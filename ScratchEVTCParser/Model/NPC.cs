@@ -1,8 +1,8 @@
 namespace ScratchEVTCParser.Model
 {
-	public class Boss : NPC
+	public class NPC : Agent
 	{
-		public Boss(ulong address, int id, string name, int toughness, int concentration, int healing, int condition,
+		public NPC(ulong address, int id, string name, int toughness, int concentration, int healing, int condition,
 			int hitboxWidth, int hitboxHeight) : base(address, id, name, toughness, concentration, healing, condition,
 			hitboxWidth, hitboxHeight)
 		{

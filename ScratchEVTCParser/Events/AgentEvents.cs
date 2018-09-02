@@ -1,14 +1,15 @@
 using System;
+using ScratchEVTCParser.Model;
 
 namespace ScratchEVTCParser.Events
 {
 	public abstract class AgentEvent : Event
 	{
-		public ushort AgentId { get; }
+		public Agent Agent { get; }
 
-		protected AgentEvent(long time, ushort agentId) : base(time)
+		protected AgentEvent(long time, Agent agent) : base(time)
 		{
-			AgentId = agentId;
+			Agent = agent;
 		}
 	}
 
@@ -16,7 +17,7 @@ namespace ScratchEVTCParser.Events
 	{
 		public int Subgroup { get; }
 
-		public AgentEnterCombatEvent(long time, ushort agentId, int subgroup) : base(time, agentId)
+		public AgentEnterCombatEvent(long time, Agent agent, int subgroup) : base(time, agent)
 		{
 			Subgroup = subgroup;
 		}
@@ -24,42 +25,42 @@ namespace ScratchEVTCParser.Events
 
 	public class AgentExitCombatEvent : AgentEvent
 	{
-		public AgentExitCombatEvent(long time, ushort agentId) : base(time, agentId)
+		public AgentExitCombatEvent(long time, Agent agent) : base(time, agent)
 		{
 		}
 	}
 
 	public class AgentRevivedEvent : AgentEvent
 	{
-		public AgentRevivedEvent(long time, ushort agentId) : base(time, agentId)
+		public AgentRevivedEvent(long time, Agent agent) : base(time, agent)
 		{
 		}
 	}
 
 	public class AgentDownedEvent : AgentEvent
 	{
-		public AgentDownedEvent(long time, ushort agentId) : base(time, agentId)
+		public AgentDownedEvent(long time, Agent agent) : base(time, agent)
 		{
 		}
 	}
 
 	public class AgentDeadEvent : AgentEvent
 	{
-		public AgentDeadEvent(long time, ushort agentId) : base(time, agentId)
+		public AgentDeadEvent(long time, Agent agent) : base(time, agent)
 		{
 		}
 	}
 
 	public class AgentSpawnEvent : AgentEvent
 	{
-		public AgentSpawnEvent(long time, ushort agentId) : base(time, agentId)
+		public AgentSpawnEvent(long time, Agent agent) : base(time, agent)
 		{
 		}
 	}
 
 	public class AgentDespawnEvent : AgentEvent
 	{
-		public AgentDespawnEvent(long time, ushort agentId) : base(time, agentId)
+		public AgentDespawnEvent(long time, Agent agent) : base(time, agent)
 		{
 		}
 	}
@@ -68,7 +69,7 @@ namespace ScratchEVTCParser.Events
 	{
 		public float HealthFraction { get; }
 
-		public AgentHealthUpdateEvent(long time, ushort agentId, float healthFraction) : base(time, agentId)
+		public AgentHealthUpdateEvent(long time, Agent agent, float healthFraction) : base(time, agent)
 		{
 			HealthFraction = healthFraction;
 		}
@@ -87,7 +88,7 @@ namespace ScratchEVTCParser.Events
 
 		public WeaponSet NewWeaponSet { get; }
 
-		public AgentWeaponSwapEvent(long time, ushort agentId, WeaponSet newWeaponSet) : base(time, agentId)
+		public AgentWeaponSwapEvent(long time, Agent agent, WeaponSet newWeaponSet) : base(time, agent)
 		{
 			NewWeaponSet = newWeaponSet;
 		}
@@ -97,7 +98,7 @@ namespace ScratchEVTCParser.Events
 	{
 		public ulong NewMaxHealth { get; }
 
-		public AgentMaxHealthUpdateEvent(long time, ushort agentId, ulong newMaxHealth) : base(time, agentId)
+		public AgentMaxHealthUpdateEvent(long time, Agent agent, ulong newMaxHealth) : base(time, agent)
 		{
 			NewMaxHealth = newMaxHealth;
 		}
@@ -107,7 +108,7 @@ namespace ScratchEVTCParser.Events
 	{
 		public int SkillId { get; }
 
-		public InitialBuffEvent(long time, ushort agentId, int skillId) : base(time, agentId)
+		public InitialBuffEvent(long time, Agent agent, int skillId) : base(time, agent)
 		{
 			SkillId = skillId;
 		}
@@ -119,7 +120,7 @@ namespace ScratchEVTCParser.Events
 		public float Y { get; }
 		public float Z { get; }
 
-		public PositionChangeEvent(long time, ushort agentId, float x, float y, float z) : base(time, agentId)
+		public PositionChangeEvent(long time, Agent agent, float x, float y, float z) : base(time, agent)
 		{
 			X = x;
 			Y = y;
@@ -133,7 +134,7 @@ namespace ScratchEVTCParser.Events
 		public float Y { get; }
 		public float Z { get; }
 
-		public VelocityChangeEvent(long time, ushort agentId, float x, float y, float z) : base(time, agentId)
+		public VelocityChangeEvent(long time, Agent agent, float x, float y, float z) : base(time, agent)
 		{
 			X = x;
 			Y = y;
@@ -146,7 +147,7 @@ namespace ScratchEVTCParser.Events
 		public float X { get; }
 		public float Y { get; }
 
-		public FacingChangeEvent(long time, ushort agentId, float x, float y) : base(time, agentId)
+		public FacingChangeEvent(long time, Agent agent, float x, float y) : base(time, agent)
 		{
 			X = x;
 			Y = y;
@@ -157,7 +158,7 @@ namespace ScratchEVTCParser.Events
 	{
 		public ulong NewTeamId { get; }
 
-		public TeamChangeEvent(long time, ushort agentId, ulong newTeamId) : base(time, agentId)
+		public TeamChangeEvent(long time, Agent agent, ulong newTeamId) : base(time, agent)
 		{
 			NewTeamId = newTeamId;
 		}

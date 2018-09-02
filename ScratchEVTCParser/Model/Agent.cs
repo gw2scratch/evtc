@@ -2,7 +2,8 @@ namespace ScratchEVTCParser.Model
 {
 	public abstract class Agent
 	{
-		private int Id { get; }
+		public ulong Address { get; }
+		public int Id { get; }
 		public string Name { get; }
 		public int Toughness { get; }
 		public int Concentration { get; }
@@ -11,7 +12,7 @@ namespace ScratchEVTCParser.Model
 		public int HitboxWidth { get; }
 		public int HitboxHeight { get; }
 
-		protected Agent(int id, string name, int toughness, int concentration, int healing, int condition, int hitboxWidth, int hitboxHeight)
+		protected Agent(ulong address, int id, string name, int toughness, int concentration, int healing, int condition, int hitboxWidth, int hitboxHeight)
 		{
 			Id = id;
 			Name = name;
@@ -21,6 +22,7 @@ namespace ScratchEVTCParser.Model
 			Condition = condition;
 			HitboxWidth = hitboxWidth;
 			HitboxHeight = hitboxHeight;
+			Address = address;
 		}
 	}
 }

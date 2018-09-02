@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using ScratchEVTCParser.Events;
 using ScratchEVTCParser.Model;
 using ScratchEVTCParser.Parsed;
@@ -47,7 +48,8 @@ namespace ScratchEVTCParser
 
 		public Log GetProcessedLog(ParsedLog log)
 		{
-			return new Log(GetEvents(log), GetAgents(log));
+			var agents = GetAgents(log).ToList();
+			return new Log(GetEvents(agents, log), agents);
 		}
 
 		private IEnumerable<Agent> GetAgents(ParsedLog log)
@@ -77,8 +79,7 @@ namespace ScratchEVTCParser
 						specialization = specializationsById[agent.IsElite];
 					}
 
-					int id;
-					if (!idsByAddress.TryGetValue(agent.Address, out id))
+					if (!idsByAddress.TryGetValue(agent.Address, out int id))
 					{
 						id = -1;
 					}
@@ -87,7 +88,8 @@ namespace ScratchEVTCParser
 					string characterName = nameParts[0];
 					string accountName = nameParts[1];
 
-					yield return new Player(id, characterName, agent.Toughness, agent.Concentration, agent.Healing,
+					yield return new Player(agent.Address, id, characterName, agent.Toughness, agent.Concentration,
+						agent.Healing,
 						agent.Condition, agent.HitboxWidth, agent.HitboxHeight, accountName, profession,
 						specialization);
 				}
@@ -96,17 +98,40 @@ namespace ScratchEVTCParser
 					if (agent.Prof >> 16 == 0xFFFF)
 					{
 						// Gadget
+						// TODO: Implement
 					}
 					else
 					{
 						// NPC
+						if (!idsByAddress.TryGetValue(agent.Address, out int id))
+						{
+							id = -1;
+						}
+
+						string name = agent.Name.Trim('\0');
+
+						yield return new NPC(agent.Address, id, name, agent.Toughness, agent.Concentration,
+							agent.Healing,
+							agent.Condition, agent.HitboxWidth, agent.HitboxHeight);
 					}
 				}
 			}
 		}
 
-		private IEnumerable<Event> GetEvents(ParsedLog log)
+		private IEnumerable<Event> GetEvents(List<Agent> agents, ParsedLog log)
 		{
+			var agentsByAddress = agents.ToDictionary(x => x.Address);
+
+			Agent GetAgentByAddress(ulong address)
+			{
+				if (agentsByAddress.TryGetValue(address, out Agent agent))
+				{
+					return agent;
+				}
+
+				return null;
+			}
+
 			foreach (var item in log.ParsedCombatItems)
 			{
 				if (item.IsStateChange != StateChange.Normal)
@@ -114,29 +139,31 @@ namespace ScratchEVTCParser
 					switch (item.IsStateChange)
 					{
 						case StateChange.EnterCombat:
-							yield return new AgentEnterCombatEvent(item.Time, item.SrcAgentId, (int) item.DstAgent);
+							yield return new AgentEnterCombatEvent(item.Time, GetAgentByAddress(item.SrcAgent),
+								(int) item.DstAgent);
 							break;
 						case StateChange.ExitCombat:
-							yield return new AgentExitCombatEvent(item.Time, item.SrcAgentId);
+							yield return new AgentExitCombatEvent(item.Time, GetAgentByAddress(item.SrcAgent));
 							break;
 						case StateChange.ChangeUp:
-							yield return new AgentRevivedEvent(item.Time, item.SrcAgentId);
+							yield return new AgentRevivedEvent(item.Time, GetAgentByAddress(item.SrcAgent));
 							break;
 						case StateChange.ChangeDead:
-							yield return new AgentDeadEvent(item.Time, item.SrcAgentId);
+							yield return new AgentDeadEvent(item.Time, GetAgentByAddress(item.SrcAgent));
 							break;
 						case StateChange.ChangeDown:
-							yield return new AgentDownedEvent(item.Time, item.SrcAgentId);
+							yield return new AgentDownedEvent(item.Time, GetAgentByAddress(item.SrcAgent));
 							break;
 						case StateChange.Spawn:
-							yield return new AgentSpawnEvent(item.Time, item.SrcAgentId);
+							yield return new AgentSpawnEvent(item.Time, GetAgentByAddress(item.SrcAgent));
 							break;
 						case StateChange.Despawn:
-							yield return new AgentDespawnEvent(item.Time, item.SrcAgentId);
+							yield return new AgentDespawnEvent(item.Time, GetAgentByAddress(item.SrcAgent));
 							break;
 						case StateChange.HealthUpdate:
 							var healthFraction = item.DstAgent / 10000f;
-							yield return new AgentHealthUpdateEvent(item.Time, item.SrcAgentId, healthFraction);
+							yield return new AgentHealthUpdateEvent(item.Time, GetAgentByAddress(item.SrcAgent),
+								healthFraction);
 							break;
 						case StateChange.LogStart:
 						{
@@ -173,10 +200,12 @@ namespace ScratchEVTCParser
 									break;
 							}
 
-							yield return new AgentWeaponSwapEvent(item.Time, item.SrcAgentId, newWeaponSet);
+							yield return new AgentWeaponSwapEvent(item.Time, GetAgentByAddress(item.SrcAgent),
+								newWeaponSet);
 							break;
 						case StateChange.MaxHealthUpdate:
-							yield return new AgentMaxHealthUpdateEvent(item.Time, item.SrcAgentId, item.DstAgent);
+							yield return new AgentMaxHealthUpdateEvent(item.Time, GetAgentByAddress(item.SrcAgent),
+								item.DstAgent);
 							break;
 						case StateChange.PointOfView:
 							yield return new PointOfViewEvent(item.Time, item.SrcAgent);
@@ -194,7 +223,8 @@ namespace ScratchEVTCParser
 							yield return new RewardEvent(item.Time, item.DstAgent, item.Value);
 							break;
 						case StateChange.BuffInitial:
-							yield return new InitialBuffEvent(item.Time, item.DstAgentId, item.SkillId);
+							yield return new InitialBuffEvent(item.Time, GetAgentByAddress(item.SrcAgent),
+								item.SkillId);
 							break;
 						case StateChange.Position:
 						{
@@ -202,7 +232,7 @@ namespace ScratchEVTCParser
 							float x = (float) (item.DstAgent & 0xFFFFFFFF);
 							float y = (float) ((item.DstAgent << 32) & 0xFFFFFFFF);
 							float z = (float) (item.Value & 0xFFFFFFFF);
-							yield return new PositionChangeEvent(item.Time, item.SrcAgentId, x, y, z);
+							yield return new PositionChangeEvent(item.Time, GetAgentByAddress(item.SrcAgent), x, y, z);
 							break;
 						}
 						case StateChange.Velocity:
@@ -211,7 +241,7 @@ namespace ScratchEVTCParser
 							float x = (float) (item.DstAgent & 0xFFFFFFFF);
 							float y = (float) ((item.DstAgent << 32) & 0xFFFFFFFF);
 							float z = (float) (item.Value & 0xFFFFFFFF);
-							yield return new VelocityChangeEvent(item.Time, item.SrcAgentId, x, y, z);
+							yield return new VelocityChangeEvent(item.Time, GetAgentByAddress(item.SrcAgent), x, y, z);
 							break;
 						}
 						case StateChange.Rotation:
@@ -219,11 +249,12 @@ namespace ScratchEVTCParser
 							// TODO: Check results
 							float x = (float) (item.DstAgent & 0xFFFFFFFF);
 							float y = (float) ((item.DstAgent << 32) & 0xFFFFFFFF);
-							yield return new FacingChangeEvent(item.Time, item.SrcAgentId, x, y);
+							yield return new FacingChangeEvent(item.Time, GetAgentByAddress(item.SrcAgent), x, y);
 							break;
 						}
 						case StateChange.TeamChange:
-							yield return new TeamChangeEvent(item.Time, item.SrcAgentId, item.DstAgent);
+							yield return new TeamChangeEvent(item.Time, GetAgentByAddress(item.SrcAgent),
+								item.DstAgent);
 							break;
 						case StateChange.Unknown:
 							yield return new UnknownEvent(item.Time, item);
@@ -239,19 +270,20 @@ namespace ScratchEVTCParser
 						// TODO: Are both of these cancelled attacks? The EVTC documentation only mentions CancelFire occurs when reaching channel time
 						case Activation.CancelCancel:
 						case Activation.CancelFire:
-							yield return new CancelledSkillCastEvent(item.Time, item.SrcAgentId, item.SkillId,
-								item.Value);
+							yield return new CancelledSkillCastEvent(item.Time, GetAgentByAddress(item.SrcAgent),
+								item.SkillId, item.Value);
 							break;
 						case Activation.Normal:
-							yield return new SuccessfulSkillCastEvent(item.Time, item.SrcAgentId, item.SkillId,
-								item.Value, SuccessfulSkillCastEvent.SkillCastType.Normal);
+							yield return new SuccessfulSkillCastEvent(item.Time, GetAgentByAddress(item.SrcAgent),
+								item.SkillId, item.Value, SuccessfulSkillCastEvent.SkillCastType.Normal);
 							break;
 						case Activation.Quickness:
-							yield return new SuccessfulSkillCastEvent(item.Time, item.SrcAgentId, item.SkillId,
-								item.Value, SuccessfulSkillCastEvent.SkillCastType.WithQuickness);
+							yield return new SuccessfulSkillCastEvent(item.Time, GetAgentByAddress(item.SrcAgent),
+								item.SkillId, item.Value, SuccessfulSkillCastEvent.SkillCastType.WithQuickness);
 							break;
 						case Activation.Reset:
-							yield return new ResetSkillCastEvent(item.Time, item.SrcAgentId, item.SkillId, item.Value);
+							yield return new ResetSkillCastEvent(item.Time, GetAgentByAddress(item.SrcAgent),
+								item.SkillId, item.Value);
 							break;
 						case Activation.Unknown:
 							yield return new UnknownEvent(item.Time, item);

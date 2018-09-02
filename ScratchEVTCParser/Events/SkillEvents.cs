@@ -1,3 +1,5 @@
+using ScratchEVTCParser.Model;
+
 namespace ScratchEVTCParser.Events
 {
 	public abstract class SkillCastEvent : AgentEvent
@@ -5,7 +7,7 @@ namespace ScratchEVTCParser.Events
 		public int SkillId { get; }
 		public int CastingTimeMs { get; }
 
-		public SkillCastEvent(long time, ushort agentId, int skillId, int castingTimeMs) : base(time, agentId)
+		public SkillCastEvent(long time, Agent agent, int skillId, int castingTimeMs) : base(time, agent)
 		{
 			SkillId = skillId;
 			CastingTimeMs = castingTimeMs;
@@ -14,15 +16,15 @@ namespace ScratchEVTCParser.Events
 
 	public class CancelledSkillCastEvent : SkillCastEvent
 	{
-		public CancelledSkillCastEvent(long time, ushort agentId, int skillId, int castingTimeMs) : base(time,
-			agentId, skillId, castingTimeMs)
+		public CancelledSkillCastEvent(long time, Agent agent, int skillId, int castingTimeMs) : base(time,
+			agent, skillId, castingTimeMs)
 		{
 		}
 	}
 
 	public class ResetSkillCastEvent : SkillCastEvent
 	{
-		public ResetSkillCastEvent(long time, ushort agentId, int skillId, int castingTimeMs) : base(time, agentId,
+		public ResetSkillCastEvent(long time, Agent agent, int skillId, int castingTimeMs) : base(time, agent,
 			skillId, castingTimeMs)
 		{
 		}
@@ -38,8 +40,8 @@ namespace ScratchEVTCParser.Events
 
 		public SkillCastType CastType { get; }
 
-		public SuccessfulSkillCastEvent(long time, ushort agentId, int skillId, int castingTimeMs,
-			SkillCastType castType) : base(time, agentId, skillId, castingTimeMs)
+		public SuccessfulSkillCastEvent(long time, Agent agent, int skillId, int castingTimeMs,
+			SkillCastType castType) : base(time, agent, skillId, castingTimeMs)
 		{
 			CastType = castType;
 		}

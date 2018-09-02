@@ -51,7 +51,7 @@
     <Compile Include="EVTCParser.cs" />
     <Compile Include="Model\Agent.cs" />
     <Compile Include="Model\Boss.cs" />
-    <Compile Include="Model\Enemy.cs" />
+    <Compile Include="Model\NPC.cs" />
     <Compile Include="Model\Log.cs" />
     <Compile Include="Model\Player.cs" />
     <Compile Include="Model\Profession.cs" />
