@@ -45,6 +45,7 @@
     <Compile Include="Events\AgentEvents.cs" />
     <Compile Include="Events\Event.cs" />
     <Compile Include="Events\LogEvents.cs" />
+    <Compile Include="Events\SkillEvents.cs" />
     <Compile Include="Events\UnknownEvent.cs" />
     <Compile Include="LogProcessor.cs" />
     <Compile Include="EVTCParser.cs" />

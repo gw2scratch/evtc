@@ -135,6 +135,32 @@ namespace ScratchEVTCParser
 							throw new ArgumentOutOfRangeException();
 					}
 				}
+				else if (item.IsActivation != Activation.None)
+				{
+					switch (item.IsActivation)
+					{
+						// TODO: Are both of these cancelled attacks? The EVTC documentation only mentions CancelFire occurs when reaching channel time
+						case Activation.CancelCancel:
+						case Activation.CancelFire:
+							yield return new CancelledSkillCastEvent(item.Time, item.SrcAgentId, item.SkillId,
+								item.Value);
+							break;
+						case Activation.Normal:
+							yield return new SuccessfulSkillCastEvent(item.Time, item.SrcAgentId, item.SkillId,
+								item.Value, SuccessfulSkillCastEvent.SkillCastType.Normal);
+							break;
+						case Activation.Quickness:
+							yield return new SuccessfulSkillCastEvent(item.Time, item.SrcAgentId, item.SkillId,
+								item.Value, SuccessfulSkillCastEvent.SkillCastType.WithQuickness);
+							break;
+						case Activation.Reset:
+							yield return new ResetSkillCastEvent(item.Time, item.SrcAgentId, item.SkillId, item.Value);
+							break;
+						case Activation.Unknown:
+							yield return new UnknownEvent(item.Time, item);
+							break;
+					}
+				}
 				else
 				{
 					yield return new UnknownEvent(item.Time, item);
