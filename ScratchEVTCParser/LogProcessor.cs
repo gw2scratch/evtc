@@ -10,7 +10,7 @@ namespace ScratchEVTCParser
 {
 	public class LogProcessor
 	{
-		private static Profession[] professions =
+		private static readonly Profession[] professions =
 		{
 			Profession.Guardian,
 			Profession.Warrior,
@@ -23,7 +23,7 @@ namespace ScratchEVTCParser
 			Profession.Revenant,
 		};
 
-		private static Dictionary<uint, EliteSpecialization> specializationsById =
+		private static readonly Dictionary<uint, EliteSpecialization> specializationsById =
 			new Dictionary<uint, EliteSpecialization>()
 			{
 				{5, EliteSpecialization.Druid},
@@ -89,8 +89,7 @@ namespace ScratchEVTCParser
 					string accountName = nameParts[1];
 
 					yield return new Player(agent.Address, id, characterName, agent.Toughness, agent.Concentration,
-						agent.Healing,
-						agent.Condition, agent.HitboxWidth, agent.HitboxHeight, accountName, profession,
+						agent.Healing, agent.Condition, agent.HitboxWidth, agent.HitboxHeight, accountName, profession,
 						specialization);
 				}
 				else
@@ -110,9 +109,8 @@ namespace ScratchEVTCParser
 
 						string name = agent.Name.Trim('\0');
 
-						yield return new NPC(agent.Address, id, name, agent.Toughness, agent.Concentration,
-							agent.Healing,
-							agent.Condition, agent.HitboxWidth, agent.HitboxHeight);
+						yield return new NPC(agent.Address, id, name, agent.Prof, agent.Toughness, agent.Concentration,
+							agent.Healing, agent.Condition, agent.HitboxWidth, agent.HitboxHeight);
 					}
 				}
 			}
@@ -208,7 +206,7 @@ namespace ScratchEVTCParser
 								item.DstAgent);
 							break;
 						case StateChange.PointOfView:
-							yield return new PointOfViewEvent(item.Time, item.SrcAgent);
+							yield return new PointOfViewEvent(item.Time, GetAgentByAddress(item.SrcAgent));
 							break;
 						case StateChange.Language:
 							yield return new LanguageEvent(item.Time, (int) item.SrcAgent);
@@ -229,26 +227,26 @@ namespace ScratchEVTCParser
 						case StateChange.Position:
 						{
 							// TODO: Check results
-							float x = (float) (item.DstAgent & 0xFFFFFFFF);
-							float y = (float) ((item.DstAgent << 32) & 0xFFFFFFFF);
-							float z = (float) (item.Value & 0xFFFFFFFF);
+							float x = item.DstAgent & 0xFFFFFFFF;
+							float y = (item.DstAgent << 32) & 0xFFFFFFFF;
+							float z = item.Value & 0xFFFFFFFF;
 							yield return new PositionChangeEvent(item.Time, GetAgentByAddress(item.SrcAgent), x, y, z);
 							break;
 						}
 						case StateChange.Velocity:
 						{
 							// TODO: Check results
-							float x = (float) (item.DstAgent & 0xFFFFFFFF);
-							float y = (float) ((item.DstAgent << 32) & 0xFFFFFFFF);
-							float z = (float) (item.Value & 0xFFFFFFFF);
+							float x = item.DstAgent & 0xFFFFFFFF;
+							float y = (item.DstAgent << 32) & 0xFFFFFFFF;
+							float z = item.Value & 0xFFFFFFFF;
 							yield return new VelocityChangeEvent(item.Time, GetAgentByAddress(item.SrcAgent), x, y, z);
 							break;
 						}
 						case StateChange.Rotation:
 						{
 							// TODO: Check results
-							float x = (float) (item.DstAgent & 0xFFFFFFFF);
-							float y = (float) ((item.DstAgent << 32) & 0xFFFFFFFF);
+							float x = item.DstAgent & 0xFFFFFFFF;
+							float y = (item.DstAgent << 32) & 0xFFFFFFFF;
 							yield return new FacingChangeEvent(item.Time, GetAgentByAddress(item.SrcAgent), x, y);
 							break;
 						}

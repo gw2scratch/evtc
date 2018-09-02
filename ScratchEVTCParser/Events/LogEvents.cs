@@ -1,4 +1,5 @@
 using System;
+using ScratchEVTCParser.Model;
 
 namespace ScratchEVTCParser.Events
 {
@@ -38,9 +39,9 @@ namespace ScratchEVTCParser.Events
 
 	public class PointOfViewEvent : Event
 	{
-		public ulong RecordingAgent { get; }
+		public Agent RecordingAgent { get; }
 
-		public PointOfViewEvent(long time, ulong recordingAgent) : base(time)
+		public PointOfViewEvent(long time, Agent recordingAgent) : base(time)
 		{
 			RecordingAgent = recordingAgent;
 		}
