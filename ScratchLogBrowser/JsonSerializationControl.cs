@@ -1,33 +1,33 @@
+using System;
 using Eto.Forms;
 using Newtonsoft.Json;
-using ScratchEVTCParser.Events;
 
 namespace ScratchLogBrowser
 {
-	public class EventControl
+	public class JsonSerializationControl
 	{
-		public Event Event
+		public object Object
 		{
-			get => @event;
+			get => obj;
 			set
 			{
-				@event = value;
-				jsonData.Text = JsonConvert.SerializeObject(@event, Formatting.Indented);
+				obj = value;
+				jsonData.Text = JsonConvert.SerializeObject(obj, Formatting.Indented);
 			}
 		}
 
 		public Control Control { get; }
 
 		private readonly Label jsonData;
-		private Event @event;
+		private Object obj;
 
-		public EventControl()
+		public JsonSerializationControl()
 		{
 			var layout = new DynamicLayout();
 			Control = layout;
 
 			jsonData = new Label {Text = ""};
-			layout.Add("All data in event:");
+			layout.Add("Serialized data:");
 			layout.Add(jsonData);
 		}
 	}

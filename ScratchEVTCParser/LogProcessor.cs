@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using ScratchEVTCParser.Events;
+using ScratchEVTCParser.Model;
 using ScratchEVTCParser.Parsed;
 using ScratchEVTCParser.Parsed.Enums;
 
@@ -8,7 +9,103 @@ namespace ScratchEVTCParser
 {
 	public class LogProcessor
 	{
-		public IEnumerable<Event> GetEvents(ParsedLog log)
+		private static Profession[] professions =
+		{
+			Profession.Guardian,
+			Profession.Warrior,
+			Profession.Engineer,
+			Profession.Ranger,
+			Profession.Thief,
+			Profession.Elementalist,
+			Profession.Mesmer,
+			Profession.Necromancer,
+			Profession.Revenant,
+		};
+
+		private static Dictionary<uint, EliteSpecialization> specializationsById =
+			new Dictionary<uint, EliteSpecialization>()
+			{
+				{5, EliteSpecialization.Druid},
+				{7, EliteSpecialization.Daredevil},
+				{18, EliteSpecialization.Berserker},
+				{27, EliteSpecialization.Dragonhunter},
+				{34, EliteSpecialization.Reaper},
+				{40, EliteSpecialization.Chronomancer},
+				{43, EliteSpecialization.Scrapper},
+				{48, EliteSpecialization.Tempest},
+				{52, EliteSpecialization.Herald},
+				{55, EliteSpecialization.Soulbeast},
+				{56, EliteSpecialization.Weaver},
+				{57, EliteSpecialization.Holosmith},
+				{58, EliteSpecialization.Deadeye},
+				{59, EliteSpecialization.Mirage},
+				{60, EliteSpecialization.Scourge},
+				{61, EliteSpecialization.Spellbreaker},
+				{62, EliteSpecialization.Firebrand},
+				{63, EliteSpecialization.Renegade}
+			};
+
+		public Log GetProcessedLog(ParsedLog log)
+		{
+			return new Log(GetEvents(log), GetAgents(log));
+		}
+
+		private IEnumerable<Agent> GetAgents(ParsedLog log)
+		{
+			var idsByAddress = new Dictionary<ulong, int>();
+			foreach (var combatItem in log.ParsedCombatItems)
+			{
+				if (combatItem.IsStateChange == StateChange.Normal)
+				{
+					idsByAddress[combatItem.SrcAgent] = combatItem.SrcAgentId;
+				}
+			}
+
+			foreach (var agent in log.ParsedAgents)
+			{
+				if (agent.IsElite != 0xFFFFFFFF)
+				{
+					// Player
+					var profession = professions[agent.Prof - 1];
+					EliteSpecialization specialization;
+					if (agent.IsElite == 0)
+					{
+						specialization = EliteSpecialization.None;
+					}
+					else
+					{
+						specialization = specializationsById[agent.IsElite];
+					}
+
+					int id;
+					if (!idsByAddress.TryGetValue(agent.Address, out id))
+					{
+						id = -1;
+					}
+
+					var nameParts = agent.Name.Split(new[] {'\0'}, StringSplitOptions.RemoveEmptyEntries);
+					string characterName = nameParts[0];
+					string accountName = nameParts[1];
+
+					yield return new Player(id, characterName, agent.Toughness, agent.Concentration, agent.Healing,
+						agent.Condition, agent.HitboxWidth, agent.HitboxHeight, accountName, profession,
+						specialization);
+				}
+				else
+				{
+					if (agent.Prof >> 16 == 0xFFFF)
+					{
+						// Gadget
+					}
+					else
+					{
+						// NPC
+					}
+				}
+			}
+		}
+
+		private IEnumerable<Event> GetEvents(ParsedLog log)
 		{
 			foreach (var item in log.ParsedCombatItems)
 			{
