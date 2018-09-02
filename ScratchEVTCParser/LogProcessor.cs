@@ -105,7 +105,7 @@ namespace ScratchEVTCParser
 							float x = (float) (item.DstAgent & 0xFFFFFFFF);
 							float y = (float) ((item.DstAgent << 32) & 0xFFFFFFFF);
 							float z = (float) (item.Value & 0xFFFFFFFF);
-							yield return new PositionChangeEvent(item.Time, item.DstAgentId, x, y, z);
+							yield return new PositionChangeEvent(item.Time, item.SrcAgentId, x, y, z);
 							break;
 						}
 						case StateChange.Velocity:
@@ -114,7 +114,7 @@ namespace ScratchEVTCParser
 							float x = (float) (item.DstAgent & 0xFFFFFFFF);
 							float y = (float) ((item.DstAgent << 32) & 0xFFFFFFFF);
 							float z = (float) (item.Value & 0xFFFFFFFF);
-							yield return new VelocityChangeEvent(item.Time, item.DstAgentId, x, y, z);
+							yield return new VelocityChangeEvent(item.Time, item.SrcAgentId, x, y, z);
 							break;
 						}
 						case StateChange.Rotation:
@@ -122,7 +122,7 @@ namespace ScratchEVTCParser
 							// TODO: Check results
 							float x = (float) (item.DstAgent & 0xFFFFFFFF);
 							float y = (float) ((item.DstAgent << 32) & 0xFFFFFFFF);
-							yield return new FacingChangeEvent(item.Time, item.DstAgentId, x, y);
+							yield return new FacingChangeEvent(item.Time, item.SrcAgentId, x, y);
 							break;
 						}
 						case StateChange.TeamChange:

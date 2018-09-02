@@ -16,7 +16,7 @@
 		WeaponSwap      = 11,
 		MaxHealthUpdate = 12,
 		PointOfView     = 13,
-		Language    = 14,
+		Language        = 14,
 		GWBuild         = 15,
 		ShardId         = 16,
 		Reward          = 17,
