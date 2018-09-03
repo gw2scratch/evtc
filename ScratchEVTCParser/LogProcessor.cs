@@ -228,7 +228,7 @@ namespace ScratchEVTCParser
 						{
 							// TODO: Check results
 							float x = item.DstAgent & 0xFFFFFFFF;
-							float y = (item.DstAgent << 32) & 0xFFFFFFFF;
+							float y = (item.DstAgent >> 32) & 0xFFFFFFFF;
 							float z = item.Value & 0xFFFFFFFF;
 							yield return new PositionChangeEvent(item.Time, GetAgentByAddress(item.SrcAgent), x, y, z);
 							break;
@@ -237,7 +237,7 @@ namespace ScratchEVTCParser
 						{
 							// TODO: Check results
 							float x = item.DstAgent & 0xFFFFFFFF;
-							float y = (item.DstAgent << 32) & 0xFFFFFFFF;
+							float y = (item.DstAgent >> 32) & 0xFFFFFFFF;
 							float z = item.Value & 0xFFFFFFFF;
 							yield return new VelocityChangeEvent(item.Time, GetAgentByAddress(item.SrcAgent), x, y, z);
 							break;
@@ -246,7 +246,7 @@ namespace ScratchEVTCParser
 						{
 							// TODO: Check results
 							float x = item.DstAgent & 0xFFFFFFFF;
-							float y = (item.DstAgent << 32) & 0xFFFFFFFF;
+							float y = (item.DstAgent >> 32) & 0xFFFFFFFF;
 							yield return new FacingChangeEvent(item.Time, GetAgentByAddress(item.SrcAgent), x, y);
 							break;
 						}
