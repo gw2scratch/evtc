@@ -171,7 +171,8 @@ namespace ScratchEVTCParser
 
 		private static Result GetResultFromByte(byte b)
 		{
-			return b < (byte) Result.Unknown ? (Result) b : Result.Unknown;
+			// Does not perform checking as that would change the result value which is used in buff remove events to indicate remaining stacks
+			return (Result) b;
 		}
 
 		private static BuffRemove GetBuffRemoveFromByte(byte b)
@@ -228,7 +229,7 @@ namespace ScratchEVTCParser
 			FriendOrFoe iff = GetFriendOrFoeFromByte(reader.ReadByte());
 
 			// 1 byte: buff
-			ushort buff = reader.ReadByte();
+			byte buff = reader.ReadByte();
 
 			// 1 byte: result
 			Result result = GetResultFromByte(reader.ReadByte());
@@ -240,30 +241,33 @@ namespace ScratchEVTCParser
 			BuffRemove isBuffRemove = GetBuffRemoveFromByte(reader.ReadByte());
 
 			// 1 byte: is_ninety
-			ushort isNinety = reader.ReadByte();
+			byte isNinety = reader.ReadByte();
 
 			// 1 byte: is_fifty
-			ushort isFifty = reader.ReadByte();
+			byte isFifty = reader.ReadByte();
 
 			// 1 byte: is_moving
-			ushort isMoving = reader.ReadByte();
+			byte isMoving = reader.ReadByte();
 
 			// 1 byte: is_statechange
 			StateChange isStateChange = GetStateChangeFromByte(reader.ReadByte());
 
 			// 1 byte: is_flanking
-			ushort isFlanking = reader.ReadByte();
+			byte isFlanking = reader.ReadByte();
 
-			// 1 byte: is_flanking
-			ushort isShields = reader.ReadByte();
-			// 2 bytes: garbage
-			reader.BaseStream.SafeSkip(2);
+			// 1 byte: is_shields
+			byte isShields = reader.ReadByte();
+			// 1 byte:
+			byte isOffcycle = reader.ReadByte();
+
+			// 1 byte: garbage
+			reader.BaseStream.SafeSkip(1);
 
 			//save
 			// Add combat
 			return new ParsedCombatItem(time, srcAgent, dstAgent, value, buffDmg, overstackValue, skillId,
 				srcInstid, dstInstid, srcMasterInstid, iff, buff, result, isActivation, isBuffRemove,
-				isNinety, isFifty, isMoving, isStateChange, isFlanking, isShields);
+				isNinety, isFifty, isMoving, isStateChange, isFlanking, isShields, isOffcycle);
 		}
 
 		/// <summary>

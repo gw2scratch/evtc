@@ -15,21 +15,22 @@ namespace ScratchEVTCParser.Parsed
 		public ushort DstAgentId { get; }
 		public ushort SrcMasterId { get; }
 		public FriendOrFoe Iff { get; }
-		public ushort Buff { get; }
+		public byte Buff { get; }
 		public Result Result { get; }
 		public Activation IsActivation { get; }
 		public BuffRemove IsBuffRemove { get; }
-		public ushort IsNinety { get; }
-		public ushort IsFifty { get; }
-		public ushort IsMoving { get; }
+		public byte IsNinety { get; }
+		public byte IsFifty { get; }
+		public byte IsMoving { get; }
 		public StateChange IsStateChange { get; }
-		public ushort IsFlanking { get; }
-		public ushort IsShields { get; }
+		public byte IsFlanking { get; }
+		public byte IsShields { get; }
+		public byte IsOffCycle { get; }
 
 		public ParsedCombatItem(long time, ulong srcAgent, ulong dstAgent, int value, int buffDmg, ushort overstackValue,
-			ushort skillId, ushort srcAgentId, ushort dstAgentId, ushort srcMasterId, FriendOrFoe iff, ushort buff,
-			Result result, Activation isActivation, BuffRemove isBuffRemove, ushort isNinety, ushort isFifty,
-			ushort isMoving, StateChange isStateChange, ushort isFlanking, ushort isShields)
+			ushort skillId, ushort srcAgentId, ushort dstAgentId, ushort srcMasterId, FriendOrFoe iff, byte buff,
+			Result result, Activation isActivation, BuffRemove isBuffRemove, byte isNinety, byte isFifty,
+			byte isMoving, StateChange isStateChange, byte isFlanking, byte isShields, byte isOffCycle)
 		{
 			Time = time;
 			SrcAgent = srcAgent;
@@ -52,6 +53,7 @@ namespace ScratchEVTCParser.Parsed
 			IsStateChange = isStateChange;
 			IsFlanking = isFlanking;
 			IsShields = isShields;
+			IsOffCycle = isOffCycle;
 		}
 	}
 }
