@@ -146,7 +146,7 @@ namespace ScratchLogBrowser
 					$"Build version: {parsedLog.LogVersion.BuildVersion}, revision {parsedLog.LogVersion.Revision}");
 				sb.AppendLine(
 					$"Parsed: {parsedLog.ParsedAgents.Length} agents, {parsedLog.ParsedSkills.Length} skills, {parsedLog.ParsedCombatItems.Length} combat items.");
-				sb.AppendLine($"Processed: {processedLog.Events} events, {processedLog.Agents}.");
+				sb.AppendLine($"Processed: {processedLog.Events.Count()} events, {processedLog.Agents.Count()} agents.");
 				parsedStateLabel.Text = sb.ToString();
 
 				agentItemGridView.DataStore = parsedLog.ParsedAgents;
