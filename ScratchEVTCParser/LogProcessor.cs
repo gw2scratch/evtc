@@ -419,12 +419,12 @@ namespace ScratchEVTCParser
 					if (!ignored)
 					{
 						yield return new PhysicalDamageEvent(item.Time, attacker, defender, damage, isMoving, isNinety,
-							isFlanking, hitResult);
+							isFlanking, shieldDamage, hitResult);
 					}
 					else
 					{
 						yield return new IgnoredPhysicalDamageEvent(item.Time, attacker, defender, damage, isMoving,
-							isNinety, isFlanking, ignoreReason);
+							isNinety, isFlanking, shieldDamage, ignoreReason);
 					}
 				}
 				else
@@ -434,5 +434,4 @@ namespace ScratchEVTCParser
 			}
 		}
 	}
-
 }
