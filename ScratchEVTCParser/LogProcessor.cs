@@ -317,7 +317,7 @@ namespace ScratchEVTCParser
 				}
 				else if (item.Buff > 0 && item.BuffDmg == 0)
 				{
-					int buffId = item.Buff;
+					int buffId = item.SkillId;
 					int durationApplied = item.Value;
 					int durationOfRemovedStack = item.OverstackValue;
 					yield return new BuffApplyEvent(item.Time, GetAgentByAddress(item.DstAgent), buffId,
