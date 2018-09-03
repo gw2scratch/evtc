@@ -288,6 +288,145 @@ namespace ScratchEVTCParser
 							break;
 					}
 				}
+				else if (item.Buff != 0 && item.IsBuffRemove != BuffRemove.None)
+				{
+					int buff = item.SkillId;
+					int remainingDuration = item.Value;
+					int remainingIntensity = item.BuffDmg;
+					int stacksRemoved = (int) item.Result;
+					switch (item.IsBuffRemove)
+					{
+						case BuffRemove.All:
+							yield return new AllStacksRemovedBuffEvent(item.Time, GetAgentByAddress(item.DstAgent),
+								buff, GetAgentByAddress(item.SrcAgent), stacksRemoved);
+							break;
+						case BuffRemove.Single:
+							yield return new SingleStackRemovedBuffEvent(item.Time, GetAgentByAddress(item.DstAgent),
+								buff, GetAgentByAddress(item.SrcAgent), remainingDuration, remainingIntensity,
+								stacksRemoved);
+							break;
+						case BuffRemove.Manual:
+							yield return new ManualSingleStackRemovedBuffEvent(item.Time,
+								GetAgentByAddress(item.DstAgent),
+								buff, GetAgentByAddress(item.SrcAgent), remainingDuration, remainingIntensity,
+								stacksRemoved);
+							break;
+						default:
+							throw new ArgumentOutOfRangeException();
+					}
+				}
+				else if (item.Buff > 0 && item.BuffDmg == 0)
+				{
+					int buffId = item.Buff;
+					int durationApplied = item.Value;
+					int durationOfRemovedStack = item.OverstackValue;
+					yield return new BuffApplyEvent(item.Time, GetAgentByAddress(item.DstAgent), buffId,
+						GetAgentByAddress(item.SrcAgent), durationApplied, durationOfRemovedStack);
+				}
+				else if (item.Buff > 0 && item.Value == 0)
+				{
+					int buffId = item.SkillId;
+					int buffDamage = item.BuffDmg;
+					bool isOffCycle = item.IsOffCycle > 0;
+					Agent attacker = GetAgentByAddress(item.SrcAgent);
+					Agent defender = GetAgentByAddress(item.DstAgent);
+					bool isMoving = item.IsMoving > 0;
+					bool isNinety = item.IsNinety > 0;
+					bool isFlanking = item.IsFlanking > 0;
+					bool isIgnored = item.Result != 0;
+
+					if (isIgnored)
+					{
+						var reason = item.Result == (Result) 1
+							? IgnoredBuffDamageEvent.Reason.InvulnerableBuff
+							: IgnoredBuffDamageEvent.Reason.InvulnerableSkill;
+
+						yield return new IgnoredBuffDamageEvent(item.Time, attacker, defender, buffDamage, buffId,
+							isMoving, isNinety, isFlanking, reason);
+					}
+					else
+					{
+						if (isOffCycle)
+						{
+							yield return new OffCycleBuffDamageEvent(item.Time, attacker, defender, buffDamage, buffId,
+								isMoving, isNinety, isFlanking);
+						}
+						else
+						{
+							yield return new BuffDamageEvent(item.Time, attacker, defender, buffDamage, buffId,
+								isMoving, isNinety, isFlanking);
+						}
+					}
+				}
+				else if (item.Buff == 0)
+				{
+					int damage = item.Value;
+					int shieldDamage = item.OverstackValue;
+					Agent attacker = GetAgentByAddress(item.SrcAgent);
+					Agent defender = GetAgentByAddress(item.DstAgent);
+					bool isMoving = item.IsMoving > 0;
+					bool isNinety = item.IsNinety > 0;
+					bool isFlanking = item.IsFlanking > 0;
+
+					// TODO: Rewrite
+					bool ignored = false;
+					var hitResult = PhysicalDamageEvent.Result.Normal;
+					var ignoreReason = IgnoredPhysicalDamageEvent.Reason.Absorbed;
+					switch (item.Result)
+					{
+						case Result.Normal:
+							hitResult = PhysicalDamageEvent.Result.Normal;
+							break;
+						case Result.Critical:
+							hitResult = PhysicalDamageEvent.Result.Critical;
+							break;
+						case Result.Glance:
+							hitResult = PhysicalDamageEvent.Result.Glance;
+							break;
+						case Result.Block:
+							ignored = true;
+							ignoreReason = IgnoredPhysicalDamageEvent.Reason.Blocked;
+							break;
+						case Result.Evade:
+							ignored = true;
+							ignoreReason = IgnoredPhysicalDamageEvent.Reason.Evaded;
+							break;
+						case Result.Interrupt:
+							hitResult = PhysicalDamageEvent.Result.Interrupt;
+							break;
+						case Result.Absorb:
+							ignored = true;
+							ignoreReason = IgnoredPhysicalDamageEvent.Reason.Absorbed;
+							break;
+						case Result.Blind:
+							ignored = true;
+							ignoreReason = IgnoredPhysicalDamageEvent.Reason.Missed;
+							break;
+						case Result.KillingBlow:
+							hitResult = PhysicalDamageEvent.Result.KillingBlow;
+							break;
+						case Result.Downed:
+							hitResult = PhysicalDamageEvent.Result.DowningBlow;
+							break;
+						case Result.Unknown:
+							yield return new UnknownEvent(item.Time, item);
+							continue;
+						default:
+							yield return new UnknownEvent(item.Time, item);
+							continue;
+					}
+
+					if (!ignored)
+					{
+						yield return new PhysicalDamageEvent(item.Time, attacker, defender, damage, isMoving, isNinety,
+							isFlanking, hitResult);
+					}
+					else
+					{
+						yield return new IgnoredPhysicalDamageEvent(item.Time, attacker, defender, damage, isMoving,
+							isNinety, isFlanking, ignoreReason);
+					}
+				}
 				else
 				{
 					yield return new UnknownEvent(item.Time, item);
@@ -295,4 +434,5 @@ namespace ScratchEVTCParser
 			}
 		}
 	}
+
 }
