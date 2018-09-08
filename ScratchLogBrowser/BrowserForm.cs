@@ -19,12 +19,15 @@ namespace ScratchLogBrowser
 		private readonly GridView<ParsedSkill> skillsGridView;
 		private readonly GridView<ParsedCombatItem> combatItemsGridView;
 		private readonly Label parsedStateLabel;
+
 		// Processed events
 		private readonly GridView<Event> eventsGridView;
 		private readonly JsonSerializationControl eventJsonControl;
+
 		// Processed event filtering
-        private readonly TextBox eventAgentNameTextBox;
+		private readonly TextBox eventAgentNameTextBox;
 		private readonly FilterCollection<Event> eventCollection = new FilterCollection<Event>();
+
 		// Processed agents
 		private readonly GridView<Agent> agentsGridView;
 		private readonly JsonSerializationControl agentJsonControl;
@@ -143,7 +146,19 @@ namespace ScratchLogBrowser
 						{
 							return false;
 						}
+
 						return agent.Name.Contains(agentNameFilter);
+					}
+					else if (ev is DamageEvent damageEvent)
+					{
+						var attacker = damageEvent.Attacker;
+						var defender = damageEvent.Defender;
+						if (attacker == null || defender == null)
+						{
+							return false;
+						}
+
+						return attacker.Name.Contains(agentNameFilter) || defender.Name.Contains(agentNameFilter);
 					}
 					else
 					{
@@ -192,7 +207,8 @@ namespace ScratchLogBrowser
 					$"Build version: {parsedLog.LogVersion.BuildVersion}, revision {parsedLog.LogVersion.Revision}");
 				sb.AppendLine(
 					$"Parsed: {parsedLog.ParsedAgents.Length} agents, {parsedLog.ParsedSkills.Length} skills, {parsedLog.ParsedCombatItems.Length} combat items.");
-				sb.AppendLine($"Processed: {processedLog.Events.Count()} events, {processedLog.Agents.Count()} agents.");
+				sb.AppendLine(
+					$"Processed: {processedLog.Events.Count()} events, {processedLog.Agents.Count()} agents.");
 				parsedStateLabel.Text = sb.ToString();
 
 				agentItemGridView.DataStore = parsedLog.ParsedAgents;
