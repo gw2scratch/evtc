@@ -54,7 +54,9 @@ namespace ScratchEVTCParser
 			var agents = GetAgents(log).ToList();
 			var skills = GetSkills(log).ToArray();
 			var events = GetEvents(agents, skills, log);
-			return new Log(events, agents, skills);
+
+			var boss = agents.OfType<Boss>().First();
+			return new Log(boss, events, agents, skills);
 		}
 
 		private IEnumerable<Skill> GetSkills(ParsedLog log)

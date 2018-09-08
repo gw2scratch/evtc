@@ -27,15 +27,21 @@ namespace ScratchLogBrowser
 
 		// Processed event filtering
 		private readonly TextBox eventAgentNameTextBox;
+		private readonly DropDown eventNameDropDown;
 		private readonly FilterCollection<Event> eventCollection = new FilterCollection<Event>();
 
 		// Processed agents
 		private readonly GridView<Agent> agentsGridView;
 		private readonly JsonSerializationControl agentJsonControl;
 
+		// Statistics
+		private readonly JsonSerializationControl statisticsJsonControl;
+
 
 		public BrowserForm()
 		{
+			ApplyEventFilters();
+
 			Title = "Scratch EVTC Browser";
 			ClientSize = new Size(600, 400);
 			var formLayout = new DynamicLayout();
@@ -96,8 +102,12 @@ namespace ScratchLogBrowser
 			eventsLayout.BeginVertical(new Padding(10));
 			eventsLayout.BeginGroup("Filters", new Padding(10));
 			eventAgentNameTextBox = new TextBox();
-			eventAgentNameTextBox.TextChanged += ApplyEventFilters;
-			eventsLayout.AddRow(new Label {Text = "Agent name"}, eventAgentNameTextBox);
+			eventAgentNameTextBox.TextChanged += (s, e) => eventCollection.Refresh();
+
+			eventNameDropDown = new DropDown {DataStore = new[] {""}};
+			eventNameDropDown.SelectedValueChanged += (s, e) => eventCollection.Refresh();
+			eventsLayout.AddRow(new Label {Text = "Event type"}, eventNameDropDown, null);
+			eventsLayout.AddRow(new Label {Text = "Agent name"}, eventAgentNameTextBox, null);
 			eventsLayout.EndGroup();
 			eventsLayout.Add(eventJsonControl.Control);
 			eventsLayout.EndVertical();
@@ -118,11 +128,15 @@ namespace ScratchLogBrowser
 			processedTabControl.Pages.Add(new TabPage(eventsLayout) {Text = "Events"});
 			processedTabControl.Pages.Add(new TabPage(agentsLayout) {Text = "Agents"});
 
+			var statisticsTabControl = new TabControl();
+			statisticsJsonControl = new JsonSerializationControl();
+			statisticsTabControl.Pages.Add(new TabPage(statisticsJsonControl.Control) {Text = "General"});
+
 			mainTabControl.Pages.Add(new TabPage(parsedTabControl) {Text = "Parsed data"});
 			mainTabControl.Pages.Add(new TabPage(processedTabControl) {Text = "Processed data"});
+			mainTabControl.Pages.Add(new TabPage(statisticsTabControl) {Text = "Statistics"});
 
 			var openFileButton = new Button {Text = "Open log"};
-
 			openFileButton.Click += OnOpenFileButtonOnClick;
 
 			formLayout.BeginVertical();
@@ -133,42 +147,55 @@ namespace ScratchLogBrowser
 			formLayout.EndVertical();
 		}
 
-		private void ApplyEventFilters(object sender, EventArgs e)
+		private bool NameFilter(Event ev)
 		{
-			string agentNameFilter = eventAgentNameTextBox.Text;
-			eventCollection.Filter = (ev) =>
+			string agentName = eventAgentNameTextBox.Text;
+			if (!string.IsNullOrWhiteSpace(agentName))
 			{
-				if (!string.IsNullOrWhiteSpace(agentNameFilter))
+				if (ev is AgentEvent agentEvent)
 				{
-					if (ev is AgentEvent agentEvent)
-					{
-						var agent = agentEvent.Agent;
-						if (agent == null)
-						{
-							return false;
-						}
-
-						return agent.Name.Contains(agentNameFilter);
-					}
-					else if (ev is DamageEvent damageEvent)
-					{
-						var attacker = damageEvent.Attacker;
-						var defender = damageEvent.Defender;
-						if (attacker == null || defender == null)
-						{
-							return false;
-						}
-
-						return attacker.Name.Contains(agentNameFilter) || defender.Name.Contains(agentNameFilter);
-					}
-					else
+					var agent = agentEvent.Agent;
+					if (agent == null)
 					{
 						return false;
 					}
-				}
 
-				return true;
-			};
+					return agent.Name.Contains(agentName);
+				}
+				else if (ev is DamageEvent damageEvent)
+				{
+					var attacker = damageEvent.Attacker;
+					var defender = damageEvent.Defender;
+					if (attacker == null || defender == null)
+					{
+						return false;
+					}
+
+					return attacker.Name.Contains(agentName) || defender.Name.Contains(agentName);
+				}
+				else
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		private bool TypeFilter(Event ev)
+		{
+			string eventName = (string) eventNameDropDown.SelectedValue;
+			if (!string.IsNullOrWhiteSpace(eventName))
+			{
+				return ev.GetType().Name.Contains(eventName);
+			}
+
+			return true;
+		}
+
+		private void ApplyEventFilters()
+		{
+			eventCollection.Filter = ev => NameFilter(ev) && TypeFilter(ev);
 		}
 
 		private void AgentGridViewOnSelectedKeyChanged(object sender, EventArgs e)
@@ -201,9 +228,15 @@ namespace ScratchLogBrowser
 				var processedLog = processor.GetProcessedLog(parsedLog);
 				var processTime = sw.Elapsed;
 
+				var statisticsCalculator = new StatisticsCalculator();
+				sw.Restart();
+				var stats = statisticsCalculator.GetStatistics(processedLog);
+				var statsTime = sw.Elapsed;
+
 				var sb = new StringBuilder();
 				sb.AppendLine($"Parsed in {parseTime}");
 				sb.AppendLine($"Processed in {processTime}");
+				sb.AppendLine($"Statistics generated in {statsTime}");
 				sb.AppendLine(
 					$"Build version: {parsedLog.LogVersion.BuildVersion}, revision {parsedLog.LogVersion.Revision}");
 				sb.AppendLine(
@@ -218,7 +251,13 @@ namespace ScratchLogBrowser
 
 				eventCollection.Clear();
 				eventCollection.AddRange(processedLog.Events);
+				eventNameDropDown.DataStore =
+					new[] {""}.Concat(
+						eventCollection.Select(x => x.GetType().Name).Distinct().OrderBy(x => x)).ToArray();
+				eventNameDropDown.SelectedIndex = 0;
 				agentsGridView.DataStore = processedLog.Agents;
+
+				statisticsJsonControl.Object = stats;
 			}
 		}
 	}

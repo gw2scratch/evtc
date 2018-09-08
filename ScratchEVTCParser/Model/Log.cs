@@ -16,8 +16,11 @@ namespace ScratchEVTCParser.Model
 		public IEnumerable<Agent> Agents => agents;
 		public IEnumerable<Skill> Skills => skills;
 
-		public Log(IEnumerable<Event> events, IEnumerable<Agent> agents, IEnumerable<Skill> skills)
+		public Boss Boss { get; }
+
+		public Log(Boss boss, IEnumerable<Event> events, IEnumerable<Agent> agents, IEnumerable<Skill> skills)
 		{
+			Boss = boss;
 			this.events = events.ToArray();
 			this.agents = agents.ToArray();
 			this.skills = skills.ToArray();

@@ -72,6 +72,8 @@
     <Compile Include="Parsed\ParsedLog.cs" />
     <Compile Include="Parsed\ParsedSkill.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StatisticsCalculator.cs" />
+    <Compile Include="Statistics\LogStatistics.cs" />
     <Compile Include="StreamExtensions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
