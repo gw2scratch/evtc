@@ -1,6 +1,7 @@
 using System;
 using ScratchEVTCParser.Model;
 using ScratchEVTCParser.Model.Agents;
+using ScratchEVTCParser.Model.Skills;
 
 namespace ScratchEVTCParser.Events
 {
@@ -107,11 +108,11 @@ namespace ScratchEVTCParser.Events
 
 	public class InitialBuffEvent : AgentEvent
 	{
-		public int SkillId { get; }
+		public Skill Skill { get; }
 
-		public InitialBuffEvent(long time, Agent agent, int skillId) : base(time, agent)
+		public InitialBuffEvent(long time, Agent agent, Skill skill) : base(time, agent)
 		{
-			SkillId = skillId;
+			Skill = skill;
 		}
 	}
 

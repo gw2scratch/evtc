@@ -1,16 +1,17 @@
 using ScratchEVTCParser.Model;
 using ScratchEVTCParser.Model.Agents;
+using ScratchEVTCParser.Model.Skills;
 
 namespace ScratchEVTCParser.Events
 {
 	public abstract class BuffEvent : AgentEvent
 	{
-		public int BuffId { get; }
+		public Skill Buff { get; }
 		public Agent SourceAgent { get; }
 
-		protected BuffEvent(long time, Agent agent, int buffId, Agent sourceAgent) : base(time, agent)
+		protected BuffEvent(long time, Agent agent, Skill buff, Agent sourceAgent) : base(time, agent)
 		{
-			BuffId = buffId;
+			Buff = buff;
 			SourceAgent = sourceAgent;
 		}
 	}
@@ -19,8 +20,8 @@ namespace ScratchEVTCParser.Events
 	{
 		public int StacksRemoved { get; }
 
-		protected BuffRemoveEvent(long time, Agent agent, int buffId, Agent sourceAgent, int stacksRemoved) : base(
-			time, agent, buffId, sourceAgent)
+		protected BuffRemoveEvent(long time, Agent agent, Skill buff, Agent sourceAgent, int stacksRemoved) : base(
+			time, agent, buff, sourceAgent)
 		{
 			StacksRemoved = stacksRemoved;
 		}
@@ -28,8 +29,8 @@ namespace ScratchEVTCParser.Events
 
 	public class AllStacksRemovedBuffEvent : BuffRemoveEvent
 	{
-		public AllStacksRemovedBuffEvent(long time, Agent agent, int buffId, Agent sourceAgent, int stacksRemoved)
-			: base(time, agent, buffId, sourceAgent, stacksRemoved)
+		public AllStacksRemovedBuffEvent(long time, Agent agent, Skill buff, Agent sourceAgent, int stacksRemoved)
+			: base(time, agent, buff, sourceAgent, stacksRemoved)
 		{
 		}
 	}
@@ -39,8 +40,8 @@ namespace ScratchEVTCParser.Events
 		public int RemainingDuration { get; }
 		public int RemainingIntensity { get; }
 
-		public SingleStackRemovedBuffEvent(long time, Agent agent, int buffId, Agent sourceAgent,
-			int remainingDuration, int remainingIntensity, int stacksRemoved) : base(time, agent, buffId,
+		public SingleStackRemovedBuffEvent(long time, Agent agent, Skill buff, Agent sourceAgent,
+			int remainingDuration, int remainingIntensity, int stacksRemoved) : base(time, agent, buff,
 			sourceAgent, stacksRemoved)
 		{
 			RemainingDuration = remainingDuration;
@@ -53,8 +54,8 @@ namespace ScratchEVTCParser.Events
 	/// </summary>
 	public class ManualSingleStackRemovedBuffEvent : SingleStackRemovedBuffEvent
 	{
-		public ManualSingleStackRemovedBuffEvent(long time, Agent agent, int buffId, Agent sourceAgent,
-			int remainingDuration, int remainingIntensity, int stacksRemoved) : base(time, agent, buffId,
+		public ManualSingleStackRemovedBuffEvent(long time, Agent agent, Skill buff, Agent sourceAgent,
+			int remainingDuration, int remainingIntensity, int stacksRemoved) : base(time, agent, buff,
 			sourceAgent, remainingDuration, remainingIntensity, stacksRemoved)
 		{
 		}
@@ -65,8 +66,8 @@ namespace ScratchEVTCParser.Events
 		public int DurationApplied { get; }
 		public int DurationOfRemovedStack { get; }
 
-		public BuffApplyEvent(long time, Agent agent, int buffId, Agent sourceAgent, int durationApplied,
-			int durationOfRemovedStack) : base(time, agent, buffId, sourceAgent)
+		public BuffApplyEvent(long time, Agent agent, Skill buff, Agent sourceAgent, int durationApplied,
+			int durationOfRemovedStack) : base(time, agent, buff, sourceAgent)
 		{
 			DurationApplied = durationApplied;
 			DurationOfRemovedStack = durationOfRemovedStack;

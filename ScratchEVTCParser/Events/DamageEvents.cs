@@ -1,5 +1,6 @@
 using ScratchEVTCParser.Model;
 using ScratchEVTCParser.Model.Agents;
+using ScratchEVTCParser.Model.Skills;
 
 namespace ScratchEVTCParser.Events
 {
@@ -61,8 +62,8 @@ namespace ScratchEVTCParser.Events
 		public Reason IgnoreReason { get; }
 		public int IgnoredDamage { get; }
 
-		public IgnoredBuffDamageEvent(long time, Agent attacker, Agent defender, int damage, int buffId, bool isMoving,
-			bool isNinety, bool isFlanking, Reason reason) : base(time, attacker, defender, 0, buffId, isMoving,
+		public IgnoredBuffDamageEvent(long time, Agent attacker, Agent defender, int damage, Skill buff, bool isMoving,
+			bool isNinety, bool isFlanking, Reason reason) : base(time, attacker, defender, 0, buff, isMoving,
 			isNinety, isFlanking)
 		{
 			IgnoredDamage = damage;
@@ -72,19 +73,19 @@ namespace ScratchEVTCParser.Events
 
 	public class BuffDamageEvent : DamageEvent
 	{
-		public int BuffId { get; }
+		public Skill Buff { get; }
 
-		public BuffDamageEvent(long time, Agent attacker, Agent defender, int damage, int buffId, bool isMoving,
+		public BuffDamageEvent(long time, Agent attacker, Agent defender, int damage, Skill buff, bool isMoving,
 			bool isNinety, bool isFlanking) : base(time, attacker, defender, damage, isMoving, isNinety, isFlanking)
 		{
-			BuffId = buffId;
+			Buff = buff;
 		}
 	}
 
 	public class OffCycleBuffDamageEvent : BuffDamageEvent
 	{
-		public OffCycleBuffDamageEvent(long time, Agent attacker, Agent defender, int damage, int buffId, bool isMoving,
-			bool isNinety, bool isFlanking) : base(time, attacker, defender, damage, buffId, isMoving, isNinety,
+		public OffCycleBuffDamageEvent(long time, Agent attacker, Agent defender, int damage, Skill buff, bool isMoving,
+			bool isNinety, bool isFlanking) : base(time, attacker, defender, damage, buff, isMoving, isNinety,
 			isFlanking)
 		{
 		}

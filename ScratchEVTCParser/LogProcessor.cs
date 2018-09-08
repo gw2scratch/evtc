@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using ScratchEVTCParser.Events;
 using ScratchEVTCParser.Model;
 using ScratchEVTCParser.Model.Agents;
+using ScratchEVTCParser.Model.Skills;
 using ScratchEVTCParser.Parsed;
 using ScratchEVTCParser.Parsed.Enums;
 
@@ -50,7 +52,18 @@ namespace ScratchEVTCParser
 		public Log GetProcessedLog(ParsedLog log)
 		{
 			var agents = GetAgents(log).ToList();
-			return new Log(GetEvents(agents, log), agents);
+			var skills = GetSkills(log).ToArray();
+			var events = GetEvents(agents, skills, log);
+			return new Log(events, agents, skills);
+		}
+
+		private IEnumerable<Skill> GetSkills(ParsedLog log)
+		{
+			foreach (var skill in log.ParsedSkills)
+			{
+				var name = skill.Name.Trim('\0');
+				yield return new Skill(skill.SkillId, name);
+			}
 		}
 
 		private IEnumerable<Agent> GetAgents(ParsedLog log)
@@ -137,15 +150,26 @@ namespace ScratchEVTCParser
 			}
 		}
 
-		private IEnumerable<Event> GetEvents(List<Agent> agents, ParsedLog log)
+		private IEnumerable<Event> GetEvents(List<Agent> agents, IEnumerable<Skill> skills, ParsedLog log)
 		{
 			var agentsByAddress = agents.ToDictionary(x => x.Address);
+			var skillsById = skills.ToDictionary(x => x.Id);
 
 			Agent GetAgentByAddress(ulong address)
 			{
 				if (agentsByAddress.TryGetValue(address, out Agent agent))
 				{
 					return agent;
+				}
+
+				return null;
+			}
+
+			Skill GetSkillById(int id)
+			{
+				if (skillsById.TryGetValue(id, out Skill skill))
+				{
+					return skill;
 				}
 
 				return null;
@@ -243,7 +267,7 @@ namespace ScratchEVTCParser
 							break;
 						case StateChange.BuffInitial:
 							yield return new InitialBuffEvent(item.Time, GetAgentByAddress(item.SrcAgent),
-								item.SkillId);
+								GetSkillById(item.SkillId));
 							break;
 						case StateChange.Position:
 						{
@@ -290,19 +314,19 @@ namespace ScratchEVTCParser
 						case Activation.CancelCancel:
 						case Activation.CancelFire:
 							yield return new CancelledSkillCastEvent(item.Time, GetAgentByAddress(item.SrcAgent),
-								item.SkillId, item.Value);
+								GetSkillById(item.SkillId), item.Value);
 							break;
 						case Activation.Normal:
 							yield return new SuccessfulSkillCastEvent(item.Time, GetAgentByAddress(item.SrcAgent),
-								item.SkillId, item.Value, SuccessfulSkillCastEvent.SkillCastType.Normal);
+								GetSkillById(item.SkillId), item.Value, SuccessfulSkillCastEvent.SkillCastType.Normal);
 							break;
 						case Activation.Quickness:
 							yield return new SuccessfulSkillCastEvent(item.Time, GetAgentByAddress(item.SrcAgent),
-								item.SkillId, item.Value, SuccessfulSkillCastEvent.SkillCastType.WithQuickness);
+								GetSkillById(item.SkillId), item.Value, SuccessfulSkillCastEvent.SkillCastType.WithQuickness);
 							break;
 						case Activation.Reset:
 							yield return new ResetSkillCastEvent(item.Time, GetAgentByAddress(item.SrcAgent),
-								item.SkillId, item.Value);
+								GetSkillById(item.SkillId), item.Value);
 							break;
 						case Activation.Unknown:
 							yield return new UnknownEvent(item.Time, item);
@@ -311,7 +335,7 @@ namespace ScratchEVTCParser
 				}
 				else if (item.Buff != 0 && item.IsBuffRemove != BuffRemove.None)
 				{
-					int buff = item.SkillId;
+					Skill buff = GetSkillById(item.SkillId);
 					int remainingDuration = item.Value;
 					int remainingIntensity = item.BuffDmg;
 					int stacksRemoved = (int) item.Result;
@@ -337,15 +361,15 @@ namespace ScratchEVTCParser
 				}
 				else if (item.Buff > 0 && item.BuffDmg == 0)
 				{
-					int buffId = item.SkillId;
+					Skill buff = GetSkillById(item.SkillId);
 					int durationApplied = item.Value;
 					int durationOfRemovedStack = item.OverstackValue;
-					yield return new BuffApplyEvent(item.Time, GetAgentByAddress(item.SrcAgent), buffId,
+					yield return new BuffApplyEvent(item.Time, GetAgentByAddress(item.SrcAgent), buff,
 						GetAgentByAddress(item.DstAgent), durationApplied, durationOfRemovedStack);
 				}
 				else if (item.Buff > 0 && item.Value == 0)
 				{
-					int buffId = item.SkillId;
+					Skill buff = GetSkillById(item.SkillId);
 					int buffDamage = item.BuffDmg;
 					bool isOffCycle = item.IsOffCycle > 0;
 					Agent attacker = GetAgentByAddress(item.SrcAgent);
@@ -361,19 +385,19 @@ namespace ScratchEVTCParser
 							? IgnoredBuffDamageEvent.Reason.InvulnerableBuff
 							: IgnoredBuffDamageEvent.Reason.InvulnerableSkill;
 
-						yield return new IgnoredBuffDamageEvent(item.Time, attacker, defender, buffDamage, buffId,
+						yield return new IgnoredBuffDamageEvent(item.Time, attacker, defender, buffDamage, buff,
 							isMoving, isNinety, isFlanking, reason);
 					}
 					else
 					{
 						if (isOffCycle)
 						{
-							yield return new OffCycleBuffDamageEvent(item.Time, attacker, defender, buffDamage, buffId,
+							yield return new OffCycleBuffDamageEvent(item.Time, attacker, defender, buffDamage, buff,
 								isMoving, isNinety, isFlanking);
 						}
 						else
 						{
-							yield return new BuffDamageEvent(item.Time, attacker, defender, buffDamage, buffId,
+							yield return new BuffDamageEvent(item.Time, attacker, defender, buffDamage, buff,
 								isMoving, isNinety, isFlanking);
 						}
 					}
