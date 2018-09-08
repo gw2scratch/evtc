@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using Eto.Forms;
 using Newtonsoft.Json;
 
@@ -12,13 +13,19 @@ namespace ScratchLogBrowser
 			set
 			{
 				obj = value;
-				jsonData.Text = JsonConvert.SerializeObject(obj, Formatting.Indented);
+				var serializer = new JsonSerializer();
+				serializer.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
+				serializer.Formatting = Formatting.Indented;
+
+				var writer = new StringWriter();
+                serializer.Serialize(writer, obj);
+				jsonData.Text = writer.ToString();
 			}
 		}
 
 		public Control Control { get; }
 
-		private readonly Label jsonData;
+		private readonly TextArea jsonData;
 		private Object obj;
 
 		public JsonSerializationControl()
@@ -26,7 +33,8 @@ namespace ScratchLogBrowser
 			var layout = new DynamicLayout();
 			Control = layout;
 
-			jsonData = new Label {Text = ""};
+			jsonData = new TextArea {Text = ""};
+			jsonData.ReadOnly = true;
 			layout.Add("Serialized data:");
 			layout.Add(jsonData);
 		}
