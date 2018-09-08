@@ -87,17 +87,26 @@ namespace ScratchEVTCParser
 					var nameParts = agent.Name.Split(new[] {'\0'}, StringSplitOptions.RemoveEmptyEntries);
 					string characterName = nameParts[0];
 					string accountName = nameParts[1];
+					string subgroupLiteral = nameParts[2];
+					if (!int.TryParse(subgroupLiteral, out int subgroup))
+					{
+						subgroup = -1;
+					}
 
 					yield return new Player(agent.Address, id, characterName, agent.Toughness, agent.Concentration,
 						agent.Healing, agent.Condition, agent.HitboxWidth, agent.HitboxHeight, accountName, profession,
-						specialization);
+						specialization, subgroup);
 				}
 				else
 				{
 					if (agent.Prof >> 16 == 0xFFFF)
 					{
 						// Gadget
-						// TODO: Implement
+						int volatileId = (int) (agent.Prof & 0xFFFF);
+						string name = agent.Name.Trim('\0');
+
+						yield return new Gadget(agent.Address, volatileId, name, agent.HitboxWidth,
+							agent.HitboxHeight);
 					}
 					else
 					{
@@ -108,9 +117,20 @@ namespace ScratchEVTCParser
 						}
 
 						string name = agent.Name.Trim('\0');
+						int speciesId = (int) (agent.Prof & 0xFFFF);
 
-						yield return new NPC(agent.Address, id, name, agent.Prof, agent.Toughness, agent.Concentration,
-							agent.Healing, agent.Condition, agent.HitboxWidth, agent.HitboxHeight);
+						if (speciesId == log.ParsedBossData.ID)
+						{
+							yield return new Boss(agent.Address, id, name, speciesId, agent.Toughness,
+								agent.Concentration, agent.Healing, agent.Condition, agent.HitboxWidth,
+								agent.HitboxHeight);
+						}
+						else
+						{
+							yield return new NPC(agent.Address, id, name, speciesId, agent.Toughness,
+								agent.Concentration, agent.Healing, agent.Condition, agent.HitboxWidth,
+								agent.HitboxHeight);
+						}
 					}
 				}
 			}
