@@ -19,10 +19,16 @@ namespace ScratchLogBrowser
 		private readonly GridView<ParsedSkill> skillsGridView;
 		private readonly GridView<ParsedCombatItem> combatItemsGridView;
 		private readonly Label parsedStateLabel;
+		// Processed events
 		private readonly GridView<Event> eventsGridView;
+		private readonly JsonSerializationControl eventJsonControl;
+		// Processed event filtering
+        private readonly TextBox eventAgentNameTextBox;
+		private readonly FilterCollection<Event> eventCollection = new FilterCollection<Event>();
+		// Processed agents
 		private readonly GridView<Agent> agentsGridView;
 		private readonly JsonSerializationControl agentJsonControl;
-		private readonly JsonSerializationControl eventJsonControl;
+
 
 		public BrowserForm()
 		{
@@ -56,6 +62,7 @@ namespace ScratchLogBrowser
 			});
 			eventsGridView.SelectedItemsChanged += EventsGridViewOnSelectedKeyChanged;
 			eventsGridView.Width = 400;
+			eventsGridView.DataStore = eventCollection;
 
 			agentsGridView = new GridViewGenerator().GetGridView<Agent>();
 			agentsGridView.SelectedItemsChanged += AgentGridViewOnSelectedKeyChanged;
@@ -82,7 +89,12 @@ namespace ScratchLogBrowser
 			eventsLayout.BeginVertical();
 			eventsLayout.BeginHorizontal();
 			eventsLayout.Add(eventsGridView);
-			eventsLayout.BeginVertical();
+			eventsLayout.BeginVertical(new Padding(10));
+			eventsLayout.BeginGroup("Filters", new Padding(10));
+			eventAgentNameTextBox = new TextBox();
+			eventAgentNameTextBox.TextChanged += ApplyEventFilters;
+			eventsLayout.AddRow(new Label {Text = "Agent name"}, eventAgentNameTextBox);
+			eventsLayout.EndGroup();
 			eventsLayout.Add(eventJsonControl.Control);
 			eventsLayout.EndVertical();
 			eventsLayout.EndHorizontal();
@@ -115,6 +127,32 @@ namespace ScratchLogBrowser
 			formLayout.AddRow();
 			formLayout.AddRow(mainTabControl);
 			formLayout.EndVertical();
+		}
+
+		private void ApplyEventFilters(object sender, EventArgs e)
+		{
+			string agentNameFilter = eventAgentNameTextBox.Text;
+			eventCollection.Filter = (ev) =>
+			{
+				if (!string.IsNullOrWhiteSpace(agentNameFilter))
+				{
+					if (ev is AgentEvent agentEvent)
+					{
+						var agent = agentEvent.Agent;
+						if (agent == null)
+						{
+							return false;
+						}
+						return agent.Name.Contains(agentNameFilter);
+					}
+					else
+					{
+						return false;
+					}
+				}
+
+				return true;
+			};
 		}
 
 		private void AgentGridViewOnSelectedKeyChanged(object sender, EventArgs e)
@@ -161,7 +199,8 @@ namespace ScratchLogBrowser
 				skillsGridView.DataStore = parsedLog.ParsedSkills;
 				combatItemsGridView.DataStore = parsedLog.ParsedCombatItems;
 
-				eventsGridView.DataStore = processedLog.Events;
+				eventCollection.Clear();
+				eventCollection.AddRange(processedLog.Events);
 				agentsGridView.DataStore = processedLog.Agents;
 			}
 		}
