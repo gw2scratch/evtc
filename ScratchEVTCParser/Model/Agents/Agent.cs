@@ -1,4 +1,4 @@
-namespace ScratchEVTCParser.Model
+namespace ScratchEVTCParser.Model.Agents
 {
 	public abstract class Agent
 	{

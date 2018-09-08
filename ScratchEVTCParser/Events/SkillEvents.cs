@@ -1,4 +1,5 @@
 using ScratchEVTCParser.Model;
+using ScratchEVTCParser.Model.Agents;
 
 namespace ScratchEVTCParser.Events
 {

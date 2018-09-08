@@ -8,6 +8,7 @@ using Eto.Generator;
 using ScratchEVTCParser;
 using ScratchEVTCParser.Events;
 using ScratchEVTCParser.Model;
+using ScratchEVTCParser.Model.Agents;
 using ScratchEVTCParser.Parsed;
 
 namespace ScratchLogBrowser

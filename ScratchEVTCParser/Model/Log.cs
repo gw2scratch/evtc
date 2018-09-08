@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ScratchEVTCParser.Events;
+using ScratchEVTCParser.Model.Agents;
 
 namespace ScratchEVTCParser.Model
 {

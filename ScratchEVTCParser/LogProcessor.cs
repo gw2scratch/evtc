@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ScratchEVTCParser.Events;
 using ScratchEVTCParser.Model;
+using ScratchEVTCParser.Model.Agents;
 using ScratchEVTCParser.Parsed;
 using ScratchEVTCParser.Parsed.Enums;
 
