@@ -342,17 +342,17 @@ namespace ScratchEVTCParser
 					switch (item.IsBuffRemove)
 					{
 						case BuffRemove.All:
-							yield return new AllStacksRemovedBuffEvent(item.Time, GetAgentByAddress(item.SrcAgent),
-								buff, GetAgentByAddress(item.DstAgent), stacksRemoved);
+							yield return new AllStacksRemovedBuffEvent(item.Time, GetAgentByAddress(item.DstAgent),
+								buff, GetAgentByAddress(item.SrcAgent), stacksRemoved);
 							break;
 						case BuffRemove.Single:
-							yield return new SingleStackRemovedBuffEvent(item.Time, GetAgentByAddress(item.SrcAgent),
-								buff, GetAgentByAddress(item.DstAgent), remainingDuration, remainingIntensity,
+							yield return new SingleStackRemovedBuffEvent(item.Time, GetAgentByAddress(item.DstAgent),
+								buff, GetAgentByAddress(item.SrcAgent), remainingDuration, remainingIntensity,
 								stacksRemoved);
 							break;
 						case BuffRemove.Manual:
 							yield return new ManualSingleStackRemovedBuffEvent(item.Time,
-								GetAgentByAddress(item.SrcAgent), buff, GetAgentByAddress(item.DstAgent),
+								GetAgentByAddress(item.DstAgent), buff, GetAgentByAddress(item.SrcAgent),
 								remainingDuration, remainingIntensity, stacksRemoved);
 							break;
 						default:
@@ -364,8 +364,8 @@ namespace ScratchEVTCParser
 					Skill buff = GetSkillById(item.SkillId);
 					int durationApplied = item.Value;
 					int durationOfRemovedStack = item.OverstackValue;
-					yield return new BuffApplyEvent(item.Time, GetAgentByAddress(item.SrcAgent), buff,
-						GetAgentByAddress(item.DstAgent), durationApplied, durationOfRemovedStack);
+					yield return new BuffApplyEvent(item.Time, GetAgentByAddress(item.DstAgent), buff,
+						GetAgentByAddress(item.SrcAgent), durationApplied, durationOfRemovedStack);
 				}
 				else if (item.Buff > 0 && item.Value == 0)
 				{
