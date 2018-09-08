@@ -60,6 +60,14 @@ namespace ScratchLogBrowser
 			agentsGridView = new GridViewGenerator().GetGridView<Agent>();
 			agentsGridView.SelectedItemsChanged += AgentGridViewOnSelectedKeyChanged;
 			agentsGridView.Width = 400;
+			agentsGridView.Columns.Insert(0, new GridColumn()
+			{
+				HeaderText = "Type",
+				DataCell = new TextBoxCell()
+				{
+					Binding = new DelegateBinding<object, string>(x => x.GetType().Name)
+				}
+			});
 
 			eventJsonControl = new JsonSerializationControl();
 			agentJsonControl = new JsonSerializationControl();
