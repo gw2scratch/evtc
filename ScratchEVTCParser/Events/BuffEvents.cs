@@ -5,12 +5,12 @@ namespace ScratchEVTCParser.Events
 	public abstract class BuffEvent : AgentEvent
 	{
 		public int BuffId { get; }
-		public Agent CausingAgent { get; }
+		public Agent SourceAgent { get; }
 
-		protected BuffEvent(long time, Agent agent, int buffId, Agent causingAgent) : base(time, agent)
+		protected BuffEvent(long time, Agent agent, int buffId, Agent sourceAgent) : base(time, agent)
 		{
 			BuffId = buffId;
-			CausingAgent = causingAgent;
+			SourceAgent = sourceAgent;
 		}
 	}
 
@@ -18,8 +18,8 @@ namespace ScratchEVTCParser.Events
 	{
 		public int StacksRemoved { get; }
 
-		protected BuffRemoveEvent(long time, Agent agent, int buffId, Agent causingAgent, int stacksRemoved) : base(
-			time, agent, buffId, causingAgent)
+		protected BuffRemoveEvent(long time, Agent agent, int buffId, Agent sourceAgent, int stacksRemoved) : base(
+			time, agent, buffId, sourceAgent)
 		{
 			StacksRemoved = stacksRemoved;
 		}
@@ -27,8 +27,8 @@ namespace ScratchEVTCParser.Events
 
 	public class AllStacksRemovedBuffEvent : BuffRemoveEvent
 	{
-		public AllStacksRemovedBuffEvent(long time, Agent agent, int buffId, Agent causingAgent, int stacksRemoved)
-			: base(time, agent, buffId, causingAgent, stacksRemoved)
+		public AllStacksRemovedBuffEvent(long time, Agent agent, int buffId, Agent sourceAgent, int stacksRemoved)
+			: base(time, agent, buffId, sourceAgent, stacksRemoved)
 		{
 		}
 	}
@@ -38,9 +38,9 @@ namespace ScratchEVTCParser.Events
 		public int RemainingDuration { get; }
 		public int RemainingIntensity { get; }
 
-		public SingleStackRemovedBuffEvent(long time, Agent agent, int buffId, Agent causingAgent,
+		public SingleStackRemovedBuffEvent(long time, Agent agent, int buffId, Agent sourceAgent,
 			int remainingDuration, int remainingIntensity, int stacksRemoved) : base(time, agent, buffId,
-			causingAgent, stacksRemoved)
+			sourceAgent, stacksRemoved)
 		{
 			RemainingDuration = remainingDuration;
 			RemainingIntensity = remainingIntensity;
@@ -52,9 +52,9 @@ namespace ScratchEVTCParser.Events
 	/// </summary>
 	public class ManualSingleStackRemovedBuffEvent : SingleStackRemovedBuffEvent
 	{
-		public ManualSingleStackRemovedBuffEvent(long time, Agent agent, int buffId, Agent causingAgent,
+		public ManualSingleStackRemovedBuffEvent(long time, Agent agent, int buffId, Agent sourceAgent,
 			int remainingDuration, int remainingIntensity, int stacksRemoved) : base(time, agent, buffId,
-			causingAgent, remainingDuration, remainingIntensity, stacksRemoved)
+			sourceAgent, remainingDuration, remainingIntensity, stacksRemoved)
 		{
 		}
 	}
@@ -64,8 +64,8 @@ namespace ScratchEVTCParser.Events
 		public int DurationApplied { get; }
 		public int DurationOfRemovedStack { get; }
 
-		public BuffApplyEvent(long time, Agent agent, int buffId, Agent causingAgent, int durationApplied,
-			int durationOfRemovedStack) : base(time, agent, buffId, causingAgent)
+		public BuffApplyEvent(long time, Agent agent, int buffId, Agent sourceAgent, int durationApplied,
+			int durationOfRemovedStack) : base(time, agent, buffId, sourceAgent)
 		{
 			DurationApplied = durationApplied;
 			DurationOfRemovedStack = durationOfRemovedStack;
