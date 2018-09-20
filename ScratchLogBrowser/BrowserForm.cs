@@ -32,7 +32,7 @@ namespace ScratchLogBrowser
 
 		// Processed agents
 		private readonly GridView<Agent> agentsGridView;
-		private readonly JsonSerializationControl agentJsonControl;
+		private readonly AgentControl agentControl;
 
 		// Statistics
 		private readonly JsonSerializationControl statisticsJsonControl;
@@ -43,7 +43,7 @@ namespace ScratchLogBrowser
 			ApplyEventFilters();
 
 			Title = "Scratch EVTC Browser";
-			ClientSize = new Size(600, 400);
+			ClientSize = new Size(800, 600);
 			var formLayout = new DynamicLayout();
 			Content = formLayout;
 
@@ -87,7 +87,7 @@ namespace ScratchLogBrowser
 			});
 
 			eventJsonControl = new JsonSerializationControl();
-			agentJsonControl = new JsonSerializationControl();
+			agentControl = new AgentControl();
 			var mainTabControl = new TabControl();
 
 			var parsedTabControl = new TabControl();
@@ -119,7 +119,7 @@ namespace ScratchLogBrowser
 			agentsLayout.BeginHorizontal();
 			agentsLayout.Add(agentsGridView);
 			agentsLayout.BeginVertical();
-			agentsLayout.Add(agentJsonControl.Control);
+			agentsLayout.Add(agentControl.Control);
 			agentsLayout.EndVertical();
 			agentsLayout.EndHorizontal();
 			agentsLayout.EndVertical();
@@ -147,62 +147,18 @@ namespace ScratchLogBrowser
 			formLayout.EndVertical();
 		}
 
-		private bool NameFilter(Event ev)
-		{
-			string agentName = eventAgentNameTextBox.Text;
-			if (!string.IsNullOrWhiteSpace(agentName))
-			{
-				if (ev is AgentEvent agentEvent)
-				{
-					var agent = agentEvent.Agent;
-					if (agent == null)
-					{
-						return false;
-					}
-
-					return agent.Name.Contains(agentName);
-				}
-				else if (ev is DamageEvent damageEvent)
-				{
-					var attacker = damageEvent.Attacker;
-					var defender = damageEvent.Defender;
-					if (attacker == null || defender == null)
-					{
-						return false;
-					}
-
-					return attacker.Name.Contains(agentName) || defender.Name.Contains(agentName);
-				}
-				else
-				{
-					return false;
-				}
-			}
-
-			return true;
-		}
-
-		private bool TypeFilter(Event ev)
-		{
-			string eventName = (string) eventNameDropDown.SelectedValue;
-			if (!string.IsNullOrWhiteSpace(eventName))
-			{
-				return ev.GetType().Name.Contains(eventName);
-			}
-
-			return true;
-		}
-
 		private void ApplyEventFilters()
 		{
-			eventCollection.Filter = ev => NameFilter(ev) && TypeFilter(ev);
+			eventCollection.Filter = ev =>
+				EventFilters.IsAgentInEvent(ev, eventAgentNameTextBox.Text) &&
+				EventFilters.IsTypeName(ev, (string) eventNameDropDown.SelectedValue);
 		}
 
 		private void AgentGridViewOnSelectedKeyChanged(object sender, EventArgs e)
 		{
 			var gridView = (GridView<Agent>) sender;
 			var agent = gridView.SelectedItem;
-			agentJsonControl.Object = agent;
+			agentControl.Agent = agent;
 		}
 
 		private void EventsGridViewOnSelectedKeyChanged(object sender, EventArgs e)
@@ -245,9 +201,9 @@ namespace ScratchLogBrowser
 					$"Processed: {processedLog.Events.Count()} events, {processedLog.Agents.Count()} agents.");
 				parsedStateLabel.Text = sb.ToString();
 
-				agentItemGridView.DataStore = parsedLog.ParsedAgents;
-				skillsGridView.DataStore = parsedLog.ParsedSkills;
-				combatItemsGridView.DataStore = parsedLog.ParsedCombatItems;
+				agentItemGridView.DataStore = parsedLog.ParsedAgents.ToArray();
+				skillsGridView.DataStore = parsedLog.ParsedSkills.ToArray();
+				combatItemsGridView.DataStore = parsedLog.ParsedCombatItems.ToArray();
 
 				eventCollection.Clear();
 				eventCollection.AddRange(processedLog.Events);
@@ -256,6 +212,8 @@ namespace ScratchLogBrowser
 						eventCollection.Select(x => x.GetType().Name).Distinct().OrderBy(x => x)).ToArray();
 				eventNameDropDown.SelectedIndex = 0;
 				agentsGridView.DataStore = processedLog.Agents;
+
+				agentControl.Events = processedLog.Events.ToArray();
 
 				statisticsJsonControl.Object = stats;
 			}

@@ -33,8 +33,7 @@ namespace ScratchLogBrowser
 			var layout = new DynamicLayout();
 			Control = layout;
 
-			jsonData = new TextArea {Text = ""};
-			jsonData.ReadOnly = true;
+			jsonData = new TextArea {Text = "", ReadOnly = true};
 			layout.Add("Serialized data:");
 			layout.Add(jsonData);
 		}

@@ -63,6 +63,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AgentControl.cs" />
+    <Compile Include="EventFilters.cs" />
     <Compile Include="JsonSerializationControl.cs" />
     <Compile Include="BrowserForm.cs" />
     <Compile Include="Program.cs" />
