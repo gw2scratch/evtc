@@ -52,10 +52,14 @@ namespace ScratchEVTCParser
 		public Log GetProcessedLog(ParsedLog log)
 		{
 			var agents = GetAgents(log).ToList();
+
 			var skills = GetSkills(log).ToArray();
-			var events = GetEvents(agents, skills, log);
+			var events = GetEvents(agents, skills, log).ToArray();
 
 			var boss = agents.OfType<Boss>().First();
+
+			SetAgentAwareTimes(agents, events);
+			AssignAgentMasters(log, agents); // Needs to be done after setting aware times
 			return new Log(boss, events, agents, skills);
 		}
 
@@ -146,6 +150,72 @@ namespace ScratchEVTCParser
 							yield return new NPC(agent.Address, id, name, speciesId, agent.Toughness,
 								agent.Concentration, agent.Healing, agent.Condition, agent.HitboxWidth,
 								agent.HitboxHeight);
+						}
+					}
+				}
+			}
+		}
+
+		private void SetAgentAwareTimes(IReadOnlyCollection<Agent> agents, IReadOnlyCollection<Event> events)
+		{
+			foreach (var ev in events.OrderBy(x => x.Time))
+			{
+				if (ev is AgentEvent agentEvent)
+				{
+					if (agentEvent.Agent == null) continue;
+
+					if (agentEvent.Agent.FirstAwareTime == 0)
+					{
+						agentEvent.Agent.FirstAwareTime = ev.Time;
+					}
+
+					agentEvent.Agent.LastAwareTime = ev.Time;
+				}
+				else if (ev is DamageEvent damageEvent)
+				{
+					if (damageEvent.Attacker != null)
+					{
+						if (damageEvent.Attacker.FirstAwareTime == 0)
+						{
+							damageEvent.Attacker.FirstAwareTime = ev.Time;
+						}
+
+						damageEvent.Attacker.LastAwareTime = ev.Time;
+					}
+
+					if (damageEvent.Defender != null)
+					{
+						if (damageEvent.Defender.FirstAwareTime == 0)
+						{
+							damageEvent.Defender.FirstAwareTime = ev.Time;
+						}
+
+						damageEvent.Defender.LastAwareTime = ev.Time;
+					}
+				}
+			}
+		}
+
+		// Requires aware times to be set first
+		private void AssignAgentMasters(ParsedLog log, IReadOnlyCollection<Agent> agents)
+		{
+			foreach (var combatItem in log.ParsedCombatItems)
+			{
+				if (combatItem.IsStateChange == StateChange.Normal)
+				{
+					if (combatItem.SrcMasterId != 0)
+					{
+						var minion = agents.OfType<NPC>().FirstOrDefault(
+							agent => agent.Id == combatItem.SrcAgentId && agent.IsWithinAwareTime(combatItem.Time)
+						);
+						var master = agents.Where(agent => !(agent is Gadget)).FirstOrDefault(
+							agent => agent.Id == combatItem.SrcMasterId && agent.IsWithinAwareTime(combatItem.Time)
+						);
+
+						if (minion != null && master != null && minion.Master == null)
+						{
+							minion.Master = master;
+							master.MinionList.Add(minion);
 						}
 					}
 				}
@@ -324,7 +394,8 @@ namespace ScratchEVTCParser
 							break;
 						case Activation.Quickness:
 							yield return new SuccessfulSkillCastEvent(item.Time, GetAgentByAddress(item.SrcAgent),
-								GetSkillById(item.SkillId), item.Value, SuccessfulSkillCastEvent.SkillCastType.WithQuickness);
+								GetSkillById(item.SkillId), item.Value,
+								SuccessfulSkillCastEvent.SkillCastType.WithQuickness);
 							break;
 						case Activation.Reset:
 							yield return new ResetSkillCastEvent(item.Time, GetAgentByAddress(item.SrcAgent),

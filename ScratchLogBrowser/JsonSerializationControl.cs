@@ -16,6 +16,7 @@ namespace ScratchLogBrowser
 				var serializer = new JsonSerializer();
 				serializer.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
 				serializer.Formatting = Formatting.Indented;
+				serializer.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
 
 				var writer = new StringWriter();
                 serializer.Serialize(writer, obj);
