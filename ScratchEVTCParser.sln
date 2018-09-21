@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScratchLogBrowser", "Scratc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScratchLogHTMLGenerator", "ScratchLogHTMLGenerator\ScratchLogHTMLGenerator.csproj", "{2A679D21-D206-4F4A-8546-8F0E86547A0D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScratchLogMaker", "ScratchLogMaker\ScratchLogMaker.csproj", "{B4EBA714-D8AE-42DD-9CD0-10F673D5AFA1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{2A679D21-D206-4F4A-8546-8F0E86547A0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2A679D21-D206-4F4A-8546-8F0E86547A0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2A679D21-D206-4F4A-8546-8F0E86547A0D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4EBA714-D8AE-42DD-9CD0-10F673D5AFA1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4EBA714-D8AE-42DD-9CD0-10F673D5AFA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4EBA714-D8AE-42DD-9CD0-10F673D5AFA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4EBA714-D8AE-42DD-9CD0-10F673D5AFA1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
