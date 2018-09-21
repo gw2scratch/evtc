@@ -19,28 +19,65 @@ namespace ScratchEVTCParser
 
 			long fightTimeMs = fightEndEvent.Time - fightStartEvent.Time;
 
-			var bossDamages = log.Events.OfType<DamageEvent>().Where(x => x.Defender == boss).GroupBy(x => x.Attacker, (attacker, events) => (attacker, events.Sum(x => x.Damage)));
+			var physicalBossDamages = log.Events
+				.OfType<PhysicalDamageEvent>()
+				.Where(x => x.Defender == boss)
+				.GroupBy(x => x.Attacker, (attacker, events) => (attacker, events.Sum(x => x.Damage)));
 
-			var bossDamagesByAgent = new Dictionary<Agent, long>();
+			var conditionBossDamages = log.Events
+				.OfType<BuffDamageEvent>()
+				.Where(x => x.Defender == boss)
+				.GroupBy(x => x.Attacker, (attacker, events) => (attacker, events.Sum(x => x.Damage)));
 
-			foreach ((var attacker, int damage) in bossDamages)
+			var bossDamagesByAgent = new Dictionary<Agent, TargetDamageData>();
+
+			foreach ((var attacker, int damage) in physicalBossDamages)
 			{
+				if (attacker == null)
+				{
+					continue; // TODO: Save as unknown damage
+				}
+
 				var mainMaster = attacker;
 				while (mainMaster.Master != null)
 				{
 					mainMaster = attacker.Master;
 				}
+
 				if (!bossDamagesByAgent.ContainsKey(mainMaster))
 				{
-					bossDamagesByAgent[mainMaster] = 0;
+					bossDamagesByAgent[mainMaster] = new TargetDamageData(fightTimeMs, 0, 0, boss);
 				}
 
-				bossDamagesByAgent[mainMaster] += damage;
+				bossDamagesByAgent[mainMaster] += new TargetDamageData(fightTimeMs, damage, 0, boss);
+			}
+
+			foreach ((var attacker, int damage) in conditionBossDamages)
+			{
+				if (attacker == null)
+				{
+					continue; // TODO: Save as unknown damage
+				}
+
+				var mainMaster = attacker;
+				while (mainMaster.Master != null)
+				{
+					mainMaster = attacker.Master;
+				}
+
+				if (!bossDamagesByAgent.ContainsKey(mainMaster))
+				{
+					bossDamagesByAgent[mainMaster] = new TargetDamageData(fightTimeMs, 0, 0, boss);
+				}
+
+				bossDamagesByAgent[mainMaster] += new TargetDamageData(fightTimeMs, 0, damage, boss);
 			}
 
 			int bossDamage = log.Events.OfType<DamageEvent>().Where(x => x.Defender == boss).Sum(x => x.Damage);
-			int bossConditionDamage = log.Events.OfType<BuffDamageEvent>().Where(x => x.Defender == boss).Sum(x => x.Damage);
-			int bossPhysicalDamage = log.Events.OfType<PhysicalDamageEvent>().Where(x => x.Defender == boss).Sum(x => x.Damage);
+			int bossConditionDamage =
+				log.Events.OfType<BuffDamageEvent>().Where(x => x.Defender == boss).Sum(x => x.Damage);
+			int bossPhysicalDamage = log.Events.OfType<PhysicalDamageEvent>().Where(x => x.Defender == boss)
+				.Sum(x => x.Damage);
 
 			float bossDps = bossDamage * 1000f / fightTimeMs;
 			float bossConditionDps = bossConditionDamage * 1000f / fightTimeMs;

@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using Eto.Drawing;
@@ -10,6 +11,7 @@ using ScratchEVTCParser.Events;
 using ScratchEVTCParser.Model;
 using ScratchEVTCParser.Model.Agents;
 using ScratchEVTCParser.Parsed;
+using ScratchLogHTMLGenerator;
 
 namespace ScratchLogBrowser
 {
@@ -36,6 +38,9 @@ namespace ScratchLogBrowser
 
 		// Statistics
 		private readonly JsonSerializationControl statisticsJsonControl;
+
+		// HTML
+		private readonly WebView webView = new WebView() {AllowDrop = false};
 
 
 		public BrowserForm()
@@ -126,6 +131,7 @@ namespace ScratchLogBrowser
 			mainTabControl.Pages.Add(new TabPage(parsedTabControl) {Text = "Parsed data"});
 			mainTabControl.Pages.Add(new TabPage(processedTabControl) {Text = "Processed data"});
 			mainTabControl.Pages.Add(new TabPage(statisticsTabControl) {Text = "Statistics"});
+			mainTabControl.Pages.Add(new TabPage(webView) {Text = "HTML"});
 
 			var openFileButton = new Button {Text = "Open log"};
 			openFileButton.Click += OnOpenFileButtonOnClick;
@@ -180,10 +186,17 @@ namespace ScratchLogBrowser
 				var stats = statisticsCalculator.GetStatistics(processedLog);
 				var statsTime = sw.Elapsed;
 
+				var htmlStringWriter = new StringWriter();
+				var generator = new HtmlGenerator();
+				sw.Restart();
+				generator.WriteHtml(htmlStringWriter, processedLog, stats);
+				var htmlTime = sw.Elapsed;
+
 				var sb = new StringBuilder();
 				sb.AppendLine($"Parsed in {parseTime}");
 				sb.AppendLine($"Processed in {processTime}");
 				sb.AppendLine($"Statistics generated in {statsTime}");
+				sb.AppendLine($"HTML generated in {htmlTime}");
 				sb.AppendLine(
 					$"Build version: {parsedLog.LogVersion.BuildVersion}, revision {parsedLog.LogVersion.Revision}");
 				sb.AppendLine(
@@ -207,6 +220,8 @@ namespace ScratchLogBrowser
 				agentControl.Events = processedLog.Events.ToArray();
 
 				statisticsJsonControl.Object = stats;
+
+				webView.LoadHtml(htmlStringWriter.ToString());
 			}
 		}
 	}

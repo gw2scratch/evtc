@@ -78,6 +78,10 @@
       <Project>{9dd47a76-3c69-4152-aa36-b656caffdecb}</Project>
       <Name>ScratchEVTCParser</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ScratchLogHTMLGenerator\ScratchLogHTMLGenerator.csproj">
+      <Project>{2a679d21-d206-4f4a-8546-8f0e86547a0d}</Project>
+      <Name>ScratchLogHTMLGenerator</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Eto.Forms.2.4.1\build\Eto.Forms.targets" Condition="Exists('..\packages\Eto.Forms.2.4.1\build\Eto.Forms.targets')" />

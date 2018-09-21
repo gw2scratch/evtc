@@ -10,16 +10,16 @@ namespace ScratchEVTCParser.Statistics
 		public float BossDps { get; }
 		public float BossConditionDps { get; }
 		public float BossPhysicalDps { get; }
-		public IReadOnlyDictionary<Agent, long> BossDamagesByAgent { get; }
+		public IReadOnlyDictionary<Agent, TargetDamageData> BossDamageByAgent { get; }
 
 		public LogStatistics(long fightTimeMs, float bossDps, float bossConditionDps, float bossPhysicalDps,
-			Dictionary<Agent, long> bossDamagesByAgent)
+			Dictionary<Agent, TargetDamageData> bossDamageByAgent)
 		{
 			FightTimeMs = fightTimeMs;
 			BossDps = bossDps;
 			BossConditionDps = bossConditionDps;
 			BossPhysicalDps = bossPhysicalDps;
-			BossDamagesByAgent = bossDamagesByAgent;
+			BossDamageByAgent = bossDamageByAgent;
 		}
 	}
 }
