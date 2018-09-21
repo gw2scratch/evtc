@@ -9,6 +9,8 @@ using ScratchEVTCParser.Parsed.Enums;
 
 namespace ScratchEVTCParser
 {
+	// Based on the Elite Insights parser
+
 	public class EVTCParser
 	{
 		public ParsedLog ParseLog(string evtcFilename)
@@ -18,67 +20,40 @@ namespace ScratchEVTCParser
 				if (evtcFilename.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
 				{
 					using (var arch = new ZipArchive(fileStream, ZipArchiveMode.Read))
+					using (var data = arch.Entries[0].Open())
+					using (var memoryStream = new MemoryStream())
 					{
-						using (var data = arch.Entries[0].Open())
-						{
-							return ParseLog(data);
-						}
+						data.CopyTo(memoryStream);
+						return ParseLog(memoryStream.ToArray());
 					}
 				}
 
-				return ParseLog(fileStream);
+				using (var memoryStream = new MemoryStream())
+				{
+					fileStream.CopyTo(memoryStream);
+                    return ParseLog(memoryStream.ToArray());
+				}
 			}
 		}
 
 
-		private ParsedLog ParseLog(Stream stream)
+		private ParsedLog ParseLog(byte[] bytes)
 		{
-            LogVersion logVersion;
-            ParsedBossData bossData;
-            ParsedAgent[] agents;
-            ParsedSkill[] skills;
-			ParsedCombatItem[] combatItems;
+			var reader = new ByteArrayBinaryReader(bytes, Encoding.UTF8);
 
-			using (var reader = new BinaryReader(stream, Encoding.UTF8))
-			{
-				logVersion = ParseLogData(reader);
-				bossData = ParseBossData(reader);
-				agents = ParseAgents(reader).ToArray();
-				skills = ParseSkills(reader).ToArray();
-				combatItems = ParseCombatItems(stream).ToArray();
-			}
+			var logVersion = ParseLogData(reader);
+			var bossData = ParseBossData(reader);
+			var agents = ParseAgents(reader).ToArray();
+			var skills = ParseSkills(reader).ToArray();
+			var combatItems = ParseCombatItems(reader).ToArray();
 
 			return new ParsedLog(logVersion, bossData, agents, skills, combatItems);
 		}
 
-		private static bool TryRead(Stream stream, byte[] data)
-		{
-			int offset = 0;
-			int count = data.Length;
-			while (count > 0)
-			{
-				var bytesRead = stream.Read(data, offset, count);
-				if (bytesRead == 0)
-				{
-					return false;
-				}
-
-				offset += bytesRead;
-				count -= bytesRead;
-			}
-
-			return true;
-		}
-
-		private static string ReadUTF8String(BinaryReader reader, int length)
-		{
-			return reader.BaseStream.ReadString(length, Encoding.UTF8, false);
-		}
-
-		private LogVersion ParseLogData(BinaryReader reader)
+		private LogVersion ParseLogData(ByteArrayBinaryReader reader)
 		{
 			// 12 bytes: arc build version
-			string buildVersion = ReadUTF8String(reader, 12);
+			string buildVersion = reader.ReadString(12);
 
 			// 1 byte: revision
 			byte revision = reader.ReadByte();
@@ -89,7 +64,7 @@ namespace ScratchEVTCParser
 		/// <summary>
 		/// Parses boss related data
 		/// </summary>
-		private ParsedBossData ParseBossData(BinaryReader reader)
+		private ParsedBossData ParseBossData(ByteArrayBinaryReader reader)
 		{
 			// 2 bytes: boss instance ID
 			ushort id = reader.ReadUInt16();
@@ -103,7 +78,7 @@ namespace ScratchEVTCParser
 		/// <summary>
 		/// Parses agent related data
 		/// </summary>
-		private IEnumerable<ParsedAgent> ParseAgents(BinaryReader reader)
+		private IEnumerable<ParsedAgent> ParseAgents(ByteArrayBinaryReader reader)
 		{
 			// 4 bytes: player count
 			int agentCount = reader.ReadInt32();
@@ -133,9 +108,10 @@ namespace ScratchEVTCParser
 				// 2 bytes: hb_height
 				int hitboxHeight = reader.ReadInt16();
 				// 68 bytes: name
-				String name = ReadUTF8String(reader, 68);
+				String name = reader.ReadString(68);
 
-				ParsedAgent parsedAgent = new ParsedAgent(address, name, prof, isElite, toughness, concentration, healing, condition,
+				ParsedAgent parsedAgent = new ParsedAgent(address, name, prof, isElite, toughness, concentration,
+					healing, condition,
 					hitboxWidth, hitboxHeight);
 
 				yield return parsedAgent;
@@ -145,7 +121,7 @@ namespace ScratchEVTCParser
 		/// <summary>
 		/// Parses skill related data
 		/// </summary>
-		private IEnumerable<ParsedSkill> ParseSkills(BinaryReader reader)
+		private IEnumerable<ParsedSkill> ParseSkills(ByteArrayBinaryReader reader)
 		{
 			// 4 bytes: player count
 			int skillCount = reader.ReadInt32();
@@ -157,7 +133,7 @@ namespace ScratchEVTCParser
 				int skillId = reader.ReadInt32();
 
 				// 64 bytes: name
-				var name = ReadUTF8String(reader, 64);
+				var name = reader.ReadString(64);
 
 				var skill = new ParsedSkill(skillId, name);
 				yield return skill;
@@ -185,12 +161,12 @@ namespace ScratchEVTCParser
 			return b < (byte) Activation.Unknown ? (Activation) b : Activation.Unknown;
 		}
 
-        private static StateChange GetStateChangeFromByte(byte b)
-        {
-            return b < (byte)StateChange.Unknown ? (StateChange)b : StateChange.Unknown;
-        }
+		private static StateChange GetStateChangeFromByte(byte b)
+		{
+			return b < (byte) StateChange.Unknown ? (StateChange) b : StateChange.Unknown;
+		}
 
-		private static ParsedCombatItem ReadCombatItem(BinaryReader reader)
+		private static ParsedCombatItem ReadCombatItem(ByteArrayBinaryReader reader)
 		{
 			// 8 bytes: time
 			long time = reader.ReadInt64();
@@ -223,7 +199,7 @@ namespace ScratchEVTCParser
 			ushort srcMasterInstid = reader.ReadUInt16();
 
 			// 9 bytes: garbage
-			reader.BaseStream.SafeSkip(9);
+			reader.Skip(9);
 
 			// 1 byte: iff
 			FriendOrFoe iff = GetFriendOrFoeFromByte(reader.ReadByte());
@@ -257,11 +233,12 @@ namespace ScratchEVTCParser
 
 			// 1 byte: is_shields
 			byte isShields = reader.ReadByte();
-			// 1 byte:
+
+			// 1 byte: is_offcycle
 			byte isOffcycle = reader.ReadByte();
 
 			// 1 byte: garbage
-			reader.BaseStream.SafeSkip(1);
+			reader.Skip(1);
 
 			//save
 			// Add combat
@@ -273,21 +250,14 @@ namespace ScratchEVTCParser
 		/// <summary>
 		/// Parses combat related data
 		/// </summary>
-		private IEnumerable<ParsedCombatItem> ParseCombatItems(Stream stream)
+		private IEnumerable<ParsedCombatItem> ParseCombatItems(ByteArrayBinaryReader reader)
 		{
 			// 64 bytes: each combat
-			var data = new byte[64];
-			using (var ms = new MemoryStream(data, writable: false))
-			using (var reader = new BinaryReader(ms))
-			{
-				while (true)
-				{
-					if (!TryRead(stream, data)) break;
-					ms.Seek(0, SeekOrigin.Begin);
-					ParsedCombatItem combatItem = ReadCombatItem(reader);
-					yield return combatItem;
-				}
-			}
+            while (reader.Length - reader.Position >= 64)
+            {
+                ParsedCombatItem combatItem = ReadCombatItem(reader);
+                yield return combatItem;
+            }
 		}
 	}
 }

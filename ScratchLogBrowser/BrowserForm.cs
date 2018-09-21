@@ -11,6 +11,7 @@ using ScratchEVTCParser.Events;
 using ScratchEVTCParser.Model;
 using ScratchEVTCParser.Model.Agents;
 using ScratchEVTCParser.Parsed;
+using ScratchEVTCParser.Statistics;
 using ScratchLogHTMLGenerator;
 
 namespace ScratchLogBrowser
@@ -192,59 +193,99 @@ namespace ScratchLogBrowser
 			if (result == DialogResult.Ok)
 			{
 				string logFilename = openFileDialog.Filenames.First();
-				var parser = new EVTCParser();
-				var sw = Stopwatch.StartNew();
-				var parsedLog = parser.ParseLog(logFilename);
-				var parseTime = sw.Elapsed;
+				var statusStringBuilder = new StringBuilder();
 
+                var parser = new EVTCParser();
 				var processor = new LogProcessor();
-				sw.Restart();
-				var processedLog = processor.GetProcessedLog(parsedLog);
-				var processTime = sw.Elapsed;
-
 				var statisticsCalculator = new StatisticsCalculator();
-				sw.Restart();
-				var stats = statisticsCalculator.GetStatistics(processedLog);
-				var statsTime = sw.Elapsed;
-
-				var htmlStringWriter = new StringWriter();
 				var generator = new HtmlGenerator();
+
+				// Parsing
+                var sw = Stopwatch.StartNew();
+				ParsedLog parsedLog = null;
+				try
+				{
+					parsedLog = parser.ParseLog(logFilename);
+					var parseTime = sw.Elapsed;
+
+					statusStringBuilder.AppendLine($"Parsed in {parseTime}");
+
+					agentItemGridView.DataStore = parsedLog.ParsedAgents.ToArray();
+					skillsGridView.DataStore = parsedLog.ParsedSkills.ToArray();
+					combatItemsGridView.DataStore = parsedLog.ParsedCombatItems.ToArray();
+				}
+				catch (Exception ex)
+				{
+					statusStringBuilder.AppendLine($"Parsing failed: {ex.Message}");
+				}
+
+				// Processing
+				Log processedLog = null;
+				try
+				{
+					sw.Restart();
+					processedLog = processor.GetProcessedLog(parsedLog);
+					var processTime = sw.Elapsed;
+
+					statusStringBuilder.AppendLine($"Processed in {processTime}");
+
+					eventCollection.Clear();
+					eventCollection.AddRange(processedLog.Events);
+					eventNameDropDown.DataStore =
+						new[] {""}.Concat(
+							eventCollection.Select(x => x.GetType().Name).Distinct().OrderBy(x => x)).ToArray();
+					eventNameDropDown.SelectedIndex = 0;
+					agentsGridView.DataStore = processedLog.Agents;
+					agentControl.Events = processedLog.Events.ToArray();
+				}
+				catch (Exception ex)
+				{
+					statusStringBuilder.AppendLine($"Processing failed: {ex.Message}");
+				}
+
+				// Statistics
+				LogStatistics stats = null;
 				sw.Restart();
-				generator.WriteHtml(htmlStringWriter, processedLog, stats);
-				var htmlTime = sw.Elapsed;
+				try
+				{
+					stats = statisticsCalculator.GetStatistics(processedLog);
+					var statsTime = sw.Elapsed;
 
-				var sb = new StringBuilder();
-				sb.AppendLine($"Parsed in {parseTime}");
-				sb.AppendLine($"Processed in {processTime}");
-				sb.AppendLine($"Statistics generated in {statsTime}");
-				sb.AppendLine($"HTML generated in {htmlTime}");
-				sb.AppendLine(
-					$"Build version: {parsedLog.LogVersion.BuildVersion}, revision {parsedLog.LogVersion.Revision}");
-				sb.AppendLine(
-					$"Parsed: {parsedLog.ParsedAgents.Length} agents, {parsedLog.ParsedSkills.Length} skills, {parsedLog.ParsedCombatItems.Length} combat items.");
-				sb.AppendLine(
-					$"Processed: {processedLog.Events.Count()} events, {processedLog.Agents.Count()} agents.");
-				parsedStateLabel.Text = sb.ToString();
+					statusStringBuilder.AppendLine($"Statistics generated in {statsTime}");
 
-				agentItemGridView.DataStore = parsedLog.ParsedAgents.ToArray();
-				skillsGridView.DataStore = parsedLog.ParsedSkills.ToArray();
-				combatItemsGridView.DataStore = parsedLog.ParsedCombatItems.ToArray();
+					statisticsJsonControl.Object = stats;
+				}
+				catch (Exception ex)
+				{
+					statusStringBuilder.AppendLine($"Statistics generation failed: {ex.Message}");
+				}
 
-				eventCollection.Clear();
-				eventCollection.AddRange(processedLog.Events);
-				eventNameDropDown.DataStore =
-					new[] {""}.Concat(
-						eventCollection.Select(x => x.GetType().Name).Distinct().OrderBy(x => x)).ToArray();
-				eventNameDropDown.SelectedIndex = 0;
-				agentsGridView.DataStore = processedLog.Agents;
+				// HTML
+				var htmlStringWriter = new StringWriter();
+				sw.Restart();
+				try
+				{
+					generator.WriteHtml(htmlStringWriter, processedLog, stats);
+					var htmlTime = sw.Elapsed;
 
-				agentControl.Events = processedLog.Events.ToArray();
+					statusStringBuilder.AppendLine($"HTML generated in {htmlTime}");
 
-				statisticsJsonControl.Object = stats;
+					webView.LoadHtml(htmlStringWriter.ToString());
+					LogHtml = htmlStringWriter.ToString();
+					saveHtmlButton.Enabled = true;
+				}
+				catch (Exception ex)
+				{
+					statusStringBuilder.AppendLine($"HTML generation failed: {ex.Message}");
+				}
 
-				webView.LoadHtml(htmlStringWriter.ToString());
-				LogHtml = htmlStringWriter.ToString();
-				saveHtmlButton.Enabled = true;
+				statusStringBuilder.AppendLine(
+					$"Build version: {parsedLog?.LogVersion?.BuildVersion}, revision {parsedLog?.LogVersion?.Revision}");
+				statusStringBuilder.AppendLine(
+					$"Parsed: {parsedLog?.ParsedAgents?.Length} agents, {parsedLog?.ParsedSkills?.Length} skills, {parsedLog?.ParsedCombatItems?.Length} combat items.");
+				statusStringBuilder.AppendLine(
+					$"Processed: {processedLog?.Events?.Count()} events, {processedLog?.Agents?.Count()} agents.");
+				parsedStateLabel.Text = statusStringBuilder.ToString();
 			}
 		}
 	}

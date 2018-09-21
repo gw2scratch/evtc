@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ByteArrayBinaryReader.cs" />
     <Compile Include="Events\AgentEvents.cs" />
     <Compile Include="Events\BuffEvents.cs" />
     <Compile Include="Events\DamageEvents.cs" />
