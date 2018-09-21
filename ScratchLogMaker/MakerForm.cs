@@ -61,12 +61,15 @@ namespace ScratchLogMaker
 			{
 				Task.Run(() =>
 				{
-					var sw = Stopwatch.StartNew();
+					var times = new List<(string taskName, double milliseconds)>();
+					var totalTimeStopwatch = Stopwatch.StartNew();
 
 					var parser = new EVTCParser();
 					var processor = new LogProcessor();
 					var statisticsCalculator = new StatisticsCalculator();
 					var generator = new HtmlGenerator();
+
+					int finishedTaskCount = 0;
 					while (notFinishedFileNames.Count > 0)
 					{
 						var taskStopwatch = Stopwatch.StartNew();
@@ -80,13 +83,28 @@ namespace ScratchLogMaker
 
 						try
 						{
+                            var lastElapsed = taskStopwatch.Elapsed;
+
 							var parsedLog = parser.ParseLog(filename);
+							times.Add(("parsing", (taskStopwatch.Elapsed - lastElapsed).TotalMilliseconds));
+							lastElapsed = taskStopwatch.Elapsed;
+
 							var processedLog = processor.GetProcessedLog(parsedLog);
+							times.Add(("processing", (taskStopwatch.Elapsed - lastElapsed).TotalMilliseconds));
+							lastElapsed = taskStopwatch.Elapsed;
+
 							var stats = statisticsCalculator.GetStatistics(processedLog);
+
+							times.Add(("stats", (taskStopwatch.Elapsed - lastElapsed).TotalMilliseconds));
+							lastElapsed = taskStopwatch.Elapsed;
+
 							using (var htmlStringWriter = new StreamWriter(resultFilename))
 							{
 								generator.WriteHtml(htmlStringWriter, processedLog, stats);
 							}
+
+							times.Add(("html", (taskStopwatch.Elapsed - lastElapsed).TotalMilliseconds));
+							lastElapsed = taskStopwatch.Elapsed;
 
 							finishedFileNames.Add(resultFilename);
 							Application.Instance.Invoke(() =>
@@ -100,9 +118,15 @@ namespace ScratchLogMaker
 							finishedFileNames.Add($"FAILED: {resultFilename} ({e.Message})");
 						}
 						Console.WriteLine($"{newName} done, time {taskStopwatch.Elapsed}");
+						finishedTaskCount++;
 					}
 
-					Console.WriteLine($"All done, total time {sw.Elapsed}");
+					Console.WriteLine($"All done, total time {totalTimeStopwatch.Elapsed}");
+
+					foreach ((string taskName, double totalMs) in times.GroupBy(x => x.taskName).Select(x => (x.Key, x.Sum(y => y.milliseconds))).OrderByDescending(x => x.Item2))
+					{
+						Console.WriteLine($"{taskName}, total {totalMs}ms, average {totalMs/Math.Max(finishedTaskCount, 1)}ms");
+					}
 				});
 			};
 		}
