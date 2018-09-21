@@ -4,7 +4,7 @@ using ScratchEVTCParser.Model.Skills;
 
 namespace ScratchEVTCParser.Events
 {
-	public class IgnoredPhysicalDamageEvent : DamageEvent
+	public class IgnoredPhysicalDamageEvent : PhysicalDamageEvent
 	{
 		public enum Reason
 		{
@@ -16,15 +16,15 @@ namespace ScratchEVTCParser.Events
 
 		public Reason IgnoreReason { get; }
 		public int IgnoredDamage { get; }
-		public int ShieldDamage { get; }
+		public int IgnoredShieldDamage { get; }
 
 		public IgnoredPhysicalDamageEvent(long time, Agent attacker, Agent defender, int damage, bool isMoving,
-			bool isNinety, bool isFlanking, int shieldDamage, Reason reason) : base(time, attacker, defender, 0, isMoving, isNinety,
-			isFlanking)
+			bool isNinety, bool isFlanking, int shieldDamage, Reason reason) : base(time, attacker, defender, 0,
+			isMoving, isNinety, isFlanking, 0, Result.Ignored)
 		{
 			IgnoreReason = reason;
 			IgnoredDamage = damage;
-			ShieldDamage = shieldDamage;
+			IgnoredShieldDamage = shieldDamage;
 		}
 	}
 
@@ -38,13 +38,15 @@ namespace ScratchEVTCParser.Events
 			Interrupt,
 			DowningBlow,
 			KillingBlow,
+			Ignored
 		}
 
 		public Result HitResult { get; }
 		public int ShieldDamage { get; }
 
 		public PhysicalDamageEvent(long time, Agent attacker, Agent defender, int damage, bool isMoving, bool isNinety,
-			bool isFlanking, int shieldDamage, Result result) : base(time, attacker, defender, damage, isMoving, isNinety, isFlanking)
+			bool isFlanking, int shieldDamage, Result result) : base(time, attacker, defender, damage, isMoving,
+			isNinety, isFlanking)
 		{
 			ShieldDamage = shieldDamage;
 			HitResult = result;
