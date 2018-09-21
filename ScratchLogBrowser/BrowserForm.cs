@@ -40,7 +40,7 @@ namespace ScratchLogBrowser
 		private readonly JsonSerializationControl statisticsJsonControl;
 
 		// HTML
-		private readonly WebView webView = new WebView() {AllowDrop = false};
+		private readonly WebView webView = new WebView();
 
 
 		public BrowserForm()
