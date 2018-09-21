@@ -40,7 +40,10 @@ namespace ScratchLogBrowser
 		private readonly JsonSerializationControl statisticsJsonControl;
 
 		// HTML
+		private readonly Button saveHtmlButton;
+		private readonly SaveFileDialog saveHtmlFileDialog;
 		private readonly WebView webView = new WebView();
+		private string LogHtml { get; set; } = "";
 
 
 		public BrowserForm()
@@ -54,6 +57,9 @@ namespace ScratchLogBrowser
 
 			openFileDialog = new OpenFileDialog();
 			openFileDialog.Filters.Add(new FileFilter("EVTC logs", ".evtc", ".evtc.zip"));
+
+			saveHtmlFileDialog = new SaveFileDialog();
+			saveHtmlFileDialog.Filters.Add(new FileFilter(".html file", ".html", ".htm", ".*"));
 
 			parsedStateLabel = new Label {Text = "No log parsed yet."};
 
@@ -128,13 +134,19 @@ namespace ScratchLogBrowser
 			statisticsJsonControl = new JsonSerializationControl();
 			statisticsTabControl.Pages.Add(new TabPage(statisticsJsonControl.Control) {Text = "General"});
 
+			saveHtmlButton = new Button {Text = "Save .html file", Enabled = false};
+			saveHtmlButton.Click += SaveHtmlButtonOnClick;
+			var htmlLayout = new DynamicLayout();
+			htmlLayout.AddRow(saveHtmlButton);
+			htmlLayout.AddRow(webView);
+
 			mainTabControl.Pages.Add(new TabPage(parsedTabControl) {Text = "Parsed data"});
 			mainTabControl.Pages.Add(new TabPage(processedTabControl) {Text = "Processed data"});
 			mainTabControl.Pages.Add(new TabPage(statisticsTabControl) {Text = "Statistics"});
-			mainTabControl.Pages.Add(new TabPage(webView) {Text = "HTML"});
+			mainTabControl.Pages.Add(new TabPage(htmlLayout) {Text = "HTML"});
 
 			var openFileButton = new Button {Text = "Open log"};
-			openFileButton.Click += OnOpenFileButtonOnClick;
+			openFileButton.Click += OpenFileButtonOnClick;
 
 			formLayout.BeginVertical();
 			formLayout.AddRow(openFileButton);
@@ -142,6 +154,15 @@ namespace ScratchLogBrowser
 			formLayout.AddRow();
 			formLayout.AddRow(mainTabControl);
 			formLayout.EndVertical();
+		}
+
+		private void SaveHtmlButtonOnClick(object sender, EventArgs e)
+		{
+			var result = saveHtmlFileDialog.ShowDialog((Control) sender);
+			if (result == DialogResult.Ok)
+			{
+				File.WriteAllText(saveHtmlFileDialog.FileName, LogHtml);
+			}
 		}
 
 		private void ApplyEventFilters()
@@ -165,7 +186,7 @@ namespace ScratchLogBrowser
 			eventJsonControl.Object = ev;
 		}
 
-		private void OnOpenFileButtonOnClick(object s, EventArgs e)
+		private void OpenFileButtonOnClick(object s, EventArgs e)
 		{
 			var result = openFileDialog.ShowDialog((Control) s);
 			if (result == DialogResult.Ok)
@@ -222,6 +243,8 @@ namespace ScratchLogBrowser
 				statisticsJsonControl.Object = stats;
 
 				webView.LoadHtml(htmlStringWriter.ToString());
+				LogHtml = htmlStringWriter.ToString();
+				saveHtmlButton.Enabled = true;
 			}
 		}
 	}
