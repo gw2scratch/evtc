@@ -205,7 +205,7 @@ namespace ScratchEVTCParser
 				{
 					if (combatItem.SrcMasterId != 0)
 					{
-						var minion = agents.OfType<NPC>().FirstOrDefault(
+						var minion = agents.FirstOrDefault(
 							agent => agent.Id == combatItem.SrcAgentId && agent.IsWithinAwareTime(combatItem.Time)
 						);
 						var master = agents.Where(agent => !(agent is Gadget)).FirstOrDefault(

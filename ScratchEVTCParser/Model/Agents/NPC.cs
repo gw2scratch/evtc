@@ -8,8 +8,6 @@ namespace ScratchEVTCParser.Model.Agents
 		public int Healing { get; }
 		public int Condition { get; }
 
-		public Agent Master { get; internal set; }
-
 		public NPC(ulong address, int id, string name, int speciesId, int toughness, int concentration, int healing,
 			int condition, int hitboxWidth, int hitboxHeight) : base(address, id, name, hitboxWidth, hitboxHeight)
 		{

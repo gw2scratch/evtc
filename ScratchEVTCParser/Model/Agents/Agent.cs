@@ -12,8 +12,9 @@ namespace ScratchEVTCParser.Model.Agents
 		public long FirstAwareTime { get; internal set; } = 0;
 		public long LastAwareTime { get; internal set; } = long.MaxValue;
 
-		internal List<NPC> MinionList { get; } = new List<NPC>();
-		public IEnumerable<NPC> Minions => MinionList;
+		internal List<Agent> MinionList { get; } = new List<Agent>();
+		public IEnumerable<Agent> Minions => MinionList;
+		public Agent Master { get; internal set; }
 
 		protected Agent(ulong address, int id, string name, int hitboxWidth, int hitboxHeight)
 		{
