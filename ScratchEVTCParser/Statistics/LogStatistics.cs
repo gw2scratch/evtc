@@ -6,6 +6,7 @@ namespace ScratchEVTCParser.Statistics
 {
 	public class LogStatistics
 	{
+		public EncounterResult EncounterResult { get; }
 		public long FightTimeMs { get; }
 		public float BossDps { get; }
 		public float BossConditionDps { get; }
@@ -13,13 +14,14 @@ namespace ScratchEVTCParser.Statistics
 		public IReadOnlyDictionary<Agent, TargetDamageData> BossDamageByAgent { get; }
 
 		public LogStatistics(long fightTimeMs, float bossDps, float bossConditionDps, float bossPhysicalDps,
-			Dictionary<Agent, TargetDamageData> bossDamageByAgent)
+			Dictionary<Agent, TargetDamageData> bossDamageByAgent, EncounterResult encounterResult)
 		{
 			FightTimeMs = fightTimeMs;
 			BossDps = bossDps;
 			BossConditionDps = bossConditionDps;
 			BossPhysicalDps = bossPhysicalDps;
 			BossDamageByAgent = bossDamageByAgent;
+			EncounterResult = encounterResult;
 		}
 	}
 }

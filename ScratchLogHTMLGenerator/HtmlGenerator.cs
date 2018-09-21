@@ -22,8 +22,10 @@ namespace ScratchLogHTMLGenerator
 <body>
 <section class='section'>
 <div class='container'>
+    <h1 class='title'>{log.Boss.Name}</h1>
+    <div class='subtitle'>{(statistics.EncounterResult == EncounterResult.Success ? "Success"
+				: statistics.EncounterResult == EncounterResult.Failure ? "Failure" : "Result unknown")} in {statistics.FightTimeMs / 1000 / 60}m {statistics.FightTimeMs / 1000 % 60}s {statistics.FightTimeMs % 1000}ms</div>
 <div class='content'>
-    <h1>{log.Boss.Name}</h1>
     <table class='table is-narrow is-striped is-hoverable'>
         <thead>
         <tr>

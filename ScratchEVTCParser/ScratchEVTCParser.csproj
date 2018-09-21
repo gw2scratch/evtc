@@ -73,6 +73,7 @@
     <Compile Include="Parsed\ParsedSkill.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StatisticsCalculator.cs" />
+    <Compile Include="Statistics\EncounterResult.cs" />
     <Compile Include="Statistics\LogStatistics.cs" />
     <Compile Include="Statistics\TargetDamageData.cs" />
     <Compile Include="StreamExtensions.cs" />
