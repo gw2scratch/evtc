@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using ScratchEVTCParser.Events;
 using ScratchEVTCParser.Model;
+using ScratchEVTCParser.Model.Agents;
 using ScratchEVTCParser.Statistics;
 
 namespace ScratchEVTCParser
@@ -17,8 +19,24 @@ namespace ScratchEVTCParser
 
 			long fightTimeMs = fightEndEvent.Time - fightStartEvent.Time;
 
-			//var bossDamages = log.Events.OfType<DamageEvent>().Where(x => x.Defender == boss)
-			//	.GroupBy(x => x.Attacker, (player, events) => (player, events.Sum(x => x.Damage)));
+			var bossDamages = log.Events.OfType<DamageEvent>().Where(x => x.Defender == boss).GroupBy(x => x.Attacker, (attacker, events) => (attacker, events.Sum(x => x.Damage)));
+
+			var bossDamagesByAgent = new Dictionary<Agent, long>();
+
+			foreach ((var attacker, int damage) in bossDamages)
+			{
+				var mainMaster = attacker;
+				while (mainMaster.Master != null)
+				{
+					mainMaster = attacker.Master;
+				}
+				if (!bossDamagesByAgent.ContainsKey(mainMaster))
+				{
+					bossDamagesByAgent[mainMaster] = 0;
+				}
+
+				bossDamagesByAgent[mainMaster] += damage;
+			}
 
 			int bossDamage = log.Events.OfType<DamageEvent>().Where(x => x.Defender == boss).Sum(x => x.Damage);
 			int bossConditionDamage = log.Events.OfType<BuffDamageEvent>().Where(x => x.Defender == boss).Sum(x => x.Damage);
@@ -28,7 +46,7 @@ namespace ScratchEVTCParser
 			float bossConditionDps = bossConditionDamage * 1000f / fightTimeMs;
 			float bossPhysicalDps = bossPhysicalDamage * 1000f / fightTimeMs;
 
-			return new LogStatistics(fightTimeMs, bossDps, bossConditionDps, bossPhysicalDps);
+			return new LogStatistics(fightTimeMs, bossDps, bossConditionDps, bossPhysicalDps, bossDamagesByAgent);
 		}
 	}
 }
