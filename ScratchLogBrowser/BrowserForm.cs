@@ -71,12 +71,10 @@ namespace ScratchLogBrowser
 				}
 			});
 			eventsGridView.SelectedItemsChanged += EventsGridViewOnSelectedKeyChanged;
-			eventsGridView.Width = 400;
 			eventsGridView.DataStore = eventCollection;
 
 			agentsGridView = new GridViewGenerator().GetGridView<Agent>();
 			agentsGridView.SelectedItemsChanged += AgentGridViewOnSelectedKeyChanged;
-			agentsGridView.Width = 400;
 			agentsGridView.Columns.Insert(0, new GridColumn()
 			{
 				HeaderText = "Type",
@@ -95,38 +93,31 @@ namespace ScratchLogBrowser
 			parsedTabControl.Pages.Add(new TabPage(skillsGridView) {Text = "Skills"});
 			parsedTabControl.Pages.Add(new TabPage(combatItemsGridView) {Text = "Combat Items"});
 
-			var eventsLayout = new DynamicLayout();
-			eventsLayout.BeginVertical();
-			eventsLayout.BeginHorizontal();
-			eventsLayout.Add(eventsGridView);
-			eventsLayout.BeginVertical(new Padding(10));
-			eventsLayout.BeginGroup("Filters", new Padding(10));
+			var eventsDetailLayout = new DynamicLayout();
+			eventsDetailLayout.BeginVertical(new Padding(10));
+			eventsDetailLayout.BeginGroup("Filters", new Padding(10));
 			eventAgentNameTextBox = new TextBox();
 			eventAgentNameTextBox.TextChanged += (s, e) => eventCollection.Refresh();
-
 			eventNameDropDown = new DropDown {DataStore = new[] {""}};
 			eventNameDropDown.SelectedValueChanged += (s, e) => eventCollection.Refresh();
-			eventsLayout.AddRow(new Label {Text = "Event type"}, eventNameDropDown, null);
-			eventsLayout.AddRow(new Label {Text = "Agent name"}, eventAgentNameTextBox, null);
-			eventsLayout.EndGroup();
-			eventsLayout.Add(eventJsonControl.Control);
-			eventsLayout.EndVertical();
-			eventsLayout.EndHorizontal();
-			eventsLayout.EndVertical();
+			eventsDetailLayout.AddRow(new Label {Text = "Event type"}, eventNameDropDown, null);
+			eventsDetailLayout.AddRow(new Label {Text = "Agent name"}, eventAgentNameTextBox, null);
+			eventsDetailLayout.EndGroup();
+			eventsDetailLayout.Add(eventJsonControl.Control);
+			eventsDetailLayout.EndVertical();
 
-			var agentsLayout = new DynamicLayout();
-			agentsLayout.BeginVertical();
-			agentsLayout.BeginHorizontal();
-			agentsLayout.Add(agentsGridView);
-			agentsLayout.BeginVertical();
-			agentsLayout.Add(agentControl.Control);
-			agentsLayout.EndVertical();
-			agentsLayout.EndHorizontal();
-			agentsLayout.EndVertical();
+			var eventsSplitter = new Splitter {Panel1 = eventsGridView, Panel2 = eventsDetailLayout, Position = 300};
+
+			var agentsDetailLayout = new DynamicLayout();
+			agentsDetailLayout.BeginVertical(new Padding(10));
+			agentsDetailLayout.Add(agentControl.Control);
+			agentsDetailLayout.EndVertical();
+
+			var agentSplitter = new Splitter {Panel1 = agentsGridView, Panel2 = agentsDetailLayout, Position = 300};
 
 			var processedTabControl = new TabControl();
-			processedTabControl.Pages.Add(new TabPage(eventsLayout) {Text = "Events"});
-			processedTabControl.Pages.Add(new TabPage(agentsLayout) {Text = "Agents"});
+			processedTabControl.Pages.Add(new TabPage(eventsSplitter) {Text = "Events"});
+			processedTabControl.Pages.Add(new TabPage(agentSplitter) {Text = "Agents"});
 
 			var statisticsTabControl = new TabControl();
 			statisticsJsonControl = new JsonSerializationControl();
