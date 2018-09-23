@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ScratchEVTCParser.Events;
 using ScratchEVTCParser.Model.Agents;
+using ScratchEVTCParser.Model.Encounters;
 using ScratchEVTCParser.Model.Skills;
 
 namespace ScratchEVTCParser.Model
@@ -16,11 +17,11 @@ namespace ScratchEVTCParser.Model
 		public IEnumerable<Agent> Agents => agents;
 		public IEnumerable<Skill> Skills => skills;
 
-		public Agent Boss { get; }
+		public IEncounter Encounter { get; }
 
-		public Log(Agent boss, IEnumerable<Event> events, IEnumerable<Agent> agents, IEnumerable<Skill> skills)
+		public Log(IEncounter encounter, IEnumerable<Event> events, IEnumerable<Agent> agents, IEnumerable<Skill> skills)
 		{
-			Boss = boss;
+			Encounter = encounter;
 			this.events = events.ToArray();
 			this.agents = agents.ToArray();
 			this.skills = skills.ToArray();

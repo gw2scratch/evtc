@@ -4,6 +4,8 @@ using System.Linq;
 using ScratchEVTCParser.Events;
 using ScratchEVTCParser.Model;
 using ScratchEVTCParser.Model.Agents;
+using ScratchEVTCParser.Model.Encounters;
+using ScratchEVTCParser.Model.Encounters.Phases;
 using ScratchEVTCParser.Statistics;
 
 namespace ScratchEVTCParser
@@ -12,15 +14,11 @@ namespace ScratchEVTCParser
 	{
 		public LogStatistics GetStatistics(Log log)
 		{
-			var boss = log.Boss;
-			var fightStartEvent = log.Events.OfType<AgentEnterCombatEvent>().First(x => x.Agent == boss);
+			var boss = log.Encounter.ImportantAgents.First(); // TODO: REMOVE
+			var fightStartEvent = log.Events.OfType<AgentEnterCombatEvent>().FirstOrDefault(x => x.Agent == boss) ??
+			                      log.Events.First();
 			var fightEndEvent = log.Events.OfType<AgentDeadEvent>().FirstOrDefault(x => x.Agent == boss) ??
 			                    log.Events.Last();
-
-
-			bool bossDead = log.Events.OfType<AgentDeadEvent>().Any(x => x.Agent == boss);
-
-			var encounterResult = bossDead ? EncounterResult.Success : EncounterResult.Failure;
 
 			long fightTimeMs = fightEndEvent.Time - fightStartEvent.Time;
 
@@ -88,7 +86,8 @@ namespace ScratchEVTCParser
 			float bossConditionDps = bossConditionDamage * 1000f / fightTimeMs;
 			float bossPhysicalDps = bossPhysicalDamage * 1000f / fightTimeMs;
 
-			return new LogStatistics(fightTimeMs, bossDps, bossConditionDps, bossPhysicalDps, bossDamagesByAgent, encounterResult);
+			return new LogStatistics(fightTimeMs, bossDps, bossConditionDps, bossPhysicalDps, bossDamagesByAgent,
+				log.Encounter.GetResult());
 		}
 	}
 }

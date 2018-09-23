@@ -5,6 +5,8 @@ using System.Runtime.InteropServices;
 using ScratchEVTCParser.Events;
 using ScratchEVTCParser.Model;
 using ScratchEVTCParser.Model.Agents;
+using ScratchEVTCParser.Model.Encounters;
+using ScratchEVTCParser.Model.Encounters.Phases;
 using ScratchEVTCParser.Model.Skills;
 using ScratchEVTCParser.Parsed;
 using ScratchEVTCParser.Parsed.Enums;
@@ -60,7 +62,31 @@ namespace ScratchEVTCParser
 
 			SetAgentAwareTimes(agents, events);
 			AssignAgentMasters(log, agents); // Needs to be done after setting aware times
-			return new Log(boss, events, agents, skills);
+
+			var encounter = GetEncounter(boss, skills, events);
+
+			return new Log(encounter, events, agents, skills);
+		}
+
+		private IEncounter GetEncounter(NPC boss, Skill[] skills, Event[] events)
+		{
+			IEncounter encounter = new DefaultEncounter(boss, events);
+
+			if (boss.SpeciesId == SpeciesIds.ValeGuardian)
+			{
+				encounter = new BaseEncounter(new[] {boss},
+					events,
+					new PhaseSplitter(boss,
+						new StartTrigger("Phase 1"),
+						new BuffAddTrigger(boss, skills.First(x => x.Id == 757), "Split 1"),
+						new BuffRemoveTrigger(boss, skills.First(x => x.Id == 757), "Phase 2"),
+						new BuffAddTrigger(boss, skills.First(x => x.Id == 757), "Split 2"),
+						new BuffRemoveTrigger(boss, skills.First(x => x.Id == 757), "Phase 3")
+					),
+					new AgentDeathResultDeterminer(boss));
+			}
+
+			return encounter;
 		}
 
 		private IEnumerable<Skill> GetSkills(ParsedLog log)

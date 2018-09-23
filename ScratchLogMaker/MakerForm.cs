@@ -100,7 +100,7 @@ namespace ScratchLogMaker
 
 							using (var htmlStringWriter = new StreamWriter(resultFilename))
 							{
-								generator.WriteHtml(htmlStringWriter, processedLog, stats);
+								generator.WriteHtml(htmlStringWriter, stats);
 							}
 
 							times.Add(("html", (taskStopwatch.Elapsed - lastElapsed).TotalMilliseconds));

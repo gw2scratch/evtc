@@ -258,6 +258,7 @@ namespace ScratchLogBrowser
 				catch (Exception ex)
 				{
 					statusStringBuilder.AppendLine($"Statistics generation failed: {ex.Message}");
+					throw;
 				}
 
 				// HTML
@@ -265,7 +266,7 @@ namespace ScratchLogBrowser
 				sw.Restart();
 				try
 				{
-					generator.WriteHtml(htmlStringWriter, processedLog, stats);
+					generator.WriteHtml(htmlStringWriter, stats);
 					var htmlTime = sw.Elapsed;
 
 					statusStringBuilder.AppendLine($"HTML generated in {htmlTime}");

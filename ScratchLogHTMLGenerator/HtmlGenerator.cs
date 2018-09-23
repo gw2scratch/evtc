@@ -2,18 +2,22 @@
 using System.Linq;
 using ScratchEVTCParser.Model;
 using ScratchEVTCParser.Model.Agents;
+using ScratchEVTCParser.Model.Encounters;
 using ScratchEVTCParser.Statistics;
 
 namespace ScratchLogHTMLGenerator
 {
 	public class HtmlGenerator
 	{
-		public void WriteHtml(TextWriter writer, Log log, LogStatistics statistics)
+		public void WriteHtml(TextWriter writer, LogStatistics statistics)
 		{
+			string result = (statistics.EncounterResult == EncounterResult.Success ? "Success"
+				: statistics.EncounterResult == EncounterResult.Failure ? "Failure" : "Result unknown");
+
 			writer.Write($@"<!DOCTYPE html>
 <html>
 <head>
-    <title>{log.Boss.Name}</title>
+    <title>{statistics.EncounterName}</title>
     <meta charset='utf-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css'>
@@ -22,9 +26,8 @@ namespace ScratchLogHTMLGenerator
 <body>
 <section class='section'>
 <div class='container'>
-    <h1 class='title'>{log.Boss.Name}</h1>
-    <div class='subtitle'>{(statistics.EncounterResult == EncounterResult.Success ? "Success"
-				: statistics.EncounterResult == EncounterResult.Failure ? "Failure" : "Result unknown")} in {statistics.FightTimeMs / 1000 / 60}m {statistics.FightTimeMs / 1000 % 60}s {statistics.FightTimeMs % 1000}ms</div>
+    <h1 class='title'>{statistics.EncounterName}</h1>
+    <div class='subtitle'>{result} in {statistics.FightTimeMs / 1000 / 60}m {statistics.FightTimeMs / 1000 % 60}s {statistics.FightTimeMs % 1000}ms</div>
 <div class='content'>
     <table class='table is-narrow is-striped is-hoverable'>
         <thead>
@@ -40,7 +43,7 @@ namespace ScratchLogHTMLGenerator
 			{
 				var player = (Player) pair.Key;
 				var damage = pair.Value;
-				var specialization = player.EliteSpecialization == EliteSpecialization.None
+				string specialization = player.EliteSpecialization == EliteSpecialization.None
 					? player.Profession.ToString()
 					: player.EliteSpecialization.ToString();
 				writer.Write($@"
