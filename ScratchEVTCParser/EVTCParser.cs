@@ -10,30 +10,24 @@ using ScratchEVTCParser.Parsed.Enums;
 namespace ScratchEVTCParser
 {
 	// Based on the Elite Insights parser
-
 	public class EVTCParser
 	{
 		public ParsedLog ParseLog(string evtcFilename)
 		{
-			using (var fileStream = new FileStream(evtcFilename, FileMode.Open, FileAccess.Read, FileShare.Read))
+			if (evtcFilename.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
 			{
-				if (evtcFilename.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
+				using (var fileStream = new FileStream(evtcFilename, FileMode.Open, FileAccess.Read, FileShare.Read))
+				using (var arch = new ZipArchive(fileStream, ZipArchiveMode.Read))
+				using (var data = arch.Entries[0].Open())
 				{
-					using (var arch = new ZipArchive(fileStream, ZipArchiveMode.Read))
-					using (var data = arch.Entries[0].Open())
-					using (var memoryStream = new MemoryStream())
-					{
-						data.CopyTo(memoryStream);
-						return ParseLog(memoryStream.ToArray());
-					}
-				}
-
-				using (var memoryStream = new MemoryStream())
-				{
-					fileStream.CopyTo(memoryStream);
-                    return ParseLog(memoryStream.ToArray());
+					var bytes = new byte[arch.Entries[0].Length];
+					data.Read(bytes, 0, bytes.Length);
+					return ParseLog(bytes);
 				}
 			}
+
+			var fileBytes = File.ReadAllBytes(evtcFilename);
+			return ParseLog(fileBytes);
 		}
 
 
@@ -253,11 +247,11 @@ namespace ScratchEVTCParser
 		private IEnumerable<ParsedCombatItem> ParseCombatItems(ByteArrayBinaryReader reader)
 		{
 			// 64 bytes: each combat
-            while (reader.Length - reader.Position >= 64)
-            {
-                ParsedCombatItem combatItem = ReadCombatItem(reader);
-                yield return combatItem;
-            }
+			while (reader.Length - reader.Position >= 64)
+			{
+				ParsedCombatItem combatItem = ReadCombatItem(reader);
+				yield return combatItem;
+			}
 		}
 	}
 }
