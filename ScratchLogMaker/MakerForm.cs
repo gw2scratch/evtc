@@ -116,6 +116,11 @@ namespace ScratchLogMaker
 						catch (Exception e)
 						{
 							finishedFileNames.Add($"FAILED: {resultFilename} ({e.Message})");
+							Application.Instance.Invoke(() =>
+							{
+								notDoneListBox.DataStore = notFinishedFileNames.Select(Path.GetFileName).ToArray();
+								doneListBox.DataStore = finishedFileNames.Select(Path.GetFileName).ToArray();
+							});
 						}
 						Console.WriteLine($"{newName} done, time {taskStopwatch.Elapsed}");
 						finishedTaskCount++;
