@@ -333,26 +333,31 @@ namespace ScratchEVTCParser
 						case StateChange.Position:
 						{
 							// TODO: Check results
-							float x = item.DstAgent & 0xFFFFFFFF;
-							float y = (item.DstAgent >> 32) & 0xFFFFFFFF;
-							float z = item.Value & 0xFFFFFFFF;
+							byte[] xyBytes = BitConverter.GetBytes(item.DstAgent);
+							float x = BitConverter.ToSingle(xyBytes, 0);
+							float y = BitConverter.ToSingle(xyBytes, 4);
+							byte[] zBytes = BitConverter.GetBytes(item.Value);
+							float z = BitConverter.ToSingle(zBytes, 0);
 							yield return new PositionChangeEvent(item.Time, GetAgentByAddress(item.SrcAgent), x, y, z);
 							break;
 						}
 						case StateChange.Velocity:
 						{
 							// TODO: Check results
-							float x = item.DstAgent & 0xFFFFFFFF;
-							float y = (item.DstAgent >> 32) & 0xFFFFFFFF;
-							float z = item.Value & 0xFFFFFFFF;
+							byte[] xyBytes = BitConverter.GetBytes(item.DstAgent);
+							float x = BitConverter.ToSingle(xyBytes, 0);
+							float y = BitConverter.ToSingle(xyBytes, 4);
+							byte[] zBytes = BitConverter.GetBytes(item.Value);
+							float z = BitConverter.ToSingle(zBytes, 0);
 							yield return new VelocityChangeEvent(item.Time, GetAgentByAddress(item.SrcAgent), x, y, z);
 							break;
 						}
 						case StateChange.Rotation:
 						{
 							// TODO: Check results
-							float x = item.DstAgent & 0xFFFFFFFF;
-							float y = (item.DstAgent >> 32) & 0xFFFFFFFF;
+							byte[] xyBytes = BitConverter.GetBytes(item.DstAgent);
+							float x = BitConverter.ToSingle(xyBytes, 0);
+							float y = BitConverter.ToSingle(xyBytes, 4);
 							yield return new FacingChangeEvent(item.Time, GetAgentByAddress(item.SrcAgent), x, y);
 							break;
 						}
