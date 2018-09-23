@@ -56,7 +56,7 @@ namespace ScratchEVTCParser
 			var skills = GetSkills(log).ToArray();
 			var events = GetEvents(agents, skills, log).ToArray();
 
-			var boss = agents.OfType<Boss>().First();
+			var boss = agents.OfType<NPC>().First(a => a.SpeciesId == log.ParsedBossData.ID);
 
 			SetAgentAwareTimes(agents, events);
 			AssignAgentMasters(log, agents); // Needs to be done after setting aware times
@@ -125,8 +125,7 @@ namespace ScratchEVTCParser
 						int volatileId = (int) (agent.Prof & 0xFFFF);
 						string name = agent.Name.Trim('\0');
 
-						yield return new Gadget(agent.Address, volatileId, name, agent.HitboxWidth,
-							agent.HitboxHeight);
+						yield return new Gadget(agent.Address, volatileId, name, agent.HitboxWidth, agent.HitboxHeight);
 					}
 					else
 					{
@@ -139,18 +138,8 @@ namespace ScratchEVTCParser
 						string name = agent.Name.Trim('\0');
 						int speciesId = (int) (agent.Prof & 0xFFFF);
 
-						if (speciesId == log.ParsedBossData.ID)
-						{
-							yield return new Boss(agent.Address, id, name, speciesId, agent.Toughness,
-								agent.Concentration, agent.Healing, agent.Condition, agent.HitboxWidth,
-								agent.HitboxHeight);
-						}
-						else
-						{
-							yield return new NPC(agent.Address, id, name, speciesId, agent.Toughness,
-								agent.Concentration, agent.Healing, agent.Condition, agent.HitboxWidth,
-								agent.HitboxHeight);
-						}
+						yield return new NPC(agent.Address, id, name, speciesId, agent.Toughness, agent.Concentration,
+							agent.Healing, agent.Condition, agent.HitboxWidth, agent.HitboxHeight);
 					}
 				}
 			}
