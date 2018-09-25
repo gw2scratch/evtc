@@ -3,19 +3,21 @@ using System.Collections.Generic;
 using ScratchEVTCParser.Events;
 using ScratchEVTCParser.Model.Agents;
 
-namespace ScratchEVTCParser.Model.Encounters.Phases
+namespace ScratchEVTCParser.Statistics.Encounters
 {
 	public class PhaseSplitter
 	{
+		private readonly Agent boss;
 		private readonly IPhaseTrigger[] triggers;
 
-		public PhaseSplitter(params IPhaseTrigger[] triggers)
+		public PhaseSplitter(Agent boss, params IPhaseTrigger[] triggers)
 		{
 			if (triggers.Length == 0)
 			{
 				throw new ArgumentException("At least one phase trigger must be provided", nameof(triggers));
 			}
 
+			this.boss = boss;
 			this.triggers = triggers;
 		}
 
@@ -50,7 +52,7 @@ namespace ScratchEVTCParser.Model.Encounters.Phases
 					eventsInPhase.Clear();
 					if (currentTriggerIndex + 1 < triggers.Length)
 					{
-						currentTrigger = triggers[++currentTriggerIndex];
+						currentTrigger = triggers[currentTriggerIndex++];
 					}
 					else
 					{

@@ -7,24 +7,27 @@ namespace ScratchEVTCParser.Statistics
 {
 	public class LogStatistics
 	{
+		public IEnumerable<PhaseStats> PhaseStats { get; }
 		public string EncounterName { get; }
-
-		public long FightTimeMs { get; }
-		public float BossDps { get; }
-		public float BossConditionDps { get; }
-		public float BossPhysicalDps { get; }
-		public IReadOnlyDictionary<Agent, TargetDamageData> BossDamageByAgent { get; }
 		public EncounterResult EncounterResult { get; }
 
-		public LogStatistics(long fightTimeMs, float bossDps, float bossConditionDps, float bossPhysicalDps,
-			Dictionary<Agent, TargetDamageData> bossDamageByAgent, EncounterResult encounterResult)
+		public long FightTimeMs { get; }
+		public string LogVersion { get; }
+
+		public IReadOnlyDictionary<string, int> EventCounts { get; }
+		public IEnumerable<Agent> Agents { get; }
+
+		public LogStatistics(IEnumerable<PhaseStats> phaseStats, EncounterResult encounterResult, string encounterName,
+			string logVersion, IReadOnlyDictionary<string, int> eventCounts, IEnumerable<Agent> agents)
 		{
-			FightTimeMs = fightTimeMs;
-			BossDps = bossDps;
-			BossConditionDps = bossConditionDps;
-			BossPhysicalDps = bossPhysicalDps;
-			BossDamageByAgent = bossDamageByAgent;
+			EncounterName = encounterName;
+			LogVersion = logVersion;
 			EncounterResult = encounterResult;
+			EventCounts = eventCounts;
+
+			PhaseStats = phaseStats as PhaseStats[] ?? phaseStats.ToArray();
+			FightTimeMs = PhaseStats.Sum(x => x.PhaseDuration);
+			Agents = agents as Agent[] ?? agents.ToArray();
 		}
 	}
 }

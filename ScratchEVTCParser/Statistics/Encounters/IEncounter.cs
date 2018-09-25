@@ -1,8 +1,9 @@
 using System.Collections.Generic;
+using ScratchEVTCParser.Events;
 using ScratchEVTCParser.Model.Agents;
-using ScratchEVTCParser.Model.Encounters.Phases;
+using ScratchEVTCParser.Statistics.Encounters.Phases;
 
-namespace ScratchEVTCParser.Model.Encounters
+namespace ScratchEVTCParser.Statistics.Encounters
 {
 	public interface IEncounter
 	{
@@ -10,6 +11,5 @@ namespace ScratchEVTCParser.Model.Encounters
 
 		EncounterResult GetResult();
 		IEnumerable<Phase> GetPhases();
-		string GetName();
 	}
 }

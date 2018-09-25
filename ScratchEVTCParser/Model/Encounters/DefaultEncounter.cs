@@ -9,7 +9,8 @@ namespace ScratchEVTCParser.Model.Encounters
 	public class DefaultEncounter : BaseEncounter
 	{
 		public DefaultEncounter(Agent boss, IEnumerable<Event> events) : base(new[] {boss}, events,
-			new PhaseSplitter(boss, new StartTrigger("Default phase")), new AgentDeathResultDeterminer(boss))
+			new PhaseSplitter(new StartTrigger("Default phase")), new AgentDeathResultDeterminer(boss),
+			new AgentNameEncounterNameProvider(boss))
 		{
 		}
 	}
@@ -18,14 +19,16 @@ namespace ScratchEVTCParser.Model.Encounters
 	{
 		private readonly PhaseSplitter phaseSplitter;
 		private readonly IResultDeterminer resultDeterminer;
+		private readonly IEncounterNameProvider nameProvider;
 		private readonly Event[] events;
 
 		public BaseEncounter(IEnumerable<Agent> importantAgents, IEnumerable<Event> events, PhaseSplitter phaseSplitter,
-			IResultDeterminer resultDeterminer)
+			IResultDeterminer resultDeterminer, IEncounterNameProvider nameProvider)
 		{
 			ImportantAgents = importantAgents.ToArray();
 			this.phaseSplitter = phaseSplitter;
 			this.resultDeterminer = resultDeterminer;
+			this.nameProvider = nameProvider;
 			this.events = events as Event[] ?? events.ToArray();
 		}
 
@@ -39,6 +42,11 @@ namespace ScratchEVTCParser.Model.Encounters
 		public IEnumerable<Phase> GetPhases()
 		{
 			return phaseSplitter.GetEventsByPhases(events);
+		}
+
+		public string GetName()
+		{
+			return nameProvider.GetEncounterName();
 		}
 	}
 }

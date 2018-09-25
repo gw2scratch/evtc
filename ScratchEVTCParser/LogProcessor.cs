@@ -65,7 +65,7 @@ namespace ScratchEVTCParser
 
 			var encounter = GetEncounter(boss, skills, events);
 
-			return new Log(encounter, events, agents, skills);
+			return new Log(encounter, events, agents, skills, log.LogVersion.BuildVersion);
 		}
 
 		private IEncounter GetEncounter(NPC boss, Skill[] skills, Event[] events)
@@ -76,14 +76,15 @@ namespace ScratchEVTCParser
 			{
 				encounter = new BaseEncounter(new[] {boss},
 					events,
-					new PhaseSplitter(boss,
+					new PhaseSplitter(
 						new StartTrigger("Phase 1"),
 						new BuffAddTrigger(boss, skills.First(x => x.Id == 757), "Split 1"),
 						new BuffRemoveTrigger(boss, skills.First(x => x.Id == 757), "Phase 2"),
 						new BuffAddTrigger(boss, skills.First(x => x.Id == 757), "Split 2"),
 						new BuffRemoveTrigger(boss, skills.First(x => x.Id == 757), "Phase 3")
 					),
-					new AgentDeathResultDeterminer(boss));
+					new AgentDeathResultDeterminer(boss),
+					new AgentNameEncounterNameProvider(boss));
 			}
 
 			return encounter;

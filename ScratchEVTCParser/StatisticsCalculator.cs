@@ -4,8 +4,6 @@ using System.Linq;
 using ScratchEVTCParser.Events;
 using ScratchEVTCParser.Model;
 using ScratchEVTCParser.Model.Agents;
-using ScratchEVTCParser.Model.Encounters;
-using ScratchEVTCParser.Model.Encounters.Phases;
 using ScratchEVTCParser.Statistics;
 
 namespace ScratchEVTCParser
@@ -14,80 +12,91 @@ namespace ScratchEVTCParser
 	{
 		public LogStatistics GetStatistics(Log log)
 		{
-			var boss = log.Encounter.ImportantAgents.First(); // TODO: REMOVE
-			var fightStartEvent = log.Events.OfType<AgentEnterCombatEvent>().FirstOrDefault(x => x.Agent == boss) ??
-			                      log.Events.First();
-			var fightEndEvent = log.Events.OfType<AgentDeadEvent>().FirstOrDefault(x => x.Agent == boss) ??
-			                    log.Events.Last();
-
-			long fightTimeMs = fightEndEvent.Time - fightStartEvent.Time;
-
-			var physicalBossDamages = log.Events
-				.OfType<PhysicalDamageEvent>()
-				.Where(x => x.Defender == boss)
-				.GroupBy(x => x.Attacker, (attacker, events) => (attacker, events.Sum(x => x.Damage)));
-
-			var conditionBossDamages = log.Events
-				.OfType<BuffDamageEvent>()
-				.Where(x => x.Defender == boss)
-				.GroupBy(x => x.Attacker, (attacker, events) => (attacker, events.Sum(x => x.Damage)));
-
-			var bossDamagesByAgent = new Dictionary<Agent, TargetDamageData>();
-
-			foreach ((var attacker, int damage) in physicalBossDamages)
+			var phaseStats = new List<PhaseStats>();
+			foreach (var phase in log.Encounter.GetPhases())
 			{
-				if (attacker == null)
+				var targetDamageData = new List<TargetDamageData>();
+
+				long phaseDuration = phase.EndTime - phase.StartTime;
+				foreach (var target in log.Encounter.ImportantAgents)
 				{
-					continue; // TODO: Save as unknown damage
+					var physicalBossDamages = phase.Events
+						.OfType<PhysicalDamageEvent>()
+						.Where(x => x.Defender == target)
+						.GroupBy(x => x.Attacker, (attacker, events) => (attacker, events.Sum(x => x.Damage)));
+
+					var conditionBossDamages = phase.Events
+						.OfType<BuffDamageEvent>()
+						.Where(x => x.Defender == target)
+						.GroupBy(x => x.Attacker, (attacker, events) => (attacker, events.Sum(x => x.Damage)));
+
+					var damageDataByAttacker = new Dictionary<Agent, DamageData>();
+
+					foreach ((var attacker, int damage) in physicalBossDamages)
+					{
+						if (attacker == null)
+						{
+							continue; // TODO: Save as unknown damage
+						}
+
+						var mainMaster = attacker;
+						while (mainMaster.Master != null)
+						{
+							mainMaster = attacker.Master;
+						}
+
+						if (!damageDataByAttacker.ContainsKey(mainMaster))
+						{
+							damageDataByAttacker[mainMaster] = new DamageData(mainMaster, phaseDuration, 0, 0);
+						}
+
+						damageDataByAttacker[mainMaster] += new DamageData(mainMaster, phaseDuration, damage, 0);
+					}
+
+					foreach ((var attacker, int damage) in conditionBossDamages)
+					{
+						if (attacker == null)
+						{
+							continue; // TODO: Save as unknown damage
+						}
+
+						var mainMaster = attacker;
+						while (mainMaster.Master != null)
+						{
+							mainMaster = attacker.Master;
+						}
+
+						if (!damageDataByAttacker.ContainsKey(mainMaster))
+						{
+							damageDataByAttacker[mainMaster] = new DamageData(mainMaster, phaseDuration, 0, 0);
+						}
+
+						damageDataByAttacker[mainMaster] += new DamageData(mainMaster, phaseDuration, 0, damage);
+					}
+
+					targetDamageData.Add(new TargetDamageData(target, phaseDuration, damageDataByAttacker.Values));
 				}
 
-				var mainMaster = attacker;
-				while (mainMaster.Master != null)
-				{
-					mainMaster = attacker.Master;
-				}
-
-				if (!bossDamagesByAgent.ContainsKey(mainMaster))
-				{
-					bossDamagesByAgent[mainMaster] = new TargetDamageData(fightTimeMs, 0, 0, boss);
-				}
-
-				bossDamagesByAgent[mainMaster] += new TargetDamageData(fightTimeMs, damage, 0, boss);
+				phaseStats.Add(new PhaseStats(phase.Name, phase.StartTime, phase.EndTime, targetDamageData));
 			}
 
-			foreach ((var attacker, int damage) in conditionBossDamages)
+			var eventCounts = new Dictionary<Type, int>();
+			foreach (var e in log.Events)
 			{
-				if (attacker == null)
+				var type = e.GetType();
+				if (!eventCounts.ContainsKey(type))
 				{
-					continue; // TODO: Save as unknown damage
+					eventCounts[type] = 0;
 				}
 
-				var mainMaster = attacker;
-				while (mainMaster.Master != null)
-				{
-					mainMaster = attacker.Master;
-				}
-
-				if (!bossDamagesByAgent.ContainsKey(mainMaster))
-				{
-					bossDamagesByAgent[mainMaster] = new TargetDamageData(fightTimeMs, 0, 0, boss);
-				}
-
-				bossDamagesByAgent[mainMaster] += new TargetDamageData(fightTimeMs, 0, damage, boss);
+				eventCounts[type]++;
 			}
 
-			int bossDamage = log.Events.OfType<DamageEvent>().Where(x => x.Defender == boss).Sum(x => x.Damage);
-			int bossConditionDamage =
-				log.Events.OfType<BuffDamageEvent>().Where(x => x.Defender == boss).Sum(x => x.Damage);
-			int bossPhysicalDamage = log.Events.OfType<PhysicalDamageEvent>().Where(x => x.Defender == boss)
-				.Sum(x => x.Damage);
+			var eventCountsByName =
+				eventCounts.Select(x => (x.Key.Name, x.Value)).ToDictionary(x => x.Item1, x => x.Item2);
 
-			float bossDps = bossDamage * 1000f / fightTimeMs;
-			float bossConditionDps = bossConditionDamage * 1000f / fightTimeMs;
-			float bossPhysicalDps = bossPhysicalDamage * 1000f / fightTimeMs;
-
-			return new LogStatistics(fightTimeMs, bossDps, bossConditionDps, bossPhysicalDps, bossDamagesByAgent,
-				log.Encounter.GetResult());
+			return new LogStatistics(phaseStats, log.Encounter.GetResult(), log.Encounter.GetName(), log.EVTCVersion,
+				eventCountsByName, log.Agents);
 		}
 	}
 }

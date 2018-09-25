@@ -18,10 +18,12 @@ namespace ScratchEVTCParser.Model
 		public IEnumerable<Skill> Skills => skills;
 
 		public IEncounter Encounter { get; }
+		public string EVTCVersion { get; }
 
-		public Log(IEncounter encounter, IEnumerable<Event> events, IEnumerable<Agent> agents, IEnumerable<Skill> skills)
+		public Log(IEncounter encounter, IEnumerable<Event> events, IEnumerable<Agent> agents, IEnumerable<Skill> skills, string evtcVersion)
 		{
 			Encounter = encounter;
+			EVTCVersion = evtcVersion;
 			this.events = events.ToArray();
 			this.agents = agents.ToArray();
 			this.skills = skills.ToArray();
