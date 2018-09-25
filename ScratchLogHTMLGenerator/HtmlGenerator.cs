@@ -47,9 +47,12 @@ namespace ScratchLogHTMLGenerator
 
 			WriteMenu(writer, stats);
 
-			writer.WriteLine(@"
+			writer.WriteLine($@"
         <div id='tab-general' class='content column scratch-tab'>
-			General tab
+            <div class='title is-4'>Total damage in encounter</div>
+            <div class='subtitle is-6'>Duration: {MillisecondsToReadableFormat(stats.TotalSquadDamageData.TimeMs)}</div>");
+			WriteDamageTable(writer, stats.TotalSquadDamageData);
+			writer.WriteLine(@"
 		</div>");
 
 			writer.WriteLine(@"
@@ -68,12 +71,28 @@ namespace ScratchLogHTMLGenerator
 			foreach (var phaseStats in stats.PhaseStats)
 			{
 				writer.WriteLine($@"
-        <div id='tab-phase-{phaseIndex++}' class='content column scratch-tab is-hidden'>");
+        <div id='tab-phase-{phaseIndex}' class='content column scratch-tab is-hidden'>");
 				writer.WriteLine($@"
-            <div class='title is-4'>{phaseStats.PhaseName}</div>
+            <div class='title is-4'>Total damage in {phaseStats.PhaseName}</div>
             <div class='subtitle is-6'>Duration: {MillisecondsToReadableFormat(phaseStats.PhaseDuration)}</div>");
-				WriteDamageTable(writer, phaseStats);
-				writer.WriteLine($@"</div>");
+				WriteDamageTable(writer, phaseStats.TotalDamageData);
+				writer.WriteLine($@"
+        </div>");
+				int targetIndex = 0;
+				foreach (var target in phaseStats.TargetDamageData)
+				{
+
+				writer.WriteLine($@"
+        <div id='tab-enemy-{phaseIndex}-{targetIndex++}' class='content column scratch-tab is-hidden'>");
+				writer.WriteLine($@"
+            <div class='title is-4'>Target damage to {target.Target.Name}</div>
+            <div class='subtitle is-6'>Duration: {MillisecondsToReadableFormat(target.TimeMs)}</div>");
+				WriteDamageTable(writer, target);
+				writer.WriteLine($@"
+        </div>");
+				}
+
+				phaseIndex++;
 			}
 
 			writer.WriteLine($@"
@@ -178,6 +197,7 @@ namespace ScratchLogHTMLGenerator
             </tr>");
 				}
 			}
+
 			writer.WriteLine($@"
         </tbody>
     </table>");
@@ -236,19 +256,26 @@ namespace ScratchLogHTMLGenerator
 			foreach (var phase in stats.PhaseStats)
 			{
 				writer.WriteLine($@"
-		  <li>
-			<a id='tablink-phase-{phaseIndex++}' onclick='openTab(this)' class='scratch-tablink'>{phase.PhaseName}</a>
-			<ul>");
+			<li>
+                <a id='tablink-phase-{phaseIndex}' onclick='openTab(this)' class='scratch-tablink'>{phase.PhaseName}</a>
+                <ul>");
 
+				int targetIndex = 0;
 				foreach (var damageData in phase.TargetDamageData)
 				{
 					writer.WriteLine($@"
-			  <li><a>{damageData.Target.Name}</a></li>");
+                    <li>
+                        <a id='tablink-enemy-{phaseIndex}-{targetIndex++}' onclick='openTab(this)' class='scratch-tablink'>
+                        {damageData.Target.Name}
+                        </a>
+                    </li>");
 				}
 
 				writer.WriteLine($@"
-			</ul>
-		  </li>");
+                </ul>
+			</li>");
+
+				phaseIndex++;
 			}
 
 			writer.WriteLine(@"
@@ -270,12 +297,9 @@ namespace ScratchLogHTMLGenerator
 			return $"{milliseconds / 1000 / 60}m {milliseconds / 1000 % 60}s {milliseconds % 1000}ms";
 		}
 
-		private void WriteDamageTable(TextWriter writer, PhaseStats phaseStats)
+		private void WriteDamageTable(TextWriter writer, SquadDamageData squadDamageData)
 		{
-			foreach (var targetDamageData in phaseStats.TargetDamageData)
-			{
-				writer.WriteLine($@"
-	<div class='title is-5'>{targetDamageData.Target.Name}</div>
+			writer.WriteLine($@"
     <table class='table is-narrow is-striped is-hoverable'>
         <thead>
         <tr>
@@ -289,14 +313,14 @@ namespace ScratchLogHTMLGenerator
         </tr>
         </thead>
         <tbody>");
-				foreach (var damageData in targetDamageData.DamageData.Where(x => x.Attacker is Player)
-					.OrderByDescending(x => x.TotalDps))
-				{
-					var player = (Player) damageData.Attacker;
-					string specialization = player.EliteSpecialization == EliteSpecialization.None
-						? player.Profession.ToString()
-						: player.EliteSpecialization.ToString();
-					writer.WriteLine($@"
+			foreach (var damageData in squadDamageData.DamageData.Where(x => x.Attacker is Player)
+				.OrderByDescending(x => x.TotalDps))
+			{
+				var player = (Player) damageData.Attacker;
+				string specialization = player.EliteSpecialization == EliteSpecialization.None
+					? player.Profession.ToString()
+					: player.EliteSpecialization.ToString();
+				writer.WriteLine($@"
 		<tr>
             <td>{player.Subgroup}</td>
             <td>{specialization}</td>
@@ -306,20 +330,19 @@ namespace ScratchLogHTMLGenerator
             <td>{damageData.PhysicalDps:0}</td>
             <td>{damageData.ConditionDps:0}</td>
 		</tr>");
-				}
+			}
 
-				writer.WriteLine($@"
+			writer.WriteLine($@"
         </tbody>
 		<tfoot>
 		<tr>
             <td colspan='4'><b>Total</b></td>
-            <td><b>{targetDamageData.TotalDps:0}<b></td>
-            <td>{targetDamageData.TotalPhysicalDps:0}</td>
-            <td>{targetDamageData.TotalConditionDps:0}</td>
+            <td><b>{squadDamageData.TotalDps:0}<b></td>
+            <td>{squadDamageData.TotalPhysicalDps:0}</td>
+            <td>{squadDamageData.TotalConditionDps:0}</td>
 		</tr>
 		</tfoot>
     </table>");
-			}
 		}
 	}
 }

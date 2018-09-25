@@ -15,18 +15,13 @@ namespace ScratchEVTCParser.Statistics
 		public float PhysicalDps => PhysicalDamage * 1000 / TimeMs;
 		public float TotalDps => TotalDamage * 1000 / TimeMs;
 
-		public DamageData(Agent attacker, long timeMs, float physicalDamage, float conditionDamage) : this(attacker,
-			timeMs, physicalDamage, conditionDamage, conditionDamage + physicalDamage)
-		{
-		}
-
-		public DamageData(Agent attacker, long timeMs, float physicalDamage, float conditionDamage, float totalDamage)
+		public DamageData(Agent attacker, long timeMs, float physicalDamage, float conditionDamage)
 		{
 			TimeMs = timeMs;
 			ConditionDamage = conditionDamage;
 			PhysicalDamage = physicalDamage;
-			TotalDamage = totalDamage;
 			Attacker = attacker;
+			TotalDamage = ConditionDamage + PhysicalDamage;
 		}
 
 		public static DamageData operator +(DamageData first, DamageData second)

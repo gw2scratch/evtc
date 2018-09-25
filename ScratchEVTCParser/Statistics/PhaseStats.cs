@@ -11,11 +11,13 @@ namespace ScratchEVTCParser.Statistics
 
 		public string PhaseName { get; }
 
-		public IEnumerable<TargetDamageData> TargetDamageData { get; }
+		public SquadDamageData TotalDamageData { get; }
+		public IEnumerable<TargetSquadDamageData> TargetDamageData { get; }
 
-		public PhaseStats(string phaseName, long startTime, long endTime, IEnumerable<TargetDamageData> targetDamageData)
+		public PhaseStats(string phaseName, long startTime, long endTime, IEnumerable<TargetSquadDamageData> targetDamageData, SquadDamageData totalDamageData)
 		{
 			TargetDamageData = targetDamageData;
+			TotalDamageData = totalDamageData;
 			StartTime = startTime;
 			EndTime = endTime;
 			PhaseName = phaseName;

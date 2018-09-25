@@ -89,6 +89,7 @@
     <Compile Include="Statistics\LogStatistics.cs" />
     <Compile Include="Statistics\PhaseStats.cs" />
     <Compile Include="Statistics\DamageData.cs" />
+    <Compile Include="Statistics\SquadDamageData.cs" />
     <Compile Include="Statistics\TargetDamageData.cs" />
     <Compile Include="StreamExtensions.cs" />
   </ItemGroup>

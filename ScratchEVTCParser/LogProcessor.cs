@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using ScratchEVTCParser.Events;
 using ScratchEVTCParser.Model;
 using ScratchEVTCParser.Model.Agents;
@@ -78,9 +77,9 @@ namespace ScratchEVTCParser
 					events,
 					new PhaseSplitter(
 						new StartTrigger("Phase 1"),
-						new BuffAddTrigger(boss, skills.First(x => x.Id == 757), "Split 1"),
+						new BuffAddTrigger(boss, skills.First(x => x.Id == 757), "Split phase 1"),
 						new BuffRemoveTrigger(boss, skills.First(x => x.Id == 757), "Phase 2"),
-						new BuffAddTrigger(boss, skills.First(x => x.Id == 757), "Split 2"),
+						new BuffAddTrigger(boss, skills.First(x => x.Id == 757), "Split phase 2"),
 						new BuffRemoveTrigger(boss, skills.First(x => x.Id == 757), "Phase 3")
 					),
 					new AgentDeathResultDeterminer(boss),

@@ -1,33 +1,16 @@
 using System.Collections.Generic;
-using System.Linq;
 using ScratchEVTCParser.Model.Agents;
 
 namespace ScratchEVTCParser.Statistics
 {
-	public class TargetDamageData
+	public class TargetSquadDamageData : SquadDamageData
 	{
-		public long TimeMs { get; }
-
 		public Agent Target { get; }
-		public IEnumerable<DamageData> DamageData { get; }
 
-		public float TotalConditionDamage { get; }
-		public float TotalPhysicalDamage { get; }
-		public float TotalDamage { get; }
-
-		public float TotalConditionDps => TotalConditionDamage * 1000 / TimeMs;
-		public float TotalPhysicalDps => TotalPhysicalDamage * 1000 / TimeMs;
-		public float TotalDps => TotalDamage * 1000 / TimeMs;
-
-		public TargetDamageData(Agent target, long timeMs, IEnumerable<DamageData> damageData)
+		public TargetSquadDamageData(Agent target, long timeMs, IEnumerable<DamageData> damageData) : base(timeMs,
+			damageData)
 		{
-			TimeMs = timeMs;
 			Target = target;
-			DamageData = damageData.ToArray();
-
-			TotalConditionDamage = DamageData.Sum(x => x.ConditionDamage);
-			TotalPhysicalDamage = DamageData.Sum(x => x.PhysicalDamage);
-			TotalDamage = DamageData.Sum(x => x.TotalDamage);
 		}
 	}
 }

@@ -15,70 +15,29 @@ namespace ScratchEVTCParser
 			var phaseStats = new List<PhaseStats>();
 			foreach (var phase in log.Encounter.GetPhases())
 			{
-				var targetDamageData = new List<TargetDamageData>();
+				var targetDamageData = new List<TargetSquadDamageData>();
 
 				long phaseDuration = phase.EndTime - phase.StartTime;
 				foreach (var target in log.Encounter.ImportantAgents)
 				{
-					var physicalBossDamages = phase.Events
-						.OfType<PhysicalDamageEvent>()
-						.Where(x => x.Defender == target)
-						.GroupBy(x => x.Attacker, (attacker, events) => (attacker, events.Sum(x => x.Damage)));
-
-					var conditionBossDamages = phase.Events
-						.OfType<BuffDamageEvent>()
-						.Where(x => x.Defender == target)
-						.GroupBy(x => x.Attacker, (attacker, events) => (attacker, events.Sum(x => x.Damage)));
-
-					var damageDataByAttacker = new Dictionary<Agent, DamageData>();
-
-					foreach ((var attacker, int damage) in physicalBossDamages)
-					{
-						if (attacker == null)
-						{
-							continue; // TODO: Save as unknown damage
-						}
-
-						var mainMaster = attacker;
-						while (mainMaster.Master != null)
-						{
-							mainMaster = attacker.Master;
-						}
-
-						if (!damageDataByAttacker.ContainsKey(mainMaster))
-						{
-							damageDataByAttacker[mainMaster] = new DamageData(mainMaster, phaseDuration, 0, 0);
-						}
-
-						damageDataByAttacker[mainMaster] += new DamageData(mainMaster, phaseDuration, damage, 0);
-					}
-
-					foreach ((var attacker, int damage) in conditionBossDamages)
-					{
-						if (attacker == null)
-						{
-							continue; // TODO: Save as unknown damage
-						}
-
-						var mainMaster = attacker;
-						while (mainMaster.Master != null)
-						{
-							mainMaster = attacker.Master;
-						}
-
-						if (!damageDataByAttacker.ContainsKey(mainMaster))
-						{
-							damageDataByAttacker[mainMaster] = new DamageData(mainMaster, phaseDuration, 0, 0);
-						}
-
-						damageDataByAttacker[mainMaster] += new DamageData(mainMaster, phaseDuration, 0, damage);
-					}
-
-					targetDamageData.Add(new TargetDamageData(target, phaseDuration, damageDataByAttacker.Values));
+					var damageData = GetDamageData(
+						phase.Events
+							.OfType<DamageEvent>()
+							.Where(x => x.Defender == target)
+							.ToArray(),
+						phaseDuration);
+					targetDamageData.Add(new TargetSquadDamageData(target, phaseDuration, damageData.Values));
 				}
 
-				phaseStats.Add(new PhaseStats(phase.Name, phase.StartTime, phase.EndTime, targetDamageData));
+				var totalDamageData = new SquadDamageData(phaseDuration,
+					GetDamageData(phase.Events.OfType<DamageEvent>().ToArray(), phaseDuration).Values);
+
+				phaseStats.Add(new PhaseStats(phase.Name, phase.StartTime, phase.EndTime, targetDamageData,
+					totalDamageData));
 			}
+
+			var fightTime = log.Encounter.GetPhases().Sum(x => x.EndTime - x.StartTime);
+			var squadDamageData = new SquadDamageData(fightTime, GetDamageData(log.Events.OfType<DamageEvent>().ToArray(), fightTime).Values);
 
 			var eventCounts = new Dictionary<Type, int>();
 			foreach (var e in log.Events)
@@ -95,8 +54,65 @@ namespace ScratchEVTCParser
 			var eventCountsByName =
 				eventCounts.Select(x => (x.Key.Name, x.Value)).ToDictionary(x => x.Item1, x => x.Item2);
 
-			return new LogStatistics(phaseStats, log.Encounter.GetResult(), log.Encounter.GetName(), log.EVTCVersion,
-				eventCountsByName, log.Agents);
+
+			return new LogStatistics(phaseStats, squadDamageData, log.Encounter.GetResult(), log.Encounter.GetName(),
+				log.EVTCVersion, eventCountsByName, log.Agents);
+		}
+
+		private Dictionary<Agent, DamageData> GetDamageData(ICollection<DamageEvent> events, long phaseDuration)
+		{
+			var physicalBossDamages = events.OfType<PhysicalDamageEvent>();
+			var conditionBossDamages = events.OfType<BuffDamageEvent>();
+
+			var damageDataByAttacker = new Dictionary<Agent, DamageData>();
+
+			foreach (var damageEvent in physicalBossDamages)
+			{
+				var attacker = damageEvent.Attacker;
+				long damage = damageEvent.Damage;
+				if (attacker == null)
+				{
+					continue; // TODO: Save as unknown damage
+				}
+
+				var mainMaster = attacker;
+				while (mainMaster.Master != null)
+				{
+					mainMaster = attacker.Master;
+				}
+
+				if (!damageDataByAttacker.ContainsKey(mainMaster))
+				{
+					damageDataByAttacker[mainMaster] = new DamageData(mainMaster, phaseDuration, 0, 0);
+				}
+
+				damageDataByAttacker[mainMaster] += new DamageData(mainMaster, phaseDuration, damage, 0);
+			}
+
+			foreach (var damageEvent in conditionBossDamages)
+			{
+				var attacker = damageEvent.Attacker;
+				long damage = damageEvent.Damage;
+				if (attacker == null)
+				{
+					continue; // TODO: Save as unknown damage
+				}
+
+				var mainMaster = attacker;
+				while (mainMaster.Master != null)
+				{
+					mainMaster = attacker.Master;
+				}
+
+				if (!damageDataByAttacker.ContainsKey(mainMaster))
+				{
+					damageDataByAttacker[mainMaster] = new DamageData(mainMaster, phaseDuration, 0, 0);
+				}
+
+				damageDataByAttacker[mainMaster] += new DamageData(mainMaster, phaseDuration, 0, damage);
+			}
+
+			return damageDataByAttacker;
 		}
 	}
 }
