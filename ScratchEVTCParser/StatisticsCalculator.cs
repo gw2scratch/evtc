@@ -21,6 +21,7 @@ namespace ScratchEVTCParser
 				foreach (var target in log.Encounter.ImportantAgents)
 				{
 					var damageData = GetDamageData(
+						log.Agents,
 						phase.Events
 							.OfType<DamageEvent>()
 							.Where(x => x.Defender == target)
@@ -30,14 +31,19 @@ namespace ScratchEVTCParser
 				}
 
 				var totalDamageData = new SquadDamageData(phaseDuration,
-					GetDamageData(phase.Events.OfType<DamageEvent>().ToArray(), phaseDuration).Values);
+					GetDamageData(
+						log.Agents,
+						phase.Events.OfType<DamageEvent>().ToArray(),
+						phaseDuration).Values
+				);
 
 				phaseStats.Add(new PhaseStats(phase.Name, phase.StartTime, phase.EndTime, targetDamageData,
 					totalDamageData));
 			}
 
 			var fightTime = log.Encounter.GetPhases().Sum(x => x.EndTime - x.StartTime);
-			var squadDamageData = new SquadDamageData(fightTime, GetDamageData(log.Events.OfType<DamageEvent>().ToArray(), fightTime).Values);
+			var squadDamageData = new SquadDamageData(fightTime,
+				GetDamageData(log.Agents, log.Events.OfType<DamageEvent>().ToArray(), fightTime).Values);
 
 			var eventCounts = new Dictionary<Type, int>();
 			foreach (var e in log.Events)
@@ -59,12 +65,22 @@ namespace ScratchEVTCParser
 				log.EVTCVersion, eventCountsByName, log.Agents);
 		}
 
-		private Dictionary<Agent, DamageData> GetDamageData(ICollection<DamageEvent> events, long phaseDuration)
+		private Dictionary<Agent, DamageData> GetDamageData(IEnumerable<Agent> agents, ICollection<DamageEvent> events,
+			long phaseDuration)
 		{
 			var physicalBossDamages = events.OfType<PhysicalDamageEvent>();
 			var conditionBossDamages = events.OfType<BuffDamageEvent>();
 
 			var damageDataByAttacker = new Dictionary<Agent, DamageData>();
+
+			// Ensure all players are always in the damage data, even if they did no damage.
+			foreach (var player in agents.OfType<Player>())
+			{
+				if (!damageDataByAttacker.ContainsKey(player))
+				{
+					damageDataByAttacker[player] = new DamageData(player, phaseDuration, 0, 0);
+				}
+			}
 
 			foreach (var damageEvent in physicalBossDamages)
 			{
