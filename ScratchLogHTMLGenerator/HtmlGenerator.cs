@@ -58,6 +58,12 @@ namespace ScratchLogHTMLGenerator
 			writer.WriteLine(@"
 		</div>");
 
+			writer.WriteLine(@"
+        <div id='tab-agents' class='content column scratch-tab is-hidden'>");
+			WriteAgentList(writer, stats);
+			writer.WriteLine(@"
+		</div>");
+
 			int phaseIndex = 0;
 			foreach (var phaseStats in stats.PhaseStats)
 			{
@@ -90,10 +96,96 @@ namespace ScratchLogHTMLGenerator
 </html>");
 		}
 
+		private void WriteAgentList(TextWriter writer, LogStatistics stats)
+		{
+			writer.WriteLine($@"
+    <table class='table is-narrow is-striped is-hoverable'>
+        <thead>
+        <tr>
+            <th>Agent type</th>
+            <th>ID</th>
+			<th>Name</th>
+			<th>Master</th>
+			<th><abbr title='Toughness'>Tgh</abbr></th>
+			<th><abbr title='Condition damage'>Cnd</abbr></th>
+			<th><abbr title='Healing'>Heal</abbr></th>
+			<th><abbr title='Concentration'>Conc</abbr></th>
+			<th>Profession</th>
+			<th><abbr title='Elite Specialization'>Elite</abbr></th>
+			<th>Species ID</th>
+			<th>Hitbox Width</th>
+			<th>Hitbox Height</th>
+        </tr>
+        </thead>
+        <tbody>");
+			foreach (var agent in stats.Agents)
+			{
+				if (agent is Player player)
+				{
+					writer.WriteLine($@"
+            <tr>
+                <td>Player</td>
+                <td>{player.Id}</td>
+                <td>{player.Name}</td>
+                <td>{player.Master?.Name ?? ""}</td>
+                <td>{player.Toughness}</td>
+                <td>{player.Condition}</td>
+                <td>{player.Healing}</td>
+                <td>{player.Concentration}</td>
+                <td>{player.Profession}</td>
+                <td>{player.EliteSpecialization}</td>
+                <td></td>
+                <td>{player.HitboxWidth}</td>
+                <td>{player.HitboxHeight}</td>
+            </tr>");
+				}
+				else if (agent is NPC npc)
+				{
+					writer.WriteLine($@"
+            <tr>
+                <td>NPC</td>
+                <td>{npc.Id}</td>
+                <td>{npc.Name}</td>
+                <td>{npc.Master?.Name ?? ""}</td>
+                <td>{npc.Toughness}</td>
+                <td>{npc.Condition}</td>
+                <td>{npc.Healing}</td>
+                <td>{npc.Concentration}</td>
+                <td></td>
+                <td></td>
+                <td>{npc.SpeciesId}</td>
+                <td>{npc.HitboxWidth}</td>
+                <td>{npc.HitboxHeight}</td>
+            </tr>");
+				}
+				else if (agent is Gadget gadget)
+				{
+					writer.WriteLine($@"
+            <tr>
+                <td>Gadget</td>
+                <td>{gadget.Id}</td>
+                <td>{gadget.Name}</td>
+                <td>{gadget.Master?.Name ?? ""}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>{gadget.HitboxWidth}</td>
+                <td>{gadget.HitboxHeight}</td>
+            </tr>");
+				}
+			}
+			writer.WriteLine($@"
+        </tbody>
+    </table>");
+		}
+
 		private void WriteEventCounts(TextWriter writer, LogStatistics stats)
 		{
-
-            writer.WriteLine($@"
+			writer.WriteLine($@"
     <table class='table is-narrow is-striped is-hoverable'>
         <thead>
         <tr>
@@ -112,7 +204,8 @@ namespace ScratchLogHTMLGenerator
                 <td>{count}</td>
             </tr>");
 			}
-				writer.WriteLine($@"
+
+			writer.WriteLine($@"
         </tbody>
 		<tfoot>
             <tr>
@@ -166,6 +259,7 @@ namespace ScratchLogHTMLGenerator
 		<ul class='menu-list'>
 		  <li><a>Log version</a></li>
 		  <li><a id='tablink-eventcounts' onclick='openTab(this)' class='scratch-tablink'>Event counts</a></li>
+		  <li><a id='tablink-agents' onclick='openTab(this)' class='scratch-tablink'>Agent list</a></li>
 		  <li><a>More?</a></li>
 		</ul>
 	</aside>");
