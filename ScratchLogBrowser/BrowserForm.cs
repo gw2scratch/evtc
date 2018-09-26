@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -25,13 +26,10 @@ namespace ScratchLogBrowser
 		private readonly Label parsedStateLabel;
 
 		// Processed events
-		private readonly GridView<Event> eventsGridView;
-		private readonly JsonSerializationControl eventJsonControl;
+		private readonly EventListControl eventListControl;
 
 		// Processed event filtering
-		private readonly TextBox eventAgentNameTextBox;
-		private readonly DropDown eventNameDropDown;
-		private readonly FilterCollection<Event> eventCollection = new FilterCollection<Event>();
+		private readonly List<Event> eventList = new List<Event>();
 
 		// Processed agents
 		private readonly GridView<Agent> agentsGridView;
@@ -46,11 +44,8 @@ namespace ScratchLogBrowser
 		private readonly WebView webView = new WebView();
 		private string LogHtml { get; set; } = "";
 
-
 		public BrowserForm()
 		{
-			ApplyEventFilters();
-
 			Title = "Scratch EVTC Browser";
 			ClientSize = new Size(800, 600);
 			var formLayout = new DynamicLayout();
@@ -68,22 +63,7 @@ namespace ScratchLogBrowser
 			skillsGridView = new GridViewGenerator().GetGridView<ParsedSkill>();
 			combatItemsGridView = new GridViewGenerator().GetGridView<ParsedCombatItem>();
 
-			eventsGridView = new GridView<Event>();
-			eventsGridView.Columns.Add(new GridColumn()
-			{
-				HeaderText = "Time",
-				DataCell = new TextBoxCell("Time")
-			});
-			eventsGridView.Columns.Add(new GridColumn()
-			{
-				HeaderText = "Event Type",
-				DataCell = new TextBoxCell()
-				{
-					Binding = new DelegateBinding<object, string>(x => x.GetType().Name)
-				}
-			});
-			eventsGridView.SelectedItemsChanged += EventsGridViewOnSelectedKeyChanged;
-			eventsGridView.DataStore = eventCollection;
+			eventListControl = new EventListControl();
 
 			agentsGridView = new GridViewGenerator().GetGridView<Agent>();
 			agentsGridView.SelectedItemsChanged += AgentGridViewOnSelectedKeyChanged;
@@ -96,7 +76,6 @@ namespace ScratchLogBrowser
 				}
 			});
 
-			eventJsonControl = new JsonSerializationControl();
 			agentControl = new AgentControl();
 			var mainTabControl = new TabControl();
 
@@ -107,33 +86,23 @@ namespace ScratchLogBrowser
 
 			var eventsDetailLayout = new DynamicLayout();
 			eventsDetailLayout.BeginVertical(new Padding(10));
-			eventsDetailLayout.BeginGroup("Filters", new Padding(10));
-			eventAgentNameTextBox = new TextBox();
-			eventAgentNameTextBox.TextChanged += (s, e) => eventCollection.Refresh();
-			eventNameDropDown = new DropDown {DataStore = new[] {""}};
-			eventNameDropDown.SelectedValueChanged += (s, e) => eventCollection.Refresh();
-			eventsDetailLayout.AddRow(new Label {Text = "Event type"}, eventNameDropDown, null);
-			eventsDetailLayout.AddRow(new Label {Text = "Agent name"}, eventAgentNameTextBox, null);
-			eventsDetailLayout.EndGroup();
-			eventsDetailLayout.Add(eventJsonControl.Control);
+			eventsDetailLayout.Add(eventListControl);
 			eventsDetailLayout.EndVertical();
-
-			var eventsSplitter = new Splitter {Panel1 = eventsGridView, Panel2 = eventsDetailLayout, Position = 300};
 
 			var agentsDetailLayout = new DynamicLayout();
 			agentsDetailLayout.BeginVertical(new Padding(10));
-			agentsDetailLayout.Add(agentControl.Control);
+			agentsDetailLayout.Add(agentControl);
 			agentsDetailLayout.EndVertical();
 
 			var agentSplitter = new Splitter {Panel1 = agentsGridView, Panel2 = agentsDetailLayout, Position = 300};
 
 			var processedTabControl = new TabControl();
-			processedTabControl.Pages.Add(new TabPage(eventsSplitter) {Text = "Events"});
+			processedTabControl.Pages.Add(new TabPage(eventsDetailLayout) {Text = "Events"});
 			processedTabControl.Pages.Add(new TabPage(agentSplitter) {Text = "Agents"});
 
 			var statisticsTabControl = new TabControl();
 			statisticsJsonControl = new JsonSerializationControl();
-			statisticsTabControl.Pages.Add(new TabPage(statisticsJsonControl.Control) {Text = "General"});
+			statisticsTabControl.Pages.Add(new TabPage(statisticsJsonControl) {Text = "General"});
 
 			saveHtmlButton = new Button {Text = "Save .html file", Enabled = false};
 			saveHtmlButton.Click += SaveHtmlButtonOnClick;
@@ -166,25 +135,11 @@ namespace ScratchLogBrowser
 			}
 		}
 
-		private void ApplyEventFilters()
-		{
-			eventCollection.Filter = ev =>
-				EventFilters.IsAgentInEvent(ev, eventAgentNameTextBox.Text) &&
-				EventFilters.IsTypeName(ev, (string) eventNameDropDown.SelectedValue);
-		}
-
 		private void AgentGridViewOnSelectedKeyChanged(object sender, EventArgs e)
 		{
 			var gridView = (GridView<Agent>) sender;
 			var agent = gridView.SelectedItem;
 			agentControl.Agent = agent;
-		}
-
-		private void EventsGridViewOnSelectedKeyChanged(object sender, EventArgs e)
-		{
-			var gridView = (GridView<Event>) sender;
-			var ev = gridView.SelectedItem;
-			eventJsonControl.Object = ev;
 		}
 
 		private void OpenFileButtonOnClick(object s, EventArgs e)
@@ -229,12 +184,9 @@ namespace ScratchLogBrowser
 
 					statusStringBuilder.AppendLine($"Processed in {processTime}");
 
-					eventCollection.Clear();
-					eventCollection.AddRange(processedLog.Events);
-					eventNameDropDown.DataStore =
-						new[] {""}.Concat(
-							eventCollection.Select(x => x.GetType().Name).Distinct().OrderBy(x => x)).ToArray();
-					eventNameDropDown.SelectedIndex = 0;
+					eventList.Clear();
+					eventList.AddRange(processedLog.Events);
+					eventListControl.Events = eventList;
 					agentsGridView.DataStore = processedLog.Agents;
 					agentControl.Events = processedLog.Events.ToArray();
 				}

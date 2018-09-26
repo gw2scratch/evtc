@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace ScratchLogBrowser
 {
-	public class JsonSerializationControl
+	public class JsonSerializationControl : Panel
 	{
 		public object Object
 		{
@@ -24,15 +24,13 @@ namespace ScratchLogBrowser
 			}
 		}
 
-		public Control Control { get; }
-
 		private readonly TextArea jsonData;
 		private Object obj;
 
 		public JsonSerializationControl()
 		{
 			var layout = new DynamicLayout();
-			Control = layout;
+			Content = layout;
 
 			jsonData = new TextArea {Text = "", ReadOnly = true};
 			layout.Add("Serialized data:");

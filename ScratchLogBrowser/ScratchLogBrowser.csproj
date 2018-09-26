@@ -65,6 +65,7 @@
   <ItemGroup>
     <Compile Include="AgentControl.cs" />
     <Compile Include="EventFilters.cs" />
+    <Compile Include="EventListControl.cs" />
     <Compile Include="JsonSerializationControl.cs" />
     <Compile Include="BrowserForm.cs" />
     <Compile Include="Program.cs" />
