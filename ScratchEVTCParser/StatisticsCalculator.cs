@@ -72,9 +72,11 @@ namespace ScratchEVTCParser
 			var eventCountsByName =
 				eventCounts.Select(x => (x.Key.Name, x.Value)).ToDictionary(x => x.Item1, x => x.Item2);
 
+			var logAuthor = log.Events.OfType<PointOfViewEvent>().First().RecordingAgent as Player;
+			var startTime = log.Events.OfType<LogStartEvent>().First().ServerTime;
 
-			return new LogStatistics(phaseStats, fullFightSquadDamageData, fullFightTargetDamageData,
-				log.Encounter.GetResult(), log.Encounter.GetName(), log.EVTCVersion, eventCountsByName, log.Agents);
+			return new LogStatistics(startTime, logAuthor, phaseStats, fullFightSquadDamageData, fullFightTargetDamageData,
+				log.Encounter.GetResult(), log.Encounter.GetName(), log.EVTCVersion, eventCountsByName, log.Agents, log.Skills);
 		}
 
 		private Dictionary<Agent, DamageData> GetDamageData(IEnumerable<Agent> agents, ICollection<DamageEvent> events,
