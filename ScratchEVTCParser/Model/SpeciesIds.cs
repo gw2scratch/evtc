@@ -13,6 +13,10 @@ namespace ScratchEVTCParser.Model
 		public const int Gorseval = 15429;
 		public const int ChargedSoul = 15434;
 		// Sabetha
+		public const int Sabetha = 15375;
+		public const int Kernan = 15372;
+		public const int Knuckles = 15404;
+		public const int Karde = 15430;
 
 		// Wing 2
 		// Slothasor

@@ -149,6 +149,33 @@ namespace ScratchEVTCParser
 					new AgentDeathResultDeterminer(boss),
 					new AgentNameEncounterNameProvider(boss));
 			}
+			else if (boss.SpeciesId == SpeciesIds.Sabetha)
+			{
+				var invulnerability = skills.First(x => x.Id == SkillIds.Invulnerability);
+
+				var kernan = agents.OfType<NPC>().FirstOrDefault(x => x.SpeciesId == SpeciesIds.Kernan);
+				var knuckles = agents.OfType<NPC>().FirstOrDefault(x => x.SpeciesId == SpeciesIds.Knuckles);
+				var karde = agents.OfType<NPC>().FirstOrDefault(x => x.SpeciesId == SpeciesIds.Karde);
+
+				encounter = new BaseEncounter(
+					new[] {boss},
+					events,
+					new PhaseSplitter(
+						new StartTrigger(new PhaseDefinition("Phase 1", boss)),
+						new BuffAddTrigger(boss, invulnerability,
+							new PhaseDefinition("Kernan", kernan != null ? new Agent[] {kernan} : new Agent[0])),
+						new BuffRemoveTrigger(boss, invulnerability, new PhaseDefinition("Phase 2", boss)),
+						new BuffAddTrigger(boss, invulnerability,
+							new PhaseDefinition("Knuckles", knuckles != null ? new Agent[] {knuckles} : new Agent[0])),
+						new BuffRemoveTrigger(boss, invulnerability, new PhaseDefinition("Phase 3", boss)),
+						new BuffAddTrigger(boss, invulnerability,
+							new PhaseDefinition("Karde", karde != null ? new Agent[] {karde} : new Agent[0])),
+						new BuffRemoveTrigger(boss, invulnerability, new PhaseDefinition("Phase 4", boss))
+					),
+					new AgentDeathResultDeterminer(boss),
+					new AgentNameEncounterNameProvider(boss)
+				);
+			}
 
 			return encounter;
 		}
