@@ -81,11 +81,11 @@ namespace ScratchEVTCParser
 					new[] {boss},
 					events,
 					new PhaseSplitter(
-						new StartTrigger("Phase 1"),
-						new BuffAddTrigger(boss, invulnerability, "Split phase 1"),
-						new BuffRemoveTrigger(boss, invulnerability, "Phase 2"),
-						new BuffAddTrigger(boss, invulnerability, "Split phase 2"),
-						new BuffRemoveTrigger(boss, invulnerability, "Phase 3")
+						new StartTrigger(new PhaseDefinition("Phase 1", boss)),
+						new BuffAddTrigger(boss, invulnerability, new PhaseDefinition("Split phase 1")), // TODO: Add 3 guardians
+						new BuffRemoveTrigger(boss, invulnerability, new PhaseDefinition("Phase 2", boss)),
+						new BuffAddTrigger(boss, invulnerability, new PhaseDefinition("Split phase 2")), // TODO: Add 3 guardians
+						new BuffRemoveTrigger(boss, invulnerability, new PhaseDefinition("Phase 3", boss))
 					),
 					new AgentDeathResultDeterminer(boss),
 					new AgentNameEncounterNameProvider(boss));
@@ -100,9 +100,9 @@ namespace ScratchEVTCParser
 					new[] {nikare, kenut},
 					events,
 					new PhaseSplitter(
-						new StartTrigger("Nikare's platform"),
-						new BuffAddTrigger(nikare, determined, "Kenut's platform"),
-						new BuffAddTrigger(kenut, determined, "Split phase")
+						new StartTrigger(new PhaseDefinition("Nikare's platform", nikare)),
+						new BuffAddTrigger(nikare, determined, new PhaseDefinition("Kenut's platform", kenut)),
+						new BuffAddTrigger(kenut, determined, new PhaseDefinition("Split phase", nikare, kenut))
 					),
 					new CombinedResultDeterminer(
 						new AgentDeathResultDeterminer(nikare),

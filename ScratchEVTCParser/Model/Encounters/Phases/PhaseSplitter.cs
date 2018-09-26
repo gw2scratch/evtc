@@ -43,7 +43,8 @@ namespace ScratchEVTCParser.Model.Encounters.Phases
 					{
 						var currentPhaseStart = eventsInPhase[0]; // The previous triggering event
 						yield return new Phase(currentPhaseStart.Time, e.Time, currentTriggerIndex,
-							previousTrigger.PhaseName, eventsInPhase);
+							previousTrigger.PhaseDefinition.Name, previousTrigger.PhaseDefinition.ImportantEnemies,
+							eventsInPhase);
 					}
 
 					previousTrigger = currentTrigger;
@@ -65,7 +66,8 @@ namespace ScratchEVTCParser.Model.Encounters.Phases
 			{
 				var currentPhaseStart = eventsInPhase[0]; // The previous triggering event
 				yield return new Phase(currentPhaseStart.Time, events[events.Count - 1].Time, currentTriggerIndex,
-					previousTrigger.PhaseName, eventsInPhase);
+					previousTrigger.PhaseDefinition.Name, previousTrigger.PhaseDefinition.ImportantEnemies,
+					eventsInPhase);
 			}
 		}
 	}

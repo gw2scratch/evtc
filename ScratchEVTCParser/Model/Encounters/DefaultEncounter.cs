@@ -8,7 +8,8 @@ namespace ScratchEVTCParser.Model.Encounters
 	public class DefaultEncounter : BaseEncounter
 	{
 		public DefaultEncounter(Agent boss, IEnumerable<Event> events) : base(new[] {boss}, events,
-			new PhaseSplitter(new StartTrigger("Default phase")), new AgentDeathResultDeterminer(boss),
+			new PhaseSplitter(new StartTrigger(new PhaseDefinition("Default phase", new[] {boss}))),
+			new AgentDeathResultDeterminer(boss),
 			new AgentNameEncounterNameProvider(boss))
 		{
 		}

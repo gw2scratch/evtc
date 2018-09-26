@@ -4,11 +4,11 @@ namespace ScratchEVTCParser.Model.Encounters.Phases
 {
 	public class StartTrigger : IPhaseTrigger
 	{
-		public string PhaseName { get; }
+		public PhaseDefinition PhaseDefinition { get; }
 
-		public StartTrigger(string phaseName)
+		public StartTrigger(PhaseDefinition phaseDefinition)
 		{
-			PhaseName = phaseName;
+			PhaseDefinition = phaseDefinition;
 		}
 
 		public bool IsTrigger(Event e) => e is LogStartEvent;

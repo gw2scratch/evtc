@@ -9,13 +9,13 @@ namespace ScratchEVTCParser.Model.Encounters.Phases
 		private readonly Agent agent;
 		private readonly Skill buff;
 
-		public string PhaseName { get; }
+		public PhaseDefinition PhaseDefinition { get; }
 
-		public BuffRemoveTrigger(Agent agent, Skill buff, string phaseName)
+		public BuffRemoveTrigger(Agent agent, Skill buff, PhaseDefinition phaseDefinition)
 		{
 			this.agent = agent;
 			this.buff = buff;
-			PhaseName = phaseName;
+			PhaseDefinition = phaseDefinition;
 		}
 
 		public bool IsTrigger(Event e)

@@ -18,7 +18,7 @@ namespace ScratchEVTCParser
 				var targetDamageData = new List<TargetSquadDamageData>();
 
 				long phaseDuration = phase.EndTime - phase.StartTime;
-				foreach (var target in log.Encounter.ImportantAgents)
+				foreach (var target in phase.ImportantEnemies)
 				{
 					var damageData = GetDamageData(
 						log.Agents,

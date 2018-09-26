@@ -72,6 +72,7 @@
     <Compile Include="Model\Encounters\Phases\BuffRemoveTrigger.cs" />
     <Compile Include="Model\Encounters\Phases\IPhaseTrigger.cs" />
     <Compile Include="Model\Encounters\Phases\Phase.cs" />
+    <Compile Include="Model\Encounters\Phases\PhaseDefinition.cs" />
     <Compile Include="Model\Encounters\Phases\PhaseSplitter.cs" />
     <Compile Include="Model\Encounters\Phases\StartTrigger.cs" />
     <Compile Include="Model\Log.cs" />
