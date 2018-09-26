@@ -1,0 +1,8 @@
+namespace ScratchEVTCParser.Model
+{
+	public static class SkillIds
+	{
+		public const int Invulnerability = 757;
+		public const int Determined = 762;
+	}
+}

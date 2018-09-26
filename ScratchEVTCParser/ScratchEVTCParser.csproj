@@ -59,7 +59,10 @@
     <Compile Include="Model\Agents\Player.cs" />
     <Compile Include="Model\Agents\Profession.cs" />
     <Compile Include="Model\Encounters\AgentDeathResultDeterminer.cs" />
+    <Compile Include="Model\Encounters\AgentNameEncounterNameProvider.cs" />
     <Compile Include="Model\Encounters\BaseEncounter.cs" />
+    <Compile Include="Model\Encounters\CombinedResultDeterminer.cs" />
+    <Compile Include="Model\Encounters\ConstantEncounterNameProvider.cs" />
     <Compile Include="Model\Encounters\DefaultEncounter.cs" />
     <Compile Include="Model\Encounters\EncounterResult.cs" />
     <Compile Include="Model\Encounters\IEncounter.cs" />
@@ -72,6 +75,7 @@
     <Compile Include="Model\Encounters\Phases\PhaseSplitter.cs" />
     <Compile Include="Model\Encounters\Phases\StartTrigger.cs" />
     <Compile Include="Model\Log.cs" />
+    <Compile Include="Model\SkillIds.cs" />
     <Compile Include="Model\Skills\Skill.cs" />
     <Compile Include="Model\SpeciesIds.cs" />
     <Compile Include="Parsed\Enums\Activation.cs" />

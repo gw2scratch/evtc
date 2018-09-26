@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using ScratchEVTCParser.Events;
 using ScratchEVTCParser.Model;
@@ -62,28 +63,53 @@ namespace ScratchEVTCParser
 			SetAgentAwareTimes(agents, events);
 			AssignAgentMasters(log, agents); // Needs to be done after setting aware times
 
-			var encounter = GetEncounter(boss, skills, events);
+			var encounter = GetEncounter(boss, agents, skills, events);
 
 			return new Log(encounter, events, agents, skills, log.LogVersion.BuildVersion);
 		}
 
-		private IEncounter GetEncounter(NPC boss, Skill[] skills, Event[] events)
+		private IEncounter GetEncounter(NPC boss, ICollection<Agent> agents, ICollection<Skill> skills,
+			ICollection<Event> events)
 		{
 			IEncounter encounter = new DefaultEncounter(boss, events);
 
 			if (boss.SpeciesId == SpeciesIds.ValeGuardian)
 			{
-				encounter = new BaseEncounter(new[] {boss},
+				var invulnerability = skills.First(x => x.Id == SkillIds.Invulnerability);
+
+				encounter = new BaseEncounter(
+					new[] {boss},
 					events,
 					new PhaseSplitter(
 						new StartTrigger("Phase 1"),
-						new BuffAddTrigger(boss, skills.First(x => x.Id == 757), "Split phase 1"),
-						new BuffRemoveTrigger(boss, skills.First(x => x.Id == 757), "Phase 2"),
-						new BuffAddTrigger(boss, skills.First(x => x.Id == 757), "Split phase 2"),
-						new BuffRemoveTrigger(boss, skills.First(x => x.Id == 757), "Phase 3")
+						new BuffAddTrigger(boss, invulnerability, "Split phase 1"),
+						new BuffRemoveTrigger(boss, invulnerability, "Phase 2"),
+						new BuffAddTrigger(boss, invulnerability, "Split phase 2"),
+						new BuffRemoveTrigger(boss, invulnerability, "Phase 3")
 					),
 					new AgentDeathResultDeterminer(boss),
 					new AgentNameEncounterNameProvider(boss));
+			}
+			else if (boss.SpeciesId == SpeciesIds.Nikare || boss.SpeciesId == SpeciesIds.Kenut)
+			{
+				var determined = skills.First(x => x.Id == SkillIds.Determined);
+				var nikare = agents.OfType<NPC>().First(x => x.SpeciesId == SpeciesIds.Nikare);
+				var kenut = agents.OfType<NPC>().First(x => x.SpeciesId == SpeciesIds.Kenut);
+
+				encounter = new BaseEncounter(
+					new[] {nikare, kenut},
+					events,
+					new PhaseSplitter(
+						new StartTrigger("Nikare's platform"),
+						new BuffAddTrigger(nikare, determined, "Kenut's platform"),
+						new BuffAddTrigger(kenut, determined, "Split phase")
+					),
+					new CombinedResultDeterminer(
+						new AgentDeathResultDeterminer(nikare),
+						new AgentDeathResultDeterminer(kenut)
+					),
+					new ConstantEncounterNameProvider("Twin Largos")
+				);
 			}
 
 			return encounter;

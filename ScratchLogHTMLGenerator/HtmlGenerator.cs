@@ -325,7 +325,7 @@ namespace ScratchLogHTMLGenerator
             <td>{player.Subgroup}</td>
             <td>{specialization}</td>
             <td>{player.Name}</td>
-            <td>{player.AccountName}</td>
+            <td>{player.AccountName.Substring(1)}</td>
             <td><b>{damageData.TotalDps:0}</b></td>
             <td>{damageData.PhysicalDps:0}</td>
             <td>{damageData.ConditionDps:0}</td>
