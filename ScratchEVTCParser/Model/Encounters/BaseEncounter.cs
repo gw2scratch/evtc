@@ -16,14 +16,14 @@ namespace ScratchEVTCParser.Model.Encounters
 		public BaseEncounter(IEnumerable<Agent> importantAgents, IEnumerable<Event> events, PhaseSplitter phaseSplitter,
 			IResultDeterminer resultDeterminer, IEncounterNameProvider nameProvider)
 		{
-			ImportantAgents = importantAgents.ToArray();
+			ImportantEnemies = importantAgents.ToArray();
 			this.phaseSplitter = phaseSplitter;
 			this.resultDeterminer = resultDeterminer;
 			this.nameProvider = nameProvider;
 			this.events = events as Event[] ?? events.ToArray();
 		}
 
-		public IEnumerable<Agent> ImportantAgents { get; }
+		public IEnumerable<Agent> ImportantEnemies { get; }
 
 		public EncounterResult GetResult()
 		{

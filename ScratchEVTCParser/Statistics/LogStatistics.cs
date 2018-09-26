@@ -17,17 +17,20 @@ namespace ScratchEVTCParser.Statistics
 		public IReadOnlyDictionary<string, int> EventCounts { get; }
 		public IEnumerable<Agent> Agents { get; }
 
-		public SquadDamageData TotalSquadDamageData { get; }
+		public SquadDamageData FullFightSquadDamageData { get; }
+		public IEnumerable<TargetSquadDamageData> FullFightTargetDamageData { get; }
 
-		public LogStatistics(IEnumerable<PhaseStats> phaseStats, SquadDamageData totalSquadDamageData,
-			EncounterResult encounterResult, string encounterName, string logVersion,
-			IReadOnlyDictionary<string, int> eventCounts, IEnumerable<Agent> agents)
+		public LogStatistics(IEnumerable<PhaseStats> phaseStats, SquadDamageData fullFightSquadDamageData,
+			IEnumerable<TargetSquadDamageData> fullFightTargetDamageData, EncounterResult encounterResult,
+			string encounterName, string logVersion, IReadOnlyDictionary<string, int> eventCounts,
+			IEnumerable<Agent> agents)
 		{
 			EncounterName = encounterName;
 			LogVersion = logVersion;
 			EncounterResult = encounterResult;
 			EventCounts = eventCounts;
-			TotalSquadDamageData = totalSquadDamageData;
+			FullFightSquadDamageData = fullFightSquadDamageData;
+			FullFightTargetDamageData = fullFightTargetDamageData.ToArray();
 
 			PhaseStats = phaseStats as PhaseStats[] ?? phaseStats.ToArray();
 			FightTimeMs = PhaseStats.Sum(x => x.PhaseDuration);

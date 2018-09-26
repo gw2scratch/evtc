@@ -47,14 +47,31 @@ namespace ScratchLogHTMLGenerator
 
 			WriteMenu(writer, stats);
 
+			// Summary tab
 			writer.WriteLine($@"
         <div id='tab-general' class='content column scratch-tab'>
             <div class='title is-4'>Total damage in encounter</div>
-            <div class='subtitle is-6'>Duration: {MillisecondsToReadableFormat(stats.TotalSquadDamageData.TimeMs)}</div>");
-			WriteDamageTable(writer, stats.TotalSquadDamageData);
+            <div class='subtitle is-6'>Duration: {MillisecondsToReadableFormat(stats.FullFightSquadDamageData.TimeMs)}</div>");
+			WriteDamageTable(writer, stats.FullFightSquadDamageData);
+
 			writer.WriteLine(@"
 		</div>");
 
+			// Encounter target tabs
+			int enemyTargetIndex = 0;
+			foreach (var target in stats.FullFightTargetDamageData)
+			{
+				writer.WriteLine($@"
+        <div id='tab-full-enemy-{enemyTargetIndex++}' class='content column scratch-tab is-hidden'>");
+				writer.WriteLine($@"
+            <div class='title is-4'>Target damage to {target.Target.Name}</div>
+            <div class='subtitle is-6'>Duration: {MillisecondsToReadableFormat(target.TimeMs)}</div>");
+				WriteDamageTable(writer, target);
+				writer.WriteLine($@"
+        </div>");
+			}
+
+			// Scratch data tabs
 			writer.WriteLine(@"
         <div id='tab-eventcounts' class='content column scratch-tab is-hidden'>");
 			WriteEventCounts(writer, stats);
@@ -81,14 +98,13 @@ namespace ScratchLogHTMLGenerator
 				int targetIndex = 0;
 				foreach (var target in phaseStats.TargetDamageData)
 				{
-
-				writer.WriteLine($@"
+					writer.WriteLine($@"
         <div id='tab-enemy-{phaseIndex}-{targetIndex++}' class='content column scratch-tab is-hidden'>");
-				writer.WriteLine($@"
+					writer.WriteLine($@"
             <div class='title is-4'>Target damage to {target.Target.Name}</div>
             <div class='subtitle is-6'>Duration: {MillisecondsToReadableFormat(target.TimeMs)}</div>");
-				WriteDamageTable(writer, target);
-				writer.WriteLine($@"
+					WriteDamageTable(writer, target);
+					writer.WriteLine($@"
         </div>");
 				}
 
@@ -244,7 +260,16 @@ namespace ScratchLogHTMLGenerator
 			General
 		</p>
 		<ul class='menu-list'>
-		  <li><a id='tablink-general' onclick='openTab(this)' class='scratch-tablink is-active'>Summary</a></li>
+		  <li><a id='tablink-general' onclick='openTab(this)' class='scratch-tablink is-active'>Summary</a></li>");
+
+			int enemyTargetIndex = 0;
+			foreach (var target in stats.FullFightTargetDamageData)
+			{
+				writer.WriteLine($@"
+          <li><a id='tablink-full-enemy-{enemyTargetIndex++}' onclick='openTab(this)' class='scratch-tablink'>{target.Target.Name}</a></li>");
+			}
+
+			writer.WriteLine(@"
 		  <li><a>More?</a></li>
 		</ul>
 		<p class='menu-label'>

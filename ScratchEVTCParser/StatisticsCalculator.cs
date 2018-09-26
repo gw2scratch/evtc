@@ -16,7 +16,6 @@ namespace ScratchEVTCParser
 			foreach (var phase in log.Encounter.GetPhases())
 			{
 				var targetDamageData = new List<TargetSquadDamageData>();
-
 				long phaseDuration = phase.EndTime - phase.StartTime;
 				foreach (var target in phase.ImportantEnemies)
 				{
@@ -42,8 +41,21 @@ namespace ScratchEVTCParser
 			}
 
 			var fightTime = log.Encounter.GetPhases().Sum(x => x.EndTime - x.StartTime);
-			var squadDamageData = new SquadDamageData(fightTime,
+			var fullFightSquadDamageData = new SquadDamageData(fightTime,
 				GetDamageData(log.Agents, log.Events.OfType<DamageEvent>().ToArray(), fightTime).Values);
+
+			var fullFightTargetDamageData = new List<TargetSquadDamageData>();
+			foreach (var target in log.Encounter.ImportantEnemies)
+			{
+				var damageData = GetDamageData(
+					log.Agents,
+					log.Events
+						.OfType<DamageEvent>()
+						.Where(x => x.Defender == target)
+						.ToArray(),
+					fightTime);
+				fullFightTargetDamageData.Add(new TargetSquadDamageData(target, fightTime, damageData.Values));
+			}
 
 			var eventCounts = new Dictionary<Type, int>();
 			foreach (var e in log.Events)
@@ -61,8 +73,8 @@ namespace ScratchEVTCParser
 				eventCounts.Select(x => (x.Key.Name, x.Value)).ToDictionary(x => x.Item1, x => x.Item2);
 
 
-			return new LogStatistics(phaseStats, squadDamageData, log.Encounter.GetResult(), log.Encounter.GetName(),
-				log.EVTCVersion, eventCountsByName, log.Agents);
+			return new LogStatistics(phaseStats, fullFightSquadDamageData, fullFightTargetDamageData,
+				log.Encounter.GetResult(), log.Encounter.GetName(), log.EVTCVersion, eventCountsByName, log.Agents);
 		}
 
 		private Dictionary<Agent, DamageData> GetDamageData(IEnumerable<Agent> agents, ICollection<DamageEvent> events,

@@ -6,7 +6,7 @@ namespace ScratchEVTCParser.Model.Encounters
 {
 	public interface IEncounter
 	{
-		IEnumerable<Agent> ImportantAgents { get; }
+		IEnumerable<Agent> ImportantEnemies { get; }
 
 		EncounterResult GetResult();
 		IEnumerable<Phase> GetPhases();
