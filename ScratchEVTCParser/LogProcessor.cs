@@ -77,14 +77,30 @@ namespace ScratchEVTCParser
 			{
 				var invulnerability = skills.First(x => x.Id == SkillIds.Invulnerability);
 
+				var redGuardians = agents.OfType<NPC>().Where(x => x.SpeciesId == SpeciesIds.RedGuardian).ToArray();
+				var greenGuardians = agents.OfType<NPC>().Where(x => x.SpeciesId == SpeciesIds.GreenGuardian).ToArray();
+				var blueGuardians = agents.OfType<NPC>().Where(x => x.SpeciesId == SpeciesIds.BlueGuardian).ToArray();
+
+				bool firstGuardians =
+					redGuardians.Length >= 1 && greenGuardians.Length >= 1 && blueGuardians.Length >= 1;
+				bool secondGuardians =
+					redGuardians.Length >= 2 && greenGuardians.Length >= 2 && blueGuardians.Length >= 2;
+
+				var split1Guardians = firstGuardians
+					? new[] {blueGuardians[0], greenGuardians[0], redGuardians[0]}
+					: new Agent[0];
+				var split2Guardians = secondGuardians
+					? new[] {blueGuardians[1], greenGuardians[1], redGuardians[1]}
+					: new Agent[0];
+
 				encounter = new BaseEncounter(
 					new[] {boss},
 					events,
 					new PhaseSplitter(
 						new StartTrigger(new PhaseDefinition("Phase 1", boss)),
-						new BuffAddTrigger(boss, invulnerability, new PhaseDefinition("Split phase 1")), // TODO: Add 3 guardians
+						new BuffAddTrigger(boss, invulnerability, new PhaseDefinition("Split 1", split1Guardians)),
 						new BuffRemoveTrigger(boss, invulnerability, new PhaseDefinition("Phase 2", boss)),
-						new BuffAddTrigger(boss, invulnerability, new PhaseDefinition("Split phase 2")), // TODO: Add 3 guardians
+						new BuffAddTrigger(boss, invulnerability, new PhaseDefinition("Split 2", split2Guardians)),
 						new BuffRemoveTrigger(boss, invulnerability, new PhaseDefinition("Phase 3", boss))
 					),
 					new AgentDeathResultDeterminer(boss),
@@ -110,6 +126,28 @@ namespace ScratchEVTCParser
 					),
 					new ConstantEncounterNameProvider("Twin Largos")
 				);
+			}
+			else if (boss.SpeciesId == SpeciesIds.Gorseval)
+			{
+				var invulnerability = skills.First(x => x.Id == SkillIds.GorsevalInvulnerability);
+
+				var chargedSouls = agents.OfType<NPC>().Where(x => x.SpeciesId == SpeciesIds.ChargedSoul).ToArray();
+
+				var split1Souls = chargedSouls.Length >= 4 ? chargedSouls.Take(4).ToArray() : new Agent[0];
+				var split2Souls = chargedSouls.Length >= 8 ? chargedSouls.Skip(4).Take(4).ToArray() : new Agent[0];
+
+				encounter = new BaseEncounter(
+					new[] {boss},
+					events,
+					new PhaseSplitter(
+						new StartTrigger(new PhaseDefinition("Phase 1", boss)),
+						new BuffAddTrigger(boss, invulnerability, new PhaseDefinition("Split 1", split1Souls)),
+						new BuffRemoveTrigger(boss, invulnerability, new PhaseDefinition("Phase 2", boss)),
+						new BuffAddTrigger(boss, invulnerability, new PhaseDefinition("Split 2", split2Souls)),
+						new BuffRemoveTrigger(boss, invulnerability, new PhaseDefinition("Phase 3", boss))
+					),
+					new AgentDeathResultDeterminer(boss),
+					new AgentNameEncounterNameProvider(boss));
 			}
 
 			return encounter;

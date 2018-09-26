@@ -4,5 +4,6 @@ namespace ScratchEVTCParser.Model
 	{
 		public const int Invulnerability = 757;
 		public const int Determined = 762;
+		public const int GorsevalInvulnerability = 31790;
 	}
 }
