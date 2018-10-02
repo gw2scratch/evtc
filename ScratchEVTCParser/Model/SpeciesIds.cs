@@ -45,5 +45,10 @@ namespace ScratchEVTCParser.Model
 		public const int Nikare = 21105;
 		public const int Kenut = 21089;
 		// Qadim
+		public const int Qadim = 20934;
+		public const int AncientInvokedHydra = 21285;
+		public const int ApocalypseBringer = 21073;
+		public const int WyvernMatriarch = 20997;
+		public const int WyvernPatriarch = 21183;
 	}
 }

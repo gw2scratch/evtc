@@ -176,6 +176,41 @@ namespace ScratchEVTCParser
 					new AgentNameEncounterNameProvider(boss)
 				);
 			}
+			else if (boss.SpeciesId == SpeciesIds.Qadim)
+			{
+				var flameArmor = skills.First(x => x.Id == SkillIds.QadimFlameArmor);
+
+				var hydra = agents.OfType<NPC>().FirstOrDefault(x => x.SpeciesId == SpeciesIds.AncientInvokedHydra);
+				var destroyer = agents.OfType<NPC>().FirstOrDefault(x => x.SpeciesId == SpeciesIds.ApocalypseBringer);
+				var matriarch = agents.OfType<NPC>().FirstOrDefault(x => x.SpeciesId == SpeciesIds.WyvernMatriarch);
+				var patriarch = agents.OfType<NPC>().FirstOrDefault(x => x.SpeciesId == SpeciesIds.WyvernPatriarch);
+
+				encounter = new BaseEncounter(
+					new[] {boss},
+					events,
+					new PhaseSplitter(
+						new AgentEventTrigger<TeamChangeEvent>(boss,
+							new PhaseDefinition("Hydra phase", hydra != null ? new Agent[] {hydra} : new Agent[0])),
+						new BuffRemoveTrigger(boss, flameArmor, new PhaseDefinition("Qadim 100-66%", boss)),
+						new BuffAddTrigger(boss, flameArmor,
+							new PhaseDefinition("Destroyer phase",
+								destroyer != null ? new Agent[] {destroyer} : new Agent[0])),
+						new BuffRemoveTrigger(boss, flameArmor, new PhaseDefinition("Qadim 66-33%", boss)),
+						new BuffAddTrigger(boss, flameArmor,
+							new PhaseDefinition("Wyvern phase",
+								matriarch != null && patriarch != null
+									? new Agent[] {matriarch, patriarch}
+									: new Agent[0])),
+						new MultipleAgentsDeadTrigger(new PhaseDefinition("Jumping puzzle"), // TODO: Add Pyre Guardians
+							matriarch != null && patriarch != null
+								? new Agent[] {matriarch, patriarch}
+								: new Agent[0]),
+						new BuffRemoveTrigger(boss, flameArmor, new PhaseDefinition("Qadim 33-0%", boss))
+					),
+					new AgentExitCombatDeterminer(boss),
+					new AgentNameEncounterNameProvider(boss)
+				);
+			}
 
 			return encounter;
 		}
@@ -523,20 +558,20 @@ namespace ScratchEVTCParser
 					int remainingDuration = item.Value;
 					int remainingIntensity = item.BuffDmg;
 					int stacksRemoved = (int) item.Result;
+					var cleansingAgent = GetAgentByAddress(item.DstAgent);
+					var agent = GetAgentByAddress(item.SrcAgent);
 					switch (item.IsBuffRemove)
 					{
 						case BuffRemove.All:
-							yield return new AllStacksRemovedBuffEvent(item.Time, GetAgentByAddress(item.DstAgent),
-								buff, GetAgentByAddress(item.SrcAgent), stacksRemoved);
-							break;
-						case BuffRemove.Single:
-							yield return new SingleStackRemovedBuffEvent(item.Time, GetAgentByAddress(item.DstAgent),
-								buff, GetAgentByAddress(item.SrcAgent), remainingDuration, remainingIntensity,
+							yield return new AllStacksRemovedBuffEvent(item.Time, agent, buff, cleansingAgent,
 								stacksRemoved);
 							break;
+						case BuffRemove.Single:
+							yield return new SingleStackRemovedBuffEvent(item.Time, agent, buff, cleansingAgent,
+								remainingDuration, remainingIntensity, stacksRemoved);
+							break;
 						case BuffRemove.Manual:
-							yield return new ManualSingleStackRemovedBuffEvent(item.Time,
-								GetAgentByAddress(item.DstAgent), buff, GetAgentByAddress(item.SrcAgent),
+							yield return new ManualSingleStackRemovedBuffEvent(item.Time, agent, buff, cleansingAgent,
 								remainingDuration, remainingIntensity, stacksRemoved);
 							break;
 						default:
@@ -548,8 +583,10 @@ namespace ScratchEVTCParser
 					Skill buff = GetSkillById(item.SkillId);
 					int durationApplied = item.Value;
 					int durationOfRemovedStack = item.OverstackValue;
-					yield return new BuffApplyEvent(item.Time, GetAgentByAddress(item.DstAgent), buff,
-						GetAgentByAddress(item.SrcAgent), durationApplied, durationOfRemovedStack);
+					var agent = GetAgentByAddress(item.DstAgent);
+					var sourceAgent = GetAgentByAddress(item.SrcAgent);
+					yield return new BuffApplyEvent(item.Time, agent, buff, sourceAgent, durationApplied,
+						durationOfRemovedStack);
 				}
 				else if (item.Buff > 0 && item.Value == 0)
 				{

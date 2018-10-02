@@ -417,6 +417,7 @@ namespace ScratchLogHTMLGenerator
 		</tr>");
 			}
 
+			// TODO: Split total for players and all agents
 			writer.WriteLine($@"
         </tbody>
 		<tfoot>

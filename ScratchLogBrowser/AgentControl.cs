@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Eto.Drawing;
 using Eto.Forms;
 using ScratchEVTCParser.Events;
@@ -38,6 +39,8 @@ namespace ScratchLogBrowser
 		private readonly Label nameLabel = new Label();
 		private ICollection<Event> events;
 		private readonly EventListControl eventListControl;
+		private readonly CheckBox eventFilterAttackerCheckBox;
+		private readonly CheckBox eventFilterDefenderCheckBox;
 
 		public AgentControl()
 		{
@@ -47,10 +50,18 @@ namespace ScratchLogBrowser
 			agentJsonControl = new JsonSerializationControl {Height = 200};
 			eventListControl = new EventListControl();
 
+			eventFilterAttackerCheckBox = new CheckBox() {Text = "Damage events where agent is attacker", Checked = true};
+			eventFilterDefenderCheckBox = new CheckBox() {Text = "Damage events where agent is defender", Checked = true};
+			eventFilterAttackerCheckBox.CheckedChanged += (s, e) => UpdateEventList();
+			eventFilterDefenderCheckBox.CheckedChanged += (s, e) => UpdateEventList();
+
 			layout.BeginGroup("Agent data", new Padding(5));
 			layout.BeginVertical();
 			layout.AddRow(nameLabel);
 			layout.AddRow(agentJsonControl);
+			layout.EndVertical();
+			layout.BeginVertical();
+			layout.AddRow(eventFilterAttackerCheckBox, eventFilterDefenderCheckBox);
 			layout.EndVertical();
 			layout.EndGroup();
 
@@ -61,7 +72,8 @@ namespace ScratchLogBrowser
 
 		private void UpdateEventList()
 		{
-			eventListControl.Events = events.Where(x => EventFilters.IsAgentInEvent(x, agent)).ToArray();
+			eventListControl.Events = events.Where(x => EventFilters.IsAgentInEvent(x, agent,
+				eventFilterAttackerCheckBox.Checked.Value, eventFilterDefenderCheckBox.Checked.Value)).ToArray();
 		}
 	}
 }

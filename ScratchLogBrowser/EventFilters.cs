@@ -39,7 +39,7 @@ namespace ScratchLogBrowser
 			return true;
 		}
 
-		public static bool IsAgentInEvent(Event ev, Agent agent)
+		public static bool IsAgentInEvent(Event ev, Agent agent, bool ifAttacker = true, bool ifDefender = true)
 		{
 			if (ev is AgentEvent agentEvent)
 			{
@@ -49,7 +49,7 @@ namespace ScratchLogBrowser
 			{
 				var attacker = damageEvent.Attacker;
 				var defender = damageEvent.Defender;
-				return agent == attacker || agent == defender;
+				return (ifAttacker && agent == attacker) || (ifDefender && agent == defender);
 			}
 			else
 			{
