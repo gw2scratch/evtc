@@ -39,7 +39,7 @@ namespace ScratchLogBrowser
 		private readonly JsonSerializationControl statisticsJsonControl;
 
 		// HTML
-		private readonly Button saveHtmlButton;
+        private readonly ButtonMenuItem saveHtmlMenuItem;
 		private readonly SaveFileDialog saveHtmlFileDialog;
 		private readonly WebView webView = new WebView();
 		private string LogHtml { get; set; } = "";
@@ -51,11 +51,24 @@ namespace ScratchLogBrowser
 			var formLayout = new DynamicLayout();
 			Content = formLayout;
 
+			var openFileMenuItem = new ButtonMenuItem {Text = "&Open EVTC log"};
+			openFileMenuItem.Click += OpenFileButtonOnClick;
+			openFileMenuItem.Shortcut = Application.Instance.CommonModifier | Keys.O;
+			saveHtmlMenuItem = new ButtonMenuItem {Text = "&Save HTML output", Enabled = false};
+			saveHtmlMenuItem.Click += SaveHtmlButtonOnClick;
+			saveHtmlMenuItem.Shortcut = Application.Instance.CommonModifier | Keys.S;
+
+			var fileMenuItem = new ButtonMenuItem {Text = "&File"};
+			fileMenuItem.Items.Add(openFileMenuItem);
+			fileMenuItem.Items.Add(saveHtmlMenuItem);
+
+			Menu = new MenuBar(fileMenuItem);
+
 			openFileDialog = new OpenFileDialog();
 			openFileDialog.Filters.Add(new FileFilter("EVTC logs", ".evtc", ".evtc.zip"));
 
 			saveHtmlFileDialog = new SaveFileDialog();
-			saveHtmlFileDialog.Filters.Add(new FileFilter(".html file", ".html", ".htm", ".*"));
+			saveHtmlFileDialog.Filters.Add(new FileFilter("HTML files", ".html file", ".html", ".htm", "*.*"));
 
 			parsedStateLabel = new Label {Text = "No log parsed yet."};
 
@@ -104,31 +117,23 @@ namespace ScratchLogBrowser
 			statisticsJsonControl = new JsonSerializationControl();
 			statisticsTabControl.Pages.Add(new TabPage(statisticsJsonControl) {Text = "General"});
 
-			saveHtmlButton = new Button {Text = "Save .html file", Enabled = false};
-			saveHtmlButton.Click += SaveHtmlButtonOnClick;
 			var htmlLayout = new DynamicLayout();
-			htmlLayout.AddRow(saveHtmlButton);
 			htmlLayout.AddRow(webView);
 
 			mainTabControl.Pages.Add(new TabPage(parsedTabControl) {Text = "Parsed data"});
 			mainTabControl.Pages.Add(new TabPage(processedTabControl) {Text = "Processed data"});
 			mainTabControl.Pages.Add(new TabPage(statisticsTabControl) {Text = "Statistics"});
 			mainTabControl.Pages.Add(new TabPage(htmlLayout) {Text = "HTML"});
-
-			var openFileButton = new Button {Text = "Open log"};
-			openFileButton.Click += OpenFileButtonOnClick;
+			mainTabControl.Pages.Add(new TabPage(parsedStateLabel) {Text = "Log"});
 
 			formLayout.BeginVertical();
-			formLayout.AddRow(openFileButton);
-			formLayout.AddRow(parsedStateLabel);
-			formLayout.AddRow();
 			formLayout.AddRow(mainTabControl);
 			formLayout.EndVertical();
 		}
 
 		private void SaveHtmlButtonOnClick(object sender, EventArgs e)
 		{
-			var result = saveHtmlFileDialog.ShowDialog((Control) sender);
+			var result = saveHtmlFileDialog.ShowDialog(this);
 			if (result == DialogResult.Ok)
 			{
 				File.WriteAllText(saveHtmlFileDialog.FileName, LogHtml);
@@ -144,7 +149,7 @@ namespace ScratchLogBrowser
 
 		private void OpenFileButtonOnClick(object s, EventArgs e)
 		{
-			var result = openFileDialog.ShowDialog((Control) s);
+			var result = openFileDialog.ShowDialog(this);
 			if (result == DialogResult.Ok)
 			{
 				string logFilename = openFileDialog.Filenames.First();
@@ -225,7 +230,7 @@ namespace ScratchLogBrowser
 
 					webView.LoadHtml(htmlStringWriter.ToString());
 					LogHtml = htmlStringWriter.ToString();
-					saveHtmlButton.Enabled = true;
+					saveHtmlMenuItem.Enabled = true;
 				}
 				catch (Exception ex)
 				{
