@@ -220,7 +220,8 @@ namespace ScratchEVTCParser
 			foreach (var skill in log.ParsedSkills)
 			{
 				var name = skill.Name.Trim('\0');
-				yield return new Skill(skill.SkillId, name);
+				uint skillId = checked((uint) skill.SkillId);
+				yield return new Skill(skillId, name);
 			}
 		}
 
@@ -378,7 +379,7 @@ namespace ScratchEVTCParser
 				return null;
 			}
 
-			Skill GetSkillById(int id)
+			Skill GetSkillById(uint id)
 			{
 				if (skillsById.TryGetValue(id, out Skill skill))
 				{
@@ -582,7 +583,7 @@ namespace ScratchEVTCParser
 				{
 					Skill buff = GetSkillById(item.SkillId);
 					int durationApplied = item.Value;
-					int durationOfRemovedStack = item.OverstackValue;
+					uint durationOfRemovedStack = item.OverstackValue;
 					var agent = GetAgentByAddress(item.DstAgent);
 					var sourceAgent = GetAgentByAddress(item.SrcAgent);
 					yield return new BuffApplyEvent(item.Time, agent, buff, sourceAgent, durationApplied,
@@ -626,7 +627,7 @@ namespace ScratchEVTCParser
 				else if (item.Buff == 0)
 				{
 					int damage = item.Value;
-					int shieldDamage = item.OverstackValue;
+					uint shieldDamage = item.OverstackValue;
 					Agent attacker = GetAgentByAddress(item.SrcAgent);
 					Agent defender = GetAgentByAddress(item.DstAgent);
 					bool isMoving = item.IsMoving > 0;

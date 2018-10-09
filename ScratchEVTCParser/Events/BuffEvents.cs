@@ -64,10 +64,10 @@ namespace ScratchEVTCParser.Events
 	public class BuffApplyEvent : BuffEvent
 	{
 		public int DurationApplied { get; }
-		public int DurationOfRemovedStack { get; }
+		public uint DurationOfRemovedStack { get; }
 
 		public BuffApplyEvent(long time, Agent agent, Skill buff, Agent sourceAgent, int durationApplied,
-			int durationOfRemovedStack) : base(time, agent, buff, sourceAgent)
+			uint durationOfRemovedStack) : base(time, agent, buff, sourceAgent)
 		{
 			DurationApplied = durationApplied;
 			DurationOfRemovedStack = durationOfRemovedStack;

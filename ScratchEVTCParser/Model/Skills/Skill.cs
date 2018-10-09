@@ -2,10 +2,10 @@ namespace ScratchEVTCParser.Model.Skills
 {
 	public class Skill
 	{
-		public int Id { get; }
+		public uint Id { get; }
 		public string Name { get; }
 
-		public Skill(int id, string name)
+		public Skill(uint id, string name)
 		{
 			Id = id;
 			Name = name;

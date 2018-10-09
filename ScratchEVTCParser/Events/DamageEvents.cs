@@ -16,10 +16,10 @@ namespace ScratchEVTCParser.Events
 
 		public Reason IgnoreReason { get; }
 		public int IgnoredDamage { get; }
-		public int IgnoredShieldDamage { get; }
+		public uint IgnoredShieldDamage { get; }
 
 		public IgnoredPhysicalDamageEvent(long time, Agent attacker, Agent defender, int damage, bool isMoving,
-			bool isNinety, bool isFlanking, int shieldDamage, Reason reason) : base(time, attacker, defender, 0,
+			bool isNinety, bool isFlanking, uint shieldDamage, Reason reason) : base(time, attacker, defender, 0,
 			isMoving, isNinety, isFlanking, 0, Result.Ignored)
 		{
 			IgnoreReason = reason;
@@ -42,10 +42,10 @@ namespace ScratchEVTCParser.Events
 		}
 
 		public Result HitResult { get; }
-		public int ShieldDamage { get; }
+		public uint ShieldDamage { get; }
 
 		public PhysicalDamageEvent(long time, Agent attacker, Agent defender, int damage, bool isMoving, bool isNinety,
-			bool isFlanking, int shieldDamage, Result result) : base(time, attacker, defender, damage, isMoving,
+			bool isFlanking, uint shieldDamage, Result result) : base(time, attacker, defender, damage, isMoving,
 			isNinety, isFlanking)
 		{
 			ShieldDamage = shieldDamage;

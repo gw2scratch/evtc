@@ -30,8 +30,7 @@ namespace ScratchEVTCParser
 			return ParseLog(fileBytes);
 		}
 
-
-		private ParsedLog ParseLog(byte[] bytes)
+		public ParsedLog ParseLog(byte[] bytes)
 		{
 			var reader = new ByteArrayBinaryReader(bytes, Encoding.UTF8);
 
@@ -39,7 +38,7 @@ namespace ScratchEVTCParser
 			var bossData = ParseBossData(reader);
 			var agents = ParseAgents(reader).ToArray();
 			var skills = ParseSkills(reader).ToArray();
-			var combatItems = ParseCombatItems(reader).ToArray();
+			var combatItems = ParseCombatItems(logVersion.Revision, reader).ToArray();
 
 			return new ParsedLog(logVersion, bossData, agents, skills, combatItems);
 		}
@@ -134,33 +133,37 @@ namespace ScratchEVTCParser
 			}
 		}
 
-		private static FriendOrFoe GetFriendOrFoeFromByte(byte b)
+		/// <summary>
+		/// Parses combat related data
+		/// </summary>
+		private IEnumerable<ParsedCombatItem> ParseCombatItems(int revision, ByteArrayBinaryReader reader)
 		{
-			return b < (byte) FriendOrFoe.Unknown ? (FriendOrFoe) b : FriendOrFoe.Unknown;
+			switch (revision)
+			{
+				case 0:
+					// 64 bytes: each combat item
+					while (reader.Length - reader.Position >= 64)
+					{
+						ParsedCombatItem combatItem = ReadCombatItemRevision0(reader);
+						yield return combatItem;
+					}
+
+					break;
+				case 1:
+					// 64 bytes: each combat item
+					while (reader.Length - reader.Position >= 64)
+					{
+						ParsedCombatItem combatItem = ReadCombatItemRevision1(reader);
+						yield return combatItem;
+					}
+
+					break;
+				default:
+					throw new NotSupportedException("Only EVTC revisions 0 and 1 are supported.");
+			}
 		}
 
-		private static Result GetResultFromByte(byte b)
-		{
-			// Does not perform checking as that would change the result value which is used in buff remove events to indicate remaining stacks
-			return (Result) b;
-		}
-
-		private static BuffRemove GetBuffRemoveFromByte(byte b)
-		{
-			return b <= 3 ? (BuffRemove) b : BuffRemove.None;
-		}
-
-		private static Activation GetActivationFromByte(byte b)
-		{
-			return b < (byte) Activation.Unknown ? (Activation) b : Activation.Unknown;
-		}
-
-		private static StateChange GetStateChangeFromByte(byte b)
-		{
-			return b < (byte) StateChange.Unknown ? (StateChange) b : StateChange.Unknown;
-		}
-
-		private static ParsedCombatItem ReadCombatItem(ByteArrayBinaryReader reader)
+		private static ParsedCombatItem ReadCombatItemRevision0(ByteArrayBinaryReader reader)
 		{
 			// 8 bytes: time
 			long time = reader.ReadInt64();
@@ -237,21 +240,113 @@ namespace ScratchEVTCParser
 			//save
 			// Add combat
 			return new ParsedCombatItem(time, srcAgent, dstAgent, value, buffDmg, overstackValue, skillId,
-				srcInstid, dstInstid, srcMasterInstid, iff, buff, result, isActivation, isBuffRemove,
+				srcInstid, dstInstid, srcMasterInstid, 0, iff, buff, result, isActivation, isBuffRemove,
 				isNinety, isFifty, isMoving, isStateChange, isFlanking, isShields, isOffcycle);
 		}
 
-		/// <summary>
-		/// Parses combat related data
-		/// </summary>
-		private IEnumerable<ParsedCombatItem> ParseCombatItems(ByteArrayBinaryReader reader)
+		private static ParsedCombatItem ReadCombatItemRevision1(ByteArrayBinaryReader reader)
 		{
-			// 64 bytes: each combat
-			while (reader.Length - reader.Position >= 64)
-			{
-				ParsedCombatItem combatItem = ReadCombatItem(reader);
-				yield return combatItem;
-			}
+			// 8 bytes: time
+			long time = reader.ReadInt64();
+
+			// 8 bytes: src_agent
+			ulong srcAgent = reader.ReadUInt64();
+
+			// 8 bytes: dst_agent
+			ulong dstAgent = reader.ReadUInt64();
+
+			// 4 bytes: value
+			int value = reader.ReadInt32();
+
+			// 4 bytes: buff_dmg
+			int buffDmg = reader.ReadInt32();
+
+			// 4 bytes: overstack_value
+			uint overstackValue = reader.ReadUInt32();
+
+			// 4 bytes: skill_id
+			uint skillId = reader.ReadUInt32();
+
+			// 2 bytes: src_instid
+			ushort srcInstid = reader.ReadUInt16();
+
+			// 2 bytes: dst_instid
+			ushort dstInstid = reader.ReadUInt16();
+
+			// 2 bytes: src_master_instid
+			ushort srcMasterInstid = reader.ReadUInt16();
+
+			// 2 bytes: dst_master_instid
+			ushort dstMasterInstid = reader.ReadUInt16();
+
+			// 1 byte: iff
+			FriendOrFoe iff = GetFriendOrFoeFromByte(reader.ReadByte());
+
+			// 1 byte: buff
+			byte buff = reader.ReadByte();
+
+			// 1 byte: result
+			Result result = GetResultFromByte(reader.ReadByte());
+
+			// 1 byte: is_activation
+			Activation isActivation = GetActivationFromByte(reader.ReadByte());
+
+			// 1 byte: is_buffremove
+			BuffRemove isBuffRemove = GetBuffRemoveFromByte(reader.ReadByte());
+
+			// 1 byte: is_ninety
+			byte isNinety = reader.ReadByte();
+
+			// 1 byte: is_fifty
+			byte isFifty = reader.ReadByte();
+
+			// 1 byte: is_moving
+			byte isMoving = reader.ReadByte();
+
+			// 1 byte: is_statechange
+			StateChange isStateChange = GetStateChangeFromByte(reader.ReadByte());
+
+			// 1 byte: is_flanking
+			byte isFlanking = reader.ReadByte();
+
+			// 1 byte: is_shields
+			byte isShields = reader.ReadByte();
+
+			// 1 byte: is_offcycle
+			byte isOffcycle = reader.ReadByte();
+
+			// 4 bytes: padding
+			reader.Skip(4);
+
+			return new ParsedCombatItem(time, srcAgent, dstAgent, value, buffDmg, overstackValue, skillId,
+				srcInstid, dstInstid, srcMasterInstid, dstMasterInstid, iff, buff, result, isActivation, isBuffRemove,
+				isNinety, isFifty, isMoving, isStateChange, isFlanking, isShields, isOffcycle);
+		}
+
+		private static FriendOrFoe GetFriendOrFoeFromByte(byte b)
+		{
+			return b < (byte) FriendOrFoe.Unknown ? (FriendOrFoe) b : FriendOrFoe.Unknown;
+		}
+
+		private static Result GetResultFromByte(byte b)
+		{
+			// Does not perform checking as that would change the result value which is used in buff remove events to indicate remaining stacks
+			return (Result) b;
+		}
+
+		private static BuffRemove GetBuffRemoveFromByte(byte b)
+		{
+			return b <= 3 ? (BuffRemove) b : BuffRemove.None;
+		}
+
+		private static Activation GetActivationFromByte(byte b)
+		{
+			return b < (byte) Activation.Unknown ? (Activation) b : Activation.Unknown;
+		}
+
+		private static StateChange GetStateChangeFromByte(byte b)
+		{
+			return b < (byte) StateChange.Unknown ? (StateChange) b : StateChange.Unknown;
 		}
 	}
 }
