@@ -44,8 +44,13 @@ namespace ScratchLogBrowser
 
 		public AgentControl()
 		{
-			var layout = new DynamicLayout();
-			Content = layout;
+			var tabControl = new TabControl();
+			Content = tabControl;
+
+			var agentDataLayout = new DynamicLayout();
+			var eventLayout = new DynamicLayout();
+			tabControl.Pages.Add(new TabPage(agentDataLayout) {Text = "Agent data"});
+			tabControl.Pages.Add(new TabPage(eventLayout) {Text = "Agent events"});
 
 			agentJsonControl = new JsonSerializationControl {Height = 200};
 			eventListControl = new EventListControl();
@@ -55,19 +60,17 @@ namespace ScratchLogBrowser
 			eventFilterAttackerCheckBox.CheckedChanged += (s, e) => UpdateEventList();
 			eventFilterDefenderCheckBox.CheckedChanged += (s, e) => UpdateEventList();
 
-			layout.BeginGroup("Agent data", new Padding(5));
-			layout.BeginVertical();
-			layout.AddRow(nameLabel);
-			layout.AddRow(agentJsonControl);
-			layout.EndVertical();
-			layout.BeginVertical();
-			layout.AddRow(eventFilterAttackerCheckBox, eventFilterDefenderCheckBox);
-			layout.EndVertical();
-			layout.EndGroup();
+			agentDataLayout.BeginVertical(new Padding(5));
+			agentDataLayout.AddRow(nameLabel);
+			agentDataLayout.AddRow(agentJsonControl);
+			agentDataLayout.EndVertical();
 
-			layout.BeginGroup("Events featuring the agent", new Padding(5));
-			layout.Add(eventListControl);
-			layout.EndGroup();
+			eventLayout.BeginVertical(new Padding(5));
+			eventLayout.AddRow(eventFilterAttackerCheckBox, eventFilterDefenderCheckBox);
+			eventLayout.EndVertical();
+			eventLayout.BeginGroup("Events featuring the agent", new Padding(5));
+			eventLayout.Add(eventListControl);
+			eventLayout.EndGroup();
 		}
 
 		private void UpdateEventList()
