@@ -27,19 +27,22 @@ namespace ScratchLogBrowser
 
 		// Processed events
 		private readonly EventListControl eventListControl;
+		private readonly FilterCollection<ParsedCombatItem> parsedCombatItems = new FilterCollection<ParsedCombatItem>();
+		private readonly FilterCollection<ParsedAgent> parsedAgents = new FilterCollection<ParsedAgent>();
+		private readonly FilterCollection<ParsedSkill> parsedSkills = new FilterCollection<ParsedSkill>();
 
 		// Processed event filtering
 		private readonly List<Event> eventList = new List<Event>();
 
 		// Processed agents
-		private readonly GridView<Agent> agentsGridView;
+		private readonly FilterCollection<Agent> agents = new FilterCollection<Agent>();
 		private readonly AgentControl agentControl;
 
 		// Statistics
 		private readonly JsonSerializationControl statisticsJsonControl;
 
 		// HTML
-        private readonly ButtonMenuItem saveHtmlMenuItem;
+		private readonly ButtonMenuItem saveHtmlMenuItem;
 		private readonly SaveFileDialog saveHtmlFileDialog;
 		private readonly WebView webView = new WebView();
 		private string LogHtml { get; set; } = "";
@@ -68,17 +71,24 @@ namespace ScratchLogBrowser
 			openFileDialog.Filters.Add(new FileFilter("EVTC logs", ".evtc", ".evtc.zip"));
 
 			saveHtmlFileDialog = new SaveFileDialog();
-			saveHtmlFileDialog.Filters.Add(new FileFilter("HTML files", ".html file", ".html", ".htm", "*.*"));
+			saveHtmlFileDialog.Filters.Add(new FileFilter("HTML files", ".html", ".htm", "*.*"));
 
 			parsedStateLabel = new Label {Text = "No log parsed yet."};
 
 			agentItemGridView = new GridViewGenerator().GetGridView<ParsedAgent>();
 			skillsGridView = new GridViewGenerator().GetGridView<ParsedSkill>();
 			combatItemsGridView = new GridViewGenerator().GetGridView<ParsedCombatItem>();
+			agentItemGridView.DataStore = parsedAgents;
+			skillsGridView.DataStore = parsedSkills;
+			combatItemsGridView.DataStore = parsedCombatItems;
+			new GridViewSorter<ParsedAgent>(agentItemGridView, parsedAgents).EnableSorting();
+			new GridViewSorter<ParsedSkill>(skillsGridView, parsedSkills).EnableSorting();
+			new GridViewSorter<ParsedCombatItem>(combatItemsGridView, parsedCombatItems).EnableSorting();
 
 			eventListControl = new EventListControl();
 
-			agentsGridView = new GridViewGenerator().GetGridView<Agent>();
+			var agentsGridView = new GridViewGenerator().GetGridView<Agent>();
+			agentsGridView.DataStore = agents;
 			agentsGridView.SelectedItemsChanged += AgentGridViewOnSelectedKeyChanged;
 			agentsGridView.Columns.Insert(0, new GridColumn()
 			{
@@ -88,6 +98,8 @@ namespace ScratchLogBrowser
 					Binding = new DelegateBinding<object, string>(x => x.GetType().Name)
 				}
 			});
+
+			new GridViewSorter<Agent>(agentsGridView, agents).EnableSorting();
 
 			agentControl = new AgentControl();
 			var mainTabControl = new TabControl();
@@ -155,13 +167,13 @@ namespace ScratchLogBrowser
 				string logFilename = openFileDialog.Filenames.First();
 				var statusStringBuilder = new StringBuilder();
 
-                var parser = new EVTCParser();
+				var parser = new EVTCParser();
 				var processor = new LogProcessor();
 				var statisticsCalculator = new StatisticsCalculator();
 				var generator = new HtmlGenerator();
 
 				// Parsing
-                var sw = Stopwatch.StartNew();
+				var sw = Stopwatch.StartNew();
 				ParsedLog parsedLog = null;
 				try
 				{
@@ -170,9 +182,15 @@ namespace ScratchLogBrowser
 
 					statusStringBuilder.AppendLine($"Parsed in {parseTime}");
 
-					agentItemGridView.DataStore = parsedLog.ParsedAgents.ToArray();
-					skillsGridView.DataStore = parsedLog.ParsedSkills.ToArray();
-					combatItemsGridView.DataStore = parsedLog.ParsedCombatItems.ToArray();
+					parsedAgents.Clear();
+					parsedAgents.AddRange(parsedLog.ParsedAgents);
+					parsedAgents.Refresh();
+					parsedSkills.Clear();
+					parsedSkills.AddRange(parsedLog.ParsedSkills);
+					parsedSkills.Refresh();
+					parsedCombatItems.Clear();
+					parsedCombatItems.AddRange(parsedLog.ParsedCombatItems);
+					parsedCombatItems.Refresh();
 				}
 				catch (Exception ex)
 				{
@@ -192,7 +210,10 @@ namespace ScratchLogBrowser
 					eventList.Clear();
 					eventList.AddRange(processedLog.Events);
 					eventListControl.Events = eventList;
-					agentsGridView.DataStore = processedLog.Agents;
+					eventListControl.Agents = processedLog.Agents.ToArray();
+					agents.Clear();
+					agents.AddRange(new FilterCollection<Agent>(processedLog.Agents));
+					agents.Refresh();
 					agentControl.Events = processedLog.Events.ToArray();
 				}
 				catch (Exception ex)
