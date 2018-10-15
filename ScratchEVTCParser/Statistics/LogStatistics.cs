@@ -4,6 +4,7 @@ using System.Linq;
 using ScratchEVTCParser.Model.Agents;
 using ScratchEVTCParser.Model.Encounters;
 using ScratchEVTCParser.Model.Skills;
+using ScratchEVTCParser.Statistics.Buffs;
 
 namespace ScratchEVTCParser.Statistics
 {
@@ -24,11 +25,12 @@ namespace ScratchEVTCParser.Statistics
 		public IEnumerable<Skill> Skills { get; }
 
 		public SquadDamageData FullFightSquadDamageData { get; }
+		public BuffData BuffData { get; }
 		public IEnumerable<TargetSquadDamageData> FullFightTargetDamageData { get; }
 
 		public LogStatistics(DateTimeOffset fightStart, Player logAuthor, IEnumerable<PhaseStats> phaseStats,
 			SquadDamageData fullFightSquadDamageData, IEnumerable<TargetSquadDamageData> fullFightTargetDamageData,
-			EncounterResult encounterResult, string encounterName, string logVersion,
+			BuffData buffData, EncounterResult encounterResult, string encounterName, string logVersion,
 			IReadOnlyDictionary<string, int> eventCounts, IEnumerable<Agent> agents, IEnumerable<Skill> skills)
 		{
 			EncounterName = encounterName;
@@ -38,6 +40,7 @@ namespace ScratchEVTCParser.Statistics
 			FightStart = fightStart;
 			LogAuthor = logAuthor;
 			FullFightSquadDamageData = fullFightSquadDamageData;
+			BuffData = buffData;
 			FullFightTargetDamageData = fullFightTargetDamageData.ToArray();
 
 			PhaseStats = phaseStats as PhaseStats[] ?? phaseStats.ToArray();

@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScratchLogHTMLGenerator", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScratchLogMaker", "ScratchLogMaker\ScratchLogMaker.csproj", "{B4EBA714-D8AE-42DD-9CD0-10F673D5AFA1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScratchEVTCParser.Tests", "ScratchEVTCParser.Tests\ScratchEVTCParser.Tests.csproj", "{642FA29B-CF62-495E-A88F-D08A9F3C5FEC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{B4EBA714-D8AE-42DD-9CD0-10F673D5AFA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B4EBA714-D8AE-42DD-9CD0-10F673D5AFA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B4EBA714-D8AE-42DD-9CD0-10F673D5AFA1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{642FA29B-CF62-495E-A88F-D08A9F3C5FEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{642FA29B-CF62-495E-A88F-D08A9F3C5FEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{642FA29B-CF62-495E-A88F-D08A9F3C5FEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{642FA29B-CF62-495E-A88F-D08A9F3C5FEC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

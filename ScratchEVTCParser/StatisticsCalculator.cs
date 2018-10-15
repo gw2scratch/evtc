@@ -4,12 +4,16 @@ using System.Linq;
 using ScratchEVTCParser.Events;
 using ScratchEVTCParser.Model;
 using ScratchEVTCParser.Model.Agents;
+using ScratchEVTCParser.Model.Skills;
 using ScratchEVTCParser.Statistics;
+using ScratchEVTCParser.Statistics.Buffs;
 
 namespace ScratchEVTCParser
 {
 	public class StatisticsCalculator
 	{
+		public BuffSimulator BuffSimulator { get; set; } = new BuffSimulator();
+
 		public LogStatistics GetStatistics(Log log)
 		{
 			var phaseStats = new List<PhaseStats>();
@@ -75,8 +79,17 @@ namespace ScratchEVTCParser
 			var logAuthor = log.Events.OfType<PointOfViewEvent>().First().RecordingAgent as Player;
 			var startTime = log.Events.OfType<LogStartEvent>().First().ServerTime;
 
-			return new LogStatistics(startTime, logAuthor, phaseStats, fullFightSquadDamageData, fullFightTargetDamageData,
-				log.Encounter.GetResult(), log.Encounter.GetName(), log.EVTCVersion, eventCountsByName, log.Agents, log.Skills);
+			var might = log.Skills.FirstOrDefault(x => x.Id == SkillIds.Might);
+			var vulnerability = log.Skills.FirstOrDefault(x => x.Id == SkillIds.Vulnerability);
+			if (might != null) BuffSimulator.TrackBuff(might, BuffSimulationType.Intensity, 25);
+			if (vulnerability != null) BuffSimulator.TrackBuff(vulnerability, BuffSimulationType.Intensity, 25);
+
+			var buffData = BuffSimulator.SimulateBuffs(log.Agents, log.Events.OfType<BuffEvent>(),
+				log.Encounter.GetPhases().Last().EndTime);
+
+			return new LogStatistics(startTime, logAuthor, phaseStats, fullFightSquadDamageData,
+				fullFightTargetDamageData, buffData, log.Encounter.GetResult(), log.Encounter.GetName(),
+				log.EVTCVersion, eventCountsByName, log.Agents, log.Skills);
 		}
 
 		private Dictionary<Agent, DamageData> GetDamageData(IEnumerable<Agent> agents, ICollection<DamageEvent> events,

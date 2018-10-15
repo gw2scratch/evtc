@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Security.Cryptography.X509Certificates;
 using Eto.Drawing;
 using Eto.Forms;
 using ScratchEVTCParser.Events;
+using ScratchEVTCParser.Model.Agents;
 
 namespace ScratchLogBrowser
 {
@@ -37,8 +36,21 @@ namespace ScratchLogBrowser
 			}
 		}
 
-		private readonly List<Event> events = new List<Event>();
+		public ICollection<Agent> Agents
+		{
+			get => agents;
+			set
+			{
+				agents.Clear();
+				agents.AddRange(value);
+			}
+		}
 
+		private readonly List<Event> events = new List<Event>();
+		private readonly List<Agent> agents = new List<Agent>();
+
+
+		private readonly Panel filterPanel = new Panel();
 		private readonly GridView<Event> eventGridView;
 		private readonly GridView<FilterType> filterGridView;
 		private readonly JsonSerializationControl eventJsonControl = new JsonSerializationControl();
@@ -74,17 +86,19 @@ namespace ScratchLogBrowser
 			};
 
 			filterGridView = new GridView<FilterType>();
-			filterGridView.Columns.Add(new GridColumn()
-			{
-				DataCell = new TextBoxCell() {Binding = Binding.Property<FilterType, string>(x => x.Type.Name)},
-				HeaderText = "Event Type",
-				Editable = false
-			});
+			filterGridView.Width = 350;
+			filterGridView.Height = 100;
 			filterGridView.Columns.Add(new GridColumn()
 			{
 				DataCell = new CheckBoxCell() {Binding = Binding.Property<FilterType, bool?>(x => x.Checked)},
 				HeaderText = "Show",
 				Editable = true
+			});
+			filterGridView.Columns.Add(new GridColumn()
+			{
+				DataCell = new TextBoxCell() {Binding = Binding.Property<FilterType, string>(x => x.Type.Name)},
+				HeaderText = "Event Type",
+				Editable = false
 			});
 			filterGridView.Columns.Add(new GridColumn()
 			{
@@ -95,6 +109,7 @@ namespace ScratchLogBrowser
 			filterGridView.CellEdited += (sender, e) =>
 			{
 				((FilterCollection<Event>) eventGridView.DataStore).Refresh();
+				UpdateFilters();
 			};
 
 			var checkAllButton = new Button() {Text = "Check all"};
@@ -109,6 +124,7 @@ namespace ScratchLogBrowser
 
 				filterGridView.DataStore = dataStore;
 				((FilterCollection<Event>) eventGridView.DataStore).Refresh();
+				UpdateFilters();
 			};
 			var uncheckAllButton = new Button() {Text = "Uncheck all"};
 			uncheckAllButton.Click += (sender, args) =>
@@ -122,18 +138,21 @@ namespace ScratchLogBrowser
 
 				filterGridView.DataStore = dataStore;
 				((FilterCollection<Event>) eventGridView.DataStore).Refresh();
+				UpdateFilters();
 			};
 
 			filterLayout.BeginHorizontal();
+			filterLayout.BeginVertical();
+			filterLayout.Add(filterGridView);
+			filterLayout.EndVertical();
 			filterLayout.BeginVertical(spacing: new Size(5, 5));
 			filterLayout.Add(checkAllButton);
 			filterLayout.Add(uncheckAllButton);
 			filterLayout.Add(null);
 			filterLayout.EndVertical();
-			filterLayout.BeginVertical();
-			filterLayout.Add(filterGridView);
-			filterLayout.EndVertical();
+			filterLayout.Add(null);
 			filterLayout.EndHorizontal();
+			filterLayout.Add(filterPanel);
 
 
 			var splitter = new Splitter
@@ -150,6 +169,50 @@ namespace ScratchLogBrowser
 			filterGridView.DataStore = filters;
 		}
 
+		private void UpdateFilters()
+		{
+			var selectedTypes = filterGridView.DataStore.Where(x => x.Checked).ToArray();
+			if (selectedTypes.Length == 0)
+			{
+				return;
+			}
+
+			var commonAncestor = selectedTypes.First().Type;
+			foreach (var type in selectedTypes)
+			{
+				commonAncestor = GetClosestType(commonAncestor, type.Type);
+			}
+
+			if (typeof(AgentEvent).IsAssignableFrom(commonAncestor))
+			{
+				var filterAgentRadioButton = new RadioButton {Text = "Exact Agent"};
+				var filterAgentDataRadioButton = new RadioButton(filterAgentRadioButton) {Text = "Agent data"};
+				var agentsDropDown = new DropDown
+				{
+					DataStore = agents,
+					ItemTextBinding = new DelegateBinding<Agent, string>(x => $"{x.Name} ({x.Address})")
+				};
+
+				var filterLayout = new DynamicLayout();
+				filterLayout.BeginHorizontal();
+				filterLayout.BeginGroup("Agent filter");
+				filterLayout.BeginVertical(spacing: new Size(5, 5));
+				filterLayout.AddRow(filterAgentRadioButton, null, agentsDropDown);
+				filterLayout.AddRow(filterAgentDataRadioButton, new CheckBox {Text = "Name"}, new TextBox {Text = ""});
+				filterLayout.AddRow(null, new CheckBox {Text = "Type"},
+					new DropDown {DataStore = new[] {"Player", "NPC", "Gadget"}});
+				filterLayout.AddRow(null);
+				filterLayout.EndVertical();
+				filterLayout.EndGroup();
+				filterLayout.EndHorizontal();
+				filterPanel.Content = filterLayout;
+			}
+			else
+			{
+				filterPanel.Content = null;
+			}
+		}
+
 		private Func<Event, bool> GetEventFilter()
 		{
 			return e =>
@@ -158,6 +221,19 @@ namespace ScratchLogBrowser
 				if (dataStore == null) return true;
 				return filterGridView.DataStore.FirstOrDefault(x => x.Type == e.GetType())?.Checked ?? true;
 			};
+		}
+
+		public Type GetClosestType(Type a, Type b)
+		{
+			while (a != null)
+			{
+				if (a.IsAssignableFrom(b))
+					return a;
+
+				a = a.BaseType;
+			}
+
+			return null;
 		}
 	}
 }

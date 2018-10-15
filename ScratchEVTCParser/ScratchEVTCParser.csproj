@@ -95,6 +95,14 @@
     <Compile Include="Parsed\ParsedSkill.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StatisticsCalculator.cs" />
+    <Compile Include="Statistics\Buffs\AgentBuffData.cs" />
+    <Compile Include="Statistics\Buffs\BuffData.cs" />
+    <Compile Include="Statistics\Buffs\BuffSimulationType.cs" />
+    <Compile Include="Statistics\Buffs\BuffSimulator.cs" />
+    <Compile Include="Statistics\Buffs\BuffStack.cs" />
+    <Compile Include="Statistics\Buffs\IBuffStackCollection.cs" />
+    <Compile Include="Statistics\Buffs\BuffStatusSegment.cs" />
+    <Compile Include="Statistics\Buffs\IntensityBuffStackCollection.cs" />
     <Compile Include="Statistics\LogStatistics.cs" />
     <Compile Include="Statistics\PhaseStats.cs" />
     <Compile Include="Statistics\DamageData.cs" />
