@@ -1,4 +1,5 @@
 using System.IO;
+using System.Runtime.InteropServices;
 using ScratchEVTCParser.Statistics;
 using ScratchLogHTMLGenerator.Parts;
 
@@ -19,12 +20,17 @@ namespace ScratchLogHTMLGenerator.Sections.General
             <div class='title is-4'>Full Encounter</div>
             <div class='subtitle is-6'>Duration: {MillisecondsToReadableFormat(stats.FullFightSquadDamageData.TimeMs)}</div>
 
-			<div>
-                <div class='title is-5'>Total damage in encounter</div>");
+			<div class='columns'>
+				<div class='column'>
+                    <div class='title is-5'>Total damage in encounter</div>");
 
 			new DamageTable(stats.FullFightSquadDamageData).WriteHtml(writer);
 
 			writer.WriteLine(@"
+				</div>
+				<div class='column'>
+					More data will appear here...
+				</div>
 			</div>");
 		}
 	}
