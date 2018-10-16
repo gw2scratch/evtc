@@ -17,7 +17,7 @@ namespace ScratchLogHTMLGenerator
 			var summaryPage = new SummaryPage(stats);
 			var defaultPage = summaryPage; // Has be a top-level page, not a subpage
 
-			IEnumerable<Page> bossPages = stats.FullFightTargetDamageData.Select(x => new BossPage(x));
+			IEnumerable<Page> bossPages = stats.FullFightBossDamageData.Select(x => new BossPage(x));
 			IEnumerable<Page> phasePages = stats.PhaseStats.Select(x => new PhasePage(x));
 
 			var sections = new[]

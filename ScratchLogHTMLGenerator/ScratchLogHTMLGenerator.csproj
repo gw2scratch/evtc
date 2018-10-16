@@ -41,6 +41,7 @@
     <Compile Include="HtmlGenerator.cs" />
     <Compile Include="Page.cs" />
     <Compile Include="Parts\DamageTable.cs" />
+    <Compile Include="Parts\MultiTargetDamageTable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Section.cs" />
     <Compile Include="Sections\General\BossPage.cs" />

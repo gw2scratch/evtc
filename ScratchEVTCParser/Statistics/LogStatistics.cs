@@ -26,7 +26,7 @@ namespace ScratchEVTCParser.Statistics
 
 		public SquadDamageData FullFightSquadDamageData { get; }
 		public BuffData BuffData { get; }
-		public IEnumerable<TargetSquadDamageData> FullFightTargetDamageData { get; }
+		public IEnumerable<TargetSquadDamageData> FullFightBossDamageData { get; }
 
 		public LogStatistics(DateTimeOffset fightStart, Player logAuthor, IEnumerable<PhaseStats> phaseStats,
 			SquadDamageData fullFightSquadDamageData, IEnumerable<TargetSquadDamageData> fullFightTargetDamageData,
@@ -41,7 +41,7 @@ namespace ScratchEVTCParser.Statistics
 			LogAuthor = logAuthor;
 			FullFightSquadDamageData = fullFightSquadDamageData;
 			BuffData = buffData;
-			FullFightTargetDamageData = fullFightTargetDamageData.ToArray();
+			FullFightBossDamageData = fullFightTargetDamageData.ToArray();
 
 			PhaseStats = phaseStats as PhaseStats[] ?? phaseStats.ToArray();
 			FightTimeMs = PhaseStats.Sum(x => x.PhaseDuration);
