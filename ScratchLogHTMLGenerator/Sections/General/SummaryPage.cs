@@ -28,9 +28,6 @@ namespace ScratchLogHTMLGenerator.Sections.General
 
 			writer.WriteLine(@"
 				</div>
-				<div class='column'>
-					More data will appear here...
-				</div>
 			</div>");
 		}
 	}

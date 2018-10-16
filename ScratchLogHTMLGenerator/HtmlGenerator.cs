@@ -25,9 +25,9 @@ namespace ScratchLogHTMLGenerator
 				new Section("General", new[] {summaryPage}.Concat(bossPages).ToArray()),
 				new Section("Phases", phasePages.ToArray()),
 				new Section("Scratch data",
-					new BuffDataPage(stats.BuffData),
+					//new BuffDataPage(stats.BuffData),
 					new EventDataPage(stats.EventCounts),
-					new AgentListPage(stats.Agents),
+					//new AgentListPage(stats.Agents),
 					new SkillListPage(stats.Skills)),
 			};
 
@@ -78,7 +78,7 @@ namespace ScratchLogHTMLGenerator
 			}
 
 			writer.WriteLine($@"
-</div>
+    </div>
 </div>
 </section>
 <footer class='footer'>
@@ -105,13 +105,11 @@ namespace ScratchLogHTMLGenerator
 			bool visible = false)
 		{
 			var hiddenClass = visible ? "" : "is-hidden";
-			writer.WriteLine($@"
-        <div id='tab-{pageNames[page]}' class='content column scratch-tab {hiddenClass}'>");
+			writer.WriteLine($"<div id='tab-{pageNames[page]}' class='content column scratch-tab {hiddenClass}'>");
 
 			page.WriteHtml(writer);
 
-			writer.WriteLine($@"
-		</div>");
+			writer.WriteLine("</div>");
 
 			foreach (var subpage in page.Subpages)
 			{
@@ -122,52 +120,42 @@ namespace ScratchLogHTMLGenerator
 		private void WriteMenu(TextWriter writer, IReadOnlyDictionary<Page, string> pageNames,
 			IEnumerable<Section> sections, Page defaultPage)
 		{
-			writer.WriteLine(@"
-	<aside class='menu column is-3'>");
+			writer.WriteLine("<aside class='menu column is-3'>");
 
 			foreach (var section in sections)
 			{
-				writer.WriteLine($@"
-		<p class='menu-label'>
-			{section.Name}
-		</p>
-		<ul class='menu-list'>");
+				writer.WriteLine($"<p class='menu-label'>{section.Name}</p><ul class='menu-list'>");
 
 				foreach (var page in section.Pages)
 				{
 					WriteMenuPage(writer, pageNames, page, page == defaultPage);
 				}
 
-				writer.WriteLine(@"
-		</ul>");
+				writer.WriteLine("</ul>");
 			}
 
-			writer.WriteLine(@"
-	</aside>");
+			writer.WriteLine("</aside>");
 		}
 
 		private void WriteMenuPage(TextWriter writer, IReadOnlyDictionary<Page, string> pageNames, Page page,
 			bool isActive = false)
 		{
 			var isActiveClass = isActive ? "is-active" : "";
-			writer.WriteLine($@"
-			<li><a id='tablink-{pageNames[page]}' onclick='openTab(this)' class='scratch-tablink {isActiveClass}'>{page.MenuName}</a>");
+			writer.WriteLine("<li>");
+            writer.WriteLine($"<a id='tablink-{pageNames[page]}' onclick='openTab(this)' class='scratch-tablink {isActiveClass}'>{page.MenuName}</a>");
 
 			if (page.Subpages.Any())
 			{
-				writer.WriteLine(@"
-            <ul>");
+				writer.WriteLine("<ul>");
 				foreach (var subpage in page.Subpages)
 				{
 					WriteMenuPage(writer, pageNames, subpage);
 				}
 
-				writer.WriteLine(@"
-            </ul>");
+				writer.WriteLine("</ul>");
 			}
 
-			writer.WriteLine($@"
-			</li>");
+			writer.WriteLine("</li>");
 		}
 
 		private Dictionary<Page, string> AssignPageNames(IEnumerable<Section> sections)
