@@ -1,4 +1,5 @@
 using System.IO;
+using System.Linq;
 using ScratchEVTCParser.Statistics;
 using ScratchLogHTMLGenerator.Parts;
 
@@ -21,7 +22,14 @@ namespace ScratchLogHTMLGenerator.Sections.General
 
 			<div>");
 
-			new MultiTargetDamageTable(stats.FullFightBossDamageData).WriteHtml(writer);
+			if (stats.FullFightBossDamageData.Count() == 1)
+			{
+                new DamageTable(stats.FullFightBossDamageData.First()).WriteHtml(writer);
+			}
+			else
+			{
+                new MultiTargetDamageTable(stats.FullFightBossDamageData).WriteHtml(writer);
+			}
 
 			writer.WriteLine($@"
 			</div>
