@@ -49,7 +49,18 @@ namespace ScratchLogBrowser
 		private string LogHtml { get; set; } = "";
 
 		// API data
-		private GW2ApiData ApiData { get; set; } = null;
+		private readonly ApiDataSection apiDataSection;
+		private GW2ApiData apiData = null;
+
+		private GW2ApiData ApiData
+		{
+			get => apiData;
+			set
+			{
+				apiData = value;
+				apiDataSection.ApiData = apiData;
+			}
+		}
 
 		public BrowserForm()
 		{
@@ -143,11 +154,14 @@ namespace ScratchLogBrowser
 			var htmlLayout = new DynamicLayout();
 			htmlLayout.AddRow(webView);
 
+			apiDataSection = new ApiDataSection();
+
 			mainTabControl.Pages.Add(new TabPage(parsedTabControl) {Text = "Parsed data"});
 			mainTabControl.Pages.Add(new TabPage(processedTabControl) {Text = "Processed data"});
 			mainTabControl.Pages.Add(new TabPage(statisticsTabControl) {Text = "Statistics"});
 			mainTabControl.Pages.Add(new TabPage(htmlLayout) {Text = "HTML"});
 			mainTabControl.Pages.Add(new TabPage(parsedStateLabel) {Text = "Log"});
+			mainTabControl.Pages.Add(new TabPage(apiDataSection) {Text = "Api data"});
 
 			formLayout.BeginVertical();
 			formLayout.AddRow(mainTabControl);
@@ -249,7 +263,7 @@ namespace ScratchLogBrowser
 				sw.Restart();
 				try
 				{
-					stats = statisticsCalculator.GetStatistics(processedLog);
+					stats = statisticsCalculator.GetStatistics(processedLog, ApiData);
 					var statsTime = sw.Elapsed;
 
 					statusStringBuilder.AppendLine($"Statistics generated in {statsTime}");

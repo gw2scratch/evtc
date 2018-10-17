@@ -24,5 +24,9 @@ namespace ScratchLogHTMLGenerator
 		{
 			return $"{milliseconds / 1000 / 60}m {milliseconds / 1000 % 60}s {milliseconds % 1000}ms";
 		}
+
+		public virtual void WriteStyleHtml(TextWriter writer)
+		{
+		}
 	}
 }

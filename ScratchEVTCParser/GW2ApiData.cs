@@ -30,6 +30,11 @@ namespace ScratchEVTCParser
 			return data;
 		}
 
+		public SkillData GetSkillData(Skill skill)
+		{
+			return GetSkillData((int)skill.Id);
+		}
+
 		public void SaveToFile(string filepath)
 		{
 			throw new NotImplementedException();

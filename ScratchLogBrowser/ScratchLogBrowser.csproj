@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AgentControl.cs" />
+    <Compile Include="ApiDataSection.cs" />
     <Compile Include="EventFilters.cs" />
     <Compile Include="EventListControl.cs" />
     <Compile Include="GridViewSorter.cs" />

@@ -18,6 +18,8 @@ namespace ScratchLogMaker
 		private readonly Queue<string> notFinishedFileNames = new Queue<string>();
 		private readonly List<string> finishedFileNames = new List<string>();
 
+		private GW2ApiData ApiData { get; set; } = null; // TODO: Add support
+
 		public MakerForm()
 		{
 			Title = "Scratch HTML log maker";
@@ -93,7 +95,7 @@ namespace ScratchLogMaker
 							times.Add(("processing", (taskStopwatch.Elapsed - lastElapsed).TotalMilliseconds));
 							lastElapsed = taskStopwatch.Elapsed;
 
-							var stats = statisticsCalculator.GetStatistics(processedLog);
+							var stats = statisticsCalculator.GetStatistics(processedLog, ApiData);
 
 							times.Add(("stats", (taskStopwatch.Elapsed - lastElapsed).TotalMilliseconds));
 							lastElapsed = taskStopwatch.Elapsed;

@@ -59,6 +59,18 @@ namespace ScratchLogHTMLGenerator
 			document.getElementById(tabName).classList.remove('is-hidden');
 		}}
 	</script>
+	<style>");
+
+			foreach (var section in sections)
+			{
+				foreach (var page in section.Pages)
+				{
+					WritePageStyle(writer, page);
+				}
+			}
+
+			writer.WriteLine($@"<!DOCTYPE html>
+	</style>
 </head>
 <body>
 <section class='section'>
@@ -115,6 +127,16 @@ namespace ScratchLogHTMLGenerator
 			foreach (var subpage in page.Subpages)
 			{
 				WritePage(writer, pageNames, subpage);
+			}
+		}
+
+		private void WritePageStyle(TextWriter writer, Page page)
+		{
+			page.WriteStyleHtml(writer);
+
+			foreach (var subpage in page.Subpages)
+			{
+				WritePageStyle(writer, subpage);
 			}
 		}
 

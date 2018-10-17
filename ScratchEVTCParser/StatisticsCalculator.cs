@@ -1,16 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Xml;
+using System.Runtime.InteropServices;
 using ScratchEVTCParser.Events;
-using ScratchEVTCParser.GW2Api.V2;
 using ScratchEVTCParser.Model;
 using ScratchEVTCParser.Model.Agents;
 using ScratchEVTCParser.Model.Skills;
-using ScratchEVTCParser.Parsed;
 using ScratchEVTCParser.Statistics;
 using ScratchEVTCParser.Statistics.Buffs;
+using SkillSlot = ScratchEVTCParser.Model.Skills.SkillSlot;
 
 namespace ScratchEVTCParser
 {
@@ -18,7 +16,13 @@ namespace ScratchEVTCParser
 	{
 		public BuffSimulator BuffSimulator { get; set; } = new BuffSimulator();
 
-		public LogStatistics GetStatistics(Log log)
+		/// <summary>
+		/// Calculates statistics for an encounter, such as damage done...
+		/// </summary>
+		/// <param name="log">The processed log.</param>
+		/// <param name="data">Data from the GW2 API, may be null, some statistics won't be calculated.</param>
+		/// <returns></returns>
+		public LogStatistics GetStatistics(Log log, GW2ApiData apiData)
 		{
 			var phaseStats = new List<PhaseStats>();
 			foreach (var phase in log.Encounter.GetPhases())
@@ -91,21 +95,25 @@ namespace ScratchEVTCParser
 			var buffData = BuffSimulator.SimulateBuffs(log.Agents, log.Events.OfType<BuffEvent>(),
 				log.Encounter.GetPhases().Last().EndTime);
 
-			var playerData = GetPlayerData(log);
-
-			var apiSkillRepository = new ApiSkillRepository();
+			var playerData = GetPlayerData(log, apiData);
 
 			return new LogStatistics(startTime, logAuthor, playerData, phaseStats, fullFightSquadDamageData,
 				fullFightTargetDamageData, buffData, log.Encounter.GetResult(), log.Encounter.GetName(),
 				log.EVTCVersion, eventCountsByName, log.Agents, log.Skills);
 		}
 
-		private IEnumerable<PlayerData> GetPlayerData(Log log)
+		private IEnumerable<PlayerData> GetPlayerData(Log log, GW2ApiData apiData)
 		{
 			var players = log.Agents.OfType<Player>().ToArray();
 			var deathCountDictionary = players.ToDictionary(x => x, x => 0);
 			var downCountDictionary = players.ToDictionary(x => x, x => 0);
 			var usedSkillDictionary = players.ToDictionary(x => x, x => new HashSet<Skill>());
+			var utilitySkillDictionary =
+				apiData == null ? null : players.ToDictionary(x => x, x => new List<SkillData>());
+			var healingSkillDictionary =
+				apiData == null ? null : players.ToDictionary(x => x, x => new List<SkillData>());
+			var eliteSkillDictionary =
+				apiData == null ? null : players.ToDictionary(x => x, x => new List<SkillData>());
 
 			foreach (var deadEvent in log.Events.OfType<AgentDeadEvent>().Where(x => x.Agent is Player))
 			{
@@ -132,8 +140,45 @@ namespace ScratchEVTCParser
 				usedSkillDictionary[player].Add(activationEvent.Skill);
 			}
 
+			if (apiData != null)
+			{
+				foreach (var player in players)
+				{
+					var utilitySkills = new List<SkillData>();
+					var healingSkills = new List<SkillData>();
+					var eliteSkills = new List<SkillData>();
+					foreach (var usedSkill in usedSkillDictionary[player])
+					{
+						var skillData = apiData.GetSkillData(usedSkill);
+
+						// Skills may be also registered as used if they affect other players and do damage through them
+						if (skillData != null && skillData.Professions.Contains(player.Profession))
+						{
+							if (skillData.Slot == SkillSlot.Elite)
+							{
+								eliteSkills.Add(skillData);
+							}
+							else if (skillData.Slot == SkillSlot.Utility)
+							{
+								utilitySkills.Add(skillData);
+							}
+							else if (skillData.Slot == SkillSlot.Heal)
+							{
+								healingSkills.Add(skillData);
+							}
+						}
+					}
+
+					utilitySkillDictionary[player] = utilitySkills;
+					healingSkillDictionary[player] = healingSkills;
+					eliteSkillDictionary[player] = eliteSkills;
+				}
+			}
+
+
 			return players.Select(p =>
-				new PlayerData(p, downCountDictionary[p], deathCountDictionary[p], usedSkillDictionary[p])).ToArray();
+				new PlayerData(p, downCountDictionary[p], deathCountDictionary[p], usedSkillDictionary[p],
+					healingSkillDictionary?[p], utilitySkillDictionary?[p], eliteSkillDictionary?[p])).ToArray();
 		}
 
 		private Dictionary<Agent, DamageData> GetDamageData(IEnumerable<Agent> agents, ICollection<DamageEvent> events,

@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using ScratchEVTCParser.Model.Agents;
+using ScratchEVTCParser.Model.Skills;
 using ScratchEVTCParser.Statistics;
 
 namespace ScratchLogHTMLGenerator.Sections.General
@@ -14,6 +16,11 @@ namespace ScratchLogHTMLGenerator.Sections.General
 		public PlayerDetailPage(IEnumerable<PlayerData> playerData) : base(true, "Players")
 		{
 			this.playerData = playerData;
+		}
+
+		public override void WriteStyleHtml(TextWriter writer)
+		{
+			writer.WriteLine(".player-skill-image {width: 32px; height: 32px;}");
 		}
 
 		public override void WriteHtml(TextWriter writer)
@@ -46,8 +53,43 @@ namespace ScratchLogHTMLGenerator.Sections.General
 				<br>
 				Death count: {data.DeathCount}
                 </p>
-				<p>
-					<ul>{usedSkills}</ul>
+				<p>");
+
+				// TODO: Revenant handling
+				if (data.UtilitySkills != null && data.EliteSkills != null && data.HealingSkills != null)
+				{
+					var skillMatrix = GetSkillMatrix(data);
+
+					for (int row = 0; row < skillMatrix.Length; row++)
+					{
+						foreach (var skillData in skillMatrix[row])
+						{
+							if (skillData == null)
+							{
+								writer.WriteLine(
+									"<img class='player-skill-image' src='https://wiki.guildwars2.com/images/7/74/Skill.png' alt='Unknown skill'>");
+							}
+							else
+							{
+								var encodedName = System.Web.HttpUtility.HtmlEncode(skillData.Name);
+								writer.WriteLine(
+									$"<img class='player-skill-image' src='{skillData.IconUrl}' alt='{encodedName}' title='{encodedName}'>");
+							}
+						}
+
+						if (row != skillMatrix.Length - 1)
+						{
+							writer.WriteLine("<br>");
+						}
+					}
+				}
+				else
+				{
+					writer.WriteLine(
+						$"No data on utility skills, perhaps API data was missing."); // TODO: Add reasons for missing data
+				}
+
+				writer.WriteLine($@"
                 </p>
 			</div>
 		</div>
@@ -86,6 +128,47 @@ namespace ScratchLogHTMLGenerator.Sections.General
 ");
 				playerIndex++;
 			}
+		}
+
+		private SkillData[][] GetSkillMatrix(PlayerData data)
+		{
+			const int weaponSlots = 5;
+			const int healingSlots = 1;
+			const int utilitySlots = 3;
+			const int eliteSlots = 1;
+
+			var healingSkills = data.HealingSkills.ToArray();
+			var utilitySkills = data.UtilitySkills.ToArray();
+			var eliteSkills = data.EliteSkills.ToArray();
+
+			int requiredLines = Math.Max(healingSkills.Length / healingSlots,
+				Math.Max(utilitySkills.Length / utilitySlots, eliteSkills.Length / eliteSlots));
+
+			var matrix = new SkillData[requiredLines][];
+
+			for (int i = 0; i < matrix.Length; i++)
+			{
+				matrix[i] = new SkillData[weaponSlots + healingSlots + utilitySlots + eliteSlots];
+			}
+
+			// TODO: Weapon skills
+
+			for (int i = 0; i < healingSkills.Length; i++)
+			{
+				matrix[i / healingSlots][weaponSlots + i % healingSlots] = healingSkills[i];
+			}
+
+			for (int i = 0; i < utilitySkills.Length; i++)
+			{
+				matrix[i / utilitySlots][weaponSlots + healingSlots + i % utilitySlots] = utilitySkills[i];
+			}
+
+			for (int i = 0; i < eliteSkills.Length; i++)
+			{
+				matrix[i / eliteSlots][weaponSlots + healingSlots + utilitySlots + i % eliteSlots] = eliteSkills[i];
+			}
+
+			return matrix;
 		}
 
 		private string GetProfessionColorMedium(Player player)
@@ -144,7 +227,6 @@ namespace ScratchLogHTMLGenerator.Sections.General
 
 		private string GetProfessionColorLightTransparent(Player player)
 		{
-
 			switch (player.Profession)
 			{
 				case Profession.Warrior:
