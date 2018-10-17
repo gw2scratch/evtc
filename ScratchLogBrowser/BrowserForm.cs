@@ -236,7 +236,6 @@ namespace ScratchLogBrowser
 				catch (Exception ex)
 				{
 					statusStringBuilder.AppendLine($"Statistics generation failed: {ex.Message}");
-					throw;
 				}
 
 				// HTML
