@@ -607,20 +607,20 @@ namespace ScratchEVTCParser
 							? IgnoredBuffDamageEvent.Reason.InvulnerableBuff
 							: IgnoredBuffDamageEvent.Reason.InvulnerableSkill;
 
-						yield return new IgnoredBuffDamageEvent(item.Time, attacker, defender, buffDamage, buff,
+						yield return new IgnoredBuffDamageEvent(item.Time, attacker, defender, buff, buffDamage,
 							isMoving, isNinety, isFlanking, reason);
 					}
 					else
 					{
 						if (isOffCycle)
 						{
-							yield return new OffCycleBuffDamageEvent(item.Time, attacker, defender, buffDamage, buff,
+							yield return new OffCycleBuffDamageEvent(item.Time, attacker, defender, buff, buffDamage,
 								isMoving, isNinety, isFlanking);
 						}
 						else
 						{
-							yield return new BuffDamageEvent(item.Time, attacker, defender, buffDamage, buff,
-								isMoving, isNinety, isFlanking);
+							yield return new BuffDamageEvent(item.Time, attacker, defender, buff, buffDamage, isMoving,
+								isNinety, isFlanking);
 						}
 					}
 				}
@@ -630,6 +630,7 @@ namespace ScratchEVTCParser
 					uint shieldDamage = item.OverstackValue;
 					Agent attacker = GetAgentByAddress(item.SrcAgent);
 					Agent defender = GetAgentByAddress(item.DstAgent);
+					Skill skill = GetSkillById(item.SkillId);
 					bool isMoving = item.IsMoving > 0;
 					bool isNinety = item.IsNinety > 0;
 					bool isFlanking = item.IsFlanking > 0;
@@ -684,13 +685,13 @@ namespace ScratchEVTCParser
 
 					if (!ignored)
 					{
-						yield return new PhysicalDamageEvent(item.Time, attacker, defender, damage, isMoving, isNinety,
-							isFlanking, shieldDamage, hitResult);
+						yield return new PhysicalDamageEvent(item.Time, attacker, defender, skill, damage, isMoving,
+							isNinety, isFlanking, shieldDamage, hitResult);
 					}
 					else
 					{
-						yield return new IgnoredPhysicalDamageEvent(item.Time, attacker, defender, damage, isMoving,
-							isNinety, isFlanking, shieldDamage, ignoreReason);
+						yield return new IgnoredPhysicalDamageEvent(item.Time, attacker, defender, skill, damage,
+							isMoving, isNinety, isFlanking, shieldDamage, ignoreReason);
 					}
 				}
 				else
