@@ -9,6 +9,7 @@ using Eto.Forms;
 using Eto.Generator;
 using ScratchEVTCParser;
 using ScratchEVTCParser.Events;
+using ScratchEVTCParser.GW2Api.V2;
 using ScratchEVTCParser.Model;
 using ScratchEVTCParser.Model.Agents;
 using ScratchEVTCParser.Parsed;
@@ -47,6 +48,9 @@ namespace ScratchLogBrowser
 		private readonly WebView webView = new WebView();
 		private string LogHtml { get; set; } = "";
 
+		// API data
+		private GW2ApiData ApiData { get; set; } = null;
+
 		public BrowserForm()
 		{
 			Title = "Scratch EVTC Browser";
@@ -65,7 +69,14 @@ namespace ScratchLogBrowser
 			fileMenuItem.Items.Add(openFileMenuItem);
 			fileMenuItem.Items.Add(saveHtmlMenuItem);
 
-			Menu = new MenuBar(fileMenuItem);
+			var loadApiDataButton = new ButtonMenuItem {Text = "&Load Data from GW2 API"};
+			loadApiDataButton.Click += LoadApiData;
+			loadApiDataButton.Shortcut = Application.Instance.CommonModifier | Keys.L;
+
+			var apiDataMenuItem = new ButtonMenuItem() {Text = "&GW2 API Data"};
+			apiDataMenuItem.Items.Add(loadApiDataButton);
+
+			Menu = new MenuBar(fileMenuItem, apiDataMenuItem);
 
 			openFileDialog = new OpenFileDialog();
 			openFileDialog.Filters.Add(new FileFilter("EVTC logs", ".evtc", ".evtc.zip"));
@@ -143,6 +154,12 @@ namespace ScratchLogBrowser
 			formLayout.EndVertical();
 		}
 
+		private async void LoadApiData(object sender, EventArgs e)
+		{
+			var apiData = await GW2ApiData.LoadFromApi(new ApiSkillRepository());
+			Application.Instance.Invoke(() => { ApiData = apiData; });
+		}
+
 		private void SaveHtmlButtonOnClick(object sender, EventArgs e)
 		{
 			var result = saveHtmlFileDialog.ShowDialog(this);
@@ -159,7 +176,7 @@ namespace ScratchLogBrowser
 			agentControl.Agent = agent;
 		}
 
-		private void OpenFileButtonOnClick(object s, EventArgs e)
+		private async void OpenFileButtonOnClick(object s, EventArgs e)
 		{
 			var result = openFileDialog.ShowDialog(this);
 			if (result == DialogResult.Ok)
@@ -182,15 +199,18 @@ namespace ScratchLogBrowser
 
 					statusStringBuilder.AppendLine($"Parsed in {parseTime}");
 
-					parsedAgents.Clear();
-					parsedAgents.AddRange(parsedLog.ParsedAgents);
-					parsedAgents.Refresh();
-					parsedSkills.Clear();
-					parsedSkills.AddRange(parsedLog.ParsedSkills);
-					parsedSkills.Refresh();
-					parsedCombatItems.Clear();
-					parsedCombatItems.AddRange(parsedLog.ParsedCombatItems);
-					parsedCombatItems.Refresh();
+					Application.Instance.Invoke(() =>
+					{
+						parsedAgents.Clear();
+						parsedAgents.AddRange(parsedLog.ParsedAgents);
+						parsedAgents.Refresh();
+						parsedSkills.Clear();
+						parsedSkills.AddRange(parsedLog.ParsedSkills);
+						parsedSkills.Refresh();
+						parsedCombatItems.Clear();
+						parsedCombatItems.AddRange(parsedLog.ParsedCombatItems);
+						parsedCombatItems.Refresh();
+					});
 				}
 				catch (Exception ex)
 				{
@@ -207,14 +227,17 @@ namespace ScratchLogBrowser
 
 					statusStringBuilder.AppendLine($"Processed in {processTime}");
 
-					eventList.Clear();
-					eventList.AddRange(processedLog.Events);
-					eventListControl.Events = eventList;
-					eventListControl.Agents = processedLog.Agents.ToArray();
-					agents.Clear();
-					agents.AddRange(new FilterCollection<Agent>(processedLog.Agents));
-					agents.Refresh();
-					agentControl.Events = processedLog.Events.ToArray();
+					Application.Instance.Invoke(() =>
+					{
+						eventList.Clear();
+						eventList.AddRange(processedLog.Events);
+						eventListControl.Events = eventList;
+						eventListControl.Agents = processedLog.Agents.ToArray();
+						agents.Clear();
+						agents.AddRange(new FilterCollection<Agent>(processedLog.Agents));
+						agents.Refresh();
+						agentControl.Events = processedLog.Events.ToArray();
+					});
 				}
 				catch (Exception ex)
 				{
@@ -231,7 +254,7 @@ namespace ScratchLogBrowser
 
 					statusStringBuilder.AppendLine($"Statistics generated in {statsTime}");
 
-					statisticsJsonControl.Object = stats;
+					Application.Instance.Invoke(() => { statisticsJsonControl.Object = stats; });
 				}
 				catch (Exception ex)
 				{
@@ -248,22 +271,28 @@ namespace ScratchLogBrowser
 
 					statusStringBuilder.AppendLine($"HTML generated in {htmlTime}");
 
-					webView.LoadHtml(htmlStringWriter.ToString());
-					LogHtml = htmlStringWriter.ToString();
-					saveHtmlMenuItem.Enabled = true;
+					Application.Instance.Invoke(() =>
+					{
+						webView.LoadHtml(htmlStringWriter.ToString());
+						LogHtml = htmlStringWriter.ToString();
+						saveHtmlMenuItem.Enabled = true;
+					});
 				}
 				catch (Exception ex)
 				{
 					statusStringBuilder.AppendLine($"HTML generation failed: {ex.Message}");
 				}
 
-				statusStringBuilder.AppendLine(
-					$"Build version: {parsedLog?.LogVersion?.BuildVersion}, revision {parsedLog?.LogVersion?.Revision}");
-				statusStringBuilder.AppendLine(
-					$"Parsed: {parsedLog?.ParsedAgents?.Length} agents, {parsedLog?.ParsedSkills?.Length} skills, {parsedLog?.ParsedCombatItems?.Length} combat items.");
-				statusStringBuilder.AppendLine(
-					$"Processed: {processedLog?.Events?.Count()} events, {processedLog?.Agents?.Count()} agents.");
-				parsedStateLabel.Text = statusStringBuilder.ToString();
+				Application.Instance.Invoke(() =>
+				{
+					statusStringBuilder.AppendLine(
+						$"Build version: {parsedLog?.LogVersion?.BuildVersion}, revision {parsedLog?.LogVersion?.Revision}");
+					statusStringBuilder.AppendLine(
+						$"Parsed: {parsedLog?.ParsedAgents?.Length} agents, {parsedLog?.ParsedSkills?.Length} skills, {parsedLog?.ParsedCombatItems?.Length} combat items.");
+					statusStringBuilder.AppendLine(
+						$"Processed: {processedLog?.Events?.Count()} events, {processedLog?.Agents?.Count()} agents.");
+					parsedStateLabel.Text = statusStringBuilder.ToString();
+				});
 			}
 		}
 	}

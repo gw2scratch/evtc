@@ -35,10 +35,15 @@
     <Reference Include="Eto.Generator, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\ScratchLogBrowser\dependencies\Eto.Generator.dll</HintPath>
     </Reference>
+    <Reference Include="RestSharp, Version=106.5.4.0, Culture=neutral, PublicKeyToken=598062e77f915f75">
+      <HintPath>..\packages\RestSharp.106.5.4\lib\net452\RestSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -50,6 +55,9 @@
     <Compile Include="Events\LogEvents.cs" />
     <Compile Include="Events\SkillEvents.cs" />
     <Compile Include="Events\UnknownEvent.cs" />
+    <Compile Include="GW2ApiData.cs" />
+    <Compile Include="GW2Api\V2\ApiSkill.cs" />
+    <Compile Include="GW2Api\V2\ApiSkillRepository.cs" />
     <Compile Include="LogProcessor.cs" />
     <Compile Include="EVTCParser.cs" />
     <Compile Include="Model\Agents\Agent.cs" />
@@ -80,7 +88,13 @@
     <Compile Include="Model\Encounters\Phases\StartTrigger.cs" />
     <Compile Include="Model\Log.cs" />
     <Compile Include="Model\SkillIds.cs" />
+    <Compile Include="Model\SkillSlot.cs" />
+    <Compile Include="Model\Skills\SkillAttunement.cs" />
+    <Compile Include="Model\Skills\SkillData.cs" />
     <Compile Include="Model\Skills\Skill.cs" />
+    <Compile Include="Model\Skills\SkillSlot.cs" />
+    <Compile Include="Model\Skills\SkillType.cs" />
+    <Compile Include="Model\Skills\WeaponType.cs" />
     <Compile Include="Model\SpeciesIds.cs" />
     <Compile Include="Parsed\Enums\Activation.cs" />
     <Compile Include="Parsed\Enums\BuffRemove.cs" />
@@ -110,6 +124,9 @@
     <Compile Include="Statistics\SquadDamageData.cs" />
     <Compile Include="Statistics\TargetDamageData.cs" />
     <Compile Include="StreamExtensions.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

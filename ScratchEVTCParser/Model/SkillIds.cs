@@ -1,3 +1,5 @@
+using ScratchEVTCParser.Model.Agents;
+
 namespace ScratchEVTCParser.Model
 {
 	public static class SkillIds
@@ -34,5 +36,24 @@ namespace ScratchEVTCParser.Model
 		public const int Determined = 762;
 		public const int GorsevalInvulnerability = 31790;
 		public const int QadimFlameArmor = 52568;
+	}
+
+	public class SkillDefinition
+	{
+		public int Id { get; }
+		public string InternalName { get; }
+		public Profession Profession { get; }
+		public EliteSpecialization EliteSpecialization { get; }
+		public SkillSlot SkillSlot { get; }
+
+		public SkillDefinition(int id, string internalName, SkillSlot skillSlot,
+			Profession profession = Profession.None, EliteSpecialization eliteSpecialization = EliteSpecialization.None)
+		{
+			Id = id;
+			InternalName = internalName;
+			SkillSlot = skillSlot;
+			Profession = profession;
+			EliteSpecialization = eliteSpecialization;
+		}
 	}
 }

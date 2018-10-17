@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using ScratchEVTCParser.Model.Agents;
 using ScratchEVTCParser.Statistics;
 
@@ -24,6 +25,8 @@ namespace ScratchLogHTMLGenerator.Sections.General
 			{
 				var player = data.Player;
 
+				string usedSkills = string.Join("", data.UsedSkills.Select(x => $"<li>{x.Name} ({x.Id})</li>"));
+
 				// TODO: Proper alt for profession icon
 				writer.WriteLine($@"
 <div class='box'>
@@ -42,6 +45,9 @@ namespace ScratchLogHTMLGenerator.Sections.General
 				Down count: {data.DownCount}
 				<br>
 				Death count: {data.DeathCount}
+                </p>
+				<p>
+					<ul>{usedSkills}</ul>
                 </p>
 			</div>
 		</div>

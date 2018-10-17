@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Xml;
 using ScratchEVTCParser.Events;
+using ScratchEVTCParser.GW2Api.V2;
 using ScratchEVTCParser.Model;
 using ScratchEVTCParser.Model.Agents;
 using ScratchEVTCParser.Model.Skills;
@@ -91,6 +93,8 @@ namespace ScratchEVTCParser
 
 			var playerData = GetPlayerData(log);
 
+			var apiSkillRepository = new ApiSkillRepository();
+
 			return new LogStatistics(startTime, logAuthor, playerData, phaseStats, fullFightSquadDamageData,
 				fullFightTargetDamageData, buffData, log.Encounter.GetResult(), log.Encounter.GetName(),
 				log.EVTCVersion, eventCountsByName, log.Agents, log.Skills);
@@ -101,6 +105,7 @@ namespace ScratchEVTCParser
 			var players = log.Agents.OfType<Player>().ToArray();
 			var deathCountDictionary = players.ToDictionary(x => x, x => 0);
 			var downCountDictionary = players.ToDictionary(x => x, x => 0);
+			var usedSkillDictionary = players.ToDictionary(x => x, x => new HashSet<Skill>());
 
 			foreach (var deadEvent in log.Events.OfType<AgentDeadEvent>().Where(x => x.Agent is Player))
 			{
@@ -114,7 +119,21 @@ namespace ScratchEVTCParser
 				downCountDictionary[player]++;
 			}
 
-			return players.Select(p => new PlayerData(p, downCountDictionary[p], deathCountDictionary[p])).ToArray();
+			// Buff damage events only tell us which conditions/buffs, not what skill actually applied them
+			foreach (var damageEvent in log.Events.OfType<PhysicalDamageEvent>().Where(x => x.Attacker is Player))
+			{
+				var player = (Player) damageEvent.Attacker;
+				usedSkillDictionary[player].Add(damageEvent.Skill);
+			}
+
+			foreach (var activationEvent in log.Events.OfType<SkillCastEvent>().Where(x => x.Agent is Player))
+			{
+				var player = (Player) activationEvent.Agent;
+				usedSkillDictionary[player].Add(activationEvent.Skill);
+			}
+
+			return players.Select(p =>
+				new PlayerData(p, downCountDictionary[p], deathCountDictionary[p], usedSkillDictionary[p])).ToArray();
 		}
 
 		private Dictionary<Agent, DamageData> GetDamageData(IEnumerable<Agent> agents, ICollection<DamageEvent> events,

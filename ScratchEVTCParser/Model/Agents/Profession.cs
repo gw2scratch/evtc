@@ -10,6 +10,7 @@ namespace ScratchEVTCParser.Model.Agents
 		Elementalist,
 		Mesmer,
 		Necromancer,
-		Revenant
+		Revenant,
+		None
 	}
 }
