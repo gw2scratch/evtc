@@ -15,6 +15,7 @@ namespace ScratchLogHTMLGenerator
 		public void WriteHtml(TextWriter writer, LogStatistics stats)
 		{
 			var summaryPage = new SummaryPage(stats);
+			var playerPage = new PlayerDetailPage(stats.PlayerData);
 			var defaultPage = summaryPage; // Has be a top-level page, not a subpage
 
 			IEnumerable<Page> bossPages = stats.FullFightBossDamageData.Select(x => new BossPage(x));
@@ -22,7 +23,7 @@ namespace ScratchLogHTMLGenerator
 
 			var sections = new[]
 			{
-				new Section("General", new[] {summaryPage}.Concat(bossPages).ToArray()),
+				new Section("General", new Page[] {summaryPage, playerPage}.Concat(bossPages).ToArray()),
 				new Section("Phases", phasePages.ToArray()),
 				new Section("Scratch data",
 					//new BuffDataPage(stats.BuffData),

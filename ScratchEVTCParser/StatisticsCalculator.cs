@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml;
 using ScratchEVTCParser.Events;
 using ScratchEVTCParser.Model;
 using ScratchEVTCParser.Model.Agents;
 using ScratchEVTCParser.Model.Skills;
+using ScratchEVTCParser.Parsed;
 using ScratchEVTCParser.Statistics;
 using ScratchEVTCParser.Statistics.Buffs;
 
@@ -87,9 +89,32 @@ namespace ScratchEVTCParser
 			var buffData = BuffSimulator.SimulateBuffs(log.Agents, log.Events.OfType<BuffEvent>(),
 				log.Encounter.GetPhases().Last().EndTime);
 
-			return new LogStatistics(startTime, logAuthor, phaseStats, fullFightSquadDamageData,
+			var playerData = GetPlayerData(log);
+
+			return new LogStatistics(startTime, logAuthor, playerData, phaseStats, fullFightSquadDamageData,
 				fullFightTargetDamageData, buffData, log.Encounter.GetResult(), log.Encounter.GetName(),
 				log.EVTCVersion, eventCountsByName, log.Agents, log.Skills);
+		}
+
+		private IEnumerable<PlayerData> GetPlayerData(Log log)
+		{
+			var players = log.Agents.OfType<Player>().ToArray();
+			var deathCountDictionary = players.ToDictionary(x => x, x => 0);
+			var downCountDictionary = players.ToDictionary(x => x, x => 0);
+
+			foreach (var deadEvent in log.Events.OfType<AgentDeadEvent>().Where(x => x.Agent is Player))
+			{
+				var player = (Player) deadEvent.Agent;
+				deathCountDictionary[player]++;
+			}
+
+			foreach (var downEvent in log.Events.OfType<AgentDownedEvent>().Where(x => x.Agent is Player))
+			{
+				var player = (Player) downEvent.Agent;
+				downCountDictionary[player]++;
+			}
+
+			return players.Select(p => new PlayerData(p, downCountDictionary[p], deathCountDictionary[p])).ToArray();
 		}
 
 		private Dictionary<Agent, DamageData> GetDamageData(IEnumerable<Agent> agents, ICollection<DamageEvent> events,
