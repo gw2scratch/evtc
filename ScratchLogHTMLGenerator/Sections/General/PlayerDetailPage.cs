@@ -101,9 +101,9 @@ namespace ScratchLogHTMLGenerator.Sections.General
                 var radarChart = new Chart(ctx, {{
                     type: 'radar',
                     data: {{
-                        labels: ['Condition', 'Healing', 'Toughness', 'Concentration'],
+                        labels: ['Power dmg', 'Condition dmg', 'Healing', 'Toughness', 'Concentration'],
                         datasets: [{{
-                            data: [{player.Condition}, {player.Healing}, {player.Toughness}, {player.Concentration}],
+                            data: [{(1 - data.ConditionDamageRatio) * 10}, {data.ConditionDamageRatio * 10}, {player.Healing}, {player.Toughness}, {player.Concentration}],
                             borderColor: '{GetProfessionColorMedium(player)}',
                             pointBorderColor: '{GetProfessionColorMedium(player)}',
                             backgroundColor: '{GetProfessionColorLightTransparent(player)}',

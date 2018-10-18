@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using ScratchEVTCParser.Events;
@@ -95,59 +96,58 @@ namespace ScratchEVTCParser
 			var buffData = BuffSimulator.SimulateBuffs(log.Agents, log.Events.OfType<BuffEvent>(),
 				log.Encounter.GetPhases().Last().EndTime);
 
-			var playerData = GetPlayerData(log, apiData);
+			var playerData = GetPlayerData(log, fullFightSquadDamageData, apiData);
 
 			return new LogStatistics(startTime, logAuthor, playerData, phaseStats, fullFightSquadDamageData,
 				fullFightTargetDamageData, buffData, log.Encounter.GetResult(), log.Encounter.GetName(),
 				log.EVTCVersion, eventCountsByName, log.Agents, log.Skills);
 		}
 
-		private IEnumerable<PlayerData> GetPlayerData(Log log, GW2ApiData apiData)
+		private IEnumerable<PlayerData> GetPlayerData(Log log, SquadDamageData damageData, GW2ApiData apiData)
 		{
 			var players = log.Agents.OfType<Player>().ToArray();
-			var deathCountDictionary = players.ToDictionary(x => x, x => 0);
-			var downCountDictionary = players.ToDictionary(x => x, x => 0);
-			var usedSkillDictionary = players.ToDictionary(x => x, x => new HashSet<Skill>());
-			var utilitySkillDictionary =
-				apiData == null ? null : players.ToDictionary(x => x, x => new List<SkillData>());
-			var healingSkillDictionary =
-				apiData == null ? null : players.ToDictionary(x => x, x => new List<SkillData>());
-			var eliteSkillDictionary =
-				apiData == null ? null : players.ToDictionary(x => x, x => new List<SkillData>());
+
+			var deathCounts = players.ToDictionary(x => x, x => 0);
+			var downCounts = players.ToDictionary(x => x, x => 0);
+			var usedSkills = players.ToDictionary(x => x, x => new HashSet<Skill>());
+			var conditionDamageFractions = players.ToDictionary(x => x, x => 0f);
+			var utilitySkills = apiData == null ? null : players.ToDictionary(x => x, x => new List<SkillData>());
+			var healingSkills = apiData == null ? null : players.ToDictionary(x => x, x => new List<SkillData>());
+			var eliteSkills = apiData == null ? null : players.ToDictionary(x => x, x => new List<SkillData>());
 
 			foreach (var deadEvent in log.Events.OfType<AgentDeadEvent>().Where(x => x.Agent is Player))
 			{
 				var player = (Player) deadEvent.Agent;
-				deathCountDictionary[player]++;
+				deathCounts[player]++;
 			}
 
 			foreach (var downEvent in log.Events.OfType<AgentDownedEvent>().Where(x => x.Agent is Player))
 			{
 				var player = (Player) downEvent.Agent;
-				downCountDictionary[player]++;
+				downCounts[player]++;
 			}
 
 			// Buff damage events only tell us which conditions/buffs, not what skill actually applied them
 			foreach (var damageEvent in log.Events.OfType<PhysicalDamageEvent>().Where(x => x.Attacker is Player))
 			{
 				var player = (Player) damageEvent.Attacker;
-				usedSkillDictionary[player].Add(damageEvent.Skill);
+				usedSkills[player].Add(damageEvent.Skill);
 			}
 
 			foreach (var activationEvent in log.Events.OfType<SkillCastEvent>().Where(x => x.Agent is Player))
 			{
 				var player = (Player) activationEvent.Agent;
-				usedSkillDictionary[player].Add(activationEvent.Skill);
+				usedSkills[player].Add(activationEvent.Skill);
 			}
 
 			if (apiData != null)
 			{
 				foreach (var player in players)
 				{
-					var utilitySkills = new List<SkillData>();
-					var healingSkills = new List<SkillData>();
-					var eliteSkills = new List<SkillData>();
-					foreach (var usedSkill in usedSkillDictionary[player])
+					var playerUtilitySkills = new List<SkillData>();
+					var playerHealingSkills = new List<SkillData>();
+					var playerEliteSkills = new List<SkillData>();
+					foreach (var usedSkill in usedSkills[player])
 					{
 						var skillData = apiData.GetSkillData(usedSkill);
 
@@ -156,29 +156,35 @@ namespace ScratchEVTCParser
 						{
 							if (skillData.Slot == SkillSlot.Elite)
 							{
-								eliteSkills.Add(skillData);
+								playerEliteSkills.Add(skillData);
 							}
 							else if (skillData.Slot == SkillSlot.Utility)
 							{
-								utilitySkills.Add(skillData);
+								playerUtilitySkills.Add(skillData);
 							}
 							else if (skillData.Slot == SkillSlot.Heal)
 							{
-								healingSkills.Add(skillData);
+								playerHealingSkills.Add(skillData);
 							}
 						}
 					}
 
-					utilitySkillDictionary[player] = utilitySkills;
-					healingSkillDictionary[player] = healingSkills;
-					eliteSkillDictionary[player] = eliteSkills;
+					utilitySkills[player] = playerUtilitySkills;
+					healingSkills[player] = playerHealingSkills;
+					eliteSkills[player] = playerEliteSkills;
 				}
 			}
 
+			foreach (var data in damageData.DamageData.Where(x => x.Attacker is Player))
+			{
+				conditionDamageFractions[(Player) data.Attacker] =
+					data.ConditionDamage / data.TotalDamage;
+			}
 
 			return players.Select(p =>
-				new PlayerData(p, downCountDictionary[p], deathCountDictionary[p], usedSkillDictionary[p],
-					healingSkillDictionary?[p], utilitySkillDictionary?[p], eliteSkillDictionary?[p])).ToArray();
+				new PlayerData(p, downCounts[p], deathCounts[p], conditionDamageFractions[p], usedSkills[p],
+					healingSkills?[p], utilitySkills?[p], eliteSkills?[p])
+			).ToArray();
 		}
 
 		private Dictionary<Agent, DamageData> GetDamageData(IEnumerable<Agent> agents, ICollection<DamageEvent> events,
