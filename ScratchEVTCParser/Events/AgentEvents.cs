@@ -79,14 +79,6 @@ namespace ScratchEVTCParser.Events
 
 	public class AgentWeaponSwapEvent : AgentEvent
 	{
-		public enum WeaponSet
-		{
-			Land1,
-			Land2,
-			Water1,
-			Water2,
-			Unknown
-		}
 
 		public WeaponSet NewWeaponSet { get; }
 

@@ -437,23 +437,23 @@ namespace ScratchEVTCParser
 							break;
 						}
 						case StateChange.WeaponSwap:
-							AgentWeaponSwapEvent.WeaponSet newWeaponSet;
+							WeaponSet newWeaponSet;
 							switch (item.DstAgent)
 							{
 								case 0:
-									newWeaponSet = AgentWeaponSwapEvent.WeaponSet.Water1;
+									newWeaponSet = WeaponSet.Water1;
 									break;
 								case 1:
-									newWeaponSet = AgentWeaponSwapEvent.WeaponSet.Water2;
+									newWeaponSet = WeaponSet.Water2;
 									break;
 								case 4:
-									newWeaponSet = AgentWeaponSwapEvent.WeaponSet.Land1;
+									newWeaponSet = WeaponSet.Land1;
 									break;
 								case 5:
-									newWeaponSet = AgentWeaponSwapEvent.WeaponSet.Land2;
+									newWeaponSet = WeaponSet.Land2;
 									break;
 								default:
-									newWeaponSet = AgentWeaponSwapEvent.WeaponSet.Unknown;
+									newWeaponSet = WeaponSet.Unknown;
 									break;
 							}
 
