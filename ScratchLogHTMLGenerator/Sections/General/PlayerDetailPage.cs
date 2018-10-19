@@ -50,15 +50,9 @@ namespace ScratchLogHTMLGenerator.Sections.General
 					<strong>{player.Name}</strong> <small>{player.AccountName.Substring(1)}</small> <small>(group {player.Subgroup})</small>
 				</p>
 				<p>
-				Down count: {data.DownCount}
-				<br>
-				Death count: {data.DeathCount}
+				Down count: {data.DownCount}, death count: {data.DeathCount}
                 </p>
 				<p>");
-
-				writer.WriteLine(
-					$"Weapon sets: {data.LandSet1Weapon1}/{data.LandSet1Weapon2} | {data.LandSet2Weapon1}/{data.LandSet2Weapon2}");
-				writer.WriteLine("</p><p>");
 
 				// TODO: Revenant handling
 				if (data.UtilitySkills != null && data.EliteSkills != null && data.HealingSkills != null)
