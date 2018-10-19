@@ -54,7 +54,6 @@ namespace ScratchLogHTMLGenerator.Sections.General
                 </p>
 				<p>");
 
-				// TODO: Revenant handling
 				if (data.UtilitySkills != null && data.EliteSkills != null && data.HealingSkills != null)
 				{
 					var skillMatrix = GetSkillMatrix(data);
