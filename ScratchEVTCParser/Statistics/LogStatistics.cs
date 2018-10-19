@@ -5,6 +5,7 @@ using ScratchEVTCParser.Model.Agents;
 using ScratchEVTCParser.Model.Encounters;
 using ScratchEVTCParser.Model.Skills;
 using ScratchEVTCParser.Statistics.Buffs;
+using ScratchEVTCParser.Statistics.PlayerDataParts;
 
 namespace ScratchEVTCParser.Statistics
 {

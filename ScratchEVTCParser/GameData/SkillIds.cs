@@ -1,6 +1,4 @@
-using ScratchEVTCParser.Model.Agents;
-
-namespace ScratchEVTCParser.Model
+namespace ScratchEVTCParser.GameData
 {
 	public static class SkillIds
 	{
@@ -32,9 +30,20 @@ namespace ScratchEVTCParser.Model
 		// Buffs
 		public const int Superspeed = 5974;
 
+		// Buffs - Mesmer
+		public const int FencersFinesse = 30426;
+		public const int IllusionaryDefense = 49099;
+
 		public const int Invulnerability = 757;
 		public const int Determined = 762;
 		public const int GorsevalInvulnerability = 31790;
 		public const int QadimFlameArmor = 52568;
+
+		// Skills
+
+		// Skills - Mesmer
+		public const int LesserChaosStorm = 13733;
+		public const int MindWrackAmmo = 49068;
+		public const int HealingPrism = 29997;
 	}
 }

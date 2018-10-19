@@ -7,6 +7,7 @@ using ScratchEVTCParser;
 using ScratchEVTCParser.Model.Agents;
 using ScratchEVTCParser.Model.Skills;
 using ScratchEVTCParser.Statistics;
+using ScratchEVTCParser.Statistics.PlayerDataParts;
 
 namespace ScratchLogHTMLGenerator.Sections.General
 {
@@ -40,7 +41,14 @@ namespace ScratchLogHTMLGenerator.Sections.General
 		<div class='media-left'>
 			<figure class='image is-64x64'>
 				<img src='{Get200PxProfessionIconUrl(player)}' alt='Specialization icon'>
-			</figure>
+			</figure>");
+
+				foreach (var badge in data.Badges)
+				{
+					writer.WriteLine($"<span class='tag is-rounded'>{badge.Text}</span>");
+				}
+
+				writer.WriteLine($@"
 		</div>
 		<div class='media-content'>
 			<div class='content'>

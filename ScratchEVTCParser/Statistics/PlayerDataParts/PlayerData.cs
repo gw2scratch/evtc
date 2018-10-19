@@ -1,11 +1,10 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using ScratchEVTCParser.Model;
 using ScratchEVTCParser.Model.Agents;
 using ScratchEVTCParser.Model.Skills;
 
-namespace ScratchEVTCParser.Statistics
+namespace ScratchEVTCParser.Statistics.PlayerDataParts
 {
 	public class PlayerData
 	{
@@ -22,6 +21,7 @@ namespace ScratchEVTCParser.Statistics
 		public WeaponType LandSet1Weapon2 { get; }
 		public WeaponType LandSet2Weapon1 { get; }
 		public WeaponType LandSet2Weapon2 { get; }
+		public IEnumerable<PlayerBadge> Badges { get; }
 		public IEnumerable<SkillData> LandSet1WeaponSkills { get; }
 		public IEnumerable<SkillData> LandSEt2WeaponSkills { get; }
 
@@ -42,11 +42,12 @@ namespace ScratchEVTCParser.Statistics
 		/// <param name="landSet2Weapon2">Off-hand weapon in second land weapon set.</param>
 		/// <param name="land1WeaponSkills">Weapon skills for first equipped land weapon set. null if unknown.</param>
 		/// <param name="land2WeaponSkills">Weapon skills for second equipped land weapon set. null if unknown.</param>
+		/// <param name="badges">Player badges showing interesting data about the player.</param>
 		public PlayerData(Player player, int downCount, int deathCount, float conditionDamageFraction,
 			IEnumerable<Skill> usedSkills, IEnumerable<SkillData> healingSkills, IEnumerable<SkillData> utilitySkills,
 			IEnumerable<SkillData> eliteSkills, WeaponType landSet1Weapon1, WeaponType landSet1Weapon2,
 			WeaponType landSet2Weapon1, WeaponType landSet2Weapon2, IEnumerable<SkillData> land1WeaponSkills,
-			IEnumerable<SkillData> land2WeaponSkills)
+			IEnumerable<SkillData> land2WeaponSkills, IEnumerable<PlayerBadge> badges)
 		{
 			Player = player;
 			DownCount = downCount;
@@ -56,6 +57,7 @@ namespace ScratchEVTCParser.Statistics
 			LandSet1Weapon2 = landSet1Weapon2;
 			LandSet2Weapon1 = landSet2Weapon1;
 			LandSet2Weapon2 = landSet2Weapon2;
+			Badges = badges?.ToArray() ?? Enumerable.Empty<PlayerBadge>();
 			LandSet1WeaponSkills = land1WeaponSkills?.ToArray();
 			LandSEt2WeaponSkills = land2WeaponSkills?.ToArray();
 			UsedSkills = usedSkills.ToArray();

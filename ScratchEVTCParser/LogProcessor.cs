@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using ScratchEVTCParser.Events;
+using ScratchEVTCParser.GameData;
 using ScratchEVTCParser.Model;
 using ScratchEVTCParser.Model.Agents;
 using ScratchEVTCParser.Model.Encounters;

@@ -8,6 +8,7 @@ using ScratchEVTCParser.Model.Agents;
 using ScratchEVTCParser.Model.Skills;
 using ScratchEVTCParser.Statistics;
 using ScratchEVTCParser.Statistics.Buffs;
+using ScratchEVTCParser.Statistics.PlayerDataParts;
 using SkillSlot = ScratchEVTCParser.Model.Skills.SkillSlot;
 
 namespace ScratchEVTCParser
@@ -16,6 +17,7 @@ namespace ScratchEVTCParser
 	{
 		public BuffSimulator BuffSimulator { get; set; } = new BuffSimulator();
 		public GameSkillDataRepository GameSkillDataRepository { get; set; } = new GameSkillDataRepository();
+		public SpecializationDetections SpecializationDetections { get; set; } = new SpecializationDetections();
 
 		/// <summary>
 		/// Calculates statistics for an encounter, such as damage done...
@@ -254,10 +256,29 @@ namespace ScratchEVTCParser
 					land2WeaponSkills = GameSkillDataRepository.GetWeaponSkillIds(player.Profession, land2Weapon1, land2Weapon2).Select(x => x == -1 ? null : apiData.GetSkillData(x));
 				}
 
+				var detections = SpecializationDetections.GetSpecializationDetections(player.Profession).ToArray();
+				var badges = new List<PlayerBadge>();
+
+				var specializations = new HashSet<CoreSpecialization>();
+				foreach (var e in log.Events)
+				{
+					foreach (var detection in detections)
+					{
+						if (detection.IsDetected(player, e))
+						{
+							specializations.Add(detection.CoreSpecialization);
+						}
+					}
+				}
+
+				foreach (var spec in specializations.OrderBy(x => x.ToString()))
+				{
+					badges.Add(new PlayerBadge(spec.ToString(), BadgeType.Specialization));
+				}
 
 				var data = new PlayerData(player, downCounts[player], deathCounts[player],
 					conditionDamageFractions[player], usedSkills[player], healingSkills, utilitySkills, eliteSkills,
-					land1Weapon1, land1Weapon2, land2Weapon1, land2Weapon2, land1WeaponSkills, land2WeaponSkills);
+					land1Weapon1, land1Weapon2, land2Weapon1, land2Weapon2, land1WeaponSkills, land2WeaponSkills, badges);
 
 				playerData.Add(data);
 			}
