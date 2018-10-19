@@ -33,8 +33,6 @@ namespace ScratchLogHTMLGenerator.Sections.General
 			{
 				var player = data.Player;
 
-				string usedSkills = string.Join("", data.UsedSkills.Select(x => $"<li>{x.Name} ({x.Id})</li>"));
-
 				// TODO: Proper alt for profession icon
 				writer.WriteLine($@"
 <div class='box'>
