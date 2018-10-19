@@ -149,15 +149,20 @@ namespace ScratchLogHTMLGenerator.Sections.General
 
 			int requiredWeaponLines =
 				(land1Skills.Any(x => x != null) ? 1 : 0) + (land2Skills.Any(x => x != null) ? 1 : 0);
-			int requiredUtilityLines = Math.Max(healingSkills.Length / healingSlots,
-				Math.Max(utilitySkills.Length / utilitySlots, eliteSkills.Length / eliteSlots));
 
-			int lines = Math.Max(requiredWeaponLines, requiredUtilityLines);
+			// Integer division with ceiling rounding
+			int healingSkillRows = (healingSkills.Length - 1) / healingSlots + 1;
+			int utilitySkillRows = (utilitySkills.Length - 1) / utilitySlots + 1;
+			int eliteSkillRows = (eliteSkills.Length - 1) / eliteSlots + 1;
+
+			int requiredNonWeaponLines = Math.Max(healingSkillRows, Math.Max(utilitySkillRows, eliteSkillRows));
+
+			int lines = Math.Max(requiredWeaponLines, requiredNonWeaponLines);
 			var matrix = new SkillData[lines][];
 
 			for (int i = 0; i < lines; i++)
 			{
-				if (i < requiredUtilityLines)
+				if (i < requiredNonWeaponLines)
 				{
 					matrix[i] = new SkillData[weaponSlots + healingSlots + utilitySlots + eliteSlots];
 				}
