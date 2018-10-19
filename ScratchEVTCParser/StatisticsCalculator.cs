@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web.UI.WebControls;
 using ScratchEVTCParser.Events;
 using ScratchEVTCParser.GameData;
 using ScratchEVTCParser.Model;
@@ -112,7 +113,8 @@ namespace ScratchEVTCParser
 			var deathCounts = players.ToDictionary(x => x, x => 0);
 			var downCounts = players.ToDictionary(x => x, x => 0);
 			var usedSkills = players.ToDictionary(x => x, x => new HashSet<Skill>());
-			var conditionDamageFractions = players.ToDictionary(x => x, x => 0f);
+			var physicalDamageRatings = players.ToDictionary(x => x, x => 0f);
+			var conditionDamageRatings = players.ToDictionary(x => x, x => 0f);
 
 			foreach (var deadEvent in log.Events.OfType<AgentDeadEvent>().Where(x => x.Agent is Player))
 			{
@@ -139,10 +141,12 @@ namespace ScratchEVTCParser
 				usedSkills[player].Add(activationEvent.Skill);
 			}
 
+			float topDamage = damageData.DamageData.Where(x => x.Attacker is Player).Max(x => x.TotalDamage);
+
 			foreach (var data in damageData.DamageData.Where(x => x.Attacker is Player))
 			{
-				conditionDamageFractions[(Player) data.Attacker] =
-					data.ConditionDamage / data.TotalDamage;
+				conditionDamageRatings[(Player) data.Attacker] = data.ConditionDamage / topDamage * 10;
+				physicalDamageRatings[(Player) data.Attacker] = data.PhysicalDamage / topDamage * 10;
 			}
 
 			var playerData = new List<PlayerData>();
@@ -184,7 +188,7 @@ namespace ScratchEVTCParser
 				WeaponType land2Weapon1 = WeaponType.Other;
 				WeaponType land2Weapon2 = WeaponType.Other;
 				IEnumerable<SkillData> land1WeaponSkills = null;
-                IEnumerable<SkillData> land2WeaponSkills = null;
+				IEnumerable<SkillData> land2WeaponSkills = null;
 
 				// TODO: Dual wield skill handling for Thieves
 				if (apiData != null)
@@ -252,8 +256,13 @@ namespace ScratchEVTCParser
 							}
 						}
 					}
-					land1WeaponSkills = GameSkillDataRepository.GetWeaponSkillIds(player.Profession, land1Weapon1, land1Weapon2).Select(x => x == -1 ? null : apiData.GetSkillData(x));
-					land2WeaponSkills = GameSkillDataRepository.GetWeaponSkillIds(player.Profession, land2Weapon1, land2Weapon2).Select(x => x == -1 ? null : apiData.GetSkillData(x));
+
+					land1WeaponSkills = GameSkillDataRepository
+						.GetWeaponSkillIds(player.Profession, land1Weapon1, land1Weapon2)
+						.Select(x => x == -1 ? null : apiData.GetSkillData(x));
+					land2WeaponSkills = GameSkillDataRepository
+						.GetWeaponSkillIds(player.Profession, land2Weapon1, land2Weapon2)
+						.Select(x => x == -1 ? null : apiData.GetSkillData(x));
 				}
 
 				var detections = SpecializationDetections.GetSpecializationDetections(player.Profession).ToArray();
@@ -277,8 +286,9 @@ namespace ScratchEVTCParser
 				}
 
 				var data = new PlayerData(player, downCounts[player], deathCounts[player],
-					conditionDamageFractions[player], usedSkills[player], healingSkills, utilitySkills, eliteSkills,
-					land1Weapon1, land1Weapon2, land2Weapon1, land2Weapon2, land1WeaponSkills, land2WeaponSkills, badges);
+					physicalDamageRatings[player], conditionDamageRatings[player], usedSkills[player], healingSkills,
+					utilitySkills, eliteSkills, land1Weapon1, land1Weapon2, land2Weapon1, land2Weapon2,
+					land1WeaponSkills, land2WeaponSkills, badges);
 
 				playerData.Add(data);
 			}

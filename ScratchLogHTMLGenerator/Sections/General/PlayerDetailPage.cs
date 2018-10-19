@@ -107,7 +107,7 @@ namespace ScratchLogHTMLGenerator.Sections.General
                     data: {{
                         labels: ['Power dmg', 'Condition dmg', 'Healing', 'Toughness', 'Concentration'],
                         datasets: [{{
-                            data: [{(1 - data.ConditionDamageRatio) * 10}, {data.ConditionDamageRatio * 10}, {player.Healing}, {player.Toughness}, {player.Concentration}],
+                            data: [{data.PhysicalDamageRating}, {data.ConditionDamageRating}, {player.Healing}, {player.Toughness}, {player.Concentration}],
                             borderColor: '{GetProfessionColorMedium(player)}',
                             pointBorderColor: '{GetProfessionColorMedium(player)}',
                             backgroundColor: '{GetProfessionColorLightTransparent(player)}',

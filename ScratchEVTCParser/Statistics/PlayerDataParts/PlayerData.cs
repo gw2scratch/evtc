@@ -11,7 +11,8 @@ namespace ScratchEVTCParser.Statistics.PlayerDataParts
 		public Player Player { get; }
 		public int DownCount { get; }
 		public int DeathCount { get; }
-		public float ConditionDamageRatio { get; }
+		public float ConditionDamageRating { get; }
+		public float PhysicalDamageRating { get; }
 		public IEnumerable<Skill> UsedSkills { get; }
 		public IEnumerable<SkillData> HealingSkills { get; }
 		public IEnumerable<SkillData> UtilitySkills { get; }
@@ -31,7 +32,8 @@ namespace ScratchEVTCParser.Statistics.PlayerDataParts
 		/// <param name="player">The player</param>
 		/// <param name="downCount">Amount of downs in encounter.</param>
 		/// <param name="deathCount">Amount of deaths in encounter.</param>
-		/// <param name="conditionDamageFraction">A float between 0-1. Power damage fraction is 1-<paramref name="conditionDamageFraction"/>.</param>
+		/// <param name="physicalDamageRating">A float between 0-10 that shows how much power damage the player did compared to others.</param>
+		/// <param name="conditionDamageRating">A float between 0-10 that shows how much condition damage the player did compared to others.</param>
 		/// <param name="usedSkills">All used skills in the encounter. May be null.</param>
 		/// <param name="healingSkills">All used healing skills in the encounter. May be null.</param>
 		/// <param name="utilitySkills">All used utility skills in the encounter. May be null.</param>
@@ -43,7 +45,7 @@ namespace ScratchEVTCParser.Statistics.PlayerDataParts
 		/// <param name="land1WeaponSkills">Weapon skills for first equipped land weapon set. null if unknown.</param>
 		/// <param name="land2WeaponSkills">Weapon skills for second equipped land weapon set. null if unknown.</param>
 		/// <param name="badges">Player badges showing interesting data about the player.</param>
-		public PlayerData(Player player, int downCount, int deathCount, float conditionDamageFraction,
+		public PlayerData(Player player, int downCount, int deathCount, float physicalDamageRating, float conditionDamageRating,
 			IEnumerable<Skill> usedSkills, IEnumerable<SkillData> healingSkills, IEnumerable<SkillData> utilitySkills,
 			IEnumerable<SkillData> eliteSkills, WeaponType landSet1Weapon1, WeaponType landSet1Weapon2,
 			WeaponType landSet2Weapon1, WeaponType landSet2Weapon2, IEnumerable<SkillData> land1WeaponSkills,
@@ -52,7 +54,8 @@ namespace ScratchEVTCParser.Statistics.PlayerDataParts
 			Player = player;
 			DownCount = downCount;
 			DeathCount = deathCount;
-			ConditionDamageRatio = conditionDamageFraction;
+			PhysicalDamageRating = physicalDamageRating;
+			ConditionDamageRating = conditionDamageRating;
 			LandSet1Weapon1 = landSet1Weapon1;
 			LandSet1Weapon2 = landSet1Weapon2;
 			LandSet2Weapon1 = landSet2Weapon1;
