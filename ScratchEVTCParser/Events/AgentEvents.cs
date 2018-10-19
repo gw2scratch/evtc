@@ -79,7 +79,6 @@ namespace ScratchEVTCParser.Events
 
 	public class AgentWeaponSwapEvent : AgentEvent
 	{
-
 		public WeaponSet NewWeaponSet { get; }
 
 		public AgentWeaponSwapEvent(long time, Agent agent, WeaponSet newWeaponSet) : base(time, agent)

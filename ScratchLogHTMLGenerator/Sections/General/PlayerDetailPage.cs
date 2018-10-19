@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using ScratchEVTCParser;
 using ScratchEVTCParser.Model.Agents;
 using ScratchEVTCParser.Model.Skills;
 using ScratchEVTCParser.Statistics;
@@ -54,6 +55,10 @@ namespace ScratchLogHTMLGenerator.Sections.General
 				Death count: {data.DeathCount}
                 </p>
 				<p>");
+
+				writer.WriteLine(
+					$"Weapon sets: {data.LandSet1Weapon1}/{data.LandSet1Weapon2} | {data.LandSet2Weapon1}/{data.LandSet2Weapon2}");
+				writer.WriteLine("</p><p>");
 
 				// TODO: Revenant handling
 				if (data.UtilitySkills != null && data.EliteSkills != null && data.HealingSkills != null)
@@ -140,18 +145,49 @@ namespace ScratchLogHTMLGenerator.Sections.General
 			var healingSkills = data.HealingSkills.ToArray();
 			var utilitySkills = data.UtilitySkills.ToArray();
 			var eliteSkills = data.EliteSkills.ToArray();
+			var land1Skills = data.LandSet1WeaponSkills.ToArray();
+			var land2Skills = data.LandSEt2WeaponSkills.ToArray();
 
-			int requiredLines = Math.Max(healingSkills.Length / healingSlots,
+			int requiredWeaponLines =
+				(land1Skills.Any(x => x != null) ? 1 : 0) + (land2Skills.Any(x => x != null) ? 1 : 0);
+			int requiredUtilityLines = Math.Max(healingSkills.Length / healingSlots,
 				Math.Max(utilitySkills.Length / utilitySlots, eliteSkills.Length / eliteSlots));
 
-			var matrix = new SkillData[requiredLines][];
+			int lines = Math.Max(requiredWeaponLines, requiredUtilityLines);
+			var matrix = new SkillData[lines][];
 
-			for (int i = 0; i < matrix.Length; i++)
+			for (int i = 0; i < lines; i++)
 			{
-				matrix[i] = new SkillData[weaponSlots + healingSlots + utilitySlots + eliteSlots];
+				if (i < requiredUtilityLines)
+				{
+					matrix[i] = new SkillData[weaponSlots + healingSlots + utilitySlots + eliteSlots];
+				}
+				else
+				{
+					matrix[i] = new SkillData[weaponSlots];
+				}
 			}
 
-			// TODO: Weapon skills
+			int weaponSkillRow = 0;
+			if (land1Skills.Any(x => x != null))
+			{
+				for (int i = 0; i < weaponSlots; i++)
+				{
+					matrix[weaponSkillRow][i] = land1Skills[i];
+				}
+
+				weaponSkillRow++;
+			}
+
+			if (land2Skills.Any(x => x != null))
+			{
+				for (int i = 0; i < weaponSlots; i++)
+				{
+					matrix[weaponSkillRow][i] = land2Skills[i];
+				}
+
+				weaponSkillRow++;
+			}
 
 			for (int i = 0; i < healingSkills.Length; i++)
 			{

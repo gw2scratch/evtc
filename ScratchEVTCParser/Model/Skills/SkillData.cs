@@ -15,6 +15,9 @@ namespace ScratchEVTCParser.Model.Skills
 		public SkillSlot Slot { get; }
 		public SkillAttunement Attunement { get; }
 
+		public SkillData NextChain { get; internal set; }
+		public SkillData PrevChain { get; internal set; }
+
 		public SkillData(int id, string name, string iconUrl, SkillType type, WeaponType weaponType,
 			IEnumerable<Profession> professions, SkillSlot slot, SkillAttunement attunement)
 		{

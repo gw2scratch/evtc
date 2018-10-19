@@ -55,6 +55,7 @@
     <Compile Include="Events\LogEvents.cs" />
     <Compile Include="Events\SkillEvents.cs" />
     <Compile Include="Events\UnknownEvent.cs" />
+    <Compile Include="GameData\GameSkillDataRepository.cs" />
     <Compile Include="GW2ApiData.cs" />
     <Compile Include="GW2Api\V2\ApiSkill.cs" />
     <Compile Include="GW2Api\V2\ApiSkillRepository.cs" />
@@ -93,9 +94,9 @@
     <Compile Include="Model\Skills\Skill.cs" />
     <Compile Include="Model\Skills\SkillSlot.cs" />
     <Compile Include="Model\Skills\SkillType.cs" />
-    <Compile Include="Model\Skills\WeaponType.cs" />
     <Compile Include="Model\SpeciesIds.cs" />
     <Compile Include="Model\WeaponSet.cs" />
+    <Compile Include="Model\WeaponType.cs" />
     <Compile Include="Parsed\Enums\Activation.cs" />
     <Compile Include="Parsed\Enums\BuffRemove.cs" />
     <Compile Include="Parsed\Enums\FriendOrFoe.cs" />

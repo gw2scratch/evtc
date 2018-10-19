@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ScratchEVTCParser.GW2Api.V2;
+using ScratchEVTCParser.Model;
 using ScratchEVTCParser.Model.Agents;
 using ScratchEVTCParser.Model.Skills;
 
@@ -287,6 +288,19 @@ namespace ScratchEVTCParser
 
 				skillData.Add(new SkillData(apiSkill.Id, apiSkill.Name, apiSkill.Icon, type, weaponType, professions,
 					slot, attunement));
+			}
+
+			var skillDataById = skillData.ToDictionary(x => x.Id);
+			foreach (var skill in apiSkills)
+			{
+				if (skill.PrevChain > 0 && skillDataById.TryGetValue(skill.PrevChain, out var prevSkill))
+				{
+					skillDataById[skill.Id].PrevChain = prevSkill;
+				}
+				if (skill.NextChain > 0 && skillDataById.TryGetValue(skill.NextChain, out var nextSkill))
+				{
+					skillDataById[skill.Id].NextChain = nextSkill;
+				}
 			}
 
 			return new GW2ApiData(skillData);

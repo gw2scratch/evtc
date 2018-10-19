@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ScratchEVTCParser.Model;
 using ScratchEVTCParser.Model.Agents;
 using ScratchEVTCParser.Model.Skills;
 
@@ -17,6 +18,13 @@ namespace ScratchEVTCParser.Statistics
 		public IEnumerable<SkillData> UtilitySkills { get; }
 		public IEnumerable<SkillData> EliteSkills { get; }
 
+		public WeaponType LandSet1Weapon1 { get; }
+		public WeaponType LandSet1Weapon2 { get; }
+		public WeaponType LandSet2Weapon1 { get; }
+		public WeaponType LandSet2Weapon2 { get; }
+		public IEnumerable<SkillData> LandSet1WeaponSkills { get; }
+		public IEnumerable<SkillData> LandSEt2WeaponSkills { get; }
+
 		/// <summary>
 		/// Creates a new instance of <see cref="PlayerData"/>.
 		/// </summary>
@@ -28,14 +36,28 @@ namespace ScratchEVTCParser.Statistics
 		/// <param name="healingSkills">All used healing skills in the encounter. May be null.</param>
 		/// <param name="utilitySkills">All used utility skills in the encounter. May be null.</param>
 		/// <param name="eliteSkills">All used elite skills in the encounter. May be null.</param>
+		/// <param name="landSet1Weapon1">Main hand weapon in first land weapon set.</param>
+		/// <param name="landSet1Weapon2">Off-hand weapon in first land weapon set.</param>
+		/// <param name="landSet2Weapon1">Main hand weapon in second land weapon set.</param>
+		/// <param name="landSet2Weapon2">Off-hand weapon in second land weapon set.</param>
+		/// <param name="land1WeaponSkills">Weapon skills for first equipped land weapon set. null if unknown.</param>
+		/// <param name="land2WeaponSkills">Weapon skills for second equipped land weapon set. null if unknown.</param>
 		public PlayerData(Player player, int downCount, int deathCount, float conditionDamageFraction,
 			IEnumerable<Skill> usedSkills, IEnumerable<SkillData> healingSkills, IEnumerable<SkillData> utilitySkills,
-			IEnumerable<SkillData> eliteSkills)
+			IEnumerable<SkillData> eliteSkills, WeaponType landSet1Weapon1, WeaponType landSet1Weapon2,
+			WeaponType landSet2Weapon1, WeaponType landSet2Weapon2, IEnumerable<SkillData> land1WeaponSkills,
+			IEnumerable<SkillData> land2WeaponSkills)
 		{
 			Player = player;
 			DownCount = downCount;
 			DeathCount = deathCount;
 			ConditionDamageRatio = conditionDamageFraction;
+			LandSet1Weapon1 = landSet1Weapon1;
+			LandSet1Weapon2 = landSet1Weapon2;
+			LandSet2Weapon1 = landSet2Weapon1;
+			LandSet2Weapon2 = landSet2Weapon2;
+			LandSet1WeaponSkills = land1WeaponSkills?.ToArray();
+			LandSEt2WeaponSkills = land2WeaponSkills?.ToArray();
 			UsedSkills = usedSkills.ToArray();
 			HealingSkills = healingSkills?.ToArray();
 			UtilitySkills = utilitySkills?.ToArray();

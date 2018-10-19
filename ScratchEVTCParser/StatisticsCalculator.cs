@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Runtime.InteropServices;
 using ScratchEVTCParser.Events;
+using ScratchEVTCParser.GameData;
 using ScratchEVTCParser.Model;
 using ScratchEVTCParser.Model.Agents;
 using ScratchEVTCParser.Model.Skills;
@@ -16,6 +15,7 @@ namespace ScratchEVTCParser
 	public class StatisticsCalculator
 	{
 		public BuffSimulator BuffSimulator { get; set; } = new BuffSimulator();
+		public GameSkillDataRepository GameSkillDataRepository { get; set; } = new GameSkillDataRepository();
 
 		/// <summary>
 		/// Calculates statistics for an encounter, such as damage done...
@@ -111,9 +111,6 @@ namespace ScratchEVTCParser
 			var downCounts = players.ToDictionary(x => x, x => 0);
 			var usedSkills = players.ToDictionary(x => x, x => new HashSet<Skill>());
 			var conditionDamageFractions = players.ToDictionary(x => x, x => 0f);
-			var utilitySkills = apiData == null ? null : players.ToDictionary(x => x, x => new List<SkillData>());
-			var healingSkills = apiData == null ? null : players.ToDictionary(x => x, x => new List<SkillData>());
-			var eliteSkills = apiData == null ? null : players.ToDictionary(x => x, x => new List<SkillData>());
 
 			foreach (var deadEvent in log.Events.OfType<AgentDeadEvent>().Where(x => x.Agent is Player))
 			{
@@ -140,13 +137,23 @@ namespace ScratchEVTCParser
 				usedSkills[player].Add(activationEvent.Skill);
 			}
 
-			if (apiData != null)
+			foreach (var data in damageData.DamageData.Where(x => x.Attacker is Player))
 			{
-				foreach (var player in players)
+				conditionDamageFractions[(Player) data.Attacker] =
+					data.ConditionDamage / data.TotalDamage;
+			}
+
+			var playerData = new List<PlayerData>();
+			foreach (var player in players)
+			{
+				List<SkillData> utilitySkills = null;
+				List<SkillData> healingSkills = null;
+				List<SkillData> eliteSkills = null;
+				if (apiData != null)
 				{
-					var playerUtilitySkills = new List<SkillData>();
-					var playerHealingSkills = new List<SkillData>();
-					var playerEliteSkills = new List<SkillData>();
+					utilitySkills = new List<SkillData>();
+					healingSkills = new List<SkillData>();
+					eliteSkills = new List<SkillData>();
 					foreach (var usedSkill in usedSkills[player])
 					{
 						var skillData = apiData.GetSkillData(usedSkill);
@@ -156,35 +163,106 @@ namespace ScratchEVTCParser
 						{
 							if (skillData.Slot == SkillSlot.Elite)
 							{
-								playerEliteSkills.Add(skillData);
+								eliteSkills.Add(skillData);
 							}
 							else if (skillData.Slot == SkillSlot.Utility)
 							{
-								playerUtilitySkills.Add(skillData);
+								utilitySkills.Add(skillData);
 							}
 							else if (skillData.Slot == SkillSlot.Heal)
 							{
-								playerHealingSkills.Add(skillData);
+								healingSkills.Add(skillData);
 							}
 						}
 					}
-
-					utilitySkills[player] = playerUtilitySkills;
-					healingSkills[player] = playerHealingSkills;
-					eliteSkills[player] = playerEliteSkills;
 				}
+
+				WeaponType land1Weapon1 = WeaponType.Other;
+				WeaponType land1Weapon2 = WeaponType.Other;
+				WeaponType land2Weapon1 = WeaponType.Other;
+				WeaponType land2Weapon2 = WeaponType.Other;
+				IEnumerable<SkillData> land1WeaponSkills = null;
+                IEnumerable<SkillData> land2WeaponSkills = null;
+
+				// TODO: Dual wield skill handling for Thieves
+				if (apiData != null)
+				{
+					WeaponSet currentWeaponSet = WeaponSet.Unknown;
+					// We are only interested in land weapons. This may be imperfect if started on an underwater set.
+					var firstWeaponSwap = log.Events.OfType<AgentWeaponSwapEvent>().FirstOrDefault(x =>
+						x.NewWeaponSet == WeaponSet.Land1 || x.NewWeaponSet == WeaponSet.Land2);
+
+					if (firstWeaponSwap == null)
+					{
+						currentWeaponSet = WeaponSet.Land1;
+					}
+					else
+					{
+						// First weapon set is the other one than the first swap swaps to (unless it was an underwater one)
+						currentWeaponSet = firstWeaponSwap.NewWeaponSet == WeaponSet.Land1
+							? WeaponSet.Land2
+							: WeaponSet.Land1;
+					}
+
+					foreach (var logEvent in log.Events)
+					{
+						if (logEvent is AgentWeaponSwapEvent weaponSwapEvent && weaponSwapEvent.Agent == player)
+						{
+							currentWeaponSet = weaponSwapEvent.NewWeaponSet;
+							continue;
+						}
+
+						SkillData skillData = null;
+						if (logEvent is SuccessfulSkillCastEvent castEvent && castEvent.Agent == player)
+						{
+							skillData = apiData.GetSkillData(castEvent.Skill);
+						}
+
+						if (skillData != null)
+						{
+							if (skillData.Professions.Contains(player.Profession) && skillData.Type == SkillType.Weapon)
+							{
+								if (skillData.WeaponType.IsTwoHanded() || skillData.Slot == SkillSlot.Weapon1 ||
+								    skillData.Slot == SkillSlot.Weapon2 || skillData.Slot == SkillSlot.Weapon3)
+								{
+									if (currentWeaponSet == WeaponSet.Land1)
+									{
+										land1Weapon1 = skillData.WeaponType;
+									}
+									else if (currentWeaponSet == WeaponSet.Land2)
+									{
+										land2Weapon1 = skillData.WeaponType;
+									}
+								}
+
+								if (skillData.WeaponType.IsTwoHanded() || skillData.Slot == SkillSlot.Weapon4 ||
+								    skillData.Slot == SkillSlot.Weapon5)
+								{
+									if (currentWeaponSet == WeaponSet.Land1)
+									{
+										land1Weapon2 = skillData.WeaponType;
+									}
+									else if (currentWeaponSet == WeaponSet.Land2)
+									{
+										land2Weapon2 = skillData.WeaponType;
+									}
+								}
+							}
+						}
+					}
+					land1WeaponSkills = GameSkillDataRepository.GetWeaponSkillIds(player.Profession, land1Weapon1, land1Weapon2).Select(x => x == -1 ? null : apiData.GetSkillData(x));
+					land2WeaponSkills = GameSkillDataRepository.GetWeaponSkillIds(player.Profession, land2Weapon1, land2Weapon2).Select(x => x == -1 ? null : apiData.GetSkillData(x));
+				}
+
+
+				var data = new PlayerData(player, downCounts[player], deathCounts[player],
+					conditionDamageFractions[player], usedSkills[player], healingSkills, utilitySkills, eliteSkills,
+					land1Weapon1, land1Weapon2, land2Weapon1, land2Weapon2, land1WeaponSkills, land2WeaponSkills);
+
+				playerData.Add(data);
 			}
 
-			foreach (var data in damageData.DamageData.Where(x => x.Attacker is Player))
-			{
-				conditionDamageFractions[(Player) data.Attacker] =
-					data.ConditionDamage / data.TotalDamage;
-			}
-
-			return players.Select(p =>
-				new PlayerData(p, downCounts[p], deathCounts[p], conditionDamageFractions[p], usedSkills[p],
-					healingSkills?[p], utilitySkills?[p], eliteSkills?[p])
-			).ToArray();
+			return playerData;
 		}
 
 		private Dictionary<Agent, DamageData> GetDamageData(IEnumerable<Agent> agents, ICollection<DamageEvent> events,
@@ -207,6 +285,7 @@ namespace ScratchEVTCParser
 			foreach (var damageEvent in physicalBossDamages)
 			{
 				var attacker = damageEvent.Attacker;
+
 				long damage = damageEvent.Damage;
 				if (attacker == null)
 				{
@@ -230,6 +309,7 @@ namespace ScratchEVTCParser
 			foreach (var damageEvent in conditionBossDamages)
 			{
 				var attacker = damageEvent.Attacker;
+
 				long damage = damageEvent.Damage;
 				if (attacker == null)
 				{

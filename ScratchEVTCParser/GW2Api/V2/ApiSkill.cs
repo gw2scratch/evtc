@@ -16,8 +16,10 @@ namespace ScratchEVTCParser.GW2Api.V2
 		public List<string> Categories { get; set; } // Optional
 		public string Attunement { get; set; } // Optional
 		public string DualWield { get; set; } // Optional
+		public int PrevChain { get; set; } // Optional
+		public int NextChain { get; set; } // Optional
 
 		// Ignored fields: facts, traited_facts, cost, flip_skill, initiative,
-		// next_chain, prev_chain, transform_skills, bundle_skills, toolbelt_skill
+		// transform_skills, bundle_skills, toolbelt_skill
 	}
 }
