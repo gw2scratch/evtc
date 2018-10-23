@@ -23,6 +23,7 @@ namespace ScratchLogHTMLGenerator.Sections.General
 		public override void WriteStyleHtml(TextWriter writer)
 		{
 			writer.WriteLine(".player-skill-image {width: 32px; height: 32px;}");
+			writer.WriteLine(".player-trait-badge {display: none !important;}");
 		}
 
 		public override void WriteHtml(TextWriter writer)
@@ -43,7 +44,10 @@ namespace ScratchLogHTMLGenerator.Sections.General
 
 				foreach (var badge in data.Badges)
 				{
-					writer.WriteLine($"<span class='tag is-rounded'>{badge.Text}</span>");
+					if (badge.Type == BadgeType.Specialization)
+					{
+						writer.WriteLine($"<span class='tag is-rounded player-trait-badge'>{badge.Text}</span>");
+					}
 				}
 
 				writer.WriteLine($@"
