@@ -57,9 +57,6 @@ namespace ScratchLogHTMLGenerator.Sections.General
 				<p>
 					<strong>{player.Name}</strong> <small>{player.AccountName.Substring(1)}</small> <small>(group {player.Subgroup})</small>
 				</p>
-				<p>
-				Down count: {data.DownCount}, death count: {data.DeathCount}
-                </p>
 				<p>");
 
 				if (data.UtilitySkills != null && data.EliteSkills != null && data.HealingSkills != null)
@@ -100,6 +97,10 @@ namespace ScratchLogHTMLGenerator.Sections.General
 			</div>
 		</div>
 		<div class='media-right'>
+			<table class='table is-bordered'>
+                <tr><th>Downs</th><td>{data.DownCount}</td></tr>
+                <tr><th>Deaths</th><td>{data.DeathCount}</td></tr>
+			</table>
 		</div>
 	</article>
 </div>
