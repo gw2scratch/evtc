@@ -27,8 +27,6 @@ namespace ScratchLogHTMLGenerator.Sections.General
 
 		public override void WriteHtml(TextWriter writer)
 		{
-			writer.WriteLine(
-				"<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js' integrity='sha256-J2sc79NPV/osLcIpzL3K8uJyAD7T5gaEFKlLDM18oxY=' crossorigin='anonymous'></script>");
 			int playerIndex = 0;
 			foreach (var data in playerData)
 			{
@@ -98,34 +96,6 @@ namespace ScratchLogHTMLGenerator.Sections.General
 			</div>
 		</div>
 		<div class='media-right'>
-            <canvas id='player-statchart-{playerIndex}' width='200' height='165'></canvas>
-            <script>
-                var ctx = document.getElementById('player-statchart-{playerIndex}').getContext('2d');
-
-                var radarChart = new Chart(ctx, {{
-                    type: 'radar',
-                    data: {{
-                        labels: ['Power dmg', 'Condition dmg', 'Healing', 'Toughness', 'Concentration'],
-                        datasets: [{{
-                            data: [{data.PhysicalDamageRating}, {data.ConditionDamageRating}, {player.Healing}, {player.Toughness}, {player.Concentration}],
-                            borderColor: '{GetProfessionColorMedium(player)}',
-                            pointBorderColor: '{GetProfessionColorMedium(player)}',
-                            backgroundColor: '{GetProfessionColorLightTransparent(player)}',
-                        }}],
-                    }},
-                    options: {{
-                        scale: {{
-                            ticks: {{
-                                beginAtZero: true,
-                                max: 10,
-                                display: false
-                            }}
-                        }},
-                        legend: {{display: false}},
-                        responsive: false
-                    }}
-                }});
-            </script>
 		</div>
 	</article>
 </div>
