@@ -99,22 +99,20 @@ namespace ScratchEVTCParser
 			var buffData = BuffSimulator.SimulateBuffs(log.Agents, log.Events.OfType<BuffEvent>(),
 				log.Encounter.GetPhases().Last().EndTime);
 
-			var playerData = GetPlayerData(log, fullFightSquadDamageData, apiData);
+			var playerData = GetPlayerData(log, apiData);
 
 			return new LogStatistics(startTime, logAuthor, playerData, phaseStats, fullFightSquadDamageData,
 				fullFightTargetDamageData, buffData, log.Encounter.GetResult(), log.Encounter.GetName(),
 				log.EVTCVersion, eventCountsByName, log.Agents, log.Skills);
 		}
 
-		private IEnumerable<PlayerData> GetPlayerData(Log log, SquadDamageData damageData, GW2ApiData apiData)
+		private IEnumerable<PlayerData> GetPlayerData(Log log, GW2ApiData apiData)
 		{
 			var players = log.Agents.OfType<Player>().ToArray();
 
 			var deathCounts = players.ToDictionary(x => x, x => 0);
 			var downCounts = players.ToDictionary(x => x, x => 0);
 			var usedSkills = players.ToDictionary(x => x, x => new HashSet<Skill>());
-			var physicalDamageRatings = players.ToDictionary(x => x, x => 0f);
-			var conditionDamageRatings = players.ToDictionary(x => x, x => 0f);
 
 			foreach (var deadEvent in log.Events.OfType<AgentDeadEvent>().Where(x => x.Agent is Player))
 			{
@@ -139,14 +137,6 @@ namespace ScratchEVTCParser
 			{
 				var player = (Player) activationEvent.Agent;
 				usedSkills[player].Add(activationEvent.Skill);
-			}
-
-			float topDamage = damageData.DamageData.Where(x => x.Attacker is Player).Max(x => x.TotalDamage);
-
-			foreach (var data in damageData.DamageData.Where(x => x.Attacker is Player))
-			{
-				conditionDamageRatings[(Player) data.Attacker] = data.ConditionDamage / topDamage * 10;
-				physicalDamageRatings[(Player) data.Attacker] = data.PhysicalDamage / topDamage * 10;
 			}
 
 			var playerData = new List<PlayerData>();
@@ -285,9 +275,8 @@ namespace ScratchEVTCParser
 					badges.Add(new PlayerBadge(spec.ToString(), BadgeType.Specialization));
 				}
 
-				var data = new PlayerData(player, downCounts[player], deathCounts[player],
-					physicalDamageRatings[player], conditionDamageRatings[player], usedSkills[player], healingSkills,
-					utilitySkills, eliteSkills, land1Weapon1, land1Weapon2, land2Weapon1, land2Weapon2,
+				var data = new PlayerData(player, downCounts[player], deathCounts[player], usedSkills[player],
+					healingSkills, utilitySkills, eliteSkills, land1Weapon1, land1Weapon2, land2Weapon1, land2Weapon2,
 					land1WeaponSkills, land2WeaponSkills, badges);
 
 				playerData.Add(data);
