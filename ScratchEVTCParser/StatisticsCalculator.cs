@@ -19,6 +19,7 @@ namespace ScratchEVTCParser
 		public BuffSimulator BuffSimulator { get; set; } = new BuffSimulator();
 		public GameSkillDataRepository GameSkillDataRepository { get; set; } = new GameSkillDataRepository();
 		public SpecializationDetections SpecializationDetections { get; set; } = new SpecializationDetections();
+		public SkillDetections SkillDetections { get; set; } = new SkillDetections();
 
 		/// <summary>
 		/// Calculates statistics for an encounter, such as damage done...
@@ -142,14 +143,14 @@ namespace ScratchEVTCParser
 			var playerData = new List<PlayerData>();
 			foreach (var player in players)
 			{
-				List<SkillData> utilitySkills = null;
-				List<SkillData> healingSkills = null;
-				List<SkillData> eliteSkills = null;
+				HashSet<SkillData> utilitySkills = null;
+				HashSet<SkillData> healingSkills = null;
+				HashSet<SkillData> eliteSkills = null;
 				if (apiData != null)
 				{
-					utilitySkills = new List<SkillData>();
-					healingSkills = new List<SkillData>();
-					eliteSkills = new List<SkillData>();
+					utilitySkills = new HashSet<SkillData>();
+					healingSkills = new HashSet<SkillData>();
+					eliteSkills = new HashSet<SkillData>();
 					foreach (var usedSkill in usedSkills[player])
 					{
 						var skillData = apiData.GetSkillData(usedSkill);
@@ -255,13 +256,46 @@ namespace ScratchEVTCParser
 						.Select(x => x == -1 ? null : apiData.GetSkillData(x));
 				}
 
-				var detections = SpecializationDetections.GetSpecializationDetections(player.Profession).ToArray();
+				if (apiData != null)
+				{
+					var skillDetections = SkillDetections.GetSkillDetections(player.Profession).ToArray();
+					foreach (var e in log.Events)
+					{
+						foreach (var detection in skillDetections)
+						{
+							if (detection.Detection.IsDetected(player, e))
+							{
+								var skill = apiData.GetSkillData(detection.SkillId);
+								if (detection.Slot == SkillSlot.Utility)
+								{
+									utilitySkills.Add(skill);
+								}
+								else if (detection.Slot == SkillSlot.Heal)
+								{
+									healingSkills.Add(skill);
+								}
+								else if (detection.Slot == SkillSlot.Elite)
+								{
+									eliteSkills.Add(skill);
+								}
+							}
+						}
+					}
+				}
+
+				var ignoredSkills = SkillDetections.GetIgnoredSkillIds(player.Profession);
+				healingSkills?.RemoveWhere(x => ignoredSkills.Contains(x.Id));
+				utilitySkills?.RemoveWhere(x => ignoredSkills.Contains(x.Id));
+				eliteSkills?.RemoveWhere(x => ignoredSkills.Contains(x.Id));
+
+				var specializationDetections =
+					SpecializationDetections.GetSpecializationDetections(player.Profession).ToArray();
 				var badges = new List<PlayerBadge>();
 
 				var specializations = new HashSet<CoreSpecialization>();
 				foreach (var e in log.Events)
 				{
-					foreach (var detection in detections)
+					foreach (var detection in specializationDetections)
 					{
 						if (detection.Detection.IsDetected(player, e))
 						{

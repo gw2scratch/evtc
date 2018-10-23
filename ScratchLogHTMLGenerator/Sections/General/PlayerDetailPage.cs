@@ -70,7 +70,7 @@ namespace ScratchLogHTMLGenerator.Sections.General
 							if (skillData == null)
 							{
 								writer.WriteLine(
-									"<img class='player-skill-image' src='https://wiki.guildwars2.com/images/7/74/Skill.png' alt='Unknown skill'>");
+									"<img class='player-skill-image' src='https://wiki.guildwars2.com/images/7/74/Skill.png' alt='Unknown skill' title='Unknown skill, unused or instant cast'>");
 							}
 							else
 							{
