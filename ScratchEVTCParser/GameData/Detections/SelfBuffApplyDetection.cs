@@ -4,18 +4,13 @@ using ScratchEVTCParser.Model.Agents;
 
 namespace ScratchEVTCParser.GameData.Detections
 {
-	/// <summary>
-	/// If a specific buff is applied to self, then the core specialization has to be selected.
-	/// </summary>
 	public class SelfBuffApplyDetection : IDetection
 	{
-		public CoreSpecialization CoreSpecialization { get; }
 		public int SkillId { get; }
 
-		public SelfBuffApplyDetection(int skillId, CoreSpecialization coreSpecialization)
+		public SelfBuffApplyDetection(int skillId)
 		{
 			SkillId = skillId;
-			CoreSpecialization = coreSpecialization;
 		}
 
 		public bool IsDetected(Player player, Event e)

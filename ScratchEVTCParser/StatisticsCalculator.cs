@@ -263,9 +263,9 @@ namespace ScratchEVTCParser
 				{
 					foreach (var detection in detections)
 					{
-						if (detection.IsDetected(player, e))
+						if (detection.Detection.IsDetected(player, e))
 						{
-							specializations.Add(detection.CoreSpecialization);
+							specializations.Add(detection.Specialization);
 						}
 					}
 				}

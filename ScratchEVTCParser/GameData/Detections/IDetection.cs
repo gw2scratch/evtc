@@ -6,8 +6,6 @@ namespace ScratchEVTCParser.GameData.Detections
 {
 	public interface IDetection
 	{
-		// TODO: Remove
-		CoreSpecialization CoreSpecialization { get; }
 		bool IsDetected(Player player, Event e);
 	}
 }
