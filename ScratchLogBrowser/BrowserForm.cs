@@ -268,7 +268,8 @@ namespace ScratchLogBrowser
 
 					statusStringBuilder.AppendLine($"Statistics generated in {statsTime}");
 
-					Application.Instance.Invoke(() => { statisticsJsonControl.Object = stats; });
+					// Way too huge by now
+					//Application.Instance.Invoke(() => { statisticsJsonControl.Object = stats; });
 				}
 				catch (Exception ex)
 				{
