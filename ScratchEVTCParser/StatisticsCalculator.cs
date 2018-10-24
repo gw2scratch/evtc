@@ -10,6 +10,7 @@ using ScratchEVTCParser.Model.Skills;
 using ScratchEVTCParser.Statistics;
 using ScratchEVTCParser.Statistics.Buffs;
 using ScratchEVTCParser.Statistics.PlayerDataParts;
+using ScratchEVTCParser.Statistics.RotationItems;
 using SkillSlot = ScratchEVTCParser.Model.Skills.SkillSlot;
 
 namespace ScratchEVTCParser
@@ -210,7 +211,7 @@ namespace ScratchEVTCParser
 						}
 
 						SkillData skillData = null;
-						if (logEvent is SuccessfulSkillCastEvent castEvent && castEvent.Agent == player)
+						if (logEvent is StartSkillCastEvent castEvent && castEvent.Agent == player)
 						{
 							skillData = apiData.GetSkillData(castEvent.Skill);
 						}
@@ -309,7 +310,9 @@ namespace ScratchEVTCParser
 					badges.Add(new PlayerBadge(spec.ToString(), BadgeType.Specialization));
 				}
 
-				var data = new PlayerData(player, downCounts[player], deathCounts[player], usedSkills[player],
+				var rotation = GetRotation(log, player, apiData);
+
+				var data = new PlayerData(player, downCounts[player], deathCounts[player], rotation, usedSkills[player],
 					healingSkills, utilitySkills, eliteSkills, land1Weapon1, land1Weapon2, land2Weapon1, land2Weapon2,
 					land1WeaponSkills, land2WeaponSkills, badges);
 
@@ -317,6 +320,49 @@ namespace ScratchEVTCParser
 			}
 
 			return playerData;
+		}
+
+		private PlayerRotation GetRotation(Log log, Player player, GW2ApiData apiData)
+		{
+			long startTime = log.Events.OfType<LogStartEvent>().FirstOrDefault()?.Time ?? 0;
+
+			var rotation = new List<RotationItem>();
+
+			long castStart = startTime;
+			foreach (var logEvent in log.Events.OfType<AgentEvent>().Where(x => x.Agent == player))
+			{
+				long time = logEvent.Time - startTime;
+				if (logEvent is StartSkillCastEvent startSkillCastEvent)
+				{
+					castStart = logEvent.Time;
+				}
+				else if (logEvent is ResetSkillCastEvent resetSkillCastEvent)
+				{
+					var skill = resetSkillCastEvent.Skill;
+					var skillData = apiData?.GetSkillData(skill);
+					rotation.Add(new SkillCastItem(castStart, time, SkillCastType.Reset, skill, skillData));
+					castStart = logEvent.Time;
+				}
+				else if (logEvent is EndSkillCastEvent cancelledSkillCastEvent)
+				{
+					var skill = cancelledSkillCastEvent.Skill;
+					var skillData = apiData?.GetSkillData(skill);
+					var type = cancelledSkillCastEvent.EndType == EndSkillCastEvent.SkillEndType.Cancel
+						? SkillCastType.Cancel
+						: SkillCastType.Success;
+					rotation.Add(new SkillCastItem(castStart, time, type, skill, skillData));
+				}
+				else if (logEvent is AgentWeaponSwapEvent weaponSwapEvent)
+				{
+					rotation.Add(new WeaponSwapItem(time, weaponSwapEvent.NewWeaponSet));
+				}
+
+				// TODO: Add downed
+				// TODO: Add death
+				// TODO: Add reviving
+			}
+
+			return new PlayerRotation(player, rotation);
 		}
 
 		private Dictionary<Agent, DamageData> GetDamageData(IEnumerable<Agent> agents, ICollection<DamageEvent> events,

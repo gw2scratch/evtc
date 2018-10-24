@@ -16,11 +16,20 @@ namespace ScratchEVTCParser.Events
 		}
 	}
 
-	public class CancelledSkillCastEvent : SkillCastEvent
+	public class EndSkillCastEvent : SkillCastEvent
 	{
-		public CancelledSkillCastEvent(long time, Agent agent, Skill skill, int castingTimeMs) : base(time,
+		public enum SkillEndType
+		{
+			Cancel,
+			Fire
+		}
+
+		public SkillEndType EndType { get; }
+
+		public EndSkillCastEvent(long time, Agent agent, Skill skill, int castingTimeMs, SkillEndType skillEndType) : base(time,
 			agent, skill, castingTimeMs)
 		{
+			EndType = skillEndType;
 		}
 	}
 
@@ -32,7 +41,7 @@ namespace ScratchEVTCParser.Events
 		}
 	}
 
-	public class SuccessfulSkillCastEvent : SkillCastEvent
+	public class StartSkillCastEvent : SkillCastEvent
 	{
 		public enum SkillCastType
 		{
@@ -42,7 +51,7 @@ namespace ScratchEVTCParser.Events
 
 		public SkillCastType CastType { get; }
 
-		public SuccessfulSkillCastEvent(long time, Agent agent, Skill skill, int castingTimeMs,
+		public StartSkillCastEvent(long time, Agent agent, Skill skill, int castingTimeMs,
 			SkillCastType castType) : base(time, agent, skill, castingTimeMs)
 		{
 			CastType = castType;

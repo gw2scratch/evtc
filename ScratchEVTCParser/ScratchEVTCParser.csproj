@@ -133,6 +133,11 @@
     <Compile Include="Statistics\PlayerDataParts\BadgeType.cs" />
     <Compile Include="Statistics\PlayerDataParts\PlayerBadge.cs" />
     <Compile Include="Statistics\PlayerDataParts\PlayerData.cs" />
+    <Compile Include="Statistics\PlayerDataParts\PlayerRotation.cs" />
+    <Compile Include="Statistics\RotationItems\RotationItem.cs" />
+    <Compile Include="Statistics\RotationItems\SkillCastItem.cs" />
+    <Compile Include="Statistics\RotationItems\SkillCastType.cs" />
+    <Compile Include="Statistics\RotationItems\WeaponSwapItem.cs" />
     <Compile Include="Statistics\SquadDamageData.cs" />
     <Compile Include="Statistics\TargetDamageData.cs" />
     <Compile Include="StreamExtensions.cs" />

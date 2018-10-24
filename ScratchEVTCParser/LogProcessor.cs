@@ -530,20 +530,22 @@ namespace ScratchEVTCParser
 				{
 					switch (item.IsActivation)
 					{
-						// TODO: Are both of these cancelled attacks? The EVTC documentation only mentions CancelFire occurs when reaching channel time
 						case Activation.CancelCancel:
+							yield return new EndSkillCastEvent(item.Time, GetAgentByAddress(item.SrcAgent),
+								GetSkillById(item.SkillId), item.Value, EndSkillCastEvent.SkillEndType.Cancel);
+							break;
 						case Activation.CancelFire:
-							yield return new CancelledSkillCastEvent(item.Time, GetAgentByAddress(item.SrcAgent),
-								GetSkillById(item.SkillId), item.Value);
+							yield return new EndSkillCastEvent(item.Time, GetAgentByAddress(item.SrcAgent),
+								GetSkillById(item.SkillId), item.Value, EndSkillCastEvent.SkillEndType.Fire);
 							break;
 						case Activation.Normal:
-							yield return new SuccessfulSkillCastEvent(item.Time, GetAgentByAddress(item.SrcAgent),
-								GetSkillById(item.SkillId), item.Value, SuccessfulSkillCastEvent.SkillCastType.Normal);
+							yield return new StartSkillCastEvent(item.Time, GetAgentByAddress(item.SrcAgent),
+								GetSkillById(item.SkillId), item.Value, StartSkillCastEvent.SkillCastType.Normal);
 							break;
 						case Activation.Quickness:
-							yield return new SuccessfulSkillCastEvent(item.Time, GetAgentByAddress(item.SrcAgent),
+							yield return new StartSkillCastEvent(item.Time, GetAgentByAddress(item.SrcAgent),
 								GetSkillById(item.SkillId), item.Value,
-								SuccessfulSkillCastEvent.SkillCastType.WithQuickness);
+								StartSkillCastEvent.SkillCastType.WithQuickness);
 							break;
 						case Activation.Reset:
 							yield return new ResetSkillCastEvent(item.Time, GetAgentByAddress(item.SrcAgent),
