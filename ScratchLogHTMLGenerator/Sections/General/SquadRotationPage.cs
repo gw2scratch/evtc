@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Web;
 using ScratchEVTCParser;
+using ScratchEVTCParser.GameData;
 using ScratchEVTCParser.Model.Agents;
 using ScratchEVTCParser.Model.Skills;
 using ScratchEVTCParser.Statistics;
@@ -96,16 +97,33 @@ document.addEventListener('DOMContentLoaded', function() {
 						var imageClass = skillCast.Type == SkillCastType.Cancel ? "cancel" :
 							skillCast.Type == SkillCastType.Reset ? "interrupt" : "";
 
-						string image;
+						string imageSrc;
+						string imageTitle;
 						if (skillCast.SkillData == null)
 						{
-							string title = $"No API data for skill {htmlEncodedName} ({skillCast.Skill.Id})";
-							image = $"<img class='rotation-skill-image {imageClass}' src='https://wiki.guildwars2.com/images/7/74/Skill.png' alt='Unknown skill' title='{title}'>";
+							if (skillCast.Skill.Id == SkillIds.ArcDpsDodge)
+							{
+								imageSrc = "https://wiki.guildwars2.com/images/c/cc/Dodge_Instructor.png";
+								imageTitle = "Dodge";
+							}
+							else if (skillCast.Skill.Id == SkillIds.Revive)
+							{
+								imageSrc = "https://wiki.guildwars2.com/images/3/3d/Downed_ally.png";
+								imageTitle = "Revive";
+							}
+							else
+							{
+								imageSrc = "https://wiki.guildwars2.com/images/7/74/Skill.png";
+								imageTitle = $"No API data for skill {htmlEncodedName} ({skillCast.Skill.Id})";
+							}
 						}
 						else
 						{
-							image = $"<img class='rotation-skill-image {imageClass}' src='{skillCast.SkillData.IconUrl}' alt='{htmlEncodedName}' title='{htmlEncodedName}'>";
+							imageSrc = skillCast.SkillData.IconUrl;
+							imageTitle = htmlEncodedName;
 						}
+
+						string image = $"<img class='rotation-skill-image {imageClass}' src='{imageSrc}' alt='{imageTitle}' title='{imageTitle}'>";
 
 						image = HttpUtility.JavaScriptStringEncode(image);
 
@@ -138,7 +156,9 @@ document.addEventListener('DOMContentLoaded', function() {
 								name = "Unknown status";
 								break;
 						}
-						writer.WriteLine($"{{group: {playerIndex}, content: '{name}', className: '{className}', type: 'background', start: {temporaryStatus.ItemTime}, end: {temporaryStatus.StatusEndTime}}},");
+
+						writer.WriteLine(
+							$"{{group: {playerIndex}, content: '{name}', className: '{className}', type: 'background', start: {temporaryStatus.ItemTime}, end: {temporaryStatus.StatusEndTime}}},");
 					}
 				}
 

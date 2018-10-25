@@ -57,6 +57,8 @@ namespace ScratchEVTCParser.GameData
 
 
 		// Skills
+		public const int Revive = 1066;
+		public const int ArcDpsDodge = 65001;
 
 		// Skills - Mesmer
 		public const int LesserChaosStorm = 13733;
