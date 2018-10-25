@@ -16,6 +16,7 @@ namespace ScratchLogHTMLGenerator
 		{
 			var summaryPage = new SummaryPage(stats);
 			var playerPage = new PlayerDetailPage(stats.PlayerData);
+			var rotationPage = new SquadRotationPage(stats.PlayerData);
 			var defaultPage = summaryPage; // Has be a top-level page, not a subpage
 
 			IEnumerable<Page> bossPages = stats.FullFightBossDamageData.Select(x => new BossPage(x));
@@ -23,7 +24,7 @@ namespace ScratchLogHTMLGenerator
 
 			var sections = new[]
 			{
-				new Section("General", new Page[] {summaryPage, playerPage}.Concat(bossPages).ToArray()),
+				new Section("General", new Page[] {summaryPage, playerPage, rotationPage}.Concat(bossPages).ToArray()),
 				new Section("Phases", phasePages.ToArray()),
 				new Section("Scratch data",
 					//new BuffDataPage(stats.BuffData),
@@ -58,7 +59,17 @@ namespace ScratchLogHTMLGenerator
 			var tabName = 'tab-' + tabLink.id.substring('tablink-'.length);
 			document.getElementById(tabName).classList.remove('is-hidden');
 		}}
-	</script>
+	</script>");
+
+			foreach (var section in sections)
+			{
+				foreach (var page in section.Pages)
+				{
+					WritePageHead(writer, page);
+				}
+			}
+
+			writer.WriteLine($@"
 	<style>");
 
 			foreach (var section in sections)
@@ -69,7 +80,7 @@ namespace ScratchLogHTMLGenerator
 				}
 			}
 
-			writer.WriteLine($@"<!DOCTYPE html>
+			writer.WriteLine($@"
 	</style>
 </head>
 <body>
@@ -137,6 +148,16 @@ namespace ScratchLogHTMLGenerator
 			foreach (var subpage in page.Subpages)
 			{
 				WritePageStyle(writer, subpage);
+			}
+		}
+
+		private void WritePageHead(TextWriter writer, Page page)
+		{
+			page.WriteHeadHtml(writer);
+
+			foreach (var subpage in page.Subpages)
+			{
+				WritePageHead(writer, subpage);
 			}
 		}
 

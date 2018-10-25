@@ -328,20 +328,20 @@ namespace ScratchEVTCParser
 
 			var rotation = new List<RotationItem>();
 
-			long castStart = startTime;
+			long castStart = 0;
 			foreach (var logEvent in log.Events.OfType<AgentEvent>().Where(x => x.Agent == player))
 			{
 				long time = logEvent.Time - startTime;
 				if (logEvent is StartSkillCastEvent startSkillCastEvent)
 				{
-					castStart = logEvent.Time;
+					castStart = logEvent.Time - startTime;
 				}
 				else if (logEvent is ResetSkillCastEvent resetSkillCastEvent)
 				{
 					var skill = resetSkillCastEvent.Skill;
 					var skillData = apiData?.GetSkillData(skill);
 					rotation.Add(new SkillCastItem(castStart, time, SkillCastType.Reset, skill, skillData));
-					castStart = logEvent.Time;
+					castStart = logEvent.Time - startTime;
 				}
 				else if (logEvent is EndSkillCastEvent cancelledSkillCastEvent)
 				{

@@ -8,12 +8,12 @@ namespace ScratchEVTCParser.Statistics.PlayerDataParts
 	public class PlayerRotation
 	{
 		public Player Player { get; }
-		public IEnumerable<RotationItem> Rotation { get; }
+		public IEnumerable<RotationItem> Items { get; }
 
 		public PlayerRotation(Player player, IEnumerable<RotationItem> rotationItems)
 		{
 			Player = player;
-			Rotation = rotationItems as RotationItem[] ?? rotationItems.ToArray();
+			Items = rotationItems as RotationItem[] ?? rotationItems.ToArray();
 		}
 	}
 }

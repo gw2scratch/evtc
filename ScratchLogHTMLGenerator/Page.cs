@@ -30,6 +30,11 @@ namespace ScratchLogHTMLGenerator
 		{
 		}
 
+		public virtual void WriteHeadHtml(TextWriter writer)
+		{
+
+		}
+
 		protected string GetProfessionColorMedium(Player player)
 		{
 			switch (player.Profession)

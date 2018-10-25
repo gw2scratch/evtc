@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Web;
 using ScratchEVTCParser;
 using ScratchEVTCParser.Model.Agents;
 using ScratchEVTCParser.Model.Skills;
@@ -103,11 +104,11 @@ namespace ScratchLogHTMLGenerator.Sections.General
 				// TODO: Tabs?
 				if (data.Rotation != null)
 				{
-					foreach (var rotationItem in data.Rotation.Rotation.OrderBy(x => x.ItemTime))
+					foreach (var rotationItem in data.Rotation.Items.OrderBy(x => x.ItemTime))
 					{
 						if (rotationItem is SkillCastItem skillCast)
 						{
-							var encodedName = System.Web.HttpUtility.HtmlEncode(skillCast.Skill.Name);
+							var encodedName = HttpUtility.HtmlEncode(skillCast.Skill.Name);
 
 							var statusClass = skillCast.Type == SkillCastType.Cancel ? "cancel" :
 								skillCast.Type == SkillCastType.Reset ? "interrupt" : "";
