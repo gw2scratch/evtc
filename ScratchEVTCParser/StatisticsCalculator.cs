@@ -328,6 +328,9 @@ namespace ScratchEVTCParser
 
 			var rotation = new List<RotationItem>();
 
+			long continuumSplitStart = -1;
+			long downStart = -1;
+
 			long castStart = 0;
 			foreach (var logEvent in log.Events.OfType<AgentEvent>().Where(x => x.Agent == player))
 			{
@@ -356,10 +359,47 @@ namespace ScratchEVTCParser
 				{
 					rotation.Add(new WeaponSwapItem(time, weaponSwapEvent.NewWeaponSet));
 				}
+				else if (logEvent is BuffApplyEvent buffApplyEvent)
+				{
+					if (buffApplyEvent.Buff.Id == SkillIds.TimeAnchored)
+					{
+						continuumSplitStart = time;
+					}
+				}
+				else if (logEvent is InitialBuffEvent initialBuffEvent)
+				{
+					if (initialBuffEvent.Skill.Id == SkillIds.TimeAnchored)
+					{
+						continuumSplitStart = time;
+					}
+				}
+				else if (logEvent is BuffRemoveEvent buffRemoveEvent)
+				{
+					if (buffRemoveEvent.Buff.Id == SkillIds.TimeAnchored && continuumSplitStart != -1)
+					{
+						rotation.Add(new TemporaryStatusItem(continuumSplitStart, time, TemporaryStatus.ContinuumSplit));
+						continuumSplitStart = -1;
+					}
+				}
+				else if (logEvent is AgentDownedEvent)
+				{
+					downStart = time;
+				}
+				else if (logEvent is AgentRevivedEvent)
+				{
+					if (downStart != -1)
+					{
+						rotation.Add(new TemporaryStatusItem(downStart, time, TemporaryStatus.Downed));
+					}
 
-				// TODO: Add downed
+					downStart = -1;
+				}
+				else if (logEvent is AgentDeadEvent)
+				{
+					downStart = -1;
+				}
+
 				// TODO: Add death
-				// TODO: Add reviving
 			}
 
 			return new PlayerRotation(player, rotation);

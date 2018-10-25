@@ -28,10 +28,24 @@ namespace ScratchLogHTMLGenerator.Sections.General
 			writer.WriteLine(".vis-item {background-color: rgba(150, 150, 150, 0.2);}");
 			writer.WriteLine(".vis-item.cancel {background-color: rgba(255, 0, 0, 0.2);}");
 			writer.WriteLine(".vis-item.interrupt {background-color: rgba(140, 0, 0, 0.2);}");
-			writer.WriteLine(".vis-item {line-height: 0;}");
+			writer.WriteLine(".vis-range {line-height: 0;}");
 			writer.WriteLine(".rotation-skill-image {width: 32px; height: 32px;}");
 			writer.WriteLine(".rotation-skill-image.cancel {outline: 3px solid red}");
 			writer.WriteLine(".rotation-skill-image.interrupt {outline: 3px solid darkred}");
+
+			// TODO: Convert to rgba() for better browser support
+			writer.WriteLine(@"
+.vis-background.csplit {
+    background-image: linear-gradient(135deg, #c121cc4d 25%, #752a704d 25%, #752a704d 50%, #c121cc4d 50%, #c121cc4d 75%, #752a704d 75%, #752a704d 100%);
+    background-size: 28.28px 28.28px;
+	color: rgba(132, 34, 152, 0.7);
+}");
+			writer.WriteLine(@"
+.vis-background.downed {
+    background-image: linear-gradient(135deg, #5724244d 25%, #0000004d 25%, #0000004d 50%, #5724244d 50%, #5724244d 75%, #0000004d 75%, #0000004d 100%);
+    background-size: 28.28px 28.28px;
+	color: rgba(0, 0, 0, 0.7);
+}");
 		}
 
 		public override void WriteHeadHtml(TextWriter writer)
@@ -61,6 +75,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 			writer.WriteLine(@"
 	]);
+
 
 	var items = new vis.DataSet([");
 
@@ -104,6 +119,26 @@ document.addEventListener('DOMContentLoaded', function() {
 						image = HttpUtility.JavaScriptStringEncode(image);
 						writer.WriteLine($"{{group: {playerIndex}, content: '{image}', start: {weaponSwap.ItemTime}}},");
 						*/
+					}
+					else if (rotationItem is TemporaryStatusItem temporaryStatus)
+					{
+						string name = "";
+						string className = "";
+						switch (temporaryStatus.TemporaryStatus)
+						{
+							case TemporaryStatus.Downed:
+								name = "Downed";
+								className = "downed";
+								break;
+							case TemporaryStatus.ContinuumSplit:
+								name = "Continuum Split";
+								className = "csplit";
+								break;
+							default:
+								name = "Unknown status";
+								break;
+						}
+						writer.WriteLine($"{{group: {playerIndex}, content: '{name}', className: '{className}', type: 'background', start: {temporaryStatus.ItemTime}, end: {temporaryStatus.StatusEndTime}}},");
 					}
 				}
 

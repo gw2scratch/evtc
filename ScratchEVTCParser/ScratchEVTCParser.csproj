@@ -137,6 +137,8 @@
     <Compile Include="Statistics\RotationItems\RotationItem.cs" />
     <Compile Include="Statistics\RotationItems\SkillCastItem.cs" />
     <Compile Include="Statistics\RotationItems\SkillCastType.cs" />
+    <Compile Include="Statistics\RotationItems\TemporaryStatus.cs" />
+    <Compile Include="Statistics\RotationItems\TemporaryStatusItem.cs" />
     <Compile Include="Statistics\RotationItems\WeaponSwapItem.cs" />
     <Compile Include="Statistics\SquadDamageData.cs" />
     <Compile Include="Statistics\TargetDamageData.cs" />

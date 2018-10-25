@@ -36,6 +36,7 @@ namespace ScratchEVTCParser.GameData
 		public const int Superspeed = 5974;
 
 		// Buffs - Mesmer
+		public const int TimeAnchored = 30136;
 		public const int FencersFinesse = 30426;
 		public const int IllusionaryDefense = 49099;
 		public const int HealingPrism = 29997;
