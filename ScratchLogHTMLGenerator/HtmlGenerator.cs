@@ -32,7 +32,8 @@ namespace ScratchLogHTMLGenerator
 
 			var sections = new[]
 			{
-				new Section("General", new Page[] {summaryPage, playerPage, rotationPage}.Concat(bossPages).ToArray()),
+				new Section("General", summaryPage, playerPage, rotationPage),
+				new Section("Bosses", bossPages.ToArray()),
 				new Section("Phases", phasePages.ToArray()),
 				new Section("Scratch data",
 					//new BuffDataPage(stats.BuffData, Theme),
