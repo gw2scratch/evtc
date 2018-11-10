@@ -18,12 +18,13 @@ namespace ScratchLogHTMLGenerator.Sections.Phases
 
 		public override void WriteHtml(TextWriter writer)
 		{
-				writer.WriteLine($@"
+			writer.WriteLine($@"
             <div class='title is-4'>Phase: {phaseStats.PhaseName}</div>
             <div class='subtitle is-6'>Duration: {MillisecondsToReadableFormat(phaseStats.PhaseDuration)}</div>
 
 			<div>
-                <div class='title is-5'>Total damage in phase</div>");
+                <div class='title is-5'>Total damage in phase</div>
+                <div class='subtitle is-7'>May include damage to insignificant enemies.</div>");
 
 				new DamageTable(phaseStats.TotalDamageData, Theme).WriteHtml(writer);
 
