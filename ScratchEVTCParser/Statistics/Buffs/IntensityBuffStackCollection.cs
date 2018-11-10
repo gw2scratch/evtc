@@ -86,6 +86,20 @@ namespace ScratchEVTCParser.Statistics.Buffs
 			finalized = true;
 		}
 
+		public int GetStackCount(long time)
+		{
+			// TODO: Add binary search
+			foreach (var segment in segments)
+			{
+				if (segment.TimeStart <= time && time < segment.TimeEnd)
+				{
+					return segment.StackCount;
+				}
+			}
+
+			return 0;
+		}
+
 		private void RemoveExpiredStacks(long currentTime)
 		{
 			var removeTimes = new List<long>();

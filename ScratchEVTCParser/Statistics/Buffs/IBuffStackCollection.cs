@@ -16,5 +16,7 @@ namespace ScratchEVTCParser.Statistics.Buffs
 		void RemoveStack(long time, long durationRemaining);
 
 		void FinalizeCollection(long time);
+
+		int GetStackCount(long time);
 	}
 }

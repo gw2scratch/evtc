@@ -20,7 +20,7 @@ namespace ScratchLogHTMLGenerator.Parts
 		public void WriteHtml(TextWriter writer)
 		{
 			writer.WriteLine($@"
-    <table class='table is-narrow is-striped is-hoverable'>
+    <table class='table is-narrow is-striped is-hoverable is-fullwidth'>
         <thead>
         <tr>
             <th><abbr title='Subgroup'>Grp</abbr></th>
@@ -28,8 +28,8 @@ namespace ScratchLogHTMLGenerator.Parts
             <th>Name</th>
             <th>Account</th>
 			<th><abbr title='Damage per second'>DPS</abbr></th>
-			<th>Power DPS</th>
-			<th>Condition DPS</th>
+			<th>Power</th>
+			<th>Condition</th>
         </tr>
         </thead>
         <tbody>");

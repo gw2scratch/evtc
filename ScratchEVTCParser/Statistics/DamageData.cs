@@ -7,37 +7,55 @@ namespace ScratchEVTCParser.Statistics
 	{
 		public Agent Attacker { get; }
 		public long TimeMs { get; }
-		public float ConditionDamage { get; }
-		public float PhysicalDamage { get; }
-		public float TotalDamage { get; }
+		public float ConditionDamage { get; private set; }
+		public float PhysicalDamage { get; private set; }
+		public float TotalDamage => ConditionDamage + PhysicalDamage;
 
 		public float ConditionDps => ConditionDamage * 1000 / TimeMs;
 		public float PhysicalDps => PhysicalDamage * 1000 / TimeMs;
 		public float TotalDps => TotalDamage * 1000 / TimeMs;
 
-		public DamageData(Agent attacker, long timeMs, float physicalDamage, float conditionDamage)
+		public bool MightDataAvailable { get; internal set; } = true;
+		public bool VulnerabilityDataAvailable { get; internal set; } = true;
+		public bool QuicknessDataAvailable { get; internal set; } = true;
+
+		public float AverageMight => DamageHitCount == 0 ? 0 : MightSum / (float) DamageHitCount;
+		public float AverageVulnerability => DamageHitCount == 0 ? 0 : VulnerabilitySum / (float) DamageHitCount;
+		public float QuicknessCastRatio => CastCount == 0 ? 0 : QuicknessCastCount / (float) CastCount;
+
+		internal int QuicknessCastCount { get; private set; } = 0;
+		internal int CastCount { get; private set; } = 0;
+
+		internal int DamageHitCount { get; private set; } = 0;
+		internal long MightSum { get; private set; } = 0;
+		internal long VulnerabilitySum { get; private set; } = 0;
+
+		public DamageData(Agent attacker, long timeMs)
 		{
 			TimeMs = timeMs;
-			ConditionDamage = conditionDamage;
-			PhysicalDamage = physicalDamage;
 			Attacker = attacker;
-			TotalDamage = ConditionDamage + PhysicalDamage;
 		}
 
-		public static DamageData operator +(DamageData first, DamageData second)
+		internal void AddSkillCast(bool quickness)
 		{
-			if (first.TimeMs != second.TimeMs)
-			{
-				throw new ArgumentException("Time period over which damage was done differs.", nameof(second));
-			}
+			if (quickness) QuicknessCastCount++;
+			CastCount++;
+		}
 
-			if (first.Attacker != second.Attacker)
-			{
-				throw new ArgumentException("The attacker differs.", nameof(second));
-			}
+		internal void AddConditionDamage(float damage, int mightStacks, int vulnerabilityStacks)
+		{
+			DamageHitCount++;
+			MightSum += mightStacks;
+			VulnerabilitySum += vulnerabilityStacks;
+			ConditionDamage += damage;
+		}
 
-			return new DamageData(first.Attacker, first.TimeMs, first.PhysicalDamage + second.PhysicalDamage,
-				first.ConditionDamage + second.ConditionDamage);
+		internal void AddPhysicalDamage(float damage, int mightStacks, int vulnerabilityStacks)
+		{
+			DamageHitCount++;
+			MightSum += mightStacks;
+			VulnerabilitySum += vulnerabilityStacks;
+			PhysicalDamage += damage;
 		}
 	}
 }

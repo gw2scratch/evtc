@@ -5,6 +5,10 @@ namespace ScratchLogHTMLGenerator
 {
 	public class DefaultTheme : ITheme
 	{
+		public string GetMightIconUrl() => "https://wiki.guildwars2.com/images/7/7c/Might.png";
+		public string GetQuicknessIconUrl() => "https://wiki.guildwars2.com/images/b/b4/Quickness.png";
+		public string GetVulnerabilityIconUrl() => "https://wiki.guildwars2.com/images/a/af/Vulnerability.png";
+
 		public string GetProfessionColorMedium(Player player)
 		{
 			switch (player.Profession)

@@ -32,14 +32,13 @@ namespace ScratchLogHTMLGenerator.Sections.General
 
 		public override void WriteHtml(TextWriter writer)
 		{
-			int playerIndex = 0;
 			foreach (var data in playerData)
 			{
 				var player = data.Player;
 
 				// TODO: Proper alt for profession icon
 				writer.WriteLine($@"
-<div class='box'>
+<div class='box content'>
 	<article class='media'>
 		<div class='media-left'>
 			<figure class='image is-64x64'>
@@ -151,7 +150,6 @@ namespace ScratchLogHTMLGenerator.Sections.General
 	</article>
 </div>
 ");
-				playerIndex++;
 			}
 		}
 

@@ -43,6 +43,7 @@
     <Compile Include="HtmlGenerator.cs" />
     <Compile Include="ITheme.cs" />
     <Compile Include="Page.cs" />
+    <Compile Include="Parts\BoonColumn.cs" />
     <Compile Include="Parts\DamageTable.cs" />
     <Compile Include="Parts\MultiTargetDamageTable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

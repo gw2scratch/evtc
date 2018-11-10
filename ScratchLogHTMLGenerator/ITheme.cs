@@ -9,5 +9,9 @@ namespace ScratchLogHTMLGenerator
 		string GetProfessionColorLightTransparent(Player player);
 		string GetBigProfessionIconUrl(Player player);
 		string GetTinyProfessionIconUrl(Player player);
+
+		string GetMightIconUrl();
+		string GetQuicknessIconUrl();
+		string GetVulnerabilityIconUrl();
 	}
 }

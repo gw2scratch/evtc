@@ -40,7 +40,7 @@ namespace ScratchLogHTMLGenerator.Parts
 			}
 
 			writer.WriteLine($@"
-    <table class='table is-narrow is-striped is-hoverable'>
+    <table class='table is-narrow is-striped is-hoverable is-fullwidth'>
         <thead>
         <tr>
             <th><abbr title='Subgroup'>Grp</abbr></th>

@@ -26,11 +26,20 @@ namespace ScratchEVTCParser
 		/// Calculates statistics for an encounter, such as damage done...
 		/// </summary>
 		/// <param name="log">The processed log.</param>
-		/// <param name="data">Data from the GW2 API, may be null, some statistics won't be calculated.</param>
+		/// <param name="apiData">Data from the GW2 API, may be null, some statistics won't be calculated.</param>
 		/// <returns></returns>
 		public LogStatistics GetStatistics(Log log, GW2ApiData apiData)
 		{
 			var phaseStats = new List<PhaseStats>();
+
+			var might = log.Skills.FirstOrDefault(x => x.Id == SkillIds.Might);
+			var vulnerability = log.Skills.FirstOrDefault(x => x.Id == SkillIds.Vulnerability);
+			if (might != null) BuffSimulator.TrackBuff(might, BuffSimulationType.Intensity, 25);
+			if (vulnerability != null) BuffSimulator.TrackBuff(vulnerability, BuffSimulationType.Intensity, 25);
+
+			var buffData = BuffSimulator.SimulateBuffs(log.Agents, log.Events.OfType<BuffEvent>(),
+				log.Encounter.GetPhases().Last().EndTime);
+
 			foreach (var phase in log.Encounter.GetPhases())
 			{
 				var targetDamageData = new List<TargetSquadDamageData>();
@@ -38,19 +47,24 @@ namespace ScratchEVTCParser
 				foreach (var target in phase.ImportantEnemies)
 				{
 					var damageData = GetDamageData(
-						log.Agents,
+						log.Agents.OfType<Player>(),
 						phase.Events
 							.OfType<DamageEvent>()
-							.Where(x => x.Defender == target)
-							.ToArray(),
+							.Where(x => x.Defender == target),
+						phase.Events.OfType<SkillCastEvent>(),
+						buffData,
+						log.Skills,
 						phaseDuration);
 					targetDamageData.Add(new TargetSquadDamageData(target, phaseDuration, damageData.Values));
 				}
 
 				var totalDamageData = new SquadDamageData(phaseDuration,
 					GetDamageData(
-						log.Agents,
-						phase.Events.OfType<DamageEvent>().ToArray(),
+						log.Agents.OfType<Player>(),
+						phase.Events.OfType<DamageEvent>(),
+						phase.Events.OfType<SkillCastEvent>(),
+						buffData,
+						log.Skills,
 						phaseDuration).Values
 				);
 
@@ -60,17 +74,20 @@ namespace ScratchEVTCParser
 
 			var fightTime = log.Encounter.GetPhases().Sum(x => x.EndTime - x.StartTime);
 			var fullFightSquadDamageData = new SquadDamageData(fightTime,
-				GetDamageData(log.Agents, log.Events.OfType<DamageEvent>().ToArray(), fightTime).Values);
+				GetDamageData(log.Agents.OfType<Player>(), log.Events.OfType<DamageEvent>(),
+					log.Events.OfType<SkillCastEvent>(), buffData, log.Skills, fightTime).Values);
 
 			var fullFightTargetDamageData = new List<TargetSquadDamageData>();
 			foreach (var target in log.Encounter.ImportantEnemies)
 			{
 				var damageData = GetDamageData(
-					log.Agents,
+					log.Agents.OfType<Player>(),
 					log.Events
 						.OfType<DamageEvent>()
-						.Where(x => x.Defender == target)
-						.ToArray(),
+						.Where(x => x.Defender == target),
+					log.Events.OfType<SkillCastEvent>(),
+					buffData,
+					log.Skills,
 					fightTime);
 				fullFightTargetDamageData.Add(new TargetSquadDamageData(target, fightTime, damageData.Values));
 			}
@@ -92,14 +109,6 @@ namespace ScratchEVTCParser
 
 			var logAuthor = log.Events.OfType<PointOfViewEvent>().First().RecordingAgent as Player;
 			var startTime = log.Events.OfType<LogStartEvent>().First().ServerTime;
-
-			var might = log.Skills.FirstOrDefault(x => x.Id == SkillIds.Might);
-			var vulnerability = log.Skills.FirstOrDefault(x => x.Id == SkillIds.Vulnerability);
-			if (might != null) BuffSimulator.TrackBuff(might, BuffSimulationType.Intensity, 25);
-			if (vulnerability != null) BuffSimulator.TrackBuff(vulnerability, BuffSimulationType.Intensity, 25);
-
-			var buffData = BuffSimulator.SimulateBuffs(log.Agents, log.Events.OfType<BuffEvent>(),
-				log.Encounter.GetPhases().Last().EndTime);
 
 			var playerData = GetPlayerData(log, apiData);
 
@@ -377,7 +386,8 @@ namespace ScratchEVTCParser
 				{
 					if (buffRemoveEvent.Buff.Id == SkillIds.TimeAnchored && continuumSplitStart != -1)
 					{
-						rotation.Add(new TemporaryStatusItem(continuumSplitStart, time, TemporaryStatus.ContinuumSplit));
+						rotation.Add(new TemporaryStatusItem(continuumSplitStart, time,
+							TemporaryStatus.ContinuumSplit));
 						continuumSplitStart = -1;
 					}
 				}
@@ -405,26 +415,70 @@ namespace ScratchEVTCParser
 			return new PlayerRotation(player, rotation);
 		}
 
-		private Dictionary<Agent, DamageData> GetDamageData(IEnumerable<Agent> agents, ICollection<DamageEvent> events,
-			long phaseDuration)
+		private Dictionary<Agent, DamageData> GetDamageData(IEnumerable<Player> players,
+			IEnumerable<DamageEvent> damageEvents, IEnumerable<SkillCastEvent> skillCastEvents,
+			BuffData buffData, IEnumerable<Skill> skills, long phaseDuration)
 		{
-			var physicalBossDamages = events.OfType<PhysicalDamageEvent>();
-			var conditionBossDamages = events.OfType<BuffDamageEvent>();
+			// Multiple enumeration is needed
+			var skillArray = skills as Skill[] ?? skills.ToArray();
+			var damageEventArray = damageEvents as DamageEvent[] ?? damageEvents.ToArray();
+
+			// Could not be present at all
+			var might = skillArray.FirstOrDefault(x => x.Id == SkillIds.Might);
+			var vulnerability = skillArray.FirstOrDefault(x => x.Id == SkillIds.Vulnerability);
+
+			var physicalBossDamages = damageEventArray.OfType<PhysicalDamageEvent>();
+			var conditionBossDamages = damageEventArray.OfType<BuffDamageEvent>();
+			var skillCastStarts = skillCastEvents.OfType<StartSkillCastEvent>();
 
 			var damageDataByAttacker = new Dictionary<Agent, DamageData>();
 
-			// Ensure all players are always in the damage data, even if they did no damage.
-			foreach (var player in agents.OfType<Player>())
+			void EnsureDamageDataExists(Agent agent)
 			{
-				if (!damageDataByAttacker.ContainsKey(player))
+				if (!damageDataByAttacker.ContainsKey(agent))
 				{
-					damageDataByAttacker[player] = new DamageData(player, phaseDuration, 0, 0);
+					damageDataByAttacker[agent] = new DamageData(agent, phaseDuration);
+
+					if (buffData.AgentBuffData.ContainsKey(agent))
+					{
+						var buffDataBySkill = buffData.AgentBuffData[agent].StackCollectionsBySkills;
+						if (might != null)
+						{
+							bool mightDataAvailable = buffDataBySkill.ContainsKey(might);
+							damageDataByAttacker[agent].MightDataAvailable = mightDataAvailable;
+						}
+						else
+						{
+							damageDataByAttacker[agent].MightDataAvailable = false;
+						}
+
+						// Vulnerability has to be checked on targets.
+						bool vulnerabilityDataAvailable = vulnerability != null;
+						damageDataByAttacker[agent].VulnerabilityDataAvailable = vulnerabilityDataAvailable;
+					}
 				}
+			}
+
+			// Ensure all players are always in the damage data, even if they did no damage.
+			foreach (var player in players)
+			{
+				EnsureDamageDataExists(player);
+			}
+
+			foreach (var skillCastEvent in skillCastStarts)
+			{
+				if (skillCastEvent.Agent == null) continue;
+
+				EnsureDamageDataExists(skillCastEvent.Agent);
+
+				damageDataByAttacker[skillCastEvent.Agent]
+					.AddSkillCast(skillCastEvent.CastType == StartSkillCastEvent.SkillCastType.WithQuickness);
 			}
 
 			foreach (var damageEvent in physicalBossDamages)
 			{
 				var attacker = damageEvent.Attacker;
+				var defender = damageEvent.Defender;
 
 				long damage = damageEvent.Damage;
 				if (attacker == null)
@@ -438,17 +492,51 @@ namespace ScratchEVTCParser
 					mainMaster = attacker.Master;
 				}
 
-				if (!damageDataByAttacker.ContainsKey(mainMaster))
+				EnsureDamageDataExists(mainMaster);
+
+				var damageData = damageDataByAttacker[mainMaster];
+				int mightStacks = 0;
+				if (damageData.MightDataAvailable)
 				{
-					damageDataByAttacker[mainMaster] = new DamageData(mainMaster, phaseDuration, 0, 0);
+					mightStacks = buffData.AgentBuffData[mainMaster].StackCollectionsBySkills[might]
+						.GetStackCount(damageEvent.Time);
 				}
 
-				damageDataByAttacker[mainMaster] += new DamageData(mainMaster, phaseDuration, damage, 0);
+				int vulnerabilityStacks = 0;
+				if (damageData.VulnerabilityDataAvailable)
+				{
+					if (defender != null)
+					{
+						if (buffData.AgentBuffData.TryGetValue(defender, out var defenderBuffs))
+						{
+							if (defenderBuffs.StackCollectionsBySkills.TryGetValue(vulnerability,
+								out var vulnerabilityBuffStacks))
+							{
+								vulnerabilityStacks = vulnerabilityBuffStacks.GetStackCount(damageEvent.Time);
+							}
+							else
+							{
+								damageData.VulnerabilityDataAvailable = false;
+							}
+						}
+						else
+						{
+							damageData.VulnerabilityDataAvailable = false;
+						}
+					}
+					else
+					{
+						damageData.VulnerabilityDataAvailable = false;
+					}
+				}
+
+				damageData.AddPhysicalDamage(damage, mightStacks, vulnerabilityStacks);
 			}
 
 			foreach (var damageEvent in conditionBossDamages)
 			{
 				var attacker = damageEvent.Attacker;
+				var defender = damageEvent.Defender;
 
 				long damage = damageEvent.Damage;
 				if (attacker == null)
@@ -462,12 +550,45 @@ namespace ScratchEVTCParser
 					mainMaster = attacker.Master;
 				}
 
-				if (!damageDataByAttacker.ContainsKey(mainMaster))
+				EnsureDamageDataExists(mainMaster);
+
+				var damageData = damageDataByAttacker[mainMaster];
+				int mightStacks = 0;
+				if (damageData.MightDataAvailable)
 				{
-					damageDataByAttacker[mainMaster] = new DamageData(mainMaster, phaseDuration, 0, 0);
+					mightStacks = buffData.AgentBuffData[mainMaster].StackCollectionsBySkills[might]
+						.GetStackCount(damageEvent.Time);
 				}
 
-				damageDataByAttacker[mainMaster] += new DamageData(mainMaster, phaseDuration, 0, damage);
+				int vulnerabilityStacks = 0;
+				if (damageData.VulnerabilityDataAvailable)
+				{
+					if (defender != null)
+					{
+						if (buffData.AgentBuffData.TryGetValue(defender, out var defenderBuffs))
+						{
+							if (defenderBuffs.StackCollectionsBySkills.TryGetValue(vulnerability,
+								out var vulnerabilityBuffStacks))
+							{
+								vulnerabilityStacks = vulnerabilityBuffStacks.GetStackCount(damageEvent.Time);
+							}
+							else
+							{
+								damageData.VulnerabilityDataAvailable = false;
+							}
+						}
+						else
+						{
+							damageData.VulnerabilityDataAvailable = false;
+						}
+					}
+					else
+					{
+						damageData.VulnerabilityDataAvailable = false;
+					}
+				}
+
+				damageData.AddConditionDamage(damage, mightStacks, vulnerabilityStacks);
 			}
 
 			return damageDataByAttacker;

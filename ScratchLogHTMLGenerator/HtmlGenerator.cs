@@ -50,7 +50,8 @@ namespace ScratchLogHTMLGenerator
     <title>{stats.EncounterName}</title>
     <meta charset='utf-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css'>
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css'>
+    <!-- <link rel='stylesheet' href='https://jenil.github.io/bulmaswatch/darkly/bulmaswatch.min.css'> -->
     <script defer src='https://use.fontawesome.com/releases/v5.1.0/js/all.js'></script>
     <script defer src='https://cdn.plot.ly/plotly-latest.min.js'></script>
 	<script>
@@ -137,7 +138,7 @@ namespace ScratchLogHTMLGenerator
 			bool visible = false)
 		{
 			var hiddenClass = visible ? "" : "is-hidden";
-			writer.WriteLine($"<div id='tab-{pageNames[page]}' class='content column scratch-tab {hiddenClass}'>");
+			writer.WriteLine($"<div id='tab-{pageNames[page]}' class='column scratch-tab {hiddenClass}'>");
 
 			page.WriteHtml(writer);
 

@@ -265,5 +265,67 @@ namespace ScratchEVTCParser.Tests.Statistics.Buffs
 			Assert.AreEqual(10 + stackCount, lastSegment.TimeStart);
 			Assert.AreEqual(0, lastSegment.StackCount);
 		}
+
+		[Test]
+		public void GetStackCount_ReturnsStackCountAtTime()
+		{
+			var collection = new IntensityBuffStackCollection(skill, int.MaxValue);
+
+			collection.AddStack(10, 20, null);
+			collection.AddStack(10, 25, null);
+			collection.AddStack(30, 35, null);
+			collection.FinalizeCollection(35);
+
+			// 10 - 20 2 stacks
+			// 20 - 25 1 stacks
+			// 25 - 30 0 stacks
+			// 30 - 35 1 stack
+
+			Assert.AreEqual(2, collection.GetStackCount(15));
+			Assert.AreEqual(1, collection.GetStackCount(23));
+			Assert.AreEqual(0, collection.GetStackCount(27));
+			Assert.AreEqual(1, collection.GetStackCount(33));
+		}
+
+		[Test]
+		public void GetStackCount_ReturnsLatterStackCountAtSegmentStart()
+		{
+			var collection = new IntensityBuffStackCollection(skill, int.MaxValue);
+
+			collection.AddStack(10, 20, null);
+			collection.AddStack(10, 25, null);
+			collection.AddStack(30, 35, null);
+			collection.FinalizeCollection(35);
+
+			// 10 - 20 2 stacks
+			// 20 - 25 1 stacks
+			// 25 - 30 0 stacks
+			// 30 - 35 1 stack
+
+			Assert.AreEqual(2, collection.GetStackCount(10));
+			Assert.AreEqual(1, collection.GetStackCount(20));
+			Assert.AreEqual(0, collection.GetStackCount(25));
+			Assert.AreEqual(1, collection.GetStackCount(30));
+		}
+
+		[Test]
+		public void GetStackCount_ReturnsZeroWhenNoDataIsPresent()
+		{
+			var collection = new IntensityBuffStackCollection(skill, int.MaxValue);
+
+			collection.AddStack(10, 20, null);
+			collection.AddStack(10, 25, null);
+			collection.AddStack(30, 35, null);
+			collection.FinalizeCollection(35);
+
+			// 10 - 20 2 stacks
+			// 20 - 25 1 stacks
+			// 25 - 30 0 stacks
+			// 30 - 35 1 stack
+
+			Assert.AreEqual(0, collection.GetStackCount(9));
+			Assert.AreEqual(0, collection.GetStackCount(35));
+			Assert.AreEqual(0, collection.GetStackCount(36));
+		}
 	}
 }
