@@ -9,7 +9,7 @@ namespace ScratchLogHTMLGenerator.Sections.ScratchData
 	{
 		private readonly IEnumerable<Skill> skills;
 
-		public SkillListPage(IEnumerable<Skill> skills) : base(true, "Skills")
+		public SkillListPage(IEnumerable<Skill> skills, ITheme theme) : base("Skills", true, theme)
 		{
 			this.skills = skills.ToArray();
 		}

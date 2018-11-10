@@ -9,7 +9,7 @@ namespace ScratchLogHTMLGenerator.Sections.ScratchData
 	{
 		private readonly BuffData buffData;
 
-		public BuffDataPage(BuffData buffData) : base(true, "Buff data")
+		public BuffDataPage(BuffData buffData, ITheme theme) : base("Buff data", true, theme)
 		{
 			this.buffData = buffData;
 		}

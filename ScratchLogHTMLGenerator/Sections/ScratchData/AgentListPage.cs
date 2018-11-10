@@ -9,7 +9,7 @@ namespace ScratchLogHTMLGenerator.Sections.ScratchData
 	{
 		private readonly IEnumerable<Agent> agents;
 
-		public AgentListPage(IEnumerable<Agent> agents) : base(true, "Agents")
+		public AgentListPage(IEnumerable<Agent> agents, ITheme theme) : base("Agents", true, theme)
 		{
 			this.agents = agents.ToArray();
 		}

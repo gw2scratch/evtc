@@ -8,7 +8,7 @@ namespace ScratchLogHTMLGenerator.Sections.General
 	{
 		private readonly TargetSquadDamageData damageData;
 
-		public BossPage(TargetSquadDamageData damageData) : base(true, damageData.Target.Name)
+		public BossPage(TargetSquadDamageData damageData, ITheme theme) : base(damageData.Target.Name, true, theme)
 		{
 			this.damageData = damageData;
 		}
@@ -22,7 +22,7 @@ namespace ScratchLogHTMLGenerator.Sections.General
 			<div>
                 <div class='title is-5'>Target damage to {damageData.Target.Name}</div>");
 
-			new DamageTable(damageData).WriteHtml(writer);
+			new DamageTable(damageData, Theme).WriteHtml(writer);
 
 			writer.WriteLine($@"
 			</div>");

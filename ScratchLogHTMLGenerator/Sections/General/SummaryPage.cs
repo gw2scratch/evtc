@@ -9,7 +9,7 @@ namespace ScratchLogHTMLGenerator.Sections.General
 	{
 		private readonly LogStatistics stats;
 
-		public SummaryPage(LogStatistics stats) : base(true, "Summary")
+		public SummaryPage(LogStatistics stats, ITheme theme) : base("Summary", true, theme)
 		{
 			this.stats = stats;
 		}
@@ -24,11 +24,11 @@ namespace ScratchLogHTMLGenerator.Sections.General
 
 			if (stats.FullFightBossDamageData.Count() == 1)
 			{
-                new DamageTable(stats.FullFightBossDamageData.First()).WriteHtml(writer);
+                new DamageTable(stats.FullFightBossDamageData.First(), Theme).WriteHtml(writer);
 			}
 			else
 			{
-                new MultiTargetDamageTable(stats.FullFightBossDamageData).WriteHtml(writer);
+                new MultiTargetDamageTable(stats.FullFightBossDamageData, Theme).WriteHtml(writer);
 			}
 
 			writer.WriteLine($@"
@@ -36,7 +36,7 @@ namespace ScratchLogHTMLGenerator.Sections.General
 			<br>
             <div>
                 <div class='title is-5'>Total damage in encounter</div>");
-			new DamageTable(stats.FullFightSquadDamageData).WriteHtml(writer);
+			new DamageTable(stats.FullFightSquadDamageData, Theme).WriteHtml(writer);
 
 			writer.WriteLine(@"
 			</div>");

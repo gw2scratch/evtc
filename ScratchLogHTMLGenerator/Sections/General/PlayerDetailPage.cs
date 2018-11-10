@@ -17,7 +17,7 @@ namespace ScratchLogHTMLGenerator.Sections.General
 	{
 		private readonly IEnumerable<PlayerData> playerData;
 
-		public PlayerDetailPage(IEnumerable<PlayerData> playerData) : base(true, "Players")
+		public PlayerDetailPage(IEnumerable<PlayerData> playerData, ITheme theme) : base("Players", true, theme)
 		{
 			this.playerData = playerData;
 		}
@@ -43,7 +43,7 @@ namespace ScratchLogHTMLGenerator.Sections.General
 	<article class='media'>
 		<div class='media-left'>
 			<figure class='image is-64x64'>
-				<img src='{Get200PxProfessionIconUrl(player)}' alt='Specialization icon'>
+				<img src='{Theme.GetBigProfessionIconUrl(player)}' alt='Specialization icon'>
 			</figure>");
 
 				foreach (var badge in data.Badges)

@@ -8,7 +8,7 @@ namespace ScratchLogHTMLGenerator.Sections.ScratchData
 	{
 		private readonly IReadOnlyDictionary<string, int> eventCounts;
 
-		public EventDataPage(IReadOnlyDictionary<string, int> eventCounts) : base(true, "Event data")
+		public EventDataPage(IReadOnlyDictionary<string, int> eventCounts, ITheme theme) : base("Event data", true, theme)
 		{
 			this.eventCounts = eventCounts;
 		}

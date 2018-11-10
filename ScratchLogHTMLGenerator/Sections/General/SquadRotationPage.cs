@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Web;
 using ScratchEVTCParser;
 using ScratchEVTCParser.GameData;
@@ -18,7 +19,7 @@ namespace ScratchLogHTMLGenerator.Sections.General
 	{
 		private readonly IEnumerable<PlayerData> playerData;
 
-		public SquadRotationPage(IEnumerable<PlayerData> playerData) : base(true, "Squad rotation")
+		public SquadRotationPage(IEnumerable<PlayerData> playerData, ITheme theme) : base("Squad rotation", true, theme)
 		{
 			this.playerData = playerData;
 		}
@@ -28,11 +29,11 @@ namespace ScratchLogHTMLGenerator.Sections.General
 			writer.WriteLine(".vis-item {border: 0;}");
 			writer.WriteLine(".vis-item {background-color: rgba(150, 150, 150, 0.2);}");
 			writer.WriteLine(".vis-item.cancel {background-color: rgba(255, 0, 0, 0.2);}");
-			writer.WriteLine(".vis-item.interrupt {background-color: rgba(140, 0, 0, 0.2);}");
+			writer.WriteLine(".vis-item.interrupt {background-color: rgba(100, 100, 100, 0.2);}");
 			writer.WriteLine(".vis-range {line-height: 0;}");
 			writer.WriteLine(".rotation-skill-image {width: 32px; height: 32px;}");
 			writer.WriteLine(".rotation-skill-image.cancel {outline: 3px solid red}");
-			writer.WriteLine(".rotation-skill-image.interrupt {outline: 3px solid darkred}");
+			writer.WriteLine(".rotation-skill-image.interrupt {outline: 3px solid darkgray}");
 
 			// TODO: Convert to rgba() for better browser support
 			writer.WriteLine(@"
@@ -132,10 +133,10 @@ document.addEventListener('DOMContentLoaded', function() {
 					}
 					else if (rotationItem is WeaponSwapItem weaponSwap)
 					{
-						/* TODO: Looks bad
+						/* TODO: Looks ugly
 						string image = $"<img class='rotation-skill-image' src='https://wiki.guildwars2.com/images/c/ce/Weapon_Swap_Button.png' alt='Weapon Swap' title='Weapon Swap to ({weaponSwap.NewWeaponSet})'>";
 						image = HttpUtility.JavaScriptStringEncode(image);
-						writer.WriteLine($"{{group: {playerIndex}, content: '{image}', start: {weaponSwap.ItemTime}}},");
+						writer.WriteLine($"{{group: {playerIndex}, content: '{image}', start: {weaponSwap.ItemTime}, type: 'point'}},");
 						*/
 					}
 					else if (rotationItem is TemporaryStatusItem temporaryStatus)
@@ -171,10 +172,10 @@ document.addEventListener('DOMContentLoaded', function() {
 	var options = {
 		format: {
 			minorLabels: function(date,scale,step) {
-				return Math.floor(new Date(date).getTime() / 1000) + '';
+				return Math.floor(new Date(date).getTime() / 1000) + 's';
 			},
 			majorLabels: function(date,scale,step) {
-				return Math.floor(new Date(date).getTime() / 1000) + '';
+				return Math.floor(new Date(date).getTime() / 1000) + 's';
 			},
 		},
 		stack: false,
@@ -183,6 +184,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		//margin: {item: {horizontal: -1}},
 		//start: 0, // setting start results in all items in initial window being moved down
 		end: 20000,
+		orientation: 'top',
 	};
 
 	var timeline = new vis.Timeline(container, items, groups, options);

@@ -9,7 +9,8 @@ namespace ScratchLogHTMLGenerator.Sections.Phases
 		private readonly PhaseStats phaseStats;
 		private readonly TargetSquadDamageData damageData;
 
-		public PhaseTargetPage(PhaseStats phaseStats, TargetSquadDamageData damageData) : base(true, damageData.Target.Name)
+		public PhaseTargetPage(PhaseStats phaseStats, TargetSquadDamageData damageData, ITheme theme)
+			: base(damageData.Target.Name, true, theme)
 		{
 			this.phaseStats = phaseStats;
 			this.damageData = damageData;
@@ -24,7 +25,7 @@ namespace ScratchLogHTMLGenerator.Sections.Phases
 			<div>
                 <div class='title is-5'>Target damage to {damageData.Target.Name}</div>");
 
-			new DamageTable(damageData).WriteHtml(writer);
+			new DamageTable(damageData, Theme).WriteHtml(writer);
 
 			writer.WriteLine($@"
 			</div>");

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Web.UI;
 using ScratchEVTCParser.Model.Encounters;
 using ScratchEVTCParser.Statistics;
 using ScratchLogHTMLGenerator.Sections.General;
@@ -12,25 +13,32 @@ namespace ScratchLogHTMLGenerator
 {
 	public class HtmlGenerator
 	{
+		private ITheme Theme { get; }
+
+		public HtmlGenerator(ITheme theme = null)
+		{
+			Theme = theme ?? new DefaultTheme();
+		}
+
 		public void WriteHtml(TextWriter writer, LogStatistics stats)
 		{
-			var summaryPage = new SummaryPage(stats);
-			var playerPage = new PlayerDetailPage(stats.PlayerData);
-			var rotationPage = new SquadRotationPage(stats.PlayerData);
+			var summaryPage = new SummaryPage(stats, Theme);
+			var playerPage = new PlayerDetailPage(stats.PlayerData, Theme);
+			var rotationPage = new SquadRotationPage(stats.PlayerData, Theme);
 			var defaultPage = summaryPage; // Has be a top-level page, not a subpage
 
-			IEnumerable<Page> bossPages = stats.FullFightBossDamageData.Select(x => new BossPage(x));
-			IEnumerable<Page> phasePages = stats.PhaseStats.Select(x => new PhasePage(x));
+			IEnumerable<Page> bossPages = stats.FullFightBossDamageData.Select(x => new BossPage(x, Theme));
+			IEnumerable<Page> phasePages = stats.PhaseStats.Select(x => new PhasePage(x, Theme));
 
 			var sections = new[]
 			{
 				new Section("General", new Page[] {summaryPage, playerPage, rotationPage}.Concat(bossPages).ToArray()),
 				new Section("Phases", phasePages.ToArray()),
 				new Section("Scratch data",
-					//new BuffDataPage(stats.BuffData),
-					new EventDataPage(stats.EventCounts),
-					//new AgentListPage(stats.Agents),
-					new SkillListPage(stats.Skills)),
+					//new BuffDataPage(stats.BuffData, Theme),
+					new EventDataPage(stats.EventCounts, Theme),
+					//new AgentListPage(stats.Agents, Theme),
+					new SkillListPage(stats.Skills, Theme)),
 			};
 
 			string result = (stats.EncounterResult == EncounterResult.Success ? "Success"

@@ -9,11 +9,11 @@ namespace ScratchLogHTMLGenerator.Sections.Phases
 	{
 		private readonly PhaseStats phaseStats;
 
-		public PhasePage(PhaseStats phaseStats) : base(true, phaseStats.PhaseName)
+		public PhasePage(PhaseStats phaseStats, ITheme theme) : base(phaseStats.PhaseName, true, theme)
 		{
 			this.phaseStats = phaseStats;
 
-			Subpages = phaseStats.TargetDamageData.Select(x => new PhaseTargetPage(this.phaseStats, x)).ToArray();
+			Subpages = phaseStats.TargetDamageData.Select(x => new PhaseTargetPage(this.phaseStats, x, theme)).ToArray();
 		}
 
 		public override void WriteHtml(TextWriter writer)
@@ -25,7 +25,7 @@ namespace ScratchLogHTMLGenerator.Sections.Phases
 			<div>
                 <div class='title is-5'>Total damage in phase</div>");
 
-				new DamageTable(phaseStats.TotalDamageData).WriteHtml(writer);
+				new DamageTable(phaseStats.TotalDamageData, Theme).WriteHtml(writer);
 
 				writer.WriteLine($@"
 			</div>");
