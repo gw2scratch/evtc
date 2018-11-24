@@ -20,6 +20,8 @@ namespace ScratchLogBrowser
 {
 	public class BrowserForm : Form
 	{
+		private static readonly Padding MainTabPadding = new Padding(2);
+
 		private readonly OpenFileDialog openFileDialog;
 		private readonly GridView<ParsedAgent> agentItemGridView;
 		private readonly GridView<ParsedSkill> skillsGridView;
@@ -132,12 +134,12 @@ namespace ScratchLogBrowser
 			parsedTabControl.Pages.Add(new TabPage(combatItemsGridView) {Text = "Combat Items"});
 
 			var eventsDetailLayout = new DynamicLayout();
-			eventsDetailLayout.BeginVertical(new Padding(10));
+			eventsDetailLayout.BeginVertical();
 			eventsDetailLayout.Add(eventListControl);
 			eventsDetailLayout.EndVertical();
 
 			var agentsDetailLayout = new DynamicLayout();
-			agentsDetailLayout.BeginVertical(new Padding(10));
+			agentsDetailLayout.BeginVertical();
 			agentsDetailLayout.Add(agentControl);
 			agentsDetailLayout.EndVertical();
 
@@ -156,12 +158,12 @@ namespace ScratchLogBrowser
 
 			apiDataSection = new ApiDataSection();
 
-			mainTabControl.Pages.Add(new TabPage(parsedTabControl) {Text = "Parsed data"});
-			mainTabControl.Pages.Add(new TabPage(processedTabControl) {Text = "Processed data"});
-			mainTabControl.Pages.Add(new TabPage(statisticsTabControl) {Text = "Statistics"});
-			mainTabControl.Pages.Add(new TabPage(htmlLayout) {Text = "HTML"});
-			mainTabControl.Pages.Add(new TabPage(parsedStateLabel) {Text = "Log"});
-			mainTabControl.Pages.Add(new TabPage(apiDataSection) {Text = "Api data"});
+			mainTabControl.Pages.Add(new TabPage(parsedTabControl) {Text = "Parsed data", Padding = MainTabPadding});
+			mainTabControl.Pages.Add(new TabPage(processedTabControl) {Text = "Processed data", Padding = MainTabPadding});
+			mainTabControl.Pages.Add(new TabPage(statisticsTabControl) {Text = "Statistics", Padding = MainTabPadding});
+			mainTabControl.Pages.Add(new TabPage(htmlLayout) {Text = "HTML", Padding = MainTabPadding});
+			mainTabControl.Pages.Add(new TabPage(parsedStateLabel) {Text = "Log", Padding = MainTabPadding});
+			mainTabControl.Pages.Add(new TabPage(apiDataSection) {Text = "Api data", Padding = MainTabPadding});
 
 			formLayout.BeginVertical();
 			formLayout.AddRow(mainTabControl);
