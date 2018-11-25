@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Eto.Drawing;
 using Eto.Forms;
 using ScratchEVTCParser.Events;
 using ScratchEVTCParser.Model.Agents;
@@ -10,16 +9,77 @@ namespace ScratchLogBrowser
 {
 	public class EventListControl : Panel
 	{
-		private class FilterType
+		private class TypeFilterItem : TreeGridItem
 		{
 			public Type Type { get; }
-			public bool Checked { get; set; } = true;
-			public int Count { get; }
 
-			public FilterType(Type type, int count)
+			private bool? shown;
+
+			public bool? Checked
+			{
+				get => shown;
+				set
+				{
+					if (shown == value) return;
+
+					shown = value;
+
+					if (shown.HasValue)
+					{
+						foreach (var item in Children)
+						{
+							var child = (TypeFilterItem) item;
+							child.Checked = shown.Value;
+						}
+					}
+
+					if (Parent != null)
+					{
+						var parent = (TypeFilterItem) Parent;
+						bool? newValue;
+						if (parent.Children.All(x => ((TypeFilterItem) x.Parent).Checked == true))
+						{
+							newValue = true;
+						}
+						else if (parent.Children.All(x => ((TypeFilterItem) x.Parent).Checked == false))
+						{
+							newValue = false;
+						}
+						else
+						{
+							newValue = null;
+						}
+
+						parent.Checked = newValue;
+					}
+				}
+			}
+
+			private int count = -1;
+
+			public new int Count
+			{
+				get
+				{
+					if (count == -1)
+					{
+						count = Children.Sum(x => ((TypeFilterItem) x).Count);
+					}
+
+					return count;
+				}
+			}
+
+			// Creates a filter item that is not present in the data, count is taken as sum of children.
+			public TypeFilterItem(Type type)
 			{
 				Type = type;
-				Count = count;
+			}
+
+			public TypeFilterItem(Type type, int count)
+			{
+				Type = type;
+				this.count = count;
 			}
 		}
 
@@ -49,10 +109,11 @@ namespace ScratchLogBrowser
 		private readonly List<Event> events = new List<Event>();
 		private readonly List<Agent> agents = new List<Agent>();
 
+		private TypeFilterItem[] filters;
 
 		private readonly Panel filterPanel = new Panel();
 		private readonly GridView<Event> eventGridView;
-		private readonly GridView<FilterType> filterGridView;
+		private readonly TreeGridView typeFilterTree;
 		private readonly JsonSerializationControl eventJsonControl = new JsonSerializationControl();
 
 		public EventListControl()
@@ -74,104 +135,145 @@ namespace ScratchLogBrowser
 			eventGridView.SelectionChanged += (sender, args) => eventJsonControl.Object = eventGridView.SelectedItem;
 			eventGridView.Width = 250;
 
-			var dataGroup = new GroupBox
-			{
-				Padding = new Padding(5), Text = "Event data", Content = eventJsonControl
-			};
-
 			var filterLayout = new DynamicLayout();
-			var filterGroup = new GroupBox
-			{
-				Padding = new Padding(5), Text = "Filters", Content = filterLayout
-			};
 
-			filterGridView = new GridView<FilterType>();
-			filterGridView.Width = 350;
-			filterGridView.Height = 100;
-			filterGridView.Columns.Add(new GridColumn()
+			typeFilterTree = new TreeGridView();
+			typeFilterTree.Columns.Add(new GridColumn
 			{
-				DataCell = new CheckBoxCell() {Binding = Binding.Property<FilterType, bool?>(x => x.Checked)},
+				DataCell = new TextBoxCell() {Binding = Binding.Property<TypeFilterItem, string>(x => x.Type.Name)},
+				HeaderText = "Event Name",
+			});
+			typeFilterTree.Columns.Add(new GridColumn
+			{
+				DataCell = new CheckBoxCell() {Binding = Binding.Property<TypeFilterItem, bool?>(x => x.Checked)},
 				HeaderText = "Show",
-				Editable = true
+				Editable = true,
 			});
-			filterGridView.Columns.Add(new GridColumn()
+			typeFilterTree.Columns.Add(new GridColumn()
 			{
-				DataCell = new TextBoxCell() {Binding = Binding.Property<FilterType, string>(x => x.Type.Name)},
-				HeaderText = "Event Type",
-				Editable = false
-			});
-			filterGridView.Columns.Add(new GridColumn()
-			{
-				DataCell = new TextBoxCell() {Binding = Binding.Property<FilterType, string>(x => x.Count.ToString())},
+				DataCell = new TextBoxCell()
+					{Binding = Binding.Property<TypeFilterItem, string>(x => x.Count.ToString())},
 				HeaderText = "Event Count",
 				Editable = false
 			});
-			filterGridView.CellEdited += (sender, e) =>
-			{
-				((FilterCollection<Event>) eventGridView.DataStore).Refresh();
-				UpdateFilters();
-			};
-
-			var checkAllButton = new Button() {Text = "Check all"};
-			checkAllButton.Click += (sender, args) =>
-			{
-				var dataStore = filterGridView.DataStore?.ToArray();
-				if (dataStore == null) return;
-				foreach (var filter in dataStore)
-				{
-					filter.Checked = true;
-				}
-
-				filterGridView.DataStore = dataStore;
-				((FilterCollection<Event>) eventGridView.DataStore).Refresh();
-				UpdateFilters();
-			};
-			var uncheckAllButton = new Button() {Text = "Uncheck all"};
-			uncheckAllButton.Click += (sender, args) =>
-			{
-				var dataStore = filterGridView.DataStore?.ToArray();
-				if (dataStore == null) return;
-				foreach (var filter in dataStore)
-				{
-					filter.Checked = false;
-				}
-
-				filterGridView.DataStore = dataStore;
-				((FilterCollection<Event>) eventGridView.DataStore).Refresh();
-				UpdateFilters();
-			};
 
 			filterLayout.BeginHorizontal();
 			filterLayout.BeginVertical();
-			filterLayout.Add(filterGridView);
-			filterLayout.EndVertical();
-			filterLayout.BeginVertical(spacing: new Size(5, 5));
-			filterLayout.Add(checkAllButton);
-			filterLayout.Add(uncheckAllButton);
-			filterLayout.Add(null);
-			filterLayout.EndVertical();
-			filterLayout.Add(null);
-			filterLayout.EndHorizontal();
 			filterLayout.Add(filterPanel);
+			filterLayout.EndVertical();
+			filterLayout.EndHorizontal();
 
+			var filterTabs = new TabControl();
+			filterTabs.Pages.Add(new TabPage {Text = "By Event Type", Content = typeFilterTree});
+			filterTabs.Pages.Add(new TabPage {Text = "By Content", Content = filterLayout});
 
-			var splitter = new Splitter
-				{Panel1 = filterGroup, Panel2 = dataGroup, Orientation = Orientation.Vertical, Position = 200};
+			var tabs = new TabControl();
+			var filterPage = new TabPage {Text = "Filters", Content = filterTabs};
+			var eventDataPage = new TabPage {Text = "Event data", Content = eventJsonControl};
+			tabs.Pages.Add(filterPage);
+			tabs.Pages.Add(eventDataPage);
 
-			var eventsSplitter = new Splitter {Panel1 = eventGridView, Panel2 = splitter, Position = 300};
+			typeFilterTree.CellEdited += (sender, args) =>
+			{
+				typeFilterTree.Invalidate();
+
+				// HACK: Invalidate doesn't redraw the tree on the Gtk3 platform
+				// TODO: Disable on other platforms if not necessary, may look significantly worse there
+				tabs.SelectedPage = eventDataPage;
+				tabs.SelectedPage = filterPage;
+
+				ApplyFilters();
+			};
+
+			var eventsSplitter = new Splitter {Panel1 = eventGridView, Panel2 = tabs, Position = 300};
 			Content = eventsSplitter;
 		}
 
 		private void UpdateFilterView()
 		{
-			var filters = events.GroupBy(x => x.GetType()).Select(x => new FilterType(x.Key, x.Count()))
+			filters = events.GroupBy(x => x.GetType()).Select(x => new TypeFilterItem(x.Key, x.Count()))
 				.OrderBy(x => x.Type.Name).ToArray();
-			filterGridView.DataStore = filters;
+
+			var rootType = filters.First().Type;
+			foreach (var type in filters)
+			{
+				rootType = GetClosestType(rootType, type.Type);
+			}
+
+			var filterByType = filters.ToDictionary(x => x.Type);
+
+			// Arrange the filters as their tree of dependency
+			foreach (var filter in filters)
+			{
+				var child = filter;
+				Type parent = filter.Type.BaseType;
+				while (parent != null)
+				{
+					bool parentProcessed = false;
+					if (!filterByType.ContainsKey(parent))
+					{
+						filterByType[parent] = new TypeFilterItem(parent, -1) {Expanded = true};
+					}
+					else
+					{
+						parentProcessed = true;
+					}
+
+					var parentFilter = filterByType[parent];
+					parentFilter.Children.Add(child);
+
+					child = parentFilter;
+					parent = parent.BaseType;
+
+					if (parentProcessed) break;
+				}
+			}
+
+			// The following part is somewhat inefficient, this is the simplest way to write it.
+			// Performance should not be an issue unless there is a very long chain of dependencies
+
+			// Remove all types that are in a chain of types that are not present,
+			// except for the direct parent of a present type
+			bool changed;
+			do
+			{
+				changed = false;
+
+				foreach (var pair in filterByType)
+				{
+					TypeFilterItem filter = pair.Value;
+
+					if (filter.Parent == null) continue; // Keep the root
+
+					if (filter.Children.Count == 1 && filter.Count < 0)
+					{
+						var childPresent = ((TypeFilterItem) filter.Children.First()).Count > 0;
+						if (!childPresent)
+						{
+							var parent = (TypeFilterItem) filter.Parent;
+							var child = (TypeFilterItem) filter.Children.First();
+							filter.Children.Clear();
+							parent.Children.Clear();
+
+							parent.Children.Add(child);
+							changed = true;
+						}
+					}
+				}
+			} while (changed);
+
+			var rootItem = filterByType[typeof(object)];
+			rootItem.Checked = true;
+
+			typeFilterTree.DataStore = rootItem;
 		}
 
-		private void UpdateFilters()
+		private void ApplyFilters()
 		{
-			var selectedTypes = filterGridView.DataStore.Where(x => x.Checked).ToArray();
+            ((FilterCollection<Event>) eventGridView.DataStore).Refresh();
+
+			/*
+			var selectedTypes = filters.Where(x => x.Checked.HasValue && x.Checked.Value).ToArray();
 			if (selectedTypes.Length == 0)
 			{
 				return;
@@ -211,19 +313,20 @@ namespace ScratchLogBrowser
 			{
 				filterPanel.Content = null;
 			}
+			*/
 		}
 
 		private Func<Event, bool> GetEventFilter()
 		{
 			return e =>
 			{
-				var dataStore = filterGridView.DataStore;
+				var dataStore = typeFilterTree.DataStore;
 				if (dataStore == null) return true;
-				return filterGridView.DataStore.FirstOrDefault(x => x.Type == e.GetType())?.Checked ?? true;
+				return filters.FirstOrDefault(x => x.Type == e.GetType())?.Checked ?? true;
 			};
 		}
 
-		public Type GetClosestType(Type a, Type b)
+		private Type GetClosestType(Type a, Type b)
 		{
 			while (a != null)
 			{
