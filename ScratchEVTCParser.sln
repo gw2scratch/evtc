@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScratchLogMaker", "ScratchL
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScratchEVTCParser.Tests", "ScratchEVTCParser.Tests\ScratchEVTCParser.Tests.csproj", "{642FA29B-CF62-495E-A88F-D08A9F3C5FEC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArcdpsLogManager", "ArcdpsLogManager\ArcdpsLogManager.csproj", "{909DE828-0610-473B-BE74-CE683C621CDC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{642FA29B-CF62-495E-A88F-D08A9F3C5FEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{642FA29B-CF62-495E-A88F-D08A9F3C5FEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{642FA29B-CF62-495E-A88F-D08A9F3C5FEC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{909DE828-0610-473B-BE74-CE683C621CDC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{909DE828-0610-473B-BE74-CE683C621CDC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{909DE828-0610-473B-BE74-CE683C621CDC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{909DE828-0610-473B-BE74-CE683C621CDC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
