@@ -65,6 +65,7 @@
     <Compile Include="GameData\SpecializationDetections.cs" />
     <Compile Include="GameData\SkillDetection.cs" />
     <Compile Include="GameData\SkillDetections.cs" />
+    <Compile Include="GameData\SpeciesIds.cs" />
     <Compile Include="GW2ApiData.cs" />
     <Compile Include="GW2Api\V2\ApiSkill.cs" />
     <Compile Include="GW2Api\V2\ApiSkillRepository.cs" />
@@ -102,7 +103,6 @@
     <Compile Include="Model\Skills\Skill.cs" />
     <Compile Include="Model\Skills\SkillSlot.cs" />
     <Compile Include="Model\Skills\SkillType.cs" />
-    <Compile Include="Model\SpeciesIds.cs" />
     <Compile Include="Model\CoreSpecialization.cs" />
     <Compile Include="Model\WeaponSet.cs" />
     <Compile Include="Model\WeaponType.cs" />

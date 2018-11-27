@@ -1,4 +1,4 @@
-namespace ScratchEVTCParser.Model
+namespace ScratchEVTCParser.GameData
 {
 	public static class SpeciesIds
 	{
