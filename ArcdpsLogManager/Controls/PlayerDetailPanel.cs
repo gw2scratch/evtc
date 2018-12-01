@@ -1,13 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using ArcdpsLogManager.Annotations;
 using ArcdpsLogManager.Logs;
 using Eto.Drawing;
 using Eto.Forms;
+using ScratchEVTCParser.Events;
 using ScratchEVTCParser.Model.Agents;
+using ScratchEVTCParser.Model.Encounters;
 
 namespace ArcdpsLogManager.Controls
 {
@@ -82,26 +85,24 @@ namespace ArcdpsLogManager.Controls
 
 
 				knownCharacters.Clear();
+				knownCharacters.BeginHorizontal();
 				knownCharacters.BeginVertical(spacing: new Size(5, 5));
 
-				knownCharacters.BeginHorizontal();
-				knownCharacters.Add("", false);
-				knownCharacters.Add("Character name", false);
-				knownCharacters.Add("Log count", false);
-				knownCharacters.Add(null, true);
-				knownCharacters.EndHorizontal();
+				knownCharacters.AddRow("", "Character name", "Log count", null);
 				foreach (var character in characters.OrderByDescending(x => x.Value.count))
 				{
-                    knownCharacters.BeginHorizontal();
-                    knownCharacters.Add(ImageProvider.GetTinyProfessionIcon(character.Value.profession), false);
-                    knownCharacters.Add(character.Key, false);
-                    knownCharacters.Add($"{character.Value.count}", false);
-					knownCharacters.Add(null, true);
-                    knownCharacters.EndHorizontal();
+					knownCharacters.AddRow(
+						ImageProvider.GetTinyProfessionIcon(character.Value.profession),
+						character.Key,
+						$"{character.Value.count}",
+						null
+					);
 				}
 
 				knownCharacters.AddRow(null);
 				knownCharacters.EndVertical();
+				knownCharacters.Add(null);
+				knownCharacters.EndHorizontal();
 				knownCharacters.Create();
 			};
 
