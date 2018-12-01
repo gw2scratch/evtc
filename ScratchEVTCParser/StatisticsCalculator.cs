@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.UI.WebControls;
 using ScratchEVTCParser.Events;
 using ScratchEVTCParser.GameData;
 using ScratchEVTCParser.Model;
 using ScratchEVTCParser.Model.Agents;
+using ScratchEVTCParser.Model.Encounters;
 using ScratchEVTCParser.Model.Skills;
 using ScratchEVTCParser.Statistics;
 using ScratchEVTCParser.Statistics.Buffs;
@@ -27,7 +27,6 @@ namespace ScratchEVTCParser
 		/// </summary>
 		/// <param name="log">The processed log.</param>
 		/// <param name="apiData">Data from the GW2 API, may be null, some statistics won't be calculated.</param>
-		/// <returns></returns>
 		public LogStatistics GetStatistics(Log log, GW2ApiData apiData)
 		{
 			var phaseStats = new List<PhaseStats>();
@@ -40,6 +39,8 @@ namespace ScratchEVTCParser
 			var buffData = BuffSimulator.SimulateBuffs(log.Agents, log.Events.OfType<BuffEvent>(),
 				log.Encounter.GetPhases().Last().EndTime);
 
+			var players = GetPlayers(log).ToArray();
+
 			foreach (var phase in log.Encounter.GetPhases())
 			{
 				var targetDamageData = new List<TargetSquadDamageData>();
@@ -47,7 +48,7 @@ namespace ScratchEVTCParser
 				foreach (var target in phase.ImportantEnemies)
 				{
 					var damageData = GetDamageData(
-						log.Agents.OfType<Player>(),
+						players,
 						phase.Events
 							.OfType<DamageEvent>()
 							.Where(x => x.Defender == target),
@@ -60,7 +61,7 @@ namespace ScratchEVTCParser
 
 				var totalDamageData = new SquadDamageData(phaseDuration,
 					GetDamageData(
-						log.Agents.OfType<Player>(),
+						players,
 						phase.Events.OfType<DamageEvent>(),
 						phase.Events.OfType<SkillCastEvent>(),
 						buffData,
@@ -74,14 +75,14 @@ namespace ScratchEVTCParser
 
 			var fightTime = log.Encounter.GetPhases().Sum(x => x.EndTime - x.StartTime);
 			var fullFightSquadDamageData = new SquadDamageData(fightTime,
-				GetDamageData(log.Agents.OfType<Player>(), log.Events.OfType<DamageEvent>(),
+				GetDamageData(players, log.Events.OfType<DamageEvent>(),
 					log.Events.OfType<SkillCastEvent>(), buffData, log.Skills, fightTime).Values);
 
 			var fullFightTargetDamageData = new List<TargetSquadDamageData>();
 			foreach (var target in log.Encounter.ImportantEnemies)
 			{
 				var damageData = GetDamageData(
-					log.Agents.OfType<Player>(),
+					players,
 					log.Events
 						.OfType<DamageEvent>()
 						.Where(x => x.Defender == target),
@@ -107,14 +108,47 @@ namespace ScratchEVTCParser
 			var eventCountsByName =
 				eventCounts.Select(x => (x.Key.Name, x.Value)).ToDictionary(x => x.Item1, x => x.Item2);
 
-			var logAuthor = log.Events.OfType<PointOfViewEvent>().First().RecordingAgent as Player;
-			var startTime = log.Events.OfType<LogStartEvent>().First().ServerTime;
-
 			var playerData = GetPlayerData(log, apiData);
 
-			return new LogStatistics(startTime, logAuthor, playerData, phaseStats, fullFightSquadDamageData,
-				fullFightTargetDamageData, buffData, log.Encounter.GetResult(), log.Encounter.GetName(),
+			return new LogStatistics(GetEncounterStartTime(log), GetLogAuthor(log), playerData, phaseStats, fullFightSquadDamageData,
+				fullFightTargetDamageData, buffData, GetResult(log), GetEncounterName(log),
 				log.EVTCVersion, eventCountsByName, log.Agents, log.Skills);
+		}
+
+		public TimeSpan GetEncounterDuration(Log log)
+		{
+			// TODO: This should be a method on Encounter
+			var phases = log.Encounter.GetPhases().ToArray();
+			var start = phases.Min(x => x.StartTime);
+			var end = phases.Max(x => x.EndTime);
+
+			return new TimeSpan(0, 0, 0, 0, (int)(end - start));
+
+		}
+
+		public Player GetLogAuthor(Log log)
+		{
+			return log.Events.OfType<PointOfViewEvent>().First().RecordingAgent as Player;
+		}
+
+		public DateTimeOffset GetEncounterStartTime(Log log)
+		{
+            return log.Events.OfType<LogStartEvent>().First().ServerTime;
+		}
+
+		public EncounterResult GetResult(Log log)
+		{
+			return log.Encounter.GetResult();
+		}
+
+		public string GetEncounterName(Log log)
+		{
+			return log.Encounter.GetName();
+		}
+
+		public IEnumerable<Player> GetPlayers(Log log)
+		{
+			return log.Agents.OfType<Player>();
 		}
 
 		private IEnumerable<PlayerData> GetPlayerData(Log log, GW2ApiData apiData)

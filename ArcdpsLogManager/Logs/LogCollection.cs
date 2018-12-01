@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using ScratchEVTCParser;
 using ScratchEVTCParser.GameData;
+using ScratchEVTCParser.Model;
 using ScratchEVTCParser.Model.Agents;
 using ScratchEVTCParser.Model.Encounters;
 
@@ -24,16 +26,18 @@ namespace ArcdpsLogManager.Logs
 		/// <returns></returns>
 		public static LogCollection GetFromDirectory(string directoryPath)
 		{
-			var files = Directory.EnumerateFiles(directoryPath, "*.evtc*", SearchOption.AllDirectories).Where(x => x.EndsWith(".evtc") || x.EndsWith(".evtc.zip"));
+			var logData = new List<LogData>();
 
+			var files = Directory.EnumerateFiles(directoryPath, "*.evtc*", SearchOption.AllDirectories).Where(x => x.EndsWith(".evtc") || x.EndsWith(".evtc.zip"));
 			foreach (var file in files)
 			{
-				// TODO: Implement
+				logData.Add(new LogData(new FileInfo(file)));
 			}
 
-			throw new NotImplementedException();
-			//return new LogCollection();
+			return new LogCollection(logData.ToArray());
 		}
+
+		public static LogCollection Empty => new LogCollection(new LogData[0]);
 
 		public static LogCollection GetTesting()
 		{
@@ -45,19 +49,17 @@ namespace ArcdpsLogManager.Logs
 				Profession.Mesmer, EliteSpecialization.Chronomancer, 2);
 			var players = new[] {player1, player2, player3};
 
-			var boss = new NPC(50, 50, "Sabetha the Saboteur", SpeciesIds.Sabetha, 0, 0, 0, 0, 120, 60);
-
-			var dateStart1 = new DateTimeOffset(2018, 06, 02, 12, 13, 14, TimeSpan.Zero);
-			var dateStart2 = new DateTimeOffset(2018, 06, 02, 13, 14, 15, TimeSpan.Zero);
-			var dateStart3 = new DateTimeOffset(2018, 06, 02, 14, 15, 16, TimeSpan.Zero);
+			var dateStart1 = new DateTimeOffset(2018, 06, 15, 12, 13, 14, TimeSpan.Zero);
+			var dateStart2 = new DateTimeOffset(2018, 06, 15, 13, 14, 15, TimeSpan.Zero);
+			var dateStart3 = new DateTimeOffset(2018, 06, 15, 14, 15, 16, TimeSpan.Zero);
 
 			var duration1 = new TimeSpan(0, 1, 0);
 			var duration2 = new TimeSpan(0, 2, 0);
 			var duration3 = new TimeSpan(0, 6, 0);
 
-			var log1 = new LogData(null, players, boss, EncounterResult.Failure, dateStart1, duration1);
-			var log2 = new LogData(null, players, boss, EncounterResult.Failure, dateStart2, duration2);
-			var log3 = new LogData(null, players, boss, EncounterResult.Success, dateStart3, duration3);
+			var log1 = new LogData(null, players, "Sabetha the Saboteur", EncounterResult.Failure, dateStart1, duration1);
+			var log2 = new LogData(null, players, "Sabetha the Saboteur", EncounterResult.Failure, dateStart2, duration2);
+			var log3 = new LogData(null, players, "Sabetha the Saboteur", EncounterResult.Success, dateStart3, duration3);
 
 			return new LogCollection(new[] {log1, log2, log3, log1, log2, log3, log1, log2, log3, log1, log2, log3, log1, log2, log3, log1, log2, log3, log1, log2, log3, log1, log2, log3});
 		}

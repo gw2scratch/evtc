@@ -16,6 +16,10 @@ namespace ArcdpsLogManager
 			Content = formLayout;
 
 			var dialog = new SelectFolderDialog();
+			if (!string.IsNullOrWhiteSpace(Settings.LogRootPath))
+			{
+				dialog.Directory = Settings.LogRootPath;
+			}
 
 			var item = new Button {Text = "Save"};
 			item.Click += (sender, args) => Close();
