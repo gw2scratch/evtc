@@ -97,7 +97,7 @@ namespace ArcdpsLogManager.Controls
 				set
 				{
 					if (Equals(value, players)) return;
-					players = value as LogPlayer[] ?? value.ToArray();
+					players = value as LogPlayer[] ?? value?.ToArray();
 					OnPropertyChanged();
 				}
 			}

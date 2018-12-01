@@ -33,6 +33,8 @@ namespace ArcdpsLogManager
 			var formLayout = new DynamicLayout();
 			Content = formLayout;
 
+			Closing += (sender, args) => { SerializeLogsToCache().Wait(); };
+
 			var logLocationMenuItem = new ButtonMenuItem {Text = "&Log location"};
 			logLocationMenuItem.Click += (sender, args) => { new LogSettingsDialog().ShowModal(); };
 			logLocationMenuItem.Shortcut = Application.Instance.CommonModifier | Keys.L;
@@ -83,7 +85,10 @@ namespace ArcdpsLogManager
 			await FindLogs();
 			var cache = await deserializeTask;
 
-			bool anyLoadedFromCache = false;
+			// Copying the logs into a new collection is required to improve performance on platforms
+			// where each modification results in a full refresh of all data in the grid view.
+			var newLogs = new ObservableCollection<LogData>(logs);
+
 			if (cache != null)
 			{
 				Application.Instance.Invoke(() =>
@@ -93,17 +98,18 @@ namespace ArcdpsLogManager
 						var log = logs[i];
 						if (cache.TryGetValue(log.FileInfo.FullName, out var cachedLog))
 						{
-							logs[i] = cachedLog;
-							anyLoadedFromCache = true;
+							newLogs[i] = cachedLog;
 						}
 					}
 				});
 			}
 
-			if (anyLoadedFromCache)
+			Application.Instance.Invoke(() =>
 			{
-				Application.Instance.Invoke(() => { gridView.ReloadData(new Range<int>(0, logsFiltered.Count - 1)); });
-			}
+				logs = newLogs;
+				logsFiltered = new SelectableFilterCollection<LogData>(gridView, newLogs);
+				gridView.DataStore = logsFiltered;
+			});
 
 			await ParseLogs(gridView);
 
@@ -156,11 +162,22 @@ namespace ArcdpsLogManager
 			foreach (var log in logs)
 			{
 				// Skip already parsed logs
-				if (log.ParsingStatus == ParsingStatus.Parsed && !reparse) continue;
+				if (log.ParsingStatus == ParsingStatus.Parsed && !reparse)
+				{
+					continue;
+				}
+
+				bool failedBefore = log.ParsingStatus == ParsingStatus.Failed;
 
 				log.ParseData();
 				var index = logsFiltered.IndexOf(log);
-				Application.Instance.Invoke(() => { gridView.ReloadData(index); });
+
+				// There is no point in reloading data if it was failed before and failed again
+				// because no data visible in the view has changed
+				if (!(failedBefore && log.ParsingStatus == ParsingStatus.Failed))
+				{
+                    Application.Instance.Invoke(() => { gridView.ReloadData(index); });
+				}
 			}
 		}
 
