@@ -29,6 +29,8 @@ namespace ArcdpsLogManager
 		private GridView<LogData> logGridView;
 		private GridView<PlayerData> playerGridView;
 
+		private Dictionary<string, LogData> cache;
+
 		public ManagerForm()
 		{
 			Title = "arcdps Log Manager";
@@ -55,6 +57,11 @@ namespace ArcdpsLogManager
 
 			Menu = new MenuBar(settingsMenuItem);
 
+
+			formLayout.BeginHorizontal();
+			formLayout.BeginVertical(Padding = new Padding(5));
+
+			formLayout.EndVertical();
 
 			formLayout.BeginVertical(Padding = new Padding(5));
 
@@ -98,6 +105,7 @@ namespace ArcdpsLogManager
 			formLayout.Add(tabs, true);
 
 			formLayout.EndVertical();
+			formLayout.EndHorizontal();
 
 			RecreateLogCollections(new ObservableCollection<LogData>(logs));
 
@@ -109,7 +117,7 @@ namespace ArcdpsLogManager
 			var deserializeTask = DeserializeLogCache();
 
 			await FindLogs();
-			var cache = await deserializeTask;
+			cache = await deserializeTask;
 
 			// Copying the logs into a new collection is required to improve performance on platforms
 			// where each modification results in a full refresh of all data in the grid view.
@@ -204,7 +212,16 @@ namespace ArcdpsLogManager
 
 		public async Task SerializeLogsToCache()
 		{
-			var logDataByFilename = logs.ToDictionary(x => x.FileInfo.FullName);
+			if (cache == null)
+			{
+                cache = new Dictionary<string, LogData>();
+			}
+
+			// Append current logs or overwrite to cache
+			foreach (var log in logs)
+			{
+				cache[log.FileInfo.FullName] = log;
+			}
 
 			var directory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
 				AppDataDirectoryName);
@@ -216,7 +233,7 @@ namespace ArcdpsLogManager
 			using (var writer = new StreamWriter(cacheFilePath))
 			{
 				var serializer = new JsonSerializer();
-				serializer.Serialize(writer, logDataByFilename);
+				serializer.Serialize(writer, cache);
 			}
 		}
 
