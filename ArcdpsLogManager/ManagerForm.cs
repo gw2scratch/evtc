@@ -28,6 +28,14 @@ namespace ArcdpsLogManager
 
 		private GridView<LogData> logGridView;
 		private GridView<PlayerData> playerGridView;
+		private DropDown encounterFilterDropDown;
+
+		private const string EncounterFilterAll = "All";
+		private string EncounterFilter { get; set; } = EncounterFilterAll;
+
+		private bool ShowSuccessfulLogs { get; set; } = true;
+		private bool ShowFailedLogs { get; set; } = true;
+		private bool ShowUnknownLogs { get; set; } = true;
 
 		private Dictionary<string, LogData> cache;
 
@@ -57,20 +65,41 @@ namespace ArcdpsLogManager
 
 			Menu = new MenuBar(settingsMenuItem);
 
+			formLayout.BeginVertical(new Padding(5));
 
-			formLayout.BeginHorizontal();
-			formLayout.BeginVertical(Padding = new Padding(5));
+			encounterFilterDropDown = new DropDown();
+			UpdateFilterDropdown();
+			encounterFilterDropDown.SelectedKey = EncounterFilterAll;
+			encounterFilterDropDown.SelectedKeyBinding.Bind(this, x => x.EncounterFilter);
 
-			formLayout.EndVertical();
+			var successCheckBox = new CheckBox {Text = "Success"};
+			successCheckBox.CheckedBinding.Bind(this, x => x.ShowSuccessfulLogs);
+			var failureCheckBox = new CheckBox {Text = "Failure"};
+			failureCheckBox.CheckedBinding.Bind(this, x => x.ShowFailedLogs);
+			var unknownCheckBox = new CheckBox {Text = "Unknown"};
+			unknownCheckBox.CheckedBinding.Bind(this, x => x.ShowUnknownLogs);
 
-			formLayout.BeginVertical(Padding = new Padding(5));
+			var applyFilterButton = new Button {Text = "Apply"};
+			applyFilterButton.Click += (sender, args) => { logsFiltered.Refresh(); };
 
 			formLayout.BeginGroup("Filters", new Padding(5));
 			formLayout.BeginHorizontal();
+			formLayout.BeginVertical(new Padding(5));
+			formLayout.BeginHorizontal();
 			formLayout.Add("By encounter result:");
-			formLayout.Add(new CheckBox {Text = "Success", Checked = true, Enabled = false}); // TODO: IMPLEMENT
-			formLayout.Add(new CheckBox {Text = "Failure", Checked = true, Enabled = false}); // TODO: IMPLEMENT
-			formLayout.Add(new CheckBox {Text = "Unknown", Checked = true, Enabled = false}); // TODO: IMPLEMENT
+			formLayout.Add(successCheckBox);
+			formLayout.Add(failureCheckBox);
+			formLayout.Add(unknownCheckBox);
+			formLayout.EndHorizontal();
+			formLayout.BeginHorizontal();
+			formLayout.Add(new Label {Text = "By encounter: ", VerticalAlignment = VerticalAlignment.Center});
+			formLayout.Add(encounterFilterDropDown);
+			formLayout.EndHorizontal();
+			formLayout.EndVertical();
+			formLayout.Add(null, true);
+			formLayout.BeginVertical(new Padding(5));
+			formLayout.Add(applyFilterButton);
+			formLayout.EndVertical();
 			formLayout.EndHorizontal();
 			formLayout.EndGroup();
 
@@ -105,7 +134,6 @@ namespace ArcdpsLogManager
 			formLayout.Add(tabs, true);
 
 			formLayout.EndVertical();
-			formLayout.EndHorizontal();
 
 			RecreateLogCollections(new ObservableCollection<LogData>(logs));
 
@@ -123,19 +151,13 @@ namespace ArcdpsLogManager
 			// where each modification results in a full refresh of all data in the grid view.
 			var newLogs = new ObservableCollection<LogData>(logs);
 
-			if (cache != null)
+			for (var i = 0; i < logs.Count; i++)
 			{
-				Application.Instance.Invoke(() =>
+				var log = logs[i];
+				if (cache.TryGetValue(log.FileInfo.FullName, out var cachedLog))
 				{
-					for (var i = 0; i < logs.Count; i++)
-					{
-						var log = logs[i];
-						if (cache.TryGetValue(log.FileInfo.FullName, out var cachedLog))
-						{
-							newLogs[i] = cachedLog;
-						}
-					}
-				});
+					newLogs[i] = cachedLog;
+				}
 			}
 
 			Application.Instance.Invoke(() => { RecreateLogCollections(newLogs); });
@@ -205,7 +227,11 @@ namespace ArcdpsLogManager
 				// because no data visible in the view has changed
 				if (!(failedBefore && log.ParsingStatus == ParsingStatus.Failed))
 				{
-					Application.Instance.Invoke(() => { logGridView.ReloadData(index); });
+					Application.Instance.Invoke(() =>
+					{
+						logGridView.ReloadData(index);
+						UpdateFilterDropdown();
+					});
 				}
 			}
 		}
@@ -214,7 +240,8 @@ namespace ArcdpsLogManager
 		{
 			if (cache == null)
 			{
-                cache = new Dictionary<string, LogData>();
+				// Cache was not loaded yet, do not overwrite it.
+				return;
 			}
 
 			// Append current logs or overwrite to cache
@@ -245,26 +272,18 @@ namespace ArcdpsLogManager
 			var cacheFilePath = Path.Combine(directory, CacheFilename);
 			if (File.Exists(cacheFilePath))
 			{
-				try
+				using (var reader = File.OpenText(cacheFilePath))
 				{
-					using (var reader = File.OpenText(cacheFilePath))
-					{
-						var serializer = new JsonSerializer();
-						var dictionary =
-							(Dictionary<string, LogData>) serializer.Deserialize(reader,
-								typeof(Dictionary<string, LogData>));
+					var serializer = new JsonSerializer();
+					var dictionary =
+						(Dictionary<string, LogData>) serializer.Deserialize(reader,
+							typeof(Dictionary<string, LogData>));
 
-						return dictionary;
-					}
-				}
-				catch
-				{
-					// Ignored
-					return null;
+					return dictionary;
 				}
 			}
 
-			return null;
+			return new Dictionary<string, LogData>();
 		}
 
 		public LogDetailPanel ConstructLogDetailPanel()
@@ -379,9 +398,57 @@ namespace ArcdpsLogManager
 			return gridView;
 		}
 
+		private bool FilterLog(LogData log)
+		{
+			if (EncounterFilter != EncounterFilterAll)
+			{
+				if (log.ParsingStatus != ParsingStatus.Parsed)
+				{
+					return false;
+				}
+
+				if (log.EncounterName != EncounterFilter)
+				{
+					return false;
+				}
+			}
+
+			if (!ShowFailedLogs && log.EncounterResult == EncounterResult.Failure)
+			{
+				return false;
+			}
+
+			if (!ShowUnknownLogs && log.EncounterResult == EncounterResult.Unknown)
+			{
+				return false;
+			}
+
+			if (!ShowSuccessfulLogs && log.EncounterResult == EncounterResult.Success)
+			{
+				return false;
+			}
+
+			return true;
+		}
+
+		private void UpdateFilterDropdown()
+		{
+			var previousKey = encounterFilterDropDown.SelectedKey;
+
+			encounterFilterDropDown.DataStore = new[] {EncounterFilterAll}.Concat(logs
+				.Where(x => x.ParsingStatus == ParsingStatus.Parsed)
+				.Select(x => x.EncounterName).Distinct().OrderBy(x => x).ToArray());
+
+			encounterFilterDropDown.SelectedKey = previousKey;
+		}
+
 		private void RecreateLogCollections(ObservableCollection<LogData> newLogCollection)
 		{
 			logs = newLogCollection;
+
+			UpdateFilterDropdown();
+
+			logs.CollectionChanged += (sender, args) => { UpdateFilterDropdown(); };
 
 			logsFiltered = new SelectableFilterCollection<LogData>(playerGridView, logs);
 
@@ -396,19 +463,21 @@ namespace ArcdpsLogManager
 					{
 						if (!logsByAccountName.ContainsKey(player.AccountName))
 						{
-                            logsByAccountName[player.AccountName] = new List<LogData>();
+							logsByAccountName[player.AccountName] = new List<LogData>();
 						}
 
 						logsByAccountName[player.AccountName].Add(log);
 					}
 				}
 
-				var playerData = logsByAccountName.Select(x => new PlayerData(x.Key, x.Value)).OrderByDescending(x => x.Logs.Count).ToArray();
+				var playerData = logsByAccountName.Select(x => new PlayerData(x.Key, x.Value))
+					.OrderByDescending(x => x.Logs.Count).ToArray();
 				playerGridView.DataStore = playerData;
 			};
 
 			logGridView.DataStore = logsFiltered;
 
+			logsFiltered.Filter = FilterLog;
 			logsFiltered.Refresh();
 		}
 	}
