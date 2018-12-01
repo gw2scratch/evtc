@@ -35,36 +35,36 @@ namespace ArcdpsLogManager
 		private Lazy<Image> TinyIconChronomancer { get; } = new Lazy<Image>(Resources.GetTinyIconChronomancer);
 		private Lazy<Image> TinyIconMirage { get; } = new Lazy<Image>(Resources.GetTinyIconMirage);
 
-		public Image GetTinyProfessionIcon(LogPlayer player)
+		public Image GetTinyProfessionIcon(Profession profession)
 		{
-		    if (player.EliteSpecialization == EliteSpecialization.None)
-		    {
-			    switch (player.Profession)
-			    {
-				    case Profession.Warrior:
-						return TinyIconWarrior.Value;
-				    case Profession.Guardian:
-						return TinyIconGuardian.Value;
-				    case Profession.Revenant:
-						return TinyIconRevenant.Value;
-				    case Profession.Ranger:
-						return TinyIconRanger.Value;
-				    case Profession.Thief:
-						return TinyIconThief.Value;
-				    case Profession.Engineer:
-						return TinyIconEngineer.Value;
-				    case Profession.Necromancer:
-						return TinyIconNecromancer.Value;
-				    case Profession.Elementalist:
-						return TinyIconElementalist.Value;
-				    case Profession.Mesmer:
-						return TinyIconMesmer.Value;
-				    default:
-					    throw new ArgumentOutOfRangeException(nameof(player.Profession));
-			    }
-		    }
+			switch (profession)
+			{
+				case Profession.Warrior:
+					return TinyIconWarrior.Value;
+				case Profession.Guardian:
+					return TinyIconGuardian.Value;
+				case Profession.Revenant:
+					return TinyIconRevenant.Value;
+				case Profession.Ranger:
+					return TinyIconRanger.Value;
+				case Profession.Thief:
+					return TinyIconThief.Value;
+				case Profession.Engineer:
+					return TinyIconEngineer.Value;
+				case Profession.Necromancer:
+					return TinyIconNecromancer.Value;
+				case Profession.Elementalist:
+					return TinyIconElementalist.Value;
+				case Profession.Mesmer:
+					return TinyIconMesmer.Value;
+				default:
+					throw new ArgumentOutOfRangeException(nameof(profession));
+			}
+		}
 
-			switch (player.EliteSpecialization)
+		public Image GetTinyProfessionIcon(EliteSpecialization specialization)
+		{
+			switch (specialization)
 			{
 				case EliteSpecialization.Berserker:
 					return TinyIconBerserker.Value;
@@ -103,8 +103,18 @@ namespace ArcdpsLogManager
 				case EliteSpecialization.Mirage:
 					return TinyIconMirage.Value;
 				default:
-					throw new ArgumentOutOfRangeException(nameof(player.EliteSpecialization));
+					throw new ArgumentOutOfRangeException(nameof(specialization));
 			}
+		}
+
+		public Image GetTinyProfessionIcon(LogPlayer player)
+		{
+			if (player.EliteSpecialization == EliteSpecialization.None)
+			{
+				return GetTinyProfessionIcon(player.Profession);
+			}
+
+			return GetTinyProfessionIcon(player.EliteSpecialization);
 		}
 	}
 }

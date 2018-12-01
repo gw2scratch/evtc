@@ -67,11 +67,13 @@
   <ItemGroup>
     <Compile Include="Controls\GroupCompositionControl.cs" />
     <Compile Include="Controls\LogDetailPanel.cs" />
+    <Compile Include="Controls\PlayerDetailPanel.cs" />
     <Compile Include="ImageProvider.cs" />
     <Compile Include="Logs\LogFinder.cs" />
     <Compile Include="Logs\LogData.cs" />
     <Compile Include="Logs\LogPlayer.cs" />
     <Compile Include="Logs\ParsingStatus.cs" />
+    <Compile Include="Logs\PlayerData.cs" />
     <Compile Include="ManagerForm.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\Annotations.cs" />

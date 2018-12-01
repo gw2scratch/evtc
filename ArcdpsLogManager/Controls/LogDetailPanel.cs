@@ -212,7 +212,7 @@ namespace ArcdpsLogManager.Controls
 			AddRow("Parsing status", parseStatusLabel);
 			EndVertical();
 
-			BeginVertical();
+			BeginVertical(spacing: new Size(5, 5));
 			BeginHorizontal();
 			Add(new Button {Text = "Upload to dps.report (EI)", Enabled = false}); // TODO: Implement
 			Add(new Button {Text = "Upload to gw2raidar", Enabled = false}); // TODO: Implement

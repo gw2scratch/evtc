@@ -26,6 +26,9 @@ namespace ArcdpsLogManager
 		private ObservableCollection<LogData> logs = new ObservableCollection<LogData>();
 		private SelectableFilterCollection<LogData> logsFiltered;
 
+		private GridView<LogData> logGridView;
+		private GridView<PlayerData> playerGridView;
+
 		public ManagerForm()
 		{
 			Title = "arcdps Log Manager";
@@ -52,7 +55,6 @@ namespace ArcdpsLogManager
 
 			Menu = new MenuBar(settingsMenuItem);
 
-			var logDetailPanel = ConstructLogDetailPanel();
 
 			formLayout.BeginVertical(Padding = new Padding(5));
 
@@ -65,20 +67,44 @@ namespace ArcdpsLogManager
 			formLayout.EndHorizontal();
 			formLayout.EndGroup();
 
-			formLayout.BeginHorizontal();
+			var tabs = new TabControl();
 
-			var gridView = ConstructLogGridView(logDetailPanel);
-			formLayout.Add(gridView, true);
-			formLayout.Add(logDetailPanel);
+			// Log tab
+			var logDetailPanel = ConstructLogDetailPanel();
+			logGridView = ConstructLogGridView(logDetailPanel);
 
-			formLayout.EndHorizontal();
+			var logLayout = new DynamicLayout();
+			logLayout.BeginVertical();
+			logLayout.BeginHorizontal();
+			logLayout.Add(logGridView, true);
+			logLayout.Add(logDetailPanel);
+			logLayout.EndHorizontal();
+			logLayout.EndVertical();
+			tabs.Pages.Add(new TabPage {Text = "Logs", Content = logLayout});
+
+			// Player tab
+			var playerDetailPanel = ConstructPlayerDetailPanel();
+			playerGridView = ConstructPlayerGridView(playerDetailPanel);
+
+			var playerLayout = new DynamicLayout();
+			playerLayout.BeginVertical();
+			playerLayout.BeginHorizontal();
+			playerLayout.Add(playerGridView, true);
+			playerLayout.Add(playerDetailPanel);
+			playerLayout.EndHorizontal();
+			playerLayout.EndVertical();
+			tabs.Pages.Add(new TabPage {Text = "Players", Content = playerLayout});
+
+			formLayout.Add(tabs, true);
 
 			formLayout.EndVertical();
 
-			Task.Run(() => LoadLogs(gridView));
+			RecreateLogCollections(new ObservableCollection<LogData>(logs));
+
+			Task.Run(() => LoadLogs(logGridView));
 		}
 
-		public async Task LoadLogs(GridView gridView)
+		public async Task LoadLogs(GridView<LogData> logGridView)
 		{
 			var deserializeTask = DeserializeLogCache();
 
@@ -104,14 +130,9 @@ namespace ArcdpsLogManager
 				});
 			}
 
-			Application.Instance.Invoke(() =>
-			{
-				logs = newLogs;
-				logsFiltered = new SelectableFilterCollection<LogData>(gridView, newLogs);
-				gridView.DataStore = logsFiltered;
-			});
+			Application.Instance.Invoke(() => { RecreateLogCollections(newLogs); });
 
-			await ParseLogs(gridView);
+			await ParseLogs(logGridView);
 
 			await SerializeLogsToCache();
 		}
@@ -157,7 +178,7 @@ namespace ArcdpsLogManager
 			}
 		}
 
-		public async Task ParseLogs(GridView gridView, bool reparse = false)
+		public async Task ParseLogs(GridView<LogData> logGridView, bool reparse = false)
 		{
 			foreach (var log in logs)
 			{
@@ -176,7 +197,7 @@ namespace ArcdpsLogManager
 				// because no data visible in the view has changed
 				if (!(failedBefore && log.ParsingStatus == ParsingStatus.Failed))
 				{
-                    Application.Instance.Invoke(() => { gridView.ReloadData(index); });
+					Application.Instance.Invoke(() => { logGridView.ReloadData(index); });
 				}
 			}
 		}
@@ -234,7 +255,7 @@ namespace ArcdpsLogManager
 			return new LogDetailPanel(ImageProvider);
 		}
 
-		public GridView ConstructLogGridView(LogDetailPanel detailPanel)
+		public GridView<LogData> ConstructLogGridView(LogDetailPanel detailPanel)
 		{
 			var gridView = new GridView<LogData>();
 			gridView.Columns.Add(new GridColumn()
@@ -304,13 +325,74 @@ namespace ArcdpsLogManager
 				}
 			});
 
-			logsFiltered = new SelectableFilterCollection<LogData>(gridView, logs);
-
-			gridView.DataStore = logsFiltered;
-
 			gridView.SelectionChanged += (sender, args) => { detailPanel.LogData = gridView.SelectedItem; };
 
 			return gridView;
+		}
+
+		private PlayerDetailPanel ConstructPlayerDetailPanel()
+		{
+			return new PlayerDetailPanel(ImageProvider);
+		}
+
+		private GridView<PlayerData> ConstructPlayerGridView(PlayerDetailPanel playerDetailPanel)
+		{
+			var gridView = new GridView<PlayerData>();
+			gridView.Columns.Add(new GridColumn()
+			{
+				HeaderText = "Account name",
+				DataCell = new TextBoxCell
+					{Binding = new DelegateBinding<PlayerData, string>(x => x.AccountName.Substring(1))}
+			});
+			gridView.Columns.Add(new GridColumn()
+			{
+				HeaderText = "Log count",
+				DataCell = new TextBoxCell
+					{Binding = new DelegateBinding<PlayerData, string>(x => x.Logs.Count.ToString())}
+			});
+
+			gridView.SelectionChanged += (sender, args) =>
+			{
+				if (gridView.SelectedItem != null)
+				{
+					playerDetailPanel.PlayerData = gridView.SelectedItem;
+				}
+			};
+
+			return gridView;
+		}
+
+		private void RecreateLogCollections(ObservableCollection<LogData> newLogCollection)
+		{
+			logs = newLogCollection;
+
+			logsFiltered = new SelectableFilterCollection<LogData>(playerGridView, logs);
+
+			logsFiltered.CollectionChanged += (sender, args) =>
+			{
+				var logsByAccountName = new Dictionary<string, List<LogData>>();
+				foreach (var log in logsFiltered)
+				{
+					if (log.ParsingStatus != ParsingStatus.Parsed) continue;
+
+					foreach (var player in log.Players)
+					{
+						if (!logsByAccountName.ContainsKey(player.AccountName))
+						{
+                            logsByAccountName[player.AccountName] = new List<LogData>();
+						}
+
+						logsByAccountName[player.AccountName].Add(log);
+					}
+				}
+
+				var playerData = logsByAccountName.Select(x => new PlayerData(x.Key, x.Value)).OrderByDescending(x => x.Logs.Count).ToArray();
+				playerGridView.DataStore = playerData;
+			};
+
+			logGridView.DataStore = logsFiltered;
+
+			logsFiltered.Refresh();
 		}
 	}
 }
