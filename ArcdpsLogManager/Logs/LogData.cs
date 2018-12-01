@@ -13,7 +13,7 @@ namespace ArcdpsLogManager.Logs
 	{
 		public FileInfo FileInfo { get; }
 
-		public IEnumerable<Player> Players { get; private set; }
+		public IEnumerable<LogPlayer> Players { get; private set; }
 		public EncounterResult EncounterResult { get; private set; } = EncounterResult.Unknown;
 		public string EncounterName { get; private set; } = "Unknown";
 		public DateTimeOffset EncounterStartTime { get; private set; }
@@ -41,7 +41,7 @@ namespace ArcdpsLogManager.Logs
 			FileInfo = fileInfo;
 		}
 
-		internal LogData(FileInfo fileInfo, IEnumerable<Player> players, string encounterName,
+		internal LogData(FileInfo fileInfo, IEnumerable<LogPlayer> players, string encounterName,
 			EncounterResult encounterResult,
 			DateTimeOffset encounterStartTime, TimeSpan encounterDuration, long parseMilliseconds = -1)
 		{
@@ -75,7 +75,9 @@ namespace ArcdpsLogManager.Logs
 
 				EncounterName = calculator.GetEncounterName(log);
 				EncounterResult = calculator.GetResult(log);
-				Players = calculator.GetPlayers(log).ToArray();
+                Players = calculator.GetPlayers(log).Select(x =>
+                    new LogPlayer(x.Name, x.AccountName, x.Subgroup, x.Profession, x.EliteSpecialization)
+                ).ToArray();
 
 				EncounterStartTime = calculator.GetEncounterStartTime(log);
 				EncounterDuration = calculator.GetEncounterDuration(log);

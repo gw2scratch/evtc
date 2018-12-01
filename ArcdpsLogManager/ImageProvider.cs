@@ -1,4 +1,5 @@
 using System;
+using ArcdpsLogManager.Logs;
 using Eto.Drawing;
 using ScratchEVTCParser.Model.Agents;
 
@@ -34,7 +35,7 @@ namespace ArcdpsLogManager
 		private Lazy<Image> TinyIconChronomancer { get; } = new Lazy<Image>(Resources.GetTinyIconChronomancer);
 		private Lazy<Image> TinyIconMirage { get; } = new Lazy<Image>(Resources.GetTinyIconMirage);
 
-		public Image GetTinyProfessionIcon(Player player)
+		public Image GetTinyProfessionIcon(LogPlayer player)
 		{
 		    if (player.EliteSpecialization == EliteSpecialization.None)
 		    {

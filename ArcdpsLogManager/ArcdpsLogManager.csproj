@@ -65,11 +65,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controls\GroupComposition.cs" />
+    <Compile Include="Controls\GroupCompositionControl.cs" />
     <Compile Include="Controls\LogDetailPanel.cs" />
     <Compile Include="ImageProvider.cs" />
     <Compile Include="Logs\LogFinder.cs" />
     <Compile Include="Logs\LogData.cs" />
+    <Compile Include="Logs\LogPlayer.cs" />
     <Compile Include="Logs\ParsingStatus.cs" />
     <Compile Include="ManagerForm.cs" />
     <Compile Include="Program.cs" />

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ArcdpsLogManager.Logs;
 using Eto.Drawing;
 using Eto.Forms;
 using ScratchEVTCParser.Model.Agents;
@@ -10,9 +11,9 @@ namespace ArcdpsLogManager.Controls
 	public class GroupCompositionControl : DynamicLayout
 	{
 		private readonly ImageProvider imageProvider;
-		private Player[] players;
+		private LogPlayer[] players;
 
-		public IEnumerable<Player> Players
+		public IEnumerable<LogPlayer> Players
 		{
 			get => players;
 			set
@@ -21,7 +22,6 @@ namespace ArcdpsLogManager.Controls
 				RecreateLayout();
 			}
 		}
-
 
 		public GroupCompositionControl(ImageProvider imageProvider)
 		{

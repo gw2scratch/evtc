@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using ArcdpsLogManager.Annotations;
 using ArcdpsLogManager.Logs;
@@ -21,7 +22,7 @@ namespace ArcdpsLogManager.Controls
 			private string encounterTime;
 			private string encounterDuration;
 			private string parseTimeMilliseconds;
-			private IEnumerable<Player> players;
+			private LogPlayer[] players;
 			private string parsingStatus;
 
 			public string EncounterName
@@ -90,13 +91,13 @@ namespace ArcdpsLogManager.Controls
 				}
 			}
 
-			public IEnumerable<Player> Players
+			public IEnumerable<LogPlayer> Players
 			{
 				get => players;
 				set
 				{
 					if (Equals(value, players)) return;
-					players = value;
+					players = value as LogPlayer[] ?? value.ToArray();
 					OnPropertyChanged();
 				}
 			}
@@ -188,7 +189,7 @@ namespace ArcdpsLogManager.Controls
 
 			var groupComposition = new GroupCompositionControl(imageProvider);
 			groupComposition.Bind(x => x.Players,
-				new ObjectBinding<IEnumerable<Player>>(Model, nameof(Model.Players)));
+				new ObjectBinding<IEnumerable<LogPlayer>>(Model, nameof(Model.Players)));
 
 			var parseTimeLabel = new Label();
 			parseTimeLabel.TextBinding.Bind(Model, x => x.ParseTimeMilliseconds);

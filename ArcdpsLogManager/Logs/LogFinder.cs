@@ -27,12 +27,9 @@ namespace ArcdpsLogManager.Logs
 
 		public IEnumerable<LogData> GetTesting()
 		{
-			var player1 = new Player(1, 1, "Testing player", 0, 0, 0, 0, 120, 120, ":Testing account.1234",
-				Profession.Thief, EliteSpecialization.Daredevil, 1);
-			var player2 = new Player(2, 2, "Testing player 2", 0, 0, 0, 0, 120, 120, ":Another account.1235",
-				Profession.Ranger, EliteSpecialization.Druid, 1);
-			var player3 = new Player(3, 3, "Testing player 3", 0, 0, 0, 0, 120, 120, ":Someone.1236",
-				Profession.Mesmer, EliteSpecialization.Chronomancer, 2);
+			var player1 = new LogPlayer("Testing player", ":Testing account.1234", 1, Profession.Thief, EliteSpecialization.Daredevil);
+			var player2 = new LogPlayer("Testing player 2", ":Another account.1235", 1, Profession.Ranger, EliteSpecialization.Druid);
+			var player3 = new LogPlayer("Testing player 3", ":ChronoGoddess.1236", 2, Profession.Mesmer, EliteSpecialization.Chronomancer);
 			var players = new[] {player1, player2, player3};
 
 			var dateStart1 = new DateTimeOffset(2018, 06, 15, 12, 13, 14, TimeSpan.Zero);
