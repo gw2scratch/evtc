@@ -124,12 +124,6 @@ namespace ArcdpsLogManager.Controls
 				SuspendLayout();
 				logData = value;
 
-				// TODO: REMOVE
-				if (logData.ParseTime == default)
-				{
-					logData.ParseData();
-				}
-
 				Model.EncounterName = logData.EncounterName;
 
 				string result;

@@ -13,28 +13,28 @@ namespace ArcdpsLogManager.Logs
 	{
 		public FileInfo FileInfo { get; }
 
-		public IEnumerable<LogPlayer> Players { get; private set; }
-		public EncounterResult EncounterResult { get; private set; } = EncounterResult.Unknown;
-		public string EncounterName { get; private set; } = "Unknown";
-		public DateTimeOffset EncounterStartTime { get; private set; }
-		public TimeSpan EncounterDuration { get; private set; }
+		public IEnumerable<LogPlayer> Players { get; set; }
+		public EncounterResult EncounterResult { get; set; } = EncounterResult.Unknown;
+		public string EncounterName { get; set; } = "Unknown";
+		public DateTimeOffset EncounterStartTime { get; set; }
+		public TimeSpan EncounterDuration { get; set; }
 
-		public ParsingStatus ParsingStatus { get; private set; } = ParsingStatus.Unparsed;
+		public ParsingStatus ParsingStatus { get; set; } = ParsingStatus.Unparsed;
 
 		/// <summary>
 		/// Contains the time of when parsing of the log was finished, will be default unless <see cref="ParsingStatus"/> is <see cref="Logs.ParsingStatus.Parsed"/>
 		/// </summary>
-		public DateTimeOffset ParseTime { get; private set; }
+		public DateTimeOffset ParseTime { get; set; }
 
 		/// <summary>
 		/// The amount of milliseconds the parsing of the log took or -1 if <see cref="ParsingStatus"/> is not <see cref="Logs.ParsingStatus.Parsed"/>
 		/// </summary>
-		public long ParseMilliseconds { get; private set; } = -1;
+		public long ParseMilliseconds { get; set; } = -1;
 
 		/// <summary>
 		/// An exception if one was thrown during parsing. Will be null unless <see cref="ParsingStatus"/> is <see cref="Logs.ParsingStatus.Failed"/>.
 		/// </summary>
-		public Exception ParsingException { get; private set; }
+		public Exception ParsingException { get; set; }
 
 		public LogData(FileInfo fileInfo)
 		{

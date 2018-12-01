@@ -1,21 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Data.SqlTypes;
 using System.Globalization;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using ArcdpsLogManager.Controls;
 using ArcdpsLogManager.Logs;
 using Eto.Drawing;
 using Eto.Forms;
+using Newtonsoft.Json;
 using ScratchEVTCParser.Model.Encounters;
 
 namespace ArcdpsLogManager
 {
 	public class ManagerForm : Form
 	{
+		private const string AppDataDirectoryName = "ArcdpsLogManager";
+		private const string CacheFilename = "LogDataCache.json";
+
 		private ImageProvider ImageProvider { get; } = new ImageProvider();
 		private LogFinder LogFinder { get; } = new LogFinder();
 
-		private List<LogData> logs = new List<LogData>();
+		private ObservableCollection<LogData> logs = new ObservableCollection<LogData>();
 		private SelectableFilterCollection<LogData> logsFiltered;
 
 		public ManagerForm()
@@ -70,19 +78,72 @@ namespace ArcdpsLogManager
 
 		public async Task LoadLogs(GridView gridView)
 		{
+			var deserializeTask = DeserializeLogCache();
+
 			await FindLogs();
+			var cache = await deserializeTask;
+
+			bool anyLoadedFromCache = false;
+			if (cache != null)
+			{
+				Application.Instance.Invoke(() =>
+				{
+					for (var i = 0; i < logs.Count; i++)
+					{
+						var log = logs[i];
+						if (cache.TryGetValue(log.FileInfo.FullName, out var cachedLog))
+						{
+							logs[i] = cachedLog;
+							anyLoadedFromCache = true;
+						}
+					}
+				});
+			}
+
+			if (anyLoadedFromCache)
+			{
+				Application.Instance.Invoke(() => { gridView.ReloadData(new Range<int>(0, logsFiltered.Count - 1)); });
+			}
+
 			await ParseLogs(gridView);
+
+			await SerializeLogsToCache();
 		}
 
 		public async Task FindLogs()
 		{
 			try
 			{
+				// Invoking for every single added file is a lot of added overhead, instead add multiple files at a time.
+				const int flushAmount = 100;
+				List<LogData> foundLogs = new List<LogData>();
+
 				//foreach (var file in LogFinder.GetTesting())
-				foreach (var file in LogFinder.GetFromDirectory(Settings.LogRootPath))
+				foreach (var log in LogFinder.GetFromDirectory(Settings.LogRootPath))
 				{
-					Application.Instance.Invoke(() => { logsFiltered.Add(file); });
+					foundLogs.Add(log);
+
+					if (foundLogs.Count == flushAmount)
+					{
+						Application.Instance.Invoke(() =>
+						{
+							foreach (var flushedLog in foundLogs)
+							{
+								logs.Add(flushedLog);
+							}
+						});
+						foundLogs.Clear();
+					}
 				}
+
+				// Add the remaining logs
+				Application.Instance.Invoke(() =>
+				{
+					foreach (var flushedLog in foundLogs)
+					{
+						logs.Add(flushedLog);
+					}
+				});
 			}
 			catch
 			{
@@ -90,14 +151,65 @@ namespace ArcdpsLogManager
 			}
 		}
 
-		public async Task ParseLogs(GridView gridView)
+		public async Task ParseLogs(GridView gridView, bool reparse = false)
 		{
 			foreach (var log in logs)
 			{
+				// Skip already parsed logs
+				if (log.ParsingStatus == ParsingStatus.Parsed && !reparse) continue;
+
 				log.ParseData();
 				var index = logsFiltered.IndexOf(log);
 				Application.Instance.Invoke(() => { gridView.ReloadData(index); });
 			}
+		}
+
+		public async Task SerializeLogsToCache()
+		{
+			var logDataByFilename = logs.ToDictionary(x => x.FileInfo.FullName);
+
+			var directory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+				AppDataDirectoryName);
+
+			var cacheFilePath = Path.Combine(directory, CacheFilename);
+
+			if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
+
+			using (var writer = new StreamWriter(cacheFilePath))
+			{
+				var serializer = new JsonSerializer();
+				serializer.Serialize(writer, logDataByFilename);
+			}
+		}
+
+		public async Task<Dictionary<string, LogData>> DeserializeLogCache()
+		{
+			var directory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+				AppDataDirectoryName);
+
+			var cacheFilePath = Path.Combine(directory, CacheFilename);
+			if (File.Exists(cacheFilePath))
+			{
+				try
+				{
+					using (var reader = File.OpenText(cacheFilePath))
+					{
+						var serializer = new JsonSerializer();
+						var dictionary =
+							(Dictionary<string, LogData>) serializer.Deserialize(reader,
+								typeof(Dictionary<string, LogData>));
+
+						return dictionary;
+					}
+				}
+				catch
+				{
+					// Ignored
+					return null;
+				}
+			}
+
+			return null;
 		}
 
 		public LogDetailPanel ConstructLogDetailPanel()
