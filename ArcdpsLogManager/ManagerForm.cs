@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Data.SqlTypes;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -86,13 +85,13 @@ namespace ArcdpsLogManager
 			formLayout.BeginHorizontal();
 			formLayout.BeginVertical(new Padding(5));
 			formLayout.BeginHorizontal();
-			formLayout.Add("By encounter result:");
+			formLayout.Add(new Label {Text = "Encounter result", VerticalAlignment = VerticalAlignment.Center});
 			formLayout.Add(successCheckBox);
 			formLayout.Add(failureCheckBox);
 			formLayout.Add(unknownCheckBox);
 			formLayout.EndHorizontal();
 			formLayout.BeginHorizontal();
-			formLayout.Add(new Label {Text = "By encounter: ", VerticalAlignment = VerticalAlignment.Center});
+			formLayout.Add(new Label {Text = "Encounter", VerticalAlignment = VerticalAlignment.Center});
 			formLayout.Add(encounterFilterDropDown);
 			formLayout.EndHorizontal();
 			formLayout.EndVertical();
