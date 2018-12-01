@@ -30,7 +30,13 @@ namespace ArcdpsLogManager.Controls
 
 		private void RecreateLayout()
 		{
-			if (players == null) return;
+			if (players == null)
+			{
+				SuspendLayout();
+				Clear();
+				ResumeLayout();
+				return;
+			}
 
 			var playersByGroups = players.GroupBy(x => x.Subgroup).OrderBy(x => x.Key);
 

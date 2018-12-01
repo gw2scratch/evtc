@@ -22,6 +22,7 @@ namespace ArcdpsLogManager.Controls
 			private string encounterDuration;
 			private string parseTimeMilliseconds;
 			private IEnumerable<Player> players;
+			private string parsingStatus;
 
 			public string EncounterName
 			{
@@ -78,6 +79,17 @@ namespace ArcdpsLogManager.Controls
 				}
 			}
 
+			public string ParsingStatus
+			{
+				get => parsingStatus;
+				set
+				{
+					if (value == parsingStatus) return;
+					parsingStatus = value;
+					OnPropertyChanged();
+				}
+			}
+
 			public IEnumerable<Player> Players
 			{
 				get => players;
@@ -101,13 +113,14 @@ namespace ArcdpsLogManager.Controls
 		public ImageProvider ImageProvider { get; }
 
 		private LogData logData;
-		private LogValues Values { get; } = new LogValues();
+		private LogValues Model { get; } = new LogValues();
 
 		public LogData LogData
 		{
 			get => logData;
 			set
 			{
+				SuspendLayout();
 				logData = value;
 
 				// TODO: REMOVE
@@ -116,7 +129,7 @@ namespace ArcdpsLogManager.Controls
 					logData.ParseData();
 				}
 
-				Values.EncounterName = logData.EncounterName;
+				Model.EncounterName = logData.EncounterName;
 
 				string result;
 				switch (logData.EncounterResult)
@@ -134,16 +147,18 @@ namespace ArcdpsLogManager.Controls
 						throw new ArgumentOutOfRangeException();
 				}
 
-				Values.EncounterTime = logData.EncounterStartTime.ToLocalTime().DateTime
+				Model.EncounterTime = logData.EncounterStartTime.ToLocalTime().DateTime
 					.ToString(CultureInfo.CurrentCulture);
 				var seconds = logData.EncounterDuration.TotalSeconds;
-				Values.EncounterDuration = $"{seconds / 60:0}m {seconds % 60:0.0}s";
+				Model.EncounterDuration = $"{seconds / 60:0}m {seconds % 60:0.0}s";
 
-				Values.Result = $"{result} in {Values.EncounterDuration}";
+				Model.Result = $"{result} in {Model.EncounterDuration}";
 
-				Values.ParseTimeMilliseconds = $"{logData.ParseMilliseconds} ms";
+				Model.ParseTimeMilliseconds = $"{logData.ParseMilliseconds} ms";
+				Model.ParsingStatus = logData.ParsingStatus.ToString();
 
-				Values.Players = logData.Players;
+				Model.Players = logData.Players;
+				ResumeLayout();
 			}
 		}
 
@@ -159,38 +174,27 @@ namespace ArcdpsLogManager.Controls
 			{
 				Font = Fonts.Sans(16, FontStyle.Bold)
 			};
-			nameLabel.TextBinding.Bind(Values, x => x.EncounterName);
+			nameLabel.TextBinding.Bind(Model, x => x.EncounterName);
 			var resultLabel = new Label()
 			{
 				Font = Fonts.Sans(12)
 			};
-			resultLabel.TextBinding.Bind(Values, x => x.Result);
+			resultLabel.TextBinding.Bind(Model, x => x.Result);
 
 			var timeLabel = new Label();
-			timeLabel.TextBinding.Bind(Values, x => x.EncounterTime);
+			timeLabel.TextBinding.Bind(Model, x => x.EncounterTime);
 			var durationLabel = new Label();
-			durationLabel.TextBinding.Bind(Values, x => x.EncounterDuration);
+			durationLabel.TextBinding.Bind(Model, x => x.EncounterDuration);
 
 			var groupComposition = new GroupCompositionControl(imageProvider);
 			groupComposition.Bind(x => x.Players,
-				new ObjectBinding<IEnumerable<Player>>(Values, nameof(Values.Players)));
-
-			var debugDataVisibleBinding = new DelegateBinding<bool>(
-				() => Settings.ShowDebugData,
-				null,
-				ev => Settings.ShowDebugDataChanged += ev,
-				ev => Settings.ShowDebugDataChanged -= ev
-			);
-
-            var parseTimeExplanationLabel = new Label {Text = "Time spent parsing"};
-            parseTimeExplanationLabel.Bind(x => x.Visible, debugDataVisibleBinding);
+				new ObjectBinding<IEnumerable<Player>>(Model, nameof(Model.Players)));
 
 			var parseTimeLabel = new Label();
-			parseTimeLabel.TextBinding.Bind(Values, x => x.ParseTimeMilliseconds);
-			parseTimeLabel.Bind(
-				x => x.Visible,
-				debugDataVisibleBinding
-			);
+			parseTimeLabel.TextBinding.Bind(Model, x => x.ParseTimeMilliseconds);
+
+			var parseStatusLabel = new Label();
+			parseStatusLabel.TextBinding.Bind(Model, x => x.ParsingStatus);
 
 			BeginVertical(spacing: new Size(0, 30));
 
@@ -207,15 +211,23 @@ namespace ArcdpsLogManager.Controls
 			BeginHorizontal(true);
 			Add(groupComposition);
 			EndHorizontal();
+
+			var debugSection = BeginVertical(spacing: new Size(5, 5));
+			AddRow("Time spent parsing", parseTimeLabel);
+			AddRow("Parsing status", parseStatusLabel);
+			EndVertical();
+
 			BeginVertical();
-			AddRow(parseTimeExplanationLabel, parseTimeLabel);
 			BeginHorizontal();
-			Add(new Button {Text = "Upload to dps.report (EI)", Enabled = false});
-			Add(new Button {Text = "Upload to gw2raidar (EI)", Enabled = false});
+			Add(new Button {Text = "Upload to dps.report (EI)", Enabled = false}); // TODO: Implement
+			Add(new Button {Text = "Upload to gw2raidar", Enabled = false}); // TODO: Implement
 			EndHorizontal();
 			EndVertical();
 
 			EndVertical();
+
+			debugSection.Visible = Settings.ShowDebugData;
+			Settings.ShowDebugDataChanged += (sender, args) => { debugSection.Visible = Settings.ShowDebugData; };
 		}
 	}
 }

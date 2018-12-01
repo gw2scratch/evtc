@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Threading.Tasks;
 using ArcdpsLogManager.Controls;
 using ArcdpsLogManager.Logs;
 using Eto.Drawing;
@@ -11,11 +13,15 @@ namespace ArcdpsLogManager
 	public class ManagerForm : Form
 	{
 		private ImageProvider ImageProvider { get; } = new ImageProvider();
+		private LogFinder LogFinder { get; } = new LogFinder();
+
+		private List<LogData> logs = new List<LogData>();
+		private SelectableFilterCollection<LogData> logsFiltered;
 
 		public ManagerForm()
 		{
 			Title = "arcdps Log Manager";
-			ClientSize = new Size(800, 600);
+			ClientSize = new Size(900, 700);
 			var formLayout = new DynamicLayout();
 			Content = formLayout;
 
@@ -51,29 +57,47 @@ namespace ArcdpsLogManager
 
 			formLayout.BeginHorizontal();
 
-			formLayout.Add(ConstructLogGridView(GetLogList(), logDetailPanel), true);
+			var gridView = ConstructLogGridView(logDetailPanel);
+			formLayout.Add(gridView, true);
 			formLayout.Add(logDetailPanel);
 
 			formLayout.EndHorizontal();
 
 			formLayout.EndVertical();
+
+			Task.Run(() => LoadLogs(gridView));
 		}
 
-		public LogCollection GetLogList()
+		public async Task LoadLogs(GridView gridView)
 		{
-			LogCollection logCollection;
-			//logCollection = LogCollection.GetTesting();
+			await FindLogs();
+			await ParseLogs(gridView);
+		}
+
+		public async Task FindLogs()
+		{
 			try
 			{
-				logCollection = LogCollection.GetFromDirectory(Settings.LogRootPath);
+				//foreach (var file in LogFinder.GetTesting())
+				foreach (var file in LogFinder.GetFromDirectory(Settings.LogRootPath))
+				{
+					Application.Instance.Invoke(() => { logsFiltered.Add(file); });
+				}
 			}
 			catch
 			{
-                // TODO: Handle exceptions properly
-                logCollection = LogCollection.Empty;
+				// TODO: Handle exceptions properly
 			}
+		}
 
-			return logCollection;
+		public async Task ParseLogs(GridView gridView)
+		{
+			foreach (var log in logs)
+			{
+				log.ParseData();
+				var index = logsFiltered.IndexOf(log);
+				Application.Instance.Invoke(() => { gridView.ReloadData(index); });
+			}
 		}
 
 		public LogDetailPanel ConstructLogDetailPanel()
@@ -81,7 +105,7 @@ namespace ArcdpsLogManager
 			return new LogDetailPanel(ImageProvider);
 		}
 
-		public GridView ConstructLogGridView(LogCollection logs, LogDetailPanel detailPanel)
+		public GridView ConstructLogGridView(LogDetailPanel detailPanel)
 		{
 			var gridView = new GridView<LogData>();
 			gridView.Columns.Add(new GridColumn()
@@ -123,6 +147,7 @@ namespace ArcdpsLogManager
 						{
 							return "Unknown";
 						}
+
 						return x.EncounterStartTime.ToLocalTime().DateTime.ToString(CultureInfo.CurrentCulture);
 					})
 				}
@@ -150,7 +175,9 @@ namespace ArcdpsLogManager
 				}
 			});
 
-			gridView.DataStore = new SelectableFilterCollection<LogData>(gridView, logs.Logs);
+			logsFiltered = new SelectableFilterCollection<LogData>(gridView, logs);
+
+			gridView.DataStore = logsFiltered;
 
 			gridView.SelectionChanged += (sender, args) => { detailPanel.LogData = gridView.SelectedItem; };
 

@@ -19,8 +19,22 @@ namespace ArcdpsLogManager.Logs
 		public DateTimeOffset EncounterStartTime { get; private set; }
 		public TimeSpan EncounterDuration { get; private set; }
 
+		public ParsingStatus ParsingStatus { get; private set; } = ParsingStatus.Unparsed;
+
+		/// <summary>
+		/// Contains the time of when parsing of the log was finished, will be default unless <see cref="ParsingStatus"/> is <see cref="Logs.ParsingStatus.Parsed"/>
+		/// </summary>
 		public DateTimeOffset ParseTime { get; private set; }
-		public long ParseMilliseconds { get; private set; }
+
+		/// <summary>
+		/// The amount of milliseconds the parsing of the log took or -1 if <see cref="ParsingStatus"/> is not <see cref="Logs.ParsingStatus.Parsed"/>
+		/// </summary>
+		public long ParseMilliseconds { get; private set; } = -1;
+
+		/// <summary>
+		/// An exception if one was thrown during parsing. Will be null unless <see cref="ParsingStatus"/> is <see cref="Logs.ParsingStatus.Failed"/>.
+		/// </summary>
+		public Exception ParsingException { get; private set; }
 
 		public LogData(FileInfo fileInfo)
 		{
@@ -45,27 +59,38 @@ namespace ArcdpsLogManager.Logs
 		public void ParseData()
 		{
 			// TODO: Move out dependencies
+			try
+			{
+				var stopwatch = Stopwatch.StartNew();
 
-			var parser = new EVTCParser();
-			var processor = new LogProcessor();
-			var calculator = new StatisticsCalculator();
+				ParsingStatus = ParsingStatus.Parsing;
 
-			var stopwatch = Stopwatch.StartNew();
+				var parser = new EVTCParser();
+				var processor = new LogProcessor();
+				var calculator = new StatisticsCalculator();
 
-			var parsedLog = parser.ParseLog(FileInfo.FullName);
-			var log = processor.GetProcessedLog(parsedLog);
 
-			EncounterName = calculator.GetEncounterName(log);
-			EncounterResult= calculator.GetResult(log);
-			Players = calculator.GetPlayers(log).ToArray();
+				var parsedLog = parser.ParseLog(FileInfo.FullName);
+				var log = processor.GetProcessedLog(parsedLog);
 
-			EncounterStartTime = calculator.GetEncounterStartTime(log);
-			EncounterDuration = calculator.GetEncounterDuration(log);
+				EncounterName = calculator.GetEncounterName(log);
+				EncounterResult = calculator.GetResult(log);
+				Players = calculator.GetPlayers(log).ToArray();
 
-			stopwatch.Stop();
+				EncounterStartTime = calculator.GetEncounterStartTime(log);
+				EncounterDuration = calculator.GetEncounterDuration(log);
 
-			ParseMilliseconds = stopwatch.ElapsedMilliseconds;
-			ParseTime = DateTimeOffset.Now;
+				stopwatch.Stop();
+
+				ParseMilliseconds = stopwatch.ElapsedMilliseconds;
+				ParseTime = DateTimeOffset.Now;
+				ParsingStatus = ParsingStatus.Parsed;
+			}
+			catch (Exception e)
+			{
+				ParsingStatus = ParsingStatus.Failed;
+				ParsingException = e;
+			}
 		}
 	}
 }
