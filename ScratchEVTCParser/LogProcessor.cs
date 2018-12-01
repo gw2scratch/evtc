@@ -264,8 +264,10 @@ namespace ScratchEVTCParser
 					string subgroupLiteral = nameParts[2];
 					if (!int.TryParse(subgroupLiteral, out int subgroup))
 					{
-						subgroup = -1;
+						subgroup = -2;
 					}
+
+					subgroup++; // Recorded subgroups are one less than ingame.
 
 					yield return new Player(agent.Address, id, characterName, agent.Toughness, agent.Concentration,
 						agent.Healing, agent.Condition, agent.HitboxWidth, agent.HitboxHeight, accountName, profession,
