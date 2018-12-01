@@ -48,7 +48,10 @@ namespace ArcdpsLogManager
 			Closing += (sender, args) => { SerializeLogsToCache().Wait(); };
 
 			var logLocationMenuItem = new ButtonMenuItem {Text = "&Log location"};
-			logLocationMenuItem.Click += (sender, args) => { new LogSettingsDialog().ShowModal(); };
+			logLocationMenuItem.Click += (sender, args) =>
+			{
+				new LogSettingsDialog(this).ShowModal(this);
+			};
 			logLocationMenuItem.Shortcut = Application.Instance.CommonModifier | Keys.L;
 
 			var debugDataMenuItem = new CheckMenuItem {Text = "Show &Debug data"};
@@ -136,15 +139,29 @@ namespace ArcdpsLogManager
 
 			RecreateLogCollections(new ObservableCollection<LogData>(logs));
 
+            ReloadLogs();
+		}
+
+		public void ReloadLogs()
+		{
+			logs.Clear();
 			Task.Run(() => LoadLogs(logGridView));
 		}
 
-		public async Task LoadLogs(GridView<LogData> logGridView)
+		private async Task LoadLogs(GridView<LogData> logGridView)
 		{
-			var deserializeTask = DeserializeLogCache();
+			Task<Dictionary<string, LogData>> deserializeTask = null;
+			if (cache == null)
+			{
+				deserializeTask = DeserializeLogCache();
+			}
 
 			await FindLogs();
-			cache = await deserializeTask;
+
+			if (deserializeTask != null)
+			{
+				cache = await deserializeTask;
+			}
 
 			// Copying the logs into a new collection is required to improve performance on platforms
 			// where each modification results in a full refresh of all data in the grid view.

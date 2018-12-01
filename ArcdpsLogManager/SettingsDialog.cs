@@ -8,7 +8,7 @@ namespace ArcdpsLogManager
 	{
 		private string LogDirectoryPath { get; set; } = Settings.LogRootPath;
 
-		public LogSettingsDialog()
+		public LogSettingsDialog(ManagerForm managerForm)
 		{
 			Title = "Settings";
 			ClientSize = new Size(500, -1);
@@ -54,6 +54,7 @@ namespace ArcdpsLogManager
 			Closed += (sender, args) =>
 			{
 				Settings.LogRootPath = LogDirectoryPath;
+				managerForm.ReloadLogs();
 			};
 		}
 	}
