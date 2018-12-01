@@ -110,7 +110,7 @@ namespace ArcdpsLogManager
 
 		public static Image GetTinyIconScrapper()
 		{
-			return GetImage("Scrapper_tango_icon_200px.png");
+			return GetImage("Scrapper_tango_icon_20px.png");
 		}
 
 		public static Image GetTinyIconHolosmith()

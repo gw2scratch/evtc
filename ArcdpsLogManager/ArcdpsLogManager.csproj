@@ -150,7 +150,7 @@
     <Content Include="Images\Scourge_tango_icon_20px.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\Scrapper_tango_icon_200px.png">
+    <Content Include="Images\Scrapper_tango_icon_20px.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\Soulbeast_tango_icon_20px.png">

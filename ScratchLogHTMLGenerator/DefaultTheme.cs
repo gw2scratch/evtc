@@ -214,7 +214,7 @@ namespace ScratchLogHTMLGenerator
 				case EliteSpecialization.Deadeye:
 					return "https://wiki.guildwars2.com/images/c/c9/Deadeye_tango_icon_20px.png";
 				case EliteSpecialization.Scrapper:
-					return "https://wiki.guildwars2.com/images/3/3a/Scrapper_tango_icon_200px.png";
+					return "https://wiki.guildwars2.com/images/b/be/Scrapper_tango_icon_20px.png";
 				case EliteSpecialization.Holosmith:
 					return "https://wiki.guildwars2.com/images/2/28/Holosmith_tango_icon_20px.png";
 				case EliteSpecialization.Reaper:
