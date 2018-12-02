@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -218,9 +218,13 @@ namespace ArcdpsLogManager
 					}
 				});
 			}
-			catch
+			catch (Exception e)
 			{
-				// TODO: Handle exceptions properly
+				Application.Instance.Invoke(() =>
+				{
+					MessageBox.Show(this, $"Logs could not be found.\nReason: {e.Message}", "Log Discovery Error",
+						MessageBoxType.Error);
+				});
 			}
 		}
 
