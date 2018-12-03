@@ -16,7 +16,9 @@ namespace ArcdpsLogManager.Controls
 {
 	public class PlayerDetailPanel : DynamicLayout, INotifyPropertyChanged
 	{
-		private PlayerData playerData = new PlayerData(":", new LogData[0]);
+		private const string NullAccountName = "-"; // Account names start with :, so this should never appear.
+
+		private PlayerData playerData = new PlayerData(NullAccountName, new LogData[0]);
 		public ImageProvider ImageProvider { get; }
 
 		public PlayerData PlayerData
@@ -26,7 +28,7 @@ namespace ArcdpsLogManager.Controls
 			{
 				if (value == null)
 				{
-                    value = new PlayerData(":", new LogData[0]);
+                    value = new PlayerData(NullAccountName, new LogData[0]);
 				}
 
 				if (Equals(value, playerData)) return;
@@ -41,6 +43,7 @@ namespace ArcdpsLogManager.Controls
 
 			Padding = new Padding(10);
 			Width = 300;
+			Visible = false;
 
 			var accountName = new Label()
 			{
@@ -69,6 +72,8 @@ namespace ArcdpsLogManager.Controls
 			PropertyChanged += (sender, args) =>
 			{
 				if (args.PropertyName != nameof(PlayerData)) return;
+
+				Visible = PlayerData.AccountName != NullAccountName;
 
 				var characters = new Dictionary<string, (Profession profession, int count)>();
 				foreach (var log in PlayerData.Logs)

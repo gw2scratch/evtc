@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -82,7 +82,10 @@ namespace ArcdpsLogManager
 			unknownCheckBox.CheckedBinding.Bind(this, x => x.ShowUnknownLogs);
 
 			var applyFilterButton = new Button {Text = "Apply"};
-			applyFilterButton.Click += (sender, args) => { logsFiltered.Refresh(); };
+			applyFilterButton.Click += (sender, args) =>
+			{
+				logsFiltered.Refresh();
+			};
 
 			formLayout.BeginGroup("Filters", new Padding(5));
 			formLayout.BeginHorizontal();
@@ -100,6 +103,7 @@ namespace ArcdpsLogManager
 			formLayout.EndVertical();
 			formLayout.Add(null, true);
 			formLayout.BeginVertical(new Padding(5));
+			formLayout.Add(null, true);
 			formLayout.Add(applyFilterButton);
 			formLayout.EndVertical();
 			formLayout.EndHorizontal();

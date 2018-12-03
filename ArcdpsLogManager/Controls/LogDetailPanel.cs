@@ -24,6 +24,18 @@ namespace ArcdpsLogManager.Controls
 			private string parseTimeMilliseconds;
 			private LogPlayer[] players;
 			private string parsingStatus;
+			private bool dataPresent = false;
+
+			public bool DataPresent
+			{
+				get => dataPresent;
+				set
+				{
+					if (value == dataPresent) return;
+					dataPresent = value;
+					OnPropertyChanged();
+				}
+			}
 
 			public string EncounterName
 			{
@@ -124,6 +136,14 @@ namespace ArcdpsLogManager.Controls
 				SuspendLayout();
 				logData = value;
 
+				if (logData == null)
+				{
+					Model.DataPresent = false;
+					return;
+				}
+
+				Model.DataPresent = true;
+
 				Model.EncounterName = logData.EncounterName;
 
 				string result;
@@ -190,6 +210,8 @@ namespace ArcdpsLogManager.Controls
 
 			var parseStatusLabel = new Label();
 			parseStatusLabel.TextBinding.Bind(Model, x => x.ParsingStatus);
+
+			this.Bind(x => x.Visible, new ObjectBinding<bool>(Model, nameof(Model.DataPresent)));
 
 			BeginVertical(spacing: new Size(0, 30));
 
