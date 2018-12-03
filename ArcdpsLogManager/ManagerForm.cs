@@ -75,11 +75,20 @@ namespace ArcdpsLogManager
 				Settings.ShowDebugData = debugDataMenuItem.Checked;
 			};
 
+			// TODO: Implement
+			var buildTemplateMenuItem = new ButtonMenuItem {Text = "&Build templates", Enabled = false};
+			// TODO: Implement
+			var arcdpsSettingsMenuItem = new ButtonMenuItem {Text = "&arcdps settings", Enabled = false};
+
+			var arcdpsMenuItem = new ButtonMenuItem {Text = "&arcdps"};
+			arcdpsMenuItem.Items.Add(arcdpsSettingsMenuItem);
+			arcdpsMenuItem.Items.Add(buildTemplateMenuItem);
+
 			var settingsMenuItem = new ButtonMenuItem {Text = "&Settings"};
 			settingsMenuItem.Items.Add(logLocationMenuItem);
 			settingsMenuItem.Items.Add(debugDataMenuItem);
 
-			Menu = new MenuBar(settingsMenuItem);
+			Menu = new MenuBar(arcdpsMenuItem, settingsMenuItem);
 
 			formLayout.BeginVertical(new Padding(5), yscale: true);
 
