@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using ArcdpsLogManager.Annotations;
 using ArcdpsLogManager.Controls;
 using ArcdpsLogManager.Logs;
 using Eto.Drawing;
@@ -14,7 +17,7 @@ using ScratchEVTCParser.Model.Encounters;
 
 namespace ArcdpsLogManager
 {
-	public class ManagerForm : Form
+	public class ManagerForm : Form, INotifyPropertyChanged
 	{
 		private const string AppDataDirectoryName = "ArcdpsLogManager";
 		private const string CacheFilename = "LogDataCache.json";
@@ -29,6 +32,8 @@ namespace ArcdpsLogManager
 		private GridView<PlayerData> playerGridView;
 		private DropDown encounterFilterDropDown;
 
+		private Dictionary<string, LogData> cache;
+
 		private const string EncounterFilterAll = "All";
 		private string EncounterFilter { get; set; } = EncounterFilterAll;
 
@@ -36,7 +41,19 @@ namespace ArcdpsLogManager
 		private bool ShowFailedLogs { get; set; } = true;
 		private bool ShowUnknownLogs { get; set; } = true;
 
-		private Dictionary<string, LogData> cache;
+		private string status = "";
+		private string Status
+		{
+			get => status;
+			set
+			{
+				if (value == status) return;
+				status = value;
+				OnPropertyChanged();
+			}
+		}
+
+		public event PropertyChangedEventHandler PropertyChanged;
 
 		public ManagerForm()
 		{
@@ -48,10 +65,7 @@ namespace ArcdpsLogManager
 			Closing += (sender, args) => { SerializeLogsToCache().Wait(); };
 
 			var logLocationMenuItem = new ButtonMenuItem {Text = "&Log location"};
-			logLocationMenuItem.Click += (sender, args) =>
-			{
-				new LogSettingsDialog(this).ShowModal(this);
-			};
+			logLocationMenuItem.Click += (sender, args) => { new LogSettingsDialog(this).ShowModal(this); };
 			logLocationMenuItem.Shortcut = Application.Instance.CommonModifier | Keys.L;
 
 			var debugDataMenuItem = new CheckMenuItem {Text = "Show &Debug data"};
@@ -67,7 +81,7 @@ namespace ArcdpsLogManager
 
 			Menu = new MenuBar(settingsMenuItem);
 
-			formLayout.BeginVertical(new Padding(5));
+			formLayout.BeginVertical(new Padding(5), yscale: true);
 
 			encounterFilterDropDown = new DropDown();
 			UpdateFilterDropdown();
@@ -82,23 +96,21 @@ namespace ArcdpsLogManager
 			unknownCheckBox.CheckedBinding.Bind(this, x => x.ShowUnknownLogs);
 
 			var applyFilterButton = new Button {Text = "Apply"};
-			applyFilterButton.Click += (sender, args) =>
-			{
-				logsFiltered.Refresh();
-			};
+			applyFilterButton.Click += (sender, args) => { logsFiltered.Refresh(); };
 
 			formLayout.BeginGroup("Filters", new Padding(5));
 			formLayout.BeginHorizontal();
-			formLayout.BeginVertical(new Padding(5));
+			formLayout.BeginVertical(new Padding(5), new Size(5, 0));
 			formLayout.BeginHorizontal();
+			formLayout.Add(new Label {Text = "Encounter", VerticalAlignment = VerticalAlignment.Center});
+			formLayout.Add(encounterFilterDropDown);
 			formLayout.Add(new Label {Text = "Encounter result", VerticalAlignment = VerticalAlignment.Center});
 			formLayout.Add(successCheckBox);
 			formLayout.Add(failureCheckBox);
 			formLayout.Add(unknownCheckBox);
 			formLayout.EndHorizontal();
 			formLayout.BeginHorizontal();
-			formLayout.Add(new Label {Text = "Encounter", VerticalAlignment = VerticalAlignment.Center});
-			formLayout.Add(encounterFilterDropDown);
+
 			formLayout.EndHorizontal();
 			formLayout.EndVertical();
 			formLayout.Add(null, true);
@@ -141,9 +153,16 @@ namespace ArcdpsLogManager
 
 			formLayout.EndVertical();
 
+			var statusLabel = new Label();
+			statusLabel.TextBinding.Bind(this, x => x.Status);
+
+			formLayout.BeginVertical(new Padding(5), yscale: false);
+			formLayout.Add(statusLabel);
+			formLayout.EndVertical();
+
 			RecreateLogCollections(new ObservableCollection<LogData>(logs));
 
-            ReloadLogs();
+			ReloadLogs();
 		}
 
 		public void ReloadLogs()
@@ -154,6 +173,8 @@ namespace ArcdpsLogManager
 
 		private async Task LoadLogs(GridView<LogData> logGridView)
 		{
+			Application.Instance.Invoke(() => { Status = "Finding logs..."; });
+
 			Task<Dictionary<string, LogData>> deserializeTask = null;
 			if (cache == null)
 			{
@@ -161,6 +182,8 @@ namespace ArcdpsLogManager
 			}
 
 			await FindLogs();
+
+			Application.Instance.Invoke(() => { Status = "Loading log cache..."; });
 
 			if (deserializeTask != null)
 			{
@@ -182,9 +205,15 @@ namespace ArcdpsLogManager
 
 			Application.Instance.Invoke(() => { RecreateLogCollections(newLogs); });
 
+			Application.Instance.Invoke(() => { Status = "Parsing logs..."; });
+
 			await ParseLogs(logGridView);
 
+			Application.Instance.Invoke(() => { Status = "Saving cache..."; });
+
 			await SerializeLogsToCache();
+
+			Application.Instance.Invoke(() => { Status = $"{logs.Count} logs found."; });
 		}
 
 		public async Task FindLogs()
@@ -234,18 +263,20 @@ namespace ArcdpsLogManager
 
 		public async Task ParseLogs(GridView<LogData> logGridView, bool reparse = false)
 		{
-			foreach (var log in logs)
+			// Skip already parsed logs
+			var logsToParse = logs.Where(x => x.ParsingStatus != ParsingStatus.Parsed).ToArray();
+
+			for (var i = 0; i < logsToParse.Length; i++)
 			{
-				// Skip already parsed logs
-				if (log.ParsingStatus == ParsingStatus.Parsed && !reparse)
-				{
-					continue;
-				}
+				var log = logsToParse[i];
 
 				bool failedBefore = log.ParsingStatus == ParsingStatus.Failed;
 
 				log.ParseData();
 				var index = logsFiltered.IndexOf(log);
+
+				int logNumber = i + 1;
+				Application.Instance.Invoke(() => { Status = $"Parsing logs ({logNumber}/{logsToParse.Length})..."; });
 
 				// There is no point in reloading data if it was failed before and failed again
 				// because no data visible in the view has changed
@@ -503,6 +534,12 @@ namespace ArcdpsLogManager
 
 			logsFiltered.Filter = FilterLog;
 			logsFiltered.Refresh();
+		}
+
+		[NotifyPropertyChangedInvocator]
+		protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+		{
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 		}
 	}
 }
