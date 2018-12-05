@@ -28,7 +28,7 @@ namespace ScratchLogMaker
 			Content = formLayout;
 
 			var openFileDialog = new OpenFileDialog {MultiSelect = true};
-			openFileDialog.Filters.Add(new FileFilter("EVTC logs", ".evtc", ".evtc.zip"));
+			openFileDialog.Filters.Add(new FileFilter("EVTC logs", ".evtc", ".evtc.zip", ".zevtc"));
 
 			var openFilesButton = new Button {Text = "Select EVTC logs"};
 			var processButton = new Button {Text = "Create HTML logs"};

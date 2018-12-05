@@ -19,8 +19,8 @@ namespace ArcdpsLogManager.Logs
 		/// <returns></returns>
 		public IEnumerable<LogData> GetFromDirectory(string directoryPath)
 		{
-			var files = Directory.EnumerateFiles(directoryPath, "*.evtc*", SearchOption.AllDirectories)
-				.Where(x => x.EndsWith(".evtc") || x.EndsWith(".evtc.zip"));
+			var files = Directory.EnumerateFiles(directoryPath, "*evtc*", SearchOption.AllDirectories)
+				.Where(x => x.EndsWith(".evtc") || x.EndsWith(".evtc.zip") || x.EndsWith(".zevtc"));
 
 			return files.Select(file => new LogData(new FileInfo(file)));
 		}
