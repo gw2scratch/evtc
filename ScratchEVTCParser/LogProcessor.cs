@@ -55,13 +55,12 @@ namespace ScratchEVTCParser
 		public Log GetProcessedLog(ParsedLog log)
 		{
 			var agents = GetAgents(log).ToList();
-
 			var skills = GetSkills(log).ToArray();
 			var events = GetEvents(agents, skills, log).ToArray();
 
 			var boss = agents.OfType<NPC>().First(a => a.SpeciesId == log.ParsedBossData.ID);
 
-			SetAgentAwareTimes(agents, events);
+			SetAgentAwareTimes(events);
 			AssignAgentMasters(log, agents); // Needs to be done after setting aware times
 
 			var encounter = GetEncounter(boss, agents, skills, events);
@@ -301,41 +300,52 @@ namespace ScratchEVTCParser
 			}
 		}
 
-		private void SetAgentAwareTimes(IReadOnlyCollection<Agent> agents, IReadOnlyCollection<Event> events)
+		private void SetAgentAwareTimes(IReadOnlyCollection<Event> events)
 		{
-			foreach (var ev in events.OrderBy(x => x.Time))
+			foreach (var ev in events)
 			{
 				if (ev is AgentEvent agentEvent)
 				{
 					if (agentEvent.Agent == null) continue;
 
-					if (agentEvent.Agent.FirstAwareTime == 0)
+					if (agentEvent.Agent.FirstAwareTime == 0 || ev.Time < agentEvent.Agent.FirstAwareTime)
 					{
 						agentEvent.Agent.FirstAwareTime = ev.Time;
 					}
 
-					agentEvent.Agent.LastAwareTime = ev.Time;
+					if (agentEvent.Agent.LastAwareTime == long.MaxValue || ev.Time > agentEvent.Agent.LastAwareTime)
+					{
+						agentEvent.Agent.LastAwareTime = ev.Time;
+					}
 				}
 				else if (ev is DamageEvent damageEvent)
 				{
 					if (damageEvent.Attacker != null)
 					{
-						if (damageEvent.Attacker.FirstAwareTime == 0)
+						if (damageEvent.Attacker.FirstAwareTime == 0 || ev.Time < damageEvent.Attacker.FirstAwareTime)
 						{
 							damageEvent.Attacker.FirstAwareTime = ev.Time;
 						}
 
-						damageEvent.Attacker.LastAwareTime = ev.Time;
+						if (damageEvent.Attacker.LastAwareTime == long.MaxValue ||
+						    ev.Time > damageEvent.Attacker.LastAwareTime)
+						{
+							damageEvent.Attacker.LastAwareTime = ev.Time;
+						}
 					}
 
 					if (damageEvent.Defender != null)
 					{
-						if (damageEvent.Defender.FirstAwareTime == 0)
+						if (damageEvent.Defender.FirstAwareTime == 0 || ev.Time < damageEvent.Defender.FirstAwareTime)
 						{
 							damageEvent.Defender.FirstAwareTime = ev.Time;
 						}
 
-						damageEvent.Defender.LastAwareTime = ev.Time;
+						if (damageEvent.Defender.LastAwareTime == long.MaxValue ||
+						    ev.Time > damageEvent.Defender.LastAwareTime)
+						{
+							damageEvent.Defender.LastAwareTime = ev.Time;
+						}
 					}
 				}
 			}
