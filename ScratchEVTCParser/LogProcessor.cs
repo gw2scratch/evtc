@@ -350,12 +350,25 @@ namespace ScratchEVTCParser
 				{
 					if (combatItem.SrcMasterId != 0)
 					{
-						var minion = agents.FirstOrDefault(
-							agent => agent.Id == combatItem.SrcAgentId && agent.IsWithinAwareTime(combatItem.Time)
-						);
-						var master = agents.Where(agent => !(agent is Gadget)).FirstOrDefault(
-							agent => agent.Id == combatItem.SrcMasterId && agent.IsWithinAwareTime(combatItem.Time)
-						);
+						Agent minion = null;
+						foreach (var agent in agents)
+						{
+							if (agent.Id == combatItem.SrcAgentId && agent.IsWithinAwareTime(combatItem.Time))
+							{
+								minion = agent;
+								break;
+							}
+						}
+
+						Agent master = null;
+						foreach (var agent in agents)
+						{
+							if (!(agent is Gadget) && agent.Id == combatItem.SrcMasterId && agent.IsWithinAwareTime(combatItem.Time))
+							{
+								master = agent;
+								break;
+							}
+						}
 
 						if (minion != null && master != null && minion.Master == null)
 						{
