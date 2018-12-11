@@ -16,7 +16,7 @@ namespace ScratchEVTCParser
 {
 	public class LogProcessor
 	{
-		private static readonly Profession[] professions =
+		private static readonly Profession[] Professions =
 		{
 			Profession.Guardian,
 			Profession.Warrior,
@@ -29,7 +29,7 @@ namespace ScratchEVTCParser
 			Profession.Revenant,
 		};
 
-		private static readonly Dictionary<uint, EliteSpecialization> specializationsById =
+		private static readonly Dictionary<uint, EliteSpecialization> SpecializationsById =
 			new Dictionary<uint, EliteSpecialization>()
 			{
 				{5, EliteSpecialization.Druid},
@@ -241,7 +241,7 @@ namespace ScratchEVTCParser
 				if (agent.IsElite != 0xFFFFFFFF)
 				{
 					// Player
-					var profession = professions[agent.Prof - 1];
+					var profession = Professions[agent.Prof - 1];
 					EliteSpecialization specialization;
 					if (agent.IsElite == 0)
 					{
@@ -249,7 +249,7 @@ namespace ScratchEVTCParser
 					}
 					else
 					{
-						specialization = specializationsById[agent.IsElite];
+						specialization = SpecializationsById[agent.IsElite];
 					}
 
 					if (!idsByAddress.TryGetValue(agent.Address, out int id))
@@ -373,7 +373,8 @@ namespace ScratchEVTCParser
 						Agent master = null;
 						foreach (var agent in agents)
 						{
-							if (!(agent is Gadget) && agent.Id == combatItem.SrcMasterId && agent.IsWithinAwareTime(combatItem.Time))
+							if (!(agent is Gadget) && agent.Id == combatItem.SrcMasterId &&
+							    agent.IsWithinAwareTime(combatItem.Time))
 							{
 								master = agent;
 								break;
@@ -390,11 +391,23 @@ namespace ScratchEVTCParser
 			}
 		}
 
-		private IEnumerable<Event> GetEvents(List<Agent> agents, IEnumerable<Skill> skills, ParsedLog log)
+		private IEnumerable<Event> GetEvents(IEnumerable<Agent> agents, IEnumerable<Skill> skills, ParsedLog log)
 		{
 			var agentsByAddress = agents.ToDictionary(x => x.Address);
 			var skillsById = skills.ToDictionary(x => x.Id);
 
+			var events = new List<Event>();
+			foreach (var item in log.ParsedCombatItems)
+			{
+				events.Add(GetEvent(agentsByAddress, skillsById, item));
+			}
+
+			return events;
+		}
+
+		private Event GetEvent(IReadOnlyDictionary<ulong, Agent> agentsByAddress,
+			IReadOnlyDictionary<uint, Skill> skillsById, ParsedCombatItem item)
+		{
 			Agent GetAgentByAddress(ulong address)
 			{
 				if (agentsByAddress.TryGetValue(address, out Agent agent))
@@ -415,318 +428,279 @@ namespace ScratchEVTCParser
 				return null;
 			}
 
-			foreach (var item in log.ParsedCombatItems)
+			if (item.IsStateChange != StateChange.Normal)
 			{
-				if (item.IsStateChange != StateChange.Normal)
+				switch (item.IsStateChange)
 				{
-					switch (item.IsStateChange)
+					case StateChange.EnterCombat:
+						return new AgentEnterCombatEvent(item.Time, GetAgentByAddress(item.SrcAgent),
+							(int) item.DstAgent);
+					case StateChange.ExitCombat:
+						return new AgentExitCombatEvent(item.Time, GetAgentByAddress(item.SrcAgent));
+					case StateChange.ChangeUp:
+						return new AgentRevivedEvent(item.Time, GetAgentByAddress(item.SrcAgent));
+					case StateChange.ChangeDead:
+						return new AgentDeadEvent(item.Time, GetAgentByAddress(item.SrcAgent));
+					case StateChange.ChangeDown:
+						return new AgentDownedEvent(item.Time, GetAgentByAddress(item.SrcAgent));
+					case StateChange.Spawn:
+						return new AgentSpawnEvent(item.Time, GetAgentByAddress(item.SrcAgent));
+					case StateChange.Despawn:
+						return new AgentDespawnEvent(item.Time, GetAgentByAddress(item.SrcAgent));
+					case StateChange.HealthUpdate:
+						var healthFraction = item.DstAgent / 10000f;
+						return new AgentHealthUpdateEvent(item.Time, GetAgentByAddress(item.SrcAgent),
+							healthFraction);
+					case StateChange.LogStart:
 					{
-						case StateChange.EnterCombat:
-							yield return new AgentEnterCombatEvent(item.Time, GetAgentByAddress(item.SrcAgent),
-								(int) item.DstAgent);
-							break;
-						case StateChange.ExitCombat:
-							yield return new AgentExitCombatEvent(item.Time, GetAgentByAddress(item.SrcAgent));
-							break;
-						case StateChange.ChangeUp:
-							yield return new AgentRevivedEvent(item.Time, GetAgentByAddress(item.SrcAgent));
-							break;
-						case StateChange.ChangeDead:
-							yield return new AgentDeadEvent(item.Time, GetAgentByAddress(item.SrcAgent));
-							break;
-						case StateChange.ChangeDown:
-							yield return new AgentDownedEvent(item.Time, GetAgentByAddress(item.SrcAgent));
-							break;
-						case StateChange.Spawn:
-							yield return new AgentSpawnEvent(item.Time, GetAgentByAddress(item.SrcAgent));
-							break;
-						case StateChange.Despawn:
-							yield return new AgentDespawnEvent(item.Time, GetAgentByAddress(item.SrcAgent));
-							break;
-						case StateChange.HealthUpdate:
-							var healthFraction = item.DstAgent / 10000f;
-							yield return new AgentHealthUpdateEvent(item.Time, GetAgentByAddress(item.SrcAgent),
-								healthFraction);
-							break;
-						case StateChange.LogStart:
+						var serverTime = DateTimeOffset.FromUnixTimeSeconds(item.Value);
+						var localTime = DateTimeOffset.FromUnixTimeSeconds(item.BuffDmg);
+						return new LogStartEvent(item.Time, serverTime, localTime);
+					}
+					case StateChange.LogEnd:
+					{
+						var serverTime = DateTimeOffset.FromUnixTimeSeconds(item.Value);
+						var localTime = DateTimeOffset.FromUnixTimeSeconds(item.BuffDmg);
+						return new LogEndEvent(item.Time, serverTime, localTime);
+					}
+					case StateChange.WeaponSwap:
+						WeaponSet newWeaponSet;
+						switch (item.DstAgent)
 						{
-							var serverTime = DateTimeOffset.FromUnixTimeSeconds(item.Value);
-							var localTime = DateTimeOffset.FromUnixTimeSeconds(item.BuffDmg);
-							yield return new LogStartEvent(item.Time, serverTime, localTime);
-							break;
+							case 0:
+								newWeaponSet = WeaponSet.Water1;
+								break;
+							case 1:
+								newWeaponSet = WeaponSet.Water2;
+								break;
+							case 4:
+								newWeaponSet = WeaponSet.Land1;
+								break;
+							case 5:
+								newWeaponSet = WeaponSet.Land2;
+								break;
+							default:
+								newWeaponSet = WeaponSet.Unknown;
+								break;
 						}
-						case StateChange.LogEnd:
-						{
-							var serverTime = DateTimeOffset.FromUnixTimeSeconds(item.Value);
-							var localTime = DateTimeOffset.FromUnixTimeSeconds(item.BuffDmg);
-							yield return new LogEndEvent(item.Time, serverTime, localTime);
-							break;
-						}
-						case StateChange.WeaponSwap:
-							WeaponSet newWeaponSet;
-							switch (item.DstAgent)
-							{
-								case 0:
-									newWeaponSet = WeaponSet.Water1;
-									break;
-								case 1:
-									newWeaponSet = WeaponSet.Water2;
-									break;
-								case 4:
-									newWeaponSet = WeaponSet.Land1;
-									break;
-								case 5:
-									newWeaponSet = WeaponSet.Land2;
-									break;
-								default:
-									newWeaponSet = WeaponSet.Unknown;
-									break;
-							}
 
-							yield return new AgentWeaponSwapEvent(item.Time, GetAgentByAddress(item.SrcAgent),
-								newWeaponSet);
-							break;
-						case StateChange.MaxHealthUpdate:
-							yield return new AgentMaxHealthUpdateEvent(item.Time, GetAgentByAddress(item.SrcAgent),
-								item.DstAgent);
-							break;
-						case StateChange.PointOfView:
-							yield return new PointOfViewEvent(item.Time, GetAgentByAddress(item.SrcAgent));
-							break;
-						case StateChange.Language:
-							yield return new LanguageEvent(item.Time, (int) item.SrcAgent);
-							break;
-						case StateChange.GWBuild:
-							yield return new GameBuildEvent(item.Time, (int) item.SrcAgent);
-							break;
-						case StateChange.ShardId:
-							yield return new GameShardEvent(item.Time, item.SrcAgent);
-							break;
-						case StateChange.Reward:
-							yield return new RewardEvent(item.Time, item.DstAgent, item.Value);
-							break;
-						case StateChange.BuffInitial:
-							yield return new InitialBuffEvent(item.Time, GetAgentByAddress(item.SrcAgent),
-								GetSkillById(item.SkillId));
-							break;
-						case StateChange.Position:
-						{
-							// TODO: Check results
-							byte[] xyBytes = BitConverter.GetBytes(item.DstAgent);
-							float x = BitConverter.ToSingle(xyBytes, 0);
-							float y = BitConverter.ToSingle(xyBytes, 4);
-							byte[] zBytes = BitConverter.GetBytes(item.Value);
-							float z = BitConverter.ToSingle(zBytes, 0);
-							yield return new PositionChangeEvent(item.Time, GetAgentByAddress(item.SrcAgent), x, y, z);
-							break;
-						}
-						case StateChange.Velocity:
-						{
-							// TODO: Check results
-							byte[] xyBytes = BitConverter.GetBytes(item.DstAgent);
-							float x = BitConverter.ToSingle(xyBytes, 0);
-							float y = BitConverter.ToSingle(xyBytes, 4);
-							byte[] zBytes = BitConverter.GetBytes(item.Value);
-							float z = BitConverter.ToSingle(zBytes, 0);
-							yield return new VelocityChangeEvent(item.Time, GetAgentByAddress(item.SrcAgent), x, y, z);
-							break;
-						}
-						case StateChange.Rotation:
-						{
-							// TODO: Check results
-							byte[] xyBytes = BitConverter.GetBytes(item.DstAgent);
-							float x = BitConverter.ToSingle(xyBytes, 0);
-							float y = BitConverter.ToSingle(xyBytes, 4);
-							yield return new FacingChangeEvent(item.Time, GetAgentByAddress(item.SrcAgent), x, y);
-							break;
-						}
-						case StateChange.TeamChange:
-							yield return new TeamChangeEvent(item.Time, GetAgentByAddress(item.SrcAgent),
-								item.DstAgent);
-							break;
-						case StateChange.Unknown:
-							yield return new UnknownEvent(item.Time, item);
-							break;
-						default:
-							throw new ArgumentOutOfRangeException();
-					}
-				}
-				else if (item.IsActivation != Activation.None)
-				{
-					switch (item.IsActivation)
+						return new AgentWeaponSwapEvent(item.Time, GetAgentByAddress(item.SrcAgent),
+							newWeaponSet);
+					case StateChange.MaxHealthUpdate:
+						return new AgentMaxHealthUpdateEvent(item.Time, GetAgentByAddress(item.SrcAgent),
+							item.DstAgent);
+					case StateChange.PointOfView:
+						return new PointOfViewEvent(item.Time, GetAgentByAddress(item.SrcAgent));
+					case StateChange.Language:
+						return new LanguageEvent(item.Time, (int) item.SrcAgent);
+					case StateChange.GWBuild:
+						return new GameBuildEvent(item.Time, (int) item.SrcAgent);
+					case StateChange.ShardId:
+						return new GameShardEvent(item.Time, item.SrcAgent);
+					case StateChange.Reward:
+						return new RewardEvent(item.Time, item.DstAgent, item.Value);
+					case StateChange.BuffInitial:
+						return new InitialBuffEvent(item.Time, GetAgentByAddress(item.SrcAgent),
+							GetSkillById(item.SkillId));
+					case StateChange.Position:
 					{
-						case Activation.CancelCancel:
-							yield return new EndSkillCastEvent(item.Time, GetAgentByAddress(item.SrcAgent),
-								GetSkillById(item.SkillId), item.Value, EndSkillCastEvent.SkillEndType.Cancel);
-							break;
-						case Activation.CancelFire:
-							yield return new EndSkillCastEvent(item.Time, GetAgentByAddress(item.SrcAgent),
-								GetSkillById(item.SkillId), item.Value, EndSkillCastEvent.SkillEndType.Fire);
-							break;
-						case Activation.Normal:
-							yield return new StartSkillCastEvent(item.Time, GetAgentByAddress(item.SrcAgent),
-								GetSkillById(item.SkillId), item.Value, StartSkillCastEvent.SkillCastType.Normal);
-							break;
-						case Activation.Quickness:
-							yield return new StartSkillCastEvent(item.Time, GetAgentByAddress(item.SrcAgent),
-								GetSkillById(item.SkillId), item.Value,
-								StartSkillCastEvent.SkillCastType.WithQuickness);
-							break;
-						case Activation.Reset:
-							yield return new ResetSkillCastEvent(item.Time, GetAgentByAddress(item.SrcAgent),
-								GetSkillById(item.SkillId), item.Value);
-							break;
-						case Activation.Unknown:
-							yield return new UnknownEvent(item.Time, item);
-							break;
+						// TODO: Check results
+						byte[] xyBytes = BitConverter.GetBytes(item.DstAgent);
+						float x = BitConverter.ToSingle(xyBytes, 0);
+						float y = BitConverter.ToSingle(xyBytes, 4);
+						byte[] zBytes = BitConverter.GetBytes(item.Value);
+						float z = BitConverter.ToSingle(zBytes, 0);
+						return new PositionChangeEvent(item.Time, GetAgentByAddress(item.SrcAgent), x, y, z);
 					}
-				}
-				else if (item.Buff != 0 && item.IsBuffRemove != BuffRemove.None)
-				{
-					Skill buff = GetSkillById(item.SkillId);
-					int remainingDuration = item.Value;
-					int remainingIntensity = item.BuffDmg;
-					int stacksRemoved = (int) item.Result;
-					var cleansingAgent = GetAgentByAddress(item.DstAgent);
-					var agent = GetAgentByAddress(item.SrcAgent);
-					switch (item.IsBuffRemove)
+					case StateChange.Velocity:
 					{
-						case BuffRemove.All:
-							yield return new AllStacksRemovedBuffEvent(item.Time, agent, buff, cleansingAgent,
-								stacksRemoved);
-							break;
-						case BuffRemove.Single:
-							yield return new SingleStackRemovedBuffEvent(item.Time, agent, buff, cleansingAgent,
-								remainingDuration, remainingIntensity, stacksRemoved);
-							break;
-						case BuffRemove.Manual:
-							yield return new ManualSingleStackRemovedBuffEvent(item.Time, agent, buff, cleansingAgent,
-								remainingDuration, remainingIntensity, stacksRemoved);
-							break;
-						default:
-							throw new ArgumentOutOfRangeException();
+						// TODO: Check results
+						byte[] xyBytes = BitConverter.GetBytes(item.DstAgent);
+						float x = BitConverter.ToSingle(xyBytes, 0);
+						float y = BitConverter.ToSingle(xyBytes, 4);
+						byte[] zBytes = BitConverter.GetBytes(item.Value);
+						float z = BitConverter.ToSingle(zBytes, 0);
+						return new VelocityChangeEvent(item.Time, GetAgentByAddress(item.SrcAgent), x, y, z);
 					}
+					case StateChange.Rotation:
+					{
+						// TODO: Check results
+						byte[] xyBytes = BitConverter.GetBytes(item.DstAgent);
+						float x = BitConverter.ToSingle(xyBytes, 0);
+						float y = BitConverter.ToSingle(xyBytes, 4);
+						return new FacingChangeEvent(item.Time, GetAgentByAddress(item.SrcAgent), x, y);
+					}
+					case StateChange.TeamChange:
+						return new TeamChangeEvent(item.Time, GetAgentByAddress(item.SrcAgent),
+							item.DstAgent);
+					case StateChange.Unknown:
+						return new UnknownEvent(item.Time, item);
+					default:
+						throw new ArgumentOutOfRangeException();
 				}
-				else if (item.Buff > 0 && item.BuffDmg == 0)
+			}
+			else if (item.IsActivation != Activation.None)
+			{
+				switch (item.IsActivation)
 				{
-					Skill buff = GetSkillById(item.SkillId);
-					int durationApplied = item.Value;
-					uint durationOfRemovedStack = item.OverstackValue;
-					var agent = GetAgentByAddress(item.DstAgent);
-					var sourceAgent = GetAgentByAddress(item.SrcAgent);
-					yield return new BuffApplyEvent(item.Time, agent, buff, sourceAgent, durationApplied,
-						durationOfRemovedStack);
+					case Activation.CancelCancel:
+						return new EndSkillCastEvent(item.Time, GetAgentByAddress(item.SrcAgent),
+							GetSkillById(item.SkillId), item.Value, EndSkillCastEvent.SkillEndType.Cancel);
+					case Activation.CancelFire:
+						return new EndSkillCastEvent(item.Time, GetAgentByAddress(item.SrcAgent),
+							GetSkillById(item.SkillId), item.Value, EndSkillCastEvent.SkillEndType.Fire);
+					case Activation.Normal:
+						return new StartSkillCastEvent(item.Time, GetAgentByAddress(item.SrcAgent),
+							GetSkillById(item.SkillId), item.Value, StartSkillCastEvent.SkillCastType.Normal);
+					case Activation.Quickness:
+						return new StartSkillCastEvent(item.Time, GetAgentByAddress(item.SrcAgent),
+							GetSkillById(item.SkillId), item.Value,
+							StartSkillCastEvent.SkillCastType.WithQuickness);
+					case Activation.Reset:
+						return new ResetSkillCastEvent(item.Time, GetAgentByAddress(item.SrcAgent),
+							GetSkillById(item.SkillId), item.Value);
+					case Activation.Unknown:
+						return new UnknownEvent(item.Time, item);
 				}
-				else if (item.Buff > 0 && item.Value == 0)
+			}
+			else if (item.Buff != 0 && item.IsBuffRemove != BuffRemove.None)
+			{
+				Skill buff = GetSkillById(item.SkillId);
+				int remainingDuration = item.Value;
+				int remainingIntensity = item.BuffDmg;
+				int stacksRemoved = (int) item.Result;
+				var cleansingAgent = GetAgentByAddress(item.DstAgent);
+				var agent = GetAgentByAddress(item.SrcAgent);
+				switch (item.IsBuffRemove)
 				{
-					Skill buff = GetSkillById(item.SkillId);
-					int buffDamage = item.BuffDmg;
-					bool isOffCycle = item.IsOffCycle > 0;
-					Agent attacker = GetAgentByAddress(item.SrcAgent);
-					Agent defender = GetAgentByAddress(item.DstAgent);
-					bool isMoving = item.IsMoving > 0;
-					bool isNinety = item.IsNinety > 0;
-					bool isFlanking = item.IsFlanking > 0;
-					bool isIgnored = item.Result != 0;
+					case BuffRemove.All:
+						return new AllStacksRemovedBuffEvent(item.Time, agent, buff, cleansingAgent,
+							stacksRemoved);
+					case BuffRemove.Single:
+						return new SingleStackRemovedBuffEvent(item.Time, agent, buff, cleansingAgent,
+							remainingDuration, remainingIntensity, stacksRemoved);
+					case BuffRemove.Manual:
+						return new ManualSingleStackRemovedBuffEvent(item.Time, agent, buff, cleansingAgent,
+							remainingDuration, remainingIntensity, stacksRemoved);
+					default:
+						throw new ArgumentOutOfRangeException();
+				}
+			}
+			else if (item.Buff > 0 && item.BuffDmg == 0)
+			{
+				Skill buff = GetSkillById(item.SkillId);
+				int durationApplied = item.Value;
+				uint durationOfRemovedStack = item.OverstackValue;
+				var agent = GetAgentByAddress(item.DstAgent);
+				var sourceAgent = GetAgentByAddress(item.SrcAgent);
+				return new BuffApplyEvent(item.Time, agent, buff, sourceAgent, durationApplied,
+					durationOfRemovedStack);
+			}
+			else if (item.Buff > 0 && item.Value == 0)
+			{
+				Skill buff = GetSkillById(item.SkillId);
+				int buffDamage = item.BuffDmg;
+				bool isOffCycle = item.IsOffCycle > 0;
+				Agent attacker = GetAgentByAddress(item.SrcAgent);
+				Agent defender = GetAgentByAddress(item.DstAgent);
+				bool isMoving = item.IsMoving > 0;
+				bool isNinety = item.IsNinety > 0;
+				bool isFlanking = item.IsFlanking > 0;
+				bool isIgnored = item.Result != 0;
 
-					if (isIgnored)
-					{
-						var reason = item.Result == (Result) 1
-							? IgnoredBuffDamageEvent.Reason.InvulnerableBuff
-							: IgnoredBuffDamageEvent.Reason.InvulnerableSkill;
-
-						yield return new IgnoredBuffDamageEvent(item.Time, attacker, defender, buff, buffDamage,
-							isMoving, isNinety, isFlanking, reason);
-					}
-					else
-					{
-						if (isOffCycle)
-						{
-							yield return new OffCycleBuffDamageEvent(item.Time, attacker, defender, buff, buffDamage,
-								isMoving, isNinety, isFlanking);
-						}
-						else
-						{
-							yield return new BuffDamageEvent(item.Time, attacker, defender, buff, buffDamage, isMoving,
-								isNinety, isFlanking);
-						}
-					}
-				}
-				else if (item.Buff == 0)
+				if (isIgnored)
 				{
-					int damage = item.Value;
-					uint shieldDamage = item.OverstackValue;
-					Agent attacker = GetAgentByAddress(item.SrcAgent);
-					Agent defender = GetAgentByAddress(item.DstAgent);
-					Skill skill = GetSkillById(item.SkillId);
-					bool isMoving = item.IsMoving > 0;
-					bool isNinety = item.IsNinety > 0;
-					bool isFlanking = item.IsFlanking > 0;
+					var reason = item.Result == (Result) 1
+						? IgnoredBuffDamageEvent.Reason.InvulnerableBuff
+						: IgnoredBuffDamageEvent.Reason.InvulnerableSkill;
 
-					// TODO: Rewrite
-					bool ignored = false;
-					var hitResult = PhysicalDamageEvent.Result.Normal;
-					var ignoreReason = IgnoredPhysicalDamageEvent.Reason.Absorbed;
-					switch (item.Result)
-					{
-						case Result.Normal:
-							hitResult = PhysicalDamageEvent.Result.Normal;
-							break;
-						case Result.Critical:
-							hitResult = PhysicalDamageEvent.Result.Critical;
-							break;
-						case Result.Glance:
-							hitResult = PhysicalDamageEvent.Result.Glance;
-							break;
-						case Result.Block:
-							ignored = true;
-							ignoreReason = IgnoredPhysicalDamageEvent.Reason.Blocked;
-							break;
-						case Result.Evade:
-							ignored = true;
-							ignoreReason = IgnoredPhysicalDamageEvent.Reason.Evaded;
-							break;
-						case Result.Interrupt:
-							hitResult = PhysicalDamageEvent.Result.Interrupt;
-							break;
-						case Result.Absorb:
-							ignored = true;
-							ignoreReason = IgnoredPhysicalDamageEvent.Reason.Absorbed;
-							break;
-						case Result.Blind:
-							ignored = true;
-							ignoreReason = IgnoredPhysicalDamageEvent.Reason.Missed;
-							break;
-						case Result.KillingBlow:
-							hitResult = PhysicalDamageEvent.Result.KillingBlow;
-							break;
-						case Result.Downed:
-							hitResult = PhysicalDamageEvent.Result.DowningBlow;
-							break;
-						case Result.Unknown:
-							yield return new UnknownEvent(item.Time, item);
-							continue;
-						default:
-							yield return new UnknownEvent(item.Time, item);
-							continue;
-					}
-
-					if (!ignored)
-					{
-						yield return new PhysicalDamageEvent(item.Time, attacker, defender, skill, damage, isMoving,
-							isNinety, isFlanking, shieldDamage, hitResult);
-					}
-					else
-					{
-						yield return new IgnoredPhysicalDamageEvent(item.Time, attacker, defender, skill, damage,
-							isMoving, isNinety, isFlanking, shieldDamage, ignoreReason);
-					}
+					return new IgnoredBuffDamageEvent(item.Time, attacker, defender, buff, buffDamage,
+						isMoving, isNinety, isFlanking, reason);
 				}
 				else
 				{
-					yield return new UnknownEvent(item.Time, item);
+					if (isOffCycle)
+					{
+						return new OffCycleBuffDamageEvent(item.Time, attacker, defender, buff, buffDamage,
+							isMoving, isNinety, isFlanking);
+					}
+					else
+					{
+						return new BuffDamageEvent(item.Time, attacker, defender, buff, buffDamage, isMoving,
+							isNinety, isFlanking);
+					}
 				}
 			}
+			else if (item.Buff == 0)
+			{
+				int damage = item.Value;
+				uint shieldDamage = item.OverstackValue;
+				Agent attacker = GetAgentByAddress(item.SrcAgent);
+				Agent defender = GetAgentByAddress(item.DstAgent);
+				Skill skill = GetSkillById(item.SkillId);
+				bool isMoving = item.IsMoving > 0;
+				bool isNinety = item.IsNinety > 0;
+				bool isFlanking = item.IsFlanking > 0;
+
+				// TODO: Rewrite
+				bool ignored = false;
+				var hitResult = PhysicalDamageEvent.Result.Normal;
+				var ignoreReason = IgnoredPhysicalDamageEvent.Reason.Absorbed;
+				switch (item.Result)
+				{
+					case Result.Normal:
+						hitResult = PhysicalDamageEvent.Result.Normal;
+						break;
+					case Result.Critical:
+						hitResult = PhysicalDamageEvent.Result.Critical;
+						break;
+					case Result.Glance:
+						hitResult = PhysicalDamageEvent.Result.Glance;
+						break;
+					case Result.Block:
+						ignored = true;
+						ignoreReason = IgnoredPhysicalDamageEvent.Reason.Blocked;
+						break;
+					case Result.Evade:
+						ignored = true;
+						ignoreReason = IgnoredPhysicalDamageEvent.Reason.Evaded;
+						break;
+					case Result.Interrupt:
+						hitResult = PhysicalDamageEvent.Result.Interrupt;
+						break;
+					case Result.Absorb:
+						ignored = true;
+						ignoreReason = IgnoredPhysicalDamageEvent.Reason.Absorbed;
+						break;
+					case Result.Blind:
+						ignored = true;
+						ignoreReason = IgnoredPhysicalDamageEvent.Reason.Missed;
+						break;
+					case Result.KillingBlow:
+						hitResult = PhysicalDamageEvent.Result.KillingBlow;
+						break;
+					case Result.Downed:
+						hitResult = PhysicalDamageEvent.Result.DowningBlow;
+						break;
+					case Result.Unknown:
+						return new UnknownEvent(item.Time, item);
+					default:
+						return new UnknownEvent(item.Time, item);
+				}
+
+				if (!ignored)
+				{
+					return new PhysicalDamageEvent(item.Time, attacker, defender, skill, damage, isMoving,
+						isNinety, isFlanking, shieldDamage, hitResult);
+				}
+				else
+				{
+					return new IgnoredPhysicalDamageEvent(item.Time, attacker, defender, skill, damage,
+						isMoving, isNinety, isFlanking, shieldDamage, ignoreReason);
+				}
+			}
+
+            return new UnknownEvent(item.Time, item);
 		}
 	}
 }
