@@ -6,10 +6,12 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 using ArcdpsLogManager.Annotations;
 using ArcdpsLogManager.Controls;
 using ArcdpsLogManager.Logs;
+using ArcdpsLogManager.Timing;
 using Eto.Drawing;
 using Eto.Forms;
 using Newtonsoft.Json;
@@ -22,15 +24,17 @@ namespace ArcdpsLogManager
 		private const string AppDataDirectoryName = "ArcdpsLogManager";
 		private const string CacheFilename = "LogDataCache.json";
 
+		private readonly Cooldown gridRefreshCooldown = new Cooldown(TimeSpan.FromSeconds(2));
+
 		private ImageProvider ImageProvider { get; } = new ImageProvider();
 		private LogFinder LogFinder { get; } = new LogFinder();
 
 		private ObservableCollection<LogData> logs = new ObservableCollection<LogData>();
 		private SelectableFilterCollection<LogData> logsFiltered;
 
-		private GridView<LogData> logGridView;
-		private GridView<PlayerData> playerGridView;
-		private DropDown encounterFilterDropDown;
+		private readonly GridView<LogData> logGridView;
+		private readonly GridView<PlayerData> playerGridView;
+		private readonly DropDown encounterFilterDropDown;
 
 		private Dictionary<string, LogData> cache;
 
@@ -41,7 +45,10 @@ namespace ArcdpsLogManager
 		private bool ShowFailedLogs { get; set; } = true;
 		private bool ShowUnknownLogs { get; set; } = true;
 
+		private CancellationTokenSource logLoadTaskTokenSource = null;
+
 		private string status = "";
+
 		private string Status
 		{
 			get => status;
@@ -104,29 +111,43 @@ namespace ArcdpsLogManager
 			var unknownCheckBox = new CheckBox {Text = "Unknown"};
 			unknownCheckBox.CheckedBinding.Bind(this, x => x.ShowUnknownLogs);
 
+			var startDateTimePicker = new DateTimePicker() {Enabled = false};
+			var endDateTimePicker = new DateTimePicker() {Enabled = false};
+
 			var applyFilterButton = new Button {Text = "Apply"};
 			applyFilterButton.Click += (sender, args) => { logsFiltered.Refresh(); };
 
 			formLayout.BeginGroup("Filters", new Padding(5));
 			formLayout.BeginHorizontal();
-			formLayout.BeginVertical(new Padding(5), new Size(5, 0));
+
+			formLayout.BeginVertical();
+			formLayout.BeginVertical(new Padding(5), new Size(4, 0));
 			formLayout.BeginHorizontal();
 			formLayout.Add(new Label {Text = "Encounter", VerticalAlignment = VerticalAlignment.Center});
 			formLayout.Add(encounterFilterDropDown);
-			formLayout.Add(new Label {Text = "Encounter result", VerticalAlignment = VerticalAlignment.Center});
+			formLayout.Add(new Label {Text = "Result", VerticalAlignment = VerticalAlignment.Center});
 			formLayout.Add(successCheckBox);
 			formLayout.Add(failureCheckBox);
 			formLayout.Add(unknownCheckBox);
 			formLayout.EndHorizontal();
+			formLayout.EndBeginVertical(new Padding(5), new Size(4, 0));
 			formLayout.BeginHorizontal();
-
+			formLayout.Add(new Label {Text = "Encounter date", VerticalAlignment = VerticalAlignment.Center});
+			formLayout.Add(new Label {Text = "between", VerticalAlignment = VerticalAlignment.Center});
+			formLayout.Add(startDateTimePicker);
+			formLayout.Add(new Label {Text = "and", VerticalAlignment = VerticalAlignment.Center});
+			formLayout.Add(endDateTimePicker);
 			formLayout.EndHorizontal();
 			formLayout.EndVertical();
+			formLayout.EndVertical();
+
 			formLayout.Add(null, true);
+
 			formLayout.BeginVertical(new Padding(5));
 			formLayout.Add(null, true);
 			formLayout.Add(applyFilterButton);
 			formLayout.EndVertical();
+
 			formLayout.EndHorizontal();
 			formLayout.EndGroup();
 
@@ -176,13 +197,17 @@ namespace ArcdpsLogManager
 
 		public void ReloadLogs()
 		{
+			logLoadTaskTokenSource?.Cancel();
+			logLoadTaskTokenSource = new CancellationTokenSource();
+
 			logs.Clear();
-			Task.Run(() => LoadLogs(logGridView));
+			Task.Run(() => LoadLogs(logGridView, logLoadTaskTokenSource.Token));
 		}
 
-		private async Task LoadLogs(GridView<LogData> logGridView)
+		private async Task LoadLogs(GridView<LogData> logGridView, CancellationToken cancellationToken)
 		{
 			Application.Instance.Invoke(() => { Status = "Finding logs..."; });
+			cancellationToken.ThrowIfCancellationRequested();
 
 			Task<Dictionary<string, LogData>> deserializeTask = null;
 			if (cache == null)
@@ -190,14 +215,17 @@ namespace ArcdpsLogManager
 				deserializeTask = DeserializeLogCache();
 			}
 
-			await FindLogs();
+			await FindLogs(cancellationToken);
 
 			Application.Instance.Invoke(() => { Status = "Loading log cache..."; });
+			cancellationToken.ThrowIfCancellationRequested();
 
 			if (deserializeTask != null)
 			{
 				cache = await deserializeTask;
 			}
+
+			cancellationToken.ThrowIfCancellationRequested();
 
 			// Copying the logs into a new collection is required to improve performance on platforms
 			// where each modification results in a full refresh of all data in the grid view.
@@ -215,22 +243,24 @@ namespace ArcdpsLogManager
 			Application.Instance.Invoke(() => { RecreateLogCollections(newLogs); });
 
 			Application.Instance.Invoke(() => { Status = "Parsing logs..."; });
+			cancellationToken.ThrowIfCancellationRequested();
 
-			await ParseLogs(logGridView);
+			await ParseLogs(logGridView, cancellationToken);
 
 			Application.Instance.Invoke(() => { Status = "Saving cache..."; });
+			cancellationToken.ThrowIfCancellationRequested();
 
 			await SerializeLogsToCache();
 
-			Application.Instance.Invoke(() => { Status = $"{logs.Count} logs found."; });
+			Application.Instance.AsyncInvoke(() => { Status = $"{logs.Count} logs found."; });
 		}
 
-		public async Task FindLogs()
+		public async Task FindLogs(CancellationToken cancellationToken)
 		{
 			try
 			{
 				// Invoking for every single added file is a lot of added overhead, instead add multiple files at a time.
-				const int flushAmount = 100;
+				const int flushAmount = 200;
 				List<LogData> foundLogs = new List<LogData>();
 
 				//foreach (var file in LogFinder.GetTesting())
@@ -249,6 +279,8 @@ namespace ArcdpsLogManager
 						});
 						foundLogs.Clear();
 					}
+
+                    cancellationToken.ThrowIfCancellationRequested();
 				}
 
 				// Add the remaining logs
@@ -270,34 +302,62 @@ namespace ArcdpsLogManager
 			}
 		}
 
-		public async Task ParseLogs(GridView<LogData> logGridView, bool reparse = false)
+		public async Task ParseLogs(GridView<LogData> logGridView, CancellationToken cancellationToken, bool reparse = false)
 		{
-			// Skip already parsed logs
-			var logsToParse = logs.Where(x => x.ParsingStatus != ParsingStatus.Parsed).ToArray();
+			IEnumerable<LogData> filteredLogs = logs;
+
+			if (!reparse)
+			{
+                // Skip already parsed logs
+				filteredLogs = filteredLogs.Where(x => x.ParsingStatus != ParsingStatus.Parsed);
+			}
+
+			var logsToParse = filteredLogs.ToArray();
 
 			for (var i = 0; i < logsToParse.Length; i++)
 			{
+				if (cancellationToken.IsCancellationRequested)
+				{
+					break;
+				}
+
 				var log = logsToParse[i];
 
 				bool failedBefore = log.ParsingStatus == ParsingStatus.Failed;
 
 				log.ParseData();
-				var index = logsFiltered.IndexOf(log);
 
 				int logNumber = i + 1;
-				Application.Instance.Invoke(() => { Status = $"Parsing logs ({logNumber}/{logsToParse.Length})..."; });
+				Application.Instance.AsyncInvoke(() =>
+				{
+					Status = $"Parsing logs ({logNumber}/{logsToParse.Length})...";
+				});
 
 				// There is no point in reloading data if it was failed before and failed again
 				// because no data visible in the view has changed
 				if (!(failedBefore && log.ParsingStatus == ParsingStatus.Failed))
 				{
-					Application.Instance.Invoke(() =>
+					Application.Instance.AsyncInvoke(() =>
 					{
-						logGridView.ReloadData(index);
-						UpdateFilterDropdown();
+						if (gridRefreshCooldown.TryUse(DateTime.Now))
+						{
+                            var index = logsFiltered.IndexOf(log);
+							logGridView.ReloadData(index);
+							UpdateFilterDropdown();
+						}
 					});
 				}
 			}
+
+			Application.Instance.AsyncInvoke(() =>
+			{
+				logGridView.ReloadData(new Range<int>(0, logs.Count - 1));
+                UpdateFilterDropdown();
+			});
+
+			// We have already broken out of the loop because of it,
+			// now we are just setting the task state to cancelled.
+			cancellationToken.ThrowIfCancellationRequested();
 		}
 
 		public async Task SerializeLogsToCache()

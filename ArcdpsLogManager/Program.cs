@@ -8,7 +8,7 @@ namespace ArcdpsLogManager
 		[STAThread]
 		static void Main()
 		{
-			new Application().Run(new ManagerForm());
+            new Application().Run(new ManagerForm());
 		}
 	}
 }
