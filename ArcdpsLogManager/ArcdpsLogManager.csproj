@@ -79,6 +79,7 @@
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources.cs" />
+    <Compile Include="Sections\LogList.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="SettingsDialog.cs" />
     <Compile Include="Timing\Cooldown.cs" />

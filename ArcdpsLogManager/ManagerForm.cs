@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using ArcdpsLogManager.Annotations;
 using ArcdpsLogManager.Controls;
 using ArcdpsLogManager.Logs;
+using ArcdpsLogManager.Sections;
 using ArcdpsLogManager.Timing;
 using Eto.Drawing;
 using Eto.Forms;
@@ -34,9 +35,9 @@ namespace ArcdpsLogManager
 		private ObservableCollection<PlayerData> playerData = new ObservableCollection<PlayerData>();
 		private SelectableFilterCollection<PlayerData> playerDataFiltered;
 
-		private readonly GridView<LogData> logGridView;
 		private readonly GridView<PlayerData> playerGridView;
 		private readonly DropDown encounterFilterDropDown;
+        private readonly LogList mainLogList;
 
 		private Dictionary<string, LogData> cache;
 
@@ -114,6 +115,7 @@ namespace ArcdpsLogManager
 			var unknownCheckBox = new CheckBox {Text = "Unknown"};
 			unknownCheckBox.CheckedBinding.Bind(this, x => x.ShowUnknownLogs);
 
+			// TODO: Implement
 			var startDateTimePicker = new DateTimePicker() {Enabled = false};
 			var endDateTimePicker = new DateTimePicker() {Enabled = false};
 
@@ -157,17 +159,9 @@ namespace ArcdpsLogManager
 			var tabs = new TabControl();
 
 			// Log tab
-			var logDetailPanel = ConstructLogDetailPanel();
-			logGridView = ConstructLogGridView(logDetailPanel);
+			mainLogList = new LogList(ImageProvider);
 
-			var logLayout = new DynamicLayout();
-			logLayout.BeginVertical();
-			logLayout.BeginHorizontal();
-			logLayout.Add(logGridView, true);
-			logLayout.Add(logDetailPanel);
-			logLayout.EndHorizontal();
-			logLayout.EndVertical();
-			tabs.Pages.Add(new TabPage {Text = "Logs", Content = logLayout});
+			tabs.Pages.Add(new TabPage {Text = "Logs", Content = mainLogList});
 
 			// Player tab
 			var playerDetailPanel = ConstructPlayerDetailPanel();
@@ -212,7 +206,7 @@ namespace ArcdpsLogManager
 			formLayout.Add(statusLabel);
 			formLayout.EndVertical();
 
-			RecreateLogCollections(new ObservableCollection<LogData>(logs));
+			RecreateLogCollections(new ObservableCollection<LogData>(logs), mainLogList);
 
 			if (string.IsNullOrEmpty(Settings.LogRootPath))
 			{
@@ -230,10 +224,10 @@ namespace ArcdpsLogManager
 			logLoadTaskTokenSource = new CancellationTokenSource();
 
 			logs.Clear();
-			Task.Run(() => LoadLogs(logGridView, logLoadTaskTokenSource.Token));
+			Task.Run(() => LoadLogs(mainLogList, logLoadTaskTokenSource.Token));
 		}
 
-		private async Task LoadLogs(GridView<LogData> logGridView, CancellationToken cancellationToken)
+		private async Task LoadLogs(LogList logList, CancellationToken cancellationToken)
 		{
 			Application.Instance.Invoke(() => { Status = "Finding logs..."; });
 			cancellationToken.ThrowIfCancellationRequested();
@@ -269,12 +263,12 @@ namespace ArcdpsLogManager
 				}
 			}
 
-			Application.Instance.Invoke(() => { RecreateLogCollections(newLogs); });
+			Application.Instance.Invoke(() => { RecreateLogCollections(newLogs, logList); });
 
 			Application.Instance.Invoke(() => { Status = "Parsing logs..."; });
 			cancellationToken.ThrowIfCancellationRequested();
 
-			await ParseLogs(logGridView, cancellationToken);
+			await ParseLogs(logList, cancellationToken);
 
 			Application.Instance.Invoke(() => { Status = "Saving cache..."; });
 			cancellationToken.ThrowIfCancellationRequested();
@@ -331,7 +325,7 @@ namespace ArcdpsLogManager
 			}
 		}
 
-		public async Task ParseLogs(GridView<LogData> logGridView, CancellationToken cancellationToken,
+		public async Task ParseLogs(LogList logList, CancellationToken cancellationToken,
 			bool reparse = false)
 		{
 			IEnumerable<LogData> filteredLogs = logs;
@@ -372,7 +366,7 @@ namespace ArcdpsLogManager
 						if (gridRefreshCooldown.TryUse(DateTime.Now))
 						{
 							var index = logsFiltered.IndexOf(log);
-							logGridView.ReloadData(index);
+							logList.ReloadData(index);
 							UpdateFilterDropdown();
 						}
 					});
@@ -381,7 +375,7 @@ namespace ArcdpsLogManager
 
 			Application.Instance.AsyncInvoke(() =>
 			{
-				logGridView.ReloadData(new Range<int>(0, logs.Count - 1));
+				logList.ReloadData();
 				UpdateFilterDropdown();
 			});
 
@@ -438,86 +432,6 @@ namespace ArcdpsLogManager
 			}
 
 			return new Dictionary<string, LogData>();
-		}
-
-		public LogDetailPanel ConstructLogDetailPanel()
-		{
-			return new LogDetailPanel(ImageProvider);
-		}
-
-		public GridView<LogData> ConstructLogGridView(LogDetailPanel detailPanel)
-		{
-			var gridView = new GridView<LogData>();
-			gridView.Columns.Add(new GridColumn()
-			{
-				HeaderText = "Encounter",
-				DataCell = new TextBoxCell {Binding = new DelegateBinding<LogData, string>(x => x.EncounterName)}
-			});
-
-			gridView.Columns.Add(new GridColumn()
-			{
-				HeaderText = "Result",
-				DataCell = new TextBoxCell
-				{
-					Binding = new DelegateBinding<LogData, string>(x =>
-					{
-						switch (x.EncounterResult)
-						{
-							case EncounterResult.Success:
-								return "Success";
-							case EncounterResult.Failure:
-								return "Failure";
-							case EncounterResult.Unknown:
-								return "Unknown";
-							default:
-								throw new ArgumentOutOfRangeException();
-						}
-					})
-				}
-			});
-
-			gridView.Columns.Add(new GridColumn()
-			{
-				HeaderText = "Date",
-				DataCell = new TextBoxCell
-				{
-					Binding = new DelegateBinding<LogData, string>(x =>
-					{
-						if (x.EncounterStartTime == default)
-						{
-							return "Unknown";
-						}
-
-						return x.EncounterStartTime.ToLocalTime().DateTime.ToString(CultureInfo.CurrentCulture);
-					})
-				}
-			});
-
-			gridView.Columns.Add(new GridColumn()
-			{
-				HeaderText = "Duration",
-				DataCell = new TextBoxCell
-				{
-					Binding = new DelegateBinding<LogData, string>(x =>
-					{
-						var seconds = x.EncounterDuration.TotalSeconds;
-						return $"{seconds / 60:0}m {seconds % 60:00.0}s";
-					})
-				}
-			});
-
-			gridView.Columns.Add(new GridColumn()
-			{
-				HeaderText = "Players",
-				DataCell = new TextBoxCell
-				{
-					Binding = new DelegateBinding<LogData, string>(x => "Composition will be here")
-				}
-			});
-
-			gridView.SelectionChanged += (sender, args) => { detailPanel.LogData = gridView.SelectedItem; };
-
-			return gridView;
 		}
 
 		private PlayerDetailPanel ConstructPlayerDetailPanel()
@@ -610,7 +524,7 @@ namespace ArcdpsLogManager
 			encounterFilterDropDown.SelectedKey = previousKey;
 		}
 
-		private void RecreateLogCollections(ObservableCollection<LogData> newLogCollection)
+		private void RecreateLogCollections(ObservableCollection<LogData> newLogCollection, LogList logList)
 		{
 			logs = newLogCollection;
 
@@ -646,7 +560,7 @@ namespace ArcdpsLogManager
 				playerDataFiltered.Refresh();
 			};
 
-			logGridView.DataStore = logsFiltered;
+			logList.DataStore = logsFiltered;
 
 			logsFiltered.Filter = FilterLog;
 			logsFiltered.Refresh();
