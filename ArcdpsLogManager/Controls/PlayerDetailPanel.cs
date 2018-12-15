@@ -6,11 +6,10 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using ArcdpsLogManager.Annotations;
 using ArcdpsLogManager.Logs;
+using ArcdpsLogManager.Sections;
 using Eto.Drawing;
 using Eto.Forms;
-using ScratchEVTCParser.Events;
 using ScratchEVTCParser.Model.Agents;
-using ScratchEVTCParser.Model.Encounters;
 
 namespace ArcdpsLogManager.Controls
 {
@@ -119,6 +118,22 @@ namespace ArcdpsLogManager.Controls
 			EndVertical();
 			BeginVertical(yscale: true);
 			Add(knownCharacters);
+			EndVertical();
+
+			var logListButton = new Button {Text = "Show logs with this player"};
+			logListButton.Click += (sender, args) =>
+			{
+				var form = new Form
+				{
+					Content = new LogList(ImageProvider) { DataStore = PlayerData.Logs.ToArray()},
+					Width = 900,
+					Height = 700,
+					Title = $"arcdps Log Manager: logs with {PlayerData.AccountName.Substring(1)}"
+				};
+				form.Show();
+			};
+			BeginVertical();
+			Add(logListButton);
 			EndVertical();
 
 			EndVertical();
