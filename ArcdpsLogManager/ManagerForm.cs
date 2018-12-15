@@ -214,7 +214,14 @@ namespace ArcdpsLogManager
 
 			RecreateLogCollections(new ObservableCollection<LogData>(logs));
 
-			ReloadLogs();
+			if (string.IsNullOrEmpty(Settings.LogRootPath))
+			{
+                new LogSettingsDialog(this).ShowModal(this);
+			}
+			else
+			{
+				ReloadLogs();
+			}
 		}
 
 		public void ReloadLogs()
