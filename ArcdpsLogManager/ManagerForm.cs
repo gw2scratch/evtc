@@ -475,9 +475,11 @@ namespace ArcdpsLogManager
 				return true;
 			}
 
-			return playerData.AccountName.Contains(PlayerFilter) || playerData.Logs.Any(log =>
+			return playerData.AccountName.IndexOf(PlayerFilter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
+			       playerData.Logs.Any(log =>
 				       log.Players.Any(player =>
-					       player.AccountName == playerData.AccountName && player.Name.Contains(PlayerFilter)
+					       player.AccountName == playerData.AccountName &&
+					       player.Name.IndexOf(PlayerFilter, StringComparison.CurrentCultureIgnoreCase) >= 0
 				       )
 			       );
 		}
