@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -48,6 +47,9 @@ namespace ArcdpsLogManager
 		private bool ShowSuccessfulLogs { get; set; } = true;
 		private bool ShowFailedLogs { get; set; } = true;
 		private bool ShowUnknownLogs { get; set; } = true;
+
+		private DateTime? MinDateTimeFilter { get; set; } = DateTime.MinValue;
+		private DateTime? MaxDateTimeFilter { get; set; } = DateTime.Now.Date.AddDays(1);
 
 		private CancellationTokenSource logLoadTaskTokenSource = null;
 
@@ -115,9 +117,10 @@ namespace ArcdpsLogManager
 			var unknownCheckBox = new CheckBox {Text = "Unknown"};
 			unknownCheckBox.CheckedBinding.Bind(this, x => x.ShowUnknownLogs);
 
-			// TODO: Implement
-			var startDateTimePicker = new DateTimePicker() {Enabled = false};
-			var endDateTimePicker = new DateTimePicker() {Enabled = false};
+			var startDateTimePicker = new DateTimePicker {Mode = DateTimePickerMode.DateTime};
+			startDateTimePicker.ValueBinding.Bind(this, x => x.MinDateTimeFilter);
+			var endDateTimePicker = new DateTimePicker {Mode = DateTimePickerMode.DateTime};
+			endDateTimePicker.ValueBinding.Bind(this, x => x.MaxDateTimeFilter);
 
 			var applyFilterButton = new Button {Text = "Apply"};
 			applyFilterButton.Click += (sender, args) => { logsFiltered.Refresh(); };
@@ -137,8 +140,7 @@ namespace ArcdpsLogManager
 			formLayout.EndHorizontal();
 			formLayout.EndBeginVertical(new Padding(5), new Size(4, 0));
 			formLayout.BeginHorizontal();
-			formLayout.Add(new Label {Text = "Encounter date", VerticalAlignment = VerticalAlignment.Center});
-			formLayout.Add(new Label {Text = "between", VerticalAlignment = VerticalAlignment.Center});
+			formLayout.Add(new Label {Text = "Encounter time between", VerticalAlignment = VerticalAlignment.Center});
 			formLayout.Add(startDateTimePicker);
 			formLayout.Add(new Label {Text = "and", VerticalAlignment = VerticalAlignment.Center});
 			formLayout.Add(endDateTimePicker);
@@ -506,6 +508,12 @@ namespace ArcdpsLogManager
 			}
 
 			if (!ShowSuccessfulLogs && log.EncounterResult == EncounterResult.Success)
+			{
+				return false;
+			}
+
+			if (log.EncounterStartTime.LocalDateTime < MinDateTimeFilter ||
+			    log.EncounterStartTime.LocalDateTime > MaxDateTimeFilter)
 			{
 				return false;
 			}
