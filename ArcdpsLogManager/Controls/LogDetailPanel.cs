@@ -6,9 +6,9 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using ArcdpsLogManager.Annotations;
 using ArcdpsLogManager.Logs;
+using ArcdpsLogManager.Sections;
 using Eto.Drawing;
 using Eto.Forms;
-using ScratchEVTCParser.Model.Agents;
 using ScratchEVTCParser.Model.Encounters;
 
 namespace ArcdpsLogManager.Controls
@@ -229,9 +229,18 @@ namespace ArcdpsLogManager.Controls
 			Add(groupComposition);
 			EndHorizontal();
 
-			var debugSection = BeginVertical(spacing: new Size(5, 5));
+			var debugSection = BeginVertical();
+			var debugButton = new Button {Text = "Debug data"};
+			BeginHorizontal();
+			BeginVertical(xscale: true, spacing: new Size(5, 0));
 			AddRow("Time spent parsing", parseTimeLabel);
 			AddRow("Parsing status", parseStatusLabel);
+			EndVertical();
+			BeginVertical();
+			AddRow(debugButton);
+			AddRow(null);
+			EndVertical();
+			EndHorizontal();
 			EndVertical();
 
 			BeginVertical(spacing: new Size(5, 5));
@@ -244,6 +253,12 @@ namespace ArcdpsLogManager.Controls
 			EndVertical();
 
 			debugSection.Visible = Settings.ShowDebugData;
+			debugButton.Click += (sender, args) =>
+			{
+				var debugData = new DebugData {LogData = LogData};
+				var dialog = new Dialog {Content = debugData, Width = 400, Height = 400, Title = "Debug data"};
+				dialog.ShowModalAsync(debugButton);
+			};
 			Settings.ShowDebugDataChanged += (sender, args) => { debugSection.Visible = Settings.ShowDebugData; };
 		}
 	}
