@@ -31,6 +31,8 @@ namespace ArcdpsLogManager
 
 		private ObservableCollection<LogData> logs = new ObservableCollection<LogData>();
 		private SelectableFilterCollection<LogData> logsFiltered;
+		private ObservableCollection<PlayerData> playerData = new ObservableCollection<PlayerData>();
+		private SelectableFilterCollection<PlayerData> playerDataFiltered;
 
 		private readonly GridView<LogData> logGridView;
 		private readonly GridView<PlayerData> playerGridView;
@@ -40,6 +42,7 @@ namespace ArcdpsLogManager
 
 		private const string EncounterFilterAll = "All";
 		private string EncounterFilter { get; set; } = EncounterFilterAll;
+		private string PlayerFilter { get; set; } = "";
 
 		private bool ShowSuccessfulLogs { get; set; } = true;
 		private bool ShowFailedLogs { get; set; } = true;
@@ -170,7 +173,26 @@ namespace ArcdpsLogManager
 			var playerDetailPanel = ConstructPlayerDetailPanel();
 			playerGridView = ConstructPlayerGridView(playerDetailPanel);
 
+			playerDataFiltered = new SelectableFilterCollection<PlayerData>(playerGridView, playerData) {Filter = FilterPlayerData};
+			playerGridView.DataStore = playerDataFiltered;
+
+			var playerFilterBox = new TextBox { };
+			playerFilterBox.TextBinding.Bind(this, x => x.PlayerFilter);
+			playerFilterBox.TextChanged += (sender, args) =>
+			{
+				playerGridView.UnselectAll();
+				playerDataFiltered.Refresh();
+			};
+
 			var playerLayout = new DynamicLayout();
+			playerLayout.BeginVertical(spacing: new Size(5, 5), padding: new Padding(5));
+			playerLayout.BeginHorizontal();
+			playerLayout.Add(new Label
+				{Text = "Filter by character or account name", VerticalAlignment = VerticalAlignment.Center});
+			playerLayout.Add(playerFilterBox);
+			playerLayout.Add(null);
+			playerLayout.EndHorizontal();
+			playerLayout.EndVertical();
 			playerLayout.BeginVertical();
 			playerLayout.BeginHorizontal();
 			playerLayout.Add(playerGridView, true);
@@ -280,7 +302,7 @@ namespace ArcdpsLogManager
 						foundLogs.Clear();
 					}
 
-                    cancellationToken.ThrowIfCancellationRequested();
+					cancellationToken.ThrowIfCancellationRequested();
 				}
 
 				// Add the remaining logs
@@ -302,13 +324,14 @@ namespace ArcdpsLogManager
 			}
 		}
 
-		public async Task ParseLogs(GridView<LogData> logGridView, CancellationToken cancellationToken, bool reparse = false)
+		public async Task ParseLogs(GridView<LogData> logGridView, CancellationToken cancellationToken,
+			bool reparse = false)
 		{
 			IEnumerable<LogData> filteredLogs = logs;
 
 			if (!reparse)
 			{
-                // Skip already parsed logs
+				// Skip already parsed logs
 				filteredLogs = filteredLogs.Where(x => x.ParsingStatus != ParsingStatus.Parsed);
 			}
 
@@ -341,7 +364,7 @@ namespace ArcdpsLogManager
 					{
 						if (gridRefreshCooldown.TryUse(DateTime.Now))
 						{
-                            var index = logsFiltered.IndexOf(log);
+							var index = logsFiltered.IndexOf(log);
 							logGridView.ReloadData(index);
 							UpdateFilterDropdown();
 						}
@@ -352,7 +375,7 @@ namespace ArcdpsLogManager
 			Application.Instance.AsyncInvoke(() =>
 			{
 				logGridView.ReloadData(new Range<int>(0, logs.Count - 1));
-                UpdateFilterDropdown();
+				UpdateFilterDropdown();
 			});
 
 			// We have already broken out of the loop because of it,
@@ -522,6 +545,20 @@ namespace ArcdpsLogManager
 			return gridView;
 		}
 
+		private bool FilterPlayerData(PlayerData playerData)
+		{
+			if (string.IsNullOrWhiteSpace(PlayerFilter))
+			{
+				return true;
+			}
+
+			return playerData.AccountName.Contains(PlayerFilter) || playerData.Logs.Any(log =>
+				       log.Players.Any(player =>
+					       player.AccountName == playerData.AccountName && player.Name.Contains(PlayerFilter)
+				       )
+			       );
+		}
+
 		private bool FilterLog(LogData log)
 		{
 			if (EncounterFilter != EncounterFilterAll)
@@ -594,9 +631,12 @@ namespace ArcdpsLogManager
 					}
 				}
 
-				var playerData = logsByAccountName.Select(x => new PlayerData(x.Key, x.Value))
-					.OrderByDescending(x => x.Logs.Count).ToArray();
-				playerGridView.DataStore = playerData;
+				playerData.Clear();
+				foreach (var data in logsByAccountName.Select(x => new PlayerData(x.Key, x.Value)).OrderByDescending(x => x.Logs.Count))
+				{
+					playerData.Add(data);
+				}
+				playerDataFiltered.Refresh();
 			};
 
 			logGridView.DataStore = logsFiltered;
