@@ -315,7 +315,7 @@ namespace ArcdpsLogManager
 					}
 				});
 			}
-			catch (Exception e)
+			catch (Exception e) when (!(e is OperationCanceledException))
 			{
 				Application.Instance.Invoke(() =>
 				{
