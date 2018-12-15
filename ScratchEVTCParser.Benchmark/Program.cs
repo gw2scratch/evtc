@@ -46,6 +46,8 @@ namespace ScratchEVTCParser.Benchmark
 					continue;
 				}
 
+				GC.Collect();
+
 				MeasureTimes(filename, Parser, Processor, StatisticsCalculator, ApiData, Console.Out);
 			}
 		}
