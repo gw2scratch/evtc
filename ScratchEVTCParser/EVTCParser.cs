@@ -14,7 +14,8 @@ namespace ScratchEVTCParser
 	{
 		public ParsedLog ParseLog(string evtcFilename)
 		{
-			if (evtcFilename.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
+			if (evtcFilename.EndsWith(".zip", StringComparison.OrdinalIgnoreCase) ||
+			    evtcFilename.EndsWith(".zevtc", StringComparison.OrdinalIgnoreCase))
 			{
 				using (var fileStream = new FileStream(evtcFilename, FileMode.Open, FileAccess.Read, FileShare.Read))
 				using (var arch = new ZipArchive(fileStream, ZipArchiveMode.Read))
