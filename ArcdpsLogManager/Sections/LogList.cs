@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using ArcdpsLogManager.Controls;
 using ArcdpsLogManager.Logs;
+using Eto.Drawing;
 using Eto.Forms;
 using ScratchEVTCParser.Model.Encounters;
 
@@ -13,7 +15,11 @@ namespace ArcdpsLogManager.Sections
 		private readonly ImageProvider imageProvider;
 		private readonly GridView<LogData> logGridView;
 
+        private const int PlayerIconSize = 20;
+        private const int PlayerIconSpacing = 5;
+
 		private ICollection<LogData> dataStore;
+
 		public ICollection<LogData> DataStore
 		{
 			get => dataStore;
@@ -43,7 +49,7 @@ namespace ArcdpsLogManager.Sections
 
 		public void ReloadData()
 		{
-            logGridView.ReloadData(new Range<int>(0, DataStore.Count - 1));
+			logGridView.ReloadData(new Range<int>(0, DataStore.Count - 1));
 		}
 
 		public void ReloadData(int row)
@@ -117,14 +123,31 @@ namespace ArcdpsLogManager.Sections
 				}
 			});
 
+			var playerDrawableCell = new DrawableCell();
+			playerDrawableCell.Paint += (sender, args) =>
+			{
+				if (!(args.Item is LogData log)) return;
+				if (log.ParsingStatus != ParsingStatus.Parsed) return;
+
+
+				var players = log.Players.OrderBy(player => player.Profession).ThenBy(player => player.EliteSpecialization).ToArray();
+				var origin = args.ClipRectangle.Location;
+				for (int i = 0; i < players.Length; i++)
+				{
+					var icon = imageProvider.GetTinyProfessionIcon(players[i]);
+					var point = origin + new PointF(i * (PlayerIconSize + PlayerIconSpacing), 0);
+					args.Graphics.DrawImage(icon, point);
+				}
+			};
+
 			gridView.Columns.Add(new GridColumn()
 			{
 				HeaderText = "Players",
-				DataCell = new TextBoxCell
-				{
-					Binding = new DelegateBinding<LogData, string>(x => "Composition will be here")
-				}
+				DataCell = playerDrawableCell,
+				Width = 11 * (PlayerIconSize + PlayerIconSpacing)  // There are logs with 11 players here and there
 			});
+
+			gridView.RowHeight = Math.Max(gridView.RowHeight, PlayerIconSize + 2);
 
 			gridView.SelectionChanged += (sender, args) => { detailPanel.LogData = gridView.SelectedItem; };
 
