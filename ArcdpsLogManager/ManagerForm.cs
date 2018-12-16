@@ -85,11 +85,18 @@ namespace ArcdpsLogManager
 			logLocationMenuItem.Click += (sender, args) => { new LogSettingsDialog(this).ShowModal(this); };
 			logLocationMenuItem.Shortcut = Application.Instance.CommonModifier | Keys.L;
 
-			var debugDataMenuItem = new CheckMenuItem {Text = "Show &Debug data"};
+			var debugDataMenuItem = new CheckMenuItem {Text = "Show &debug data"};
 			debugDataMenuItem.Checked = Settings.ShowDebugData;
 			debugDataMenuItem.CheckedChanged += (sender, args) =>
 			{
 				Settings.ShowDebugData = debugDataMenuItem.Checked;
+			};
+
+			var showCompositionsMenuItem = new CheckMenuItem {Text = "Show &squad compositions in log list"};
+			showCompositionsMenuItem.Checked = Settings.ShowSquadCompositions;
+			showCompositionsMenuItem.CheckedChanged += (sender, args) =>
+			{
+				Settings.ShowSquadCompositions = showCompositionsMenuItem.Checked;
 			};
 
 			// TODO: Implement
@@ -103,6 +110,8 @@ namespace ArcdpsLogManager
 
 			var settingsMenuItem = new ButtonMenuItem {Text = "&Settings"};
 			settingsMenuItem.Items.Add(logLocationMenuItem);
+			settingsMenuItem.Items.Add(showCompositionsMenuItem);
+			settingsMenuItem.Items.Add(new SeparatorMenuItem());
 			settingsMenuItem.Items.Add(debugDataMenuItem);
 
 			Menu = new MenuBar(arcdpsMenuItem, settingsMenuItem);

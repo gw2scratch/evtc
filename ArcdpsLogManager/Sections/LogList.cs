@@ -123,8 +123,8 @@ namespace ArcdpsLogManager.Sections
 				}
 			});
 
-			var playerDrawableCell = new DrawableCell();
-			playerDrawableCell.Paint += (sender, args) =>
+			var compositionCell = new DrawableCell();
+			compositionCell.Paint += (sender, args) =>
 			{
 				if (!(args.Item is LogData log)) return;
 				if (log.ParsingStatus != ParsingStatus.Parsed) return;
@@ -140,12 +140,20 @@ namespace ArcdpsLogManager.Sections
 				}
 			};
 
-			gridView.Columns.Add(new GridColumn()
+			var compositionColumn = new GridColumn()
 			{
 				HeaderText = "Players",
-				DataCell = playerDrawableCell,
-				Width = 11 * (PlayerIconSize + PlayerIconSpacing)  // There are logs with 11 players here and there
-			});
+				DataCell = compositionCell,
+				Width = 11 * (PlayerIconSize + PlayerIconSpacing) // There are logs with 11 players here and there
+			};
+
+			gridView.Columns.Add(compositionColumn);
+
+            compositionColumn.Visible = Settings.ShowSquadCompositions;
+			Settings.ShowSquadCompositionsChanged += (sender, args) =>
+			{
+				compositionColumn.Visible = Settings.ShowSquadCompositions;
+			};
 
 			gridView.RowHeight = Math.Max(gridView.RowHeight, PlayerIconSize + 2);
 

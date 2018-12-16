@@ -35,8 +35,22 @@ namespace ArcdpsLogManager
 			}
 		}
 
+		public static bool ShowSquadCompositions
+		{
+			get => AppSettings.GetValueOrDefault(nameof(ShowSquadCompositions), false);
+
+			set
+			{
+				if (AppSettings.AddOrUpdateValue(nameof(ShowSquadCompositions), value))
+				{
+					OnShowSquadCompositionsChanged();
+				}
+			}
+		}
+
 		public static event EventHandler<EventArgs> LogRootPathChanged;
 		public static event EventHandler<EventArgs> ShowDebugDataChanged;
+		public static event EventHandler<EventArgs> ShowSquadCompositionsChanged;
 
 		private static void OnLogRootPathChanged()
 		{
@@ -46,6 +60,11 @@ namespace ArcdpsLogManager
 		private static void OnShowDebugDataChanged()
 		{
 			ShowDebugDataChanged?.Invoke(null, EventArgs.Empty);
+		}
+
+		private static void OnShowSquadCompositionsChanged()
+		{
+			ShowSquadCompositionsChanged?.Invoke(null, EventArgs.Empty);
 		}
 	}
 }
