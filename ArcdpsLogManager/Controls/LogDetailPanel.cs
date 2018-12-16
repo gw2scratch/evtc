@@ -1,12 +1,9 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Globalization;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using ArcdpsLogManager.Annotations;
+using System.Threading.Tasks;
 using ArcdpsLogManager.Logs;
 using ArcdpsLogManager.Sections;
+using ArcdpsLogManager.Uploaders;
 using Eto.Drawing;
 using Eto.Forms;
 using ScratchEVTCParser.Model.Encounters;
@@ -15,118 +12,22 @@ namespace ArcdpsLogManager.Controls
 {
 	public class LogDetailPanel : DynamicLayout
 	{
-		private class LogValues : INotifyPropertyChanged
-		{
-			private string encounterName;
-			private string result;
-			private string encounterTime;
-			private string encounterDuration;
-			private string parseTimeMilliseconds;
-			private LogPlayer[] players;
-			private string parsingStatus;
-			private bool dataPresent = false;
-
-			public bool DataPresent
-			{
-				get => dataPresent;
-				set
-				{
-					if (value == dataPresent) return;
-					dataPresent = value;
-					OnPropertyChanged();
-				}
-			}
-
-			public string EncounterName
-			{
-				get => encounterName;
-				set
-				{
-					if (value == encounterName) return;
-					encounterName = value;
-					OnPropertyChanged();
-				}
-			}
-
-			public string Result
-			{
-				get => result;
-				set
-				{
-					if (value == result) return;
-					result = value;
-					OnPropertyChanged();
-				}
-			}
-
-			public string EncounterTime
-			{
-				get => encounterTime;
-				set
-				{
-					if (value == encounterTime) return;
-					encounterTime = value;
-					OnPropertyChanged();
-				}
-			}
-
-			public string EncounterDuration
-			{
-				get => encounterDuration;
-				set
-				{
-					if (value == encounterDuration) return;
-					encounterDuration = value;
-					OnPropertyChanged();
-				}
-			}
-
-			public string ParseTimeMilliseconds
-			{
-				get => parseTimeMilliseconds;
-				set
-				{
-					if (value == parseTimeMilliseconds) return;
-					parseTimeMilliseconds = value;
-					OnPropertyChanged();
-				}
-			}
-
-			public string ParsingStatus
-			{
-				get => parsingStatus;
-				set
-				{
-					if (value == parsingStatus) return;
-					parsingStatus = value;
-					OnPropertyChanged();
-				}
-			}
-
-			public IEnumerable<LogPlayer> Players
-			{
-				get => players;
-				set
-				{
-					if (Equals(value, players)) return;
-					players = value as LogPlayer[] ?? value?.ToArray();
-					OnPropertyChanged();
-				}
-			}
-
-			public event PropertyChangedEventHandler PropertyChanged;
-
-			[NotifyPropertyChangedInvocator]
-			protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-			{
-				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-
 		public ImageProvider ImageProvider { get; }
+		public DpsReportUploader DpsReportUploader { get; } = new DpsReportUploader();
 
 		private LogData logData;
-		private LogValues Model { get; } = new LogValues();
+
+		private readonly Label nameLabel = new Label() { Font = Fonts.Sans(16, FontStyle.Bold) };
+		private readonly Label resultLabel = new Label() { Font = Fonts.Sans(12) };
+		private readonly Label timeLabel = new Label();
+		private readonly Label durationLabel = new Label();
+		private readonly GroupCompositionControl groupComposition;
+		private readonly Label parseTimeLabel = new Label();
+		private readonly Label parseStatusLabel = new Label();
+		private readonly Button dpsReportUploadButton;
+		private readonly TextBox dpsReportTextBox;
+		private readonly Button dpsReportOpenButton;
+
 
 		public LogData LogData
 		{
@@ -138,13 +39,13 @@ namespace ArcdpsLogManager.Controls
 
 				if (logData == null)
 				{
-					Model.DataPresent = false;
+					Visible = false;
 					return;
 				}
 
-				Model.DataPresent = true;
+				Visible = true;
 
-				Model.EncounterName = logData.EncounterName;
+				nameLabel.Text = logData.EncounterName;
 
 				string result;
 				switch (logData.EncounterResult)
@@ -162,19 +63,33 @@ namespace ArcdpsLogManager.Controls
 						throw new ArgumentOutOfRangeException();
 				}
 
-				Model.EncounterTime = logData.EncounterStartTime.ToLocalTime().DateTime
-					.ToString(CultureInfo.CurrentCulture);
-				var seconds = logData.EncounterDuration.TotalSeconds;
-				Model.EncounterDuration = $"{seconds / 60:0}m {seconds % 60:0.0}s";
+				timeLabel.Text = logData.EncounterStartTime.ToLocalTime().DateTime.ToString(CultureInfo.CurrentCulture);
 
-				Model.Result = $"{result} in {Model.EncounterDuration}";
+				double seconds = logData.EncounterDuration.TotalSeconds;
+				string duration = $"{seconds / 60:0}m {seconds % 60:0.0}s";
 
-				Model.ParseTimeMilliseconds = $"{logData.ParseMilliseconds} ms";
-				Model.ParsingStatus = logData.ParsingStatus.ToString();
+				durationLabel.Text = duration;
 
-				Model.Players = logData.Players;
+				resultLabel.Text = $"{result} in {duration}";
+
+				UpdateUploadStatus();
+
 				ResumeLayout();
 			}
+		}
+
+		private void UpdateUploadStatus()
+		{
+            parseTimeLabel.Text = $"{logData.ParseMilliseconds} ms";
+            parseStatusLabel.Text = logData.ParsingStatus.ToString();
+
+            groupComposition.Players = logData.Players;
+            dpsReportUploadButton.Text = logData.DpsReportEIUpload.UploadState == UploadState.Uploaded
+                ? "Reupload to dps.report (EI)"
+                : "Upload to dps.report (EI)";
+            dpsReportUploadButton.Enabled = logData.DpsReportEIUpload.UploadState != UploadState.Uploading;
+            dpsReportTextBox.Text = logData.DpsReportEIUpload.Url ?? "";
+            dpsReportOpenButton.Enabled = logData.DpsReportEIUpload.Url != null;
 		}
 
 
@@ -184,34 +99,9 @@ namespace ArcdpsLogManager.Controls
 
 			Padding = new Padding(10);
 			Width = 300;
+			Visible = false;
 
-			var nameLabel = new Label()
-			{
-				Font = Fonts.Sans(16, FontStyle.Bold)
-			};
-			nameLabel.TextBinding.Bind(Model, x => x.EncounterName);
-			var resultLabel = new Label()
-			{
-				Font = Fonts.Sans(12)
-			};
-			resultLabel.TextBinding.Bind(Model, x => x.Result);
-
-			var timeLabel = new Label();
-			timeLabel.TextBinding.Bind(Model, x => x.EncounterTime);
-			var durationLabel = new Label();
-			durationLabel.TextBinding.Bind(Model, x => x.EncounterDuration);
-
-			var groupComposition = new GroupCompositionControl(imageProvider);
-			groupComposition.Bind(x => x.Players,
-				new ObjectBinding<IEnumerable<LogPlayer>>(Model, nameof(Model.Players)));
-
-			var parseTimeLabel = new Label();
-			parseTimeLabel.TextBinding.Bind(Model, x => x.ParseTimeMilliseconds);
-
-			var parseStatusLabel = new Label();
-			parseStatusLabel.TextBinding.Bind(Model, x => x.ParsingStatus);
-
-			this.Bind(x => x.Visible, new ObjectBinding<bool>(Model, nameof(Model.DataPresent)));
+			groupComposition = new GroupCompositionControl(imageProvider);
 
 			BeginVertical(spacing: new Size(0, 30));
 
@@ -243,23 +133,60 @@ namespace ArcdpsLogManager.Controls
 			EndHorizontal();
 			EndVertical();
 
+			dpsReportUploadButton = new Button();
+			dpsReportTextBox = new TextBox {ReadOnly = true};
+			dpsReportOpenButton = new Button {Text = "Open"};
+
 			BeginVertical(spacing: new Size(5, 5));
 			BeginHorizontal();
-			Add(new Button {Text = "Upload to dps.report (EI)", Enabled = false}); // TODO: Implement
-			Add(new Button {Text = "Upload to gw2raidar", Enabled = false}); // TODO: Implement
+			Add(dpsReportUploadButton);
+			//Add(new Button {Text = "Upload to gw2raidar", Enabled = false}); // TODO: Implement
+			EndHorizontal();
+			BeginHorizontal();
+			BeginVertical();
+			BeginHorizontal();
+			Add(dpsReportTextBox, true);
+			Add(dpsReportOpenButton);
+			EndHorizontal();
+			EndVertical();
+			//AddSeparateRow(new TextBox {Text = "", ReadOnly = true, Width = 80}, new Button {Text = "Open"});
 			EndHorizontal();
 			EndVertical();
 
 			EndVertical();
 
-			debugSection.Visible = Settings.ShowDebugData;
+			dpsReportUploadButton.Click += (sender, args) =>
+			{
+				Task.Run(() => UploadDpsReportEliteInsights(logData));
+			};
+			dpsReportOpenButton.Click += (sender, args) =>
+			{
+				System.Diagnostics.Process.Start(logData.DpsReportEIUpload.Url);
+			};
+
 			debugButton.Click += (sender, args) =>
 			{
 				var debugData = new DebugData {LogData = LogData};
 				var dialog = new Dialog {Content = debugData, Width = 400, Height = 400, Title = "Debug data"};
 				dialog.ShowModalAsync(debugButton);
 			};
+
+			debugSection.Visible = Settings.ShowDebugData; // TODO: Doesn't work
 			Settings.ShowDebugDataChanged += (sender, args) => { debugSection.Visible = Settings.ShowDebugData; };
+		}
+
+		private async void UploadDpsReportEliteInsights(LogData logData)
+		{
+			// Keep in mind that a different log could be shown at this point.
+			// For this reason we can only recheck the upload status instead of changing it directly.
+
+			logData.DpsReportEIUpload.UploadState = UploadState.Uploading;
+			Application.Instance.Invoke(UpdateUploadStatus);
+
+			var url = await DpsReportUploader.UploadLogAsync(LogData);
+			logData.DpsReportEIUpload.Url = url;
+			logData.DpsReportEIUpload.UploadState = UploadState.Uploaded;
+			Application.Instance.Invoke(UpdateUploadStatus);
 		}
 	}
 }

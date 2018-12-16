@@ -19,6 +19,8 @@ namespace ArcdpsLogManager.Logs
 		public DateTimeOffset EncounterStartTime { get; set; }
 		public TimeSpan EncounterDuration { get; set; }
 
+		public LogUpload DpsReportEIUpload { get; set; } = new LogUpload();
+
 		public ParsingStatus ParsingStatus { get; set; } = ParsingStatus.Unparsed;
 
 		/// <summary>
