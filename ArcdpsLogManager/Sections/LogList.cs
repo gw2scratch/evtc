@@ -118,7 +118,7 @@ namespace ArcdpsLogManager.Sections
 					Binding = new DelegateBinding<LogData, string>(x =>
 					{
 						var seconds = x.EncounterDuration.TotalSeconds;
-						return $"{seconds / 60:0}m {seconds % 60:00.0}s";
+						return $"{(int)seconds / 60:0}m {seconds % 60:00.0}s";
 					})
 				}
 			});

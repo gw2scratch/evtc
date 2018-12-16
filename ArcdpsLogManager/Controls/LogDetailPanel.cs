@@ -66,7 +66,7 @@ namespace ArcdpsLogManager.Controls
 				timeLabel.Text = logData.EncounterStartTime.ToLocalTime().DateTime.ToString(CultureInfo.CurrentCulture);
 
 				double seconds = logData.EncounterDuration.TotalSeconds;
-				string duration = $"{seconds / 60:0}m {seconds % 60:0.0}s";
+				string duration = $"{(int)seconds / 60:0}m {seconds % 60:0.0}s";
 
 				durationLabel.Text = duration;
 
@@ -105,7 +105,6 @@ namespace ArcdpsLogManager.Controls
             dpsReportTextBox.Text = logData.DpsReportEIUpload.Url ?? "";
             dpsReportOpenButton.Enabled = logData.DpsReportEIUpload.Url != null;
 		}
-
 
 		public LogDetailPanel(ImageProvider imageProvider)
 		{
