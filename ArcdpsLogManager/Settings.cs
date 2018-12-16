@@ -15,11 +15,10 @@ namespace ArcdpsLogManager
 
 			set
 			{
-				if (value == LogRootPath) return;
-
-				AppSettings.AddOrUpdateValue(nameof(LogRootPath), value);
-
-                OnLogRootPathChanged();
+				if (AppSettings.AddOrUpdateValue(nameof(LogRootPath), value))
+				{
+					OnLogRootPathChanged();
+				}
 			}
 		}
 
@@ -29,10 +28,10 @@ namespace ArcdpsLogManager
 
 			set
 			{
-				if (value == ShowDebugData) return;
-
-				AppSettings.AddOrUpdateValue(nameof(ShowDebugData), value);
-				OnShowDebugDataChanged();
+				if (AppSettings.AddOrUpdateValue(nameof(ShowDebugData), value))
+				{
+					OnShowDebugDataChanged();
+				}
 			}
 		}
 

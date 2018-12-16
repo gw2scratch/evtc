@@ -56,19 +56,13 @@ namespace ArcdpsLogManager.Logs
 			ParseMilliseconds = parseMilliseconds;
 		}
 
-		public void ParseData()
+		public void ParseData(EVTCParser parser, LogProcessor processor, StatisticsCalculator calculator)
 		{
-			// TODO: Move out dependencies
 			try
 			{
 				var stopwatch = Stopwatch.StartNew();
 
 				ParsingStatus = ParsingStatus.Parsing;
-
-				var parser = new EVTCParser();
-				var processor = new LogProcessor();
-				var calculator = new StatisticsCalculator();
-
 
 				var parsedLog = parser.ParseLog(FileInfo.FullName);
 				var log = processor.GetProcessedLog(parsedLog);

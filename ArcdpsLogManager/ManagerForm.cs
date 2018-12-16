@@ -15,6 +15,7 @@ using ArcdpsLogManager.Timing;
 using Eto.Drawing;
 using Eto.Forms;
 using Newtonsoft.Json;
+using ScratchEVTCParser;
 using ScratchEVTCParser.Model.Encounters;
 
 namespace ArcdpsLogManager
@@ -28,6 +29,9 @@ namespace ArcdpsLogManager
 
 		private ImageProvider ImageProvider { get; } = new ImageProvider();
 		private LogFinder LogFinder { get; } = new LogFinder();
+		private EVTCParser EVTCParser { get; } = new EVTCParser();
+		private LogProcessor LogProcessor { get; } = new LogProcessor();
+		private StatisticsCalculator StatisticsCalculator { get; } = new StatisticsCalculator();
 
 		private ObservableCollection<LogData> logs = new ObservableCollection<LogData>();
 		private SelectableFilterCollection<LogData> logsFiltered;
@@ -351,7 +355,7 @@ namespace ArcdpsLogManager
 
 				bool failedBefore = log.ParsingStatus == ParsingStatus.Failed;
 
-				log.ParseData();
+				log.ParseData(EVTCParser, LogProcessor, StatisticsCalculator);
 
 				int logNumber = i + 1;
 				Application.Instance.AsyncInvoke(() =>
