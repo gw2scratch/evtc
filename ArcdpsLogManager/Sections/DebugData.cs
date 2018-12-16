@@ -17,8 +17,12 @@ namespace ArcdpsLogManager.Sections
 				logData = value;
 				var layout = new DynamicLayout();
 
-				layout.BeginVertical(new Padding(5), new Size(5, 5));
-				layout.AddRow(null, null, null);
+				layout.BeginVertical(new Padding(5), new Size(5, 5), yscale: true);
+				layout.BeginHorizontal();
+				layout.Add(null);
+				layout.Add(null, true);
+				layout.Add(null);
+				layout.EndHorizontal();
 				layout.AddRow("File name", logData.FileInfo.Name);
 				layout.AddRow("File size", $"{logData.FileInfo.Length / 1000f / 1000f:0.000} MB");
 				layout.AddRow("File creation", $"{logData.FileInfo.CreationTime}");
@@ -38,8 +42,6 @@ namespace ArcdpsLogManager.Sections
                 layout.EndVertical();
                 layout.BeginVertical();
 				layout.AddSeparateRow(browserButton);
-				layout.AddRow(null);
-
                 layout.EndVertical();
 
                 browserButton.Click += (sender, args) =>
