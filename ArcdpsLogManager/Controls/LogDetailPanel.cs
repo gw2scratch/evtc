@@ -171,8 +171,12 @@ namespace ArcdpsLogManager.Controls
 				dialog.Show();
 			};
 
-			debugSection.Visible = Settings.ShowDebugData; // TODO: Doesn't work
 			Settings.ShowDebugDataChanged += (sender, args) => { debugSection.Visible = Settings.ShowDebugData; };
+			Shown += (sender, args) =>
+			{
+				// Assigning visibility in the constructor did not work
+				debugSection.Visible = Settings.ShowDebugData;
+			};
 		}
 
 		private async void UploadDpsReportEliteInsights(LogData logData)
