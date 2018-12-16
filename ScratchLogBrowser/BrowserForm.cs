@@ -30,7 +30,10 @@ namespace ScratchLogBrowser
 
 		// Processed events
 		private readonly EventListControl eventListControl;
-		private readonly FilterCollection<ParsedCombatItem> parsedCombatItems = new FilterCollection<ParsedCombatItem>();
+
+		private readonly FilterCollection<ParsedCombatItem>
+			parsedCombatItems = new FilterCollection<ParsedCombatItem>();
+
 		private readonly FilterCollection<ParsedAgent> parsedAgents = new FilterCollection<ParsedAgent>();
 		private readonly FilterCollection<ParsedSkill> parsedSkills = new FilterCollection<ParsedSkill>();
 
@@ -159,7 +162,8 @@ namespace ScratchLogBrowser
 			apiDataSection = new ApiDataSection();
 
 			mainTabControl.Pages.Add(new TabPage(parsedTabControl) {Text = "Parsed data", Padding = MainTabPadding});
-			mainTabControl.Pages.Add(new TabPage(processedTabControl) {Text = "Processed data", Padding = MainTabPadding});
+			mainTabControl.Pages.Add(new TabPage(processedTabControl)
+				{Text = "Processed data", Padding = MainTabPadding});
 			mainTabControl.Pages.Add(new TabPage(statisticsTabControl) {Text = "Statistics", Padding = MainTabPadding});
 			mainTabControl.Pages.Add(new TabPage(htmlLayout) {Text = "HTML", Padding = MainTabPadding});
 			mainTabControl.Pages.Add(new TabPage(parsedStateLabel) {Text = "Log", Padding = MainTabPadding});
@@ -192,125 +196,130 @@ namespace ScratchLogBrowser
 			agentControl.Agent = agent;
 		}
 
-		private async void OpenFileButtonOnClick(object s, EventArgs e)
+		private void OpenFileButtonOnClick(object s, EventArgs e)
 		{
 			var result = openFileDialog.ShowDialog(this);
 			if (result == DialogResult.Ok)
 			{
-				string logFilename = openFileDialog.Filenames.First();
-				var statusStringBuilder = new StringBuilder();
+				string logFilename = openFileDialog.FileName;
+				SelectLog(logFilename);
+			}
+		}
 
-				var parser = new EVTCParser();
-				var processor = new LogProcessor();
-				var statisticsCalculator = new StatisticsCalculator();
-				var generator = new HtmlGenerator();
+		public void SelectLog(string logFilename)
+		{
+			var statusStringBuilder = new StringBuilder();
 
-				// Parsing
-				var sw = Stopwatch.StartNew();
-				ParsedLog parsedLog = null;
-				try
-				{
-					parsedLog = parser.ParseLog(logFilename);
-					var parseTime = sw.Elapsed;
+			var parser = new EVTCParser();
+			var processor = new LogProcessor();
+			var statisticsCalculator = new StatisticsCalculator();
+			var generator = new HtmlGenerator();
 
-					statusStringBuilder.AppendLine($"Parsed in {parseTime}");
+			// Parsing
+			var sw = Stopwatch.StartNew();
+			ParsedLog parsedLog = null;
+			try
+			{
+				parsedLog = parser.ParseLog(logFilename);
+				var parseTime = sw.Elapsed;
 
-					Application.Instance.Invoke(() =>
-					{
-						parsedAgents.Clear();
-						parsedAgents.AddRange(parsedLog.ParsedAgents);
-						parsedAgents.Refresh();
-						parsedSkills.Clear();
-						parsedSkills.AddRange(parsedLog.ParsedSkills);
-						parsedSkills.Refresh();
-						parsedCombatItems.Clear();
-						parsedCombatItems.AddRange(parsedLog.ParsedCombatItems);
-						parsedCombatItems.Refresh();
-					});
-				}
-				catch (Exception ex)
-				{
-					statusStringBuilder.AppendLine($"Parsing failed: {ex.Message}");
-				}
-
-				// Processing
-				Log processedLog = null;
-				try
-				{
-					sw.Restart();
-					processedLog = processor.GetProcessedLog(parsedLog);
-					var processTime = sw.Elapsed;
-
-					statusStringBuilder.AppendLine($"Processed in {processTime}");
-
-					Application.Instance.Invoke(() =>
-					{
-						eventList.Clear();
-						eventList.AddRange(processedLog.Events);
-						eventListControl.Events = eventList;
-						eventListControl.Agents = processedLog.Agents.ToArray();
-						agents.Clear();
-						agents.AddRange(new FilterCollection<Agent>(processedLog.Agents));
-						agents.Refresh();
-						agentControl.Events = processedLog.Events.ToArray();
-					});
-				}
-				catch (Exception ex)
-				{
-					statusStringBuilder.AppendLine($"Processing failed: {ex.Message}");
-				}
-
-				// Statistics
-				LogStatistics stats = null;
-				sw.Restart();
-				try
-				{
-					stats = statisticsCalculator.GetStatistics(processedLog, ApiData);
-					var statsTime = sw.Elapsed;
-
-					statusStringBuilder.AppendLine($"Statistics generated in {statsTime}");
-
-					// Way too huge by now
-					//Application.Instance.Invoke(() => { statisticsJsonControl.Object = stats; });
-				}
-				catch (Exception ex)
-				{
-					statusStringBuilder.AppendLine($"Statistics generation failed: {ex.Message}");
-				}
-
-				// HTML
-				var htmlStringWriter = new StringWriter();
-				sw.Restart();
-				try
-				{
-					generator.WriteHtml(htmlStringWriter, stats);
-					var htmlTime = sw.Elapsed;
-
-					statusStringBuilder.AppendLine($"HTML generated in {htmlTime}");
-
-					Application.Instance.Invoke(() =>
-					{
-						webView.LoadHtml(htmlStringWriter.ToString());
-						LogHtml = htmlStringWriter.ToString();
-						saveHtmlMenuItem.Enabled = true;
-					});
-				}
-				catch (Exception ex)
-				{
-					statusStringBuilder.AppendLine($"HTML generation failed: {ex.Message}");
-				}
+				statusStringBuilder.AppendLine($"Parsed in {parseTime}");
 
 				Application.Instance.Invoke(() =>
 				{
-					statusStringBuilder.AppendLine(
-						$"Build version: {parsedLog?.LogVersion?.BuildVersion}, revision {parsedLog?.LogVersion?.Revision}");
-					statusStringBuilder.AppendLine(
-						$"Parsed: {parsedLog?.ParsedAgents?.Length} agents, {parsedLog?.ParsedSkills?.Length} skills, {parsedLog?.ParsedCombatItems?.Length} combat items.");
-					statusStringBuilder.AppendLine(
-						$"Processed: {processedLog?.Events?.Count()} events, {processedLog?.Agents?.Count()} agents.");
-					parsedStateLabel.Text = statusStringBuilder.ToString();
+					parsedAgents.Clear();
+					parsedAgents.AddRange(parsedLog.ParsedAgents);
+					parsedAgents.Refresh();
+					parsedSkills.Clear();
+					parsedSkills.AddRange(parsedLog.ParsedSkills);
+					parsedSkills.Refresh();
+					parsedCombatItems.Clear();
+					parsedCombatItems.AddRange(parsedLog.ParsedCombatItems);
+					parsedCombatItems.Refresh();
 				});
 			}
+			catch (Exception ex)
+			{
+				statusStringBuilder.AppendLine($"Parsing failed: {ex.Message}");
+			}
+
+			// Processing
+			Log processedLog = null;
+			try
+			{
+				sw.Restart();
+				processedLog = processor.GetProcessedLog(parsedLog);
+				var processTime = sw.Elapsed;
+
+				statusStringBuilder.AppendLine($"Processed in {processTime}");
+
+				Application.Instance.Invoke(() =>
+				{
+					eventList.Clear();
+					eventList.AddRange(processedLog.Events);
+					eventListControl.Events = eventList;
+					eventListControl.Agents = processedLog.Agents.ToArray();
+					agents.Clear();
+					agents.AddRange(new FilterCollection<Agent>(processedLog.Agents));
+					agents.Refresh();
+					agentControl.Events = processedLog.Events.ToArray();
+				});
+			}
+			catch (Exception ex)
+			{
+				statusStringBuilder.AppendLine($"Processing failed: {ex.Message}");
+			}
+
+			// Statistics
+			LogStatistics stats = null;
+			sw.Restart();
+			try
+			{
+				stats = statisticsCalculator.GetStatistics(processedLog, ApiData);
+				var statsTime = sw.Elapsed;
+
+				statusStringBuilder.AppendLine($"Statistics generated in {statsTime}");
+
+				// Way too huge by now
+				//Application.Instance.Invoke(() => { statisticsJsonControl.Object = stats; });
+			}
+			catch (Exception ex)
+			{
+				statusStringBuilder.AppendLine($"Statistics generation failed: {ex.Message}");
+			}
+
+			// HTML
+			var htmlStringWriter = new StringWriter();
+			sw.Restart();
+			try
+			{
+				generator.WriteHtml(htmlStringWriter, stats);
+				var htmlTime = sw.Elapsed;
+
+				statusStringBuilder.AppendLine($"HTML generated in {htmlTime}");
+
+				Application.Instance.Invoke(() =>
+				{
+					webView.LoadHtml(htmlStringWriter.ToString());
+					LogHtml = htmlStringWriter.ToString();
+					saveHtmlMenuItem.Enabled = true;
+				});
+			}
+			catch (Exception ex)
+			{
+				statusStringBuilder.AppendLine($"HTML generation failed: {ex.Message}");
+			}
+
+			Application.Instance.Invoke(() =>
+			{
+				statusStringBuilder.AppendLine(
+					$"Build version: {parsedLog?.LogVersion?.BuildVersion}, revision {parsedLog?.LogVersion?.Revision}");
+				statusStringBuilder.AppendLine(
+					$"Parsed: {parsedLog?.ParsedAgents?.Length} agents, {parsedLog?.ParsedSkills?.Length} skills, {parsedLog?.ParsedCombatItems?.Length} combat items.");
+				statusStringBuilder.AppendLine(
+					$"Processed: {processedLog?.Events?.Count()} events, {processedLog?.Agents?.Count()} agents.");
+				parsedStateLabel.Text = statusStringBuilder.ToString();
+			});
 		}
 	}
 }

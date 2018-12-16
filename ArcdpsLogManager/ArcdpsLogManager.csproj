@@ -100,6 +100,10 @@
       <Project>{9dd47a76-3c69-4152-aa36-b656caffdecb}</Project>
       <Name>ScratchEVTCParser</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ScratchLogBrowser\ScratchLogBrowser.csproj">
+      <Project>{cb188f27-d853-4167-9693-ae4c8890be70}</Project>
+      <Name>ScratchLogBrowser</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Images\Berserker_tango_icon_20px.png">

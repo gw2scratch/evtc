@@ -167,8 +167,8 @@ namespace ArcdpsLogManager.Controls
 			debugButton.Click += (sender, args) =>
 			{
 				var debugData = new DebugData {LogData = LogData};
-				var dialog = new Dialog {Content = debugData, Width = 400, Height = 400, Title = "Debug data"};
-				dialog.ShowModalAsync(debugButton);
+				var dialog = new Form {Content = debugData, Width = 400, Title = "Debug data"};
+				dialog.Show();
 			};
 
 			debugSection.Visible = Settings.ShowDebugData; // TODO: Doesn't work

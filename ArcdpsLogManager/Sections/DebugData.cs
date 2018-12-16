@@ -1,5 +1,7 @@
 using ArcdpsLogManager.Logs;
+using Eto.Drawing;
 using Eto.Forms;
+using ScratchLogBrowser;
 
 namespace ArcdpsLogManager.Sections
 {
@@ -15,7 +17,8 @@ namespace ArcdpsLogManager.Sections
 				logData = value;
 				var layout = new DynamicLayout();
 
-				layout.BeginVertical();
+				layout.BeginVertical(new Padding(5), new Size(5, 5));
+				layout.AddRow(null, null, null);
 				layout.AddRow("File name", logData.FileInfo.Name);
 				layout.AddRow("File size", $"{logData.FileInfo.Length / 1000f / 1000f:0.000} MB");
 				layout.AddRow("File creation", $"{logData.FileInfo.CreationTime}");
@@ -31,7 +34,20 @@ namespace ArcdpsLogManager.Sections
 					layout.AddRow(new TextArea {Text = $"{logData.ParsingException}", ReadOnly = true});
 				}
 
+				var browserButton = new Button {Text = "Open in Scratch EVTC Browser"};
                 layout.EndVertical();
+                layout.BeginVertical();
+				layout.AddSeparateRow(browserButton);
+				layout.AddRow(null);
+
+                layout.EndVertical();
+
+                browserButton.Click += (sender, args) =>
+                {
+	                var browserForm = new BrowserForm();
+	                browserForm.SelectLog(logData.FileInfo.FullName);
+	                browserForm.Show();
+                };
 
 				Content = layout;
 			}
