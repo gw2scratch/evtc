@@ -417,14 +417,22 @@ namespace ArcdpsLogManager
 				AppDataDirectoryName);
 
 			var cacheFilePath = Path.Combine(directory, CacheFilename);
+			var tmpFilePath = cacheFilePath + ".tmp";
 
 			if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
 
-			using (var writer = new StreamWriter(cacheFilePath))
+			using (var writer = new StreamWriter(tmpFilePath))
 			{
 				var serializer = new JsonSerializer();
 				serializer.Serialize(writer, cache);
 			}
+
+			if (File.Exists(cacheFilePath))
+			{
+				File.Delete(cacheFilePath);
+			}
+
+			File.Move(tmpFilePath, cacheFilePath);
 		}
 
 		public async Task<Dictionary<string, LogData>> DeserializeLogCache()

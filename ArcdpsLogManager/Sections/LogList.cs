@@ -15,17 +15,19 @@ namespace ArcdpsLogManager.Sections
 		private readonly ImageProvider imageProvider;
 		private readonly GridView<LogData> logGridView;
 
-        private const int PlayerIconSize = 20;
-        private const int PlayerIconSpacing = 5;
+		private const int PlayerIconSize = 20;
+		private const int PlayerIconSpacing = 5;
 
-		private ICollection<LogData> dataStore;
+		private GridViewSorter<LogData> sorter;
+		private FilterCollection<LogData> dataStore;
 
-		public ICollection<LogData> DataStore
+		public FilterCollection<LogData> DataStore
 		{
 			get => dataStore;
 			set
 			{
 				dataStore = value;
+				sorter.DataStore = dataStore;
 				logGridView.DataStore = dataStore;
 			}
 		}
@@ -93,7 +95,7 @@ namespace ArcdpsLogManager.Sections
 				}
 			});
 
-			gridView.Columns.Add(new GridColumn()
+			var dateColumn = new GridColumn()
 			{
 				HeaderText = "Date",
 				DataCell = new TextBoxCell
@@ -108,9 +110,10 @@ namespace ArcdpsLogManager.Sections
 						return x.EncounterStartTime.ToLocalTime().DateTime.ToString(CultureInfo.CurrentCulture);
 					})
 				}
-			});
+			};
+			gridView.Columns.Add(dateColumn);
 
-			gridView.Columns.Add(new GridColumn()
+			var durationColumn = new GridColumn()
 			{
 				HeaderText = "Duration",
 				DataCell = new TextBoxCell
@@ -121,7 +124,8 @@ namespace ArcdpsLogManager.Sections
 						return $"{(int)seconds / 60:0}m {seconds % 60:00.0}s";
 					})
 				}
-			});
+			};
+			gridView.Columns.Add(durationColumn);
 
 			var compositionCell = new DrawableCell();
 			compositionCell.Paint += (sender, args) =>
@@ -130,7 +134,8 @@ namespace ArcdpsLogManager.Sections
 				if (log.ParsingStatus != ParsingStatus.Parsed) return;
 
 
-				var players = log.Players.OrderBy(player => player.Profession).ThenBy(player => player.EliteSpecialization).ToArray();
+				var players = log.Players.OrderBy(player => player.Profession)
+					.ThenBy(player => player.EliteSpecialization).ToArray();
 				var origin = args.ClipRectangle.Location;
 				for (int i = 0; i < players.Length; i++)
 				{
@@ -149,7 +154,7 @@ namespace ArcdpsLogManager.Sections
 
 			gridView.Columns.Add(compositionColumn);
 
-            compositionColumn.Visible = Settings.ShowSquadCompositions;
+			compositionColumn.Visible = Settings.ShowSquadCompositions;
 			Settings.ShowSquadCompositionsChanged += (sender, args) =>
 			{
 				compositionColumn.Visible = Settings.ShowSquadCompositions;
@@ -158,6 +163,25 @@ namespace ArcdpsLogManager.Sections
 			gridView.RowHeight = Math.Max(gridView.RowHeight, PlayerIconSize + 2);
 
 			gridView.SelectionChanged += (sender, args) => { detailPanel.LogData = gridView.SelectedItem; };
+
+			sorter = new GridViewSorter<LogData>(gridView, DataStore);
+			sorter.EnableSorting(new Dictionary<GridColumn, Comparison<LogData>>()
+			{
+				{
+					compositionColumn, (x, y) =>
+					{
+						int xPlayerCount = x.Players?.Count() ?? -1;
+						int yPlayerCount = y.Players?.Count() ?? -1;
+						return xPlayerCount.CompareTo(yPlayerCount);
+					}
+				},
+				{
+					durationColumn, (x, y) => x.EncounterDuration.CompareTo(y.EncounterDuration)
+				},
+				{
+					dateColumn, (x, y) => x.EncounterStartTime.CompareTo(y.EncounterStartTime)
+				}
+			});
 
 			return gridView;
 		}

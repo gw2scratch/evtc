@@ -125,7 +125,7 @@ namespace ArcdpsLogManager.Controls
 			{
 				var form = new Form
 				{
-					Content = new LogList(ImageProvider) { DataStore = PlayerData.Logs.ToArray()},
+					Content = new LogList(ImageProvider) { DataStore = new FilterCollection<LogData>(PlayerData.Logs)},
 					Width = 900,
 					Height = 700,
 					Title = $"arcdps Log Manager: logs with {PlayerData.AccountName.Substring(1)}"

@@ -71,6 +71,7 @@
     <Compile Include="Controls\GroupCompositionControl.cs" />
     <Compile Include="Controls\LogDetailPanel.cs" />
     <Compile Include="Controls\PlayerDetailPanel.cs" />
+    <Compile Include="GridViewSorter.cs" />
     <Compile Include="ImageProvider.cs" />
     <Compile Include="Logs\LogUpload.cs" />
     <Compile Include="Logs\LogFinder.cs" />
