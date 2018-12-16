@@ -84,9 +84,23 @@ namespace ArcdpsLogManager.Controls
             parseStatusLabel.Text = logData.ParsingStatus.ToString();
 
             groupComposition.Players = logData.Players;
-            dpsReportUploadButton.Text = logData.DpsReportEIUpload.UploadState == UploadState.Uploaded
-                ? "Reupload to dps.report (EI)"
-                : "Upload to dps.report (EI)";
+            string uploadButtonText;
+            switch (logData.DpsReportEIUpload.UploadState)
+            {
+	            case UploadState.NotUploaded:
+		            uploadButtonText = "Upload to dps.report (EI)";
+		            break;
+	            case UploadState.Uploading:
+		            uploadButtonText = "Uploading...";
+		            break;
+	            case UploadState.Uploaded:
+		            uploadButtonText = "Reupload to dps.report (EI)";
+		            break;
+	            default:
+		            throw new ArgumentOutOfRangeException();
+            }
+
+            dpsReportUploadButton.Text = uploadButtonText;
             dpsReportUploadButton.Enabled = logData.DpsReportEIUpload.UploadState != UploadState.Uploading;
             dpsReportTextBox.Text = logData.DpsReportEIUpload.Url ?? "";
             dpsReportOpenButton.Enabled = logData.DpsReportEIUpload.Url != null;
