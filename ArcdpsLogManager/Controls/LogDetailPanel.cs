@@ -72,6 +72,11 @@ namespace ArcdpsLogManager.Controls
 
 				resultLabel.Text = $"{result} in {duration}";
 
+                parseTimeLabel.Text = $"{logData.ParseMilliseconds} ms";
+                parseStatusLabel.Text = logData.ParsingStatus.ToString();
+
+                groupComposition.Players = logData.Players;
+
 				UpdateUploadStatus();
 
 				ResumeLayout();
@@ -80,10 +85,6 @@ namespace ArcdpsLogManager.Controls
 
 		private void UpdateUploadStatus()
 		{
-            parseTimeLabel.Text = $"{logData.ParseMilliseconds} ms";
-            parseStatusLabel.Text = logData.ParsingStatus.ToString();
-
-            groupComposition.Players = logData.Players;
             string uploadButtonText;
             switch (logData.DpsReportEIUpload.UploadState)
             {
