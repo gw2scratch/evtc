@@ -24,6 +24,7 @@ namespace ArcdpsLogManager
 	{
 		private const string AppDataDirectoryName = "ArcdpsLogManager";
 		private const string CacheFilename = "LogDataCache.json";
+		private static readonly DateTime GuildWars2ReleaseDate = new DateTime(2012, 8, 28);
 
 		private readonly Cooldown gridRefreshCooldown = new Cooldown(TimeSpan.FromSeconds(2));
 
@@ -40,7 +41,7 @@ namespace ArcdpsLogManager
 
 		private readonly GridView<PlayerData> playerGridView;
 		private readonly DropDown encounterFilterDropDown;
-        private readonly LogList mainLogList;
+		private readonly LogList mainLogList;
 
 		private Dictionary<string, LogData> cache;
 
@@ -52,7 +53,7 @@ namespace ArcdpsLogManager
 		private bool ShowFailedLogs { get; set; } = true;
 		private bool ShowUnknownLogs { get; set; } = true;
 
-		private DateTime? MinDateTimeFilter { get; set; } = DateTime.MinValue;
+		private DateTime? MinDateTimeFilter { get; set; } = GuildWars2ReleaseDate;
 		private DateTime? MaxDateTimeFilter { get; set; } = DateTime.Now.Date.AddDays(1);
 
 		private CancellationTokenSource logLoadTaskTokenSource = null;
@@ -135,6 +136,20 @@ namespace ArcdpsLogManager
 			var endDateTimePicker = new DateTimePicker {Mode = DateTimePickerMode.DateTime};
 			endDateTimePicker.ValueBinding.Bind(this, x => x.MaxDateTimeFilter);
 
+			var lastDayButton = new Button {Text = "Last day"};
+			lastDayButton.Click += (sender, args) =>
+			{
+				startDateTimePicker.Value = DateTime.Now - TimeSpan.FromDays(1);
+				endDateTimePicker.Value = DateTime.Now;
+			};
+
+			var allTimeButton = new Button {Text = "All time"};
+			allTimeButton.Click += (sender, args) =>
+			{
+				startDateTimePicker.Value = GuildWars2ReleaseDate;
+				endDateTimePicker.Value = DateTime.Now;
+			};
+
 			var applyFilterButton = new Button {Text = "Apply"};
 			applyFilterButton.Click += (sender, args) => { logsFiltered.Refresh(); };
 
@@ -157,6 +172,8 @@ namespace ArcdpsLogManager
 			formLayout.Add(startDateTimePicker);
 			formLayout.Add(new Label {Text = "and", VerticalAlignment = VerticalAlignment.Center});
 			formLayout.Add(endDateTimePicker);
+			formLayout.Add(lastDayButton);
+			formLayout.Add(allTimeButton);
 			formLayout.EndHorizontal();
 			formLayout.EndVertical();
 			formLayout.EndVertical();
@@ -182,7 +199,8 @@ namespace ArcdpsLogManager
 			var playerDetailPanel = ConstructPlayerDetailPanel();
 			playerGridView = ConstructPlayerGridView(playerDetailPanel);
 
-			playerDataFiltered = new SelectableFilterCollection<PlayerData>(playerGridView, playerData) {Filter = FilterPlayerData};
+			playerDataFiltered = new SelectableFilterCollection<PlayerData>(playerGridView, playerData)
+				{Filter = FilterPlayerData};
 			playerGridView.DataStore = playerDataFiltered;
 
 			var playerFilterBox = new TextBox { };
@@ -225,7 +243,7 @@ namespace ArcdpsLogManager
 
 			if (string.IsNullOrEmpty(Settings.LogRootPath))
 			{
-                new LogSettingsDialog(this).ShowModal(this);
+				new LogSettingsDialog(this).ShowModal(this);
 			}
 			else
 			{
@@ -584,10 +602,12 @@ namespace ArcdpsLogManager
 				}
 
 				playerData.Clear();
-				foreach (var data in logsByAccountName.Select(x => new PlayerData(x.Key, x.Value)).OrderByDescending(x => x.Logs.Count))
+				foreach (var data in logsByAccountName.Select(x => new PlayerData(x.Key, x.Value))
+					.OrderByDescending(x => x.Logs.Count))
 				{
 					playerData.Add(data);
 				}
+
 				playerDataFiltered.Refresh();
 			};
 
