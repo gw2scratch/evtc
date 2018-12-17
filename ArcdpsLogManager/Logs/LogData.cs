@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using ArcdpsLogManager.Uploaders;
 using ScratchEVTCParser;
-using ScratchEVTCParser.Model.Agents;
 using ScratchEVTCParser.Model.Encounters;
 
 namespace ArcdpsLogManager.Logs
@@ -71,9 +73,9 @@ namespace ArcdpsLogManager.Logs
 
 				EncounterName = calculator.GetEncounterName(log);
 				EncounterResult = calculator.GetResult(log);
-                Players = calculator.GetPlayers(log).Select(x =>
-                    new LogPlayer(x.Name, x.AccountName, x.Subgroup, x.Profession, x.EliteSpecialization)
-                ).ToArray();
+				Players = calculator.GetPlayers(log).Select(x =>
+					new LogPlayer(x.Name, x.AccountName, x.Subgroup, x.Profession, x.EliteSpecialization)
+				).ToArray();
 
 				EncounterStartTime = calculator.GetEncounterStartTime(log);
 				EncounterDuration = calculator.GetEncounterDuration(log);
@@ -89,6 +91,12 @@ namespace ArcdpsLogManager.Logs
 				ParsingStatus = ParsingStatus.Failed;
 				ParsingException = e;
 			}
+		}
+
+		public Task UploadDpsReportEliteInsights(IUploader uploader, CancellationToken cancellationToken,
+			bool reupload = false)
+		{
+			return DpsReportEIUpload.Upload(this, uploader, cancellationToken, reupload);
 		}
 	}
 }

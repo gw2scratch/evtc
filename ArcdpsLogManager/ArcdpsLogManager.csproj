@@ -70,6 +70,7 @@
   <ItemGroup>
     <Compile Include="Controls\GroupCompositionControl.cs" />
     <Compile Include="Controls\LogDetailPanel.cs" />
+    <Compile Include="Controls\MultipleLogPanel.cs" />
     <Compile Include="Controls\PlayerDetailPanel.cs" />
     <Compile Include="GridViewSorter.cs" />
     <Compile Include="ImageProvider.cs" />

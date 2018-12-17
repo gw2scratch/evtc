@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using System.Threading;
 using System.Threading.Tasks;
 using ArcdpsLogManager.Logs;
 using ArcdpsLogManager.Sections;
@@ -171,7 +172,7 @@ namespace ArcdpsLogManager.Controls
 
 			dpsReportUploadButton.Click += (sender, args) =>
 			{
-				Task.Run(() => UploadDpsReportEliteInsights(logData));
+				Task.Run(() => UploadDpsReportEliteInsights(logData, CancellationToken.None));
 			};
 			dpsReportOpenButton.Click += (sender, args) =>
 			{
@@ -181,7 +182,7 @@ namespace ArcdpsLogManager.Controls
 			debugButton.Click += (sender, args) =>
 			{
 				var debugData = new DebugData {LogData = LogData};
-				var dialog = new Form {Content = debugData, Width = 400, Title = "Debug data"};
+				var dialog = new Form {Content = debugData, Width = 500, Title = "Debug data"};
 				dialog.Show();
 			};
 
@@ -193,17 +194,15 @@ namespace ArcdpsLogManager.Controls
 			};
 		}
 
-		private async void UploadDpsReportEliteInsights(LogData logData)
+		private async void UploadDpsReportEliteInsights(LogData logData, CancellationToken cancellationToken)
 		{
 			// Keep in mind that a different log could be shown at this point.
 			// For this reason we can only recheck the upload status instead of changing it directly.
 
-			logData.DpsReportEIUpload.UploadState = UploadState.Uploading;
+			var task = logData.UploadDpsReportEliteInsights(DpsReportUploader, cancellationToken, true); // Reupload if needed
 			Application.Instance.Invoke(UpdateUploadStatus);
 
-			var url = await DpsReportUploader.UploadLogAsync(LogData);
-			logData.DpsReportEIUpload.Url = url;
-			logData.DpsReportEIUpload.UploadState = UploadState.Uploaded;
+			await task;
 			Application.Instance.Invoke(UpdateUploadStatus);
 		}
 	}

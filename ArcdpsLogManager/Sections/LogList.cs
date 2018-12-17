@@ -36,13 +36,15 @@ namespace ArcdpsLogManager.Sections
 		{
 			this.imageProvider = imageProvider;
 			var logDetailPanel = ConstructLogDetailPanel();
-			logGridView = ConstructLogGridView(logDetailPanel);
+			var multipleLogPanel = ConstructMultipleLogPanel();
+			logGridView = ConstructLogGridView(logDetailPanel, multipleLogPanel);
 
 			var logLayout = new DynamicLayout();
 			logLayout.BeginVertical();
 			logLayout.BeginHorizontal();
 			logLayout.Add(logGridView, true);
 			logLayout.Add(logDetailPanel);
+			logLayout.Add(multipleLogPanel);
 			logLayout.EndHorizontal();
 			logLayout.EndVertical();
 
@@ -64,9 +66,18 @@ namespace ArcdpsLogManager.Sections
 			return new LogDetailPanel(imageProvider);
 		}
 
-		public GridView<LogData> ConstructLogGridView(LogDetailPanel detailPanel)
+		public MultipleLogPanel ConstructMultipleLogPanel()
 		{
-			var gridView = new GridView<LogData>();
+			return new MultipleLogPanel();
+		}
+
+		public GridView<LogData> ConstructLogGridView(LogDetailPanel detailPanel, MultipleLogPanel multipleLogPanel)
+		{
+			var gridView = new GridView<LogData>
+			{
+				AllowMultipleSelection = true
+			};
+
 			gridView.Columns.Add(new GridColumn()
 			{
 				HeaderText = "Encounter",
@@ -160,9 +171,14 @@ namespace ArcdpsLogManager.Sections
 				compositionColumn.Visible = Settings.ShowSquadCompositions;
 			};
 
+			// Some extra height is needed on the WPF platform to properly fit the icons
 			gridView.RowHeight = Math.Max(gridView.RowHeight, PlayerIconSize + 2);
 
-			gridView.SelectionChanged += (sender, args) => { detailPanel.LogData = gridView.SelectedItem; };
+			gridView.SelectionChanged += (sender, args) =>
+			{
+				detailPanel.LogData = gridView.SelectedItem;
+				multipleLogPanel.LogData = gridView.SelectedItems;
+			};
 
 			sorter = new GridViewSorter<LogData>(gridView, DataStore);
 			sorter.EnableSorting(new Dictionary<GridColumn, Comparison<LogData>>()
