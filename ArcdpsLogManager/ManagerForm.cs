@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -227,6 +227,11 @@ namespace ArcdpsLogManager
 			playerLayout.EndHorizontal();
 			playerLayout.EndVertical();
 			tabs.Pages.Add(new TabPage {Text = "Players", Content = playerLayout});
+
+			// Statistics tab
+			var statistics = new Statistics(mainLogList, ImageProvider);
+            tabs.Pages.Add(new TabPage {Text = "Statistics", Content = statistics});
+
 
 			formLayout.Add(tabs, true);
 
