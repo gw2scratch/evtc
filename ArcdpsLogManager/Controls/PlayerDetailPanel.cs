@@ -27,7 +27,7 @@ namespace ArcdpsLogManager.Controls
 			{
 				if (value == null)
 				{
-                    value = new PlayerData(NullAccountName, new LogData[0]);
+					value = new PlayerData(NullAccountName, new LogData[0]);
 				}
 
 				if (Equals(value, playerData)) return;
@@ -64,7 +64,8 @@ namespace ArcdpsLogManager.Controls
 				if (args.PropertyName != nameof(PlayerData)) return;
 				if (PlayerData?.Logs == null) return;
 
-				logCountLabel.Text = $"Appears in {PlayerData.Logs.Count} {(PlayerData.Logs.Count == 1 ? "log" : "logs")}";
+				logCountLabel.Text =
+					$"Appears in {PlayerData.Logs.Count} {(PlayerData.Logs.Count == 1 ? "log" : "logs")}";
 			};
 
 			var knownCharacters = new DynamicLayout();
@@ -90,17 +91,38 @@ namespace ArcdpsLogManager.Controls
 
 				knownCharacters.Clear();
 				knownCharacters.BeginHorizontal();
-				knownCharacters.BeginVertical(spacing: new Size(5, 5));
+				knownCharacters.BeginVertical(spacing: new Size(5, 2));
 
 				knownCharacters.AddRow("", "Character name", "Log count", null);
 				foreach (var character in characters.OrderByDescending(x => x.Value.count))
 				{
-					knownCharacters.AddRow(
-						ImageProvider.GetTinyProfessionIcon(character.Value.profession),
-						character.Key,
-						$"{character.Value.count}",
-						null
-					);
+					var name = character.Key;
+					var showLogsButton = new LinkButton {Text = "Logs"};
+					showLogsButton.Click += (o, eventArgs) =>
+					{
+						var characterLogs = PlayerData.Logs.Where(log => log.Players.Any(x => x.Name == name));
+						var form = new Form
+						{
+							Content = new LogList(ImageProvider)
+								{DataStore = new FilterCollection<LogData>(characterLogs)},
+							Width = 900,
+							Height = 700,
+							Title = $"arcdps Log Manager: logs with character {name}"
+						};
+						form.Show();
+					};
+
+					knownCharacters.BeginHorizontal();
+					knownCharacters.Add(ImageProvider.GetTinyProfessionIcon(character.Value.profession));
+					knownCharacters.Add(new Label {Text = name, VerticalAlignment = VerticalAlignment.Center});
+					knownCharacters.Add(new Label
+					{
+						Text = $"{character.Value.count}",
+						VerticalAlignment = VerticalAlignment.Center
+					});
+					knownCharacters.Add(showLogsButton);
+					knownCharacters.Add(null);
+					knownCharacters.EndHorizontal();
 				}
 
 				knownCharacters.AddRow(null);
@@ -125,7 +147,7 @@ namespace ArcdpsLogManager.Controls
 			{
 				var form = new Form
 				{
-					Content = new LogList(ImageProvider) { DataStore = new FilterCollection<LogData>(PlayerData.Logs)},
+					Content = new LogList(ImageProvider) {DataStore = new FilterCollection<LogData>(PlayerData.Logs)},
 					Width = 900,
 					Height = 700,
 					Title = $"arcdps Log Manager: logs with {PlayerData.AccountName.Substring(1)}"
