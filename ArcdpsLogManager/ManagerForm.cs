@@ -232,8 +232,19 @@ namespace ArcdpsLogManager
 			var statistics = new Statistics(mainLogList, ImageProvider);
             tabs.Pages.Add(new TabPage {Text = "Statistics", Content = statistics});
 
+            // Game data collecting tab
+            var gameDataCollecting = new GameDataCollecting(mainLogList);
+            var gameDataPage = new TabPage
+            {
+	            Text = "Game data", Content = gameDataCollecting, Visible = Settings.ShowDebugData
+            };
+            Settings.ShowDebugDataChanged += (sender, args) => gameDataPage.Visible = Settings.ShowDebugData;
+            tabs.Pages.Add(gameDataPage);
 
 			formLayout.Add(tabs, true);
+
+			// This is needed to avoid a Gtk3 platform issue where the tab is changed to the game data one.
+			Shown += (sender, args) => tabs.SelectedIndex = 0;
 
 			formLayout.EndVertical();
 
