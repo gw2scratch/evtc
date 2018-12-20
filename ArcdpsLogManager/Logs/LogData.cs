@@ -18,6 +18,10 @@ namespace ArcdpsLogManager.Logs
 		public IEnumerable<LogPlayer> Players { get; set; }
 		public EncounterResult EncounterResult { get; set; } = EncounterResult.Unknown;
 		public string EncounterName { get; set; } = "Unknown";
+		/// <summary>
+		/// Time when the encounter started.
+		/// Is only an estimate if <see cref="ParsingStatus"/> is not <see cref="Logs.ParsingStatus.Parsed"/>.
+		/// </summary>
 		public DateTimeOffset EncounterStartTime { get; set; }
 		public TimeSpan EncounterDuration { get; set; }
 
@@ -43,6 +47,7 @@ namespace ArcdpsLogManager.Logs
 		public LogData(FileInfo fileInfo)
 		{
 			FileInfo = fileInfo;
+			EncounterStartTime = fileInfo.CreationTime;
 		}
 
 		internal LogData(FileInfo fileInfo, IEnumerable<LogPlayer> players, string encounterName,

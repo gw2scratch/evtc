@@ -118,7 +118,9 @@ namespace ArcdpsLogManager.Sections
 							return "Unknown";
 						}
 
-						return x.EncounterStartTime.ToLocalTime().DateTime.ToString(CultureInfo.CurrentCulture);
+						string prefix = x.ParsingStatus != ParsingStatus.Parsed ? "~" : "";
+						string encounterTime = x.EncounterStartTime.ToLocalTime().DateTime.ToString(CultureInfo.CurrentCulture);
+						return $"{prefix}{encounterTime}";
 					})
 				}
 			};

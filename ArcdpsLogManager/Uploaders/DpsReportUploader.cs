@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 
 namespace ArcdpsLogManager.Uploaders
 {
-	public class DpsReportUploader : IUploader
+	public class DpsReportUploader : IUploader, IDisposable
 	{
 		private class DpsReportResponse
 		{
@@ -17,7 +17,6 @@ namespace ArcdpsLogManager.Uploaders
 		}
 
 		private const string UploadEndpoint = "https://dps.report/uploadContent";
-
 
 		private readonly HttpClient httpClient = new HttpClient();
 
@@ -42,6 +41,11 @@ namespace ArcdpsLogManager.Uploaders
 		public Task<string> UploadLogAsync(LogData log)
 		{
 			return UploadLogAsync(log, CancellationToken.None);
+		}
+
+		public void Dispose()
+		{
+			httpClient?.Dispose();
 		}
 	}
 }

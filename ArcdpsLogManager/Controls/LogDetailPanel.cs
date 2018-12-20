@@ -1,5 +1,4 @@
 using System;
-using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using ArcdpsLogManager.Logs;
@@ -18,17 +17,15 @@ namespace ArcdpsLogManager.Controls
 
 		private LogData logData;
 
-		private readonly Label nameLabel = new Label() { Font = Fonts.Sans(16, FontStyle.Bold) };
-		private readonly Label resultLabel = new Label() { Font = Fonts.Sans(12) };
-		private readonly Label timeLabel = new Label();
-		private readonly Label durationLabel = new Label();
+		private readonly Label nameLabel = new Label {Font = Fonts.Sans(16, FontStyle.Bold)};
+		private readonly Label resultLabel = new Label {Font = Fonts.Sans(12)};
+		private readonly Label filenameLabel = new Label {TextAlignment = TextAlignment.Right};
 		private readonly GroupCompositionControl groupComposition;
 		private readonly Label parseTimeLabel = new Label();
 		private readonly Label parseStatusLabel = new Label();
 		private readonly Button dpsReportUploadButton;
 		private readonly TextBox dpsReportTextBox;
 		private readonly Button dpsReportOpenButton;
-
 
 		public LogData LogData
 		{
@@ -64,19 +61,17 @@ namespace ArcdpsLogManager.Controls
 						throw new ArgumentOutOfRangeException();
 				}
 
-				timeLabel.Text = logData.EncounterStartTime.ToLocalTime().DateTime.ToString(CultureInfo.CurrentCulture);
-
 				double seconds = logData.EncounterDuration.TotalSeconds;
-				string duration = $"{(int)seconds / 60:0}m {seconds % 60:0.0}s";
+				string duration = $"{(int) seconds / 60:0}m {seconds % 60:0.0}s";
 
-				durationLabel.Text = duration;
+				filenameLabel.Text = logData.FileInfo.Name;
 
 				resultLabel.Text = $"{result} in {duration}";
 
-                parseTimeLabel.Text = $"{logData.ParseMilliseconds} ms";
-                parseStatusLabel.Text = logData.ParsingStatus.ToString();
+				parseTimeLabel.Text = $"{logData.ParseMilliseconds} ms";
+				parseStatusLabel.Text = logData.ParsingStatus.ToString();
 
-                groupComposition.Players = logData.Players;
+				groupComposition.Players = logData.Players;
 
 				UpdateUploadStatus();
 
@@ -86,88 +81,114 @@ namespace ArcdpsLogManager.Controls
 
 		private void UpdateUploadStatus()
 		{
-            string uploadButtonText;
-            switch (logData.DpsReportEIUpload.UploadState)
-            {
-	            case UploadState.NotUploaded:
-		            uploadButtonText = "Upload to dps.report (EI)";
-		            break;
-	            case UploadState.Uploading:
-		            uploadButtonText = "Uploading...";
-		            break;
-	            case UploadState.Uploaded:
-		            uploadButtonText = "Reupload to dps.report (EI)";
-		            break;
-	            default:
-		            throw new ArgumentOutOfRangeException();
-            }
+			string uploadButtonText;
+			switch (logData.DpsReportEIUpload.UploadState)
+			{
+				case UploadState.NotUploaded:
+					uploadButtonText = "Upload to dps.report (EI)";
+					break;
+				case UploadState.Uploading:
+					uploadButtonText = "Uploading...";
+					break;
+				case UploadState.Uploaded:
+					uploadButtonText = "Reupload to dps.report (EI)";
+					break;
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
 
-            dpsReportUploadButton.Text = uploadButtonText;
-            dpsReportUploadButton.Enabled = logData.DpsReportEIUpload.UploadState != UploadState.Uploading;
-            dpsReportTextBox.Text = logData.DpsReportEIUpload.Url ?? "";
-            dpsReportOpenButton.Enabled = logData.DpsReportEIUpload.Url != null;
+			dpsReportUploadButton.Text = uploadButtonText;
+			dpsReportUploadButton.Enabled = logData.DpsReportEIUpload.UploadState != UploadState.Uploading;
+			dpsReportTextBox.Text = logData.DpsReportEIUpload.Url ?? "";
+			dpsReportOpenButton.Enabled = logData.DpsReportEIUpload.Url != null;
 		}
 
 		public LogDetailPanel(ImageProvider imageProvider)
 		{
 			ImageProvider = imageProvider;
 
-			Padding = new Padding(10);
+			Padding = new Padding(10, 10, 10, 2);
 			Width = 300;
 			Visible = false;
 
 			groupComposition = new GroupCompositionControl(imageProvider);
 
-			BeginVertical(spacing: new Size(0, 30));
-
-			BeginVertical();
-			Add(nameLabel);
-			Add(resultLabel);
-			EndVertical();
-			BeginVertical(spacing: new Size(5, 5));
-			AddRow("Encounter start", timeLabel);
-			AddRow("Encounter duration", durationLabel);
-			AddRow();
-			EndVertical();
-			BeginVertical();
-			BeginHorizontal(true);
-			Add(groupComposition);
-			EndHorizontal();
-
-			var debugSection = BeginVertical();
+			DynamicTable debugSection;
 			var debugButton = new Button {Text = "Debug data"};
-			BeginHorizontal();
-			BeginVertical(xscale: true, spacing: new Size(5, 0));
-			AddRow("Time spent parsing", parseTimeLabel);
-			AddRow("Parsing status", parseStatusLabel);
-			EndVertical();
-			BeginVertical();
-			AddRow(debugButton);
-			AddRow(null);
-			EndVertical();
-			EndHorizontal();
-			EndVertical();
 
-			dpsReportUploadButton = new Button();
-			dpsReportTextBox = new TextBox {ReadOnly = true};
-			dpsReportOpenButton = new Button {Text = "Open"};
+			BeginVertical(spacing: new Size(0, 30), yscale: true);
+			{
+				BeginVertical();
+				{
+					Add(nameLabel);
+					Add(resultLabel);
+				}
+				EndVertical();
+				BeginVertical();
+				{
+					BeginHorizontal(true);
+					{
+						Add(new Scrollable {Content = groupComposition, Border = BorderType.None});
+					}
+					EndHorizontal();
 
-			BeginVertical(spacing: new Size(5, 5));
-			BeginHorizontal();
-			Add(dpsReportUploadButton);
-			//Add(new Button {Text = "Upload to gw2raidar", Enabled = false}); // TODO: Implement
-			EndHorizontal();
-			BeginHorizontal();
-			BeginVertical();
-			BeginHorizontal();
-			Add(dpsReportTextBox, true);
-			Add(dpsReportOpenButton);
-			EndHorizontal();
-			EndVertical();
-			//AddSeparateRow(new TextBox {Text = "", ReadOnly = true, Width = 80}, new Button {Text = "Open"});
-			EndHorizontal();
-			EndVertical();
+					debugSection = BeginVertical();
+					{
+						BeginHorizontal();
+						{
+							BeginVertical(xscale: true, spacing: new Size(5, 0));
+							{
+								AddRow("Time spent parsing", parseTimeLabel);
+								AddRow("Parsing status", parseStatusLabel);
+							}
+							EndVertical();
+							BeginVertical();
+							{
+								AddRow(debugButton);
+								AddRow(null);
+							}
+							EndVertical();
+						}
+						EndHorizontal();
+					}
+					EndVertical();
 
+					dpsReportUploadButton = new Button();
+					dpsReportTextBox = new TextBox {ReadOnly = true};
+					dpsReportOpenButton = new Button {Text = "Open"};
+
+					BeginVertical(spacing: new Size(0, 5));
+					{
+						BeginVertical(spacing: new Size(5, 5));
+						{
+							BeginHorizontal();
+							{
+								Add(dpsReportUploadButton);
+							}
+							EndHorizontal();
+						}
+						EndVertical();
+						BeginVertical(spacing: new Size(5, 5));
+						{
+							BeginHorizontal();
+							{
+								Add(dpsReportTextBox, true);
+								Add(dpsReportOpenButton);
+							}
+							EndHorizontal();
+						}
+						EndVertical();
+					}
+					EndVertical();
+				}
+				EndVertical();
+			}
+			EndVertical();
+			BeginVertical(spacing: new Size(10, 0));
+			{
+				Add(null, true);
+				Add(filenameLabel);
+			}
 			EndVertical();
 
 			dpsReportUploadButton.Click += (sender, args) =>
@@ -199,7 +220,8 @@ namespace ArcdpsLogManager.Controls
 			// Keep in mind that a different log could be shown at this point.
 			// For this reason we can only recheck the upload status instead of changing it directly.
 
-			var task = logData.UploadDpsReportEliteInsights(DpsReportUploader, cancellationToken, true); // Reupload if needed
+			var task = logData.UploadDpsReportEliteInsights(DpsReportUploader, cancellationToken,
+				true); // Reupload if needed
 			Application.Instance.Invoke(UpdateUploadStatus);
 
 			await task;

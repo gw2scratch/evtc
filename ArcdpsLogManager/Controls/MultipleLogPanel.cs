@@ -64,7 +64,7 @@ namespace ArcdpsLogManager.Controls
 
 			dpsReportUploadButton.Enabled = currentTaskCompleted;
 			dpsReportCancelButton.Enabled = !currentTaskCompleted && !cancelRequested;
-			dpsReportUploadButton.Text = $"Upload selected logs ({notUploadedCount})";
+			dpsReportUploadButton.Text = $"Upload missing logs ({notUploadedCount})";
 			dpsReportNotUploadedLabel.Text = notUploadedCount.ToString();
 			dpsReportUploadingLabel.Text = uploadingCount.ToString();
 			dpsReportUploadedLabel.Text = uploadedCount.ToString();

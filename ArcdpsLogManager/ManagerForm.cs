@@ -271,7 +271,7 @@ namespace ArcdpsLogManager
 				deserializeTask = DeserializeLogCache();
 			}
 
-			await FindLogs(cancellationToken);
+			await FindLogs(logList, cancellationToken);
 
 			Application.Instance.Invoke(() => { Status = "Loading log cache..."; });
 			cancellationToken.ThrowIfCancellationRequested();
@@ -311,42 +311,36 @@ namespace ArcdpsLogManager
 			Application.Instance.AsyncInvoke(() => { Status = $"{logs.Count} logs found."; });
 		}
 
-		public async Task FindLogs(CancellationToken cancellationToken)
+		public async Task FindLogs(LogList logList, CancellationToken cancellationToken)
 		{
 			try
 			{
-				// Invoking for every single added file is a lot of added overhead, instead add multiple files at a time.
-				const int flushAmount = 200;
-				List<LogData> foundLogs = new List<LogData>();
+				// Because GridView updates are costly, adding thousands of logs creates significant performance issues.
+				// For this reason we add to a new copy of the ObservableCollection and update the GridView once in
+				// a few seconds. This is not the cleanest solution, but works for now. None of the invokes can be async
+				// or things will break.
+				var refreshCooldown = new Cooldown(TimeSpan.FromSeconds(3));
+				refreshCooldown.Reset(DateTime.Now);
+
+				var newLogs = new ObservableCollection<LogData>(logs);
 
 				//foreach (var file in LogFinder.GetTesting())
 				foreach (var log in LogFinder.GetFromDirectory(Settings.LogRootPath))
 				{
-					foundLogs.Add(log);
+					newLogs.Add(log);
 
-					if (foundLogs.Count == flushAmount)
+					if (refreshCooldown.TryUse(DateTime.Now))
 					{
-						Application.Instance.Invoke(() =>
-						{
-							foreach (var flushedLog in foundLogs)
-							{
-								logs.Add(flushedLog);
-							}
-						});
-						foundLogs.Clear();
+						Application.Instance.Invoke(() => { RecreateLogCollections(newLogs, logList); });
+						// newLogs becomes logs, we recreate it now to avoid updating the GridView
+						newLogs = new ObservableCollection<LogData>(logs);
 					}
 
 					cancellationToken.ThrowIfCancellationRequested();
 				}
 
 				// Add the remaining logs
-				Application.Instance.Invoke(() =>
-				{
-					foreach (var flushedLog in foundLogs)
-					{
-						logs.Add(flushedLog);
-					}
-				});
+                Application.Instance.Invoke(() => { RecreateLogCollections(newLogs, logList); });
 			}
 			catch (Exception e) when (!(e is OperationCanceledException))
 			{
