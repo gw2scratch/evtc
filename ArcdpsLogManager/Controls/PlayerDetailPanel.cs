@@ -139,7 +139,7 @@ namespace ArcdpsLogManager.Controls
 			Add(logCountLabel);
 			EndVertical();
 			BeginVertical(yscale: true);
-			Add(knownCharacters);
+			Add(new Scrollable {Content = knownCharacters, Border = BorderType.None});
 			EndVertical();
 
 			var logListButton = new Button {Text = "Show logs with this player"};

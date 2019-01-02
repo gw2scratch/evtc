@@ -35,19 +35,16 @@ namespace ArcdpsLogManager
 		private StatisticsCalculator StatisticsCalculator { get; } = new StatisticsCalculator();
 
 		private ObservableCollection<LogData> logs = new ObservableCollection<LogData>();
-		private SelectableFilterCollection<LogData> logsFiltered;
-		private ObservableCollection<PlayerData> playerData = new ObservableCollection<PlayerData>();
-		private SelectableFilterCollection<PlayerData> playerDataFiltered;
+		private FilterCollection<LogData> logsFiltered;
 
-		private readonly GridView<PlayerData> playerGridView;
 		private readonly DropDown encounterFilterDropDown;
 		private readonly LogList mainLogList;
+		private readonly PlayerList playerList;
 
 		private Dictionary<string, LogData> cache;
 
 		private const string EncounterFilterAll = "All";
 		private string EncounterFilter { get; set; } = EncounterFilterAll;
-		private string PlayerFilter { get; set; } = "";
 
 		private bool ShowSuccessfulLogs { get; set; } = true;
 		private bool ShowFailedLogs { get; set; } = true;
@@ -180,7 +177,8 @@ namespace ArcdpsLogManager
 
 			formLayout.Add(null, true);
 
-			formLayout.BeginVertical(new Padding(5));
+			formLayout.BeginVertical(new Padding(5), new Size(0, 5));
+			formLayout.Add(advancedFiltersButton);
 			formLayout.Add(null, true);
 			formLayout.Add(applyFilterButton);
 			formLayout.EndVertical();
@@ -196,37 +194,9 @@ namespace ArcdpsLogManager
 			tabs.Pages.Add(new TabPage {Text = "Logs", Content = mainLogList});
 
 			// Player tab
-			var playerDetailPanel = ConstructPlayerDetailPanel();
-			playerGridView = ConstructPlayerGridView(playerDetailPanel);
 
-			playerDataFiltered = new SelectableFilterCollection<PlayerData>(playerGridView, playerData)
-				{Filter = FilterPlayerData};
-			playerGridView.DataStore = playerDataFiltered;
-
-			var playerFilterBox = new TextBox { };
-			playerFilterBox.TextBinding.Bind(this, x => x.PlayerFilter);
-			playerFilterBox.TextChanged += (sender, args) =>
-			{
-				playerGridView.UnselectAll();
-				playerDataFiltered.Refresh();
-			};
-
-			var playerLayout = new DynamicLayout();
-			playerLayout.BeginVertical(spacing: new Size(5, 5), padding: new Padding(5));
-			playerLayout.BeginHorizontal();
-			playerLayout.Add(new Label
-				{Text = "Filter by character or account name", VerticalAlignment = VerticalAlignment.Center});
-			playerLayout.Add(playerFilterBox);
-			playerLayout.Add(null);
-			playerLayout.EndHorizontal();
-			playerLayout.EndVertical();
-			playerLayout.BeginVertical();
-			playerLayout.BeginHorizontal();
-			playerLayout.Add(playerGridView, true);
-			playerLayout.Add(playerDetailPanel);
-			playerLayout.EndHorizontal();
-			playerLayout.EndVertical();
-			tabs.Pages.Add(new TabPage {Text = "Players", Content = playerLayout});
+            playerList = new PlayerList(ImageProvider);
+			tabs.Pages.Add(new TabPage {Text = "Players", Content = playerList});
 
 			// Statistics tab
 			var statistics = new Statistics(mainLogList, ImageProvider);
@@ -485,54 +455,6 @@ namespace ArcdpsLogManager
 			return new Dictionary<string, LogData>();
 		}
 
-		private PlayerDetailPanel ConstructPlayerDetailPanel()
-		{
-			return new PlayerDetailPanel(ImageProvider);
-		}
-
-		private GridView<PlayerData> ConstructPlayerGridView(PlayerDetailPanel playerDetailPanel)
-		{
-			var gridView = new GridView<PlayerData>();
-			gridView.Columns.Add(new GridColumn()
-			{
-				HeaderText = "Account name",
-				DataCell = new TextBoxCell
-					{Binding = new DelegateBinding<PlayerData, string>(x => x.AccountName.Substring(1))}
-			});
-			gridView.Columns.Add(new GridColumn()
-			{
-				HeaderText = "Log count",
-				DataCell = new TextBoxCell
-					{Binding = new DelegateBinding<PlayerData, string>(x => x.Logs.Count.ToString())}
-			});
-
-			gridView.SelectionChanged += (sender, args) =>
-			{
-				if (gridView.SelectedItem != null)
-				{
-					playerDetailPanel.PlayerData = gridView.SelectedItem;
-				}
-			};
-
-			return gridView;
-		}
-
-		private bool FilterPlayerData(PlayerData playerData)
-		{
-			if (string.IsNullOrWhiteSpace(PlayerFilter))
-			{
-				return true;
-			}
-
-			return playerData.AccountName.IndexOf(PlayerFilter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
-			       playerData.Logs.Any(log =>
-				       log.Players.Any(player =>
-					       player.AccountName == playerData.AccountName &&
-					       player.Name.IndexOf(PlayerFilter, StringComparison.CurrentCultureIgnoreCase) >= 0
-				       )
-			       );
-		}
-
 		private bool FilterLog(LogData log)
 		{
 			if (EncounterFilter != EncounterFilterAll)
@@ -591,7 +513,7 @@ namespace ArcdpsLogManager
 
 			logs.CollectionChanged += (sender, args) => { UpdateFilterDropdown(); };
 
-			logsFiltered = new SelectableFilterCollection<LogData>(playerGridView, logs);
+			logsFiltered = new FilterCollection<LogData>(logs);
 
 			logsFiltered.CollectionChanged += (sender, args) =>
 			{
@@ -611,14 +533,14 @@ namespace ArcdpsLogManager
 					}
 				}
 
-				playerData.Clear();
+				playerList.DataStore.Clear();
 				foreach (var data in logsByAccountName.Select(x => new PlayerData(x.Key, x.Value))
 					.OrderByDescending(x => x.Logs.Count))
 				{
-					playerData.Add(data);
+					playerList.DataStore.Add(data);
 				}
 
-				playerDataFiltered.Refresh();
+				playerList.Refresh();
 			};
 
 			logList.DataStore = logsFiltered;

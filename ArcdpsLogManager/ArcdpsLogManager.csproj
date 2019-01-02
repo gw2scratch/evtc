@@ -90,6 +90,7 @@
     <Compile Include="Sections\DebugData.cs" />
     <Compile Include="Sections\GameDataGathering.cs" />
     <Compile Include="Sections\LogList.cs" />
+    <Compile Include="Sections\PlayerList.cs" />
     <Compile Include="Sections\Statistics.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="SettingsDialog.cs" />
