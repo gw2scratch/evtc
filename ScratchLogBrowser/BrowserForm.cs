@@ -44,9 +44,6 @@ namespace ScratchLogBrowser
 		private readonly FilterCollection<Agent> agents = new FilterCollection<Agent>();
 		private readonly AgentControl agentControl;
 
-		// Statistics
-		private readonly JsonSerializationControl statisticsJsonControl;
-
 		// HTML
 		private readonly ButtonMenuItem saveHtmlMenuItem;
 		private readonly SaveFileDialog saveHtmlFileDialog;
@@ -152,10 +149,6 @@ namespace ScratchLogBrowser
 			processedTabControl.Pages.Add(new TabPage(eventsDetailLayout) {Text = "Events"});
 			processedTabControl.Pages.Add(new TabPage(agentSplitter) {Text = "Agents"});
 
-			var statisticsTabControl = new TabControl();
-			statisticsJsonControl = new JsonSerializationControl();
-			statisticsTabControl.Pages.Add(new TabPage(statisticsJsonControl) {Text = "General"});
-
 			var htmlLayout = new DynamicLayout();
 			htmlLayout.AddRow(webView);
 
@@ -164,7 +157,6 @@ namespace ScratchLogBrowser
 			mainTabControl.Pages.Add(new TabPage(parsedTabControl) {Text = "Parsed data", Padding = MainTabPadding});
 			mainTabControl.Pages.Add(new TabPage(processedTabControl)
 				{Text = "Processed data", Padding = MainTabPadding});
-			mainTabControl.Pages.Add(new TabPage(statisticsTabControl) {Text = "Statistics", Padding = MainTabPadding});
 			mainTabControl.Pages.Add(new TabPage(htmlLayout) {Text = "HTML", Padding = MainTabPadding});
 			mainTabControl.Pages.Add(new TabPage(parsedStateLabel) {Text = "Log", Padding = MainTabPadding});
 			mainTabControl.Pages.Add(new TabPage(apiDataSection) {Text = "Api data", Padding = MainTabPadding});
