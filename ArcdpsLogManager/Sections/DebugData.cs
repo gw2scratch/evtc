@@ -20,7 +20,7 @@ namespace ArcdpsLogManager.Sections
 
 				var browserButton = new Button {Text = "Open in Scratch EVTC Browser"};
 
-				layout.BeginVertical(new Padding(5), new Size(5, 5), yscale: true);
+				layout.BeginVertical(new Padding(5), new Size(5, 5));
 				{
 					layout.BeginHorizontal();
 					{
@@ -42,7 +42,7 @@ namespace ArcdpsLogManager.Sections
 					if (logData.ParsingStatus == ParsingStatus.Failed)
 					{
 						layout.EndVertical();
-						layout.BeginVertical();
+						layout.BeginVertical(new Padding(5), yscale: true);
 						layout.AddRow("Parsing exception");
 						layout.AddRow(new TextArea {Text = $"{logData.ParsingException}", ReadOnly = true});
 					}
