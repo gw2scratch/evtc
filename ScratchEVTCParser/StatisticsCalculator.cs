@@ -110,7 +110,7 @@ namespace ScratchEVTCParser
 
 			var playerData = GetPlayerData(log, apiData);
 
-			return new LogStatistics(GetEncounterStartTime(log), GetLogAuthor(log), playerData, phaseStats, fullFightSquadDamageData,
+			return new LogStatistics(log.StartTime.ServerTime, log.PointOfView, playerData, phaseStats, fullFightSquadDamageData,
 				fullFightTargetDamageData, buffData, GetResult(log), GetEncounterName(log),
 				log.EVTCVersion, eventCountsByName, log.Agents, log.Skills);
 		}
@@ -124,16 +124,6 @@ namespace ScratchEVTCParser
 
 			return new TimeSpan(0, 0, 0, 0, (int)(end - start));
 
-		}
-
-		public Player GetLogAuthor(Log log)
-		{
-			return log.Events.OfType<PointOfViewEvent>().First().RecordingAgent as Player;
-		}
-
-		public DateTimeOffset GetEncounterStartTime(Log log)
-		{
-            return log.Events.OfType<LogStartEvent>().First().ServerTime;
 		}
 
 		public EncounterResult GetResult(Log log)
@@ -367,7 +357,7 @@ namespace ScratchEVTCParser
 
 		private PlayerRotation GetRotation(Log log, Player player, GW2ApiData apiData)
 		{
-			long startTime = log.Events.OfType<LogStartEvent>().FirstOrDefault()?.Time ?? 0;
+			long startTime = log.StartTime.TimeMilliseconds;
 
 			var rotation = new List<RotationItem>();
 

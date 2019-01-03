@@ -56,6 +56,7 @@
     <Compile Include="Events\LogEvents.cs" />
     <Compile Include="Events\SkillEvents.cs" />
     <Compile Include="Events\UnknownEvent.cs" />
+    <Compile Include="Exceptions\LogProcessingException.cs" />
     <Compile Include="GameData\Detections\DamageWithSkillDetection.cs" />
     <Compile Include="GameData\Detections\IDetection.cs" />
     <Compile Include="GameData\Detections\InitialBuffDetection.cs" />
@@ -98,6 +99,7 @@
     <Compile Include="Model\Encounters\Phases\PhaseDefinition.cs" />
     <Compile Include="Model\Encounters\Phases\PhaseSplitter.cs" />
     <Compile Include="Model\Encounters\Phases\StartTrigger.cs" />
+    <Compile Include="Model\LogTime.cs" />
     <Compile Include="Model\Log.cs" />
     <Compile Include="Model\Skills\SkillAttunement.cs" />
     <Compile Include="Model\Skills\SkillData.cs" />

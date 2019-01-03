@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using ScratchEVTCParser.Events;
+using ScratchEVTCParser.Exceptions;
 using ScratchEVTCParser.GameData;
 using ScratchEVTCParser.Model;
 using ScratchEVTCParser.Model.Agents;
@@ -56,7 +57,8 @@ namespace ScratchEVTCParser
 		{
 			var agents = GetAgents(log).ToList();
 			var skills = GetSkills(log).ToArray();
-			var events = GetEvents(agents, skills, log).ToArray();
+			var combatItemData = GetDataFromCombatItems(agents, skills, log);
+			var events = combatItemData.Events.ToArray();
 
 			var boss = agents.OfType<NPC>().First(a => a.SpeciesId == log.ParsedBossData.ID);
 
@@ -65,9 +67,12 @@ namespace ScratchEVTCParser
 
 			var encounter = GetEncounter(boss, agents, skills, events);
 
-			return new Log(encounter, events, agents, skills, log.LogVersion.BuildVersion);
+			return new Log(encounter, events, agents, skills, log.LogVersion.BuildVersion, combatItemData.LogStartTime,
+				combatItemData.LogEndTime, combatItemData.PointOfView, combatItemData.Language,
+				combatItemData.GameBuild, combatItemData.GameShardId);
 		}
 
+		// Needs to be separated
 		private IEncounter GetEncounter(NPC boss, ICollection<Agent> agents, ICollection<Skill> skills,
 			ICollection<Event> events)
 		{
@@ -389,18 +394,105 @@ namespace ScratchEVTCParser
 			}
 		}
 
-		private IEnumerable<Event> GetEvents(IEnumerable<Agent> agents, IEnumerable<Skill> skills, ParsedLog log)
+		private class CombatItemData
+		{
+			public IEnumerable<Event> Events { get; }
+			public LogTime LogStartTime { get; }
+			public LogTime LogEndTime { get; }
+			public Player PointOfView { get; }
+			public int? Language { get; }
+			public int? GameBuild { get; }
+			public int? GameShardId { get; }
+
+			public CombatItemData(IEnumerable<Event> events, LogTime logStartTime, LogTime logEndTime,
+				Player pointOfView, int? language, int? gameBuild, int? gameShardId)
+			{
+				Events = events;
+				LogStartTime = logStartTime;
+				LogEndTime = logEndTime;
+				PointOfView = pointOfView;
+				Language = language;
+				GameBuild = gameBuild;
+				GameShardId = gameShardId;
+			}
+		}
+
+		private CombatItemData GetDataFromCombatItems(IEnumerable<Agent> agents, IEnumerable<Skill> skills,
+			ParsedLog log)
 		{
 			var agentsByAddress = agents.ToDictionary(x => x.Address);
 			var skillsById = skills.ToDictionary(x => x.Id);
 
 			var events = new List<Event>();
+			LogTime startTime = null;
+			LogTime endTime = null;
+			Player pointOfView = null;
+			int? languageId = null;
+			int? gameBuild = null;
+			int? gameShardId = null;
 			foreach (var item in log.ParsedCombatItems)
 			{
+				if (item.IsStateChange == StateChange.LogStart)
+				{
+					if (startTime != null)
+					{
+						throw new LogProcessingException("Multiple log start combat items found");
+					}
+
+					var serverTime = DateTimeOffset.FromUnixTimeSeconds(item.Value);
+					var localTime = DateTimeOffset.FromUnixTimeSeconds(item.BuffDmg);
+
+					startTime = new LogTime(localTime, serverTime, item.Time);
+					continue;
+				}
+
+				if (item.IsStateChange == StateChange.LogEnd)
+				{
+					if (endTime != null)
+					{
+						throw new LogProcessingException("Multiple log end combat items found");
+					}
+
+					var serverTime = DateTimeOffset.FromUnixTimeSeconds(item.Value);
+					var localTime = DateTimeOffset.FromUnixTimeSeconds(item.BuffDmg);
+
+					endTime = new LogTime(localTime, serverTime, item.Time);
+					continue;
+				}
+
+				if (item.IsStateChange == StateChange.PointOfView)
+				{
+					if (agentsByAddress.TryGetValue(item.SrcAgent, out var agent))
+					{
+						pointOfView = agent as Player ??
+						              throw new LogProcessingException("The point of view agent is not a player");
+					}
+
+					continue;
+				}
+
+				if (item.IsStateChange == StateChange.Language)
+				{
+					languageId = (int) item.SrcAgent;
+					continue;
+				}
+
+				if (item.IsStateChange == StateChange.GWBuild)
+				{
+					gameBuild = (int) item.SrcAgent;
+					continue;
+				}
+
+				if (item.IsStateChange == StateChange.ShardId)
+				{
+					gameShardId = (int) item.SrcAgent;
+					continue;
+				}
+
 				events.Add(GetEvent(agentsByAddress, skillsById, item));
 			}
 
-			return events;
+			return new CombatItemData(events, startTime, endTime, pointOfView, languageId, gameBuild, gameShardId);
 		}
 
 		private Event GetEvent(IReadOnlyDictionary<ulong, Agent> agentsByAddress,
@@ -449,18 +541,6 @@ namespace ScratchEVTCParser
 						var healthFraction = item.DstAgent / 10000f;
 						return new AgentHealthUpdateEvent(item.Time, GetAgentByAddress(item.SrcAgent),
 							healthFraction);
-					case StateChange.LogStart:
-					{
-						var serverTime = DateTimeOffset.FromUnixTimeSeconds(item.Value);
-						var localTime = DateTimeOffset.FromUnixTimeSeconds(item.BuffDmg);
-						return new LogStartEvent(item.Time, serverTime, localTime);
-					}
-					case StateChange.LogEnd:
-					{
-						var serverTime = DateTimeOffset.FromUnixTimeSeconds(item.Value);
-						var localTime = DateTimeOffset.FromUnixTimeSeconds(item.BuffDmg);
-						return new LogEndEvent(item.Time, serverTime, localTime);
-					}
 					case StateChange.WeaponSwap:
 						WeaponSet newWeaponSet;
 						switch (item.DstAgent)
@@ -487,14 +567,6 @@ namespace ScratchEVTCParser
 					case StateChange.MaxHealthUpdate:
 						return new AgentMaxHealthUpdateEvent(item.Time, GetAgentByAddress(item.SrcAgent),
 							item.DstAgent);
-					case StateChange.PointOfView:
-						return new PointOfViewEvent(item.Time, GetAgentByAddress(item.SrcAgent));
-					case StateChange.Language:
-						return new LanguageEvent(item.Time, (int) item.SrcAgent);
-					case StateChange.GWBuild:
-						return new GameBuildEvent(item.Time, (int) item.SrcAgent);
-					case StateChange.ShardId:
-						return new GameShardEvent(item.Time, item.SrcAgent);
 					case StateChange.Reward:
 						return new RewardEvent(item.Time, item.DstAgent, item.Value);
 					case StateChange.BuffInitial:

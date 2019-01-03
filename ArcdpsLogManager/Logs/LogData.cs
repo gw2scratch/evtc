@@ -82,7 +82,7 @@ namespace ArcdpsLogManager.Logs
 					new LogPlayer(x.Name, x.AccountName, x.Subgroup, x.Profession, x.EliteSpecialization)
 				).ToArray();
 
-				EncounterStartTime = calculator.GetEncounterStartTime(log);
+				EncounterStartTime = log.StartTime.ServerTime;
 				EncounterDuration = calculator.GetEncounterDuration(log);
 
 				stopwatch.Stop();

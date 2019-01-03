@@ -20,13 +20,29 @@ namespace ScratchEVTCParser.Model
 		public IEncounter Encounter { get; }
 		public string EVTCVersion { get; }
 
-		public Log(IEncounter encounter, IEnumerable<Event> events, IEnumerable<Agent> agents, IEnumerable<Skill> skills, string evtcVersion)
+		public LogTime StartTime { get; }
+		public LogTime EndTime { get; }
+
+		public Player PointOfView { get; }
+		public int? Language { get; }
+		public int? GameBuild { get; }
+		public int? GameShardId { get; }
+
+		public Log(IEncounter encounter, IEnumerable<Event> events, IEnumerable<Agent> agents,
+			IEnumerable<Skill> skills, string evtcVersion, LogTime startTime, LogTime endTime, Player pointOfView,
+			int? language, int? gameBuild, int? gameShardId)
 		{
 			Encounter = encounter;
 			EVTCVersion = evtcVersion;
-			this.events = events.ToArray();
-			this.agents = agents.ToArray();
-			this.skills = skills.ToArray();
+			StartTime = startTime;
+			EndTime = endTime;
+			PointOfView = pointOfView;
+			Language = language;
+			GameBuild = gameBuild;
+			GameShardId = gameShardId;
+			this.events = events as Event[] ?? events.ToArray();
+			this.agents = agents as Agent[] ?? agents.ToArray();
+			this.skills = skills as Skill[] ?? skills.ToArray();
 		}
 
 	}
