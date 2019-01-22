@@ -92,7 +92,7 @@ namespace ScratchLogBrowser
 			Menu = new MenuBar(fileMenuItem, apiDataMenuItem);
 
 			openFileDialog = new OpenFileDialog();
-			openFileDialog.Filters.Add(new FileFilter("EVTC logs", ".evtc", ".evtc.zip"));
+			openFileDialog.Filters.Add(new FileFilter("EVTC logs", ".evtc", ".evtc.zip", ".zevtc"));
 
 			saveHtmlFileDialog = new SaveFileDialog();
 			saveHtmlFileDialog.Filters.Add(new FileFilter("HTML files", ".html", ".htm", "*.*"));
