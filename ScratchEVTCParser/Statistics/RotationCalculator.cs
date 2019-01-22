@@ -75,7 +75,7 @@ namespace ScratchEVTCParser.Statistics
 			new EventTemporaryEffect<AgentDownedEvent, AgentRevivedEvent>(TemporaryStatus.Downed),
 		};
 
-		public PlayerRotation GetRotation(Log log, Player player, GW2ApiData apiData)
+		public PlayerRotation GetRotation(Log log, Player player)
 		{
 			var rotation = new List<RotationItem>();
 
@@ -98,18 +98,16 @@ namespace ScratchEVTCParser.Statistics
 				else if (logEvent is ResetSkillCastEvent resetSkillCastEvent)
 				{
 					var skill = resetSkillCastEvent.Skill;
-					var skillData = apiData?.GetSkillData(skill);
-					rotation.Add(new SkillCastItem(castStart, time, SkillCastType.Reset, skill, skillData));
+					rotation.Add(new SkillCastItem(castStart, time, SkillCastType.Reset, skill));
 					castStart = logEvent.Time - startTime;
 				}
 				else if (logEvent is EndSkillCastEvent cancelledSkillCastEvent)
 				{
 					var skill = cancelledSkillCastEvent.Skill;
-					var skillData = apiData?.GetSkillData(skill);
 					var type = cancelledSkillCastEvent.EndType == EndSkillCastEvent.SkillEndType.Cancel
 						? SkillCastType.Cancel
 						: SkillCastType.Success;
-					rotation.Add(new SkillCastItem(castStart, time, type, skill, skillData));
+					rotation.Add(new SkillCastItem(castStart, time, type, skill));
 				}
 				else if (logEvent is AgentWeaponSwapEvent weaponSwapEvent)
 				{

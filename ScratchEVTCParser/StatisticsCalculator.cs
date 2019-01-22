@@ -10,7 +10,6 @@ using ScratchEVTCParser.Statistics;
 using ScratchEVTCParser.Statistics.Buffs;
 using ScratchEVTCParser.Statistics.Encounters;
 using ScratchEVTCParser.Statistics.PlayerDataParts;
-using ScratchEVTCParser.Statistics.RotationItems;
 using SkillSlot = ScratchEVTCParser.Model.Skills.SkillSlot;
 
 namespace ScratchEVTCParser
@@ -341,7 +340,7 @@ namespace ScratchEVTCParser
 					badges.Add(new PlayerBadge(spec.ToString(), BadgeType.Specialization));
 				}
 
-				var rotation = RotationCalculator.GetRotation(log, player, apiData);
+				var rotation = RotationCalculator.GetRotation(log, player);
 
 				var data = new PlayerData(player, downCounts[player], deathCounts[player], rotation, usedSkills[player],
 					healingSkills, utilitySkills, eliteSkills, land1Weapon1, land1Weapon2, land2Weapon1, land2Weapon2,

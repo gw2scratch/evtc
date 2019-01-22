@@ -16,10 +16,12 @@ namespace ScratchLogHTMLGenerator.Sections.General
 	public class PlayerDetailPage : Page
 	{
 		private readonly IEnumerable<PlayerData> playerData;
+		private readonly GW2ApiData gw2ApiData;
 
-		public PlayerDetailPage(IEnumerable<PlayerData> playerData, ITheme theme) : base("Players", true, theme)
+		public PlayerDetailPage(IEnumerable<PlayerData> playerData, GW2ApiData gw2ApiData, ITheme theme) : base("Players", true, theme)
 		{
 			this.playerData = playerData;
+			this.gw2ApiData = gw2ApiData;
 		}
 
 		public override void WriteStyleHtml(TextWriter writer)
@@ -112,7 +114,8 @@ namespace ScratchLogHTMLGenerator.Sections.General
 							var statusClass = skillCast.Type == SkillCastType.Cancel ? "cancel" :
 								skillCast.Type == SkillCastType.Reset ? "interrupt" : "";
 
-							if (skillCast.SkillData == null)
+							var skillData = gw2ApiData?.GetSkillData(skillCast.Skill);
+							if (skillData == null)
 							{
 								string title = $"No API data for skill {encodedName} ({skillCast.Skill.Id})";
 								writer.WriteLine(
@@ -121,7 +124,7 @@ namespace ScratchLogHTMLGenerator.Sections.General
 							else
 							{
 								writer.WriteLine(
-									$"<img class='player-skill-image {statusClass}' src='{skillCast.SkillData.IconUrl}' alt='{encodedName}' title='{encodedName}'>");
+									$"<img class='player-skill-image {statusClass}' src='{skillData.IconUrl}' alt='{encodedName}' title='{encodedName}'>");
 							}
 						}
 						else if (rotationItem is WeaponSwapItem weaponSwap)

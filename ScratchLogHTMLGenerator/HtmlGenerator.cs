@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using ScratchEVTCParser;
 using ScratchEVTCParser.Statistics;
 using ScratchEVTCParser.Statistics.Encounters.Results;
 using ScratchLogHTMLGenerator.Sections.General;
@@ -12,18 +13,20 @@ namespace ScratchLogHTMLGenerator
 {
 	public class HtmlGenerator
 	{
+		private readonly GW2ApiData gw2ApiData;
 		private ITheme Theme { get; }
 
-		public HtmlGenerator(ITheme theme = null)
+		public HtmlGenerator(GW2ApiData gw2ApiData, ITheme theme = null)
 		{
+			this.gw2ApiData = gw2ApiData;
 			Theme = theme ?? new DefaultTheme();
 		}
 
 		public void WriteHtml(TextWriter writer, LogStatistics stats)
 		{
 			var summaryPage = new SummaryPage(stats, Theme);
-			var playerPage = new PlayerDetailPage(stats.PlayerData, Theme);
-			var rotationPage = new SquadRotationPage(stats.PlayerData, Theme);
+			var playerPage = new PlayerDetailPage(stats.PlayerData, gw2ApiData, Theme);
+			var rotationPage = new SquadRotationPage(stats.PlayerData, gw2ApiData, Theme);
 			var defaultPage = summaryPage; // Has be a top-level page, not a subpage
 
 			IEnumerable<Page> bossPages = stats.FullFightBossDamageData.Select(x => new BossPage(x, Theme));

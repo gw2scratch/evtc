@@ -69,7 +69,7 @@ namespace ScratchLogMaker
 					var parser = new EVTCParser();
 					var processor = new LogProcessor();
 					var statisticsCalculator = new StatisticsCalculator();
-					var generator = new HtmlGenerator();
+					var generator = new HtmlGenerator(ApiData);
 
 					int finishedTaskCount = 0;
 					while (notFinishedFileNames.Count > 0)

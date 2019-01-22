@@ -205,7 +205,7 @@ namespace ScratchLogBrowser
 			var parser = new EVTCParser();
 			var processor = new LogProcessor();
 			var statisticsCalculator = new StatisticsCalculator();
-			var generator = new HtmlGenerator();
+			var generator = new HtmlGenerator(ApiData);
 
 			// Parsing
 			var sw = Stopwatch.StartNew();

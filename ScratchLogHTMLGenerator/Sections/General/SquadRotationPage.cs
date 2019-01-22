@@ -18,10 +18,12 @@ namespace ScratchLogHTMLGenerator.Sections.General
 	public class SquadRotationPage : Page
 	{
 		private readonly IEnumerable<PlayerData> playerData;
+		private readonly GW2ApiData gw2ApiData;
 
-		public SquadRotationPage(IEnumerable<PlayerData> playerData, ITheme theme) : base("Squad rotation", true, theme)
+		public SquadRotationPage(IEnumerable<PlayerData> playerData, GW2ApiData gw2ApiData, ITheme theme) : base("Squad rotation", true, theme)
 		{
 			this.playerData = playerData;
+			this.gw2ApiData = gw2ApiData;
 		}
 
 		public override void WriteStyleHtml(TextWriter writer)
@@ -100,7 +102,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
 						string imageSrc;
 						string imageTitle;
-						if (skillCast.SkillData == null)
+
+                        var skillData = gw2ApiData?.GetSkillData(skillCast.Skill);
+						if (skillData == null)
 						{
 							if (skillCast.Skill.Id == SkillIds.ArcDpsDodge)
 							{
@@ -120,7 +124,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						}
 						else
 						{
-							imageSrc = skillCast.SkillData.IconUrl;
+							imageSrc = skillData.IconUrl;
 							imageTitle = htmlEncodedName;
 						}
 

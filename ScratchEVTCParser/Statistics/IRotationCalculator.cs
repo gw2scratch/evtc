@@ -6,6 +6,6 @@ namespace ScratchEVTCParser.Statistics
 {
 	public interface IRotationCalculator
 	{
-		PlayerRotation GetRotation(Log log, Player player, GW2ApiData apiData);
+		PlayerRotation GetRotation(Log log, Player player);
 	}
 }
