@@ -5,10 +5,10 @@ using ScratchEVTCParser.Events;
 using ScratchEVTCParser.GameData;
 using ScratchEVTCParser.Model;
 using ScratchEVTCParser.Model.Agents;
-using ScratchEVTCParser.Model.Encounters;
 using ScratchEVTCParser.Model.Skills;
 using ScratchEVTCParser.Statistics;
 using ScratchEVTCParser.Statistics.Buffs;
+using ScratchEVTCParser.Statistics.Encounters;
 using ScratchEVTCParser.Statistics.PlayerDataParts;
 using ScratchEVTCParser.Statistics.RotationItems;
 using SkillSlot = ScratchEVTCParser.Model.Skills.SkillSlot;
@@ -21,6 +21,7 @@ namespace ScratchEVTCParser
 		public GameSkillDataRepository GameSkillDataRepository { get; set; } = new GameSkillDataRepository();
 		public SpecializationDetections SpecializationDetections { get; set; } = new SpecializationDetections();
 		public SkillDetections SkillDetections { get; set; } = new SkillDetections();
+		public EncounterFinder EncounterFinder { get; set; } = new EncounterFinder();
 
 		/// <summary>
 		/// Calculates statistics for an encounter, such as damage done...
@@ -29,6 +30,8 @@ namespace ScratchEVTCParser
 		/// <param name="apiData">Data from the GW2 API, may be null, some statistics won't be calculated.</param>
 		public LogStatistics GetStatistics(Log log, GW2ApiData apiData)
 		{
+			var encounter = GetEncounter(log);
+
 			var phaseStats = new List<PhaseStats>();
 
 			var might = log.Skills.FirstOrDefault(x => x.Id == SkillIds.Might);
@@ -37,11 +40,11 @@ namespace ScratchEVTCParser
 			if (vulnerability != null) BuffSimulator.TrackBuff(vulnerability, BuffSimulationType.Intensity, 25);
 
 			var buffData = BuffSimulator.SimulateBuffs(log.Agents, log.Events.OfType<BuffEvent>(),
-				log.Encounter.GetPhases().Last().EndTime);
+				encounter.GetPhases().Last().EndTime);
 
 			var players = GetPlayers(log).ToArray();
 
-			foreach (var phase in log.Encounter.GetPhases())
+			foreach (var phase in encounter.GetPhases())
 			{
 				var targetDamageData = new List<TargetSquadDamageData>();
 				long phaseDuration = phase.EndTime - phase.StartTime;
@@ -73,13 +76,13 @@ namespace ScratchEVTCParser
 					totalDamageData));
 			}
 
-			var fightTime = log.Encounter.GetPhases().Sum(x => x.EndTime - x.StartTime);
+			var fightTime = encounter.GetPhases().Sum(x => x.EndTime - x.StartTime);
 			var fullFightSquadDamageData = new SquadDamageData(fightTime,
 				GetDamageData(players, log.Events.OfType<DamageEvent>(),
 					log.Events.OfType<SkillCastEvent>(), buffData, log.Skills, fightTime).Values);
 
 			var fullFightTargetDamageData = new List<TargetSquadDamageData>();
-			foreach (var target in log.Encounter.ImportantEnemies)
+			foreach (var target in encounter.ImportantEnemies)
 			{
 				var damageData = GetDamageData(
 					players,
@@ -111,29 +114,23 @@ namespace ScratchEVTCParser
 			var playerData = GetPlayerData(log, apiData);
 
 			return new LogStatistics(log.StartTime.ServerTime, log.PointOfView, playerData, phaseStats, fullFightSquadDamageData,
-				fullFightTargetDamageData, buffData, GetResult(log), GetEncounterName(log),
+				fullFightTargetDamageData, buffData, encounter.GetResult(), encounter.GetName(),
 				log.EVTCVersion, eventCountsByName, log.Agents, log.Skills);
 		}
 
-		public TimeSpan GetEncounterDuration(Log log)
+		public TimeSpan GetEncounterDuration(IEncounter encounter)
 		{
 			// TODO: This should be a method on Encounter
-			var phases = log.Encounter.GetPhases().ToArray();
+			var phases = encounter.GetPhases().ToArray();
 			var start = phases.Min(x => x.StartTime);
 			var end = phases.Max(x => x.EndTime);
 
 			return new TimeSpan(0, 0, 0, 0, (int)(end - start));
-
 		}
 
-		public EncounterResult GetResult(Log log)
+		public IEncounter GetEncounter(Log log)
 		{
-			return log.Encounter.GetResult();
-		}
-
-		public string GetEncounterName(Log log)
-		{
-			return log.Encounter.GetName();
+			return EncounterFinder.GetEncounter(log);
 		}
 
 		public IEnumerable<Player> GetPlayers(Log log)

@@ -6,7 +6,7 @@ using ArcdpsLogManager.Controls;
 using ArcdpsLogManager.Logs;
 using Eto.Drawing;
 using Eto.Forms;
-using ScratchEVTCParser.Model.Encounters;
+using ScratchEVTCParser.Statistics.Encounters.Results;
 
 namespace ArcdpsLogManager.Sections
 {

@@ -1,6 +1,6 @@
 using System;
 
-namespace ScratchEVTCParser
+namespace ScratchEVTCParser.IO
 {
 	public static class BitConversions
 	{

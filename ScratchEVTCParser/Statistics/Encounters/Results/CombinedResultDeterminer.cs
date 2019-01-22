@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ScratchEVTCParser.Events;
 
-namespace ScratchEVTCParser.Model.Encounters
+namespace ScratchEVTCParser.Statistics.Encounters.Results
 {
 	/// <summary>
 	/// Combines the result of multiple determiners, returning success if all succeed, unknown if any is unknown and failure otherwise.

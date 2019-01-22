@@ -4,11 +4,9 @@ using System.Diagnostics;
 using System.Linq;
 using ScratchEVTCParser.Events;
 using ScratchEVTCParser.Exceptions;
-using ScratchEVTCParser.GameData;
+using ScratchEVTCParser.IO;
 using ScratchEVTCParser.Model;
 using ScratchEVTCParser.Model.Agents;
-using ScratchEVTCParser.Model.Encounters;
-using ScratchEVTCParser.Model.Encounters.Phases;
 using ScratchEVTCParser.Model.Skills;
 using ScratchEVTCParser.Parsed;
 using ScratchEVTCParser.Parsed.Enums;
@@ -60,165 +58,16 @@ namespace ScratchEVTCParser
 			var combatItemData = GetDataFromCombatItems(agents, skills, log);
 			var events = combatItemData.Events.ToArray();
 
-			var boss = agents.OfType<NPC>().First(a => a.SpeciesId == log.ParsedBossData.ID);
+			var boss = agents.OfType<NPC>().FirstOrDefault(a => a.SpeciesId == log.ParsedBossData.ID);
 
 			SetAgentAwareTimes(events);
 			AssignAgentMasters(log, agents); // Needs to be done after setting aware times
 
-			var encounter = GetEncounter(boss, agents, skills, events);
-
-			return new Log(encounter, events, agents, skills, log.LogVersion.BuildVersion, combatItemData.LogStartTime,
+			return new Log(boss, events, agents, skills, log.LogVersion.BuildVersion, combatItemData.LogStartTime,
 				combatItemData.LogEndTime, combatItemData.PointOfView, combatItemData.Language,
 				combatItemData.GameBuild, combatItemData.GameShardId);
 		}
 
-		// Needs to be separated
-		private IEncounter GetEncounter(NPC boss, ICollection<Agent> agents, ICollection<Skill> skills,
-			ICollection<Event> events)
-		{
-			IEncounter encounter = new DefaultEncounter(boss, events);
-
-			if (boss.SpeciesId == SpeciesIds.ValeGuardian)
-			{
-				var invulnerability = skills.First(x => x.Id == SkillIds.Invulnerability);
-
-				var redGuardians = agents.OfType<NPC>().Where(x => x.SpeciesId == SpeciesIds.RedGuardian).ToArray();
-				var greenGuardians = agents.OfType<NPC>().Where(x => x.SpeciesId == SpeciesIds.GreenGuardian).ToArray();
-				var blueGuardians = agents.OfType<NPC>().Where(x => x.SpeciesId == SpeciesIds.BlueGuardian).ToArray();
-
-				bool firstGuardians =
-					redGuardians.Length >= 1 && greenGuardians.Length >= 1 && blueGuardians.Length >= 1;
-				bool secondGuardians =
-					redGuardians.Length >= 2 && greenGuardians.Length >= 2 && blueGuardians.Length >= 2;
-
-				var split1Guardians = firstGuardians
-					? new[] {blueGuardians[0], greenGuardians[0], redGuardians[0]}
-					: new Agent[0];
-				var split2Guardians = secondGuardians
-					? new[] {blueGuardians[1], greenGuardians[1], redGuardians[1]}
-					: new Agent[0];
-
-				encounter = new BaseEncounter(
-					new[] {boss},
-					events,
-					new PhaseSplitter(
-						new StartTrigger(new PhaseDefinition("Phase 1", boss)),
-						new BuffAddTrigger(boss, invulnerability, new PhaseDefinition("Split 1", split1Guardians)),
-						new BuffRemoveTrigger(boss, invulnerability, new PhaseDefinition("Phase 2", boss)),
-						new BuffAddTrigger(boss, invulnerability, new PhaseDefinition("Split 2", split2Guardians)),
-						new BuffRemoveTrigger(boss, invulnerability, new PhaseDefinition("Phase 3", boss))
-					),
-					new AgentDeathResultDeterminer(boss),
-					new AgentNameEncounterNameProvider(boss));
-			}
-			else if (boss.SpeciesId == SpeciesIds.Nikare || boss.SpeciesId == SpeciesIds.Kenut)
-			{
-				var determined = skills.First(x => x.Id == SkillIds.Determined);
-				var nikare = agents.OfType<NPC>().First(x => x.SpeciesId == SpeciesIds.Nikare);
-				var kenut = agents.OfType<NPC>().First(x => x.SpeciesId == SpeciesIds.Kenut);
-
-				encounter = new BaseEncounter(
-					new[] {nikare, kenut},
-					events,
-					new PhaseSplitter(
-						new StartTrigger(new PhaseDefinition("Nikare's platform", nikare)),
-						new BuffAddTrigger(nikare, determined, new PhaseDefinition("Kenut's platform", kenut)),
-						new BuffAddTrigger(kenut, determined, new PhaseDefinition("Split phase", nikare, kenut))
-					),
-					new CombinedResultDeterminer(
-						new AgentDeathResultDeterminer(nikare),
-						new AgentDeathResultDeterminer(kenut)
-					),
-					new ConstantEncounterNameProvider("Twin Largos")
-				);
-			}
-			else if (boss.SpeciesId == SpeciesIds.Gorseval)
-			{
-				var invulnerability = skills.First(x => x.Id == SkillIds.GorsevalInvulnerability);
-
-				var chargedSouls = agents.OfType<NPC>().Where(x => x.SpeciesId == SpeciesIds.ChargedSoul).ToArray();
-
-				var split1Souls = chargedSouls.Length >= 4 ? chargedSouls.Take(4).ToArray() : new Agent[0];
-				var split2Souls = chargedSouls.Length >= 8 ? chargedSouls.Skip(4).Take(4).ToArray() : new Agent[0];
-
-				encounter = new BaseEncounter(
-					new[] {boss},
-					events,
-					new PhaseSplitter(
-						new StartTrigger(new PhaseDefinition("Phase 1", boss)),
-						new BuffAddTrigger(boss, invulnerability, new PhaseDefinition("Split 1", split1Souls)),
-						new BuffRemoveTrigger(boss, invulnerability, new PhaseDefinition("Phase 2", boss)),
-						new BuffAddTrigger(boss, invulnerability, new PhaseDefinition("Split 2", split2Souls)),
-						new BuffRemoveTrigger(boss, invulnerability, new PhaseDefinition("Phase 3", boss))
-					),
-					new AgentDeathResultDeterminer(boss),
-					new AgentNameEncounterNameProvider(boss));
-			}
-			else if (boss.SpeciesId == SpeciesIds.Sabetha)
-			{
-				var invulnerability = skills.First(x => x.Id == SkillIds.Invulnerability);
-
-				var kernan = agents.OfType<NPC>().FirstOrDefault(x => x.SpeciesId == SpeciesIds.Kernan);
-				var knuckles = agents.OfType<NPC>().FirstOrDefault(x => x.SpeciesId == SpeciesIds.Knuckles);
-				var karde = agents.OfType<NPC>().FirstOrDefault(x => x.SpeciesId == SpeciesIds.Karde);
-
-				encounter = new BaseEncounter(
-					new[] {boss},
-					events,
-					new PhaseSplitter(
-						new StartTrigger(new PhaseDefinition("Phase 1", boss)),
-						new BuffAddTrigger(boss, invulnerability,
-							new PhaseDefinition("Kernan", kernan != null ? new Agent[] {kernan} : new Agent[0])),
-						new BuffRemoveTrigger(boss, invulnerability, new PhaseDefinition("Phase 2", boss)),
-						new BuffAddTrigger(boss, invulnerability,
-							new PhaseDefinition("Knuckles", knuckles != null ? new Agent[] {knuckles} : new Agent[0])),
-						new BuffRemoveTrigger(boss, invulnerability, new PhaseDefinition("Phase 3", boss)),
-						new BuffAddTrigger(boss, invulnerability,
-							new PhaseDefinition("Karde", karde != null ? new Agent[] {karde} : new Agent[0])),
-						new BuffRemoveTrigger(boss, invulnerability, new PhaseDefinition("Phase 4", boss))
-					),
-					new AgentDeathResultDeterminer(boss),
-					new AgentNameEncounterNameProvider(boss)
-				);
-			}
-			else if (boss.SpeciesId == SpeciesIds.Qadim)
-			{
-				var flameArmor = skills.First(x => x.Id == SkillIds.QadimFlameArmor);
-
-				var hydra = agents.OfType<NPC>().FirstOrDefault(x => x.SpeciesId == SpeciesIds.AncientInvokedHydra);
-				var destroyer = agents.OfType<NPC>().FirstOrDefault(x => x.SpeciesId == SpeciesIds.ApocalypseBringer);
-				var matriarch = agents.OfType<NPC>().FirstOrDefault(x => x.SpeciesId == SpeciesIds.WyvernMatriarch);
-				var patriarch = agents.OfType<NPC>().FirstOrDefault(x => x.SpeciesId == SpeciesIds.WyvernPatriarch);
-
-				encounter = new BaseEncounter(
-					new[] {boss},
-					events,
-					new PhaseSplitter(
-						new AgentEventTrigger<TeamChangeEvent>(boss,
-							new PhaseDefinition("Hydra phase", hydra != null ? new Agent[] {hydra} : new Agent[0])),
-						new BuffRemoveTrigger(boss, flameArmor, new PhaseDefinition("Qadim 100-66%", boss)),
-						new BuffAddTrigger(boss, flameArmor,
-							new PhaseDefinition("Destroyer phase",
-								destroyer != null ? new Agent[] {destroyer} : new Agent[0])),
-						new BuffRemoveTrigger(boss, flameArmor, new PhaseDefinition("Qadim 66-33%", boss)),
-						new BuffAddTrigger(boss, flameArmor,
-							new PhaseDefinition("Wyvern phase",
-								matriarch != null && patriarch != null
-									? new Agent[] {matriarch, patriarch}
-									: new Agent[0])),
-						new MultipleAgentsDeadTrigger(new PhaseDefinition("Jumping puzzle"), // TODO: Add Pyre Guardians
-							matriarch != null && patriarch != null
-								? new Agent[] {matriarch, patriarch}
-								: new Agent[0]),
-						new BuffRemoveTrigger(boss, flameArmor, new PhaseDefinition("Qadim 33-0%", boss))
-					),
-					new AgentExitCombatDeterminer(boss),
-					new AgentNameEncounterNameProvider(boss)
-				);
-			}
-
-			return encounter;
-		}
 
 		private IEnumerable<Skill> GetSkills(ParsedLog log)
 		{

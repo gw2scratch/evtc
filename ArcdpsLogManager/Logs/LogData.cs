@@ -7,7 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ArcdpsLogManager.Uploaders;
 using ScratchEVTCParser;
-using ScratchEVTCParser.Model.Encounters;
+using ScratchEVTCParser.Statistics.Encounters.Results;
 
 namespace ArcdpsLogManager.Logs
 {
@@ -76,14 +76,15 @@ namespace ArcdpsLogManager.Logs
 				var parsedLog = parser.ParseLog(FileInfo.FullName);
 				var log = processor.GetProcessedLog(parsedLog);
 
-				EncounterName = calculator.GetEncounterName(log);
-				EncounterResult = calculator.GetResult(log);
+				var encounter = calculator.GetEncounter(log);
+				EncounterName = encounter.GetName();
+				EncounterResult = encounter.GetResult();
 				Players = calculator.GetPlayers(log).Select(x =>
 					new LogPlayer(x.Name, x.AccountName, x.Subgroup, x.Profession, x.EliteSpecialization)
 				).ToArray();
 
 				EncounterStartTime = log.StartTime.ServerTime;
-				EncounterDuration = calculator.GetEncounterDuration(log);
+				EncounterDuration = calculator.GetEncounterDuration(encounter);
 
 				stopwatch.Stop();
 

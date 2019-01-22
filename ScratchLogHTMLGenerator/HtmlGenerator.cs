@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Web.UI;
-using ScratchEVTCParser.Model.Encounters;
 using ScratchEVTCParser.Statistics;
+using ScratchEVTCParser.Statistics.Encounters.Results;
 using ScratchLogHTMLGenerator.Sections.General;
 using ScratchLogHTMLGenerator.Sections.Phases;
 using ScratchLogHTMLGenerator.Sections.ScratchData;

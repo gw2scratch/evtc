@@ -16,7 +16,7 @@ using Eto.Drawing;
 using Eto.Forms;
 using Newtonsoft.Json;
 using ScratchEVTCParser;
-using ScratchEVTCParser.Model.Encounters;
+using ScratchEVTCParser.Statistics.Encounters.Results;
 
 namespace ArcdpsLogManager
 {

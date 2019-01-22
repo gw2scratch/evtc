@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ScratchEVTCParser.Model.Agents;
 
-namespace ScratchEVTCParser.Model.Encounters.Phases
+namespace ScratchEVTCParser.Statistics.Encounters.Phases
 {
 	public class PhaseDefinition
 	{

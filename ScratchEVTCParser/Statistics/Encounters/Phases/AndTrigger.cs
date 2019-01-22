@@ -1,7 +1,7 @@
 using ScratchEVTCParser.Events;
 using ScratchEVTCParser.Model.Agents;
 
-namespace ScratchEVTCParser.Model.Encounters.Phases
+namespace ScratchEVTCParser.Statistics.Encounters.Phases
 {
 	public class MultipleAgentsDeadTrigger : IPhaseTrigger
 	{

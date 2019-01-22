@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using ScratchEVTCParser.Events;
 
-namespace ScratchEVTCParser.Statistics.Encounters
+namespace ScratchEVTCParser.Statistics.Encounters.Results
 {
 	public interface IResultDeterminer
 	{

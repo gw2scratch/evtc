@@ -1,23 +1,20 @@
 using System;
 using System.Collections.Generic;
 using ScratchEVTCParser.Events;
-using ScratchEVTCParser.Model.Agents;
 
-namespace ScratchEVTCParser.Statistics.Encounters
+namespace ScratchEVTCParser.Statistics.Encounters.Phases
 {
 	public class PhaseSplitter
 	{
-		private readonly Agent boss;
 		private readonly IPhaseTrigger[] triggers;
 
-		public PhaseSplitter(Agent boss, params IPhaseTrigger[] triggers)
+		public PhaseSplitter(params IPhaseTrigger[] triggers)
 		{
 			if (triggers.Length == 0)
 			{
 				throw new ArgumentException("At least one phase trigger must be provided", nameof(triggers));
 			}
 
-			this.boss = boss;
 			this.triggers = triggers;
 		}
 
@@ -45,14 +42,15 @@ namespace ScratchEVTCParser.Statistics.Encounters
 					{
 						var currentPhaseStart = eventsInPhase[0]; // The previous triggering event
 						yield return new Phase(currentPhaseStart.Time, e.Time, currentTriggerIndex,
-							previousTrigger.PhaseName, eventsInPhase);
+							previousTrigger.PhaseDefinition.Name, previousTrigger.PhaseDefinition.ImportantEnemies,
+							eventsInPhase);
 					}
 
 					previousTrigger = currentTrigger;
 					eventsInPhase.Clear();
 					if (currentTriggerIndex + 1 < triggers.Length)
 					{
-						currentTrigger = triggers[currentTriggerIndex++];
+						currentTrigger = triggers[++currentTriggerIndex];
 					}
 					else
 					{
@@ -67,7 +65,8 @@ namespace ScratchEVTCParser.Statistics.Encounters
 			{
 				var currentPhaseStart = eventsInPhase[0]; // The previous triggering event
 				yield return new Phase(currentPhaseStart.Time, events[events.Count - 1].Time, currentTriggerIndex,
-					previousTrigger.PhaseName, eventsInPhase);
+					previousTrigger.PhaseDefinition.Name, previousTrigger.PhaseDefinition.ImportantEnemies,
+					eventsInPhase);
 			}
 		}
 	}

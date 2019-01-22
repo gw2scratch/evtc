@@ -6,7 +6,7 @@ using ScratchEVTCParser;
 using ScratchEVTCParser.GameData;
 using ScratchEVTCParser.Model;
 using ScratchEVTCParser.Model.Agents;
-using ScratchEVTCParser.Model.Encounters;
+using ScratchEVTCParser.Statistics.Encounters.Results;
 
 namespace ArcdpsLogManager.Logs
 {

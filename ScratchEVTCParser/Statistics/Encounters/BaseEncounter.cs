@@ -1,10 +1,12 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using ScratchEVTCParser.Events;
 using ScratchEVTCParser.Model.Agents;
-using ScratchEVTCParser.Model.Encounters.Phases;
+using ScratchEVTCParser.Statistics.Encounters.Phases;
+using ScratchEVTCParser.Statistics.Encounters.Results;
 
-namespace ScratchEVTCParser.Model.Encounters
+namespace ScratchEVTCParser.Statistics.Encounters
 {
 	public class BaseEncounter : IEncounter
 	{
@@ -12,6 +14,10 @@ namespace ScratchEVTCParser.Model.Encounters
 		private readonly IResultDeterminer resultDeterminer;
 		private readonly IEncounterNameProvider nameProvider;
 		private readonly Event[] events;
+
+		private EncounterResult? result = null;
+		private Phase[] phases = null;
+		private string name = null;
 
 		public BaseEncounter(IEnumerable<Agent> importantAgents, IEnumerable<Event> events, PhaseSplitter phaseSplitter,
 			IResultDeterminer resultDeterminer, IEncounterNameProvider nameProvider)
@@ -27,17 +33,32 @@ namespace ScratchEVTCParser.Model.Encounters
 
 		public EncounterResult GetResult()
 		{
-			return resultDeterminer.GetResult(events);
+			if (result == null)
+			{
+				result = resultDeterminer.GetResult(events);
+			}
+
+			return result.Value;
 		}
 
 		public IEnumerable<Phase> GetPhases()
 		{
-			return phaseSplitter.GetEventsByPhases(events);
+			if (phases == null)
+			{
+				phases = phaseSplitter.GetEventsByPhases(events).ToArray();
+			}
+
+			return phases;
 		}
 
 		public string GetName()
 		{
-			return nameProvider.GetEncounterName();
+			if (name == null)
+			{
+				name = nameProvider.GetEncounterName();
+			}
+
+			return name;
 		}
 	}
 }

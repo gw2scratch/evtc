@@ -1,4 +1,4 @@
-namespace ScratchEVTCParser.Model.Encounters
+namespace ScratchEVTCParser.Statistics.Encounters
 {
 	public class ConstantEncounterNameProvider : IEncounterNameProvider
 	{

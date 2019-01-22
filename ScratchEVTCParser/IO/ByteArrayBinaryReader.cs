@@ -1,7 +1,7 @@
 using System;
 using System.Text;
 
-namespace ScratchEVTCParser
+namespace ScratchEVTCParser.IO
 {
 	/// <summary>
 	/// A little-endian Binary Reader for reading from a Byte array.
