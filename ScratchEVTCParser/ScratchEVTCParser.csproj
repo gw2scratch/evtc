@@ -133,6 +133,7 @@
     <Compile Include="Statistics\Encounters\Results\EncounterResult.cs" />
     <Compile Include="Statistics\Encounters\Results\IResultDeterminer.cs" />
     <Compile Include="Statistics\IEncounterFinder.cs" />
+    <Compile Include="Statistics\IRotationCalculator.cs" />
     <Compile Include="Statistics\LogStatistics.cs" />
     <Compile Include="Statistics\PhaseStats.cs" />
     <Compile Include="Statistics\DamageData.cs" />
@@ -140,6 +141,7 @@
     <Compile Include="Statistics\PlayerDataParts\PlayerBadge.cs" />
     <Compile Include="Statistics\PlayerDataParts\PlayerData.cs" />
     <Compile Include="Statistics\PlayerDataParts\PlayerRotation.cs" />
+    <Compile Include="Statistics\RotationCalculator.cs" />
     <Compile Include="Statistics\RotationItems\RotationItem.cs" />
     <Compile Include="Statistics\RotationItems\SkillCastItem.cs" />
     <Compile Include="Statistics\RotationItems\SkillCastType.cs" />

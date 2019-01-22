@@ -21,7 +21,8 @@ namespace ScratchEVTCParser
 		public GameSkillDataRepository GameSkillDataRepository { get; set; } = new GameSkillDataRepository();
 		public SpecializationDetections SpecializationDetections { get; set; } = new SpecializationDetections();
 		public SkillDetections SkillDetections { get; set; } = new SkillDetections();
-		public EncounterFinder EncounterFinder { get; set; } = new EncounterFinder();
+		public IEncounterFinder EncounterFinder { get; set; } = new EncounterFinder();
+		public IRotationCalculator RotationCalculator { get; set; } = new RotationCalculator();
 
 		/// <summary>
 		/// Calculates statistics for an encounter, such as damage done...
@@ -340,7 +341,7 @@ namespace ScratchEVTCParser
 					badges.Add(new PlayerBadge(spec.ToString(), BadgeType.Specialization));
 				}
 
-				var rotation = GetRotation(log, player, apiData);
+				var rotation = RotationCalculator.GetRotation(log, player, apiData);
 
 				var data = new PlayerData(player, downCounts[player], deathCounts[player], rotation, usedSkills[player],
 					healingSkills, utilitySkills, eliteSkills, land1Weapon1, land1Weapon2, land2Weapon1, land2Weapon2,
@@ -350,90 +351,6 @@ namespace ScratchEVTCParser
 			}
 
 			return playerData;
-		}
-
-		private PlayerRotation GetRotation(Log log, Player player, GW2ApiData apiData)
-		{
-			long startTime = log.StartTime.TimeMilliseconds;
-
-			var rotation = new List<RotationItem>();
-
-			long continuumSplitStart = -1;
-			long downStart = -1;
-
-			long castStart = 0;
-			foreach (var logEvent in log.Events.OfType<AgentEvent>().Where(x => x.Agent == player))
-			{
-				long time = logEvent.Time - startTime;
-				if (logEvent is StartSkillCastEvent startSkillCastEvent)
-				{
-					castStart = logEvent.Time - startTime;
-				}
-				else if (logEvent is ResetSkillCastEvent resetSkillCastEvent)
-				{
-					var skill = resetSkillCastEvent.Skill;
-					var skillData = apiData?.GetSkillData(skill);
-					rotation.Add(new SkillCastItem(castStart, time, SkillCastType.Reset, skill, skillData));
-					castStart = logEvent.Time - startTime;
-				}
-				else if (logEvent is EndSkillCastEvent cancelledSkillCastEvent)
-				{
-					var skill = cancelledSkillCastEvent.Skill;
-					var skillData = apiData?.GetSkillData(skill);
-					var type = cancelledSkillCastEvent.EndType == EndSkillCastEvent.SkillEndType.Cancel
-						? SkillCastType.Cancel
-						: SkillCastType.Success;
-					rotation.Add(new SkillCastItem(castStart, time, type, skill, skillData));
-				}
-				else if (logEvent is AgentWeaponSwapEvent weaponSwapEvent)
-				{
-					rotation.Add(new WeaponSwapItem(time, weaponSwapEvent.NewWeaponSet));
-				}
-				else if (logEvent is BuffApplyEvent buffApplyEvent)
-				{
-					if (buffApplyEvent.Buff.Id == SkillIds.TimeAnchored)
-					{
-						continuumSplitStart = time;
-					}
-				}
-				else if (logEvent is InitialBuffEvent initialBuffEvent)
-				{
-					if (initialBuffEvent.Skill.Id == SkillIds.TimeAnchored)
-					{
-						continuumSplitStart = time;
-					}
-				}
-				else if (logEvent is BuffRemoveEvent buffRemoveEvent)
-				{
-					if (buffRemoveEvent.Buff.Id == SkillIds.TimeAnchored && continuumSplitStart != -1)
-					{
-						rotation.Add(new TemporaryStatusItem(continuumSplitStart, time,
-							TemporaryStatus.ContinuumSplit));
-						continuumSplitStart = -1;
-					}
-				}
-				else if (logEvent is AgentDownedEvent)
-				{
-					downStart = time;
-				}
-				else if (logEvent is AgentRevivedEvent)
-				{
-					if (downStart != -1)
-					{
-						rotation.Add(new TemporaryStatusItem(downStart, time, TemporaryStatus.Downed));
-					}
-
-					downStart = -1;
-				}
-				else if (logEvent is AgentDeadEvent)
-				{
-					downStart = -1;
-				}
-
-				// TODO: Add death
-			}
-
-			return new PlayerRotation(player, rotation);
 		}
 
 		private Dictionary<Agent, DamageData> GetDamageData(IEnumerable<Player> players,
