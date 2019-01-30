@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using RotationComparison.Logs;
 using ScratchEVTCParser;
 using ScratchEVTCParser.Model;
+using ScratchEVTCParser.Model.Skills;
 using ScratchEVTCParser.Statistics.RotationItems;
 
 namespace RotationComparison
@@ -98,18 +99,53 @@ namespace RotationComparison
     <script defer src='https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js'></script>
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css'>
 	<style>
+		.rot-skill-image {
+			width: 32px;
+			height: 32px;
+		}
+        .vis-item {
+			border: 0;
+			line-height: 0;
+        }
+        .vis-item .vis-item-content {
+			padding: 0;
+        }
+		.vis-item.vis-range {
+			border-radius: 0;
+        }
+        .vis-item.success {
+            background-color: #80DA5F;
+			border: 1px solid #005826;
+        }
+        .vis-item.cancel {
+            background-color: #F26D7D;
+			border: 1px solid #ED1C24;
+        }
+        .vis-item.reset {
+            background-color: #AAAAAA;
+			border: 1px solid black;
+        }
+		.main {
+			width: 80%;
+			margin: 0 auto;
+        }
 	</style>
 </head>
 <body>
-    <div id='rotation'></div>
-	<script>
+	<section class='main'>
+		<h1>Rotation Comparison</h1>
+        <div id='rotation'></div>
+        <script>
 document.addEventListener('DOMContentLoaded', function() {
-	var rotations = ");
+	var model = ");
 			WriteJsonModel(logSources, writer);
             writer.Write(@";
 	let container = document.getElementById('rotation');
 	let groups = new vis.DataSet({});
 	let items = new vis.DataSet({});
+
+	let rotations = model.Rotations;
+	let skillData = model.SkillData;
 
 	let id = 0;
 	for (let i = 0; i < rotations.length; i++) {
@@ -120,13 +156,25 @@ document.addEventListener('DOMContentLoaded', function() {
 				// Skill cast
                 let displayClass = '';
 				if (item.CastType == 1) {
-					displayClass = 'item-success';
+					displayClass = 'success';
                 } else if (item.CastType == 2) {
-					displayClass = 'item-cancel';
+					displayClass = 'cancel';
                 } else if (item.CastType == 3) {
-                    displayClass = 'item-reset';
+                    displayClass = 'reset';
                 }
-                items.add({id: id++, group: i, content: '' + item.SkillId, start: item.Time, end: item.TimeEnd, className: displayClass});
+
+                let data = skillData[item.SkillId];
+                let name = data.Name;
+                if (name == null) {
+                    name = 'Unknown Skill Name';
+                }
+                let iconUrl = data.IconUrl;
+                if (iconUrl == null) {
+                    iconUrl = 'https://wiki.guildwars2.com/images/7/74/Skill.png';
+                }
+
+                let content = '<img class=\'rot-skill-image\' src=\'' + iconUrl + '\' alt=\'' + name + '\'> ';
+                items.add({id: id++, group: i, content: content, start: item.Time, end: item.TimeEnd, className: displayClass});
             }
         }
 	}
@@ -146,12 +194,12 @@ document.addEventListener('DOMContentLoaded', function() {
 		//margin: {item: {horizontal: -1}},
 		//start: 0, // setting start results in all items in initial window being moved down
 		end: 20000,
-		orientation: 'top',
 	};
 
 	var timeline = new vis.Timeline(container, items, groups, options);
 });
-	</script>
+        </script>
+	</section>
 </body>
 </html>
 ");
@@ -182,6 +230,11 @@ document.addEventListener('DOMContentLoaded', function() {
 		public void WriteJsonModel(IEnumerable<ILogSource> logSources, TextWriter writer)
 		{
             var rotationLists = new List<Rotation>();
+
+            // This can't simply be a Hashset because Skills from different logs can have the same id,
+            // but are in fact different instances
+            var usedSkills = new Dictionary<uint, Skill>();
+
 			foreach (var source in logSources)
 			{
 				var rotations = source.GetRotations();
@@ -196,6 +249,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						{
 							case SkillCastItem skillCastItem:
                                 outputItems.Add(new SkillRotationItem(skillCastItem));
+                                usedSkills[skillCastItem.Skill.Id] = skillCastItem.Skill;
 								break;
 							case TemporaryStatusItem temporaryStatusItem:
 								break;
@@ -210,7 +264,16 @@ document.addEventListener('DOMContentLoaded', function() {
 					rotationLists.Add(new Rotation(player, outputItems));
 				}
 			}
-            writer.Write(JsonConvert.SerializeObject(rotationLists));
+
+			var skillData = usedSkills.Values.Select(x => (Skill: x, Data: apiData.GetSkillData(x)))
+				.ToDictionary(
+					x => x.Skill.Id,
+					x => x.Data == null
+						? new {Name = x.Skill.Name, IconUrl = (string) null}
+						: new {Name = x.Data.Name, IconUrl = x.Data.IconUrl}
+				);
+
+            writer.Write(JsonConvert.SerializeObject(new {Rotations = rotationLists, SkillData = skillData}));
 		}
 	}
 }
