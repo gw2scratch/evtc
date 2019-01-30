@@ -168,7 +168,7 @@ namespace ScratchLogBrowser
 
 		private async void LoadApiData(object sender, EventArgs e)
 		{
-			var apiData = await GW2ApiData.LoadFromApi(new ApiSkillRepository());
+			var apiData = await GW2ApiData.LoadFromApiAsync(new ApiSkillRepository());
 			Application.Instance.Invoke(() => { ApiData = apiData; });
 		}
 

@@ -1,8 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using ScratchEVTCParser.GW2Api.V2;
 using ScratchEVTCParser.Model;
 using ScratchEVTCParser.Model.Agents;
@@ -21,6 +24,11 @@ namespace ScratchEVTCParser
 			skillDataBySkillId = skills.ToDictionary(x => x.Id);
 		}
 
+		private GW2ApiData(Dictionary<int, SkillData> skillDataBySkillId)
+		{
+			this.skillDataBySkillId = skillDataBySkillId;
+		}
+
 		public SkillData GetSkillData(int skillId)
 		{
 			if (!skillDataBySkillId.TryGetValue(skillId, out var data))
@@ -36,17 +44,29 @@ namespace ScratchEVTCParser
 			return GetSkillData((int)skill.Id);
 		}
 
-		public void SaveToFile(string filepath)
+		public async Task SaveToFileAsync(string filepath)
 		{
-			throw new NotImplementedException();
+			using (var writer = new JsonTextWriter(new StreamWriter(new FileStream(filepath, FileMode.OpenOrCreate,
+				FileAccess.Write, FileShare.None, 4096, true))))
+			{
+				await JObject.FromObject(skillDataBySkillId).WriteToAsync(writer);
+			}
 		}
 
-		public static GW2ApiData LoadFromFile(string filepath)
+		public static async Task<GW2ApiData> LoadFromFileAsync(string filepath)
 		{
-			throw new NotImplementedException();
+			Dictionary<int, SkillData> dataDictionary;
+			using (var reader = new JsonTextReader(new StreamReader(new FileStream(filepath, FileMode.Open,
+				FileAccess.Read, FileShare.Read, 4096, true))))
+			{
+				var obj = await JObject.LoadAsync(reader);
+				dataDictionary = obj.ToObject<Dictionary<int, SkillData>>();
+			}
+
+			return new GW2ApiData(dataDictionary);
 		}
 
-		public static async Task<GW2ApiData> LoadFromApi(ApiSkillRepository skillRepository)
+		public static async Task<GW2ApiData> LoadFromApiAsync(ApiSkillRepository skillRepository)
 		{
 			var apiSkills = (await skillRepository.GetAllApiSkills()).ToArray();
 			var skillData = new List<SkillData>();
@@ -290,6 +310,7 @@ namespace ScratchEVTCParser
 					slot, attunement));
 			}
 
+			/* TODO: This makes serialization significantly more difficult (although still doable)
 			var skillDataById = skillData.ToDictionary(x => x.Id);
 			foreach (var skill in apiSkills)
 			{
@@ -302,6 +323,7 @@ namespace ScratchEVTCParser
 					skillDataById[skill.Id].NextChain = nextSkill;
 				}
 			}
+			*/
 
 			return new GW2ApiData(skillData);
 		}
