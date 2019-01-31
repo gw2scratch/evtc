@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using ScratchEVTCParser;
+using ScratchEVTCParser.Model;
 using ScratchEVTCParser.Model.Agents;
 using ScratchEVTCParser.Statistics;
 using ScratchEVTCParser.Statistics.PlayerDataParts;
@@ -11,10 +13,24 @@ namespace RotationComparison.Logs
 	{
 		private readonly string filename;
 		private string[] characterNames;
+		private Log processedLog;
 
 		public FileLogSource(string filename)
 		{
 			this.filename = filename;
+		}
+
+		private Log GetLog()
+		{
+			if (processedLog == null)
+			{
+				var parser = new EVTCParser();
+				var processor = new LogProcessor();
+				var parsedLog = parser.ParseLog(filename);
+				processedLog = processor.GetProcessedLog(parsedLog);
+			}
+
+			return processedLog;
 		}
 
 		public void SetCharacterNameFilter(string[] names)
@@ -24,11 +40,7 @@ namespace RotationComparison.Logs
 
 		public IEnumerable<PlayerRotation> GetRotations()
 		{
-			var parser = new EVTCParser();
-			var processor = new LogProcessor();
-			var parsedLog = parser.ParseLog(filename);
-			var log = processor.GetProcessedLog(parsedLog);
-
+			var log = GetLog();
 			var players = log.Agents.OfType<Player>();
 			if (characterNames != null)
 			{
@@ -40,6 +52,18 @@ namespace RotationComparison.Logs
 			{
 				yield return rotationCalculator.GetRotation(log, player);
 			}
+		}
+
+		public string GetEncounterName()
+		{
+			var log = GetLog();
+			var calculator = new StatisticsCalculator();
+			return calculator.GetEncounter(log).GetName();
+		}
+
+		public string GetLogName()
+		{
+			return Path.GetFileName(filename);
 		}
 	}
 }

@@ -159,7 +159,6 @@ namespace RotationComparison
 			{
 				var generator = new RotationComparisonGenerator(apiData);
 				generator.WriteHtmlOutput(logSources, Console.Out);
-                //generator.WriteHtmlOutput(new [] { new TestLogSource(), new TestLogSource() }, Console.Out);
 			}
 			catch (Exception e)
 			{

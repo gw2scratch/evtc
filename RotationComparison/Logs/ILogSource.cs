@@ -7,5 +7,7 @@ namespace RotationComparison.Logs
 	{
 		void SetCharacterNameFilter(params string[] names);
 		IEnumerable<PlayerRotation> GetRotations();
+		string GetEncounterName();
+		string GetLogName();
 	}
 }

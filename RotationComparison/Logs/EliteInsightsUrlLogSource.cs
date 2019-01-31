@@ -23,5 +23,15 @@ namespace RotationComparison.Logs
 		{
 			throw new NotImplementedException();
 		}
+
+		public string GetEncounterName()
+		{
+			throw new NotImplementedException();
+		}
+
+		public string GetLogName()
+		{
+			throw new NotImplementedException();
+		}
 	}
 }
