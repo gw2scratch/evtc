@@ -27,8 +27,10 @@ namespace RotationComparison
 <head>
 	<title>Rotation Comparison</title>
 	<meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
     <script defer src='https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js'></script>
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css'>
+	<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css' integrity='sha256-8B1OaG0zT7uYA572S2xOxWACq9NXYPQ+U5kHPV1bJN4=' crossorigin='anonymous' />
 	<style>
 		.rot-skill-image {
 			width: 32px;
@@ -59,10 +61,6 @@ namespace RotationComparison
         .vis-inner {
 			padding: 5px;
         }
-		.main {
-			width: 80%;
-			margin: 0 auto;
-        }
 		.character-name {
 			margin-bottom: 5px;
 			display: flex;
@@ -80,10 +78,13 @@ namespace RotationComparison
 	</style>
 </head>
 <body>
-	<section class='main'>
-		<h1>Rotation Comparison</h1>
-        <div id='rotation'></div>
-        <script>
+	<section class='section'>
+		<div class='container'>
+			<h1 class='title'>Rotation Comparison</h1>
+        	<div id='rotation'></div>
+			<br>
+			<div id='errors'></div>
+        	<script>
 document.addEventListener('DOMContentLoaded', function() {
 	var model = ");
 			WriteJsonModel(logSources, writer);
@@ -94,6 +95,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	let rotations = model.Rotations;
 	let skillData = model.SkillData;
+	let errors = model.Errors;
+
+	for (let i = 0; i < errors.length; i++) {
+		let div = document.createElement('div');
+		div.className = 'notification is-danger';
+		div.innerHTML = errors[i];
+		document.getElementById('errors').appendChild(div);
+	}
 
 	let id = 0;
 	for (let i = 0; i < rotations.length; i++) {
@@ -158,7 +167,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	var timeline = new vis.Timeline(container, items, groups, options);
 });
-        </script>
+			</script>
+		</div>
 	</section>
 </body>
 </html>
@@ -167,13 +177,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		public void WriteJsonModel(IEnumerable<ILogSource> logSources, TextWriter writer)
 		{
-			var rotationLists = new List<JsonRotation>();
+			var errors = new List<string>();
+			var jsonRotations = new List<JsonRotation>();
 
 			var usedSkills = new Dictionary<uint, string>();
 
 			foreach (var source in logSources)
 			{
-				var rotations = source.GetRotations();
+                IEnumerable<Rotation> rotations;
+                try
+                {
+	                rotations = source.GetRotations();
+                }
+                catch (Exception e)
+                {
+                    errors.Add($"Failed to process {source.GetLogName()}: " + e.Message);
+                    continue;
+                }
 
 				foreach (var rotation in rotations)
 				{
@@ -186,7 +206,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						usedSkills[skillCast.SkillId] = skillCast.SkillName;
 					}
 
-					rotationLists.Add(new JsonRotation(player, rotation.Items));
+					jsonRotations.Add(new JsonRotation(player, rotation.Items));
 				}
 			}
 
@@ -199,7 +219,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						: new {Name = x.Data.Name, IconUrl = x.Data.IconUrl}
 				);
 
-			writer.Write(JsonConvert.SerializeObject(new {Rotations = rotationLists, SkillData = skillData}));
+			writer.Write(JsonConvert.SerializeObject(new {Rotations = jsonRotations, SkillData = skillData, Errors = errors}));
 		}
 
 		public string GetTinyProfessionIconUrl(Profession profession, EliteSpecialization specialization)

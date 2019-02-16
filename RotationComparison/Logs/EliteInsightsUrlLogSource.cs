@@ -31,7 +31,7 @@ namespace RotationComparison.Logs
 
 		public string GetLogName()
 		{
-			throw new NotImplementedException();
+			return dpsReportUrl;
 		}
 	}
 }
