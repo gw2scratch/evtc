@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using ScratchEVTCParser.Statistics.PlayerDataParts;
+using RotationComparison.Rotations;
 
 namespace RotationComparison.Logs
 {
@@ -19,7 +19,7 @@ namespace RotationComparison.Logs
 			characterNames = names;
 		}
 
-		public IEnumerable<PlayerRotation> GetRotations()
+		public IEnumerable<Rotation> GetRotations()
 		{
 			throw new NotImplementedException();
 		}

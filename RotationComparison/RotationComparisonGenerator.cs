@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
+using RotationComparison.JsonModel;
 using RotationComparison.Logs;
+using RotationComparison.Rotations;
 using ScratchEVTCParser;
-using ScratchEVTCParser.Model;
 using ScratchEVTCParser.Model.Agents;
-using ScratchEVTCParser.Model.Skills;
-using ScratchEVTCParser.Statistics.RotationItems;
 
 namespace RotationComparison
 {
@@ -20,75 +19,6 @@ namespace RotationComparison
 		{
 			this.apiData = apiData;
 		}
-
-		private enum RotationItemType
-		{
-			Unknown = 0,
-			SkillCast = 1,
-			WeaponSwap = 2,
-		}
-
-        private enum SkillCast
-        {
-	        Unknown = 0,
-            Success = 1,
-            Cancel = 2,
-            Reset = 3,
-        }
-
-		private abstract class RotationItemBase
-		{
-			public abstract RotationItemType Type { get; }
-			public abstract long Time { get; }
-			public abstract long Duration { get; }
-			public long TimeEnd => Time + Duration;
-		}
-
-		private class SkillRotationItem : RotationItemBase
-		{
-			public override RotationItemType Type { get; } = RotationItemType.SkillCast;
-            public override long Time { get; }
-            public override long Duration { get; }
-			public SkillCast CastType { get; }
-            public uint SkillId { get; }
-
-            public SkillRotationItem(SkillCastItem skillCastItem)
-            {
-	            Time = skillCastItem.ItemTime;
-	            SkillId = skillCastItem.Skill.Id;
-	            Duration = skillCastItem.Duration;
-	            switch (skillCastItem.Type)
-	            {
-		            case SkillCastType.Success:
-			            CastType = SkillCast.Success;
-			            break;
-		            case SkillCastType.Cancel:
-			            CastType = SkillCast.Cancel;
-			            break;
-		            case SkillCastType.Reset:
-			            CastType = SkillCast.Reset;
-			            break;
-		            default:
-			            CastType = SkillCast.Unknown;
-			            break;
-	            }
-            }
-		}
-
-		private class WeaponSwapRotationItem : RotationItemBase
-		{
-			public override RotationItemType Type { get; } = RotationItemType.WeaponSwap;
-            public override long Time { get; }
-            public override long Duration { get; } = 0;
-			public WeaponSet NewWeaponSet { get; }
-
-            public WeaponSwapRotationItem(WeaponSwapItem item)
-            {
-	            Time = item.ItemTime;
-	            NewWeaponSet = item.NewWeaponSet;
-            }
-		}
-
 
 		public void WriteHtmlOutput(IEnumerable<ILogSource> logSources, TextWriter writer)
 		{
@@ -157,7 +87,7 @@ namespace RotationComparison
 document.addEventListener('DOMContentLoaded', function() {
 	var model = ");
 			WriteJsonModel(logSources, writer);
-            writer.Write(@";
+			writer.Write(@";
 	let container = document.getElementById('rotation');
 	let groups = new vis.DataSet({});
 	let items = new vis.DataSet({});
@@ -235,41 +165,11 @@ document.addEventListener('DOMContentLoaded', function() {
 ");
 		}
 
-		private class PlayerData
-		{
-			public string Name { get; }
-			public string IconUrl { get; }
-			public string LogName { get; }
-			public string EncounterName { get; }
-
-			public PlayerData(string name, string iconUrl, string logName, string encounterName)
-			{
-				Name = name;
-				IconUrl = iconUrl;
-				LogName = logName;
-				EncounterName = encounterName;
-			}
-		}
-
-		private class Rotation
-		{
-			public Rotation(PlayerData playerData, IEnumerable<RotationItemBase> items)
-			{
-				PlayerData = playerData;
-				Items = items.ToArray();
-			}
-
-			public PlayerData PlayerData { get; }
-			public IEnumerable<RotationItemBase> Items { get; }
-		}
-
 		public void WriteJsonModel(IEnumerable<ILogSource> logSources, TextWriter writer)
 		{
-            var rotationLists = new List<Rotation>();
+			var rotationLists = new List<JsonRotation>();
 
-            // This can't simply be a Hashset because Skills from different logs can have the same id,
-            // but are in fact different instances
-            var usedSkills = new Dictionary<uint, Skill>();
+			var usedSkills = new Dictionary<uint, string>();
 
 			foreach (var source in logSources)
 			{
@@ -277,32 +177,21 @@ document.addEventListener('DOMContentLoaded', function() {
 
 				foreach (var rotation in rotations)
 				{
-					var outputItems = new List<RotationItemBase>();
-
-					foreach (var item in rotation.Items)
-					{
-						switch (item)
-						{
-							case SkillCastItem skillCastItem:
-                                outputItems.Add(new SkillRotationItem(skillCastItem));
-                                usedSkills[skillCastItem.Skill.Id] = skillCastItem.Skill;
-								break;
-							case TemporaryStatusItem temporaryStatusItem:
-								break;
-							case WeaponSwapItem weaponSwapItem:
-                                outputItems.Add(new WeaponSwapRotationItem(weaponSwapItem));
-								break;
-						}
-					}
-
-					var player = new PlayerData(rotation.Player.Name, GetTinyProfessionIconUrl(rotation.Player),
+					var player = new PlayerData(rotation.PlayerName,
+						GetTinyProfessionIconUrl(rotation.Profession, rotation.Specialization),
 						source.GetLogName(), source.GetEncounterName());
 
-					rotationLists.Add(new Rotation(player, outputItems));
+					foreach (var skillCast in rotation.Items.OfType<SkillCast>())
+					{
+						usedSkills[skillCast.SkillId] = skillCast.SkillName;
+					}
+
+					rotationLists.Add(new JsonRotation(player, rotation.Items));
 				}
 			}
 
-			var skillData = usedSkills.Values.Select(x => (Skill: x, Data: apiData.GetSkillData(x)))
+			var skillData = usedSkills
+				.Select(x => (Skill: (Id: x.Key, Name: x.Value), Data: apiData.GetSkillData((int) x.Key)))
 				.ToDictionary(
 					x => x.Skill.Id,
 					x => x.Data == null
@@ -310,39 +199,39 @@ document.addEventListener('DOMContentLoaded', function() {
 						: new {Name = x.Data.Name, IconUrl = x.Data.IconUrl}
 				);
 
-            writer.Write(JsonConvert.SerializeObject(new {Rotations = rotationLists, SkillData = skillData}));
+			writer.Write(JsonConvert.SerializeObject(new {Rotations = rotationLists, SkillData = skillData}));
 		}
 
-		public string GetTinyProfessionIconUrl(Player player)
+		public string GetTinyProfessionIconUrl(Profession profession, EliteSpecialization specialization)
 		{
-		    if (player.EliteSpecialization == EliteSpecialization.None)
-		    {
-			    switch (player.Profession)
-			    {
-				    case Profession.Warrior:
-					    return "https://wiki.guildwars2.com/images/4/43/Warrior_tango_icon_20px.png";
-				    case Profession.Guardian:
-					    return "https://wiki.guildwars2.com/images/8/8c/Guardian_tango_icon_20px.png";
-				    case Profession.Revenant:
-					    return "https://wiki.guildwars2.com/images/b/b5/Revenant_tango_icon_20px.png";
-				    case Profession.Ranger:
-					    return "https://wiki.guildwars2.com/images/4/43/Ranger_tango_icon_20px.png";
-				    case Profession.Thief:
-					    return "https://wiki.guildwars2.com/images/7/7a/Thief_tango_icon_20px.png";
-				    case Profession.Engineer:
-					    return "https://wiki.guildwars2.com/images/2/27/Engineer_tango_icon_20px.png";
-				    case Profession.Necromancer:
-					    return "https://wiki.guildwars2.com/images/4/43/Necromancer_tango_icon_20px.png";
-				    case Profession.Elementalist:
-					    return "https://wiki.guildwars2.com/images/a/aa/Elementalist_tango_icon_20px.png";
-				    case Profession.Mesmer:
-					    return "https://wiki.guildwars2.com/images/6/60/Mesmer_tango_icon_20px.png";
-				    default:
-					    throw new ArgumentOutOfRangeException(nameof(player.Profession));
-			    }
-		    }
+			if (specialization == EliteSpecialization.None)
+			{
+				switch (profession)
+				{
+					case Profession.Warrior:
+						return "https://wiki.guildwars2.com/images/4/43/Warrior_tango_icon_20px.png";
+					case Profession.Guardian:
+						return "https://wiki.guildwars2.com/images/8/8c/Guardian_tango_icon_20px.png";
+					case Profession.Revenant:
+						return "https://wiki.guildwars2.com/images/b/b5/Revenant_tango_icon_20px.png";
+					case Profession.Ranger:
+						return "https://wiki.guildwars2.com/images/4/43/Ranger_tango_icon_20px.png";
+					case Profession.Thief:
+						return "https://wiki.guildwars2.com/images/7/7a/Thief_tango_icon_20px.png";
+					case Profession.Engineer:
+						return "https://wiki.guildwars2.com/images/2/27/Engineer_tango_icon_20px.png";
+					case Profession.Necromancer:
+						return "https://wiki.guildwars2.com/images/4/43/Necromancer_tango_icon_20px.png";
+					case Profession.Elementalist:
+						return "https://wiki.guildwars2.com/images/a/aa/Elementalist_tango_icon_20px.png";
+					case Profession.Mesmer:
+						return "https://wiki.guildwars2.com/images/6/60/Mesmer_tango_icon_20px.png";
+					default:
+						throw new ArgumentOutOfRangeException(nameof(profession));
+				}
+			}
 
-			switch (player.EliteSpecialization)
+			switch (specialization)
 			{
 				case EliteSpecialization.Berserker:
 					return "https://wiki.guildwars2.com/images/d/da/Berserker_tango_icon_20px.png";
@@ -381,7 +270,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				case EliteSpecialization.Mirage:
 					return "https://wiki.guildwars2.com/images/d/df/Mirage_tango_icon_20px.png";
 				default:
-					throw new ArgumentOutOfRangeException(nameof(player.EliteSpecialization));
+					throw new ArgumentOutOfRangeException(nameof(specialization));
 			}
 		}
 	}

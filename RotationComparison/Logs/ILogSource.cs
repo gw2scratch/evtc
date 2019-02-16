@@ -1,12 +1,12 @@
 using System.Collections.Generic;
-using ScratchEVTCParser.Statistics.PlayerDataParts;
+using RotationComparison.Rotations;
 
 namespace RotationComparison.Logs
 {
 	public interface ILogSource
 	{
 		void SetCharacterNameFilter(params string[] names);
-		IEnumerable<PlayerRotation> GetRotations();
+		IEnumerable<Rotation> GetRotations();
 		string GetEncounterName();
 		string GetLogName();
 	}
