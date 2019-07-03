@@ -1,13 +1,11 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using Eto.Drawing;
 using Eto.Forms;
 using ScratchEVTCParser.Events;
 using ScratchEVTCParser.Model.Agents;
 
-namespace ScratchLogBrowser
+namespace ScratchLogInspector
 {
 	public class AgentControl : Panel
 	{

@@ -5,7 +5,7 @@ using Eto.Forms;
 using ScratchEVTCParser.Events;
 using ScratchEVTCParser.Model.Agents;
 
-namespace ScratchLogBrowser
+namespace ScratchLogInspector
 {
 	public class EventListControl : Panel
 	{

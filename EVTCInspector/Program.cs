@@ -1,7 +1,7 @@
 ﻿using System;
 using Eto.Forms;
 
-namespace ScratchLogBrowser
+namespace ScratchLogInspector
 {
 	public static class Program
 	{

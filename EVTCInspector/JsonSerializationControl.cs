@@ -3,7 +3,7 @@ using System.IO;
 using Eto.Forms;
 using Newtonsoft.Json;
 
-namespace ScratchLogBrowser
+namespace ScratchLogInspector
 {
 	public class JsonSerializationControl : Panel
 	{

@@ -1,7 +1,7 @@
 using ScratchEVTCParser.Events;
 using ScratchEVTCParser.Model.Agents;
 
-namespace ScratchLogBrowser
+namespace ScratchLogInspector
 {
 	public static class EventFilters
 	{

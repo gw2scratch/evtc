@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScratchEVTCParser", "ScratchEVTCParser\ScratchEVTCParser.csproj", "{9DD47A76-3C69-4152-AA36-B656CAFFDECB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScratchLogBrowser", "ScratchLogBrowser\ScratchLogBrowser.csproj", "{CB188F27-D853-4167-9693-AE4C8890BE70}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVTCInspector", "EVTCInspector\EVTCInspector.csproj", "{CB188F27-D853-4167-9693-AE4C8890BE70}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScratchLogHTMLGenerator", "ScratchLogHTMLGenerator\ScratchLogHTMLGenerator.csproj", "{2A679D21-D206-4F4A-8546-8F0E86547A0D}"
 EndProject

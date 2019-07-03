@@ -16,7 +16,7 @@ using ScratchEVTCParser.Parsed;
 using ScratchEVTCParser.Statistics;
 using ScratchLogHTMLGenerator;
 
-namespace ScratchLogBrowser
+namespace ScratchLogInspector
 {
 	public class BrowserForm : Form
 	{
@@ -66,7 +66,7 @@ namespace ScratchLogBrowser
 
 		public BrowserForm()
 		{
-			Title = "Scratch EVTC Browser";
+			Title = "Scratch EVTC Inspector";
 			ClientSize = new Size(800, 600);
 			var formLayout = new DynamicLayout();
 			Content = formLayout;

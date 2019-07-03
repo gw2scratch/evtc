@@ -4,7 +4,7 @@ using Eto.Generator;
 using ScratchEVTCParser;
 using ScratchEVTCParser.Model.Skills;
 
-namespace ScratchLogBrowser
+namespace ScratchLogInspector
 {
 	public class ApiDataSection : Panel
 	{
