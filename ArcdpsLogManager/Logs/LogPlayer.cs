@@ -1,6 +1,6 @@
-using ScratchEVTCParser.Model.Agents;
+using GW2Scratch.EVTCAnalytics.Model.Agents;
 
-namespace ArcdpsLogManager.Logs
+namespace GW2Scratch.ArcdpsLogManager.Logs
 {
 	public class LogPlayer
 	{

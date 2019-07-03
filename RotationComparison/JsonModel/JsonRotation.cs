@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
-using RotationComparison.Rotations;
+using GW2Scratch.RotationComparison.Rotations;
 
-namespace RotationComparison.JsonModel
+namespace GW2Scratch.RotationComparison.JsonModel
 {
 	public class JsonRotation
 	{

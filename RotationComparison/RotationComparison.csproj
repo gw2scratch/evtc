@@ -1,84 +1,83 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-    <PropertyGroup>
-        <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-        <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-        <ProjectGuid>{E20EFF93-9A56-4B0C-9272-E7B0B2331372}</ProjectGuid>
-        <OutputType>Exe</OutputType>
-        <AppDesignerFolder>Properties</AppDesignerFolder>
-        <RootNamespace>RotationComparison</RootNamespace>
-        <AssemblyName>RotationComparison</AssemblyName>
-        <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
-        <FileAlignment>512</FileAlignment>
-        <LangVersion>latest</LangVersion>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-        <PlatformTarget>AnyCPU</PlatformTarget>
-        <DebugSymbols>true</DebugSymbols>
-        <DebugType>full</DebugType>
-        <Optimize>false</Optimize>
-        <OutputPath>bin\Debug\</OutputPath>
-        <DefineConstants>DEBUG;TRACE</DefineConstants>
-        <ErrorReport>prompt</ErrorReport>
-        <WarningLevel>4</WarningLevel>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-        <PlatformTarget>AnyCPU</PlatformTarget>
-        <DebugType>pdbonly</DebugType>
-        <Optimize>true</Optimize>
-        <OutputPath>bin\Release\</OutputPath>
-        <DefineConstants>TRACE</DefineConstants>
-        <ErrorReport>prompt</ErrorReport>
-        <WarningLevel>4</WarningLevel>
-    </PropertyGroup>
-    <ItemGroup>
-        <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
-          <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-          <Private>True</Private>
-        </Reference>
-        <Reference Include="System" />
-        <Reference Include="System.Core" />
-        <Reference Include="System.Data" />
-        <Reference Include="System.Xml" />
-    </ItemGroup>
-    <ItemGroup>
-        <Compile Include="GW2Api\ApiApiDataSource.cs" />
-        <Compile Include="GW2Api\FileApiDataSource.cs" />
-        <Compile Include="GW2Api\IApiDataSource.cs" />
-        <Compile Include="JsonModel\JsonRotation.cs" />
-        <Compile Include="Logs\EliteInsightsUrlLogSource.cs" />
-        <Compile Include="Logs\FileLogSource.cs" />
-        <Compile Include="Logs\ILogSource.cs" />
-        <Compile Include="Logs\ScratchParserLogSource.cs" />
-        <Compile Include="Logs\StreamLogSource.cs" />
-        <Compile Include="Program.cs" />
-        <Compile Include="Properties\AssemblyInfo.cs" />
-        <Compile Include="RotationComparisonGenerator.cs" />
-        <Compile Include="Rotations\PlayerData.cs" />
-        <Compile Include="Rotations\Rotation.cs" />
-        <Compile Include="Rotations\RotationItem.cs" />
-        <Compile Include="Rotations\RotationItemType.cs" />
-        <Compile Include="Rotations\SkillCastType.cs" />
-        <Compile Include="Rotations\SkillCast.cs" />
-        <Compile Include="Rotations\WeaponSwap.cs" />
-    </ItemGroup>
-    <ItemGroup>
-      <ProjectReference Include="..\ScratchEVTCParser\ScratchEVTCParser.csproj">
-        <Project>{9dd47a76-3c69-4152-aa36-b656caffdecb}</Project>
-        <Name>ScratchEVTCParser</Name>
-      </ProjectReference>
-    </ItemGroup>
-    <ItemGroup>
-      <None Include="packages.config" />
-    </ItemGroup>
-    <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-    <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{E20EFF93-9A56-4B0C-9272-E7B0B2331372}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>GW2Scratch.RotationComparison</RootNamespace>
+    <AssemblyName>GW2Scratch.RotationComparison</AssemblyName>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="GW2Api\ApiApiDataSource.cs" />
+    <Compile Include="GW2Api\FileApiDataSource.cs" />
+    <Compile Include="GW2Api\IApiDataSource.cs" />
+    <Compile Include="JsonModel\JsonRotation.cs" />
+    <Compile Include="Logs\EliteInsightsUrlLogSource.cs" />
+    <Compile Include="Logs\FileLogSource.cs" />
+    <Compile Include="Logs\ILogSource.cs" />
+    <Compile Include="Logs\ScratchParserLogSource.cs" />
+    <Compile Include="Logs\StreamLogSource.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RotationComparisonGenerator.cs" />
+    <Compile Include="Rotations\PlayerData.cs" />
+    <Compile Include="Rotations\Rotation.cs" />
+    <Compile Include="Rotations\RotationItem.cs" />
+    <Compile Include="Rotations\RotationItemType.cs" />
+    <Compile Include="Rotations\SkillCastType.cs" />
+    <Compile Include="Rotations\SkillCast.cs" />
+    <Compile Include="Rotations\WeaponSwap.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EVTCAnalytics\EVTCAnalytics.csproj">
+      <Project>{9dd47a76-3c69-4152-aa36-b656caffdecb}</Project>
+      <Name>EVTCAnalytics</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
          Other similar extension points exist, see Microsoft.Common.targets.
     <Target Name="BeforeBuild">
     </Target>
     <Target Name="AfterBuild">
     </Target>
     -->
-
 </Project>

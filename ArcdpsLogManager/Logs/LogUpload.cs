@@ -1,10 +1,10 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using ArcdpsLogManager.Uploaders;
+using GW2Scratch.ArcdpsLogManager.Uploaders;
 using Newtonsoft.Json;
 
-namespace ArcdpsLogManager.Logs
+namespace GW2Scratch.ArcdpsLogManager.Logs
 {
 	public class LogUpload
 	{

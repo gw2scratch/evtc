@@ -3,7 +3,7 @@ using System.IO;
 using Eto.Forms;
 using Newtonsoft.Json;
 
-namespace ScratchLogInspector
+namespace GW2Scratch.EVTCInspector
 {
 	public class JsonSerializationControl : Panel
 	{

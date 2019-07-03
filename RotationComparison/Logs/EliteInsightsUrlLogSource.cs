@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using RotationComparison.Rotations;
+using GW2Scratch.RotationComparison.Rotations;
 
-namespace RotationComparison.Logs
+namespace GW2Scratch.RotationComparison.Logs
 {
 	public class EliteInsightsUrlLogSource : ILogSource
 	{

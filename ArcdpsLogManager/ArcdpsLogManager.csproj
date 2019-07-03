@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -7,9 +7,9 @@
     <ProjectGuid>{909DE828-0610-473B-BE74-CE683C621CDC}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ArcdpsLogManager</RootNamespace>
-    <AssemblyName>ArcdpsLogManager</AssemblyName>
-    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+    <RootNamespace>GW2Scratch.ArcdpsLogManager</RootNamespace>
+    <AssemblyName>GW2Scratch.ArcdpsLogManager</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
@@ -87,6 +87,7 @@
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources.cs" />
+    <Compile Include="Sections\AdvancedFilters.cs" />
     <Compile Include="Sections\DebugData.cs" />
     <Compile Include="Sections\GameDataGathering.cs" />
     <Compile Include="Sections\LogList.cs" />
@@ -102,13 +103,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ScratchEVTCParser\ScratchEVTCParser.csproj">
+    <ProjectReference Include="..\EVTCAnalytics\EVTCAnalytics.csproj">
       <Project>{9dd47a76-3c69-4152-aa36-b656caffdecb}</Project>
-      <Name>ScratchEVTCParser</Name>
+      <Name>EVTCAnalytics</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ScratchLogBrowser\ScratchLogBrowser.csproj">
+    <ProjectReference Include="..\EVTCInspector\EVTCInspector.csproj">
       <Project>{cb188f27-d853-4167-9693-ae4c8890be70}</Project>
-      <Name>ScratchLogBrowser</Name>
+      <Name>EVTCInspector</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

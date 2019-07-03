@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -7,18 +7,17 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
-using ArcdpsLogManager.Annotations;
-using ArcdpsLogManager.Controls;
-using ArcdpsLogManager.Logs;
-using ArcdpsLogManager.Sections;
-using ArcdpsLogManager.Timing;
 using Eto.Drawing;
 using Eto.Forms;
+using GW2Scratch.ArcdpsLogManager.Logs;
+using GW2Scratch.ArcdpsLogManager.Properties;
+using GW2Scratch.ArcdpsLogManager.Sections;
+using GW2Scratch.ArcdpsLogManager.Timing;
+using GW2Scratch.EVTCAnalytics;
+using GW2Scratch.EVTCAnalytics.Statistics.Encounters.Results;
 using Newtonsoft.Json;
-using ScratchEVTCParser;
-using ScratchEVTCParser.Statistics.Encounters.Results;
 
-namespace ArcdpsLogManager
+namespace GW2Scratch.ArcdpsLogManager
 {
 	public class ManagerForm : Form, INotifyPropertyChanged
 	{
@@ -145,6 +144,14 @@ namespace ArcdpsLogManager
 			{
 				startDateTimePicker.Value = GuildWars2ReleaseDate;
 				endDateTimePicker.Value = DateTime.Now;
+			};
+
+			var advancedFiltersButton = new Button {Text = "Advanced"};
+			advancedFiltersButton.Click += (sender, args) =>
+			{
+				// TODO: Properly implement
+				var form = new Form() {Content = new AdvancedFilters(ImageProvider)};
+				form.Show();
 			};
 
 			var applyFilterButton = new Button {Text = "Apply"};

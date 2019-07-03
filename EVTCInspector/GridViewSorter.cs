@@ -1,7 +1,7 @@
 using System;
 using Eto.Forms;
 
-namespace ScratchLogInspector
+namespace GW2Scratch.EVTCInspector
 {
 	public class GridViewSorter<T>
 	{

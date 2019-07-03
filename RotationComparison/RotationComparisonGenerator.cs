@@ -2,14 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using GW2Scratch.EVTCAnalytics;
+using GW2Scratch.EVTCAnalytics.Model.Agents;
+using GW2Scratch.RotationComparison.JsonModel;
+using GW2Scratch.RotationComparison.Logs;
+using GW2Scratch.RotationComparison.Rotations;
 using Newtonsoft.Json;
-using RotationComparison.JsonModel;
-using RotationComparison.Logs;
-using RotationComparison.Rotations;
-using ScratchEVTCParser;
-using ScratchEVTCParser.Model.Agents;
 
-namespace RotationComparison
+namespace GW2Scratch.RotationComparison
 {
 	public class RotationComparisonGenerator
 	{

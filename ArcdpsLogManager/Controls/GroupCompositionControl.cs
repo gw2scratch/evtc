@@ -1,12 +1,10 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using ArcdpsLogManager.Logs;
 using Eto.Drawing;
 using Eto.Forms;
-using ScratchEVTCParser.Model.Agents;
+using GW2Scratch.ArcdpsLogManager.Logs;
 
-namespace ArcdpsLogManager.Controls
+namespace GW2Scratch.ArcdpsLogManager.Controls
 {
 	public class GroupCompositionControl : DynamicLayout
 	{

@@ -1,14 +1,14 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using ArcdpsLogManager.Logs;
-using ArcdpsLogManager.Sections;
-using ArcdpsLogManager.Uploaders;
 using Eto.Drawing;
 using Eto.Forms;
-using ScratchEVTCParser.Statistics.Encounters.Results;
+using GW2Scratch.ArcdpsLogManager.Logs;
+using GW2Scratch.ArcdpsLogManager.Sections;
+using GW2Scratch.ArcdpsLogManager.Uploaders;
+using GW2Scratch.EVTCAnalytics.Statistics.Encounters.Results;
 
-namespace ArcdpsLogManager.Controls
+namespace GW2Scratch.ArcdpsLogManager.Controls
 {
 	public class LogDetailPanel : DynamicLayout
 	{

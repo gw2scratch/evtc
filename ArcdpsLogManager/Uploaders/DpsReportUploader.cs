@@ -2,10 +2,10 @@ using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using ArcdpsLogManager.Logs;
+using GW2Scratch.ArcdpsLogManager.Logs;
 using Newtonsoft.Json;
 
-namespace ArcdpsLogManager.Uploaders
+namespace GW2Scratch.ArcdpsLogManager.Uploaders
 {
 	public class DpsReportUploader : IUploader, IDisposable
 	{

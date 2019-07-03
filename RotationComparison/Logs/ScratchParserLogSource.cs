@@ -1,15 +1,15 @@
 using System.Collections.Generic;
 using System.Linq;
-using RotationComparison.Rotations;
-using ScratchEVTCParser;
-using ScratchEVTCParser.Model;
-using ScratchEVTCParser.Model.Agents;
-using ScratchEVTCParser.Statistics;
-using ScratchEVTCParser.Statistics.RotationItems;
-using RotationItem = RotationComparison.Rotations.RotationItem;
-using SkillCastType = RotationComparison.Rotations.SkillCastType;
+using GW2Scratch.EVTCAnalytics;
+using GW2Scratch.EVTCAnalytics.Model;
+using GW2Scratch.EVTCAnalytics.Model.Agents;
+using GW2Scratch.EVTCAnalytics.Statistics;
+using GW2Scratch.EVTCAnalytics.Statistics.RotationItems;
+using GW2Scratch.RotationComparison.Rotations;
+using RotationItem = GW2Scratch.RotationComparison.Rotations.RotationItem;
+using SkillCastType = GW2Scratch.RotationComparison.Rotations.SkillCastType;
 
-namespace RotationComparison.Logs
+namespace GW2Scratch.RotationComparison.Logs
 {
 	public abstract class ScratchParserLogSource : ILogSource
 	{
@@ -60,13 +60,13 @@ namespace RotationComparison.Logs
 			SkillCastType type;
 			switch (skillCastItem.Type)
 			{
-				case ScratchEVTCParser.Statistics.RotationItems.SkillCastType.Success:
+				case GW2Scratch.EVTCAnalytics.Statistics.RotationItems.SkillCastType.Success:
 					type = SkillCastType.Success;
 					break;
-				case ScratchEVTCParser.Statistics.RotationItems.SkillCastType.Cancel:
+				case GW2Scratch.EVTCAnalytics.Statistics.RotationItems.SkillCastType.Cancel:
 					type = SkillCastType.Cancel;
 					break;
-				case ScratchEVTCParser.Statistics.RotationItems.SkillCastType.Reset:
+				case GW2Scratch.EVTCAnalytics.Statistics.RotationItems.SkillCastType.Reset:
 					type = SkillCastType.Reset;
 					break;
 				default:

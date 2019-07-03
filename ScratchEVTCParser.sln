@@ -1,18 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScratchEVTCParser", "ScratchEVTCParser\ScratchEVTCParser.csproj", "{9DD47A76-3C69-4152-AA36-B656CAFFDECB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVTCAnalytics", "EVTCAnalytics\EVTCAnalytics.csproj", "{9DD47A76-3C69-4152-AA36-B656CAFFDECB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVTCInspector", "EVTCInspector\EVTCInspector.csproj", "{CB188F27-D853-4167-9693-AE4C8890BE70}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScratchLogHTMLGenerator", "ScratchLogHTMLGenerator\ScratchLogHTMLGenerator.csproj", "{2A679D21-D206-4F4A-8546-8F0E86547A0D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVTCAnalytics.HtmlLogs", "EVTCAnalytics.HtmlLogs\EVTCAnalytics.HtmlLogs.csproj", "{2A679D21-D206-4F4A-8546-8F0E86547A0D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScratchLogMaker", "ScratchLogMaker\ScratchLogMaker.csproj", "{B4EBA714-D8AE-42DD-9CD0-10F673D5AFA1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HtmlLogMaker", "HtmlLogMaker\HtmlLogMaker.csproj", "{B4EBA714-D8AE-42DD-9CD0-10F673D5AFA1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScratchEVTCParser.Tests", "ScratchEVTCParser.Tests\ScratchEVTCParser.Tests.csproj", "{642FA29B-CF62-495E-A88F-D08A9F3C5FEC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVTCAnalytics.Tests", "EVTCAnalytics.Tests\EVTCAnalytics.Tests.csproj", "{642FA29B-CF62-495E-A88F-D08A9F3C5FEC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArcdpsLogManager", "ArcdpsLogManager\ArcdpsLogManager.csproj", "{909DE828-0610-473B-BE74-CE683C621CDC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScratchEVTCParser.Benchmark", "ScratchEVTCParser.Benchmark\ScratchEVTCParser.Benchmark.csproj", "{13CFD4FA-3CF3-4169-A692-9874AC2DEE08}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVTCAnalytics.Benchmark", "EVTCAnalytics.Benchmark\EVTCAnalytics.Benchmark.csproj", "{13CFD4FA-3CF3-4169-A692-9874AC2DEE08}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RotationComparison", "RotationComparison\RotationComparison.csproj", "{E20EFF93-9A56-4B0C-9272-E7B0B2331372}"
 EndProject

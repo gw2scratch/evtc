@@ -1,10 +1,10 @@
 using System.Globalization;
-using ArcdpsLogManager.Logs;
 using Eto.Drawing;
 using Eto.Forms;
-using ScratchLogBrowser;
+using GW2Scratch.ArcdpsLogManager.Logs;
+using GW2Scratch.EVTCInspector;
 
-namespace ArcdpsLogManager.Sections
+namespace GW2Scratch.ArcdpsLogManager.Sections
 {
 	public class DebugData : Panel
 	{
@@ -18,7 +18,7 @@ namespace ArcdpsLogManager.Sections
 				logData = value;
 				var layout = new DynamicLayout();
 
-				var browserButton = new Button {Text = "Open in Scratch EVTC Browser"};
+				var browserButton = new Button {Text = "Open in Scratch EVTC Inspector"};
 
 				layout.BeginVertical(new Padding(5), new Size(5, 5));
 				{

@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
-using ScratchEVTCParser.Model.Agents;
+using GW2Scratch.EVTCAnalytics.Model.Agents;
 
-namespace RotationComparison.Rotations
+namespace GW2Scratch.RotationComparison.Rotations
 {
 	public class Rotation
 	{

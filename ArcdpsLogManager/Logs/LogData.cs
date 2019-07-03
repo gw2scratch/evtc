@@ -5,11 +5,11 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using ArcdpsLogManager.Uploaders;
-using ScratchEVTCParser;
-using ScratchEVTCParser.Statistics.Encounters.Results;
+using GW2Scratch.ArcdpsLogManager.Uploaders;
+using GW2Scratch.EVTCAnalytics;
+using GW2Scratch.EVTCAnalytics.Statistics.Encounters.Results;
 
-namespace ArcdpsLogManager.Logs
+namespace GW2Scratch.ArcdpsLogManager.Logs
 {
 	public class LogData
 	{

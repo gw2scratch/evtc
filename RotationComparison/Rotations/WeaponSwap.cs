@@ -1,6 +1,6 @@
-using ScratchEVTCParser.Model;
+using GW2Scratch.EVTCAnalytics.Model;
 
-namespace RotationComparison.Rotations
+namespace GW2Scratch.RotationComparison.Rotations
 {
 	public class WeaponSwap : RotationItem
 	{

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ArcdpsLogManager.Logs
+namespace GW2Scratch.ArcdpsLogManager.Logs
 {
 	public class PlayerData
 	{

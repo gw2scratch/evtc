@@ -1,0 +1,170 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{9DD47A76-3C69-4152-AA36-B656CAFFDECB}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>GW2Scratch.EVTCAnalytics</RootNamespace>
+    <AssemblyName>GW2Scratch.EVTCAnalytics</AssemblyName>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Eto.Generator, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\ScratchLogBrowser\dependencies\Eto.Generator.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="RestSharp, Version=106.5.4.0, Culture=neutral, PublicKeyToken=598062e77f915f75">
+      <HintPath>..\packages\RestSharp.106.5.4\lib\net452\RestSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Events\AgentEvents.cs" />
+    <Compile Include="Events\BuffEvents.cs" />
+    <Compile Include="Events\DamageEvents.cs" />
+    <Compile Include="Events\Event.cs" />
+    <Compile Include="Events\LogEvents.cs" />
+    <Compile Include="Events\SkillEvents.cs" />
+    <Compile Include="Events\UnknownEvent.cs" />
+    <Compile Include="Exceptions\LogProcessingException.cs" />
+    <Compile Include="GameData\Detections\DamageWithSkillDetection.cs" />
+    <Compile Include="GameData\Detections\IDetection.cs" />
+    <Compile Include="GameData\Detections\InitialBuffDetection.cs" />
+    <Compile Include="GameData\Detections\SelfBuffApplyDetection.cs" />
+    <Compile Include="GameData\GameSkillDataRepository.cs" />
+    <Compile Include="GameData\SkillIds.cs" />
+    <Compile Include="GameData\SpecializationDetection.cs" />
+    <Compile Include="GameData\SpecializationDetections.cs" />
+    <Compile Include="GameData\SkillDetection.cs" />
+    <Compile Include="GameData\SkillDetections.cs" />
+    <Compile Include="GameData\SpeciesIds.cs" />
+    <Compile Include="GW2ApiData.cs" />
+    <Compile Include="GW2Api\V2\ApiSkill.cs" />
+    <Compile Include="GW2Api\V2\ApiSkillRepository.cs" />
+    <Compile Include="IO\BitConversions.cs" />
+    <Compile Include="IO\ByteArrayBinaryReader.cs" />
+    <Compile Include="LogProcessor.cs" />
+    <Compile Include="EVTCParser.cs" />
+    <Compile Include="Model\Agents\Agent.cs" />
+    <Compile Include="Model\Agents\EliteSpecialization.cs" />
+    <Compile Include="Model\Agents\Gadget.cs" />
+    <Compile Include="Model\Agents\NPC.cs" />
+    <Compile Include="Model\Agents\Player.cs" />
+    <Compile Include="Model\Agents\Profession.cs" />
+    <Compile Include="Model\LogTime.cs" />
+    <Compile Include="Model\Log.cs" />
+    <Compile Include="Model\Skills\SkillAttunement.cs" />
+    <Compile Include="Model\Skills\SkillData.cs" />
+    <Compile Include="Model\Skills\Skill.cs" />
+    <Compile Include="Model\Skills\SkillSlot.cs" />
+    <Compile Include="Model\Skills\SkillType.cs" />
+    <Compile Include="Model\CoreSpecialization.cs" />
+    <Compile Include="Model\WeaponSet.cs" />
+    <Compile Include="Model\WeaponType.cs" />
+    <Compile Include="Parsed\Enums\Activation.cs" />
+    <Compile Include="Parsed\Enums\BuffRemove.cs" />
+    <Compile Include="Parsed\Enums\FriendOrFoe.cs" />
+    <Compile Include="Parsed\Enums\Result.cs" />
+    <Compile Include="Parsed\Enums\StateChange.cs" />
+    <Compile Include="Parsed\LogVersion.cs" />
+    <Compile Include="Parsed\ParsedAgent.cs" />
+    <Compile Include="Parsed\ParsedBossData.cs" />
+    <Compile Include="Parsed\ParsedCombatItem.cs" />
+    <Compile Include="Parsed\ParsedLog.cs" />
+    <Compile Include="Parsed\ParsedSkill.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StatisticsCalculator.cs" />
+    <Compile Include="Statistics\Buffs\AgentBuffData.cs" />
+    <Compile Include="Statistics\Buffs\BuffData.cs" />
+    <Compile Include="Statistics\Buffs\BuffSimulationType.cs" />
+    <Compile Include="Statistics\Buffs\BuffSimulator.cs" />
+    <Compile Include="Statistics\Buffs\BuffStack.cs" />
+    <Compile Include="Statistics\Buffs\IBuffStackCollection.cs" />
+    <Compile Include="Statistics\Buffs\BuffStatusSegment.cs" />
+    <Compile Include="Statistics\Buffs\IntensityBuffStackCollection.cs" />
+    <Compile Include="Statistics\EncounterFinder.cs" />
+    <Compile Include="Statistics\Encounters\AgentNameEncounterNameProvider.cs" />
+    <Compile Include="Statistics\Encounters\BaseEncounter.cs" />
+    <Compile Include="Statistics\Encounters\ConstantEncounterNameProvider.cs" />
+    <Compile Include="Statistics\Encounters\DefaultEncounter.cs" />
+    <Compile Include="Statistics\Encounters\IEncounter.cs" />
+    <Compile Include="Statistics\Encounters\IEncounterNameProvider.cs" />
+    <Compile Include="Statistics\Encounters\Phases\AgentEventTrigger.cs" />
+    <Compile Include="Statistics\Encounters\Phases\AndTrigger.cs" />
+    <Compile Include="Statistics\Encounters\Phases\BuffAddTrigger.cs" />
+    <Compile Include="Statistics\Encounters\Phases\BuffRemoveTrigger.cs" />
+    <Compile Include="Statistics\Encounters\Phases\IPhaseTrigger.cs" />
+    <Compile Include="Statistics\Encounters\Phases\Phase.cs" />
+    <Compile Include="Statistics\Encounters\Phases\PhaseDefinition.cs" />
+    <Compile Include="Statistics\Encounters\Phases\PhaseSplitter.cs" />
+    <Compile Include="Statistics\Encounters\Phases\StartTrigger.cs" />
+    <Compile Include="Statistics\Encounters\Results\AgentDeathResultDeterminer.cs" />
+    <Compile Include="Statistics\Encounters\Results\AgentExitCombatDeterminer.cs" />
+    <Compile Include="Statistics\Encounters\Results\CombinedResultDeterminer.cs" />
+    <Compile Include="Statistics\Encounters\Results\EncounterResult.cs" />
+    <Compile Include="Statistics\Encounters\Results\IResultDeterminer.cs" />
+    <Compile Include="Statistics\IEncounterFinder.cs" />
+    <Compile Include="Statistics\IRotationCalculator.cs" />
+    <Compile Include="Statistics\LogStatistics.cs" />
+    <Compile Include="Statistics\PhaseStats.cs" />
+    <Compile Include="Statistics\DamageData.cs" />
+    <Compile Include="Statistics\PlayerDataParts\BadgeType.cs" />
+    <Compile Include="Statistics\PlayerDataParts\PlayerBadge.cs" />
+    <Compile Include="Statistics\PlayerDataParts\PlayerData.cs" />
+    <Compile Include="Statistics\PlayerDataParts\PlayerRotation.cs" />
+    <Compile Include="Statistics\RotationCalculator.cs" />
+    <Compile Include="Statistics\RotationItems\RotationItem.cs" />
+    <Compile Include="Statistics\RotationItems\SkillCastItem.cs" />
+    <Compile Include="Statistics\RotationItems\SkillCastType.cs" />
+    <Compile Include="Statistics\RotationItems\TemporaryStatus.cs" />
+    <Compile Include="Statistics\RotationItems\TemporaryStatusItem.cs" />
+    <Compile Include="Statistics\RotationItems\WeaponSwapItem.cs" />
+    <Compile Include="Statistics\SquadDamageData.cs" />
+    <Compile Include="Statistics\TargetDamageData.cs" />
+    <Compile Include="StreamExtensions.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+         Other similar extension points exist, see Microsoft.Common.targets.
+    <Target Name="BeforeBuild">
+    </Target>
+    <Target Name="AfterBuild">
+    </Target>
+    -->
+</Project>

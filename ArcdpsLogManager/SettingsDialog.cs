@@ -1,8 +1,7 @@
-using Plugin.Settings;
 using Eto.Drawing;
 using Eto.Forms;
 
-namespace ArcdpsLogManager
+namespace GW2Scratch.ArcdpsLogManager
 {
 	public class LogSettingsDialog : Dialog
 	{

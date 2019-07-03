@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
-using ScratchEVTCParser;
+using GW2Scratch.EVTCAnalytics;
 
-namespace RotationComparison.GW2Api
+namespace GW2Scratch.RotationComparison.GW2Api
 {
 	public class FileApiDataSource : IApiDataSource
 	{

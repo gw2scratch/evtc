@@ -1,10 +1,10 @@
 using System.Linq;
 using Eto.Forms;
 using Eto.Generator;
-using ScratchEVTCParser;
-using ScratchEVTCParser.Model.Skills;
+using GW2Scratch.EVTCAnalytics;
+using GW2Scratch.EVTCAnalytics.Model.Skills;
 
-namespace ScratchLogInspector
+namespace GW2Scratch.EVTCInspector
 {
 	public class ApiDataSection : Panel
 	{

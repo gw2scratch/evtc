@@ -4,12 +4,12 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using ArcdpsLogManager.Logs;
-using ArcdpsLogManager.Uploaders;
 using Eto.Drawing;
 using Eto.Forms;
+using GW2Scratch.ArcdpsLogManager.Logs;
+using GW2Scratch.ArcdpsLogManager.Uploaders;
 
-namespace ArcdpsLogManager.Controls
+namespace GW2Scratch.ArcdpsLogManager.Controls
 {
 	public class MultipleLogPanel : DynamicLayout
 	{

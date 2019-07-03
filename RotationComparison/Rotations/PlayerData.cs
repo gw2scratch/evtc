@@ -1,4 +1,4 @@
-namespace RotationComparison.Rotations
+namespace GW2Scratch.RotationComparison.Rotations
 {
 	public class PlayerData
 	{

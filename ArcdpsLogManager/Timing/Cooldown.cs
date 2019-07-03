@@ -1,6 +1,6 @@
 using System;
 
-namespace ArcdpsLogManager.Timing
+namespace GW2Scratch.ArcdpsLogManager.Timing
 {
 	/// <summary>
 	/// A cooldown measures whether a time period has has passed from last trigger.

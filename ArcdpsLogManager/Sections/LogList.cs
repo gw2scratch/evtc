@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using ArcdpsLogManager.Controls;
-using ArcdpsLogManager.Logs;
 using Eto.Drawing;
 using Eto.Forms;
-using ScratchEVTCParser.Statistics.Encounters.Results;
+using GW2Scratch.ArcdpsLogManager.Controls;
+using GW2Scratch.ArcdpsLogManager.Logs;
+using GW2Scratch.EVTCAnalytics.Statistics.Encounters.Results;
 
-namespace ArcdpsLogManager.Sections
+namespace GW2Scratch.ArcdpsLogManager.Sections
 {
 	public class LogList : Panel
 	{

@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Eto.Forms;
-using ScratchEVTCParser.Events;
-using ScratchEVTCParser.Model.Agents;
+using GW2Scratch.EVTCAnalytics.Events;
+using GW2Scratch.EVTCAnalytics.Model.Agents;
 
-namespace ScratchLogInspector
+namespace GW2Scratch.EVTCInspector
 {
 	public class EventListControl : Panel
 	{

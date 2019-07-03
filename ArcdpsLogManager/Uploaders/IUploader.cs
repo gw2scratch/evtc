@@ -1,8 +1,8 @@
 using System.Threading;
 using System.Threading.Tasks;
-using ArcdpsLogManager.Logs;
+using GW2Scratch.ArcdpsLogManager.Logs;
 
-namespace ArcdpsLogManager.Uploaders
+namespace GW2Scratch.ArcdpsLogManager.Uploaders
 {
 	public interface IUploader
 	{

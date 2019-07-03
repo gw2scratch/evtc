@@ -4,14 +4,14 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using ArcdpsLogManager.Logs;
 using Eto.Drawing;
 using Eto.Forms;
-using ScratchEVTCParser;
-using ScratchEVTCParser.Model;
-using ScratchEVTCParser.Model.Agents;
+using GW2Scratch.ArcdpsLogManager.Logs;
+using GW2Scratch.EVTCAnalytics;
+using GW2Scratch.EVTCAnalytics.Model;
+using GW2Scratch.EVTCAnalytics.Model.Agents;
 
-namespace ArcdpsLogManager.Sections
+namespace GW2Scratch.ArcdpsLogManager.Sections
 {
 	public class GameDataCollecting : DynamicLayout
 	{

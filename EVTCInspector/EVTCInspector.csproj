@@ -7,8 +7,8 @@
     <ProjectGuid>{CB188F27-D853-4167-9693-AE4C8890BE70}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ScratchLogInspector</RootNamespace>
-    <AssemblyName>EVTCInspector</AssemblyName>
+    <RootNamespace>GW2Scratch.EVTCInspector</RootNamespace>
+    <AssemblyName>GW2Scratch.EVTCInspector</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <LangVersion>latest</LangVersion>
@@ -78,13 +78,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ScratchEVTCParser\ScratchEVTCParser.csproj">
-      <Project>{9dd47a76-3c69-4152-aa36-b656caffdecb}</Project>
-      <Name>ScratchEVTCParser</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ScratchLogHTMLGenerator\ScratchLogHTMLGenerator.csproj">
+    <ProjectReference Include="..\EVTCAnalytics.HtmlLogs\EVTCAnalytics.HtmlLogs.csproj">
       <Project>{2a679d21-d206-4f4a-8546-8f0e86547a0d}</Project>
-      <Name>ScratchLogHTMLGenerator</Name>
+      <Name>EVTCAnalytics.HtmlLogs</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EVTCAnalytics\EVTCAnalytics.csproj">
+      <Project>{9dd47a76-3c69-4152-aa36-b656caffdecb}</Project>
+      <Name>EVTCAnalytics</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

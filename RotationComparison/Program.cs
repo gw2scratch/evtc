@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using RotationComparison.GW2Api;
-using RotationComparison.Logs;
-using ScratchEVTCParser;
-using ScratchEVTCParser.GW2Api.V2;
+using GW2Scratch.EVTCAnalytics;
+using GW2Scratch.EVTCAnalytics.GW2Api.V2;
+using GW2Scratch.RotationComparison.GW2Api;
+using GW2Scratch.RotationComparison.Logs;
 
-namespace RotationComparison
+namespace GW2Scratch.RotationComparison
 {
 	internal class Program
 	{

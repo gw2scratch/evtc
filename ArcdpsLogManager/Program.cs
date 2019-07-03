@@ -1,7 +1,7 @@
 ﻿using System;
 using Eto.Forms;
 
-namespace ArcdpsLogManager
+namespace GW2Scratch.ArcdpsLogManager
 {
 	internal class Program
 	{

@@ -1,17 +1,15 @@
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using ArcdpsLogManager.Annotations;
-using ArcdpsLogManager.Logs;
-using ArcdpsLogManager.Sections;
 using Eto.Drawing;
 using Eto.Forms;
-using ScratchEVTCParser.Model.Agents;
+using GW2Scratch.ArcdpsLogManager.Logs;
+using GW2Scratch.ArcdpsLogManager.Properties;
+using GW2Scratch.ArcdpsLogManager.Sections;
+using GW2Scratch.EVTCAnalytics.Model.Agents;
 
-namespace ArcdpsLogManager.Controls
+namespace GW2Scratch.ArcdpsLogManager.Controls
 {
 	public class PlayerDetailPanel : DynamicLayout, INotifyPropertyChanged
 	{

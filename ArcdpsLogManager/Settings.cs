@@ -1,9 +1,8 @@
 using System;
-using System.Dynamic;
 using Plugin.Settings;
 using Plugin.Settings.Abstractions;
 
-namespace ArcdpsLogManager
+namespace GW2Scratch.ArcdpsLogManager
 {
 	public class Settings
 	{

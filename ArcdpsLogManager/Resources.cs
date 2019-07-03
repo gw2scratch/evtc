@@ -2,7 +2,7 @@ using System.IO;
 using System.Reflection;
 using Eto.Drawing;
 
-namespace ArcdpsLogManager
+namespace GW2Scratch.ArcdpsLogManager
 {
 	public static class Resources
 	{

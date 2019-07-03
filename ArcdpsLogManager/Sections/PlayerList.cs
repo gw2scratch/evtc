@@ -1,12 +1,12 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using ArcdpsLogManager.Controls;
-using ArcdpsLogManager.Logs;
 using Eto.Drawing;
 using Eto.Forms;
+using GW2Scratch.ArcdpsLogManager.Controls;
+using GW2Scratch.ArcdpsLogManager.Logs;
 
-namespace ArcdpsLogManager.Sections
+namespace GW2Scratch.ArcdpsLogManager.Sections
 {
 	public class PlayerList : DynamicLayout
 	{

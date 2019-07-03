@@ -1,9 +1,9 @@
 using System;
-using ArcdpsLogManager.Logs;
 using Eto.Drawing;
-using ScratchEVTCParser.Model.Agents;
+using GW2Scratch.ArcdpsLogManager.Logs;
+using GW2Scratch.EVTCAnalytics.Model.Agents;
 
-namespace ArcdpsLogManager
+namespace GW2Scratch.ArcdpsLogManager
 {
 	public class ImageProvider
 	{

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using ScratchEVTCParser.Model.Agents;
+using GW2Scratch.EVTCAnalytics.Model.Agents;
 
-namespace ArcdpsLogManager
+namespace GW2Scratch.ArcdpsLogManager
 {
 	public static class GameData
 	{

@@ -7,16 +7,16 @@ using System.Text;
 using Eto.Drawing;
 using Eto.Forms;
 using Eto.Generator;
-using ScratchEVTCParser;
-using ScratchEVTCParser.Events;
-using ScratchEVTCParser.GW2Api.V2;
-using ScratchEVTCParser.Model;
-using ScratchEVTCParser.Model.Agents;
-using ScratchEVTCParser.Parsed;
-using ScratchEVTCParser.Statistics;
+using GW2Scratch.EVTCAnalytics;
+using GW2Scratch.EVTCAnalytics.Events;
+using GW2Scratch.EVTCAnalytics.GW2Api.V2;
+using GW2Scratch.EVTCAnalytics.Model;
+using GW2Scratch.EVTCAnalytics.Model.Agents;
+using GW2Scratch.EVTCAnalytics.Parsed;
+using GW2Scratch.EVTCAnalytics.Statistics;
 using ScratchLogHTMLGenerator;
 
-namespace ScratchLogInspector
+namespace GW2Scratch.EVTCInspector
 {
 	public class BrowserForm : Form
 	{

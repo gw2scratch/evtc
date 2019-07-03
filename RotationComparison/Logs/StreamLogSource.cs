@@ -1,9 +1,9 @@
 using System;
 using System.IO;
-using ScratchEVTCParser;
-using ScratchEVTCParser.Model;
+using GW2Scratch.EVTCAnalytics;
+using GW2Scratch.EVTCAnalytics.Model;
 
-namespace RotationComparison.Logs
+namespace GW2Scratch.RotationComparison.Logs
 {
 	public class StreamLogSource : ScratchParserLogSource, IDisposable
 	{

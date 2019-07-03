@@ -2,13 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using ScratchEVTCParser;
-using ScratchEVTCParser.GameData;
-using ScratchEVTCParser.Model;
-using ScratchEVTCParser.Model.Agents;
-using ScratchEVTCParser.Statistics.Encounters.Results;
+using GW2Scratch.EVTCAnalytics.Model.Agents;
+using GW2Scratch.EVTCAnalytics.Statistics.Encounters.Results;
 
-namespace ArcdpsLogManager.Logs
+namespace GW2Scratch.ArcdpsLogManager.Logs
 {
 	public class LogFinder
 	{
