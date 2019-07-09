@@ -54,6 +54,10 @@
       <HintPath>..\packages\Xam.Plugins.Settings.4.0.0.10-beta\lib\net45\Plugin.Settings.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="RestSharp, Version=106.5.4.0, Culture=neutral, PublicKeyToken=598062e77f915f75">
+      <HintPath>..\packages\RestSharp.106.5.4\lib\net452\RestSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
@@ -65,22 +69,26 @@
       <HintPath>..\packages\System.Runtime.Serialization.Primitives.4.3.0\lib\net46\System.Runtime.Serialization.Primitives.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApiData.cs" />
     <Compile Include="Controls\GroupCompositionControl.cs" />
+    <Compile Include="Controls\GuildDetailPanel.cs" />
     <Compile Include="Controls\LogDetailPanel.cs" />
     <Compile Include="Controls\MultipleLogPanel.cs" />
     <Compile Include="Controls\PlayerDetailPanel.cs" />
     <Compile Include="GameData.cs" />
     <Compile Include="GridViewSorter.cs" />
+    <Compile Include="GW2Api\V2\ApiGuild.cs" />
+    <Compile Include="GW2Api\V2\GuildEndpoint.cs" />
     <Compile Include="ImageProvider.cs" />
     <Compile Include="Logs\LogUpload.cs" />
     <Compile Include="Logs\LogFinder.cs" />
     <Compile Include="Logs\LogData.cs" />
     <Compile Include="Logs\LogPlayer.cs" />
     <Compile Include="Logs\ParsingStatus.cs" />
-    <Compile Include="Logs\PlayerData.cs" />
     <Compile Include="Logs\UploadState.cs" />
     <Compile Include="ManagerForm.cs" />
     <Compile Include="Program.cs" />
@@ -90,8 +98,13 @@
     <Compile Include="Sections\AdvancedFilters.cs" />
     <Compile Include="Sections\DebugData.cs" />
     <Compile Include="Sections\GameDataGathering.cs" />
+    <Compile Include="Sections\GuildList.cs" />
+    <Compile Include="Sections\Guilds\GuildCharacter.cs" />
+    <Compile Include="Sections\Guilds\GuildData.cs" />
+    <Compile Include="Sections\Guilds\GuildMember.cs" />
     <Compile Include="Sections\LogList.cs" />
     <Compile Include="Sections\PlayerList.cs" />
+    <Compile Include="Sections\Players\PlayerData.cs" />
     <Compile Include="Sections\Statistics.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="SettingsDialog.cs" />

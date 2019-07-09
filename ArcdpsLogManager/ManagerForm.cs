@@ -9,9 +9,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using Eto.Drawing;
 using Eto.Forms;
+using GW2Scratch.ArcdpsLogManager.GW2Api.V2;
 using GW2Scratch.ArcdpsLogManager.Logs;
 using GW2Scratch.ArcdpsLogManager.Properties;
 using GW2Scratch.ArcdpsLogManager.Sections;
+using GW2Scratch.ArcdpsLogManager.Sections.Guilds;
+using GW2Scratch.ArcdpsLogManager.Sections.Players;
 using GW2Scratch.ArcdpsLogManager.Timing;
 using GW2Scratch.EVTCAnalytics;
 using GW2Scratch.EVTCAnalytics.Statistics.Encounters.Results;
@@ -19,7 +22,7 @@ using Newtonsoft.Json;
 
 namespace GW2Scratch.ArcdpsLogManager
 {
-	public class ManagerForm : Form, INotifyPropertyChanged
+	public sealed class ManagerForm : Form, INotifyPropertyChanged
 	{
 		private const string AppDataDirectoryName = "ArcdpsLogManager";
 		private const string CacheFilename = "LogDataCache.json";
@@ -33,12 +36,15 @@ namespace GW2Scratch.ArcdpsLogManager
 		private LogProcessor LogProcessor { get; } = new LogProcessor();
 		private StatisticsCalculator StatisticsCalculator { get; } = new StatisticsCalculator();
 
+		private ApiData ApiData { get; } = new ApiData(new GuildEndpoint());
+
 		private ObservableCollection<LogData> logs = new ObservableCollection<LogData>();
 		private FilterCollection<LogData> logsFiltered;
 
 		private readonly DropDown encounterFilterDropDown;
 		private readonly LogList mainLogList;
 		private readonly PlayerList playerList;
+		private readonly GuildList guildList;
 
 		private Dictionary<string, LogData> cache;
 
@@ -205,6 +211,11 @@ namespace GW2Scratch.ArcdpsLogManager
             playerList = new PlayerList(ImageProvider);
 			tabs.Pages.Add(new TabPage {Text = "Players", Content = playerList});
 
+			// Guild tab
+
+			guildList = new GuildList(ImageProvider, ApiData);
+			tabs.Pages.Add(new TabPage {Text = "Guilds", Content = guildList});
+
 			// Statistics tab
 			var statistics = new Statistics(mainLogList, ImageProvider);
             tabs.Pages.Add(new TabPage {Text = "Statistics", Content = statistics});
@@ -317,7 +328,7 @@ namespace GW2Scratch.ArcdpsLogManager
 
 				var newLogs = new ObservableCollection<LogData>(logs);
 
-				//foreach (var file in LogFinder.GetTesting())
+				//foreach (var log in LogFinder.GetTesting())
 				foreach (var log in LogFinder.GetFromDirectory(Settings.LogRootPath))
 				{
 					newLogs.Add(log);
@@ -525,6 +536,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			logsFiltered.CollectionChanged += (sender, args) =>
 			{
 				var logsByAccountName = new Dictionary<string, List<LogData>>();
+				var dataByGuild = new Dictionary<string, (List<LogData> Logs, List<LogPlayer> Players)>();
 				foreach (var log in logsFiltered)
 				{
 					if (log.ParsingStatus != ParsingStatus.Parsed) continue;
@@ -537,6 +549,19 @@ namespace GW2Scratch.ArcdpsLogManager
 						}
 
 						logsByAccountName[player.AccountName].Add(log);
+
+						if (player.GuildGuid != null)
+						{
+							if (!dataByGuild.ContainsKey(player.GuildGuid))
+							{
+								dataByGuild[player.GuildGuid] = (new List<LogData>(), new List<LogPlayer>());
+							}
+
+							var (guildLogs, guildPlayers) = dataByGuild[player.GuildGuid];
+
+							guildLogs.Add(log);
+							guildPlayers.Add(player);
+						}
 					}
 				}
 
@@ -548,6 +573,16 @@ namespace GW2Scratch.ArcdpsLogManager
 				}
 
 				playerList.Refresh();
+
+				guildList.DataStore.Clear();
+				foreach (var data in dataByGuild
+					.Select(x => new GuildData(x.Key, x.Value.Logs.Distinct(), x.Value.Players))
+					.OrderByDescending(x => x.Logs.Count))
+				{
+					guildList.DataStore.Add(data);
+				}
+
+				guildList.Refresh();
 			};
 
 			logList.DataStore = logsFiltered;
@@ -557,7 +592,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		}
 
 		[NotifyPropertyChangedInvocator]
-		protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+		private void OnPropertyChanged([CallerMemberName] string propertyName = null)
 		{
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 		}

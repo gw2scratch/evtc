@@ -9,15 +9,17 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 		public int Subgroup { get; set; }
 		public Profession Profession { get; set; }
 		public EliteSpecialization EliteSpecialization { get; set; }
+		public string GuildGuid { get; set; }
 
 		public LogPlayer(string name, string accountName, int subgroup, Profession profession,
-			EliteSpecialization eliteSpecialization)
+			EliteSpecialization eliteSpecialization, string guildGuid)
 		{
 			Name = name;
 			AccountName = accountName;
 			Subgroup = subgroup;
 			Profession = profession;
 			EliteSpecialization = eliteSpecialization;
+			GuildGuid = guildGuid;
 		}
 	}
 }
