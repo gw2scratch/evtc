@@ -65,7 +65,7 @@ namespace GW2Scratch.EVTCAnalytics
 
 			return new Log(boss, events, agents, skills, log.LogVersion.BuildVersion, combatItemData.LogStartTime,
 				combatItemData.LogEndTime, combatItemData.PointOfView, combatItemData.Language,
-				combatItemData.GameBuild, combatItemData.GameShardId);
+				combatItemData.GameBuild, combatItemData.GameShardId, combatItemData.MapId);
 		}
 
 
@@ -252,9 +252,10 @@ namespace GW2Scratch.EVTCAnalytics
 			public int? Language { get; }
 			public int? GameBuild { get; }
 			public int? GameShardId { get; }
+			public int? MapId { get; }
 
 			public CombatItemData(IEnumerable<Event> events, LogTime logStartTime, LogTime logEndTime,
-				Player pointOfView, int? language, int? gameBuild, int? gameShardId)
+				Player pointOfView, int? language, int? gameBuild, int? gameShardId, int? mapId)
 			{
 				Events = events;
 				LogStartTime = logStartTime;
@@ -263,6 +264,7 @@ namespace GW2Scratch.EVTCAnalytics
 				Language = language;
 				GameBuild = gameBuild;
 				GameShardId = gameShardId;
+				MapId = mapId;
 			}
 		}
 
@@ -279,6 +281,7 @@ namespace GW2Scratch.EVTCAnalytics
 			int? languageId = null;
 			int? gameBuild = null;
 			int? gameShardId = null;
+			int? mapId = null;
 			foreach (var item in log.ParsedCombatItems)
 			{
 				if (item.IsStateChange == StateChange.LogStart)
@@ -338,10 +341,53 @@ namespace GW2Scratch.EVTCAnalytics
 					continue;
 				}
 
+				if (item.IsStateChange == StateChange.MapId)
+				{
+					mapId = (int) item.SrcAgent;
+					continue;
+				}
+
+				if (item.IsStateChange == StateChange.Guild)
+				{
+					if (agentsByAddress.TryGetValue(item.SrcAgent, out Agent agent))
+					{
+						var player = (Player) agent;
+						var guid = new byte[16];
+
+						// It is unclear how the arcdps values would be stored on a big-endian platform
+                        Debug.Assert(BitConverter.IsLittleEndian);
+
+						var dstBytes = BitConverter.GetBytes(item.DstAgent);
+						var valueBytes = BitConverter.GetBytes(item.Value);
+						var buffDamageBytes = BitConverter.GetBytes(item.BuffDmg);
+
+						guid[0] = dstBytes[3];
+						guid[1] = dstBytes[2];
+						guid[2] = dstBytes[1];
+						guid[3] = dstBytes[0];
+						guid[4] = dstBytes[5];
+						guid[5] = dstBytes[4];
+						guid[6] = dstBytes[7];
+						guid[7] = dstBytes[6];
+						guid[8] = valueBytes[0];
+						guid[9] = valueBytes[1];
+						guid[10] = valueBytes[2];
+						guid[11] = valueBytes[3];
+						guid[12] = buffDamageBytes[0];
+						guid[13] = buffDamageBytes[1];
+						guid[14] = buffDamageBytes[2];
+						guid[15] = buffDamageBytes[3];
+
+						player.GuildGuid = guid;
+					}
+
+					continue;
+				}
+
 				events.Add(GetEvent(agentsByAddress, skillsById, item));
 			}
 
-			return new CombatItemData(events, startTime, endTime, pointOfView, languageId, gameBuild, gameShardId);
+			return new CombatItemData(events, startTime, endTime, pointOfView, languageId, gameBuild, gameShardId, mapId);
 		}
 
 		private Event GetEvent(IReadOnlyDictionary<ulong, Agent> agentsByAddress,
@@ -425,7 +471,7 @@ namespace GW2Scratch.EVTCAnalytics
 					{
 						float x = BitConversions.ToSingle((uint) (item.DstAgent & 0xFFFFFFFF));
 						float y = BitConversions.ToSingle((uint) (item.DstAgent >> 32 & 0xFFFFFFFF));
-						float z = BitConversions.ToSingle((item.Value));
+						float z = BitConversions.ToSingle(item.Value);
 
 						return new PositionChangeEvent(item.Time, GetAgentByAddress(item.SrcAgent), x, y, z);
 					}
@@ -433,7 +479,7 @@ namespace GW2Scratch.EVTCAnalytics
 					{
 						float x = BitConversions.ToSingle((uint) (item.DstAgent & 0xFFFFFFFF));
 						float y = BitConversions.ToSingle((uint) (item.DstAgent >> 32 & 0xFFFFFFFF));
-						float z = BitConversions.ToSingle((item.Value));
+						float z = BitConversions.ToSingle(item.Value);
 
 						return new VelocityChangeEvent(item.Time, GetAgentByAddress(item.SrcAgent), x, y, z);
 					}
@@ -447,6 +493,20 @@ namespace GW2Scratch.EVTCAnalytics
 					case StateChange.TeamChange:
 						return new TeamChangeEvent(item.Time, GetAgentByAddress(item.SrcAgent),
 							item.DstAgent);
+					case StateChange.AttackTarget:
+						// TODO Implement attack targets
+						return new UnknownEvent(item.Time, item);
+					case StateChange.Targetable:
+						return new TargetableChangeEvent(item.Time, GetAgentByAddress(item.SrcAgent),
+							item.DstAgent != 0);
+					case StateChange.ReplInfo:
+						return new UnknownEvent(item.Time, item);
+					case StateChange.StackActive:
+						return new ActiveBuffStackEvent(item.Time, GetAgentByAddress(item.SrcAgent),
+							(uint) item.DstAgent);
+					case StateChange.StackReset:
+						return new ResetBuffStackEvent(item.Time, GetAgentByAddress(item.SrcAgent), item.Padding,
+							item.Value);
 					case StateChange.Unknown:
 						return new UnknownEvent(item.Time, item);
 					default:
@@ -491,11 +551,12 @@ namespace GW2Scratch.EVTCAnalytics
 						return new AllStacksRemovedBuffEvent(item.Time, agent, buff, cleansingAgent,
 							stacksRemoved);
 					case BuffRemove.Single:
+						uint stackId = item.Padding;
 						return new SingleStackRemovedBuffEvent(item.Time, agent, buff, cleansingAgent,
-							remainingDuration, remainingIntensity, stacksRemoved);
+							remainingDuration, remainingIntensity, stackId);
 					case BuffRemove.Manual:
-						return new ManualSingleStackRemovedBuffEvent(item.Time, agent, buff, cleansingAgent,
-							remainingDuration, remainingIntensity, stacksRemoved);
+						return new ManualStackRemovedBuffEvent(item.Time, agent, buff, cleansingAgent,
+							remainingDuration, remainingIntensity);
 					default:
 						throw new ArgumentOutOfRangeException();
 				}

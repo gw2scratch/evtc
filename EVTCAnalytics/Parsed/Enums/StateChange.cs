@@ -25,6 +25,13 @@
 		Velocity        = 20,
 		Rotation        = 21,
 		TeamChange      = 22,
+		AttackTarget    = 23,
+		Targetable      = 24,
+		MapId           = 25,
+		ReplInfo        = 26, // Internal in arcdps, shouldn't appear
+		StackActive     = 27,
+		StackReset      = 28,
+		Guild           = 29,
 		Unknown
 	};
 }

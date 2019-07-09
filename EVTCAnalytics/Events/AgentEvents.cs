@@ -156,4 +156,14 @@ namespace GW2Scratch.EVTCAnalytics.Events
 			NewTeamId = newTeamId;
 		}
 	}
+
+	public class TargetableChangeEvent : AgentEvent
+	{
+		public bool IsTargetable { get; }
+
+		public TargetableChangeEvent(long time, Agent agent, bool targetable) : base(time, agent)
+		{
+			IsTargetable = targetable;
+		}
+	}
 }

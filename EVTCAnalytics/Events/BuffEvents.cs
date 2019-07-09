@@ -1,6 +1,5 @@
 using GW2Scratch.EVTCAnalytics.Model.Agents;
 using GW2Scratch.EVTCAnalytics.Model.Skills;
-using GW2Scratch.EVTCAnalytics.Model;
 
 namespace GW2Scratch.EVTCAnalytics.Events
 {
@@ -18,20 +17,20 @@ namespace GW2Scratch.EVTCAnalytics.Events
 
 	public abstract class BuffRemoveEvent : BuffEvent
 	{
-		public int StacksRemoved { get; }
-
-		protected BuffRemoveEvent(long time, Agent agent, Skill buff, Agent sourceAgent, int stacksRemoved) : base(
+		protected BuffRemoveEvent(long time, Agent agent, Skill buff, Agent sourceAgent) : base(
 			time, agent, buff, sourceAgent)
 		{
-			StacksRemoved = stacksRemoved;
 		}
 	}
 
 	public class AllStacksRemovedBuffEvent : BuffRemoveEvent
 	{
+		public int StacksRemoved { get; }
+
 		public AllStacksRemovedBuffEvent(long time, Agent agent, Skill buff, Agent sourceAgent, int stacksRemoved)
-			: base(time, agent, buff, sourceAgent, stacksRemoved)
+			: base(time, agent, buff, sourceAgent)
 		{
+			StacksRemoved = stacksRemoved;
 		}
 	}
 
@@ -39,25 +38,30 @@ namespace GW2Scratch.EVTCAnalytics.Events
 	{
 		public int RemainingDuration { get; }
 		public int RemainingIntensity { get; }
+		public uint StackId { get; }
 
 		public SingleStackRemovedBuffEvent(long time, Agent agent, Skill buff, Agent sourceAgent,
-			int remainingDuration, int remainingIntensity, int stacksRemoved) : base(time, agent, buff,
-			sourceAgent, stacksRemoved)
+			int remainingDuration, int remainingIntensity, uint stackId) : base(time, agent, buff, sourceAgent)
 		{
 			RemainingDuration = remainingDuration;
 			RemainingIntensity = remainingIntensity;
+			StackId = stackId;
 		}
 	}
 
 	/// <summary>
 	/// Happens when going out of combat or stack is full, to be ignored for strip/cleanse, to be used for in/out volume.
 	/// </summary>
-	public class ManualSingleStackRemovedBuffEvent : SingleStackRemovedBuffEvent
+	public class ManualStackRemovedBuffEvent : BuffRemoveEvent
 	{
-		public ManualSingleStackRemovedBuffEvent(long time, Agent agent, Skill buff, Agent sourceAgent,
-			int remainingDuration, int remainingIntensity, int stacksRemoved) : base(time, agent, buff,
-			sourceAgent, remainingDuration, remainingIntensity, stacksRemoved)
+		public int RemainingDuration { get; }
+		public int RemainingIntensity { get; }
+
+		public ManualStackRemovedBuffEvent(long time, Agent agent, Skill buff, Agent sourceAgent, int remainingDuration,
+			int remainingIntensity) : base(time, agent, buff, sourceAgent)
 		{
+			RemainingDuration = remainingDuration;
+			RemainingIntensity = remainingIntensity;
 		}
 	}
 
@@ -71,6 +75,28 @@ namespace GW2Scratch.EVTCAnalytics.Events
 		{
 			DurationApplied = durationApplied;
 			DurationOfRemovedStack = durationOfRemovedStack;
+		}
+	}
+
+	public class ActiveBuffStackEvent : AgentEvent
+	{
+		public uint StackId { get; }
+
+		public ActiveBuffStackEvent(long time, Agent agent, uint stackId) : base(time, agent)
+		{
+			StackId = stackId;
+		}
+	}
+
+	public class ResetBuffStackEvent : AgentEvent
+	{
+		public uint StackId { get; }
+		public int Duration { get; }
+
+		public ResetBuffStackEvent(long time, Agent agent, uint stackId, int duration) : base(time, agent)
+		{
+			StackId = stackId;
+			Duration = duration;
 		}
 	}
 }

@@ -27,11 +27,12 @@ namespace GW2Scratch.EVTCAnalytics.Parsed
 		public byte IsFlanking { get; }
 		public byte IsShields { get; }
 		public byte IsOffCycle { get; }
+		public uint Padding { get; }
 
 		public ParsedCombatItem(long time, ulong srcAgent, ulong dstAgent, int value, int buffDmg, uint overstackValue,
 			uint skillId, ushort srcAgentId, ushort dstAgentId, ushort srcMasterId, ushort dstMasterId, FriendOrFoe iff, byte buff,
 			Result result, Activation isActivation, BuffRemove isBuffRemove, byte isNinety, byte isFifty,
-			byte isMoving, StateChange isStateChange, byte isFlanking, byte isShields, byte isOffCycle)
+			byte isMoving, StateChange isStateChange, byte isFlanking, byte isShields, byte isOffCycle, uint padding)
 		{
 			Time = time;
 			SrcAgent = srcAgent;
@@ -56,6 +57,7 @@ namespace GW2Scratch.EVTCAnalytics.Parsed
 			IsFlanking = isFlanking;
 			IsShields = isShields;
 			IsOffCycle = isOffCycle;
+			Padding = padding;
 		}
 	}
 }

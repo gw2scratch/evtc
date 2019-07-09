@@ -27,10 +27,11 @@ namespace GW2Scratch.EVTCAnalytics.Model
 		public int? Language { get; }
 		public int? GameBuild { get; }
 		public int? GameShardId { get; }
+		public int? MapId { get; }
 
 		public Log(Agent mainTarget, IEnumerable<Event> events, IEnumerable<Agent> agents,
 			IEnumerable<Skill> skills, string evtcVersion, LogTime startTime, LogTime endTime, Player pointOfView,
-			int? language, int? gameBuild, int? gameShardId)
+			int? language, int? gameBuild, int? gameShardId, int? mapId)
 		{
 			MainTarget = mainTarget;
 			EVTCVersion = evtcVersion;
@@ -40,6 +41,7 @@ namespace GW2Scratch.EVTCAnalytics.Model
 			Language = language;
 			GameBuild = gameBuild;
 			GameShardId = gameShardId;
+			MapId = mapId;
 			this.events = events as Event[] ?? events.ToArray();
 			this.agents = agents as Agent[] ?? agents.ToArray();
 			this.skills = skills as Skill[] ?? skills.ToArray();

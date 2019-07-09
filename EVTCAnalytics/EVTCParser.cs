@@ -63,8 +63,8 @@ namespace GW2Scratch.EVTCAnalytics
 		{
 			// 2 bytes: boss instance ID
 			ushort id = reader.ReadUInt16();
-			// 1 byte: position
-			byte position = reader.ReadByte(); // ignored
+			// 1 byte: unused
+			reader.Skip(1);
 
 			//Save
 			return new ParsedBossData(id);
@@ -243,7 +243,7 @@ namespace GW2Scratch.EVTCAnalytics
 			// Add combat
 			return new ParsedCombatItem(time, srcAgent, dstAgent, value, buffDmg, overstackValue, skillId,
 				srcInstid, dstInstid, srcMasterInstid, 0, iff, buff, result, isActivation, isBuffRemove,
-				isNinety, isFifty, isMoving, isStateChange, isFlanking, isShields, isOffcycle);
+				isNinety, isFifty, isMoving, isStateChange, isFlanking, isShields, isOffcycle, 0);
 		}
 
 		private static ParsedCombatItem ReadCombatItemRevision1(ByteArrayBinaryReader reader)
@@ -317,12 +317,12 @@ namespace GW2Scratch.EVTCAnalytics
 			// 1 byte: is_offcycle
 			byte isOffcycle = reader.ReadByte();
 
-			// 4 bytes: padding
-			reader.Skip(4);
+			// 4 bytes: "padding"
+			uint padding = reader.ReadUInt32();
 
 			return new ParsedCombatItem(time, srcAgent, dstAgent, value, buffDmg, overstackValue, skillId,
 				srcInstid, dstInstid, srcMasterInstid, dstMasterInstid, iff, buff, result, isActivation, isBuffRemove,
-				isNinety, isFifty, isMoving, isStateChange, isFlanking, isShields, isOffcycle);
+				isNinety, isFifty, isMoving, isStateChange, isFlanking, isShields, isOffcycle, padding);
 		}
 
 		private static FriendOrFoe GetFriendOrFoeFromByte(byte b)
