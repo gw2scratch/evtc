@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -247,7 +247,7 @@ namespace GW2Scratch.ArcdpsLogManager
 
 			if (string.IsNullOrEmpty(Settings.LogRootPath))
 			{
-				new LogSettingsDialog(this).ShowModal(this);
+				Shown += (sender, args) => new LogSettingsDialog(this).ShowModal(this);
 			}
 			else
 			{
