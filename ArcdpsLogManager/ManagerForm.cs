@@ -1,14 +1,14 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Eto.Drawing;
 using Eto.Forms;
+using GW2Scratch.ArcdpsLogManager.Data;
 using GW2Scratch.ArcdpsLogManager.GW2Api.V2;
 using GW2Scratch.ArcdpsLogManager.Logs;
 using GW2Scratch.ArcdpsLogManager.Properties;
@@ -18,14 +18,11 @@ using GW2Scratch.ArcdpsLogManager.Sections.Players;
 using GW2Scratch.ArcdpsLogManager.Timing;
 using GW2Scratch.EVTCAnalytics;
 using GW2Scratch.EVTCAnalytics.Statistics.Encounters.Results;
-using Newtonsoft.Json;
 
 namespace GW2Scratch.ArcdpsLogManager
 {
 	public sealed class ManagerForm : Form, INotifyPropertyChanged
 	{
-		private const string AppDataDirectoryName = "ArcdpsLogManager";
-		private const string CacheFilename = "LogDataCache.json";
 		private static readonly DateTime GuildWars2ReleaseDate = new DateTime(2012, 8, 28);
 
 		private readonly Cooldown gridRefreshCooldown = new Cooldown(TimeSpan.FromSeconds(2));
@@ -45,8 +42,6 @@ namespace GW2Scratch.ArcdpsLogManager
 		private readonly LogList mainLogList;
 		private readonly PlayerList playerList;
 		private readonly GuildList guildList;
-
-		private Dictionary<string, LogData> cache;
 
 		private const string EncounterFilterAll = "All";
 		private string EncounterFilter { get; set; } = EncounterFilterAll;
@@ -73,7 +68,11 @@ namespace GW2Scratch.ArcdpsLogManager
 			}
 		}
 
+		public event EventHandler CacheLoaded;
 		public event PropertyChangedEventHandler PropertyChanged;
+
+		public IEnumerable<LogData> LoadedLogs => logs;
+		public LogCache LogCache { get; private set; }
 
 		public ManagerForm()
 		{
@@ -82,7 +81,10 @@ namespace GW2Scratch.ArcdpsLogManager
 			var formLayout = new DynamicLayout();
 			Content = formLayout;
 
-			Closing += (sender, args) => { SerializeLogsToCache().Wait(); };
+			Closing += (sender, args) => { LogCache?.SaveToFile(); };
+
+			var logCacheMenuItem = new ButtonMenuItem {Text = "Log &cache"};
+			logCacheMenuItem.Click += (sender, args) => { new CacheDialog(this).ShowModal(this); };
 
 			var logLocationMenuItem = new ButtonMenuItem {Text = "&Log location"};
 			logLocationMenuItem.Click += (sender, args) => { new LogSettingsDialog(this).ShowModal(this); };
@@ -111,13 +113,16 @@ namespace GW2Scratch.ArcdpsLogManager
 			arcdpsMenuItem.Items.Add(arcdpsSettingsMenuItem);
 			arcdpsMenuItem.Items.Add(buildTemplateMenuItem);
 
+			var dataMenuItem = new ButtonMenuItem {Text = "&Data"};
+			dataMenuItem.Items.Add(logCacheMenuItem);
+
 			var settingsMenuItem = new ButtonMenuItem {Text = "&Settings"};
 			settingsMenuItem.Items.Add(logLocationMenuItem);
 			settingsMenuItem.Items.Add(showCompositionsMenuItem);
 			settingsMenuItem.Items.Add(new SeparatorMenuItem());
 			settingsMenuItem.Items.Add(debugDataMenuItem);
 
-			Menu = new MenuBar(arcdpsMenuItem, settingsMenuItem);
+			Menu = new MenuBar(arcdpsMenuItem, dataMenuItem, settingsMenuItem);
 
 			formLayout.BeginVertical(new Padding(5), yscale: true);
 
@@ -152,11 +157,11 @@ namespace GW2Scratch.ArcdpsLogManager
 				endDateTimePicker.Value = DateTime.Now;
 			};
 
-			var advancedFiltersButton = new Button {Text = "Advanced"};
+			var advancedFiltersButton = new Button {Text = "Advanced", Visible = false};
 			advancedFiltersButton.Click += (sender, args) =>
 			{
-				// TODO: Properly implement
-				var form = new Form() {Content = new AdvancedFilters(ImageProvider)};
+				// TODO: Properly implement, make visible
+				var form = new Form {Content = new AdvancedFilters(ImageProvider)};
 				form.Show();
 			};
 
@@ -203,16 +208,13 @@ namespace GW2Scratch.ArcdpsLogManager
 
 			// Log tab
 			mainLogList = new LogList(ImageProvider);
-
 			tabs.Pages.Add(new TabPage {Text = "Logs", Content = mainLogList});
 
 			// Player tab
-
             playerList = new PlayerList(ImageProvider);
 			tabs.Pages.Add(new TabPage {Text = "Players", Content = playerList});
 
 			// Guild tab
-
 			guildList = new GuildList(ImageProvider, ApiData);
 			tabs.Pages.Add(new TabPage {Text = "Guilds", Content = guildList});
 
@@ -269,20 +271,21 @@ namespace GW2Scratch.ArcdpsLogManager
 			Application.Instance.Invoke(() => { Status = "Finding logs..."; });
 			cancellationToken.ThrowIfCancellationRequested();
 
-			Task<Dictionary<string, LogData>> deserializeTask = null;
-			if (cache == null)
+			Task<LogCache> deserializeTask = null;
+			if (LogCache == null)
 			{
-				deserializeTask = DeserializeLogCache();
+				deserializeTask = Task.Run(LogCache.LoadFromFile, cancellationToken);
 			}
 
-			await FindLogs(logList, cancellationToken);
+			FindLogs(logList, cancellationToken);
 
 			Application.Instance.Invoke(() => { Status = "Loading log cache..."; });
 			cancellationToken.ThrowIfCancellationRequested();
 
 			if (deserializeTask != null)
 			{
-				cache = await deserializeTask;
+				LogCache = await deserializeTask;
+				Application.Instance.AsyncInvoke(OnCacheLoaded);
 			}
 
 			cancellationToken.ThrowIfCancellationRequested();
@@ -294,7 +297,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			for (var i = 0; i < logs.Count; i++)
 			{
 				var log = logs[i];
-				if (cache.TryGetValue(log.FileInfo.FullName, out var cachedLog))
+				if (LogCache.TryGetLogData(log.FileInfo.FullName, out var cachedLog))
 				{
 					newLogs[i] = cachedLog;
 				}
@@ -305,17 +308,17 @@ namespace GW2Scratch.ArcdpsLogManager
 			Application.Instance.Invoke(() => { Status = "Parsing logs..."; });
 			cancellationToken.ThrowIfCancellationRequested();
 
-			await ParseLogs(logList, cancellationToken);
+			ParseLogs(logList, cancellationToken);
 
 			Application.Instance.Invoke(() => { Status = "Saving cache..."; });
 			cancellationToken.ThrowIfCancellationRequested();
 
-			await SerializeLogsToCache();
+			LogCache.SaveToFile();
 
 			Application.Instance.AsyncInvoke(() => { Status = $"{logs.Count} logs found."; });
 		}
 
-		public async Task FindLogs(LogList logList, CancellationToken cancellationToken)
+		private void FindLogs(LogList logList, CancellationToken cancellationToken)
 		{
 			try
 			{
@@ -356,8 +359,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			}
 		}
 
-		public async Task ParseLogs(LogList logList, CancellationToken cancellationToken,
-			bool reparse = false)
+		private void ParseLogs(LogList logList, CancellationToken cancellationToken, bool reparse = false)
 		{
 			IEnumerable<LogData> filteredLogs = logs;
 
@@ -381,6 +383,7 @@ namespace GW2Scratch.ArcdpsLogManager
 				bool failedBefore = log.ParsingStatus == ParsingStatus.Failed;
 
 				log.ParseData(EVTCParser, LogProcessor, StatisticsCalculator);
+				LogCache?.CacheLogData(log.FileInfo.FullName, log);
 
 				int logNumber = i + 1;
 				Application.Instance.AsyncInvoke(() =>
@@ -415,63 +418,6 @@ namespace GW2Scratch.ArcdpsLogManager
 			cancellationToken.ThrowIfCancellationRequested();
 		}
 
-		public async Task SerializeLogsToCache()
-		{
-			if (cache == null)
-			{
-				// Cache was not loaded yet, do not overwrite it.
-				return;
-			}
-
-			// Append current logs or overwrite to cache
-			foreach (var log in logs)
-			{
-				cache[log.FileInfo.FullName] = log;
-			}
-
-			var directory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-				AppDataDirectoryName);
-
-			var cacheFilePath = Path.Combine(directory, CacheFilename);
-			var tmpFilePath = cacheFilePath + ".tmp";
-
-			if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
-
-			using (var writer = new StreamWriter(tmpFilePath))
-			{
-				var serializer = new JsonSerializer();
-				serializer.Serialize(writer, cache);
-			}
-
-			if (File.Exists(cacheFilePath))
-			{
-				File.Delete(cacheFilePath);
-			}
-
-			File.Move(tmpFilePath, cacheFilePath);
-		}
-
-		public async Task<Dictionary<string, LogData>> DeserializeLogCache()
-		{
-			var directory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-				AppDataDirectoryName);
-
-			var cacheFilePath = Path.Combine(directory, CacheFilename);
-			if (File.Exists(cacheFilePath))
-			{
-				using (var reader = File.OpenText(cacheFilePath))
-				{
-					var serializer = new JsonSerializer();
-					var dictionary =
-						(Dictionary<string, LogData>) serializer.Deserialize(reader,
-							typeof(Dictionary<string, LogData>));
-
-					return dictionary;
-				}
-			}
-
-			return new Dictionary<string, LogData>();
-		}
 
 		private bool FilterLog(LogData log)
 		{
@@ -595,6 +541,11 @@ namespace GW2Scratch.ArcdpsLogManager
 		private void OnPropertyChanged([CallerMemberName] string propertyName = null)
 		{
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		}
+
+		private void OnCacheLoaded()
+		{
+			CacheLoaded?.Invoke(this, EventArgs.Empty);
 		}
 	}
 }
