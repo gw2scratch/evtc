@@ -9,7 +9,7 @@ namespace GW2Scratch.ArcdpsLogManager
 
 		public LogSettingsDialog(ManagerForm managerForm)
 		{
-			Title = "Settings";
+			Title = "Settings - arcdps Log Manager";
 			ClientSize = new Size(500, -1);
 			var formLayout = new DynamicLayout();
 			Content = formLayout;
