@@ -172,33 +172,46 @@ namespace GW2Scratch.ArcdpsLogManager
 			formLayout.BeginHorizontal();
 
 			formLayout.BeginVertical();
-			formLayout.BeginVertical(new Padding(5), new Size(4, 0));
-			formLayout.BeginHorizontal();
-			formLayout.Add(new Label {Text = "Encounter", VerticalAlignment = VerticalAlignment.Center});
-			formLayout.Add(encounterFilterDropDown);
-			formLayout.Add(new Label {Text = "Result", VerticalAlignment = VerticalAlignment.Center});
-			formLayout.Add(successCheckBox);
-			formLayout.Add(failureCheckBox);
-			formLayout.Add(unknownCheckBox);
-			formLayout.EndHorizontal();
-			formLayout.EndBeginVertical(new Padding(5), new Size(4, 0));
-			formLayout.BeginHorizontal();
-			formLayout.Add(new Label {Text = "Encounter time between", VerticalAlignment = VerticalAlignment.Center});
-			formLayout.Add(startDateTimePicker);
-			formLayout.Add(new Label {Text = "and", VerticalAlignment = VerticalAlignment.Center});
-			formLayout.Add(endDateTimePicker);
-			formLayout.Add(lastDayButton);
-			formLayout.Add(allTimeButton);
-			formLayout.EndHorizontal();
-			formLayout.EndVertical();
+			{
+				formLayout.BeginVertical(new Padding(5), new Size(4, 0));
+				{
+					formLayout.BeginHorizontal();
+					{
+						formLayout.Add(new Label {Text = "Encounter", VerticalAlignment = VerticalAlignment.Center});
+						formLayout.Add(encounterFilterDropDown);
+						formLayout.Add(new Label {Text = "Result", VerticalAlignment = VerticalAlignment.Center});
+						formLayout.Add(successCheckBox);
+						formLayout.Add(failureCheckBox);
+						formLayout.Add(unknownCheckBox);
+					}
+					formLayout.EndHorizontal();
+				}
+				formLayout.EndBeginVertical(new Padding(5), new Size(4, 0));
+				{
+					formLayout.BeginHorizontal();
+					{
+						formLayout.Add(
+							new Label {Text = "Encounter time between", VerticalAlignment = VerticalAlignment.Center});
+						formLayout.Add(startDateTimePicker);
+						formLayout.Add(new Label {Text = "and", VerticalAlignment = VerticalAlignment.Center});
+						formLayout.Add(endDateTimePicker);
+						formLayout.Add(lastDayButton);
+						formLayout.Add(allTimeButton);
+					}
+					formLayout.EndHorizontal();
+				}
+				formLayout.EndVertical();
+			}
 			formLayout.EndVertical();
 
 			formLayout.Add(null, true);
 
 			formLayout.BeginVertical(new Padding(5), new Size(0, 5));
-			formLayout.Add(advancedFiltersButton);
-			formLayout.Add(null, true);
-			formLayout.Add(applyFilterButton);
+			{
+				formLayout.Add(advancedFiltersButton);
+				formLayout.Add(null, true);
+				formLayout.Add(applyFilterButton);
+			}
 			formLayout.EndVertical();
 
 			formLayout.EndHorizontal();
@@ -211,7 +224,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			tabs.Pages.Add(new TabPage {Text = "Logs", Content = mainLogList});
 
 			// Player tab
-            playerList = new PlayerList(ImageProvider);
+			playerList = new PlayerList(ImageProvider);
 			tabs.Pages.Add(new TabPage {Text = "Players", Content = playerList});
 
 			// Guild tab
@@ -220,16 +233,16 @@ namespace GW2Scratch.ArcdpsLogManager
 
 			// Statistics tab
 			var statistics = new Statistics(mainLogList, ImageProvider);
-            tabs.Pages.Add(new TabPage {Text = "Statistics", Content = statistics});
+			tabs.Pages.Add(new TabPage {Text = "Statistics", Content = statistics});
 
-            // Game data collecting tab
-            var gameDataCollecting = new GameDataCollecting(mainLogList);
-            var gameDataPage = new TabPage
-            {
-	            Text = "Game data", Content = gameDataCollecting, Visible = Settings.ShowDebugData
-            };
-            Settings.ShowDebugDataChanged += (sender, args) => gameDataPage.Visible = Settings.ShowDebugData;
-            tabs.Pages.Add(gameDataPage);
+			// Game data collecting tab
+			var gameDataCollecting = new GameDataCollecting(mainLogList);
+			var gameDataPage = new TabPage
+			{
+				Text = "Game data", Content = gameDataCollecting, Visible = Settings.ShowDebugData
+			};
+			Settings.ShowDebugDataChanged += (sender, args) => gameDataPage.Visible = Settings.ShowDebugData;
+			tabs.Pages.Add(gameDataPage);
 
 			formLayout.Add(tabs, true);
 
@@ -242,7 +255,9 @@ namespace GW2Scratch.ArcdpsLogManager
 			statusLabel.TextBinding.Bind(this, x => x.Status);
 
 			formLayout.BeginVertical(new Padding(5), yscale: false);
-			formLayout.Add(statusLabel);
+			{
+				formLayout.Add(statusLabel);
+			}
 			formLayout.EndVertical();
 
 			RecreateLogCollections(new ObservableCollection<LogData>(logs), mainLogList);
@@ -347,7 +362,7 @@ namespace GW2Scratch.ArcdpsLogManager
 				}
 
 				// Add the remaining logs
-                Application.Instance.Invoke(() => { RecreateLogCollections(newLogs, logList); });
+				Application.Instance.Invoke(() => { RecreateLogCollections(newLogs, logList); });
 			}
 			catch (Exception e) when (!(e is OperationCanceledException))
 			{
