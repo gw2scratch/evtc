@@ -98,11 +98,24 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 				return true;
 			}
 
-			return data.Guid.IndexOf(GuildFilter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
+			return GetName(data).IndexOf(GuildFilter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
+			       GetTag(data).IndexOf(GuildFilter, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
 			       data.Characters.Any(member =>
 				       member.Name.IndexOf(GuildFilter, StringComparison.CurrentCultureIgnoreCase) >= 0) ||
 			       data.Accounts.Any(account =>
 				       account.Name.IndexOf(GuildFilter, StringComparison.CurrentCultureIgnoreCase) >= 0);
+		}
+
+		private string GetName(GuildData data)
+		{
+			if (data.Guid == null) return "null";
+			return ApiData.GetGuildName(data.Guid) ?? "(Unknown)";
+		}
+
+		private string GetTag(GuildData data)
+		{
+			if (data.Guid == null) return "null";
+			return ApiData.GetGuildTag(data.Guid) ?? "???";
 		}
 
 		private GuildDetailPanel ConstructGuildDetailPanel()
@@ -117,13 +130,13 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			{
 				HeaderText = "Tag",
 				DataCell = new TextBoxCell
-					{Binding = new DelegateBinding<GuildData, string>(x => $"[{ApiData.GetGuildTag(x.Guid) ?? "???"}]")}
+					{Binding = new DelegateBinding<GuildData, string>(GetTag)}
 			});
 			gridView.Columns.Add(new GridColumn()
 			{
 				HeaderText = "Name",
 				DataCell = new TextBoxCell
-					{Binding = new DelegateBinding<GuildData, string>(x => ApiData.GetGuildName(x.Guid) ?? "(Unknown)")}
+					{Binding = new DelegateBinding<GuildData, string>(GetName)}
 			});
 			gridView.Columns.Add(new GridColumn()
 			{
