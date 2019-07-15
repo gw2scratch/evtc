@@ -318,7 +318,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			for (var i = 0; i < logs.Count; i++)
 			{
 				var log = logs[i];
-				if (LogCache.TryGetLogData(log.FileInfo.FullName, out var cachedLog))
+				if (LogCache.TryGetLogData(log.FileInfo, out var cachedLog))
 				{
 					newLogs[i] = cachedLog;
 				}
@@ -407,7 +407,7 @@ namespace GW2Scratch.ArcdpsLogManager
 				bool failedBefore = log.ParsingStatus == ParsingStatus.Failed;
 
 				log.ParseData(EVTCParser, LogProcessor, StatisticsCalculator);
-				LogCache?.CacheLogData(log.FileInfo.FullName, log);
+				LogCache?.CacheLogData(log);
 
 				int logNumber = i + 1;
 				Application.Instance.AsyncInvoke(() =>

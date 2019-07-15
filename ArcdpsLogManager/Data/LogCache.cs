@@ -119,6 +119,11 @@ namespace GW2Scratch.ArcdpsLogManager.Data
 			}
 		}
 
+		public bool TryGetLogData(FileInfo fileInfo, out LogData data)
+		{
+			return TryGetLogData(fileInfo.FullName, out data);
+		}
+
 		public bool TryGetLogData(string filename, out LogData data)
 		{
 			lock (dictionaryLock)
@@ -134,11 +139,15 @@ namespace GW2Scratch.ArcdpsLogManager.Data
 			}
 		}
 
-		public void CacheLogData(string filename, LogData logData)
+		/// <summary>
+		/// Save the cache data. This has to be called even if the mutable data is modified.
+		/// </summary>
+		/// <param name="logData">The log data that will be cached</param>
+		public void CacheLogData(LogData logData)
 		{
 			lock (dictionaryLock)
 			{
-				logsByFilename[filename] = logData;
+				logsByFilename[logData.FileInfo.FullName] = logData;
 				ChangedSinceLastSave = true;
 			}
 		}
