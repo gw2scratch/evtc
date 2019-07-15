@@ -81,7 +81,13 @@ namespace GW2Scratch.ArcdpsLogManager
 			var formLayout = new DynamicLayout();
 			Content = formLayout;
 
-			Closing += (sender, args) => { LogCache?.SaveToFile(); };
+			Closing += (sender, args) =>
+			{
+				if (LogCache?.ChangedSinceLastSave ?? false)
+				{
+					LogCache?.SaveToFile();
+				}
+			};
 
 			var logCacheMenuItem = new ButtonMenuItem {Text = "Log &cache"};
 			logCacheMenuItem.Click += (sender, args) => { new CacheDialog(this).ShowModal(this); };
@@ -328,7 +334,10 @@ namespace GW2Scratch.ArcdpsLogManager
 			Application.Instance.Invoke(() => { Status = "Saving cache..."; });
 			cancellationToken.ThrowIfCancellationRequested();
 
-			LogCache.SaveToFile();
+			if (LogCache.ChangedSinceLastSave)
+			{
+				LogCache.SaveToFile();
+			}
 
 			Application.Instance.AsyncInvoke(() => { Status = $"{logs.Count} logs found."; });
 		}
