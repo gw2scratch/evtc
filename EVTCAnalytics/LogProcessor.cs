@@ -99,6 +99,8 @@ namespace GW2Scratch.EVTCAnalytics
 				}
 			}
 
+			var playerAddresses = new HashSet<ulong>();
+
 			foreach (var agent in log.ParsedAgents)
 			{
 				if (agent.IsElite != 0xFFFFFFFF)
@@ -128,6 +130,17 @@ namespace GW2Scratch.EVTCAnalytics
 					{
 						subgroup = -1;
 					}
+
+					if (playerAddresses.Contains(agent.Address))
+					{
+						// If there is already an agent with this address, this is the same player after changing
+						// characters. For now we simply merge everything into the first instance, even though that
+						// may result in a player using skills of a different profession, a better solution will be
+						// needed for the future.
+						continue;
+					}
+
+					playerAddresses.Add(agent.Address);
 
 					yield return new Player(agent.Address, id, characterName, agent.Toughness, agent.Concentration,
 						agent.Healing, agent.Condition, agent.HitboxWidth, agent.HitboxHeight, accountName, profession,
