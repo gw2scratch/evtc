@@ -58,7 +58,16 @@ namespace GW2Scratch.EVTCAnalytics
 			var combatItemData = GetDataFromCombatItems(agents, skills, log);
 			var events = combatItemData.Events.ToArray();
 
-			var boss = agents.OfType<NPC>().FirstOrDefault(a => a.SpeciesId == log.ParsedBossData.ID);
+			Agent boss = null;
+			foreach (var agent in agents)
+			{
+				if (agent is NPC npc && npc.SpeciesId == log.ParsedBossData.ID ||
+				    agent is Gadget gadget && gadget.VolatileId == log.ParsedBossData.ID)
+				{
+					boss = agent;
+					break;
+				}
+			}
 
 			SetAgentAwareTimes(events);
 			AssignAgentMasters(log, agents); // Needs to be done after setting aware times
@@ -355,7 +364,7 @@ namespace GW2Scratch.EVTCAnalytics
 						var guid = new byte[16];
 
 						// It is unclear how the arcdps values would be stored on a big-endian platform
-                        Debug.Assert(BitConverter.IsLittleEndian);
+						Debug.Assert(BitConverter.IsLittleEndian);
 
 						var dstBytes = BitConverter.GetBytes(item.DstAgent);
 						var valueBytes = BitConverter.GetBytes(item.Value);
@@ -387,7 +396,8 @@ namespace GW2Scratch.EVTCAnalytics
 				events.Add(GetEvent(agentsByAddress, skillsById, item));
 			}
 
-			return new CombatItemData(events, startTime, endTime, pointOfView, languageId, gameBuild, gameShardId, mapId);
+			return new CombatItemData(events, startTime, endTime, pointOfView, languageId, gameBuild, gameShardId,
+				mapId);
 		}
 
 		private Event GetEvent(IReadOnlyDictionary<ulong, Agent> agentsByAddress,
@@ -675,7 +685,7 @@ namespace GW2Scratch.EVTCAnalytics
 				}
 			}
 
-            return new UnknownEvent(item.Time, item);
+			return new UnknownEvent(item.Time, item);
 		}
 	}
 }
