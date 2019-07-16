@@ -50,6 +50,11 @@ namespace GW2Scratch.ArcdpsLogManager
 		private bool ShowFailedLogs { get; set; } = true;
 		private bool ShowUnknownLogs { get; set; } = true;
 
+		internal bool ShowParseUnparsedLogs { get; set; } = true;
+		internal bool ShowParseParsingLogs { get; set; } = true;
+		internal bool ShowParseParsedLogs { get; set; } = true;
+		internal bool ShowParseFailedLogs { get; set; } = true;
+
 		private DateTime? MinDateTimeFilter { get; set; } = GuildWars2ReleaseDate;
 		private DateTime? MaxDateTimeFilter { get; set; } = DateTime.Now.Date.AddDays(1);
 
@@ -163,11 +168,14 @@ namespace GW2Scratch.ArcdpsLogManager
 				endDateTimePicker.Value = DateTime.Now;
 			};
 
-			var advancedFiltersButton = new Button {Text = "Advanced", Visible = false};
+			var advancedFiltersButton = new Button {Text = "Advanced"};
 			advancedFiltersButton.Click += (sender, args) =>
 			{
-				// TODO: Properly implement, make visible
-				var form = new Form {Content = new AdvancedFilters(ImageProvider)};
+				var form = new Form
+				{
+					Title = "Advanced filters - arcdps Log Manager",
+					Content = new AdvancedFilters(this, ImageProvider)
+				};
 				form.Show();
 			};
 
@@ -458,17 +466,17 @@ namespace GW2Scratch.ArcdpsLogManager
 				}
 			}
 
-			if (!ShowFailedLogs && log.EncounterResult == EncounterResult.Failure)
+			if (!ShowFailedLogs && log.EncounterResult == EncounterResult.Failure ||
+			    !ShowUnknownLogs && log.EncounterResult == EncounterResult.Unknown ||
+			    !ShowSuccessfulLogs && log.EncounterResult == EncounterResult.Success)
 			{
 				return false;
 			}
 
-			if (!ShowUnknownLogs && log.EncounterResult == EncounterResult.Unknown)
-			{
-				return false;
-			}
-
-			if (!ShowSuccessfulLogs && log.EncounterResult == EncounterResult.Success)
+			if (!ShowParseUnparsedLogs && log.ParsingStatus == ParsingStatus.Unparsed ||
+			    !ShowParseParsedLogs && log.ParsingStatus == ParsingStatus.Parsed ||
+			    !ShowParseParsingLogs && log.ParsingStatus == ParsingStatus.Parsing ||
+			    !ShowParseFailedLogs && log.ParsingStatus == ParsingStatus.Failed)
 			{
 				return false;
 			}

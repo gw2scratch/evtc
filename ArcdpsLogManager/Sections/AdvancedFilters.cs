@@ -6,18 +6,13 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 {
 	public class AdvancedFilters : DynamicLayout
 	{
-		public AdvancedFilters(ImageProvider imageProvider)
+		public AdvancedFilters(ManagerForm managerForm, ImageProvider imageProvider)
 		{
-			BeginVertical(new Padding(5));
-			{
-				Add(new Label {Text = "Not implemented yet, doesn't do anything."});
-			}
-			EndVertical();
-
 			BeginVertical(new Padding(5));
 			{
 				BeginGroup("Group composition", new Padding(5));
 				{
+                    AddSeparateRow(new Label {Text = "Not implemented yet, doesn't do anything."});
 					BeginVertical();
 					{
 						BeginHorizontal();
@@ -92,6 +87,24 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 						EndHorizontal();
 					}
 					EndVertical();
+				}
+				EndGroup();
+			}
+			EndVertical();
+
+			var unparsedCheckBox = new CheckBox {Text = "Unparsed"};
+			unparsedCheckBox.CheckedBinding.Bind(managerForm, x => x.ShowParseUnparsedLogs);
+			var parsingCheckBox = new CheckBox {Text = "Parsing"};
+			parsingCheckBox.CheckedBinding.Bind(managerForm, x => x.ShowParseParsingLogs);
+			var parsedCheckBox = new CheckBox {Text = "Parsed"};
+			parsedCheckBox.CheckedBinding.Bind(managerForm, x => x.ShowParseParsedLogs);
+			var failedCheckBox = new CheckBox {Text = "Failed"};
+			failedCheckBox.CheckedBinding.Bind(managerForm, x => x.ShowParseFailedLogs);
+			BeginVertical(new Padding(5));
+			{
+				BeginGroup("Parsing status", new Padding(5));
+				{
+					AddRow(unparsedCheckBox, parsingCheckBox, parsedCheckBox, failedCheckBox);
 				}
 				EndGroup();
 			}
