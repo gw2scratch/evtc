@@ -7,14 +7,14 @@ namespace GW2Scratch.EVTCAnalytics.Statistics.Encounters.Phases
 	public class BuffRemoveTrigger : IPhaseTrigger
 	{
 		private readonly Agent agent;
-		private readonly Skill buff;
+		private readonly uint buffId;
 
 		public PhaseDefinition PhaseDefinition { get; }
 
-		public BuffRemoveTrigger(Agent agent, Skill buff, PhaseDefinition phaseDefinition)
+		public BuffRemoveTrigger(Agent agent, uint buffId, PhaseDefinition phaseDefinition)
 		{
 			this.agent = agent;
-			this.buff = buff;
+			this.buffId = buffId;
 			PhaseDefinition = phaseDefinition;
 		}
 
@@ -22,7 +22,7 @@ namespace GW2Scratch.EVTCAnalytics.Statistics.Encounters.Phases
 		{
 			if (e is BuffRemoveEvent buffRemoveEvent)
 			{
-				return buffRemoveEvent.Agent == agent && buffRemoveEvent.Buff == buff;
+				return buffRemoveEvent.Agent == agent && buffRemoveEvent.Buff.Id == buffId;
 			}
 
 			return false;

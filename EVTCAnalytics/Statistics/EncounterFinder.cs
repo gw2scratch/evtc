@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using GW2Scratch.EVTCAnalytics.Events;
 using GW2Scratch.EVTCAnalytics.GameData;
@@ -13,16 +14,16 @@ namespace GW2Scratch.EVTCAnalytics.Statistics
 	{
 		public IEncounter GetEncounter(Log log)
 		{
-            // TODO: Fix all .First calls
 			if (log.MainTarget is NPC boss)
 			{
 				if (boss.Id == SpeciesIds.ValeGuardian)
 				{
-					var invulnerability = log.Skills.First(x => x.Id == SkillIds.Invulnerability);
-
-					var redGuardians = log.Agents.OfType<NPC>().Where(x => x.SpeciesId == SpeciesIds.RedGuardian).ToArray();
-					var greenGuardians = log.Agents.OfType<NPC>().Where(x => x.SpeciesId == SpeciesIds.GreenGuardian).ToArray();
-					var blueGuardians = log.Agents.OfType<NPC>().Where(x => x.SpeciesId == SpeciesIds.BlueGuardian).ToArray();
+					var redGuardians = log.Agents.OfType<NPC>().Where(x => x.SpeciesId == SpeciesIds.RedGuardian)
+						.ToArray();
+					var greenGuardians = log.Agents.OfType<NPC>().Where(x => x.SpeciesId == SpeciesIds.GreenGuardian)
+						.ToArray();
+					var blueGuardians = log.Agents.OfType<NPC>().Where(x => x.SpeciesId == SpeciesIds.BlueGuardian)
+						.ToArray();
 
 					bool firstGuardians =
 						redGuardians.Length >= 1 && greenGuardians.Length >= 1 && blueGuardians.Length >= 1;
@@ -41,10 +42,12 @@ namespace GW2Scratch.EVTCAnalytics.Statistics
 						log.Events,
 						new PhaseSplitter(
 							new StartTrigger(new PhaseDefinition("Phase 1", boss)),
-							new BuffAddTrigger(boss, invulnerability, new PhaseDefinition("Split 1", split1Guardians)),
-							new BuffRemoveTrigger(boss, invulnerability, new PhaseDefinition("Phase 2", boss)),
-							new BuffAddTrigger(boss, invulnerability, new PhaseDefinition("Split 2", split2Guardians)),
-							new BuffRemoveTrigger(boss, invulnerability, new PhaseDefinition("Phase 3", boss))
+							new BuffAddTrigger(boss, SkillIds.Invulnerability,
+								new PhaseDefinition("Split 1", split1Guardians)),
+							new BuffRemoveTrigger(boss, SkillIds.Invulnerability, new PhaseDefinition("Phase 2", boss)),
+							new BuffAddTrigger(boss, SkillIds.Invulnerability,
+								new PhaseDefinition("Split 2", split2Guardians)),
+							new BuffRemoveTrigger(boss, SkillIds.Invulnerability, new PhaseDefinition("Phase 3", boss))
 						),
 						new AgentDeathResultDeterminer(boss),
 						new AgentNameEncounterNameProvider(boss));
@@ -52,17 +55,22 @@ namespace GW2Scratch.EVTCAnalytics.Statistics
 
 				if (boss.SpeciesId == SpeciesIds.Nikare || boss.SpeciesId == SpeciesIds.Kenut)
 				{
-					var determined = log.Skills.First(x => x.Id == SkillIds.Determined);
-					var nikare = log.Agents.OfType<NPC>().First(x => x.SpeciesId == SpeciesIds.Nikare);
-					var kenut = log.Agents.OfType<NPC>().First(x => x.SpeciesId == SpeciesIds.Kenut);
+					var nikare = log.Agents.OfType<NPC>().FirstOrDefault(x => x.SpeciesId == SpeciesIds.Nikare);
+					var kenut = log.Agents.OfType<NPC>().FirstOrDefault(x => x.SpeciesId == SpeciesIds.Kenut);
+
+					var bosses = new List<NPC>();
+					if (nikare != null) bosses.Add(nikare);
+					if (kenut != null) bosses.Add(kenut);
 
 					return new BaseEncounter(
-						new[] {nikare, kenut},
+						bosses,
 						log.Events,
 						new PhaseSplitter(
 							new StartTrigger(new PhaseDefinition("Nikare's platform", nikare)),
-							new BuffAddTrigger(nikare, determined, new PhaseDefinition("Kenut's platform", kenut)),
-							new BuffAddTrigger(kenut, determined, new PhaseDefinition("Split phase", nikare, kenut))
+							new BuffAddTrigger(nikare, SkillIds.Determined,
+								new PhaseDefinition("Kenut's platform", kenut)),
+							new BuffAddTrigger(kenut, SkillIds.Determined,
+								new PhaseDefinition("Split phase", nikare, kenut))
 						),
 						new CombinedResultDeterminer(
 							new AgentDeathResultDeterminer(nikare),
@@ -74,9 +82,8 @@ namespace GW2Scratch.EVTCAnalytics.Statistics
 
 				if (boss.SpeciesId == SpeciesIds.Gorseval)
 				{
-					var invulnerability = log.Skills.First(x => x.Id == SkillIds.GorsevalInvulnerability);
-
-					var chargedSouls = log.Agents.OfType<NPC>().Where(x => x.SpeciesId == SpeciesIds.ChargedSoul).ToArray();
+					var chargedSouls = log.Agents.OfType<NPC>().Where(x => x.SpeciesId == SpeciesIds.ChargedSoul)
+						.ToArray();
 
 					var split1Souls = chargedSouls.Length >= 4 ? chargedSouls.Take(4).ToArray() : new Agent[0];
 					var split2Souls = chargedSouls.Length >= 8 ? chargedSouls.Skip(4).Take(4).ToArray() : new Agent[0];
@@ -86,10 +93,14 @@ namespace GW2Scratch.EVTCAnalytics.Statistics
 						log.Events,
 						new PhaseSplitter(
 							new StartTrigger(new PhaseDefinition("Phase 1", boss)),
-							new BuffAddTrigger(boss, invulnerability, new PhaseDefinition("Split 1", split1Souls)),
-							new BuffRemoveTrigger(boss, invulnerability, new PhaseDefinition("Phase 2", boss)),
-							new BuffAddTrigger(boss, invulnerability, new PhaseDefinition("Split 2", split2Souls)),
-							new BuffRemoveTrigger(boss, invulnerability, new PhaseDefinition("Phase 3", boss))
+							new BuffAddTrigger(boss, SkillIds.GorsevalInvulnerability,
+								new PhaseDefinition("Split 1", split1Souls)),
+							new BuffRemoveTrigger(boss, SkillIds.GorsevalInvulnerability,
+								new PhaseDefinition("Phase 2", boss)),
+							new BuffAddTrigger(boss, SkillIds.GorsevalInvulnerability,
+								new PhaseDefinition("Split 2", split2Souls)),
+							new BuffRemoveTrigger(boss, SkillIds.GorsevalInvulnerability,
+								new PhaseDefinition("Phase 3", boss))
 						),
 						new AgentDeathResultDeterminer(boss),
 						new AgentNameEncounterNameProvider(boss));
@@ -97,8 +108,6 @@ namespace GW2Scratch.EVTCAnalytics.Statistics
 
 				if (boss.SpeciesId == SpeciesIds.Sabetha)
 				{
-					var invulnerability = log.Skills.First(x => x.Id == SkillIds.Invulnerability);
-
 					var kernan = log.Agents.OfType<NPC>().FirstOrDefault(x => x.SpeciesId == SpeciesIds.Kernan);
 					var knuckles = log.Agents.OfType<NPC>().FirstOrDefault(x => x.SpeciesId == SpeciesIds.Knuckles);
 					var karde = log.Agents.OfType<NPC>().FirstOrDefault(x => x.SpeciesId == SpeciesIds.Karde);
@@ -108,16 +117,16 @@ namespace GW2Scratch.EVTCAnalytics.Statistics
 						log.Events,
 						new PhaseSplitter(
 							new StartTrigger(new PhaseDefinition("Phase 1", boss)),
-							new BuffAddTrigger(boss, invulnerability,
+							new BuffAddTrigger(boss, SkillIds.Invulnerability,
 								new PhaseDefinition("Kernan", kernan != null ? new Agent[] {kernan} : new Agent[0])),
-							new BuffRemoveTrigger(boss, invulnerability, new PhaseDefinition("Phase 2", boss)),
-							new BuffAddTrigger(boss, invulnerability,
+							new BuffRemoveTrigger(boss, SkillIds.Invulnerability, new PhaseDefinition("Phase 2", boss)),
+							new BuffAddTrigger(boss, SkillIds.Invulnerability,
 								new PhaseDefinition("Knuckles",
 									knuckles != null ? new Agent[] {knuckles} : new Agent[0])),
-							new BuffRemoveTrigger(boss, invulnerability, new PhaseDefinition("Phase 3", boss)),
-							new BuffAddTrigger(boss, invulnerability,
+							new BuffRemoveTrigger(boss, SkillIds.Invulnerability, new PhaseDefinition("Phase 3", boss)),
+							new BuffAddTrigger(boss, SkillIds.Invulnerability,
 								new PhaseDefinition("Karde", karde != null ? new Agent[] {karde} : new Agent[0])),
-							new BuffRemoveTrigger(boss, invulnerability, new PhaseDefinition("Phase 4", boss))
+							new BuffRemoveTrigger(boss, SkillIds.Invulnerability, new PhaseDefinition("Phase 4", boss))
 						),
 						new AgentDeathResultDeterminer(boss),
 						new AgentNameEncounterNameProvider(boss)
@@ -126,13 +135,14 @@ namespace GW2Scratch.EVTCAnalytics.Statistics
 
 				if (boss.SpeciesId == SpeciesIds.Qadim)
 				{
-					var flameArmor = log.Skills.First(x => x.Id == SkillIds.QadimFlameArmor);
-
-					var hydra = log.Agents.OfType<NPC>().FirstOrDefault(x => x.SpeciesId == SpeciesIds.AncientInvokedHydra);
+					var hydra = log.Agents.OfType<NPC>()
+						.FirstOrDefault(x => x.SpeciesId == SpeciesIds.AncientInvokedHydra);
 					var destroyer = log.Agents.OfType<NPC>()
 						.FirstOrDefault(x => x.SpeciesId == SpeciesIds.ApocalypseBringer);
-					var matriarch = log.Agents.OfType<NPC>().FirstOrDefault(x => x.SpeciesId == SpeciesIds.WyvernMatriarch);
-					var patriarch = log.Agents.OfType<NPC>().FirstOrDefault(x => x.SpeciesId == SpeciesIds.WyvernPatriarch);
+					var matriarch = log.Agents.OfType<NPC>()
+						.FirstOrDefault(x => x.SpeciesId == SpeciesIds.WyvernMatriarch);
+					var patriarch = log.Agents.OfType<NPC>()
+						.FirstOrDefault(x => x.SpeciesId == SpeciesIds.WyvernPatriarch);
 
 					return new BaseEncounter(
 						new[] {boss},
@@ -140,23 +150,25 @@ namespace GW2Scratch.EVTCAnalytics.Statistics
 						new PhaseSplitter(
 							new AgentEventTrigger<TeamChangeEvent>(boss,
 								new PhaseDefinition("Hydra phase", hydra != null ? new Agent[] {hydra} : new Agent[0])),
-							new BuffRemoveTrigger(boss, flameArmor, new PhaseDefinition("Qadim 100-66%", boss)),
-							new BuffAddTrigger(boss, flameArmor,
+							new BuffRemoveTrigger(boss, SkillIds.QadimFlameArmor,
+								new PhaseDefinition("Qadim 100-66%", boss)),
+							new BuffAddTrigger(boss, SkillIds.QadimFlameArmor,
 								new PhaseDefinition("Destroyer phase",
 									destroyer != null ? new Agent[] {destroyer} : new Agent[0])),
-							new BuffRemoveTrigger(boss, flameArmor, new PhaseDefinition("Qadim 66-33%", boss)),
-							new BuffAddTrigger(boss, flameArmor,
+							new BuffRemoveTrigger(boss, SkillIds.QadimFlameArmor,
+								new PhaseDefinition("Qadim 66-33%", boss)),
+							new BuffAddTrigger(boss, SkillIds.QadimFlameArmor,
 								new PhaseDefinition("Wyvern phase",
 									matriarch != null && patriarch != null
 										? new Agent[] {matriarch, patriarch}
 										: new Agent[0])),
 							new MultipleAgentsDeadTrigger(
-								new PhaseDefinition("Jumping puzzle"), // TODO: Add Pyre Guardians
+								new PhaseDefinition("Jumping puzzle"),
 								matriarch != null && patriarch != null
 									? new Agent[] {matriarch, patriarch}
 									: new Agent[0]),
-							new BuffRemoveTrigger(boss, flameArmor, new PhaseDefinition("Qadim 33-0%", boss))
-						),
+							new BuffRemoveTrigger(boss, SkillIds.QadimFlameArmor,
+								new PhaseDefinition("Qadim 33-0%", boss))),
 						new AgentExitCombatDeterminer(boss),
 						new AgentNameEncounterNameProvider(boss)
 					);

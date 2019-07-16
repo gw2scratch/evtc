@@ -9,7 +9,7 @@ namespace GW2Scratch.EVTCAnalytics.Statistics.Encounters
 	public class DefaultEncounter : BaseEncounter
 	{
 		public DefaultEncounter(Agent boss, IEnumerable<Event> events) : base(new[] {boss}, events,
-			new PhaseSplitter(new StartTrigger(new PhaseDefinition("Default phase", new[] {boss}))),
+			new PhaseSplitter(new StartTrigger(new PhaseDefinition("Default phase", boss))),
 			new AgentDeathResultDeterminer(boss),
 			new AgentNameEncounterNameProvider(boss))
 		{
