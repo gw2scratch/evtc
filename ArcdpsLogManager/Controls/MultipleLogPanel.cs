@@ -11,7 +11,7 @@ using GW2Scratch.ArcdpsLogManager.Uploaders;
 
 namespace GW2Scratch.ArcdpsLogManager.Controls
 {
-	public class MultipleLogPanel : DynamicLayout
+	public sealed class MultipleLogPanel : DynamicLayout
 	{
 		public DpsReportUploader DpsReportUploader { get; } = new DpsReportUploader();
 

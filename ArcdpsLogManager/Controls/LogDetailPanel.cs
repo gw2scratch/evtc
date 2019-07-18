@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Eto.Drawing;
 using Eto.Forms;
+using GW2Scratch.ArcdpsLogManager.Data;
 using GW2Scratch.ArcdpsLogManager.Logs;
 using GW2Scratch.ArcdpsLogManager.Sections;
 using GW2Scratch.ArcdpsLogManager.Uploaders;
@@ -10,7 +11,7 @@ using GW2Scratch.EVTCAnalytics.Statistics.Encounters.Results;
 
 namespace GW2Scratch.ArcdpsLogManager.Controls
 {
-	public class LogDetailPanel : DynamicLayout
+	public sealed class LogDetailPanel : DynamicLayout
 	{
 		public ImageProvider ImageProvider { get; }
 		public DpsReportUploader DpsReportUploader { get; } = new DpsReportUploader();
@@ -103,7 +104,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			dpsReportOpenButton.Enabled = logData.DpsReportEIUpload.Url != null;
 		}
 
-		public LogDetailPanel(ImageProvider imageProvider)
+		public LogDetailPanel(ApiData apiData, ImageProvider imageProvider)
 		{
 			ImageProvider = imageProvider;
 
@@ -111,7 +112,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			Width = 300;
 			Visible = false;
 
-			groupComposition = new GroupCompositionControl(imageProvider);
+			groupComposition = new GroupCompositionControl(apiData, imageProvider);
 
 			DynamicTable debugSection;
 			var debugButton = new Button {Text = "Debug data"};
@@ -210,7 +211,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			Settings.ShowDebugDataChanged += (sender, args) => { debugSection.Visible = Settings.ShowDebugData; };
 			Shown += (sender, args) =>
 			{
-				// Assigning visibility in the constructor did not work
+				// Assigning visibility in the constructor does not work
 				debugSection.Visible = Settings.ShowDebugData;
 			};
 		}

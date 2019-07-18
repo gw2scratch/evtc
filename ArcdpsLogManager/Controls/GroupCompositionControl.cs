@@ -2,12 +2,14 @@ using System.Collections.Generic;
 using System.Linq;
 using Eto.Drawing;
 using Eto.Forms;
+using GW2Scratch.ArcdpsLogManager.Data;
 using GW2Scratch.ArcdpsLogManager.Logs;
 
 namespace GW2Scratch.ArcdpsLogManager.Controls
 {
 	public class GroupCompositionControl : DynamicLayout
 	{
+		private readonly ApiData apiData;
 		private readonly ImageProvider imageProvider;
 		private LogPlayer[] players;
 
@@ -21,8 +23,9 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			}
 		}
 
-		public GroupCompositionControl(ImageProvider imageProvider)
+		public GroupCompositionControl(ApiData apiData, ImageProvider imageProvider)
 		{
+			this.apiData = apiData;
 			this.imageProvider = imageProvider;
 		}
 
@@ -47,10 +50,10 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				foreach (var player in group)
 				{
 					var icon = imageProvider.GetTinyProfessionIcon(player);
-					var imageView = new ImageView() {Image = icon};
-					AddRow(imageView, player.Name, player.AccountName.Substring(1));
+					var imageView = new ImageView {Image = icon};
+					string guildTag = player.GuildGuid != null ? $" [{apiData.GetGuildTag(player.GuildGuid)}]" : "";
+					AddRow(imageView, $"{player.Name}{guildTag}", player.AccountName.Substring(1));
 				}
-
 				Add(null);
 				EndGroup();
 			}

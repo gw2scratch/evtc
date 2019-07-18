@@ -4,6 +4,7 @@ using System.Linq;
 using Eto.Drawing;
 using Eto.Forms;
 using GW2Scratch.ArcdpsLogManager.Controls;
+using GW2Scratch.ArcdpsLogManager.Data;
 using GW2Scratch.ArcdpsLogManager.Logs;
 using GW2Scratch.ArcdpsLogManager.Sections.Players;
 
@@ -11,6 +12,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 {
 	public class PlayerList : DynamicLayout
 	{
+		private ApiData ApiData { get; }
 		private ImageProvider ImageProvider { get; }
 
 		private ObservableCollection<PlayerData> playerData;
@@ -44,8 +46,9 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 
 		private string PlayerFilter { get; set; } = "";
 
-		public PlayerList(ImageProvider imageProvider)
+		public PlayerList(ApiData apiData, ImageProvider imageProvider)
 		{
+			ApiData = apiData;
 			ImageProvider = imageProvider;
 
 			var playerDetailPanel = ConstructPlayerDetailPanel();
@@ -118,7 +121,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 
 		private PlayerDetailPanel ConstructPlayerDetailPanel()
 		{
-			return new PlayerDetailPanel(ImageProvider);
+			return new PlayerDetailPanel(ApiData, ImageProvider);
 		}
 
 		private GridView<PlayerData> ConstructPlayerGridView(PlayerDetailPanel playerDetailPanel)

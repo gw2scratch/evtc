@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using Eto.Drawing;
 using Eto.Forms;
+using GW2Scratch.ArcdpsLogManager.Data;
 using GW2Scratch.ArcdpsLogManager.Logs;
 using GW2Scratch.ArcdpsLogManager.Properties;
 using GW2Scratch.ArcdpsLogManager.Sections;
@@ -12,12 +13,14 @@ using GW2Scratch.EVTCAnalytics.Model.Agents;
 
 namespace GW2Scratch.ArcdpsLogManager.Controls
 {
-	public class PlayerDetailPanel : DynamicLayout, INotifyPropertyChanged
+	public sealed class PlayerDetailPanel : DynamicLayout, INotifyPropertyChanged
 	{
+		private readonly ApiData apiData;
+		private readonly ImageProvider imageProvider;
+
 		private const string NullAccountName = "-"; // Account names start with :, so this should never appear.
 
 		private PlayerData playerData = new PlayerData(NullAccountName, new LogData[0]);
-		public ImageProvider ImageProvider { get; }
 
 		public PlayerData PlayerData
 		{
@@ -35,9 +38,10 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			}
 		}
 
-		public PlayerDetailPanel(ImageProvider imageProvider)
+		public PlayerDetailPanel(ApiData apiData, ImageProvider imageProvider)
 		{
-			ImageProvider = imageProvider;
+			this.apiData = apiData;
+			this.imageProvider = imageProvider;
 
 			Padding = new Padding(10);
 			Width = 300;
@@ -102,7 +106,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 						var characterLogs = PlayerData.Logs.Where(log => log.Players.Any(x => x.Name == name));
 						var form = new Form
 						{
-							Content = new LogList(ImageProvider)
+							Content = new LogList(apiData, imageProvider)
 								{DataStore = new FilterCollection<LogData>(characterLogs)},
 							Width = 900,
 							Height = 700,
@@ -112,7 +116,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 					};
 
 					knownCharacters.BeginHorizontal();
-					knownCharacters.Add(ImageProvider.GetTinyProfessionIcon(character.Value.profession));
+					knownCharacters.Add(imageProvider.GetTinyProfessionIcon(character.Value.profession));
 					knownCharacters.Add(new Label {Text = name, VerticalAlignment = VerticalAlignment.Center});
 					knownCharacters.Add(new Label
 					{
@@ -146,7 +150,10 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			{
 				var form = new Form
 				{
-					Content = new LogList(ImageProvider) {DataStore = new FilterCollection<LogData>(PlayerData.Logs)},
+					Content = new LogList(apiData, imageProvider)
+					{
+						DataStore = new FilterCollection<LogData>(PlayerData.Logs)
+					},
 					Width = 900,
 					Height = 700,
 					Title = $"arcdps Log Manager: logs with {PlayerData.AccountName.Substring(1)}"
@@ -163,7 +170,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		[NotifyPropertyChangedInvocator]
-		protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+		private void OnPropertyChanged([CallerMemberName] string propertyName = null)
 		{
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 		}

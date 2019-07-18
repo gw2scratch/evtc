@@ -134,7 +134,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			{
 				var form = new Form
 				{
-					Content = new LogList(ImageProvider) {DataStore = new FilterCollection<LogData>(GuildData.Logs)},
+					Content = new LogList(apiData, ImageProvider) {DataStore = new FilterCollection<LogData>(GuildData.Logs)},
 					Width = 900,
 					Height = 700,
 					Title = $"arcdps Log Manager: logs with a member in {ApiData.GetGuildName(guildData.Guid) ?? "(Unknown)"}"

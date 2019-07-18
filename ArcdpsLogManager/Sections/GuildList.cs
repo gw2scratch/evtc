@@ -44,7 +44,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 
 		private string GuildFilter { get; set; } = "";
 
-		public GuildList(ImageProvider imageProvider, ApiData apiData)
+		public GuildList(ApiData apiData, ImageProvider imageProvider)
 		{
 			ImageProvider = imageProvider;
 			ApiData = apiData;
