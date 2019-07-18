@@ -154,6 +154,14 @@ namespace GW2Scratch.ArcdpsLogManager.Data
 			return null;
 		}
 
+		// Forgets all cached data.
+		public void Clear()
+		{
+			changedSinceLastSave = true;
+			guildDataCache.Clear();
+            SaveDataToFile();
+		}
+
 		/// <summary>
 		/// Register a guild GUID, potentially scheduling it for retrieval of data from the API.
 		/// </summary>

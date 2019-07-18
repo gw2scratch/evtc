@@ -19,6 +19,11 @@ namespace GW2Scratch.ArcdpsLogManager.Dialogs
 			item.Click += (sender, args) => Close();
 			PositiveButtons.Add(item);
 
+			var deleteButton = new Button
+			{
+				Text = "Delete the cache",
+			};
+
 			var enableCheckbox = new CheckBox {Text = "Use the GW2 API", Checked = Settings.UseGW2Api};
 			enableCheckbox.CheckedChanged += (sender, args) => Settings.UseGW2Api = enableCheckbox.Checked ?? false;
 
@@ -31,7 +36,7 @@ namespace GW2Scratch.ArcdpsLogManager.Dialogs
 			{
 				formLayout.AddRow(new Label
 				{
-					Text = "Guild names and tags can be loaded the official GW2 API as\n" +
+					Text = "Guild names and tags have to be loaded from the official GW2 API as\n" +
 					       "the EVTC logs only contain GUID values."
 				});
 			}
@@ -45,6 +50,7 @@ namespace GW2Scratch.ArcdpsLogManager.Dialogs
 			formLayout.BeginVertical(new Padding(10), new Size(5, 5));
 			{
 				formLayout.AddRow(enableCheckbox);
+				formLayout.AddRow(deleteButton);
 			}
 			formLayout.EndVertical();
 
@@ -52,6 +58,22 @@ namespace GW2Scratch.ArcdpsLogManager.Dialogs
 			{
 				Application.Instance.AsyncInvoke(() => { UpdateLabelTexts(apiData, guildCountLabel, sizeLabel); });
 			}
+
+			deleteButton.Click += (sender, args) =>
+			{
+				if (MessageBox.Show(
+					    $"Delete the API cache? The API data of all {apiData.CachedGuildCount} guilds will be " +
+					    "forgotten. Renamed guilds will have their names/tags updated, but data of disbanded " +
+					    "guilds won't be retrievable anymore. You may have to restart the program for " +
+					    "everything to update.",
+					    MessageBoxButtons.OKCancel) == DialogResult.Ok)
+				{
+					apiData.Clear();
+					apiData.SaveDataToFile();
+					MessageBox.Show("API Cache deleted.");
+					UpdateLabelTexts(apiData, guildCountLabel, sizeLabel);
+				}
+			};
 
 			apiData.GuildAdded += OnGuildAdded;
 
