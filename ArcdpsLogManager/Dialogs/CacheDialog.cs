@@ -1,9 +1,8 @@
 using System;
 using Eto.Drawing;
 using Eto.Forms;
-using GW2Scratch.ArcdpsLogManager.Data;
 
-namespace GW2Scratch.ArcdpsLogManager
+namespace GW2Scratch.ArcdpsLogManager.Dialogs
 {
 	public class CacheDialog : Dialog
 	{

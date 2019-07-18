@@ -1,7 +1,7 @@
 using Eto.Drawing;
 using Eto.Forms;
 
-namespace GW2Scratch.ArcdpsLogManager
+namespace GW2Scratch.ArcdpsLogManager.Dialogs
 {
 	public class LogSettingsDialog : Dialog
 	{

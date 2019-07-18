@@ -4,7 +4,7 @@ using Plugin.Settings.Abstractions;
 
 namespace GW2Scratch.ArcdpsLogManager
 {
-	public class Settings
+	public static class Settings
 	{
 		public const string AppDataDirectoryName = "ArcdpsLogManager";
 		public const string CacheFilename = "LogDataCache.json";
@@ -50,9 +50,23 @@ namespace GW2Scratch.ArcdpsLogManager
 			}
 		}
 
+		public static bool UseGW2Api
+		{
+			get => AppSettings.GetValueOrDefault(nameof(UseGW2Api), false);
+
+			set
+			{
+				if (AppSettings.AddOrUpdateValue(nameof(UseGW2Api), value))
+				{
+					OnUseGW2ApiChanged();
+				}
+			}
+		}
+
 		public static event EventHandler<EventArgs> LogRootPathChanged;
 		public static event EventHandler<EventArgs> ShowDebugDataChanged;
 		public static event EventHandler<EventArgs> ShowSquadCompositionsChanged;
+		public static event EventHandler<EventArgs> UseGW2ApiChanged;
 
 		private static void OnLogRootPathChanged()
 		{
@@ -67,6 +81,11 @@ namespace GW2Scratch.ArcdpsLogManager
 		private static void OnShowSquadCompositionsChanged()
 		{
 			ShowSquadCompositionsChanged?.Invoke(null, EventArgs.Empty);
+		}
+
+		private static void OnUseGW2ApiChanged()
+		{
+			UseGW2ApiChanged?.Invoke(null, EventArgs.Empty);
 		}
 	}
 }

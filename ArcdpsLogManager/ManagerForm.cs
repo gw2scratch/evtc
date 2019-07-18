@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Eto.Drawing;
 using Eto.Forms;
 using GW2Scratch.ArcdpsLogManager.Data;
+using GW2Scratch.ArcdpsLogManager.Dialogs;
 using GW2Scratch.ArcdpsLogManager.GW2Api.V2;
 using GW2Scratch.ArcdpsLogManager.Logs;
 using GW2Scratch.ArcdpsLogManager.Properties;
@@ -97,6 +98,9 @@ namespace GW2Scratch.ArcdpsLogManager
 			var logCacheMenuItem = new ButtonMenuItem {Text = "Log &cache"};
 			logCacheMenuItem.Click += (sender, args) => { new CacheDialog(this).ShowModal(this); };
 
+			var apiDataMenuItem = new ButtonMenuItem {Text = "&API data"};
+			apiDataMenuItem.Click += (sender, args) => { new ApiDialog(ApiData).ShowModal(this); };
+
 			var logLocationMenuItem = new ButtonMenuItem {Text = "&Log location"};
 			logLocationMenuItem.Click += (sender, args) => { new LogSettingsDialog(this).ShowModal(this); };
 			logLocationMenuItem.Shortcut = Application.Instance.CommonModifier | Keys.L;
@@ -126,6 +130,7 @@ namespace GW2Scratch.ArcdpsLogManager
 
 			var dataMenuItem = new ButtonMenuItem {Text = "&Data"};
 			dataMenuItem.Items.Add(logCacheMenuItem);
+			dataMenuItem.Items.Add(apiDataMenuItem);
 
 			var settingsMenuItem = new ButtonMenuItem {Text = "&Settings"};
 			settingsMenuItem.Items.Add(logLocationMenuItem);
@@ -284,6 +289,23 @@ namespace GW2Scratch.ArcdpsLogManager
 			{
 				ReloadLogs();
 			}
+
+			if (Settings.UseGW2Api)
+			{
+				ApiData.StartApiWorker();
+			}
+
+			Settings.UseGW2ApiChanged += (sender, args) =>
+			{
+				if (Settings.UseGW2Api)
+				{
+					ApiData.StartApiWorker();
+				}
+				else
+				{
+					ApiData.StopApiWorker();
+				}
+			};
 		}
 
 		public void ReloadLogs()
@@ -436,6 +458,20 @@ namespace GW2Scratch.ArcdpsLogManager
 							UpdateFilterDropdown();
 						}
 					});
+				}
+			}
+
+			foreach (var log in logs)
+			{
+				if (log.ParsingStatus == ParsingStatus.Parsed)
+				{
+					foreach (var player in log.Players)
+					{
+						if (player.GuildGuid != null)
+						{
+							ApiData.RegisterGuild(player.GuildGuid);
+						}
+					}
 				}
 			}
 
