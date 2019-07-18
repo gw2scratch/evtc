@@ -40,7 +40,7 @@ namespace GW2Scratch.ArcdpsLogManager
 
 		public static bool ShowSquadCompositions
 		{
-			get => AppSettings.GetValueOrDefault(nameof(ShowSquadCompositions), false);
+			get => AppSettings.GetValueOrDefault(nameof(ShowSquadCompositions), true);
 
 			set
 			{
