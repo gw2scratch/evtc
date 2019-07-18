@@ -51,6 +51,19 @@ namespace GW2Scratch.ArcdpsLogManager
 			}
 		}
 
+		public static bool ShowGuildTagsInLogDetail
+		{
+			get => AppSettings.GetValueOrDefault(nameof(ShowGuildTagsInLogDetail), false);
+
+			set
+			{
+				if (AppSettings.AddOrUpdateValue(nameof(ShowGuildTagsInLogDetail), value))
+				{
+					OnShowGuildTagsInLogDetailChanged();
+				}
+			}
+		}
+
 		public static bool UseGW2Api
 		{
 			get => AppSettings.GetValueOrDefault(nameof(UseGW2Api), false);
@@ -67,6 +80,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		public static event EventHandler<EventArgs> LogRootPathChanged;
 		public static event EventHandler<EventArgs> ShowDebugDataChanged;
 		public static event EventHandler<EventArgs> ShowSquadCompositionsChanged;
+		public static event EventHandler<EventArgs> ShowGuildTagsInLogDetailChanged;
 		public static event EventHandler<EventArgs> UseGW2ApiChanged;
 
 		private static void OnLogRootPathChanged()
@@ -87,6 +101,11 @@ namespace GW2Scratch.ArcdpsLogManager
 		private static void OnUseGW2ApiChanged()
 		{
 			UseGW2ApiChanged?.Invoke(null, EventArgs.Empty);
+		}
+
+		private static void OnShowGuildTagsInLogDetailChanged()
+		{
+			ShowGuildTagsInLogDetailChanged?.Invoke(null, EventArgs.Empty);
 		}
 	}
 }

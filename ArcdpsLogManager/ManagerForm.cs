@@ -119,6 +119,13 @@ namespace GW2Scratch.ArcdpsLogManager
 				Settings.ShowSquadCompositions = showCompositionsMenuItem.Checked;
 			};
 
+			var showGuildTagsMenuItem = new CheckMenuItem {Text = "Show &guild tags in log details"};
+			showGuildTagsMenuItem.Checked = Settings.ShowGuildTagsInLogDetail;
+			showGuildTagsMenuItem.CheckedChanged += (sender, args) =>
+			{
+				Settings.ShowGuildTagsInLogDetail = showGuildTagsMenuItem.Checked;
+			};
+
 			// TODO: Implement
 			var buildTemplateMenuItem = new ButtonMenuItem {Text = "&Build templates", Enabled = false};
 			// TODO: Implement
@@ -135,6 +142,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			var settingsMenuItem = new ButtonMenuItem {Text = "&Settings"};
 			settingsMenuItem.Items.Add(logLocationMenuItem);
 			settingsMenuItem.Items.Add(showCompositionsMenuItem);
+			settingsMenuItem.Items.Add(showGuildTagsMenuItem);
 			settingsMenuItem.Items.Add(new SeparatorMenuItem());
 			settingsMenuItem.Items.Add(debugDataMenuItem);
 
