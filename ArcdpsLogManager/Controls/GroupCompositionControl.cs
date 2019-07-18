@@ -62,7 +62,13 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 						guildTagSuffix = $" [{apiData.GetGuildTag(player.GuildGuid)}]";
 					}
 
-					AddRow(imageView, $"{player.Name}{guildTagSuffix}", player.AccountName.Substring(1));
+					string guildName = player.GuildGuid != null
+						? apiData.GetGuildName(player.GuildGuid)
+						: "No guild data";
+
+					var nameLabel = new Label {Text = $"{player.Name}{guildTagSuffix}", ToolTip = guildName};
+
+					AddRow(imageView, nameLabel, player.AccountName.Substring(1));
 				}
 
 				Add(null);
