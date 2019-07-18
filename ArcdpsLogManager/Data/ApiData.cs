@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using GW2Scratch.ArcdpsLogManager.GW2Api.V2;
+using Newtonsoft.Json;
 
-namespace GW2Scratch.ArcdpsLogManager
+namespace GW2Scratch.ArcdpsLogManager.Data
 {
 	public class ApiData
 	{
@@ -11,6 +14,7 @@ namespace GW2Scratch.ArcdpsLogManager
 
 		private readonly ConcurrentDictionary<string, ApiGuild> guildDataCache =
 			new ConcurrentDictionary<string, ApiGuild>();
+
 		private readonly ConcurrentQueue<string> pendingGuildGuids = new ConcurrentQueue<string>();
 
 		private Timer workerTimer;
@@ -20,9 +24,63 @@ namespace GW2Scratch.ArcdpsLogManager
 		public int TotalRequestCount { get; private set; } = 0;
 		public int CachedGuildCount => guildDataCache.Count;
 
+		private bool changedSinceLastSave = false;
+
 		public ApiData(GuildEndpoint guildEndpoint)
 		{
 			this.guildEndpoint = guildEndpoint;
+		}
+
+		public void LoadDataFromFile()
+		{
+			string filename = GetCacheFilename();
+
+			if (File.Exists(filename))
+			{
+				using (var reader = File.OpenText(filename))
+				{
+					var serializer = new JsonSerializer();
+					var dictionary = (Dictionary<string, ApiGuild>) serializer.Deserialize(reader,
+						typeof(Dictionary<string, ApiGuild>));
+
+					foreach (var pair in dictionary)
+					{
+						guildDataCache[pair.Key] = pair.Value;
+					}
+				}
+			}
+		}
+
+		public void SaveDataToFile()
+		{
+			changedSinceLastSave = false;
+
+			string directory = GetCacheDirectory();
+			string filename = GetCacheFilename();
+			string tmpFilename = filename + ".tmp";
+
+			if (!Directory.Exists(directory))
+			{
+				Directory.CreateDirectory(directory);
+			}
+
+			using (var writer = new StreamWriter(tmpFilename))
+			{
+				var serializer = new JsonSerializer();
+				serializer.Serialize(writer, guildDataCache);
+			}
+
+			if (File.Exists(filename))
+			{
+				File.Delete(filename);
+			}
+
+			File.Move(tmpFilename, filename);
+		}
+
+		public FileInfo GetCacheFileInfo()
+		{
+			return new FileInfo(GetCacheFilename());
 		}
 
 		/// <summary>
@@ -62,6 +120,7 @@ namespace GW2Scratch.ArcdpsLogManager
 
 				try
 				{
+					changedSinceLastSave = true;
 					TotalRequestCount++;
 					var guild = guildEndpoint.GetGuild(guid);
 					guildDataCache[guid] = guild;
@@ -72,6 +131,11 @@ namespace GW2Scratch.ArcdpsLogManager
 				{
 					break;
 				}
+			}
+
+			if (changedSinceLastSave)
+			{
+				SaveDataToFile();
 			}
 		}
 
@@ -124,9 +188,20 @@ namespace GW2Scratch.ArcdpsLogManager
 			return GetApiGuild(guid)?.Tag ?? unavailableDefault;
 		}
 
-		protected virtual void OnGuildAdded()
+		private void OnGuildAdded()
 		{
 			GuildAdded?.Invoke(this, EventArgs.Empty);
+		}
+
+		private static string GetCacheDirectory()
+		{
+			return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+				Settings.AppDataDirectoryName);
+		}
+
+		private static string GetCacheFilename()
+		{
+			return Path.Combine(GetCacheDirectory(), Settings.ApiCacheFilename);
 		}
 	}
 }

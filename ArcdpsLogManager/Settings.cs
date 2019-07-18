@@ -8,6 +8,7 @@ namespace GW2Scratch.ArcdpsLogManager
 	{
 		public const string AppDataDirectoryName = "ArcdpsLogManager";
 		public const string CacheFilename = "LogDataCache.json";
+		public const string ApiCacheFilename = "ApiDataCache.json";
 
 		private static ISettings AppSettings => CrossSettings.Current;
 

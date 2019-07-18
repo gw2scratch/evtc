@@ -1,6 +1,8 @@
 using System;
+using System.IO;
 using Eto.Drawing;
 using Eto.Forms;
+using GW2Scratch.ArcdpsLogManager.Data;
 
 namespace GW2Scratch.ArcdpsLogManager.Dialogs
 {
@@ -21,8 +23,9 @@ namespace GW2Scratch.ArcdpsLogManager.Dialogs
 			enableCheckbox.CheckedChanged += (sender, args) => Settings.UseGW2Api = enableCheckbox.Checked ?? false;
 
 			var guildCountLabel = new Label {Text = "Not loaded"};
+			var sizeLabel = new Label {Text = "No file"};
 
-			UpdateLabelTexts(apiData, guildCountLabel);
+			UpdateLabelTexts(apiData, guildCountLabel, sizeLabel);
 
 			formLayout.BeginVertical(new Padding(10), new Size(5, 5));
 			{
@@ -36,6 +39,7 @@ namespace GW2Scratch.ArcdpsLogManager.Dialogs
 			formLayout.BeginVertical(new Padding(10), new Size(5, 5));
 			{
 				formLayout.AddRow(new Label {Text = "Guilds:"}, guildCountLabel);
+				formLayout.AddRow(new Label {Text = "Cache file size:"}, sizeLabel);
 			}
 			formLayout.EndVertical();
 			formLayout.BeginVertical(new Padding(10), new Size(5, 5));
@@ -46,7 +50,7 @@ namespace GW2Scratch.ArcdpsLogManager.Dialogs
 
 			void OnGuildAdded(object sender, EventArgs _)
 			{
-				Application.Instance.AsyncInvoke(() => { UpdateLabelTexts(apiData, guildCountLabel); });
+				Application.Instance.AsyncInvoke(() => { UpdateLabelTexts(apiData, guildCountLabel, sizeLabel); });
 			}
 
 			apiData.GuildAdded += OnGuildAdded;
@@ -54,9 +58,10 @@ namespace GW2Scratch.ArcdpsLogManager.Dialogs
 			Closed += (sender, args) => apiData.GuildAdded -= OnGuildAdded;
 		}
 
-		private void UpdateLabelTexts(ApiData apiData, Label countLabel)
+		private void UpdateLabelTexts(ApiData apiData, Label countLabel, Label cacheSizeLabel)
 		{
 			UpdateGuildCountText(apiData, countLabel);
+			UpdateCacheSizeText(apiData, cacheSizeLabel);
 		}
 
 		private void UpdateGuildCountText(ApiData apiData, Label label)
@@ -66,6 +71,19 @@ namespace GW2Scratch.ArcdpsLogManager.Dialogs
 			if (apiData != null)
 			{
 				text = $"{apiData.CachedGuildCount}";
+			}
+
+			label.Text = text;
+		}
+
+		private void UpdateCacheSizeText(ApiData apiData, Label label)
+		{
+			string text = "Not loaded";
+
+			if (apiData != null)
+			{
+				FileInfo fileInfo = apiData.GetCacheFileInfo();
+				text = fileInfo.Exists ? $"{fileInfo.Length / 1000.0 / 1000.0:0.00} MB" : "No file";
 			}
 
 			label.Text = text;

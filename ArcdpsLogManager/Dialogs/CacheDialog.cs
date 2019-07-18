@@ -143,14 +143,7 @@ namespace GW2Scratch.ArcdpsLogManager.Dialogs
 			if (managerForm.LogCache != null)
 			{
 				var fileInfo = managerForm.LogCache.GetCacheFileInfo();
-				if (fileInfo.Exists)
-				{
-					text = $"{fileInfo.Length / 1000 / 1000} MB";
-				}
-				else
-				{
-					text = "No file";
-				}
+				text = fileInfo.Exists ? $"{fileInfo.Length / 1000.0 / 1000.0:0.00} MB" : "No file";
 			}
 
 			label.Text = text;

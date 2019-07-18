@@ -4,6 +4,7 @@ using System.Linq;
 using Eto.Drawing;
 using Eto.Forms;
 using GW2Scratch.ArcdpsLogManager.Controls;
+using GW2Scratch.ArcdpsLogManager.Data;
 using GW2Scratch.ArcdpsLogManager.Sections.Guilds;
 
 namespace GW2Scratch.ArcdpsLogManager.Sections

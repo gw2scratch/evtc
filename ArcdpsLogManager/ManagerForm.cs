@@ -290,22 +290,7 @@ namespace GW2Scratch.ArcdpsLogManager
 				ReloadLogs();
 			}
 
-			if (Settings.UseGW2Api)
-			{
-				ApiData.StartApiWorker();
-			}
-
-			Settings.UseGW2ApiChanged += (sender, args) =>
-			{
-				if (Settings.UseGW2Api)
-				{
-					ApiData.StartApiWorker();
-				}
-				else
-				{
-					ApiData.StopApiWorker();
-				}
-			};
+			SetupApiWorker();
 		}
 
 		public void ReloadLogs()
@@ -316,6 +301,30 @@ namespace GW2Scratch.ArcdpsLogManager
 			logs.Clear();
 			Task.Run(() => LoadLogs(mainLogList, logLoadTaskTokenSource.Token));
 		}
+
+		private void SetupApiWorker()
+		{
+			Task.Run(ApiData.LoadDataFromFile).ContinueWith(_ =>
+			{
+				if (Settings.UseGW2Api)
+				{
+					ApiData.StartApiWorker();
+				}
+
+				Settings.UseGW2ApiChanged += (sender, args) =>
+				{
+					if (Settings.UseGW2Api)
+					{
+						ApiData.StartApiWorker();
+					}
+					else
+					{
+						ApiData.StopApiWorker();
+					}
+				};
+			});
+		}
+
 
 		private async Task LoadLogs(LogList logList, CancellationToken cancellationToken)
 		{

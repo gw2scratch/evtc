@@ -101,12 +101,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ApiData.cs" />
     <Compile Include="Controls\GroupCompositionControl.cs" />
     <Compile Include="Controls\GuildDetailPanel.cs" />
     <Compile Include="Controls\LogDetailPanel.cs" />
     <Compile Include="Controls\MultipleLogPanel.cs" />
     <Compile Include="Controls\PlayerDetailPanel.cs" />
+    <Compile Include="Data\ApiData.cs" />
     <Compile Include="Data\LogCache.cs" />
     <Compile Include="Dialogs\ApiDialog.cs" />
     <Compile Include="Dialogs\CacheDialog.cs" />
