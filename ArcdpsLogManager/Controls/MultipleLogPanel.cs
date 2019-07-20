@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Eto.Drawing;
 using Eto.Forms;
+using GW2Scratch.ArcdpsLogManager.Analytics;
 using GW2Scratch.ArcdpsLogManager.Logs;
 using GW2Scratch.ArcdpsLogManager.Uploaders;
 
@@ -13,7 +14,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 {
 	public sealed class MultipleLogPanel : DynamicLayout
 	{
-		public DpsReportUploader DpsReportUploader { get; } = new DpsReportUploader();
+		private DpsReportUploader DpsReportUploader { get; } = new DpsReportUploader();
 
 		private LogData[] logData;
 
@@ -72,11 +73,20 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				logData.Where(x => x.DpsReportEIUpload.Url != null).Select(x => x.DpsReportEIUpload.Url));
 		}
 
-		public MultipleLogPanel()
+		public MultipleLogPanel(LogAnalytics logAnalytics)
 		{
 			Padding = new Padding(10);
 			Width = 300;
 			Visible = false;
+
+			var reparseButton = new Button {Text = "Reparse all"};
+			reparseButton.Click += (sender, args) =>
+			{
+				foreach (var log in logData)
+				{
+					log.ParseData(logAnalytics);
+				}
+			};
 
 			dpsReportUploadButton.Click += (sender, args) =>
 			{
@@ -89,12 +99,19 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 
 			dpsReportCancelButton.Click += (sender, args) => uploadTaskCancellationTokenSource?.Cancel();
 
+			DynamicTable debugSection;
+
 			BeginVertical(spacing: new Size(0, 30));
 			{
 				BeginVertical();
 				{
 					//Add(new Label {Text = "Batch log management", Font = Fonts.Sans(16, FontStyle.Bold)});
 					Add(countLabel);
+				}
+				EndVertical();
+				debugSection = BeginVertical();
+				{
+					Add(reparseButton);
 				}
 				EndVertical();
 
@@ -128,6 +145,13 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				EndVertical();
 			}
 			EndVertical();
+
+			Settings.ShowDebugDataChanged += (sender, args) => { debugSection.Visible = Settings.ShowDebugData; };
+			Shown += (sender, args) =>
+			{
+				// Assigning visibility in the constructor does not work
+				debugSection.Visible = Settings.ShowDebugData;
+			};
 		}
 
 		private void DpsReportUploadFiles(IEnumerable<LogData> logsToUpload)

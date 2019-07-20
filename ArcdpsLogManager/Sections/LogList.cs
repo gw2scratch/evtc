@@ -75,7 +75,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 
 		public MultipleLogPanel ConstructMultipleLogPanel()
 		{
-			return new MultipleLogPanel();
+			return new MultipleLogPanel(logAnalytics);
 		}
 
 		public GridView<LogData> ConstructLogGridView(LogDetailPanel detailPanel, MultipleLogPanel multipleLogPanel)
