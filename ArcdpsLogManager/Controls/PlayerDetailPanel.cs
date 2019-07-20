@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using Eto.Drawing;
 using Eto.Forms;
+using GW2Scratch.ArcdpsLogManager.Analytics;
 using GW2Scratch.ArcdpsLogManager.Data;
 using GW2Scratch.ArcdpsLogManager.Logs;
 using GW2Scratch.ArcdpsLogManager.Properties;
@@ -15,9 +16,6 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 {
 	public sealed class PlayerDetailPanel : DynamicLayout, INotifyPropertyChanged
 	{
-		private readonly ApiData apiData;
-		private readonly ImageProvider imageProvider;
-
 		private const string NullAccountName = "-"; // Account names start with :, so this should never appear.
 
 		private PlayerData playerData = new PlayerData(NullAccountName, new LogData[0]);
@@ -38,11 +36,8 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			}
 		}
 
-		public PlayerDetailPanel(ApiData apiData, ImageProvider imageProvider)
+		public PlayerDetailPanel(ApiData apiData, LogAnalytics logAnalytics, ImageProvider imageProvider)
 		{
-			this.apiData = apiData;
-			this.imageProvider = imageProvider;
-
 			Padding = new Padding(10);
 			Width = 300;
 			Visible = false;
@@ -106,7 +101,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 						var characterLogs = PlayerData.Logs.Where(log => log.Players.Any(x => x.Name == name));
 						var form = new Form
 						{
-							Content = new LogList(apiData, imageProvider)
+							Content = new LogList(apiData, logAnalytics, imageProvider)
 								{DataStore = new FilterCollection<LogData>(characterLogs)},
 							Width = 900,
 							Height = 700,
@@ -150,7 +145,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			{
 				var form = new Form
 				{
-					Content = new LogList(apiData, imageProvider)
+					Content = new LogList(apiData, logAnalytics, imageProvider)
 					{
 						DataStore = new FilterCollection<LogData>(PlayerData.Logs)
 					},

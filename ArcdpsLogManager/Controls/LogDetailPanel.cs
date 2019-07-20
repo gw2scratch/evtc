@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Eto.Drawing;
 using Eto.Forms;
+using GW2Scratch.ArcdpsLogManager.Analytics;
 using GW2Scratch.ArcdpsLogManager.Data;
 using GW2Scratch.ArcdpsLogManager.Logs;
 using GW2Scratch.ArcdpsLogManager.Sections;
@@ -13,8 +14,9 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 {
 	public sealed class LogDetailPanel : DynamicLayout
 	{
-		public ImageProvider ImageProvider { get; }
-		public DpsReportUploader DpsReportUploader { get; } = new DpsReportUploader();
+		private LogAnalytics LogAnalytics { get; }
+		private ImageProvider ImageProvider { get; }
+		private DpsReportUploader DpsReportUploader { get; } = new DpsReportUploader();
 
 		private LogData logData;
 
@@ -104,8 +106,9 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			dpsReportOpenButton.Enabled = logData.DpsReportEIUpload.Url != null;
 		}
 
-		public LogDetailPanel(ApiData apiData, ImageProvider imageProvider)
+		public LogDetailPanel(ApiData apiData, LogAnalytics logAnalytics, ImageProvider imageProvider)
 		{
+			LogAnalytics = logAnalytics;
 			ImageProvider = imageProvider;
 
 			Padding = new Padding(10, 10, 10, 2);
@@ -116,6 +119,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 
 			DynamicTable debugSection;
 			var debugButton = new Button {Text = "Debug data"};
+			var reparseButton = new Button {Text = "Reparse"};
 
 			BeginVertical(spacing: new Size(0, 30), yscale: true);
 			{
@@ -146,7 +150,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 							BeginVertical();
 							{
 								AddRow(debugButton);
-								AddRow(null);
+								AddRow(reparseButton);
 							}
 							EndVertical();
 						}
@@ -207,6 +211,8 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				var dialog = new Form {Content = debugData, Width = 500, Title = "Debug data"};
 				dialog.Show();
 			};
+
+			reparseButton.Click += (sender, args) => { logData.ParseData(LogAnalytics); };
 
 			Settings.ShowDebugDataChanged += (sender, args) => { debugSection.Visible = Settings.ShowDebugData; };
 			Shown += (sender, args) =>

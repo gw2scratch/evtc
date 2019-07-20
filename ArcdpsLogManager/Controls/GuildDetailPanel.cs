@@ -2,6 +2,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Eto.Drawing;
 using Eto.Forms;
+using GW2Scratch.ArcdpsLogManager.Analytics;
 using GW2Scratch.ArcdpsLogManager.Data;
 using GW2Scratch.ArcdpsLogManager.Logs;
 using GW2Scratch.ArcdpsLogManager.Properties;
@@ -16,8 +17,9 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 
 		private GuildData guildData = NullGuild;
 
-		private ImageProvider ImageProvider { get; }
 		private ApiData ApiData { get; }
+		private LogAnalytics LogAnalytics { get; }
+		private ImageProvider ImageProvider { get; }
 
 		public GuildData GuildData
 		{
@@ -35,10 +37,11 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			}
 		}
 
-		public GuildDetailPanel(ImageProvider imageProvider, ApiData apiData)
+		public GuildDetailPanel(ApiData apiData, LogAnalytics logAnalytics, ImageProvider imageProvider)
 		{
 			ImageProvider = imageProvider;
 			ApiData = apiData;
+			LogAnalytics = logAnalytics;
 
 			Padding = new Padding(10);
 			Width = 300;
@@ -134,7 +137,10 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			{
 				var form = new Form
 				{
-					Content = new LogList(apiData, ImageProvider) {DataStore = new FilterCollection<LogData>(GuildData.Logs)},
+					Content = new LogList(apiData, logAnalytics, ImageProvider)
+					{
+						DataStore = new FilterCollection<LogData>(GuildData.Logs)
+					},
 					Width = 900,
 					Height = 700,
 					Title = $"arcdps Log Manager: logs with a member in {ApiData.GetGuildName(guildData.Guid) ?? "(Unknown)"}"

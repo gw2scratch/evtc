@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using Eto.Drawing;
 using Eto.Forms;
+using GW2Scratch.ArcdpsLogManager.Analytics;
 using GW2Scratch.ArcdpsLogManager.Controls;
 using GW2Scratch.ArcdpsLogManager.Data;
 using GW2Scratch.ArcdpsLogManager.Logs;
@@ -14,6 +15,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 	public class LogList : Panel
 	{
 		private readonly ApiData apiData;
+		private readonly LogAnalytics logAnalytics;
 		private readonly ImageProvider imageProvider;
 		private readonly GridView<LogData> logGridView;
 
@@ -34,10 +36,12 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			}
 		}
 
-		public LogList(ApiData apiData, ImageProvider imageProvider)
+		public LogList(ApiData apiData, LogAnalytics logAnalytics, ImageProvider imageProvider)
 		{
 			this.apiData = apiData;
+			this.logAnalytics = logAnalytics;
 			this.imageProvider = imageProvider;
+
 			var logDetailPanel = ConstructLogDetailPanel();
 			var multipleLogPanel = ConstructMultipleLogPanel();
 			logGridView = ConstructLogGridView(logDetailPanel, multipleLogPanel);
@@ -66,7 +70,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 
 		public LogDetailPanel ConstructLogDetailPanel()
 		{
-			return new LogDetailPanel(apiData, imageProvider);
+			return new LogDetailPanel(apiData, logAnalytics, imageProvider);
 		}
 
 		public MultipleLogPanel ConstructMultipleLogPanel()
