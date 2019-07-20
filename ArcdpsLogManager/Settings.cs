@@ -77,39 +77,11 @@ namespace GW2Scratch.ArcdpsLogManager
 			}
 		}
 
-		public static int ManagerFormWidth
-		{
-			get => AppSettings.GetValueOrDefault(nameof(ManagerFormWidth), 900);
-
-			set
-			{
-				if (AppSettings.AddOrUpdateValue(nameof(ManagerFormWidth), value))
-				{
-					OnManagerFormWidthChanged();
-				}
-			}
-		}
-
-		public static int ManagerFormHeight
-		{
-			get => AppSettings.GetValueOrDefault(nameof(ManagerFormHeight), 700);
-
-			set
-			{
-				if (AppSettings.AddOrUpdateValue(nameof(ManagerFormHeight), value))
-				{
-					OnManagerFormWidthChanged();
-				}
-			}
-		}
-
 		public static event EventHandler<EventArgs> LogRootPathChanged;
 		public static event EventHandler<EventArgs> ShowDebugDataChanged;
 		public static event EventHandler<EventArgs> ShowSquadCompositionsChanged;
 		public static event EventHandler<EventArgs> ShowGuildTagsInLogDetailChanged;
 		public static event EventHandler<EventArgs> UseGW2ApiChanged;
-		public static event EventHandler<EventArgs> ManagerFormWidthChanged;
-		public static event EventHandler<EventArgs> ManagerFormHeightChanged;
 
 		private static void OnLogRootPathChanged()
 		{
@@ -134,16 +106,6 @@ namespace GW2Scratch.ArcdpsLogManager
 		private static void OnShowGuildTagsInLogDetailChanged()
 		{
 			ShowGuildTagsInLogDetailChanged?.Invoke(null, EventArgs.Empty);
-		}
-
-		private static void OnManagerFormWidthChanged()
-		{
-			ManagerFormWidthChanged?.Invoke(null, EventArgs.Empty);
-		}
-
-		private static void OnManagerFormHeightChanged()
-		{
-			ManagerFormHeightChanged?.Invoke(null, EventArgs.Empty);
 		}
 	}
 }

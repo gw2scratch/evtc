@@ -83,7 +83,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		public ManagerForm()
 		{
 			Title = "arcdps Log Manager";
-			ClientSize = new Size(Settings.ManagerFormWidth, Settings.ManagerFormHeight);
+			ClientSize = new Size(900, 700);
 			var formLayout = new DynamicLayout();
 			Content = formLayout;
 
@@ -93,9 +93,6 @@ namespace GW2Scratch.ArcdpsLogManager
 				{
 					LogCache?.SaveToFile();
 				}
-
-				Settings.ManagerFormWidth = Width;
-				Settings.ManagerFormHeight = Height;
 			};
 
 			var logCacheMenuItem = new ButtonMenuItem {Text = "Log &cache"};
