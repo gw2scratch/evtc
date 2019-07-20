@@ -68,7 +68,7 @@ namespace GW2Scratch.HtmlLogMaker
 
 					var parser = new EVTCParser();
 					var processor = new LogProcessor();
-					var statisticsCalculator = new StatisticsCalculator();
+					var analysis = new LogAnalyser();
 					var generator = new HtmlGenerator(ApiData);
 
 					int finishedTaskCount = 0;
@@ -95,7 +95,7 @@ namespace GW2Scratch.HtmlLogMaker
 							times.Add(("processing", (taskStopwatch.Elapsed - lastElapsed).TotalMilliseconds));
 							lastElapsed = taskStopwatch.Elapsed;
 
-							var stats = statisticsCalculator.GetStatistics(processedLog, ApiData);
+							var stats = analysis.GetStatistics(processedLog, ApiData);
 
 							times.Add(("stats", (taskStopwatch.Elapsed - lastElapsed).TotalMilliseconds));
 							lastElapsed = taskStopwatch.Elapsed;

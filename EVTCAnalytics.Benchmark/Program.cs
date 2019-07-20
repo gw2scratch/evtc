@@ -10,7 +10,7 @@ namespace GW2Scratch.EVTCAnalytics.Benchmark
 	{
 		public static EVTCParser Parser { get; set; } = new EVTCParser();
 		public static LogProcessor Processor { get; set; } = new LogProcessor();
-		public static StatisticsCalculator StatisticsCalculator { get; set; } = new StatisticsCalculator();
+		public static LogAnalyser LogAnalyser { get; set; } = new LogAnalyser();
 		public static GW2ApiData ApiData { get; set; } = null;
 
 		public static void Main(string[] args)
@@ -48,11 +48,11 @@ namespace GW2Scratch.EVTCAnalytics.Benchmark
 
 				GC.Collect();
 
-				MeasureTimes(filename, Parser, Processor, StatisticsCalculator, ApiData, Console.Out);
+				MeasureTimes(filename, Parser, Processor, LogAnalyser, ApiData, Console.Out);
 			}
 		}
 
-		private static void MeasureTimes(string filename, EVTCParser parser, LogProcessor processor, StatisticsCalculator calculator, GW2ApiData apiData, TextWriter outputWriter)
+		private static void MeasureTimes(string filename, EVTCParser parser, LogProcessor processor, LogAnalyser analyser, GW2ApiData apiData, TextWriter outputWriter)
 		{
 			var stopwatch = Stopwatch.StartNew();
 			var log = parser.ParseLog(filename);
@@ -65,7 +65,7 @@ namespace GW2Scratch.EVTCAnalytics.Benchmark
 			var processedTime = stopwatch.Elapsed;
 
 			stopwatch.Restart();
-			var statistics = calculator.GetStatistics(processedLog, apiData);
+			var statistics = analyser.GetStatistics(processedLog, apiData);
 
 			var statisticsTime = stopwatch.Elapsed;
 

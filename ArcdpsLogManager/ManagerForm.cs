@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Eto.Drawing;
 using Eto.Forms;
+using GW2Scratch.ArcdpsLogManager.Analytics;
 using GW2Scratch.ArcdpsLogManager.Data;
 using GW2Scratch.ArcdpsLogManager.Dialogs;
 using GW2Scratch.ArcdpsLogManager.GW2Api.V2;
@@ -30,9 +31,7 @@ namespace GW2Scratch.ArcdpsLogManager
 
 		private ImageProvider ImageProvider { get; } = new ImageProvider();
 		private LogFinder LogFinder { get; } = new LogFinder();
-		private EVTCParser EVTCParser { get; } = new EVTCParser();
-		private LogProcessor LogProcessor { get; } = new LogProcessor();
-		private StatisticsCalculator StatisticsCalculator { get; } = new StatisticsCalculator();
+		private LogAnalytics LogAnalytics { get; } = new LogAnalytics(new EVTCParser(), new LogProcessor(), new LogAnalyser());
 
 		private ApiData ApiData { get; } = new ApiData(new GuildEndpoint());
 
@@ -247,15 +246,15 @@ namespace GW2Scratch.ArcdpsLogManager
 			var tabs = new TabControl();
 
 			// Log tab
-			mainLogList = new LogList(ApiData, ImageProvider);
+			mainLogList = new LogList(ApiData, LogAnalytics, ImageProvider);
 			tabs.Pages.Add(new TabPage {Text = "Logs", Content = mainLogList});
 
 			// Player tab
-			playerList = new PlayerList(ApiData, ImageProvider);
+			playerList = new PlayerList(ApiData, LogAnalytics, ImageProvider);
 			tabs.Pages.Add(new TabPage {Text = "Players", Content = playerList});
 
 			// Guild tab
-			guildList = new GuildList(ApiData, ImageProvider);
+			guildList = new GuildList(ApiData, LogAnalytics, ImageProvider);
 			tabs.Pages.Add(new TabPage {Text = "Guilds", Content = guildList});
 
 			// Statistics tab
@@ -453,7 +452,7 @@ namespace GW2Scratch.ArcdpsLogManager
 
 				bool failedBefore = log.ParsingStatus == ParsingStatus.Failed;
 
-				log.ParseData(EVTCParser, LogProcessor, StatisticsCalculator);
+				log.ParseData(LogAnalytics);
 				LogCache?.CacheLogData(log);
 
 				int logNumber = i + 1;

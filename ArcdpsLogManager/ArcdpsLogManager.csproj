@@ -123,6 +123,7 @@
     <Compile Include="Logs\ParsingStatus.cs" />
     <Compile Include="Logs\UploadState.cs" />
     <Compile Include="ManagerForm.cs" />
+    <Compile Include="Analytics\LogAnalytics.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

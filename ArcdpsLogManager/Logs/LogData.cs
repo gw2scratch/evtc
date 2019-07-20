@@ -6,8 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using GW2Scratch.ArcdpsLogManager.Analytics;
 using GW2Scratch.ArcdpsLogManager.Uploaders;
-using GW2Scratch.EVTCAnalytics;
 using GW2Scratch.EVTCAnalytics.Statistics.Encounters.Results;
 
 namespace GW2Scratch.ArcdpsLogManager.Logs
@@ -66,7 +66,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 			ParseMilliseconds = parseMilliseconds;
 		}
 
-		public void ParseData(EVTCParser parser, LogProcessor processor, StatisticsCalculator calculator)
+		public void ParseData(LogAnalytics logAnalytics)
 		{
 			try
 			{
@@ -74,19 +74,19 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 
 				ParsingStatus = ParsingStatus.Parsing;
 
-				var parsedLog = parser.ParseLog(FileInfo.FullName);
-				var log = processor.GetProcessedLog(parsedLog);
+				var parsedLog = logAnalytics.Parser.ParseLog(FileInfo.FullName);
+				var log = logAnalytics.Processor.GetProcessedLog(parsedLog);
 
-				var encounter = calculator.GetEncounter(log);
+				var encounter = logAnalytics.Analyser.GetEncounter(log);
 				EncounterName = encounter.GetName();
 				EncounterResult = encounter.GetResult();
-				Players = calculator.GetPlayers(log).Select(x =>
+				Players = logAnalytics.Analyser.GetPlayers(log).Select(x =>
 					new LogPlayer(x.Name, x.AccountName, x.Subgroup, x.Profession, x.EliteSpecialization,
 						GetGuildGuid(x.GuildGuid))
 				).ToArray();
 
 				EncounterStartTime = log.StartTime.ServerTime;
-				EncounterDuration = calculator.GetEncounterDuration(encounter);
+				EncounterDuration = logAnalytics.Analyser.GetEncounterDuration(encounter);
 
 				stopwatch.Stop();
 

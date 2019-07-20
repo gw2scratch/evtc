@@ -204,7 +204,7 @@ namespace GW2Scratch.EVTCInspector
 
 			var parser = new EVTCParser();
 			var processor = new LogProcessor();
-			var statisticsCalculator = new StatisticsCalculator();
+			var analysis = new LogAnalyser();
 			var generator = new HtmlGenerator(ApiData);
 
 			// Parsing
@@ -267,7 +267,7 @@ namespace GW2Scratch.EVTCInspector
 			sw.Restart();
 			try
 			{
-				stats = statisticsCalculator.GetStatistics(processedLog, ApiData);
+				stats = analysis.GetStatistics(processedLog, ApiData);
 				var statsTime = sw.Elapsed;
 
 				statusStringBuilder.AppendLine($"Statistics generated in {statsTime}");

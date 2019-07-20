@@ -14,7 +14,7 @@ using SkillSlot = GW2Scratch.EVTCAnalytics.Model.Skills.SkillSlot;
 
 namespace GW2Scratch.EVTCAnalytics
 {
-	public class StatisticsCalculator
+	public class LogAnalyser
 	{
 		public BuffSimulator BuffSimulator { get; set; } = new BuffSimulator();
 		public GameSkillDataRepository GameSkillDataRepository { get; set; } = new GameSkillDataRepository();
