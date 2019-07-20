@@ -118,6 +118,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			var exportSpeciesButton = new Button {Text = "Export species data to csv"};
 			var exportSkillsButton = new Button {Text = "Export skill data to csv"};
 			var progressBar = new ProgressBar();
+			var progressLabel = new Label {Text = ""};
 			var speciesGridView = new GridView<SpeciesData>();
 			var skillGridView = new GridView<SkillData>();
 
@@ -135,7 +136,12 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 					AddRow(gatherButton, cancelButton);
 				}
 				EndCentered();
-				AddCentered(progressBar);
+				BeginCentered(spacing: new Size(5, 5));
+				{
+					AddRow(progressBar);
+					AddRow(progressLabel);
+				}
+				EndCentered();
 
 				BeginHorizontal(true);
 				Add(dataTabs);
@@ -199,14 +205,17 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			});
 
 			cancelButton.Click += (sender, args) => cancellationTokenSource?.Cancel();
-			gatherButton.Click += (sender, args) => GatherData(logList, progressBar, speciesGridView, skillGridView);
-			exportSkillsButton.Click += (sender, args) => SaveToCsv(skillGridView.DataStore ?? Enumerable.Empty<SkillData>());
-			exportSpeciesButton.Click += (sender, args) => SaveToCsv(speciesGridView.DataStore ?? Enumerable.Empty<SpeciesData>());
+			gatherButton.Click += (sender, args) =>
+				GatherData(logList, progressBar, progressLabel, speciesGridView, skillGridView);
+			exportSkillsButton.Click += (sender, args) =>
+				SaveToCsv(skillGridView.DataStore ?? Enumerable.Empty<SkillData>());
+			exportSpeciesButton.Click += (sender, args) =>
+				SaveToCsv(speciesGridView.DataStore ?? Enumerable.Empty<SpeciesData>());
 		}
 
 		private void SaveToCsv(IEnumerable<SkillData> skillData)
 		{
-            var dialog = new SaveFileDialog();
+			var dialog = new SaveFileDialog();
 			if (dialog.ShowDialog(this) == DialogResult.Ok)
 			{
 				using (var writer = new StreamWriter(dialog.FileName))
@@ -222,7 +231,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 
 		private void SaveToCsv(IEnumerable<SpeciesData> speciesData)
 		{
-            var dialog = new SaveFileDialog();
+			var dialog = new SaveFileDialog();
 			if (dialog.ShowDialog(this) == DialogResult.Ok)
 			{
 				using (var writer = new StreamWriter(dialog.FileName))
@@ -236,22 +245,27 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			}
 		}
 
-		private void GatherData(LogList logList, ProgressBar progressBar, GridView<SpeciesData> speciesGridView,
-			GridView<SkillData> skillGridView)
+		private void GatherData(LogList logList, ProgressBar progressBar, Label progressLabel,
+			GridView<SpeciesData> speciesGridView, GridView<SkillData> skillGridView)
 		{
 			cancellationTokenSource?.Cancel();
 			cancellationTokenSource = new CancellationTokenSource();
 
 			var logs = logList.DataStore.ToArray();
-			ParseLogs(logs, cancellationTokenSource.Token, new Progress<(int done, int totalLogs)>(progress =>
-			{
-				(int done, int totalLogs) = progress;
-				Application.Instance.Invoke(() =>
+			ParseLogs(
+				logs,
+				cancellationTokenSource.Token,
+				new Progress<(int done, int totalLogs, int failed)>(progress =>
 				{
-					progressBar.MaxValue = totalLogs;
-					progressBar.Value = done;
-				});
-			})).ContinueWith(task =>
+					(int done, int totalLogs, int failed) = progress;
+					Application.Instance.Invoke(() =>
+					{
+						progressBar.MaxValue = totalLogs;
+						progressBar.Value = done;
+						progressLabel.Text = $"{done}/{totalLogs} ({failed} failed)";
+					});
+				})
+			).ContinueWith(task =>
 			{
 				if (task.Status == TaskStatus.RanToCompletion)
 				{
@@ -266,7 +280,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 		}
 
 		private Task<(IEnumerable<SpeciesData>, IEnumerable<SkillData>)> ParseLogs(IReadOnlyCollection<LogData> logs,
-			CancellationToken cancellationToken, IProgress<(int done, int totalLogs)> progress = null)
+			CancellationToken cancellationToken, IProgress<(int done, int totalLogs, int failed)> progress = null)
 		{
 			return Task.Run(() =>
 			{
@@ -274,10 +288,10 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 				var skills = new Dictionary<uint, Dictionary<SkillData, int>>();
 
 				int done = 0;
+				int failed = 0;
 				foreach (var log in logs)
 				{
 					cancellationToken.ThrowIfCancellationRequested();
-
 
 					Log processedLog;
 					try
@@ -287,6 +301,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 					}
 					catch
 					{
+						failed++;
 						continue;
 					}
 
@@ -335,7 +350,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 					}
 
 					done++;
-					progress?.Report((done, logs.Count));
+					progress?.Report((done, logs.Count, failed));
 				}
 
 				var speciesEnumerable = (IEnumerable<SpeciesData>) species.Values.SelectMany(x => x).Select(x =>
