@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -65,6 +65,7 @@
     <Compile Include="GameData\Detections\IDetection.cs" />
     <Compile Include="GameData\Detections\InitialBuffDetection.cs" />
     <Compile Include="GameData\Detections\SelfBuffApplyDetection.cs" />
+    <Compile Include="GameData\GadgetIds.cs" />
     <Compile Include="GameData\GameSkillDataRepository.cs" />
     <Compile Include="GameData\SkillIds.cs" />
     <Compile Include="GameData\SpecializationDetection.cs" />
@@ -142,6 +143,7 @@
     <Compile Include="Statistics\Encounters\Results\AnyCombinedResultDeterminer.cs" />
     <Compile Include="Statistics\Encounters\Results\ConstantResultDeterminer.cs" />
     <Compile Include="Statistics\Encounters\Results\EncounterResult.cs" />
+    <Compile Include="Statistics\Encounters\Results\GroupedEventDeterminer.cs" />
     <Compile Include="Statistics\Encounters\Results\IResultDeterminer.cs" />
     <Compile Include="Statistics\IEncounterFinder.cs" />
     <Compile Include="Statistics\IRotationCalculator.cs" />

@@ -42,6 +42,8 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		// Wing 5
 		// Soulless Horror
 		public const int SoullessHorror = 19767;
+		// River of Souls
+		public const int Desmina = 19828;
 		// Statues of Grenth
 		// Dhuum
 

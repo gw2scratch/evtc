@@ -227,6 +227,20 @@ namespace GW2Scratch.EVTCAnalytics.Statistics
 						new AgentNameEncounterNameProvider(boss)
 					);
 				}
+
+				if (boss.SpeciesId == SpeciesIds.Desmina)
+				{
+					long startTime = log.Events.FirstOrDefault()?.Time ?? -1;
+					return new BaseEncounter(
+						new[] {boss},
+						log.Events,
+						new PhaseSplitter(new StartTrigger(new PhaseDefinition("Default phase", boss))),
+						// At the end of the event, 8 of the rifts become untargetable
+						new GroupedEventDeterminer<TargetableChangeEvent>(
+							e => e.Time - startTime > 3000 && e.IsTargetable == false, 8, 1000),
+						new ConstantEncounterNameProvider("River of Souls")
+					);
+				}
 			}
 
 			return new DefaultEncounter(log.MainTarget, log.Events);
