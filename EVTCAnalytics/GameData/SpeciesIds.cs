@@ -20,7 +20,12 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 
 		// Wing 2
 		// Slothasor
+		public const int Slothasor = 16123;
 		// Trio
+		public const int Berg = 16088;
+		public const int Zane = 16137;
+		public const int Narella = 16125;
+		public const int TrioCagePrisoner = 16103;
 		// Matthias
 
 		// Wing 3

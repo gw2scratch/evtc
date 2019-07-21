@@ -132,9 +132,14 @@
     <Compile Include="Statistics\Encounters\Phases\PhaseDefinition.cs" />
     <Compile Include="Statistics\Encounters\Phases\PhaseSplitter.cs" />
     <Compile Include="Statistics\Encounters\Phases\StartTrigger.cs" />
+    <Compile Include="Statistics\Encounters\Results\AgentAliveCombatDeterminer.cs" />
+    <Compile Include="Statistics\Encounters\Results\AgentBelowHealthFractionDeterminer.cs" />
     <Compile Include="Statistics\Encounters\Results\AgentDeathResultDeterminer.cs" />
     <Compile Include="Statistics\Encounters\Results\AgentExitCombatDeterminer.cs" />
-    <Compile Include="Statistics\Encounters\Results\CombinedResultDeterminer.cs" />
+    <Compile Include="Statistics\Encounters\Results\AgentKillingBlowDeterminer.cs" />
+    <Compile Include="Statistics\Encounters\Results\AllCombinedResultDeterminer.cs" />
+    <Compile Include="Statistics\Encounters\Results\AnyCombinedResultDeterminer.cs" />
+    <Compile Include="Statistics\Encounters\Results\ConstantResultDeterminer.cs" />
     <Compile Include="Statistics\Encounters\Results\EncounterResult.cs" />
     <Compile Include="Statistics\Encounters\Results\IResultDeterminer.cs" />
     <Compile Include="Statistics\IEncounterFinder.cs" />

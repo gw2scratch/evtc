@@ -6,13 +6,14 @@ using GW2Scratch.EVTCAnalytics.Events;
 namespace GW2Scratch.EVTCAnalytics.Statistics.Encounters.Results
 {
 	/// <summary>
-	/// Combines the result of multiple determiners, returning success if all succeed, unknown if any is unknown and failure otherwise.
+	/// Combines the result of multiple determiners, returning success if all succeed, unknown if any
+	/// is unknown and failure otherwise.
 	/// </summary>
-	public class CombinedResultDeterminer : IResultDeterminer
+	public class AllCombinedResultDeterminer : IResultDeterminer
 	{
 		private readonly IResultDeterminer[] determiners;
 
-		public CombinedResultDeterminer(params IResultDeterminer[] determiners)
+		public AllCombinedResultDeterminer(params IResultDeterminer[] determiners)
 		{
 			if (determiners.Length == 0)
 			{

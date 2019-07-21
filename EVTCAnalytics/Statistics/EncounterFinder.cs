@@ -72,7 +72,7 @@ namespace GW2Scratch.EVTCAnalytics.Statistics
 							new BuffAddTrigger(kenut, SkillIds.Determined,
 								new PhaseDefinition("Split phase", nikare, kenut))
 						),
-						new CombinedResultDeterminer(
+						new AllCombinedResultDeterminer(
 							new AgentDeathResultDeterminer(nikare),
 							new AgentDeathResultDeterminer(kenut)
 						),
@@ -171,6 +171,49 @@ namespace GW2Scratch.EVTCAnalytics.Statistics
 								new PhaseDefinition("Qadim 33-0%", boss))),
 						new AgentExitCombatDeterminer(boss),
 						new AgentNameEncounterNameProvider(boss)
+					);
+				}
+
+				if (boss.SpeciesId == SpeciesIds.Berg ||
+				    boss.SpeciesId == SpeciesIds.Zane ||
+				    boss.SpeciesId == SpeciesIds.Narella)
+				{
+					var berg = log.Agents.OfType<NPC>().FirstOrDefault(x => x.SpeciesId == SpeciesIds.Berg);
+					var zane = log.Agents.OfType<NPC>().FirstOrDefault(x => x.SpeciesId == SpeciesIds.Zane);
+					var narella = log.Agents.OfType<NPC>().FirstOrDefault(x => x.SpeciesId == SpeciesIds.Narella);
+					var prisoner = log.Agents.OfType<NPC>()
+						.FirstOrDefault(x => x.SpeciesId == SpeciesIds.TrioCagePrisoner);
+
+					IResultDeterminer resultDeterminer;
+					if (berg != null && zane != null && narella != null && prisoner != null)
+					{
+						resultDeterminer = new AllCombinedResultDeterminer(
+							new AgentDeathResultDeterminer(berg), // Berg has to die
+							new AgentDeathResultDeterminer(zane), // So does Zane
+							new AgentAliveDeterminer(prisoner), // The prisoner in the cage must survive
+							new AnyCombinedResultDeterminer(
+								// Narella has to be below 3% health
+								new AgentBelowHealthFractionDeterminer(narella, 0.03f),
+								// Or killed with a physical killing blow above 3% (a Warg can do that)
+								new AgentKillingBlowDeterminer(narella)
+							),
+							new AnyCombinedResultDeterminer(
+								new AgentExitCombatDeterminer(narella), // Narella typically doesn't die; exits combat
+								new AgentDeathResultDeterminer(narella) // Or she can seldom die
+							)
+						);
+					}
+					else
+					{
+						resultDeterminer = new ConstantResultDeterminer(EncounterResult.Unknown);
+					}
+
+					return new BaseEncounter(
+						new[] {berg, zane, narella}.Where(x => x != null),
+						log.Events,
+						new PhaseSplitter(new StartTrigger(new PhaseDefinition("Default phase", boss))),
+						resultDeterminer,
+						new ConstantEncounterNameProvider("Bandit Trio")
 					);
 				}
 			}
