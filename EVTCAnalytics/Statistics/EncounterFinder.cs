@@ -216,6 +216,17 @@ namespace GW2Scratch.EVTCAnalytics.Statistics
 						new ConstantEncounterNameProvider("Bandit Trio")
 					);
 				}
+
+				if (boss.SpeciesId == SpeciesIds.SoullessHorror)
+				{
+					return new BaseEncounter(
+						new[] {boss},
+						log.Events,
+						new PhaseSplitter(new StartTrigger(new PhaseDefinition("Default phase", boss))),
+						new AgentBuffGainedDeterminer(boss, SkillIds.SoullessHorrorDetermined),
+						new AgentNameEncounterNameProvider(boss)
+					);
+				}
 			}
 
 			return new DefaultEncounter(log.MainTarget, log.Events);

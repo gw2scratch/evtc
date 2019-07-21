@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -134,6 +134,7 @@
     <Compile Include="Statistics\Encounters\Phases\StartTrigger.cs" />
     <Compile Include="Statistics\Encounters\Results\AgentAliveCombatDeterminer.cs" />
     <Compile Include="Statistics\Encounters\Results\AgentBelowHealthFractionDeterminer.cs" />
+    <Compile Include="Statistics\Encounters\Results\AgentBuffGainedDeterminer.cs" />
     <Compile Include="Statistics\Encounters\Results\AgentDeathResultDeterminer.cs" />
     <Compile Include="Statistics\Encounters\Results\AgentExitCombatDeterminer.cs" />
     <Compile Include="Statistics\Encounters\Results\AgentKillingBlowDeterminer.cs" />

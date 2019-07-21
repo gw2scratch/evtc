@@ -41,6 +41,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 
 		// Wing 5
 		// Soulless Horror
+		public const int SoullessHorror = 19767;
 		// Statues of Grenth
 		// Dhuum
 
@@ -55,5 +56,10 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		public const int ApocalypseBringer = 21073;
 		public const int WyvernMatriarch = 20997;
 		public const int WyvernPatriarch = 21183;
+
+		// Wing 7
+		// Cardinal Adina
+		// Cardinal Sabir
+		// Qadim the Peerless
 	}
 }

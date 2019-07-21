@@ -32,6 +32,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		public const int Determined = 762;
 		public const int GorsevalInvulnerability = 31790;
 		public const int QadimFlameArmor = 52568;
+		public const int SoullessHorrorDetermined = 895;
 
 		public const int Superspeed = 5974;
 
