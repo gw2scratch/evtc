@@ -16,9 +16,9 @@ namespace GW2Scratch.EVTCAnalytics.Statistics.Encounters.Results
 
 		public EncounterResult GetResult(IEnumerable<Event> events)
 		{
-			bool agentDead = events.OfType<AgentExitCombatEvent>().Any(x => x.Agent == agent);
+			bool combatExited = events.OfType<AgentExitCombatEvent>().Any(x => x.Agent == agent);
 
-			return agentDead ? EncounterResult.Success : EncounterResult.Failure;
+			return combatExited ? EncounterResult.Success : EncounterResult.Failure;
 		}
 	}
 }

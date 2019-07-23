@@ -199,7 +199,8 @@ namespace GW2Scratch.EVTCAnalytics.Statistics
 								new AgentKillingBlowDeterminer(narella)
 							),
 							new AnyCombinedResultDeterminer(
-								new AgentExitCombatDeterminer(narella), // Narella typically doesn't die; exits combat
+								// Narella typically doesn't die; exits combat
+								new AgentOutsideOfCombatDeterminer(narella),
 								new AgentDeathResultDeterminer(narella) // Or she can seldom die
 							)
 						);
