@@ -139,6 +139,8 @@
     <Compile Include="Statistics\Encounters\Results\AgentDeathResultDeterminer.cs" />
     <Compile Include="Statistics\Encounters\Results\AgentExitCombatDeterminer.cs" />
     <Compile Include="Statistics\Encounters\Results\AgentKillingBlowDeterminer.cs" />
+    <Compile Include="Statistics\Encounters\Results\AgentOutsideOfCombatDeterminer.cs" />
+    <Compile Include="Statistics\Encounters\Results\NPCSpawnDeterminer.cs" />
     <Compile Include="Statistics\Encounters\Results\AllCombinedResultDeterminer.cs" />
     <Compile Include="Statistics\Encounters\Results\AnyCombinedResultDeterminer.cs" />
     <Compile Include="Statistics\Encounters\Results\ConstantResultDeterminer.cs" />

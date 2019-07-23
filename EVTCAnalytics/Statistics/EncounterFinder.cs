@@ -275,6 +275,19 @@ namespace GW2Scratch.EVTCAnalytics.Statistics
 					);
 				}
 			}
+			else if (log.MainTarget is Gadget gadgetBoss)
+			{
+				if (gadgetBoss.VolatileId == GadgetIds.ConjuredAmalgamate)
+				{
+					return new BaseEncounter(
+						new[] {gadgetBoss},
+						log.Events,
+						new PhaseSplitter(new StartTrigger(new PhaseDefinition("Default phase", gadgetBoss))),
+						new NPCSpawnDeterminer(SpeciesIds.RoleplayZommoros),
+						new AgentNameEncounterNameProvider(gadgetBoss)
+					);
+				}
+			}
 
 			return new DefaultEncounter(log.MainTarget, log.Events);
 		}

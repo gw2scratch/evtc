@@ -52,6 +52,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 
 		// Wing 6
 		// Conjured Amalgamate
+		public const int RoleplayZommoros = 21118;
 		// Twin Largos
 		public const int Nikare = 21105;
 		public const int Kenut = 21089;
