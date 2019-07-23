@@ -61,7 +61,7 @@ namespace GW2Scratch.EVTCAnalytics
 		/// </summary>
 		private ParsedBossData ParseBossData(ByteArrayBinaryReader reader)
 		{
-			// 2 bytes: boss instance ID
+			// 2 bytes: boss species ID
 			ushort id = reader.ReadUInt16();
 			// 1 byte: unused
 			reader.Skip(1);
@@ -75,10 +75,10 @@ namespace GW2Scratch.EVTCAnalytics
 		/// </summary>
 		private IEnumerable<ParsedAgent> ParseAgents(ByteArrayBinaryReader reader)
 		{
-			// 4 bytes: player count
+			// 4 bytes: agent count
 			int agentCount = reader.ReadInt32();
 
-			// 96 bytes: each player
+			// 96 bytes: each agent
 			for (int i = 0; i < agentCount; i++)
 			{
 				// 8 bytes: agent address
@@ -118,7 +118,7 @@ namespace GW2Scratch.EVTCAnalytics
 		/// </summary>
 		private IEnumerable<ParsedSkill> ParseSkills(ByteArrayBinaryReader reader)
 		{
-			// 4 bytes: player count
+			// 4 bytes: skill count
 			int skillCount = reader.ReadInt32();
 
 			// 68 bytes: each skill
