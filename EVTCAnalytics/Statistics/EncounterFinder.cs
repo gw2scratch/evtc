@@ -187,7 +187,7 @@ namespace GW2Scratch.EVTCAnalytics.Statistics
 							new AgentDeathResultDeterminer(berg), // Berg has to die
 							new AgentDeathResultDeterminer(zane), // So does Zane
 							new AgentAliveDeterminer(prisoner), // The prisoner in the cage must survive
-							new AnyCombinedResultDeterminer(
+							new AnyCombinedResultDeterminer( // And finally, Narella has to perish as well
 								new AgentKillingBlowDeterminer(narella),
 								new AgentDeathResultDeterminer(narella)
 							)
