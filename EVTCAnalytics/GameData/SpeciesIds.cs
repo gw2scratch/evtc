@@ -45,7 +45,10 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		// River of Souls
 		public const int Desmina = 19828;
 		// Statues of Grenth
+		public const int EyeOfJudgment = 19651;
+		public const int EyeOfFate = 19844;
 		// Dhuum
+		public const int Dhuum = 19450;
 
 		// Wing 6
 		// Conjured Amalgamate

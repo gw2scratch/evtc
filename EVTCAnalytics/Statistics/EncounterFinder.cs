@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using GW2Scratch.EVTCAnalytics.Events;
@@ -239,6 +240,38 @@ namespace GW2Scratch.EVTCAnalytics.Statistics
 						new GroupedEventDeterminer<TargetableChangeEvent>(
 							e => e.Time - startTime > 3000 && e.IsTargetable == false, 8, 1000),
 						new ConstantEncounterNameProvider("River of Souls")
+					);
+				}
+
+				// Eyes logs sometimes get Dhuum as the boss when the player is too close to him
+				if (boss.SpeciesId == SpeciesIds.EyeOfJudgment ||
+				    boss.SpeciesId == SpeciesIds.EyeOfFate ||
+				    boss.SpeciesId == SpeciesIds.Dhuum &&
+				    log.Agents.OfType<NPC>().Any(x => x.SpeciesId == SpeciesIds.EyeOfFate))
+				{
+					var fate = log.Agents.OfType<NPC>().FirstOrDefault(x => x.SpeciesId == SpeciesIds.EyeOfFate);
+					var judgment = log.Agents.OfType<NPC>()
+						.FirstOrDefault(x => x.SpeciesId == SpeciesIds.EyeOfJudgment);
+
+					IResultDeterminer resultDeterminer;
+					if (fate == null || judgment == null)
+					{
+						resultDeterminer = new ConstantResultDeterminer(EncounterResult.Unknown);
+					}
+					else
+					{
+						resultDeterminer = new AnyCombinedResultDeterminer(
+							new AgentDeathResultDeterminer(judgment),
+							new AgentDeathResultDeterminer(fate)
+						);
+					}
+
+					return new BaseEncounter(
+						new[] {fate, judgment}.Where(x => x != null),
+						log.Events,
+						new PhaseSplitter(new StartTrigger(new PhaseDefinition("Default phase", boss))),
+						resultDeterminer,
+						new ConstantEncounterNameProvider("Statue of Darkness")
 					);
 				}
 			}
