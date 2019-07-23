@@ -179,11 +179,10 @@ namespace GW2Scratch.EVTCAnalytics.Statistics
 				    boss.SpeciesId == SpeciesIds.Zane ||
 				    boss.SpeciesId == SpeciesIds.Narella)
 				{
-					var berg = log.Agents.OfType<NPC>().FirstOrDefault(x => x.SpeciesId == SpeciesIds.Berg);
-					var zane = log.Agents.OfType<NPC>().FirstOrDefault(x => x.SpeciesId == SpeciesIds.Zane);
-					var narella = log.Agents.OfType<NPC>().FirstOrDefault(x => x.SpeciesId == SpeciesIds.Narella);
-					var prisoner = log.Agents.OfType<NPC>()
-						.FirstOrDefault(x => x.SpeciesId == SpeciesIds.TrioCagePrisoner);
+					var berg = GetTargetBySpeciesId(log, SpeciesIds.Berg);
+					var zane = GetTargetBySpeciesId(log, SpeciesIds.Zane);
+					var narella = GetTargetBySpeciesId(log, SpeciesIds.Narella);
+					var prisoner = GetTargetBySpeciesId(log, SpeciesIds.TrioCagePrisoner);
 
 					IResultDeterminer resultDeterminer;
 					if (berg != null && zane != null && narella != null && prisoner != null)
@@ -193,15 +192,8 @@ namespace GW2Scratch.EVTCAnalytics.Statistics
 							new AgentDeathResultDeterminer(zane), // So does Zane
 							new AgentAliveDeterminer(prisoner), // The prisoner in the cage must survive
 							new AnyCombinedResultDeterminer(
-								// Narella has to be below 3% health
-								new AgentBelowHealthFractionDeterminer(narella, 0.03f),
-								// Or killed with a physical killing blow above 3% (a Warg can do that)
-								new AgentKillingBlowDeterminer(narella)
-							),
-							new AnyCombinedResultDeterminer(
-								// Narella typically doesn't die; exits combat
-								new AgentOutsideOfCombatDeterminer(narella),
-								new AgentDeathResultDeterminer(narella) // Or she can seldom die
+								new AgentKillingBlowDeterminer(narella),
+								new AgentDeathResultDeterminer(narella)
 							)
 						);
 					}
@@ -291,6 +283,28 @@ namespace GW2Scratch.EVTCAnalytics.Statistics
 			}
 
 			return new DefaultEncounter(log.MainTarget, log.Events);
+		}
+
+		private NPC GetTargetBySpeciesId(Log log, int speciesId)
+		{
+			// When leaving the detection range and returning, another copy of the NPC may appear in the log.
+			// As this is rather rare, we take the one that had events spanning the longest time
+			long maxAwareTime = int.MinValue;
+			NPC target = null;
+			foreach (var agent in log.Agents)
+			{
+				if (agent is NPC npc && npc.SpeciesId == speciesId)
+				{
+					long awareTime = npc.LastAwareTime - npc.FirstAwareTime;
+					if (awareTime > maxAwareTime)
+					{
+						maxAwareTime = awareTime;
+						target = npc;
+					}
+				}
+			}
+
+			return target;
 		}
 	}
 }
