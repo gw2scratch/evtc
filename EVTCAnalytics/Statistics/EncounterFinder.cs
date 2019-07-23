@@ -56,8 +56,8 @@ namespace GW2Scratch.EVTCAnalytics.Statistics
 
 				if (boss.SpeciesId == SpeciesIds.Nikare || boss.SpeciesId == SpeciesIds.Kenut)
 				{
-					var nikare = log.Agents.OfType<NPC>().FirstOrDefault(x => x.SpeciesId == SpeciesIds.Nikare);
-					var kenut = log.Agents.OfType<NPC>().FirstOrDefault(x => x.SpeciesId == SpeciesIds.Kenut);
+					var nikare = GetTargetBySpeciesId(log, SpeciesIds.Nikare);
+					var kenut = GetTargetBySpeciesId(log, SpeciesIds.Kenut);
 
 					var bosses = new List<NPC>();
 					if (nikare != null) bosses.Add(nikare);
@@ -109,9 +109,9 @@ namespace GW2Scratch.EVTCAnalytics.Statistics
 
 				if (boss.SpeciesId == SpeciesIds.Sabetha)
 				{
-					var kernan = log.Agents.OfType<NPC>().FirstOrDefault(x => x.SpeciesId == SpeciesIds.Kernan);
-					var knuckles = log.Agents.OfType<NPC>().FirstOrDefault(x => x.SpeciesId == SpeciesIds.Knuckles);
-					var karde = log.Agents.OfType<NPC>().FirstOrDefault(x => x.SpeciesId == SpeciesIds.Karde);
+					var kernan = GetTargetBySpeciesId(log, SpeciesIds.Kernan);
+					var knuckles = GetTargetBySpeciesId(log, SpeciesIds.Knuckles);
+					var karde = GetTargetBySpeciesId(log, SpeciesIds.Karde);
 
 					return new BaseEncounter(
 						new[] {boss},
@@ -136,14 +136,10 @@ namespace GW2Scratch.EVTCAnalytics.Statistics
 
 				if (boss.SpeciesId == SpeciesIds.Qadim)
 				{
-					var hydra = log.Agents.OfType<NPC>()
-						.FirstOrDefault(x => x.SpeciesId == SpeciesIds.AncientInvokedHydra);
-					var destroyer = log.Agents.OfType<NPC>()
-						.FirstOrDefault(x => x.SpeciesId == SpeciesIds.ApocalypseBringer);
-					var matriarch = log.Agents.OfType<NPC>()
-						.FirstOrDefault(x => x.SpeciesId == SpeciesIds.WyvernMatriarch);
-					var patriarch = log.Agents.OfType<NPC>()
-						.FirstOrDefault(x => x.SpeciesId == SpeciesIds.WyvernPatriarch);
+					var hydra = GetTargetBySpeciesId(log, SpeciesIds.AncientInvokedHydra);
+					var destroyer = GetTargetBySpeciesId(log, SpeciesIds.ApocalypseBringer);
+					var matriarch = GetTargetBySpeciesId(log, SpeciesIds.WyvernMatriarch);
+					var patriarch = GetTargetBySpeciesId(log, SpeciesIds.WyvernPatriarch);
 
 					return new BaseEncounter(
 						new[] {boss},
@@ -242,9 +238,8 @@ namespace GW2Scratch.EVTCAnalytics.Statistics
 				    boss.SpeciesId == SpeciesIds.Dhuum &&
 				    log.Agents.OfType<NPC>().Any(x => x.SpeciesId == SpeciesIds.EyeOfFate))
 				{
-					var fate = log.Agents.OfType<NPC>().FirstOrDefault(x => x.SpeciesId == SpeciesIds.EyeOfFate);
-					var judgment = log.Agents.OfType<NPC>()
-						.FirstOrDefault(x => x.SpeciesId == SpeciesIds.EyeOfJudgment);
+					var fate = GetTargetBySpeciesId(log, SpeciesIds.EyeOfFate);
+					var judgment = GetTargetBySpeciesId(log, SpeciesIds.EyeOfJudgment);
 
 					IResultDeterminer resultDeterminer;
 					if (fate == null || judgment == null)
