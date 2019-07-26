@@ -136,10 +136,9 @@
     <Compile Include="Statistics\Encounters\Phases\PhaseSplitter.cs" />
     <Compile Include="Statistics\Encounters\Phases\StartTrigger.cs" />
     <Compile Include="Statistics\Encounters\Results\AgentAliveCombatDeterminer.cs" />
-    <Compile Include="Statistics\Encounters\Results\AgentBelowHealthFractionDeterminer.cs" />
     <Compile Include="Statistics\Encounters\Results\AgentBuffGainedDeterminer.cs" />
-    <Compile Include="Statistics\Encounters\Results\AgentDeathResultDeterminer.cs" />
-    <Compile Include="Statistics\Encounters\Results\AgentExitCombatDeterminer.cs" />
+    <Compile Include="Statistics\Encounters\Results\AgentDeadDeterminer.cs" />
+    <Compile Include="Statistics\Encounters\Results\AgentCombatExitDeterminer.cs" />
     <Compile Include="Statistics\Encounters\Results\AgentKillingBlowDeterminer.cs" />
     <Compile Include="Statistics\Encounters\Results\AgentOutsideOfCombatDeterminer.cs" />
     <Compile Include="Statistics\Encounters\Results\NPCSpawnDeterminer.cs" />

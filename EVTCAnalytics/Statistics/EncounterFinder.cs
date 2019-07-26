@@ -50,7 +50,7 @@ namespace GW2Scratch.EVTCAnalytics.Statistics
 								new PhaseDefinition("Split 2", split2Guardians)),
 							new BuffRemoveTrigger(boss, SkillIds.Invulnerability, new PhaseDefinition("Phase 3", boss))
 						),
-						new AgentDeathResultDeterminer(boss),
+						new AgentDeadDeterminer(boss),
 						new AgentNameEncounterNameProvider(boss));
 				}
 
@@ -74,8 +74,8 @@ namespace GW2Scratch.EVTCAnalytics.Statistics
 								new PhaseDefinition("Split phase", nikare, kenut))
 						),
 						new AllCombinedResultDeterminer(
-							new AgentDeathResultDeterminer(nikare),
-							new AgentDeathResultDeterminer(kenut)
+							new AgentDeadDeterminer(nikare),
+							new AgentDeadDeterminer(kenut)
 						),
 						new ConstantEncounterNameProvider("Twin Largos")
 					);
@@ -103,7 +103,7 @@ namespace GW2Scratch.EVTCAnalytics.Statistics
 							new BuffRemoveTrigger(boss, SkillIds.GorsevalInvulnerability,
 								new PhaseDefinition("Phase 3", boss))
 						),
-						new AgentDeathResultDeterminer(boss),
+						new AgentDeadDeterminer(boss),
 						new AgentNameEncounterNameProvider(boss));
 				}
 
@@ -129,7 +129,7 @@ namespace GW2Scratch.EVTCAnalytics.Statistics
 								new PhaseDefinition("Karde", karde != null ? new Agent[] {karde} : new Agent[0])),
 							new BuffRemoveTrigger(boss, SkillIds.Invulnerability, new PhaseDefinition("Phase 4", boss))
 						),
-						new AgentDeathResultDeterminer(boss),
+						new AgentDeadDeterminer(boss),
 						new AgentNameEncounterNameProvider(boss)
 					);
 				}
@@ -166,7 +166,7 @@ namespace GW2Scratch.EVTCAnalytics.Statistics
 									: new Agent[0]),
 							new BuffRemoveTrigger(boss, SkillIds.QadimFlameArmor,
 								new PhaseDefinition("Qadim 33-0%", boss))),
-						new AgentExitCombatDeterminer(boss),
+						new AgentCombatExitDeterminer(boss),
 						new AgentNameEncounterNameProvider(boss)
 					);
 				}
@@ -184,12 +184,12 @@ namespace GW2Scratch.EVTCAnalytics.Statistics
 					if (berg != null && zane != null && narella != null && prisoner != null)
 					{
 						resultDeterminer = new AllCombinedResultDeterminer(
-							new AgentDeathResultDeterminer(berg), // Berg has to die
-							new AgentDeathResultDeterminer(zane), // So does Zane
+							new AgentDeadDeterminer(berg), // Berg has to die
+							new AgentDeadDeterminer(zane), // So does Zane
 							new AgentAliveDeterminer(prisoner), // The prisoner in the cage must survive
 							new AnyCombinedResultDeterminer( // And finally, Narella has to perish as well
 								new AgentKillingBlowDeterminer(narella),
-								new AgentDeathResultDeterminer(narella)
+								new AgentDeadDeterminer(narella)
 							)
 						);
 					}
@@ -249,8 +249,8 @@ namespace GW2Scratch.EVTCAnalytics.Statistics
 					else
 					{
 						resultDeterminer = new AnyCombinedResultDeterminer(
-							new AgentDeathResultDeterminer(judgment),
-							new AgentDeathResultDeterminer(fate)
+							new AgentDeadDeterminer(judgment),
+							new AgentDeadDeterminer(fate)
 						);
 					}
 

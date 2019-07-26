@@ -5,11 +5,11 @@ using GW2Scratch.EVTCAnalytics.Model.Agents;
 
 namespace GW2Scratch.EVTCAnalytics.Statistics.Encounters.Results
 {
-	public class AgentExitCombatDeterminer : IResultDeterminer
+	public class AgentCombatExitDeterminer : IResultDeterminer
 	{
 		private readonly Agent agent;
 
-		public AgentExitCombatDeterminer(Agent agent)
+		public AgentCombatExitDeterminer(Agent agent)
 		{
 			this.agent = agent;
 		}
