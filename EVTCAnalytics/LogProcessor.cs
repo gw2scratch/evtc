@@ -150,11 +150,23 @@ namespace GW2Scratch.EVTCAnalytics
 				{
 					if (agent.Prof >> 16 == 0xFFFF)
 					{
-						// Gadget
+						// Gadget or Attack Target
 						int volatileId = (int) (agent.Prof & 0xFFFF);
 						string name = agent.Name.Trim('\0');
 
-						yield return new Gadget(agent.Address, volatileId, name, agent.HitboxWidth, agent.HitboxHeight);
+						if (name.StartsWith("at"))
+						{
+							// The attack target name is structured as "at[MasterAddress]-[GadgetId]-[MasterId]"
+							// Preferably, the AttackTarget statechange would be used to detect if this is an
+							// attack target to not rely on the name which could change in the future
+							yield return new AttackTarget(agent.Address, volatileId, name, agent.HitboxWidth,
+								agent.HitboxHeight);
+						}
+						else
+						{
+							yield return new Gadget(agent.Address, volatileId, name, agent.HitboxWidth,
+								agent.HitboxHeight);
+						}
 					}
 					else
 					{
@@ -235,6 +247,8 @@ namespace GW2Scratch.EVTCAnalytics
 					if (combatItem.SrcMasterId != 0)
 					{
 						Agent minion = null;
+
+						// TODO: Look up by id with a dictionary first
 						foreach (var agent in agents)
 						{
 							if (agent.Id == combatItem.SrcAgentId && agent.IsWithinAwareTime(combatItem.Time))
@@ -260,6 +274,33 @@ namespace GW2Scratch.EVTCAnalytics
 							minion.Master = master;
 							master.MinionList.Add(minion);
 						}
+					}
+				}
+
+				if (combatItem.IsStateChange == StateChange.AttackTarget)
+				{
+					ulong attackTargetAddress = combatItem.SrcAgent;
+					ulong masterGadgetAddress = combatItem.DstAgent;
+
+					AttackTarget target = null;
+					Gadget master = null;
+					foreach (var agent in agents)
+					{
+						switch (agent)
+						{
+							case Gadget gadget when gadget.Address == masterGadgetAddress:
+								master = gadget;
+								break;
+							case AttackTarget attackTarget when attackTarget.Address == attackTargetAddress:
+								target = attackTarget;
+								break;
+						}
+					}
+
+					if (master != null && target != null)
+					{
+						master.AddAttackTarget(target);
+						target.Gadget = master;
 					}
 				}
 			}
@@ -406,6 +447,13 @@ namespace GW2Scratch.EVTCAnalytics
 					continue;
 				}
 
+				if (item.IsStateChange == StateChange.AttackTarget)
+				{
+					// Only used for master assignment
+					// Contains if the attack target is targetable as the value.
+					continue;
+				}
+
 				events.Add(GetEvent(agentsByAddress, skillsById, item));
 			}
 
@@ -516,12 +564,18 @@ namespace GW2Scratch.EVTCAnalytics
 					case StateChange.TeamChange:
 						return new TeamChangeEvent(item.Time, GetAgentByAddress(item.SrcAgent),
 							item.DstAgent);
-					case StateChange.AttackTarget:
-						// TODO Implement attack targets
-						return new UnknownEvent(item.Time, item);
 					case StateChange.Targetable:
-						return new TargetableChangeEvent(item.Time, GetAgentByAddress(item.SrcAgent),
-							item.DstAgent != 0);
+					{
+						var agent = GetAgentByAddress(item.SrcAgent);
+						if (agent is AttackTarget target)
+						{
+							return new TargetableChangeEvent(item.Time, target, item.DstAgent != 0);
+						}
+						else
+						{
+							return new UnknownEvent(item.Time, item);
+						}
+					}
 					case StateChange.ReplInfo:
 						return new UnknownEvent(item.Time, item);
 					case StateChange.StackActive:

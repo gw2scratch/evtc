@@ -159,9 +159,11 @@ namespace GW2Scratch.EVTCAnalytics.Events
 
 	public class TargetableChangeEvent : AgentEvent
 	{
+		public AttackTarget AttackTarget => (AttackTarget) Agent;
+
 		public bool IsTargetable { get; }
 
-		public TargetableChangeEvent(long time, Agent agent, bool targetable) : base(time, agent)
+		public TargetableChangeEvent(long time, AttackTarget agent, bool targetable) : base(time, agent)
 		{
 			IsTargetable = targetable;
 		}
