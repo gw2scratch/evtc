@@ -262,6 +262,53 @@ namespace GW2Scratch.EVTCAnalytics.Statistics
 						new ConstantEncounterNameProvider("Statue of Darkness")
 					);
 				}
+
+				if (boss.SpeciesId == SpeciesIds.Deimos)
+				{
+					IResultDeterminer resultDeterminer;
+					if (log.GameBuild < GameBuilds.AhdashimRelease)
+					{
+						// This release reworked rewards, currently a reward event is not present if an encounter was
+						// finished a second time within a week. Before that, we can safely just check for the
+						// presence of such a reward.
+
+						// We cannot use the targetable detection method before they were introduced, and there was
+						// a long period of time when logs did not contain the main gadget so we need to rely on this.
+						resultDeterminer = new RewardDeterminer(525);
+					}
+					else
+					{
+						long maxAwareTime = -1;
+						Gadget mainGadget = null;
+						foreach (var gadget in log.Agents.OfType<Gadget>().Where(x => x.AttackTargets.Count == 1))
+						{
+							long aware = gadget.LastAwareTime - gadget.FirstAwareTime;
+							if (aware > maxAwareTime)
+							{
+								maxAwareTime = aware;
+								mainGadget = gadget;
+							}
+						}
+
+						if (mainGadget != null)
+						{
+							resultDeterminer = new TargetableDeterminer(mainGadget.AttackTargets.Single(), false);
+						}
+						else
+						{
+							resultDeterminer = new ConstantResultDeterminer(EncounterResult.Unknown);
+						}
+					}
+
+
+					return new BaseEncounter(
+						new[] {boss},
+						log.Events,
+						new PhaseSplitter(new StartTrigger(new PhaseDefinition("Default phase", boss))),
+						resultDeterminer,
+						new AgentNameEncounterNameProvider(boss)
+					);
+				}
 			}
 			else if (log.MainTarget is Gadget gadgetBoss)
 			{

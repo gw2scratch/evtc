@@ -37,6 +37,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		// Cairn the Indomitable
 		// Mursaat Overseer
 		// Samarog
+		public const int Deimos = 17154;
 		// Deimos
 
 		// Wing 5
