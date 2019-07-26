@@ -5,7 +5,6 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		// Wing 1
 		// Vale Guardian
 		public const int ValeGuardian = 15438;
-
 		public const int RedGuardian = 15433;
 		public const int GreenGuardian = 15420;
 		public const int BlueGuardian = 15431;
@@ -19,26 +18,15 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		public const int Karde = 15430;
 
 		// Wing 2
-		// Slothasor
-		public const int Slothasor = 16123;
 		// Trio
 		public const int Berg = 16088;
 		public const int Zane = 16137;
 		public const int Narella = 16125;
 		public const int TrioCagePrisoner = 16103;
-		// Matthias
-
-		// Wing 3
-		// Escort
-		// Keep Construct
-		// Xera
 
 		// Wing 4
-		// Cairn the Indomitable
-		// Mursaat Overseer
-		// Samarog
-		public const int Deimos = 17154;
 		// Deimos
+		public const int Deimos = 17154;
 
 		// Wing 5
 		// Soulless Horror
@@ -63,10 +51,5 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		public const int ApocalypseBringer = 21073;
 		public const int WyvernMatriarch = 20997;
 		public const int WyvernPatriarch = 21183;
-
-		// Wing 7
-		// Cardinal Adina
-		// Cardinal Sabir
-		// Qadim the Peerless
 	}
 }
