@@ -36,7 +36,8 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			}
 		}
 
-		public PlayerDetailPanel(ApiData apiData, LogAnalytics logAnalytics, ImageProvider imageProvider)
+		public PlayerDetailPanel(ApiData apiData, LogAnalytics logAnalytics, UploadProcessor uploadProcessor,
+			ImageProvider imageProvider)
 		{
 			Padding = new Padding(10);
 			Width = 300;
@@ -101,7 +102,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 						var characterLogs = PlayerData.Logs.Where(log => log.Players.Any(x => x.Name == name));
 						var form = new Form
 						{
-							Content = new LogList(apiData, logAnalytics, imageProvider)
+							Content = new LogList(apiData, logAnalytics, uploadProcessor, imageProvider)
 								{DataStore = new FilterCollection<LogData>(characterLogs)},
 							Width = 900,
 							Height = 700,
@@ -145,7 +146,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			{
 				var form = new Form
 				{
-					Content = new LogList(apiData, logAnalytics, imageProvider)
+					Content = new LogList(apiData, logAnalytics, uploadProcessor, imageProvider)
 					{
 						DataStore = new FilterCollection<LogData>(PlayerData.Logs)
 					},

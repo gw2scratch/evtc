@@ -106,8 +106,12 @@
     <Compile Include="Controls\LogDetailPanel.cs" />
     <Compile Include="Controls\MultipleLogPanel.cs" />
     <Compile Include="Controls\PlayerDetailPanel.cs" />
+    <Compile Include="Controls\BackgroundProcessorDetail.cs" />
     <Compile Include="Data\ApiData.cs" />
+    <Compile Include="Data\BackgroundProcessor.cs" />
+    <Compile Include="Data\IBackgroundProcessor.cs" />
     <Compile Include="Data\LogCache.cs" />
+    <Compile Include="Data\UploadProcessor.cs" />
     <Compile Include="Dialogs\ApiDialog.cs" />
     <Compile Include="Dialogs\CacheDialog.cs" />
     <Compile Include="Dialogs\SettingsDialog.cs" />
@@ -116,6 +120,7 @@
     <Compile Include="GW2Api\V2\ApiGuild.cs" />
     <Compile Include="GW2Api\V2\GuildEndpoint.cs" />
     <Compile Include="ImageProvider.cs" />
+    <Compile Include="LoadingForm.cs" />
     <Compile Include="Logs\LogUpload.cs" />
     <Compile Include="Logs\LogFinder.cs" />
     <Compile Include="Logs\LogData.cs" />
@@ -141,8 +146,8 @@
     <Compile Include="Sections\Statistics.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Timing\Cooldown.cs" />
+    <Compile Include="Uploaders\DpsReportResponse.cs" />
     <Compile Include="Uploaders\DpsReportUploader.cs" />
-    <Compile Include="Uploaders\IUploader.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

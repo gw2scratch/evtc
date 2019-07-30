@@ -17,18 +17,14 @@ namespace GW2Scratch.ArcdpsLogManager.Dialogs
 			item.Click += (sender, args) => Close();
 			PositiveButtons.Add(item);
 
-			bool cacheLoaded = managerForm.LogCache != null;
-
 			var deleteButton = new Button
 			{
 				Text = "Delete the cache",
-				Enabled = cacheLoaded
 			};
 
 			var pruneButton = new Button
 			{
 				Text = "Prune missing logs",
-				Enabled = cacheLoaded
 			};
 
 			var countLabel = new Label {Text = "Not loaded"};
@@ -92,16 +88,7 @@ namespace GW2Scratch.ArcdpsLogManager.Dialogs
 				}
 			};
 
-			void OnCacheLoaded(object sender, EventArgs _)
-			{
-				deleteButton.Enabled = true;
-				pruneButton.Enabled = true;
-				UpdateLabelTexts(managerForm, countLabel, unloadedCountLabel, sizeLabel);
-			}
-
-			managerForm.CacheLoaded += OnCacheLoaded;
-
-			Closed += (sender, args) => managerForm.CacheLoaded -= OnCacheLoaded;
+			UpdateLabelTexts(managerForm, countLabel, unloadedCountLabel, sizeLabel);
 		}
 
 		private void UpdateLabelTexts(ManagerForm managerForm, Label countLabel, Label unloadedCountLabel,

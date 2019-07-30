@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Eto.Drawing;
 using Eto.Forms;
 using GW2Scratch.ArcdpsLogManager.Analytics;
+using GW2Scratch.ArcdpsLogManager.Controls;
 using GW2Scratch.ArcdpsLogManager.Data;
 using GW2Scratch.ArcdpsLogManager.Dialogs;
 using GW2Scratch.ArcdpsLogManager.GW2Api.V2;
@@ -18,6 +19,7 @@ using GW2Scratch.ArcdpsLogManager.Sections;
 using GW2Scratch.ArcdpsLogManager.Sections.Guilds;
 using GW2Scratch.ArcdpsLogManager.Sections.Players;
 using GW2Scratch.ArcdpsLogManager.Timing;
+using GW2Scratch.ArcdpsLogManager.Uploaders;
 using GW2Scratch.EVTCAnalytics;
 using GW2Scratch.EVTCAnalytics.Statistics.Encounters.Results;
 
@@ -31,9 +33,12 @@ namespace GW2Scratch.ArcdpsLogManager
 
 		private ImageProvider ImageProvider { get; } = new ImageProvider();
 		private LogFinder LogFinder { get; } = new LogFinder();
-		private LogAnalytics LogAnalytics { get; } = new LogAnalytics(new EVTCParser(), new LogProcessor(), new LogAnalyser());
+
+		private LogAnalytics LogAnalytics { get; } =
+			new LogAnalytics(new EVTCParser(), new LogProcessor(), new LogAnalyser());
 
 		private ApiData ApiData { get; } = new ApiData(new GuildEndpoint());
+		private UploadProcessor UploadProcessor { get; set; }
 
 		private ObservableCollection<LogData> logs = new ObservableCollection<LogData>();
 		private FilterCollection<LogData> logsFiltered;
@@ -73,14 +78,17 @@ namespace GW2Scratch.ArcdpsLogManager
 			}
 		}
 
-		public event EventHandler CacheLoaded;
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		public IEnumerable<LogData> LoadedLogs => logs;
-		public LogCache LogCache { get; private set; }
+		public LogCache LogCache { get; internal set; }
 
-		public ManagerForm()
+		public ManagerForm(LogCache logCache)
 		{
+			LogCache = logCache ?? throw new ArgumentNullException(nameof(logCache));
+
+			UploadProcessor = new UploadProcessor(new DpsReportUploader(), LogCache);
+
 			Title = "arcdps Log Manager";
 			ClientSize = new Size(900, 700);
 			var formLayout = new DynamicLayout();
@@ -99,6 +107,17 @@ namespace GW2Scratch.ArcdpsLogManager
 
 			var apiDataMenuItem = new ButtonMenuItem {Text = "&API data"};
 			apiDataMenuItem.Click += (sender, args) => { new ApiDialog(ApiData).ShowModal(this); };
+
+			// TODO: Remove, temporary
+			var uploadServiceMenuItem = new ButtonMenuItem {Text = "&Upload service"};
+			uploadServiceMenuItem.Click += (sender, args) =>
+			{
+				new Form
+				{
+					Title = "Uploads - arcdps Log Manager",
+					Content = new BackgroundProcessorDetail {BackgroundProcessor = UploadProcessor}
+				}.Show();
+			};
 
 			var logLocationMenuItem = new ButtonMenuItem {Text = "&Log location"};
 			logLocationMenuItem.Click += (sender, args) => { new LogSettingsDialog(this).ShowModal(this); };
@@ -137,6 +156,8 @@ namespace GW2Scratch.ArcdpsLogManager
 			var dataMenuItem = new ButtonMenuItem {Text = "&Data"};
 			dataMenuItem.Items.Add(logCacheMenuItem);
 			dataMenuItem.Items.Add(apiDataMenuItem);
+			dataMenuItem.Items.Add(new SeparatorMenuItem());
+			dataMenuItem.Items.Add(uploadServiceMenuItem);
 
 			var settingsMenuItem = new ButtonMenuItem {Text = "&Settings"};
 			settingsMenuItem.Items.Add(logLocationMenuItem);
@@ -246,15 +267,15 @@ namespace GW2Scratch.ArcdpsLogManager
 			var tabs = new TabControl();
 
 			// Log tab
-			mainLogList = new LogList(ApiData, LogAnalytics, ImageProvider);
+			mainLogList = new LogList(ApiData, LogAnalytics, UploadProcessor, ImageProvider);
 			tabs.Pages.Add(new TabPage {Text = "Logs", Content = mainLogList});
 
 			// Player tab
-			playerList = new PlayerList(ApiData, LogAnalytics, ImageProvider);
+			playerList = new PlayerList(ApiData, LogAnalytics, UploadProcessor, ImageProvider);
 			tabs.Pages.Add(new TabPage {Text = "Players", Content = playerList});
 
 			// Guild tab
-			guildList = new GuildList(ApiData, LogAnalytics, ImageProvider);
+			guildList = new GuildList(ApiData, LogAnalytics, UploadProcessor, ImageProvider);
 			tabs.Pages.Add(new TabPage {Text = "Guilds", Content = guildList});
 
 			// Statistics tab
@@ -272,7 +293,7 @@ namespace GW2Scratch.ArcdpsLogManager
 
 			formLayout.Add(tabs, true);
 
-			// This is needed to avoid a Gtk3 platform issue where the tab is changed to the game data one.
+			// This is needed to avoid a Gtk platform issue where the tab is changed to the game data one.
 			Shown += (sender, args) => tabs.SelectedIndex = 0;
 
 			formLayout.EndVertical();
@@ -288,9 +309,14 @@ namespace GW2Scratch.ArcdpsLogManager
 
 			RecreateLogCollections(new ObservableCollection<LogData>(logs), mainLogList);
 
+			Shown += (sender, args) => InitializeManager();
+		}
+
+		private void InitializeManager()
+		{
 			if (string.IsNullOrEmpty(Settings.LogRootPath))
 			{
-				Shown += (sender, args) => new LogSettingsDialog(this).ShowModal(this);
+				new LogSettingsDialog(this).ShowModal(this);
 			}
 			else
 			{
@@ -338,22 +364,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			Application.Instance.Invoke(() => { Status = "Finding logs..."; });
 			cancellationToken.ThrowIfCancellationRequested();
 
-			Task<LogCache> deserializeTask = null;
-			if (LogCache == null)
-			{
-				deserializeTask = Task.Run(LogCache.LoadFromFile, cancellationToken);
-			}
-
 			FindLogs(logList, cancellationToken);
-
-			Application.Instance.Invoke(() => { Status = "Loading log cache..."; });
-			cancellationToken.ThrowIfCancellationRequested();
-
-			if (deserializeTask != null)
-			{
-				LogCache = await deserializeTask;
-				Application.Instance.AsyncInvoke(OnCacheLoaded);
-			}
 
 			cancellationToken.ThrowIfCancellationRequested();
 
@@ -625,11 +636,6 @@ namespace GW2Scratch.ArcdpsLogManager
 		private void OnPropertyChanged([CallerMemberName] string propertyName = null)
 		{
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-		}
-
-		private void OnCacheLoaded()
-		{
-			CacheLoaded?.Invoke(this, EventArgs.Empty);
 		}
 	}
 }

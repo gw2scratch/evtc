@@ -8,7 +8,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		[STAThread]
 		static void Main()
 		{
-            new Application().Run(new ManagerForm());
+            new Application().Run(new LoadingForm());
 		}
 	}
 }

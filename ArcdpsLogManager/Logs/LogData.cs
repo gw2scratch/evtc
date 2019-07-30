@@ -4,10 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using GW2Scratch.ArcdpsLogManager.Analytics;
-using GW2Scratch.ArcdpsLogManager.Uploaders;
 using GW2Scratch.EVTCAnalytics.Statistics.Encounters.Results;
 
 namespace GW2Scratch.ArcdpsLogManager.Logs
@@ -122,12 +119,6 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 
 			return $"{GetPart(guidBytes, 0, 4)}-{GetPart(guidBytes, 4, 6)}-{GetPart(guidBytes, 6, 8)}" +
 			       $"-{GetPart(guidBytes, 8, 10)}-{GetPart(guidBytes, 10, 16)}";
-		}
-
-		public Task UploadDpsReportEliteInsights(IUploader uploader, CancellationToken cancellationToken,
-			bool reupload = false)
-		{
-			return DpsReportEIUpload.Upload(this, uploader, cancellationToken, reupload);
 		}
 	}
 }

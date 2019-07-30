@@ -14,6 +14,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 	{
 		private ApiData ApiData { get; }
 		private LogAnalytics LogAnalytics { get; }
+		private UploadProcessor UploadProcessor { get; }
 		private ImageProvider ImageProvider { get; }
 
 		private ObservableCollection<GuildData> guildData;
@@ -46,10 +47,12 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 
 		private string GuildFilter { get; set; } = "";
 
-		public GuildList(ApiData apiData, LogAnalytics logAnalytics, ImageProvider imageProvider)
+		public GuildList(ApiData apiData, LogAnalytics logAnalytics, UploadProcessor uploadProcessor,
+			ImageProvider imageProvider)
 		{
 			ApiData = apiData;
 			LogAnalytics = logAnalytics;
+			UploadProcessor = uploadProcessor;
 			ImageProvider = imageProvider;
 
 			var playerDetailPanel = ConstructGuildDetailPanel();
@@ -124,7 +127,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 
 		private GuildDetailPanel ConstructGuildDetailPanel()
 		{
-			return new GuildDetailPanel(ApiData, LogAnalytics, ImageProvider);
+			return new GuildDetailPanel(ApiData, LogAnalytics, UploadProcessor, ImageProvider);
 		}
 
 		private GridView<GuildData> ConstructGuildGridView(GuildDetailPanel guildDetailPanel)

@@ -77,11 +77,24 @@ namespace GW2Scratch.ArcdpsLogManager
 			}
 		}
 
+		public static string DpsReportUserToken
+		{
+			get => AppSettings.GetValueOrDefault(nameof(DpsReportUserToken), string.Empty);
+			set
+			{
+				if (AppSettings.AddOrUpdateValue(nameof(DpsReportUserToken), value))
+				{
+					OnDpsReportUserTokenChanged();
+				}
+			}
+		}
+
 		public static event EventHandler<EventArgs> LogRootPathChanged;
 		public static event EventHandler<EventArgs> ShowDebugDataChanged;
 		public static event EventHandler<EventArgs> ShowSquadCompositionsChanged;
 		public static event EventHandler<EventArgs> ShowGuildTagsInLogDetailChanged;
 		public static event EventHandler<EventArgs> UseGW2ApiChanged;
+		public static event EventHandler<EventArgs> DpsReportUserTokenChanged;
 
 		private static void OnLogRootPathChanged()
 		{
@@ -106,6 +119,11 @@ namespace GW2Scratch.ArcdpsLogManager
 		private static void OnShowGuildTagsInLogDetailChanged()
 		{
 			ShowGuildTagsInLogDetailChanged?.Invoke(null, EventArgs.Empty);
+		}
+
+		private static void OnDpsReportUserTokenChanged()
+		{
+			DpsReportUserTokenChanged?.Invoke(null, EventArgs.Empty);
 		}
 	}
 }

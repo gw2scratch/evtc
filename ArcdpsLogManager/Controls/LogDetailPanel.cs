@@ -1,13 +1,10 @@
 using System;
-using System.Threading;
-using System.Threading.Tasks;
 using Eto.Drawing;
 using Eto.Forms;
 using GW2Scratch.ArcdpsLogManager.Analytics;
 using GW2Scratch.ArcdpsLogManager.Data;
 using GW2Scratch.ArcdpsLogManager.Logs;
 using GW2Scratch.ArcdpsLogManager.Sections;
-using GW2Scratch.ArcdpsLogManager.Uploaders;
 using GW2Scratch.EVTCAnalytics.Statistics.Encounters.Results;
 
 namespace GW2Scratch.ArcdpsLogManager.Controls
@@ -15,8 +12,8 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 	public sealed class LogDetailPanel : DynamicLayout
 	{
 		private LogAnalytics LogAnalytics { get; }
+		private UploadProcessor UploadProcessor { get; }
 		private ImageProvider ImageProvider { get; }
-		private DpsReportUploader DpsReportUploader { get; } = new DpsReportUploader();
 
 		private LogData logData;
 
@@ -84,31 +81,59 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 
 		private void UpdateUploadStatus()
 		{
+			if (logData == null)
+			{
+				return;
+			}
+
+			const string reuploadButtonText = "Reupload to dps.report (EI)";
+
+			bool uploadEnabled = false;
+			bool openEnabled = false;
+			string text = "";
 			string uploadButtonText;
-			switch (logData.DpsReportEIUpload.UploadState)
+			var upload = logData.DpsReportEIUpload;
+			switch (upload.UploadState)
 			{
 				case UploadState.NotUploaded:
 					uploadButtonText = "Upload to dps.report (EI)";
+					uploadEnabled = true;
 					break;
+				case UploadState.Queued:
 				case UploadState.Uploading:
 					uploadButtonText = "Uploading...";
 					break;
+				case UploadState.UploadError:
+					uploadButtonText = reuploadButtonText;
+					uploadEnabled = true;
+					text = $"Upload failed: {upload.UploadError ?? "No error"}";
+					break;
+				case UploadState.ProcessingError:
+					uploadButtonText = reuploadButtonText;
+					uploadEnabled = true;
+					text = $"Processing failed: {upload.ProcessingError ?? "No error"}";
+					break;
 				case UploadState.Uploaded:
-					uploadButtonText = "Reupload to dps.report (EI)";
+					uploadButtonText = reuploadButtonText;
+					uploadEnabled = true;
+					openEnabled = true;
+					text = upload.Url;
 					break;
 				default:
 					throw new ArgumentOutOfRangeException();
 			}
 
 			dpsReportUploadButton.Text = uploadButtonText;
-			dpsReportUploadButton.Enabled = logData.DpsReportEIUpload.UploadState != UploadState.Uploading;
-			dpsReportTextBox.Text = logData.DpsReportEIUpload.Url ?? "";
-			dpsReportOpenButton.Enabled = logData.DpsReportEIUpload.Url != null;
+			dpsReportUploadButton.Enabled = uploadEnabled;
+			dpsReportOpenButton.Enabled = openEnabled;
+			dpsReportTextBox.Text = text;
 		}
 
-		public LogDetailPanel(ApiData apiData, LogAnalytics logAnalytics, ImageProvider imageProvider)
+		public LogDetailPanel(ApiData apiData, LogAnalytics logAnalytics, UploadProcessor uploadProcessor,
+			ImageProvider imageProvider)
 		{
 			LogAnalytics = logAnalytics;
+			UploadProcessor = uploadProcessor;
 			ImageProvider = imageProvider;
 
 			Padding = new Padding(10, 10, 10, 2);
@@ -196,10 +221,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			}
 			EndVertical();
 
-			dpsReportUploadButton.Click += (sender, args) =>
-			{
-				Task.Run(() => UploadDpsReportEliteInsights(logData, CancellationToken.None));
-			};
+			dpsReportUploadButton.Click += (sender, args) => { UploadProcessor.ScheduleDpsReportEIUpload(logData); };
 			dpsReportOpenButton.Click += (sender, args) =>
 			{
 				System.Diagnostics.Process.Start(logData.DpsReportEIUpload.Url);
@@ -220,18 +242,14 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				// Assigning visibility in the constructor does not work
 				debugSection.Visible = Settings.ShowDebugData;
 			};
+
+			uploadProcessor.Processed += OnUploadProcessorUpdate;
+			uploadProcessor.Unscheduled += OnUploadProcessorUpdate;
+			uploadProcessor.Scheduled += OnUploadProcessorUpdate;
 		}
 
-		private async void UploadDpsReportEliteInsights(LogData logData, CancellationToken cancellationToken)
+		private void OnUploadProcessorUpdate(object sender, EventArgs e)
 		{
-			// Keep in mind that a different log could be shown at this point.
-			// For this reason we can only recheck the upload status instead of changing it directly.
-
-			var task = logData.UploadDpsReportEliteInsights(DpsReportUploader, cancellationToken,
-				true); // Reupload if needed
-			Application.Instance.Invoke(UpdateUploadStatus);
-
-			await task;
 			Application.Instance.Invoke(UpdateUploadStatus);
 		}
 	}

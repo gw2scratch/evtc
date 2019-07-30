@@ -16,6 +16,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 	{
 		private readonly ApiData apiData;
 		private readonly LogAnalytics logAnalytics;
+		private readonly UploadProcessor uploadProcessor;
 		private readonly ImageProvider imageProvider;
 		private readonly GridView<LogData> logGridView;
 
@@ -36,10 +37,12 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			}
 		}
 
-		public LogList(ApiData apiData, LogAnalytics logAnalytics, ImageProvider imageProvider)
+		public LogList(ApiData apiData, LogAnalytics logAnalytics, UploadProcessor uploadProcessor,
+			ImageProvider imageProvider)
 		{
 			this.apiData = apiData;
 			this.logAnalytics = logAnalytics;
+			this.uploadProcessor = uploadProcessor;
 			this.imageProvider = imageProvider;
 
 			var logDetailPanel = ConstructLogDetailPanel();
@@ -68,17 +71,17 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			logGridView.ReloadData(row);
 		}
 
-		public LogDetailPanel ConstructLogDetailPanel()
+		private LogDetailPanel ConstructLogDetailPanel()
 		{
-			return new LogDetailPanel(apiData, logAnalytics, imageProvider);
+			return new LogDetailPanel(apiData, logAnalytics, uploadProcessor, imageProvider);
 		}
 
-		public MultipleLogPanel ConstructMultipleLogPanel()
+		private MultipleLogPanel ConstructMultipleLogPanel()
 		{
-			return new MultipleLogPanel(logAnalytics);
+			return new MultipleLogPanel(logAnalytics, uploadProcessor);
 		}
 
-		public GridView<LogData> ConstructLogGridView(LogDetailPanel detailPanel, MultipleLogPanel multipleLogPanel)
+		private GridView<LogData> ConstructLogGridView(LogDetailPanel detailPanel, MultipleLogPanel multipleLogPanel)
 		{
 			var gridView = new GridView<LogData>
 			{
@@ -126,7 +129,8 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 						}
 
 						string prefix = x.ParsingStatus != ParsingStatus.Parsed ? "~" : "";
-						string encounterTime = x.EncounterStartTime.ToLocalTime().DateTime.ToString(CultureInfo.CurrentCulture);
+						string encounterTime = x.EncounterStartTime.ToLocalTime().DateTime
+							.ToString(CultureInfo.CurrentCulture);
 						return $"{prefix}{encounterTime}";
 					})
 				}
@@ -141,7 +145,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 					Binding = new DelegateBinding<LogData, string>(x =>
 					{
 						var seconds = x.EncounterDuration.TotalSeconds;
-						return $"{(int)seconds / 60:0}m {seconds % 60:00.0}s";
+						return $"{(int) seconds / 60:0}m {seconds % 60:00.0}s";
 					})
 				}
 			};

@@ -1,34 +1,32 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Eto.Drawing;
 using Eto.Forms;
 using GW2Scratch.ArcdpsLogManager.Analytics;
+using GW2Scratch.ArcdpsLogManager.Data;
 using GW2Scratch.ArcdpsLogManager.Logs;
-using GW2Scratch.ArcdpsLogManager.Uploaders;
+using Button = Eto.Forms.Button;
+using Label = Eto.Forms.Label;
 
 namespace GW2Scratch.ArcdpsLogManager.Controls
 {
 	public sealed class MultipleLogPanel : DynamicLayout
 	{
-		private DpsReportUploader DpsReportUploader { get; } = new DpsReportUploader();
-
 		private LogData[] logData;
 
 		private readonly Label countLabel = new Label {Font = Fonts.Sans(12)};
 		private readonly Label dpsReportNotUploadedLabel = new Label();
 		private readonly Label dpsReportUploadingLabel = new Label();
 		private readonly Label dpsReportUploadedLabel = new Label();
+		private readonly Label dpsReportProcessingFailedLabel = new Label();
+		private readonly Label dpsReportUploadFailedLabel = new Label();
 		private readonly TextArea dpsReportLinkTextArea = new TextArea {ReadOnly = true};
 		private readonly Button dpsReportUploadButton = new Button();
 		private readonly Button dpsReportCancelButton = new Button {Text = "Cancel"};
 		private readonly ProgressBar dpsReportUploadProgressBar = new ProgressBar();
-
-		private Task currentUploadTask = null;
-		private CancellationTokenSource uploadTaskCancellationTokenSource = null;
+		private readonly DynamicTable dpsReportUploadFailedRow;
+		private readonly DynamicTable dpsReportProcessingFailedRow;
 
 		public IEnumerable<LogData> LogData
 		{
@@ -56,24 +54,28 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 
 		private void UpdateDpsReportUploadStatus()
 		{
-			int notUploadedCount = logData.Count(x => x.DpsReportEIUpload.UploadState == UploadState.NotUploaded);
-			int uploadingCount = logData.Count(x => x.DpsReportEIUpload.UploadState == UploadState.Uploading);
-			int uploadedCount = logData.Count(x => x.DpsReportEIUpload.UploadState == UploadState.Uploaded);
+			int notUploaded = logData.Count(x => x.DpsReportEIUpload.UploadState == UploadState.NotUploaded);
+			int queued = logData.Count(x => x.DpsReportEIUpload.UploadState == UploadState.Queued);
+			int uploading = logData.Count(x => x.DpsReportEIUpload.UploadState == UploadState.Uploading);
+			int uploaded = logData.Count(x => x.DpsReportEIUpload.UploadState == UploadState.Uploaded);
+			int uploadsFailed = logData.Count(x => x.DpsReportEIUpload.UploadState == UploadState.UploadError);
+			int processingFailed = logData.Count(x => x.DpsReportEIUpload.UploadState == UploadState.ProcessingError);
 
-			bool currentTaskCompleted = currentUploadTask == null || currentUploadTask.IsCompleted;
-			bool cancelRequested = uploadTaskCancellationTokenSource?.IsCancellationRequested ?? false;
-
-			dpsReportUploadButton.Enabled = currentTaskCompleted;
-			dpsReportCancelButton.Enabled = !currentTaskCompleted && !cancelRequested;
-			dpsReportUploadButton.Text = $"Upload missing logs ({notUploadedCount})";
-			dpsReportNotUploadedLabel.Text = notUploadedCount.ToString();
-			dpsReportUploadingLabel.Text = uploadingCount.ToString();
-			dpsReportUploadedLabel.Text = uploadedCount.ToString();
+			dpsReportUploadButton.Enabled = notUploaded + uploadsFailed > 0;
+			dpsReportCancelButton.Enabled = queued > 0;
+			dpsReportUploadButton.Text = $"Upload missing logs ({notUploaded + uploadsFailed})";
+			dpsReportNotUploadedLabel.Text = notUploaded.ToString();
+			dpsReportUploadingLabel.Text = (uploading + queued).ToString();
+			dpsReportUploadedLabel.Text = uploaded.ToString();
+			dpsReportUploadFailedLabel.Text = uploadsFailed.ToString();
+			dpsReportUploadFailedRow.Table.Visible = uploadsFailed > 0;
+			dpsReportProcessingFailedLabel.Text = processingFailed.ToString();
+			dpsReportProcessingFailedRow.Table.Visible = processingFailed > 0;
 			dpsReportLinkTextArea.Text = string.Join(Environment.NewLine,
 				logData.Where(x => x.DpsReportEIUpload.Url != null).Select(x => x.DpsReportEIUpload.Url));
 		}
 
-		public MultipleLogPanel(LogAnalytics logAnalytics)
+		public MultipleLogPanel(LogAnalytics logAnalytics, UploadProcessor uploadProcessor)
 		{
 			Padding = new Padding(10);
 			Width = 300;
@@ -90,14 +92,17 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 
 			dpsReportUploadButton.Click += (sender, args) =>
 			{
-				Task.Run(
-					() => DpsReportUploadFiles(
-						logData.Where(x => x.DpsReportEIUpload.UploadState == UploadState.NotUploaded)
-					)
-				);
+				foreach (var log in logData)
+				{
+					var state = log.DpsReportEIUpload.UploadState;
+					if (state == UploadState.NotUploaded || state == UploadState.UploadError)
+					{
+						uploadProcessor.ScheduleDpsReportEIUpload(log);
+					}
+				}
 			};
 
-			dpsReportCancelButton.Click += (sender, args) => uploadTaskCancellationTokenSource?.Cancel();
+			dpsReportCancelButton.Click += (sender, args) => { uploadProcessor.CancelDpsReportEIUpload(logData); };
 
 			DynamicTable debugSection;
 
@@ -120,9 +125,19 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 					BeginVertical(spacing: new Size(5, 5));
 					{
 						AddRow(new Label {Text = "Upload to dps.report (EI)", Font = Fonts.Sans(12)});
-						AddRow("Not uploaded", dpsReportNotUploadedLabel);
-						AddRow("Uploading", dpsReportUploadingLabel);
-						AddRow("Uploaded", dpsReportUploadedLabel);
+						AddRow("Not uploaded:", dpsReportNotUploadedLabel);
+						AddRow("Uploading:", dpsReportUploadingLabel);
+						AddRow("Uploaded:", dpsReportUploadedLabel);
+						dpsReportUploadFailedRow = BeginVertical(spacing: new Size(5, 5));
+						{
+							AddRow("Upload failed:", dpsReportUploadFailedLabel);
+						}
+						EndVertical();
+						dpsReportProcessingFailedRow = BeginVertical(spacing: new Size(5, 5));
+						{
+							AddRow("Processing failed:", dpsReportProcessingFailedLabel);
+						}
+						EndVertical();
 					}
 					EndVertical();
 					BeginVertical();
@@ -152,46 +167,15 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				// Assigning visibility in the constructor does not work
 				debugSection.Visible = Settings.ShowDebugData;
 			};
+
+			uploadProcessor.Processed += OnUploadProcessorUpdate;
+			uploadProcessor.Unscheduled += OnUploadProcessorUpdate;
+			uploadProcessor.Scheduled += OnUploadProcessorUpdate;
 		}
 
-		private void DpsReportUploadFiles(IEnumerable<LogData> logsToUpload)
+		private void OnUploadProcessorUpdate(object sender, EventArgs e)
 		{
-			Debug.Assert(currentUploadTask == null || currentUploadTask.IsCompleted);
-
-			uploadTaskCancellationTokenSource = new CancellationTokenSource();
-			currentUploadTask = DpsReportUploadFilesAsync(
-				logsToUpload,
-				uploadTaskCancellationTokenSource.Token,
-				new Progress<(int done, int logCount)>(progress =>
-				{
-					Application.Instance.AsyncInvoke(() =>
-					{
-						UpdateDpsReportUploadStatus();
-
-						(int done, int logCount) = progress;
-						dpsReportUploadProgressBar.MaxValue = logCount;
-						dpsReportUploadProgressBar.Value = done;
-					});
-				})
-			);
-			currentUploadTask.ContinueWith(task => { Application.Instance.AsyncInvoke(UpdateDpsReportUploadStatus); });
-
-			Application.Instance.AsyncInvoke(UpdateDpsReportUploadStatus);
-		}
-
-		private async Task DpsReportUploadFilesAsync(IEnumerable<LogData> logsToUpload,
-			CancellationToken cancellationToken, IProgress<(int done, int logCount)> progress = null)
-		{
-			var logs = logsToUpload.ToArray();
-			progress?.Report((0, logs.Length));
-
-			for (var i = 0; i < logs.Length; i++)
-			{
-				cancellationToken.ThrowIfCancellationRequested();
-
-				await logs[i].UploadDpsReportEliteInsights(DpsReportUploader, cancellationToken);
-				progress?.Report((i + 1, logs.Length));
-			}
+			Application.Instance.Invoke(UpdateDpsReportUploadStatus);
 		}
 	}
 }

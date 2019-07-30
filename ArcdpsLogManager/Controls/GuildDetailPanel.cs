@@ -19,6 +19,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 
 		private ApiData ApiData { get; }
 		private LogAnalytics LogAnalytics { get; }
+		private UploadProcessor UploadProcessor { get; }
 		private ImageProvider ImageProvider { get; }
 
 		public GuildData GuildData
@@ -37,11 +38,13 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			}
 		}
 
-		public GuildDetailPanel(ApiData apiData, LogAnalytics logAnalytics, ImageProvider imageProvider)
+		public GuildDetailPanel(ApiData apiData, LogAnalytics logAnalytics, UploadProcessor uploadProcessor,
+			ImageProvider imageProvider)
 		{
 			ImageProvider = imageProvider;
 			ApiData = apiData;
 			LogAnalytics = logAnalytics;
+			UploadProcessor = uploadProcessor;
 
 			Padding = new Padding(10);
 			Width = 300;
@@ -70,7 +73,8 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				if (GuildData == null) return;
 
 				var members = $"{GuildData.Accounts.Count} {(GuildData.Accounts.Count == 1 ? "member" : "members")}";
-				var characters = $"{GuildData.Characters.Count} {(GuildData.Characters.Count == 1 ? "character" : "characters")}";
+				var characters =
+					$"{GuildData.Characters.Count} {(GuildData.Characters.Count == 1 ? "character" : "characters")}";
 				memberCountLabel.Text = $"{members}, {characters}";
 			};
 
@@ -137,13 +141,14 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			{
 				var form = new Form
 				{
-					Content = new LogList(apiData, logAnalytics, ImageProvider)
+					Content = new LogList(apiData, logAnalytics, uploadProcessor, imageProvider)
 					{
 						DataStore = new FilterCollection<LogData>(GuildData.Logs)
 					},
 					Width = 900,
 					Height = 700,
-					Title = $"arcdps Log Manager: logs with a member in {ApiData.GetGuildName(guildData.Guid) ?? "(Unknown)"}"
+					Title =
+						$"arcdps Log Manager: logs with a member in {ApiData.GetGuildName(guildData.Guid) ?? "(Unknown)"}"
 				};
 				form.Show();
 			};

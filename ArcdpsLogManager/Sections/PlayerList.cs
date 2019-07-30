@@ -14,6 +14,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 	{
 		private ApiData ApiData { get; }
 		private LogAnalytics LogAnalytics { get; }
+		private UploadProcessor UploadProcessor { get; }
 		private ImageProvider ImageProvider { get; }
 
 		private ObservableCollection<PlayerData> playerData;
@@ -47,11 +48,13 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 
 		private string PlayerFilter { get; set; } = "";
 
-		public PlayerList(ApiData apiData, LogAnalytics logAnalytics, ImageProvider imageProvider)
+		public PlayerList(ApiData apiData, LogAnalytics logAnalytics, UploadProcessor uploadProcessor,
+			ImageProvider imageProvider)
 		{
 			ApiData = apiData;
 			LogAnalytics = logAnalytics;
 			ImageProvider = imageProvider;
+			UploadProcessor = uploadProcessor;
 
 			var playerDetailPanel = ConstructPlayerDetailPanel();
 			playerGridView = ConstructPlayerGridView(playerDetailPanel);
@@ -123,7 +126,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 
 		private PlayerDetailPanel ConstructPlayerDetailPanel()
 		{
-			return new PlayerDetailPanel(ApiData, LogAnalytics, ImageProvider);
+			return new PlayerDetailPanel(ApiData, LogAnalytics, UploadProcessor, ImageProvider);
 		}
 
 		private GridView<PlayerData> ConstructPlayerGridView(PlayerDetailPanel playerDetailPanel)
