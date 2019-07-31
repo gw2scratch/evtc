@@ -66,7 +66,7 @@ namespace GW2Scratch.ArcdpsLogManager
 
 		public static bool UseGW2Api
 		{
-			get => AppSettings.GetValueOrDefault(nameof(UseGW2Api), false);
+			get => AppSettings.GetValueOrDefault(nameof(UseGW2Api), true);
 
 			set
 			{

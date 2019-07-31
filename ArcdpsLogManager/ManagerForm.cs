@@ -120,9 +120,8 @@ namespace GW2Scratch.ArcdpsLogManager
 				}.Show();
 			};
 
-			var logLocationMenuItem = new ButtonMenuItem {Text = "&Log location"};
-			logLocationMenuItem.Click += (sender, args) => { new LogSettingsDialog(this).ShowModal(this); };
-			logLocationMenuItem.Shortcut = Application.Instance.CommonModifier | Keys.L;
+			var settingsFormMenuItem = new ButtonMenuItem {Text = "&Settings"};
+			settingsFormMenuItem.Click += (sender, args) => { new SettingsForm(this).Show(); };
 
 			var debugDataMenuItem = new CheckMenuItem {Text = "Show &debug data"};
 			debugDataMenuItem.Checked = Settings.ShowDebugData;
@@ -161,7 +160,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			dataMenuItem.Items.Add(uploadServiceMenuItem);
 
 			var settingsMenuItem = new ButtonMenuItem {Text = "&Settings"};
-			settingsMenuItem.Items.Add(logLocationMenuItem);
+			settingsMenuItem.Items.Add(settingsFormMenuItem);
 			settingsMenuItem.Items.Add(showCompositionsMenuItem);
 			settingsMenuItem.Items.Add(showGuildTagsMenuItem);
 			settingsMenuItem.Items.Add(new SeparatorMenuItem());
@@ -315,14 +314,7 @@ namespace GW2Scratch.ArcdpsLogManager
 
 		private void InitializeManager()
 		{
-			if (string.IsNullOrEmpty(Settings.LogRootPath))
-			{
-				new LogSettingsDialog(this).ShowModal(this);
-			}
-			else
-			{
-				ReloadLogs();
-			}
+			ReloadLogs();
 
 			SetupApiWorker();
 		}

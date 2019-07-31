@@ -114,7 +114,7 @@
     <Compile Include="Data\UploadProcessor.cs" />
     <Compile Include="Dialogs\ApiDialog.cs" />
     <Compile Include="Dialogs\CacheDialog.cs" />
-    <Compile Include="Dialogs\SettingsDialog.cs" />
+    <Compile Include="SettingsForm.cs" />
     <Compile Include="GameData.cs" />
     <Compile Include="GridViewSorter.cs" />
     <Compile Include="GW2Api\V2\ApiGuild.cs" />

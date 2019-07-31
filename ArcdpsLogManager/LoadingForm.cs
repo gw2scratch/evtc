@@ -25,7 +25,39 @@ namespace GW2Scratch.ArcdpsLogManager
 			}
 			layout.EndCentered();
 
-			Shown += (sender, args) => Task.Run(LoadManager);
+			if (string.IsNullOrWhiteSpace(Settings.LogRootPath))
+			{
+				LoadComplete += (sender, args) => Task.Run(ShowInitialConfiguration);
+			}
+			else
+			{
+				LoadComplete += (sender, args) => Task.Run(LoadManager);
+			}
+		}
+
+		private void ShowInitialConfiguration()
+		{
+			Application.Instance.Invoke(() =>
+			{
+				var form = new SettingsForm(null);
+				form.Show();
+				Visible = false;
+				form.SettingsSaved += (sender, args) =>
+				{
+					Visible = true;
+					Task.Run(LoadManager);
+				};
+
+				form.Closed += (sender, args) =>
+				{
+					// If the form was closed without saving, this form is still invisible, and we want to close
+					// the whole program
+					if (!Visible)
+					{
+						Close();
+					}
+				};
+			});
 		}
 
 		private void LoadManager()
