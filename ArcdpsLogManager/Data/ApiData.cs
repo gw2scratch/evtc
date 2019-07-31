@@ -10,6 +10,8 @@ namespace GW2Scratch.ArcdpsLogManager.Data
 {
 	public class ApiData
 	{
+		public static readonly ApiGuild NoGuild = new ApiGuild {Tag = "", Name = "No guild"};
+
 		private readonly GuildEndpoint guildEndpoint;
 
 		private readonly ConcurrentDictionary<string, ApiGuild> guildDataCache =
@@ -144,6 +146,11 @@ namespace GW2Scratch.ArcdpsLogManager.Data
 			if (guid == null)
 			{
 				throw new ArgumentNullException(nameof(guid));
+			}
+
+			if (guid == "00000000-0000-0000-0000-000000000000")
+			{
+				return NoGuild;
 			}
 
 			if (guildDataCache.TryGetValue(guid, out var data))

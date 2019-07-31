@@ -52,14 +52,14 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 					var icon = imageProvider.GetTinyProfessionIcon(player);
 					var imageView = new ImageView {Image = icon};
 
-					string guildTagSuffix;
-					if (player.GuildGuid == null || !Settings.ShowGuildTagsInLogDetail)
+					string guildTagSuffix = "";
+					if (player.GuildGuid != null && Settings.ShowGuildTagsInLogDetail)
 					{
-						guildTagSuffix = "";
-					}
-					else
-					{
-						guildTagSuffix = $" [{apiData.GetGuildTag(player.GuildGuid)}]";
+						string guildTag = apiData.GetGuildTag(player.GuildGuid);
+						if (guildTag != "")
+						{
+							guildTagSuffix = $" [{guildTag}]";
+						}
 					}
 
 					string guildName = player.GuildGuid != null
