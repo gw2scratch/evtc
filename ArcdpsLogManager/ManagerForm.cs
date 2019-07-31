@@ -81,7 +81,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		public IEnumerable<LogData> LoadedLogs => logs;
-		public LogCache LogCache { get; internal set; }
+		public LogCache LogCache { get; }
 
 		public ManagerForm(LogCache logCache)
 		{
@@ -368,22 +368,8 @@ namespace GW2Scratch.ArcdpsLogManager
 
 			cancellationToken.ThrowIfCancellationRequested();
 
-			// Copying the logs into a new collection is required to improve performance on platforms
-			// where each modification results in a full refresh of all data in the grid view.
-			var newLogs = new ObservableCollection<LogData>(logs);
-
-			for (var i = 0; i < logs.Count; i++)
-			{
-				var log = logs[i];
-				if (LogCache.TryGetLogData(log.FileInfo, out var cachedLog))
-				{
-					newLogs[i] = cachedLog;
-				}
-			}
-
-			Application.Instance.Invoke(() => { RecreateLogCollections(newLogs, logList); });
-
 			Application.Instance.Invoke(() => { Status = "Parsing logs..."; });
+
 			cancellationToken.ThrowIfCancellationRequested();
 
 			ParseLogs(logList, cancellationToken);
@@ -413,7 +399,7 @@ namespace GW2Scratch.ArcdpsLogManager
 				var newLogs = new ObservableCollection<LogData>(logs);
 
 				//foreach (var log in LogFinder.GetTesting())
-				foreach (var log in LogFinder.GetFromDirectory(Settings.LogRootPath))
+				foreach (var log in LogFinder.GetFromDirectory(Settings.LogRootPath, LogCache))
 				{
 					newLogs.Add(log);
 
@@ -606,22 +592,14 @@ namespace GW2Scratch.ArcdpsLogManager
 					}
 				}
 
-				playerList.DataStore.Clear();
-				foreach (var data in logsByAccountName.Select(x => new PlayerData(x.Key, x.Value))
-					.OrderByDescending(x => x.Logs.Count))
-				{
-					playerList.DataStore.Add(data);
-				}
+				playerList.DataStore = new ObservableCollection<PlayerData>(logsByAccountName
+					.Select(x => new PlayerData(x.Key, x.Value)).OrderByDescending(x => x.Logs.Count));
 
 				playerList.Refresh();
 
-				guildList.DataStore.Clear();
-				foreach (var data in dataByGuild
+				guildList.DataStore = new ObservableCollection<GuildData>(dataByGuild
 					.Select(x => new GuildData(x.Key, x.Value.Logs.Distinct(), x.Value.Players))
-					.OrderByDescending(x => x.Logs.Count))
-				{
-					guildList.DataStore.Add(data);
-				}
+					.OrderByDescending(x => x.Logs.Count));
 
 				guildList.Refresh();
 			};

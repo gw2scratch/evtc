@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using GW2Scratch.ArcdpsLogManager.Data;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
 using GW2Scratch.EVTCAnalytics.Statistics.Encounters.Results;
 
@@ -12,14 +13,28 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 		/// <summary>
 		/// Creates a new log collection that contains all logs contained in a directory including subdirectories
 		/// </summary>
-		/// <param name="directoryPath"></param>
-		/// <returns></returns>
-		public IEnumerable<LogData> GetFromDirectory(string directoryPath)
+		/// <param name="directoryPath">A path to a dictionary that should be searched.</param>
+		/// <param name="logCache">An optional log cache that will be used to retrieve log data if available.</param>
+		/// <returns>Logs that were found.</returns>
+		public IEnumerable<LogData> GetFromDirectory(string directoryPath, LogCache logCache = null)
 		{
 			var files = Directory.EnumerateFiles(directoryPath, "*evtc*", SearchOption.AllDirectories)
 				.Where(x => x.EndsWith(".evtc") || x.EndsWith(".evtc.zip") || x.EndsWith(".zevtc"));
 
-			return files.Select(file => new LogData(new FileInfo(file)));
+			return files.Select(file =>
+			{
+				var fileInfo = new FileInfo(file);
+
+				if (logCache != null)
+				{
+					if (logCache.TryGetLogData(fileInfo, out var cachedLog))
+					{
+						return cachedLog;
+					}
+				}
+
+				return new LogData(fileInfo);
+			});
 		}
 
 		public IEnumerable<LogData> GetTesting()
