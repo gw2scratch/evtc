@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -560,54 +561,54 @@ namespace GW2Scratch.ArcdpsLogManager
 
 			logsFiltered = new FilterCollection<LogData>(logs);
 
-			logsFiltered.CollectionChanged += (sender, args) =>
-			{
-				var logsByAccountName = new Dictionary<string, List<LogData>>();
-				var dataByGuild = new Dictionary<string, (List<LogData> Logs, List<LogPlayer> Players)>();
-				foreach (var log in logsFiltered)
-				{
-					if (log.ParsingStatus != ParsingStatus.Parsed) continue;
-
-					foreach (var player in log.Players)
-					{
-						if (!logsByAccountName.ContainsKey(player.AccountName))
-						{
-							logsByAccountName[player.AccountName] = new List<LogData>();
-						}
-
-						logsByAccountName[player.AccountName].Add(log);
-
-						if (player.GuildGuid != null)
-						{
-							if (!dataByGuild.ContainsKey(player.GuildGuid))
-							{
-								dataByGuild[player.GuildGuid] = (new List<LogData>(), new List<LogPlayer>());
-							}
-
-							var (guildLogs, guildPlayers) = dataByGuild[player.GuildGuid];
-
-							guildLogs.Add(log);
-							guildPlayers.Add(player);
-						}
-					}
-				}
-
-				playerList.DataStore = new ObservableCollection<PlayerData>(logsByAccountName
-					.Select(x => new PlayerData(x.Key, x.Value)).OrderByDescending(x => x.Logs.Count));
-
-				playerList.Refresh();
-
-				guildList.DataStore = new ObservableCollection<GuildData>(dataByGuild
-					.Select(x => new GuildData(x.Key, x.Value.Logs.Distinct(), x.Value.Players))
-					.OrderByDescending(x => x.Logs.Count));
-
-				guildList.Refresh();
-			};
+			logsFiltered.CollectionChanged += FilteredLogsUpdated;
 
 			logList.DataStore = logsFiltered;
 
 			logsFiltered.Filter = FilterLog;
 			logsFiltered.Refresh();
+		}
+
+		private void FilteredLogsUpdated(object sender, NotifyCollectionChangedEventArgs args)
+		{
+			var logsByAccountName = new Dictionary<string, List<LogData>>();
+			var dataByGuild = new Dictionary<string, (List<LogData> Logs, List<LogPlayer> Players)>();
+			foreach (var log in logsFiltered)
+			{
+				if (log.ParsingStatus != ParsingStatus.Parsed) continue;
+
+				foreach (var player in log.Players)
+				{
+					if (!logsByAccountName.ContainsKey(player.AccountName))
+					{
+						logsByAccountName[player.AccountName] = new List<LogData>();
+					}
+
+					logsByAccountName[player.AccountName].Add(log);
+
+					if (player.GuildGuid != null)
+					{
+						if (!dataByGuild.ContainsKey(player.GuildGuid))
+						{
+							dataByGuild[player.GuildGuid] = (new List<LogData>(), new List<LogPlayer>());
+						}
+
+						var (guildLogs, guildPlayers) = dataByGuild[player.GuildGuid];
+
+						guildLogs.Add(log);
+						guildPlayers.Add(player);
+					}
+				}
+			}
+
+			playerList.DataStore = new ObservableCollection<PlayerData>(logsByAccountName.Select(x => new PlayerData(x.Key, x.Value)).OrderByDescending(x => x.Logs.Count));
+
+			playerList.Refresh();
+
+			guildList.DataStore = new ObservableCollection<GuildData>(dataByGuild.Select(x => new GuildData(x.Key, x.Value.Logs.Distinct(), x.Value.Players))
+				.OrderByDescending(x => x.Logs.Count));
+
+			guildList.Refresh();
 		}
 
 		[NotifyPropertyChangedInvocator]
