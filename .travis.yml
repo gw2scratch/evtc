@@ -1,0 +1,4 @@
+language: csharp
+solution: ScratchEVTCParser.sln
+mono:
+    - latest
