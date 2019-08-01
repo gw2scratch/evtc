@@ -321,6 +321,23 @@ namespace GW2Scratch.EVTCAnalytics.Statistics
 					);
 				}
 
+				// TODO: Check if these are all the possible kitty golem IDs
+				// TODO: Improve the detection if possible
+				if (boss.SpeciesId == SpeciesIds.StandardKittyGolem || boss.SpeciesId == SpeciesIds.MediumKittyGolem ||
+				    boss.SpeciesId == SpeciesIds.LargeKittyGolem || boss.SpeciesId == SpeciesIds.MassiveKittyGolem)
+				{
+					return new BaseEncounter(
+						new[] {boss},
+						log.Events,
+						new PhaseSplitter(new StartTrigger(new PhaseDefinition("Default phase", boss))),
+						new TransformResultDeterminer(
+							new AgentKillingBlowDeterminer(boss),
+							result => result == EncounterResult.Failure ? EncounterResult.Unknown : result
+						),
+						new AgentNameEncounterNameProvider(boss)
+					);
+				}
+
 				if (boss.SpeciesId == SpeciesIds.Freezie)
 				{
 					return new BaseEncounter(

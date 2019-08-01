@@ -150,6 +150,7 @@
     <Compile Include="Statistics\Encounters\Results\IResultDeterminer.cs" />
     <Compile Include="Statistics\Encounters\Results\RewardDeterminer.cs" />
     <Compile Include="Statistics\Encounters\Results\TargetableDeterminer.cs" />
+    <Compile Include="Statistics\Encounters\Results\TransformResultDeterminer.cs" />
     <Compile Include="Statistics\IEncounterFinder.cs" />
     <Compile Include="Statistics\IRotationCalculator.cs" />
     <Compile Include="Statistics\LogStatistics.cs" />

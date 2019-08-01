@@ -52,6 +52,12 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		public const int WyvernMatriarch = 20997;
 		public const int WyvernPatriarch = 21183;
 
+		// Special Forces Training Area
+		public const int StandardKittyGolem = 16199;
+		public const int MediumKittyGolem = 19645;
+		public const int LargeKittyGolem = 19676;
+		public const int MassiveKittyGolem = 16202;
+
 		// Fractals
 		// Shattered Observatory CM
 		public const int Artsariiv = 17949;
