@@ -9,9 +9,7 @@ namespace GW2Scratch.ArcdpsLogManager.Dialogs
 		public CacheDialog(ManagerForm managerForm)
 		{
 			Title = "Log cache - arcdps Log Manager";
-			ClientSize = new Size(300, -1);
 			var formLayout = new DynamicLayout();
-			Content = formLayout;
 
 			var item = new Button {Text = "Close"};
 			item.Click += (sender, args) => Close();
@@ -31,13 +29,23 @@ namespace GW2Scratch.ArcdpsLogManager.Dialogs
 			var unloadedCountLabel = new Label {Text = "Not loaded"};
 			var sizeLabel = new Label {Text = "No file"};
 
-			formLayout.BeginVertical(new Padding(10), new Size(5, 5));
+			formLayout.BeginVertical(new Padding(10), new Size(0, 0));
 			{
+				// This is a very hacky solution for WrapMode.Word not working properly on the Gtk platform
 				formLayout.AddRow(new Label
 				{
-					Text = "The parsed contents of logs are saved in a cache file to save time.\n" +
-					       "You can delete the cached results here to parse the logs again or prune\n" +
-					       "results for logs that are not in the scanned directory anymore.",
+					Text = "The parsed contents of logs are saved in a cache file to save time. You can",
+					Wrap = WrapMode.None
+				});
+				formLayout.AddRow(new Label
+				{
+					Text = "delete the cached results here to parse the logs again or prune results for",
+					Wrap = WrapMode.None
+				});
+				formLayout.AddRow(new Label
+				{
+					Text = "logs that are not in the scanned directory anymore.",
+					Wrap = WrapMode.None
 				});
 			}
 			formLayout.EndVertical();
@@ -60,7 +68,7 @@ namespace GW2Scratch.ArcdpsLogManager.Dialogs
 			{
 				int unloadedLogs = managerForm.LogCache?.GetUnloadedLogCount(managerForm.LoadedLogs) ?? 0;
 				if (MessageBox.Show(
-					    $"Prune the cache? {unloadedLogs} results of currently unloaded will be forgotten. " +
+					    $"Prune the cache? {unloadedLogs} results of currently unloaded logs will be forgotten. " +
 					    "If the logs are added back in the future, they will have to be parsed again.",
 					    MessageBoxButtons.OKCancel) == DialogResult.Ok)
 				{
@@ -89,6 +97,8 @@ namespace GW2Scratch.ArcdpsLogManager.Dialogs
 			};
 
 			UpdateLabelTexts(managerForm, countLabel, unloadedCountLabel, sizeLabel);
+
+			Content = formLayout;
 		}
 
 		private void UpdateLabelTexts(ManagerForm managerForm, Label countLabel, Label unloadedCountLabel,
