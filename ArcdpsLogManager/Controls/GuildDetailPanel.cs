@@ -13,6 +13,8 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 {
 	public sealed class GuildDetailPanel : DynamicLayout, INotifyPropertyChanged
 	{
+		private const int PlayerIconSize = 20;
+
 		private static readonly GuildData NullGuild = new GuildData(null, new LogData[0], new LogPlayer[0]);
 
 		private GuildData guildData = NullGuild;
@@ -113,8 +115,9 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				DataCell = new ImageViewCell
 				{
 					Binding = new DelegateBinding<GuildCharacter, Image>(x =>
-						ImageProvider.GetTinyProfessionIcon(x.Profession))
-				}
+						ImageProvider.GetTinyProfessionIcon(x.Profession)),
+				},
+				Width = 20,
 			});
 			characterGridView.Columns.Add(new GridColumn
 			{
