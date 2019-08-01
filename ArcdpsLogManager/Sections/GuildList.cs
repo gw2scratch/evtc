@@ -12,6 +12,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 {
 	public class GuildList : DynamicLayout
 	{
+		private LogCache LogCache { get; }
 		private ApiData ApiData { get; }
 		private LogAnalytics LogAnalytics { get; }
 		private UploadProcessor UploadProcessor { get; }
@@ -47,9 +48,10 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 
 		private string GuildFilter { get; set; } = "";
 
-		public GuildList(ApiData apiData, LogAnalytics logAnalytics, UploadProcessor uploadProcessor,
+		public GuildList(LogCache logCache, ApiData apiData, LogAnalytics logAnalytics, UploadProcessor uploadProcessor,
 			ImageProvider imageProvider)
 		{
+			LogCache = logCache;
 			ApiData = apiData;
 			LogAnalytics = logAnalytics;
 			UploadProcessor = uploadProcessor;
@@ -127,7 +129,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 
 		private GuildDetailPanel ConstructGuildDetailPanel()
 		{
-			return new GuildDetailPanel(ApiData, LogAnalytics, UploadProcessor, ImageProvider);
+			return new GuildDetailPanel(LogCache, ApiData, LogAnalytics, UploadProcessor, ImageProvider);
 		}
 
 		private GridView<GuildData> ConstructGuildGridView(GuildDetailPanel guildDetailPanel)

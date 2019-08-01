@@ -129,7 +129,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			dpsReportTextBox.Text = text;
 		}
 
-		public LogDetailPanel(ApiData apiData, LogAnalytics logAnalytics, UploadProcessor uploadProcessor,
+		public LogDetailPanel(LogCache logCache, ApiData apiData, LogAnalytics logAnalytics, UploadProcessor uploadProcessor,
 			ImageProvider imageProvider)
 		{
 			LogAnalytics = logAnalytics;
@@ -234,7 +234,11 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				dialog.Show();
 			};
 
-			reparseButton.Click += (sender, args) => { logData.ParseData(LogAnalytics); };
+			reparseButton.Click += (sender, args) =>
+			{
+				logData.ParseData(LogAnalytics);
+				logCache.CacheLogData(logData);
+			};
 
 			Settings.ShowDebugDataChanged += (sender, args) => { debugSection.Visible = Settings.ShowDebugData; };
 			Shown += (sender, args) =>

@@ -38,8 +38,8 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			}
 		}
 
-		public GuildDetailPanel(ApiData apiData, LogAnalytics logAnalytics, UploadProcessor uploadProcessor,
-			ImageProvider imageProvider)
+		public GuildDetailPanel(LogCache logCache, ApiData apiData, LogAnalytics logAnalytics,
+			UploadProcessor uploadProcessor, ImageProvider imageProvider)
 		{
 			ImageProvider = imageProvider;
 			ApiData = apiData;
@@ -141,7 +141,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			{
 				var form = new Form
 				{
-					Content = new LogList(apiData, logAnalytics, uploadProcessor, imageProvider)
+					Content = new LogList(logCache, apiData, logAnalytics, uploadProcessor, imageProvider)
 					{
 						DataStore = new FilterCollection<LogData>(GuildData.Logs)
 					},

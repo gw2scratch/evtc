@@ -14,6 +14,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 {
 	public class LogList : Panel
 	{
+		private readonly LogCache logCache;
 		private readonly ApiData apiData;
 		private readonly LogAnalytics logAnalytics;
 		private readonly UploadProcessor uploadProcessor;
@@ -37,9 +38,10 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			}
 		}
 
-		public LogList(ApiData apiData, LogAnalytics logAnalytics, UploadProcessor uploadProcessor,
+		public LogList(LogCache logCache, ApiData apiData, LogAnalytics logAnalytics, UploadProcessor uploadProcessor,
 			ImageProvider imageProvider)
 		{
+			this.logCache = logCache;
 			this.apiData = apiData;
 			this.logAnalytics = logAnalytics;
 			this.uploadProcessor = uploadProcessor;
@@ -73,12 +75,12 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 
 		private LogDetailPanel ConstructLogDetailPanel()
 		{
-			return new LogDetailPanel(apiData, logAnalytics, uploadProcessor, imageProvider);
+			return new LogDetailPanel(logCache, apiData, logAnalytics, uploadProcessor, imageProvider);
 		}
 
 		private MultipleLogPanel ConstructMultipleLogPanel()
 		{
-			return new MultipleLogPanel(logAnalytics, uploadProcessor);
+			return new MultipleLogPanel(logCache, logAnalytics, uploadProcessor);
 		}
 
 		private GridView<LogData> ConstructLogGridView(LogDetailPanel detailPanel, MultipleLogPanel multipleLogPanel)

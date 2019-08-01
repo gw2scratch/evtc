@@ -267,15 +267,15 @@ namespace GW2Scratch.ArcdpsLogManager
 			var tabs = new TabControl();
 
 			// Log tab
-			mainLogList = new LogList(ApiData, LogAnalytics, UploadProcessor, ImageProvider);
+			mainLogList = new LogList(LogCache, ApiData, LogAnalytics, UploadProcessor, ImageProvider);
 			tabs.Pages.Add(new TabPage {Text = "Logs", Content = mainLogList});
 
 			// Player tab
-			playerList = new PlayerList(ApiData, LogAnalytics, UploadProcessor, ImageProvider);
+			playerList = new PlayerList(LogCache, ApiData, LogAnalytics, UploadProcessor, ImageProvider);
 			tabs.Pages.Add(new TabPage {Text = "Players", Content = playerList});
 
 			// Guild tab
-			guildList = new GuildList(ApiData, LogAnalytics, UploadProcessor, ImageProvider);
+			guildList = new GuildList(LogCache, ApiData, LogAnalytics, UploadProcessor, ImageProvider);
 			tabs.Pages.Add(new TabPage {Text = "Guilds", Content = guildList});
 
 			// Statistics tab
