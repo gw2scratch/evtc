@@ -81,23 +81,29 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			var accountGridView = new GridView<GuildMember>();
 			accountGridView.Columns.Add(new GridColumn
 			{
+				HeaderText = "Logs",
+				DataCell = new TextBoxCell
+					{Binding = new DelegateBinding<GuildMember, string>(x => $"{x.Logs.Count}")}
+			});
+			accountGridView.Columns.Add(new GridColumn
+			{
 				HeaderText = "Account",
 				DataCell = new TextBoxCell
 					{Binding = new DelegateBinding<GuildMember, string>(x => x.Name.Substring(1))}
 			});
 			accountGridView.Columns.Add(new GridColumn
 			{
-				HeaderText = "Logs",
+				HeaderText = "Characters",
 				DataCell = new TextBoxCell
-					{Binding = new DelegateBinding<GuildMember, string>(x => $"{x.Logs.Count}")}
+					{Binding = new DelegateBinding<GuildMember, string>(x => $"{x.Characters.Count}")}
 			});
 			// TODO: Add log button
 			var characterGridView = new GridView<GuildCharacter>();
 			characterGridView.Columns.Add(new GridColumn
 			{
-				HeaderText = "Account",
+				HeaderText = "Logs",
 				DataCell = new TextBoxCell
-					{Binding = new DelegateBinding<GuildCharacter, string>(x => x.Account.Name.Substring(1))}
+					{Binding = new DelegateBinding<GuildCharacter, string>(x => $"{x.Logs.Count}")}
 			});
 			characterGridView.Columns.Add(new GridColumn {
 				HeaderText = "",
@@ -114,9 +120,9 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			});
 			characterGridView.Columns.Add(new GridColumn
 			{
-				HeaderText = "Logs",
+				HeaderText = "Account",
 				DataCell = new TextBoxCell
-					{Binding = new DelegateBinding<GuildCharacter, string>(x => $"{x.Logs.Count}")}
+					{Binding = new DelegateBinding<GuildCharacter, string>(x => x.Account.Name.Substring(1))}
 			});
 			// TODO: Add log button
 
