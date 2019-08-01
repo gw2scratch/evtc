@@ -55,3 +55,5 @@ channel in our [Discord server](https://discord.gg/TnHpN34).
 
 Tiny fixes are always welcome, however do please discuss bigger changes first. Currently,
 most of the projects are very much in early development and significant changes are planned.
+
+In the future, this repository may get split up into smaller ones for the individual projects.
