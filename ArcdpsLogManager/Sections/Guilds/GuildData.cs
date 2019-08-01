@@ -52,8 +52,8 @@ namespace GW2Scratch.ArcdpsLogManager.Sections.Guilds
 		        characterList.AddRange(account.Characters);
 	        }
 
-	        Accounts = accountList;
-	        Characters = characterList;
+	        Accounts = accountList.OrderBy(x => x.Logs.Count).ToArray();
+	        Characters = characterList.OrderBy(x => x.Logs.Count).ToArray();
         }
 	}
 }
