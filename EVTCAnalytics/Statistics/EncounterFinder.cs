@@ -309,6 +309,17 @@ namespace GW2Scratch.EVTCAnalytics.Statistics
 						new AgentNameEncounterNameProvider(boss)
 					);
 				}
+
+				if (boss.SpeciesId == SpeciesIds.Arkk || boss.SpeciesId == SpeciesIds.Artsariiv)
+				{
+					return new BaseEncounter(
+						new[] {boss},
+						log.Events,
+						new PhaseSplitter(new StartTrigger(new PhaseDefinition("Default phase", boss))),
+						new AgentKillingBlowDeterminer(boss),
+						new AgentNameEncounterNameProvider(boss)
+					);
+				}
 			}
 			else if (log.MainTarget is Gadget gadgetBoss)
 			{

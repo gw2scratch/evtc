@@ -51,5 +51,10 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		public const int ApocalypseBringer = 21073;
 		public const int WyvernMatriarch = 20997;
 		public const int WyvernPatriarch = 21183;
+
+		// Fractals
+		// Shattered Observatory CM
+		public const int Artsariiv = 17949;
+		public const int Arkk = 17759;
 	}
 }
