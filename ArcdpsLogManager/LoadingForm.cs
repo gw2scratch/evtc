@@ -11,6 +11,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		{
 			var layout = new DynamicLayout();
 
+			Icon = Resources.GetProgramIcon();
 			Title = "Loading - arcdps Log Manager";
 			ClientSize = new Size(200, 80);
 			Resizable = false;

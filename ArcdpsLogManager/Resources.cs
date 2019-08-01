@@ -7,10 +7,21 @@ namespace GW2Scratch.ArcdpsLogManager
 	public static class Resources
 	{
 		private const string ImageDirectoryName = "Images";
-		private static Image GetImage(string imageName)
+
+		private static string GetImagePath(string imageName)
 		{
-			var path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), ImageDirectoryName, imageName);
-			return new Bitmap(path);
+			return Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), ImageDirectoryName,
+				imageName);
+		}
+
+		private static Bitmap GetImage(string imageName)
+		{
+			return new Bitmap(GetImagePath(imageName));
+		}
+
+		public static Icon GetProgramIcon()
+		{
+			return new Icon(1, GetImage("program_icon.png"));
 		}
 
 		public static Image GetTinyIconWarrior()

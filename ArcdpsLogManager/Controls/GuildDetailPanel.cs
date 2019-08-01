@@ -59,8 +59,8 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			{
 				if (args.PropertyName != nameof(GuildData)) return;
 
-				var name = GuildData.Guid != null ? ApiData.GetGuildName(GuildData.Guid) ?? "(Unknown)" : "(Unknown)";
-				var tag = GuildData.Guid != null ? ApiData.GetGuildTag(GuildData.Guid) ?? "???" : "???";
+				var name = GuildData.Guid != null ? ApiData.GetGuildName(GuildData.Guid) : "(Unknown)";
+				var tag = GuildData.Guid != null ? ApiData.GetGuildTag(GuildData.Guid) : "???";
 				guildName.Text = $"{name} [{tag}]";
 			};
 
@@ -99,6 +99,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 					{Binding = new DelegateBinding<GuildMember, string>(x => $"{x.Characters.Count}")}
 			});
 			// TODO: Add log button
+
 			var characterGridView = new GridView<GuildCharacter>();
 			characterGridView.Columns.Add(new GridColumn
 			{
@@ -106,7 +107,8 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				DataCell = new TextBoxCell
 					{Binding = new DelegateBinding<GuildCharacter, string>(x => $"{x.Logs.Count}")}
 			});
-			characterGridView.Columns.Add(new GridColumn {
+			characterGridView.Columns.Add(new GridColumn
+			{
 				HeaderText = "",
 				DataCell = new ImageViewCell
 				{
@@ -114,7 +116,8 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 						ImageProvider.GetTinyProfessionIcon(x.Profession))
 				}
 			});
-			characterGridView.Columns.Add(new GridColumn {
+			characterGridView.Columns.Add(new GridColumn
+			{
 				HeaderText = "Character",
 				DataCell = new TextBoxCell
 					{Binding = new DelegateBinding<GuildCharacter, string>(x => x.Name)}
@@ -161,8 +164,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 					},
 					Width = 900,
 					Height = 700,
-					Title =
-						$"arcdps Log Manager: logs with a member in {ApiData.GetGuildName(guildData.Guid) ?? "(Unknown)"}"
+					Title = $"arcdps Log Manager: logs with a member in {ApiData.GetGuildName(guildData.Guid)}"
 				};
 				form.Show();
 			};

@@ -101,6 +101,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\About.cs" />
     <Compile Include="Controls\GroupCompositionControl.cs" />
     <Compile Include="Controls\GuildDetailPanel.cs" />
     <Compile Include="Controls\LogDetailPanel.cs" />
@@ -206,6 +207,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\Necromancer_tango_icon_20px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\program_icon.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\Ranger_tango_icon_20px.png">

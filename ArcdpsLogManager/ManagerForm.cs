@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Eto.Drawing;
 using Eto.Forms;
 using GW2Scratch.ArcdpsLogManager.Analytics;
+using GW2Scratch.ArcdpsLogManager.Commands;
 using GW2Scratch.ArcdpsLogManager.Controls;
 using GW2Scratch.ArcdpsLogManager.Data;
 using GW2Scratch.ArcdpsLogManager.Dialogs;
@@ -90,6 +91,7 @@ namespace GW2Scratch.ArcdpsLogManager
 
 			UploadProcessor = new UploadProcessor(new DpsReportUploader(), LogCache);
 
+			Icon = Resources.GetProgramIcon();
 			Title = "arcdps Log Manager";
 			ClientSize = new Size(1024, 768);
 			var formLayout = new DynamicLayout();
@@ -166,7 +168,10 @@ namespace GW2Scratch.ArcdpsLogManager
 			settingsMenuItem.Items.Add(new SeparatorMenuItem());
 			settingsMenuItem.Items.Add(debugDataMenuItem);
 
-			Menu = new MenuBar(arcdpsMenuItem, dataMenuItem, settingsMenuItem);
+			var helpMenuItem = new ButtonMenuItem {Text = "Help"};
+			helpMenuItem.Items.Add(new About());
+
+			Menu = new MenuBar(arcdpsMenuItem, dataMenuItem, settingsMenuItem, helpMenuItem);
 
 			formLayout.BeginVertical(new Padding(5), yscale: true);
 
