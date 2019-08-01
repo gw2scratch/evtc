@@ -17,7 +17,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 
 		private LogData logData;
 
-		private readonly Label nameLabel = new Label {Font = Fonts.Sans(16, FontStyle.Bold)};
+		private readonly Label nameLabel = new Label {Font = Fonts.Sans(16, FontStyle.Bold), Wrap = WrapMode.Word};
 		private readonly Label resultLabel = new Label {Font = Fonts.Sans(12)};
 		private readonly Label filenameLabel = new Label {TextAlignment = TextAlignment.Right};
 		private readonly GroupCompositionControl groupComposition;
@@ -137,7 +137,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			ImageProvider = imageProvider;
 
 			Padding = new Padding(10, 10, 10, 2);
-			Width = 300;
+			Width = 350;
 			Visible = false;
 
 			groupComposition = new GroupCompositionControl(apiData, imageProvider);

@@ -40,12 +40,13 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			UploadProcessor uploadProcessor, ImageProvider imageProvider)
 		{
 			Padding = new Padding(10);
-			Width = 300;
+			Width = 350;
 			Visible = false;
 
 			var accountName = new Label()
 			{
-				Font = Fonts.Sans(16, FontStyle.Bold)
+				Font = Fonts.Sans(16, FontStyle.Bold),
+				Wrap = WrapMode.Word
 			};
 			PropertyChanged += (sender, args) =>
 			{

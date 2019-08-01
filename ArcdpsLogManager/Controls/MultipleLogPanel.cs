@@ -78,7 +78,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 		public MultipleLogPanel(LogCache logCache, LogAnalytics logAnalytics, UploadProcessor uploadProcessor)
 		{
 			Padding = new Padding(10);
-			Width = 300;
+			Width = 350;
 			Visible = false;
 
 			var reparseButton = new Button {Text = "Reparse all"};

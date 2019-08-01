@@ -91,7 +91,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			UploadProcessor = new UploadProcessor(new DpsReportUploader(), LogCache);
 
 			Title = "arcdps Log Manager";
-			ClientSize = new Size(900, 700);
+			ClientSize = new Size(1024, 768);
 			var formLayout = new DynamicLayout();
 			Content = formLayout;
 
