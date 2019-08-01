@@ -56,5 +56,8 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		// Shattered Observatory CM
 		public const int Artsariiv = 17949;
 		public const int Arkk = 17759;
+
+		// Festivals
+		public const int Freezie = 21333;
 	}
 }

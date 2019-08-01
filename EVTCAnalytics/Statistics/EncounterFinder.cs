@@ -320,6 +320,17 @@ namespace GW2Scratch.EVTCAnalytics.Statistics
 						new AgentNameEncounterNameProvider(boss)
 					);
 				}
+
+				if (boss.SpeciesId == SpeciesIds.Freezie)
+				{
+					return new BaseEncounter(
+						new[] {boss},
+						log.Events,
+						new PhaseSplitter(new StartTrigger(new PhaseDefinition("Default phase", boss))),
+						new AgentBuffGainedDeterminer(boss, SkillIds.Determined),
+						new AgentNameEncounterNameProvider(boss)
+					);
+				}
 			}
 			else if (log.MainTarget is Gadget gadgetBoss)
 			{
