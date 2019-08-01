@@ -9,7 +9,7 @@ namespace GW2Scratch.EVTCInspector
 {
 	public class EventListControl : Panel
 	{
-		private class TypeFilterItem : TreeGridItem
+		public class TypeFilterItem : TreeGridItem
 		{
 			public Type Type { get; }
 
@@ -90,7 +90,7 @@ namespace GW2Scratch.EVTCInspector
 			{
 				events.Clear();
 				events.AddRange(value);
-				eventGridView.DataStore = new FilterCollection<Event>(events) {Filter = GetEventFilter()};
+				eventGridView.DataStore = new FilterCollection<Event>(events) {Filter = GetEventFilter};
 
 				UpdateFilterView();
 			}
@@ -109,9 +109,9 @@ namespace GW2Scratch.EVTCInspector
 		private readonly List<Event> events = new List<Event>();
 		private readonly List<Agent> agents = new List<Agent>();
 
-		private TypeFilterItem[] filters;
+		public TypeFilterItem[] TypeFilters { get; private set; }
 
-		private readonly Panel filterPanel = new Panel();
+		private readonly EventContentFilterControl contentFilters = new EventContentFilterControl();
 		private readonly GridView<Event> eventGridView;
 		private readonly TreeGridView typeFilterTree;
 		private readonly JsonSerializationControl eventJsonControl = new JsonSerializationControl();
@@ -157,11 +157,18 @@ namespace GW2Scratch.EVTCInspector
 				Editable = false
 			});
 
-			filterLayout.BeginHorizontal();
-			filterLayout.BeginVertical();
-			filterLayout.Add(filterPanel);
+			var applyContentFilterButton = new Button {Text = "Apply filters"};
+			applyContentFilterButton.Click += (sender, args) => ApplyFilters();
+			filterLayout.BeginVertical(yscale: true);
+			{
+				filterLayout.Add(contentFilters);
+			}
 			filterLayout.EndVertical();
-			filterLayout.EndHorizontal();
+			filterLayout.BeginVertical(yscale: false);
+			{
+				filterLayout.AddRow(applyContentFilterButton, null);
+			}
+			filterLayout.EndVertical();
 
 			var filterTabs = new TabControl();
 			filterTabs.Pages.Add(new TabPage {Text = "By Event Type", Content = typeFilterTree});
@@ -191,19 +198,19 @@ namespace GW2Scratch.EVTCInspector
 
 		private void UpdateFilterView()
 		{
-			filters = events.GroupBy(x => x.GetType()).Select(x => new TypeFilterItem(x.Key, x.Count()))
+			TypeFilters = events.GroupBy(x => x.GetType()).Select(x => new TypeFilterItem(x.Key, x.Count()))
 				.OrderBy(x => x.Type.Name).ToArray();
 
-			var rootType = filters.First().Type;
-			foreach (var type in filters)
+			var rootType = TypeFilters.First().Type;
+			foreach (var type in TypeFilters)
 			{
 				rootType = GetClosestType(rootType, type.Type);
 			}
 
-			var filterByType = filters.ToDictionary(x => x.Type);
+			var filterByType = TypeFilters.ToDictionary(x => x.Type);
 
 			// Arrange the filters as their tree of dependency
-			foreach (var filter in filters)
+			foreach (var filter in TypeFilters)
 			{
 				var child = filter;
 				Type parent = filter.Type.BaseType;
@@ -270,60 +277,21 @@ namespace GW2Scratch.EVTCInspector
 
 		private void ApplyFilters()
 		{
-            ((FilterCollection<Event>) eventGridView.DataStore).Refresh();
+			((FilterCollection<Event>) eventGridView.DataStore).Refresh();
 
-			/*
-			var selectedTypes = filters.Where(x => x.Checked.HasValue && x.Checked.Value).ToArray();
-			if (selectedTypes.Length == 0)
-			{
-				return;
-			}
-
-			var commonAncestor = selectedTypes.First().Type;
-			foreach (var type in selectedTypes)
-			{
-				commonAncestor = GetClosestType(commonAncestor, type.Type);
-			}
-
-			if (typeof(AgentEvent).IsAssignableFrom(commonAncestor))
-			{
-				var filterAgentRadioButton = new RadioButton {Text = "Exact Agent"};
-				var filterAgentDataRadioButton = new RadioButton(filterAgentRadioButton) {Text = "Agent data"};
-				var agentsDropDown = new DropDown
-				{
-					DataStore = agents,
-					ItemTextBinding = new DelegateBinding<Agent, string>(x => $"{x.Name} ({x.Address})")
-				};
-
-				var filterLayout = new DynamicLayout();
-				filterLayout.BeginHorizontal();
-				filterLayout.BeginGroup("Agent filter");
-				filterLayout.BeginVertical(spacing: new Size(5, 5));
-				filterLayout.AddRow(filterAgentRadioButton, null, agentsDropDown);
-				filterLayout.AddRow(filterAgentDataRadioButton, new CheckBox {Text = "Name"}, new TextBox {Text = ""});
-				filterLayout.AddRow(null, new CheckBox {Text = "Type"},
-					new DropDown {DataStore = new[] {"Player", "NPC", "Gadget"}});
-				filterLayout.AddRow(null);
-				filterLayout.EndVertical();
-				filterLayout.EndGroup();
-				filterLayout.EndHorizontal();
-				filterPanel.Content = filterLayout;
-			}
-			else
-			{
-				filterPanel.Content = null;
-			}
-			*/
+			contentFilters.UpdateContent(this);
 		}
 
-		private Func<Event, bool> GetEventFilter()
+		private bool FilterByEventType(Event e)
 		{
-			return e =>
-			{
-				var dataStore = typeFilterTree.DataStore;
-				if (dataStore == null) return true;
-				return filters.FirstOrDefault(x => x.Type == e.GetType())?.Checked ?? true;
-			};
+			var dataStore = typeFilterTree.DataStore;
+			if (dataStore == null) return true;
+			return TypeFilters.FirstOrDefault(x => x.Type == e.GetType())?.Checked ?? true;
+		}
+
+		private bool GetEventFilter(Event e)
+		{
+			return FilterByEventType(e) && contentFilters.FilterEvent(e);
 		}
 
 		private Type GetClosestType(Type a, Type b)
