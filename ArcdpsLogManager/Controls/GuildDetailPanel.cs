@@ -99,8 +99,15 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				DataCell = new TextBoxCell
 					{Binding = new DelegateBinding<GuildCharacter, string>(x => x.Account.Name.Substring(1))}
 			});
-			characterGridView.Columns.Add(new GridColumn
-			{
+			characterGridView.Columns.Add(new GridColumn {
+				HeaderText = "",
+				DataCell = new ImageViewCell
+				{
+					Binding = new DelegateBinding<GuildCharacter, Image>(x =>
+						ImageProvider.GetTinyProfessionIcon(x.Profession))
+				}
+			});
+			characterGridView.Columns.Add(new GridColumn {
 				HeaderText = "Character",
 				DataCell = new TextBoxCell
 					{Binding = new DelegateBinding<GuildCharacter, string>(x => x.Name)}
@@ -111,7 +118,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				DataCell = new TextBoxCell
 					{Binding = new DelegateBinding<GuildCharacter, string>(x => $"{x.Logs.Count}")}
 			});
-			// TODO: Add class icon, log button
+			// TODO: Add log button
 
 			var tabs = new TabControl();
 			tabs.Pages.Add(new TabPage(accountGridView) {Text = "Accounts"});

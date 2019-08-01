@@ -27,19 +27,22 @@ namespace GW2Scratch.ArcdpsLogManager.Sections.Guilds
 		        string accountName = accountGrouping.Key;
 
 		        var accountLogs = Logs
-			        .Where(l => l.Players.Any(p => p.AccountName == accountName))
+			        .Where(l => l.Players.Any(p => p.AccountName == accountName && p.GuildGuid == guid))
 			        .Distinct()
 			        .ToArray();
 		        var account = new GuildMember(accountName, accountLogs);
 
 		        var accountCharacters = new List<GuildCharacter>();
 
-		        var characters = accountGrouping.GroupBy(x => x.Name);
+		        var characters = accountGrouping.GroupBy(x => (x.Name, x.Profession));
 		        foreach (var characterGrouping in characters)
 		        {
-			        string characterName = characterGrouping.Key;
-			        var characterLogs = accountLogs.Where(l => l.Players.Any(p => p.Name == characterName)).Distinct();
-					var character = new GuildCharacter(account, characterName, characterLogs);
+			        (string characterName, var profession) = characterGrouping.Key;
+
+			        var characterLogs = accountLogs
+				        .Where(l => l.Players.Any(p => p.Name == characterName && p.GuildGuid == guid))
+				        .Distinct();
+					var character = new GuildCharacter(account, profession, characterName, characterLogs);
 					accountCharacters.Add(character);
 		        }
 
