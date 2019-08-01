@@ -396,6 +396,11 @@ namespace GW2Scratch.ArcdpsLogManager
 				{
 					newLogs.Add(log);
 
+					if (log.ParsingStatus == ParsingStatus.Parsed)
+					{
+						RegisterLogForApi(log);
+					}
+
 					if (refreshCooldown.TryUse(DateTime.Now))
 					{
 						Application.Instance.Invoke(() => { RecreateLogCollections(newLogs, logList); });
@@ -445,6 +450,11 @@ namespace GW2Scratch.ArcdpsLogManager
 				log.ParseData(LogAnalytics);
 				LogCache?.CacheLogData(log);
 
+				if (log.ParsingStatus == ParsingStatus.Parsed)
+				{
+					RegisterLogForApi(log);
+				}
+
 				int logNumber = i + 1;
 				Application.Instance.AsyncInvoke(() =>
 				{
@@ -467,24 +477,11 @@ namespace GW2Scratch.ArcdpsLogManager
 				}
 			}
 
-			foreach (var log in logs)
-			{
-				if (log.ParsingStatus == ParsingStatus.Parsed)
-				{
-					foreach (var player in log.Players)
-					{
-						if (player.GuildGuid != null)
-						{
-							ApiData.RegisterGuild(player.GuildGuid);
-						}
-					}
-				}
-			}
-
 			Application.Instance.AsyncInvoke(() =>
 			{
 				logList.ReloadData();
 				UpdateFilterDropdown();
+				FilteredLogsUpdated();
 			});
 
 			// We have already broken out of the loop because of it,
@@ -553,7 +550,7 @@ namespace GW2Scratch.ArcdpsLogManager
 
 			logsFiltered = new FilterCollection<LogData>(logs);
 
-			logsFiltered.CollectionChanged += FilteredLogsUpdated;
+			logsFiltered.CollectionChanged += (sender, args) => FilteredLogsUpdated();
 
 			logList.DataStore = logsFiltered;
 
@@ -561,7 +558,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			logsFiltered.Refresh();
 		}
 
-		private void FilteredLogsUpdated(object sender, NotifyCollectionChangedEventArgs args)
+		private void FilteredLogsUpdated()
 		{
 			var logsByAccountName = new Dictionary<string, List<LogData>>();
 			var dataByGuild = new Dictionary<string, (List<LogData> Logs, List<LogPlayer> Players)>();
@@ -593,14 +590,27 @@ namespace GW2Scratch.ArcdpsLogManager
 				}
 			}
 
-			playerList.DataStore = new ObservableCollection<PlayerData>(logsByAccountName.Select(x => new PlayerData(x.Key, x.Value)).OrderByDescending(x => x.Logs.Count));
+			playerList.DataStore = new ObservableCollection<PlayerData>(logsByAccountName
+				.Select(x => new PlayerData(x.Key, x.Value)).OrderByDescending(x => x.Logs.Count));
 
 			playerList.Refresh();
 
-			guildList.DataStore = new ObservableCollection<GuildData>(dataByGuild.Select(x => new GuildData(x.Key, x.Value.Logs.Distinct(), x.Value.Players))
+			guildList.DataStore = new ObservableCollection<GuildData>(dataByGuild
+				.Select(x => new GuildData(x.Key, x.Value.Logs.Distinct(), x.Value.Players))
 				.OrderByDescending(x => x.Logs.Count));
 
 			guildList.Refresh();
+		}
+
+		private void RegisterLogForApi(LogData log)
+		{
+			foreach (var player in log.Players)
+			{
+				if (player.GuildGuid != null)
+				{
+					ApiData.RegisterGuild(player.GuildGuid);
+				}
+			}
 		}
 
 		[NotifyPropertyChangedInvocator]
