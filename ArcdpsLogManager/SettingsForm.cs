@@ -40,9 +40,9 @@ namespace GW2Scratch.ArcdpsLogManager
 			saveButton.Click += (sender, args) =>
 			{
 				Settings.UseGW2Api = apiDataCheckbox.Checked ?? false;
-				if (locationTextBox.Text.Trim() != Settings.LogRootPath)
+				if (locationTextBox.Text.Trim() != Settings.LogRootPaths.FirstOrDefault())
 				{
-					Settings.LogRootPath = locationTextBox.Text;
+					Settings.LogRootPaths = new [] {locationTextBox.Text};
 					// TODO: Subscribe from the manager form, and pass if location was changed through event args
 					managerForm?.ReloadLogs();
 				}
@@ -98,10 +98,22 @@ namespace GW2Scratch.ArcdpsLogManager
 
 			Content = layout;
 
-			if (!string.IsNullOrWhiteSpace(Settings.LogRootPath))
+			if (Settings.LogRootPaths.Any())
 			{
-				dialog.Directory = Settings.LogRootPath;
-				locationTextBox.Text = Settings.LogRootPath;
+				if (Settings.LogRootPaths.Count > 1)
+				{
+					// There is currently no interface for adding more than one log directory, so this would end up
+					// losing some quietly when that is implemented.
+					throw new NotImplementedException();
+				}
+
+				string logRootPath = Settings.LogRootPaths.Single();
+				if (Directory.Exists(logRootPath))
+				{
+					dialog.Directory = logRootPath;
+				}
+
+				locationTextBox.Text = logRootPath;
 			}
 			else
 			{

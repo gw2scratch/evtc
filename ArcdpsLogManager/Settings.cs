@@ -1,6 +1,8 @@
 using System;
-using Plugin.Settings;
-using Plugin.Settings.Abstractions;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using Newtonsoft.Json;
 
 namespace GW2Scratch.ArcdpsLogManager
 {
@@ -9,30 +11,110 @@ namespace GW2Scratch.ArcdpsLogManager
 		public const string AppDataDirectoryName = "ArcdpsLogManager";
 		public const string CacheFilename = "LogDataCache.json";
 		public const string ApiCacheFilename = "ApiDataCache.json";
+		public const string SettingsFilename = "Settings.json";
 
-		private static ISettings AppSettings => CrossSettings.Current;
-
-		public static string LogRootPath
+		/// <summary>
+		/// A class that is serialized to store the settings. Also used to define default values.
+		/// </summary>
+		private class StoredSettings
 		{
-			get => AppSettings.GetValueOrDefault(nameof(LogRootPath), string.Empty);
+			public List<string> LogRootPaths { get; set; } = new List<string>();
+			public bool ShowDebugData { get; set; } = false;
+			public bool ShowSquadCompositions { get; set; } = true;
+			public bool ShowGuildTagsInLogDetail { get; set; } = false;
+			public bool UseGW2Api { get; set; } = true;
+			public string DpsReportUserToken { get; set; } = string.Empty;
 
+			public static StoredSettings LoadFromFile()
+			{
+				string filename = GetFilename();
+
+				if (!File.Exists(filename))
+				{
+					return new StoredSettings();
+				}
+
+				using (var reader = File.OpenText(filename))
+				{
+					var serializer = new JsonSerializer();
+					return (StoredSettings) serializer.Deserialize(reader, typeof(StoredSettings));
+				}
+			}
+		}
+
+		private static readonly object WriteLock = new object();
+
+		private static StoredSettings Values => Stored.Value;
+
+		private static readonly Lazy<StoredSettings> Stored = new Lazy<StoredSettings>(() =>
+		{
+			LogRootPathChanged += (sender, args) => SaveToFile();
+			ShowDebugDataChanged += (sender, args) => SaveToFile();
+			ShowSquadCompositionsChanged += (sender, args) => SaveToFile();
+			ShowGuildTagsInLogDetailChanged += (sender, args) => SaveToFile();
+			UseGW2ApiChanged += (sender, args) => SaveToFile();
+			DpsReportUserTokenChanged += (sender, args) => SaveToFile();
+
+			return StoredSettings.LoadFromFile();
+		});
+
+		private static void SaveToFile()
+		{
+			string directory = GetDirectory();
+			string filename = GetFilename();
+			string tmpFilename = filename + ".tmp";
+
+			lock (WriteLock)
+			{
+				if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
+
+				using (var writer = new StreamWriter(tmpFilename))
+				{
+					var serializer = new JsonSerializer();
+					serializer.Serialize(writer, Values);
+				}
+
+				if (File.Exists(filename))
+				{
+					File.Delete(filename);
+				}
+
+				File.Move(tmpFilename, filename);
+			}
+		}
+
+		private static string GetDirectory()
+		{
+			return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+				AppDataDirectoryName);
+		}
+
+		private static string GetFilename()
+		{
+			return Path.Combine(GetDirectory(), SettingsFilename);
+		}
+
+		public static IReadOnlyList<string> LogRootPaths
+		{
+			get => Values.LogRootPaths;
 			set
 			{
-				if (AppSettings.AddOrUpdateValue(nameof(LogRootPath), value))
+				if (!Equals(Values.LogRootPaths, value))
 				{
-					OnLogRootPathChanged();
+					Values.LogRootPaths = value.ToList();
+					OnLogRootPathsChanged();
 				}
 			}
 		}
 
 		public static bool ShowDebugData
 		{
-			get => AppSettings.GetValueOrDefault(nameof(ShowDebugData), false);
-
+			get => Values.ShowDebugData;
 			set
 			{
-				if (AppSettings.AddOrUpdateValue(nameof(ShowDebugData), value))
+				if (Values.ShowDebugData != value)
 				{
+					Values.ShowDebugData = value;
 					OnShowDebugDataChanged();
 				}
 			}
@@ -40,12 +122,12 @@ namespace GW2Scratch.ArcdpsLogManager
 
 		public static bool ShowSquadCompositions
 		{
-			get => AppSettings.GetValueOrDefault(nameof(ShowSquadCompositions), true);
-
+			get => Values.ShowSquadCompositions;
 			set
 			{
-				if (AppSettings.AddOrUpdateValue(nameof(ShowSquadCompositions), value))
+				if (Values.ShowSquadCompositions != value)
 				{
+					Values.ShowSquadCompositions = value;
 					OnShowSquadCompositionsChanged();
 				}
 			}
@@ -53,12 +135,12 @@ namespace GW2Scratch.ArcdpsLogManager
 
 		public static bool ShowGuildTagsInLogDetail
 		{
-			get => AppSettings.GetValueOrDefault(nameof(ShowGuildTagsInLogDetail), false);
-
+			get => Values.ShowGuildTagsInLogDetail;
 			set
 			{
-				if (AppSettings.AddOrUpdateValue(nameof(ShowGuildTagsInLogDetail), value))
+				if (Values.ShowGuildTagsInLogDetail != value)
 				{
+					Values.ShowGuildTagsInLogDetail = value;
 					OnShowGuildTagsInLogDetailChanged();
 				}
 			}
@@ -66,12 +148,12 @@ namespace GW2Scratch.ArcdpsLogManager
 
 		public static bool UseGW2Api
 		{
-			get => AppSettings.GetValueOrDefault(nameof(UseGW2Api), true);
-
+			get => Values.UseGW2Api;
 			set
 			{
-				if (AppSettings.AddOrUpdateValue(nameof(UseGW2Api), value))
+				if (Values.UseGW2Api != value)
 				{
+					Values.UseGW2Api = value;
 					OnUseGW2ApiChanged();
 				}
 			}
@@ -79,11 +161,12 @@ namespace GW2Scratch.ArcdpsLogManager
 
 		public static string DpsReportUserToken
 		{
-			get => AppSettings.GetValueOrDefault(nameof(DpsReportUserToken), string.Empty);
+			get => Values.DpsReportUserToken;
 			set
 			{
-				if (AppSettings.AddOrUpdateValue(nameof(DpsReportUserToken), value))
+				if (Values.DpsReportUserToken != value)
 				{
+					Values.DpsReportUserToken = value;
 					OnDpsReportUserTokenChanged();
 				}
 			}
@@ -96,7 +179,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		public static event EventHandler<EventArgs> UseGW2ApiChanged;
 		public static event EventHandler<EventArgs> DpsReportUserTokenChanged;
 
-		private static void OnLogRootPathChanged()
+		private static void OnLogRootPathsChanged()
 		{
 			LogRootPathChanged?.Invoke(null, EventArgs.Empty);
 		}

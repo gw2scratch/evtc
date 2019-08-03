@@ -397,7 +397,7 @@ namespace GW2Scratch.ArcdpsLogManager
 				var newLogs = new ObservableCollection<LogData>(logs);
 
 				//foreach (var log in LogFinder.GetTesting())
-				foreach (var log in LogFinder.GetFromDirectory(Settings.LogRootPath, LogCache))
+				foreach (var log in Settings.LogRootPaths.SelectMany(x => LogFinder.GetFromDirectory(x, LogCache)))
 				{
 					newLogs.Add(log);
 

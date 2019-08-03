@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using Eto.Drawing;
 using Eto.Forms;
@@ -26,7 +27,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			}
 			layout.EndCentered();
 
-			if (string.IsNullOrWhiteSpace(Settings.LogRootPath))
+			if (!Settings.LogRootPaths.Any())
 			{
 				LoadComplete += (sender, args) => Task.Run(ShowInitialConfiguration);
 			}
