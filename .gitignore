@@ -435,3 +435,6 @@ fabric.properties
 .history
 
 # End of https://www.gitignore.io/api/rider,csharp,visualstudio,visualstudiocode
+
+# Fody
+*/FodyWeavers.xsd
