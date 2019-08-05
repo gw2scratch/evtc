@@ -426,7 +426,7 @@ namespace GW2Scratch.EVTCAnalytics
 				var mainMaster = attacker;
 				while (mainMaster.Master != null)
 				{
-					mainMaster = attacker.Master;
+					mainMaster = mainMaster.Master;
 				}
 
 				EnsureDamageDataExists(mainMaster);
@@ -484,7 +484,7 @@ namespace GW2Scratch.EVTCAnalytics
 				var mainMaster = attacker;
 				while (mainMaster.Master != null)
 				{
-					mainMaster = attacker.Master;
+					mainMaster = mainMaster.Master;
 				}
 
 				EnsureDamageDataExists(mainMaster);
