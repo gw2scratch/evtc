@@ -237,7 +237,7 @@ namespace GW2Scratch.EVTCInspector
 			}
 			catch (Exception ex)
 			{
-				statusStringBuilder.AppendLine($"Parsing failed: {ex.Message}");
+				statusStringBuilder.AppendLine($"Parsing failed: {ex.Message}\n{ex.StackTrace}");
 			}
 
 			// Processing
@@ -264,7 +264,7 @@ namespace GW2Scratch.EVTCInspector
 			}
 			catch (Exception ex)
 			{
-				statusStringBuilder.AppendLine($"Processing failed: {ex.Message}");
+				statusStringBuilder.AppendLine($"Processing failed: {ex.Message}\n{ex.StackTrace}");
 			}
 
 			// Statistics
@@ -282,7 +282,7 @@ namespace GW2Scratch.EVTCInspector
 			}
 			catch (Exception ex)
 			{
-				statusStringBuilder.AppendLine($"Statistics generation failed: {ex.Message}");
+				statusStringBuilder.AppendLine($"Statistics generation failed: {ex.Message}\n{ex.StackTrace}");
 			}
 
 			// HTML
@@ -304,7 +304,7 @@ namespace GW2Scratch.EVTCInspector
 			}
 			catch (Exception ex)
 			{
-				statusStringBuilder.AppendLine($"HTML generation failed: {ex.Message}");
+				statusStringBuilder.AppendLine($"HTML generation failed: {ex.Message}\n{ex.StackTrace}");
 			}
 
 			Application.Instance.Invoke(() =>
