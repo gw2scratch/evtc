@@ -77,7 +77,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 				var encounter = logAnalytics.Analyser.GetEncounter(log);
 				EncounterName = encounter.GetName();
 				EncounterResult = encounter.GetResult();
-				Players = logAnalytics.Analyser.GetPlayers(log).Select(x =>
+				Players = logAnalytics.Analyser.GetPlayers(log).Where(x => x.Identified).Select(x =>
 					new LogPlayer(x.Name, x.AccountName, x.Subgroup, x.Profession, x.EliteSpecialization,
 						GetGuildGuid(x.GuildGuid))
 				).ToArray();
