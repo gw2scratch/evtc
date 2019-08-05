@@ -22,6 +22,7 @@ namespace GW2Scratch.EVTCAnalytics.Model
 		public LogTime StartTime { get; }
 		public LogTime EndTime { get; }
 
+		public LogType LogType { get; }
 		public Agent MainTarget { get; }
 		public Player PointOfView { get; }
 		public int? Language { get; }
@@ -29,11 +30,12 @@ namespace GW2Scratch.EVTCAnalytics.Model
 		public int? GameShardId { get; }
 		public int? MapId { get; }
 
-		public Log(Agent mainTarget, IEnumerable<Event> events, IEnumerable<Agent> agents,
+		public Log(Agent mainTarget, LogType logType, IEnumerable<Event> events, IEnumerable<Agent> agents,
 			IEnumerable<Skill> skills, string evtcVersion, LogTime startTime, LogTime endTime, Player pointOfView,
 			int? language, int? gameBuild, int? gameShardId, int? mapId)
 		{
 			MainTarget = mainTarget;
+			LogType = logType;
 			EVTCVersion = evtcVersion;
 			StartTime = startTime;
 			EndTime = endTime;

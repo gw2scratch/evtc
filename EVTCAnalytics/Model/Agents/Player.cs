@@ -2,6 +2,13 @@ namespace GW2Scratch.EVTCAnalytics.Model.Agents
 {
 	public class Player : Agent
 	{
+		/// <summary>
+		/// A value indicating whether all values are available. If false, <see cref="Agent.Name"/>,
+		/// <see cref="AccountName"/> and <see cref="Subgroup"/> will likely be random values. This
+		/// is most common in WvW on enemies as they are anonymized.
+		/// </summary>
+		public bool Identified { get; }
+
 		public string AccountName { get; }
 		public int Subgroup { get; }
 		public Profession Profession { get; }
@@ -13,7 +20,8 @@ namespace GW2Scratch.EVTCAnalytics.Model.Agents
 		public byte[] GuildGuid { get; internal set; }
 
 		public Player(ulong address, int id, string name, int toughness, int concentration, int healing, int condition,
-			int hitboxWidth, int hitboxHeight, string accountName, Profession profession, EliteSpecialization eliteSpecialization, int subgroup)
+			int hitboxWidth, int hitboxHeight, string accountName, Profession profession,
+			EliteSpecialization eliteSpecialization, int subgroup, bool identified)
 			: base(address, id, name, hitboxWidth, hitboxHeight)
 		{
 			Toughness = toughness;
@@ -21,6 +29,7 @@ namespace GW2Scratch.EVTCAnalytics.Model.Agents
 			Healing = healing;
 			Condition = condition;
 
+			Identified = identified;
 			Subgroup = subgroup;
 			AccountName = accountName;
 			Profession = profession;

@@ -15,6 +15,24 @@ namespace GW2Scratch.EVTCAnalytics.Statistics
 	{
 		public IEncounter GetEncounter(Log log)
 		{
+			switch (log.LogType)
+			{
+				case LogType.PvE:
+					return GetPvEEncounter(log);
+				case LogType.WorldVersusWorld:
+					return GetWvWEncounter(log);
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
+		}
+
+		private IEncounter GetWvWEncounter(Log log)
+		{
+			return new WorldVersusWorldEncounter(log.Agents.OfType<Player>().Where(x => x.Subgroup == -1), log.Events);
+		}
+
+		private IEncounter GetPvEEncounter(Log log)
+		{
 			if (log.MainTarget is NPC boss)
 			{
 				if (boss.Id == SpeciesIds.ValeGuardian)

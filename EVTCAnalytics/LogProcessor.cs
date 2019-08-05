@@ -58,23 +58,31 @@ namespace GW2Scratch.EVTCAnalytics
 			var combatItemData = GetDataFromCombatItems(agents, skills, log);
 			var events = combatItemData.Events.ToArray();
 
-			Agent boss = null;
-			foreach (var agent in agents)
+			Agent mainTarget = null;
+			LogType logType = LogType.PvE;
+			if (log.ParsedBossData.ID != 1)
 			{
-				if (agent is NPC npc && npc.SpeciesId == log.ParsedBossData.ID ||
-				    agent is Gadget gadget && gadget.VolatileId == log.ParsedBossData.ID)
+				foreach (var agent in agents)
 				{
-					boss = agent;
-					break;
+					if (agent is NPC npc && npc.SpeciesId == log.ParsedBossData.ID ||
+					    agent is Gadget gadget && gadget.VolatileId == log.ParsedBossData.ID)
+					{
+						mainTarget = agent;
+						break;
+					}
 				}
+			}
+			else
+			{
+				logType = LogType.WorldVersusWorld;
 			}
 
 			SetAgentAwareTimes(events);
 			AssignAgentMasters(log, agents); // Needs to be done after setting aware times
 
-			return new Log(boss, events, agents, skills, log.LogVersion.BuildVersion, combatItemData.LogStartTime,
-				combatItemData.LogEndTime, combatItemData.PointOfView, combatItemData.Language,
-				combatItemData.GameBuild, combatItemData.GameShardId, combatItemData.MapId);
+			return new Log(mainTarget, logType, events, agents, skills, log.LogVersion.BuildVersion,
+				combatItemData.LogStartTime, combatItemData.LogEndTime, combatItemData.PointOfView,
+				combatItemData.Language, combatItemData.GameBuild, combatItemData.GameShardId, combatItemData.MapId);
 		}
 
 
@@ -122,10 +130,13 @@ namespace GW2Scratch.EVTCAnalytics
 						id = -1;
 					}
 
+					// All parts of the name of the player might not be available, most commonly in WvW logs.
 					var nameParts = agent.Name.Split(new[] {'\0'}, StringSplitOptions.RemoveEmptyEntries);
 					string characterName = nameParts[0];
-					string accountName = nameParts[1];
-					string subgroupLiteral = nameParts[2];
+					string accountName = nameParts.Length > 1 ? nameParts[1] : ":Unknown";
+					string subgroupLiteral = nameParts.Length > 2 ? nameParts[2] : "";
+					bool identified = nameParts.Length >= 3;
+
 					if (!int.TryParse(subgroupLiteral, out int subgroup))
 					{
 						subgroup = -1;
@@ -144,7 +155,7 @@ namespace GW2Scratch.EVTCAnalytics
 
 					yield return new Player(agent.Address, id, characterName, agent.Toughness, agent.Concentration,
 						agent.Healing, agent.Condition, agent.HitboxWidth, agent.HitboxHeight, accountName, profession,
-						specialization, subgroup);
+						specialization, subgroup, identified);
 				}
 				else
 				{
