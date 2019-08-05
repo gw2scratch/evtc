@@ -61,6 +61,10 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			int uploadsFailed = logData.Count(x => x.DpsReportEIUpload.UploadState == UploadState.UploadError);
 			int processingFailed = logData.Count(x => x.DpsReportEIUpload.UploadState == UploadState.ProcessingError);
 
+			int finished = uploaded + uploadsFailed + processingFailed;
+			int totalRequested = queued + uploading + uploaded + uploadsFailed + processingFailed;
+			dpsReportUploadProgressBar.MaxValue = totalRequested > 0 ? totalRequested : 1;
+			dpsReportUploadProgressBar.Value = finished;
 			dpsReportUploadButton.Enabled = notUploaded + uploadsFailed > 0;
 			dpsReportCancelButton.Enabled = queued > 0;
 			dpsReportUploadButton.Text = $"Upload missing logs ({notUploaded + uploadsFailed})";
