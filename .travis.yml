@@ -5,8 +5,8 @@ mono:
 
 before_deploy:
   - mkdir artifacts
-  - cp -R ArcdpsLogManager/bin/Release artifacts/ArcdpsLogManager
-  - cp -R EVTCInspector/bin/Release artifacts/EVTCInspector
+  - cp -R ArcdpsLogManager/bin/Release/net472 artifacts/ArcdpsLogManager
+  - cp -R EVTCInspector/bin/Release/net472 artifacts/EVTCInspector
   - cd artifacts
   - zip -r ArcdpsLogManager.zip ArcdpsLogManager
   - zip -r EVTCInspector.zip EVTCInspector
