@@ -109,6 +109,11 @@ namespace GW2Scratch.EVTCInspector
 			new GridViewSorter<ParsedSkill>(skillsGridView, parsedSkills).EnableSorting();
 			new GridViewSorter<ParsedCombatItem>(combatItemsGridView, parsedCombatItems).EnableSorting();
 
+			agentItemGridView.Columns.Single(x => x.HeaderText == "Name").DataCell = new TextBoxCell
+			{
+				Binding = new DelegateBinding<ParsedAgent, string>(x => $"{x.Name.TrimEnd('\0').Replace("\0", "\\0")}")
+			};
+
 			eventListControl = new EventListControl();
 
 			var agentsGridView = new GridViewGenerator().GetGridView<Agent>();
