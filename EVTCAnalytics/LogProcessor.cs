@@ -287,21 +287,42 @@ namespace GW2Scratch.EVTCAnalytics
 							}
 						}
 
-						Agent master = null;
-						foreach (var agent in agents)
+						if (minion != null && minion.Master == null)
 						{
-							if (!(agent is Gadget) && agent.Id == combatItem.SrcMasterId &&
-							    agent.IsWithinAwareTime(combatItem.Time))
+							Agent master = null;
+							foreach (var agent in agents)
 							{
-								master = agent;
-								break;
+								if (!(agent is Gadget) && agent.Id == combatItem.SrcMasterId &&
+								    agent.IsWithinAwareTime(combatItem.Time))
+								{
+									master = agent;
+									break;
+								}
 							}
-						}
 
-						if (minion != null && master != null && minion.Master == null)
-						{
-							minion.Master = master;
-							master.MinionList.Add(minion);
+							if (master != null)
+							{
+								bool inCycle = false;
+								var masterParent = master;
+								while (masterParent != null)
+								{
+									if (masterParent == minion)
+									{
+										// A cycle is present in the minion hierarchy, this minion would end up as
+										// a transitive minion of itself, which could cause infinite looping.
+										// This is common in very old logs where minion data is somewhat weird.
+										inCycle = true;
+										break;
+									}
+									masterParent = masterParent.Master;
+								}
+
+								if (!inCycle)
+								{
+									minion.Master = master;
+									master.MinionList.Add(minion);
+								}
+							}
 						}
 					}
 				}
