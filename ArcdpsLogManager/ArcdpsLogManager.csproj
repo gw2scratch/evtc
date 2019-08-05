@@ -9,6 +9,7 @@
     <Version>0.3</Version>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Costura.Fody" Version="4.0.0" />
     <PackageReference Include="Eto.Forms" Version="2.4.1" />
     <PackageReference Include="Eto.Platform.Gtk" Version="2.4.1" />
     <PackageReference Include="Eto.Platform.Wpf" Version="2.4.1" />
