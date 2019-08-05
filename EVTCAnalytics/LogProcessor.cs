@@ -28,6 +28,20 @@ namespace GW2Scratch.EVTCAnalytics
 			Profession.Revenant,
 		};
 
+		private static readonly Dictionary<Profession, EliteSpecialization> HeartOfThornsSpecializationsByProfession =
+			new Dictionary<Profession, EliteSpecialization>
+			{
+				{Profession.Guardian, EliteSpecialization.Dragonhunter},
+				{Profession.Warrior, EliteSpecialization.Berserker},
+				{Profession.Engineer, EliteSpecialization.Scrapper},
+				{Profession.Ranger, EliteSpecialization.Druid},
+				{Profession.Thief, EliteSpecialization.Daredevil},
+				{Profession.Elementalist, EliteSpecialization.Tempest},
+				{Profession.Mesmer, EliteSpecialization.Chronomancer},
+				{Profession.Necromancer, EliteSpecialization.Reaper},
+				{Profession.Revenant, EliteSpecialization.Herald}
+			};
+
 		private static readonly Dictionary<uint, EliteSpecialization> SpecializationsById =
 			new Dictionary<uint, EliteSpecialization>()
 			{
@@ -119,6 +133,10 @@ namespace GW2Scratch.EVTCAnalytics
 					if (agent.IsElite == 0)
 					{
 						specialization = EliteSpecialization.None;
+					}
+					else if (agent.IsElite == 1)
+					{
+						specialization = HeartOfThornsSpecializationsByProfession[profession];
 					}
 					else
 					{
