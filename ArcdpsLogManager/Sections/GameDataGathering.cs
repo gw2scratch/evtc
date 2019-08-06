@@ -204,9 +204,16 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 				}
 			});
 
+			var speciesSorter = new GridViewSorter<SpeciesData>(speciesGridView);
+			var skillSorter = new GridViewSorter<SkillData>(skillGridView);
+
+			speciesSorter.EnableSorting();
+			skillSorter.EnableSorting();
+
 			cancelButton.Click += (sender, args) => cancellationTokenSource?.Cancel();
 			gatherButton.Click += (sender, args) =>
-				GatherData(logList, progressBar, progressLabel, speciesGridView, skillGridView);
+				GatherData(logList, progressBar, progressLabel, speciesGridView, skillGridView, speciesSorter,
+					skillSorter);
 			exportSkillsButton.Click += (sender, args) =>
 				SaveToCsv(skillGridView.DataStore ?? Enumerable.Empty<SkillData>());
 			exportSpeciesButton.Click += (sender, args) =>
@@ -246,7 +253,8 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 		}
 
 		private void GatherData(LogList logList, ProgressBar progressBar, Label progressLabel,
-			GridView<SpeciesData> speciesGridView, GridView<SkillData> skillGridView)
+			GridView<SpeciesData> speciesGridView, GridView<SkillData> skillGridView,
+			GridViewSorter<SpeciesData> speciesSorter, GridViewSorter<SkillData> skillSorter)
 		{
 			cancellationTokenSource?.Cancel();
 			cancellationTokenSource = new CancellationTokenSource();
@@ -272,8 +280,11 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 					Application.Instance.Invoke(() =>
 					{
 						var (species, skills) = task.Result;
-						speciesGridView.DataStore = species.ToArray();
-						skillGridView.DataStore = skills.ToArray();
+						speciesGridView.DataStore = new FilterCollection<SpeciesData>(species);
+						skillGridView.DataStore = new FilterCollection<SkillData>(skills);
+
+						speciesSorter.UpdateDataStore();
+						skillSorter.UpdateDataStore();
 					});
 				}
 			});
