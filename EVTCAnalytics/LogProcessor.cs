@@ -385,7 +385,16 @@ namespace GW2Scratch.EVTCAnalytics
 			ParsedLog log)
 		{
 			var agentsByAddress = agents.ToDictionary(x => x.Address);
-			var skillsById = skills.ToDictionary(x => x.Id);
+			var skillsById = new Dictionary<uint, Skill>();
+			foreach (var skill in skills)
+			{
+				// Rarely, in old logs a skill may be duplicated (typically a skill with id 0),
+				// so we only use the first definition
+				if (!skillsById.ContainsKey(skill.Id))
+				{
+					skillsById.Add(skill.Id, skill);
+				}
+			}
 
 			var events = new List<Event>();
 			LogTime startTime = null;
