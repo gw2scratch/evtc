@@ -22,6 +22,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 		private SelectableFilterCollection<PlayerData> filtered;
 
 		private readonly GridView<PlayerData> playerGridView;
+		private readonly GridViewSorter<PlayerData> sorter;
 		private readonly Label accountCountLabel = new Label();
 		private readonly Label characterCountLabel = new Label();
 
@@ -41,6 +42,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 				if (playerGridView != null)
 				{
 					playerGridView.DataStore = filtered;
+					sorter.UpdateDataStore();
 				}
 
 				UpdateCountLabels();
@@ -60,6 +62,8 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 
 			var playerDetailPanel = ConstructPlayerDetailPanel();
 			playerGridView = ConstructPlayerGridView(playerDetailPanel);
+			sorter = new GridViewSorter<PlayerData>(playerGridView);
+			sorter.EnableSorting();
 
 			DataStore = new ObservableCollection<PlayerData>();
 
