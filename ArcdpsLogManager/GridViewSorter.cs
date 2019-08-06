@@ -4,9 +4,9 @@ using Eto.Forms;
 
 namespace GW2Scratch.ArcdpsLogManager
 {
-	public class GridViewSorter<T>
+	public class GridViewSorter<T> where T : class
 	{
-		private readonly GridView gridView;
+		private readonly GridView<T> gridView;
 		private readonly IReadOnlyDictionary<GridColumn, Comparison<T>> customSorts;
 		private bool sortedAscending = false;
 		private GridColumn sortColumn = null;
@@ -18,7 +18,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		/// to apply the sort.</remarks>
 		/// <param name="gridView">A <see cref="GridView"/> that will be sorted.</param>
 		/// <param name="customSorts">Optional custom sorting logic for specified columns.</param>
-		public GridViewSorter(GridView gridView, IReadOnlyDictionary<GridColumn, Comparison<T>> customSorts = null)
+		public GridViewSorter(GridView<T> gridView, IReadOnlyDictionary<GridColumn, Comparison<T>> customSorts = null)
 		{
 			this.gridView = gridView;
 			this.customSorts = customSorts;
