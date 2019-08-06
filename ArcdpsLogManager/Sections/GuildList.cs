@@ -21,6 +21,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 		private ObservableCollection<GuildData> guildData;
 		private SelectableFilterCollection<GuildData> filtered;
 
+		private readonly GridViewSorter<GuildData> sorter;
 		private readonly GridView<GuildData> guildGridView;
 		private readonly Label guildCountLabel = new Label();
 
@@ -40,6 +41,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 				if (guildGridView != null)
 				{
 					guildGridView.DataStore = filtered;
+					sorter.UpdateDataStore();
 				}
 
 				UpdateCountLabels();
@@ -59,6 +61,8 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 
 			var playerDetailPanel = ConstructGuildDetailPanel();
 			guildGridView = ConstructGuildGridView(playerDetailPanel);
+			sorter = new GridViewSorter<GuildData>(guildGridView);
+			sorter.EnableSorting();
 
 			DataStore = new ObservableCollection<GuildData>();
 
