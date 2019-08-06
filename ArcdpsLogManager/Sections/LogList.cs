@@ -33,8 +33,8 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			set
 			{
 				dataStore = value;
-				sorter.DataStore = dataStore;
 				logGridView.DataStore = dataStore;
+				sorter.UpdateDataStore();
 			}
 		}
 
@@ -195,8 +195,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 				multipleLogPanel.LogData = gridView.SelectedItems;
 			};
 
-			sorter = new GridViewSorter<LogData>(gridView, DataStore);
-			sorter.EnableSorting(new Dictionary<GridColumn, Comparison<LogData>>()
+			sorter = new GridViewSorter<LogData>(gridView, new Dictionary<GridColumn, Comparison<LogData>>
 			{
 				{
 					compositionColumn, (x, y) =>
@@ -213,6 +212,9 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 					dateColumn, (x, y) => x.EncounterStartTime.CompareTo(y.EncounterStartTime)
 				}
 			});
+
+			sorter.EnableSorting();
+			sorter.SortByDescending(dateColumn);
 
 			return gridView;
 		}
