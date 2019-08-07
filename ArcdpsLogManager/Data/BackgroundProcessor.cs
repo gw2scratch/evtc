@@ -64,7 +64,7 @@ namespace GW2Scratch.ArcdpsLogManager.Data
 					{
 						await Process(item, cancellationToken);
 						Interlocked.Increment(ref processedItemCount);
-						OnProcessed();
+						Processed?.Invoke(this, BuildEventArgs());
 					}
 					else
 					{
@@ -131,7 +131,7 @@ namespace GW2Scratch.ArcdpsLogManager.Data
 			if (scheduled)
 			{
 				Interlocked.Increment(ref totalScheduledCount);
-				OnScheduled();
+				Scheduled?.Invoke(this, BuildEventArgs());
 			}
 
 			if (startProcess && !BackgroundTaskRunning)
@@ -185,7 +185,7 @@ namespace GW2Scratch.ArcdpsLogManager.Data
 
 			if (unscheduledItems.Length > 0)
 			{
-				OnUnscheduled();
+				Unscheduled?.Invoke(this, BuildEventArgs());
 			}
 		}
 
@@ -200,17 +200,17 @@ namespace GW2Scratch.ArcdpsLogManager.Data
 		/// <summary>
 		/// Invoked when an item has been processed.
 		/// </summary>
-		public event EventHandler<EventArgs> Processed;
+		public event EventHandler<BackgroundProcessorEventArgs> Processed;
 
 		/// <summary>
 		/// Invoked when a new item has been scheduled.
 		/// </summary>
-		public event EventHandler<EventArgs> Scheduled;
+		public event EventHandler<BackgroundProcessorEventArgs> Scheduled;
 
 		/// <summary>
 		/// Invoked when an item has been unscheduled.
 		/// </summary>
-		public event EventHandler<EventArgs> Unscheduled;
+		public event EventHandler<BackgroundProcessorEventArgs> Unscheduled;
 
 		/// <summary>
 		/// Invoked when the background thread is starting.
@@ -222,19 +222,12 @@ namespace GW2Scratch.ArcdpsLogManager.Data
 		/// </summary>
 		public event EventHandler<EventArgs> Stopping;
 
-		private void OnProcessed()
+		/// <summary>
+		/// Creates event args, locks.
+		/// </summary>
+		private BackgroundProcessorEventArgs BuildEventArgs()
 		{
-			Processed?.Invoke(this, EventArgs.Empty);
-		}
-
-		private void OnScheduled()
-		{
-			Scheduled?.Invoke(this, EventArgs.Empty);
-		}
-
-		private void OnUnscheduled()
-		{
-			Unscheduled?.Invoke(this, EventArgs.Empty);
+			return new BackgroundProcessorEventArgs(GetScheduledItemCount(), ProcessedItemCount, TotalScheduledCount);
 		}
 
 		private void OnStarting()

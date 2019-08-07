@@ -30,17 +30,17 @@ namespace GW2Scratch.ArcdpsLogManager.Data
 		/// <summary>
 		/// Invoked when an item has been processed.
 		/// </summary>
-		event EventHandler<EventArgs> Processed;
+		event EventHandler<BackgroundProcessorEventArgs> Processed;
 
 		/// <summary>
 		/// Invoked when a new item has been scheduled.
 		/// </summary>
-		event EventHandler<EventArgs> Scheduled;
+		event EventHandler<BackgroundProcessorEventArgs> Scheduled;
 
 		/// <summary>
 		/// Invoked when an item has been unscheduled.
 		/// </summary>
-		event EventHandler<EventArgs> Unscheduled;
+		event EventHandler<BackgroundProcessorEventArgs> Unscheduled;
 
 		/// <summary>
 		/// Invoked when the background thread is starting.
