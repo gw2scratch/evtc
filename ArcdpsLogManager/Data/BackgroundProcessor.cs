@@ -190,6 +190,24 @@ namespace GW2Scratch.ArcdpsLogManager.Data
 		}
 
 		/// <summary>
+		/// Unschedule all scheduled items. Does not affect the currently processed item.
+		/// </summary>
+		/// <param name="processUnscheduled">An optional action to execute on each unscheduled item.</param>
+		public void UnscheduleAll(Action<T> processUnscheduled = null)
+		{
+			Unschedule(_ => true, processUnscheduled);
+		}
+
+		/// <summary>
+		/// Resets <see cref="TotalScheduledCount"/> and <see cref="ProcessedItemCount"/> to 0.
+		/// </summary>
+		public void ResetTotalCounters()
+		{
+			Interlocked.Exchange(ref totalScheduledCount, 0);
+			Interlocked.Exchange(ref processedItemCount, 0);
+		}
+
+		/// <summary>
 		/// Process an item after being dequeued.
 		/// </summary>
 		/// <param name="item">An item to process.</param>

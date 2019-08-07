@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using GW2Scratch.ArcdpsLogManager.GW2Api.V2;
+using GW2Scratch.ArcdpsLogManager.Logs;
 using Newtonsoft.Json;
 
 namespace GW2Scratch.ArcdpsLogManager.Data
@@ -178,6 +179,20 @@ namespace GW2Scratch.ArcdpsLogManager.Data
 			if (!guildDataCache.ContainsKey(guid))
 			{
 				pendingGuildGuids.Enqueue(guid);
+			}
+		}
+
+		/// <summary>
+		/// Register a log, potentially scheduling all possible data for retrieval from the API.
+		/// </summary>
+		public void RegisterLog(LogData log)
+		{
+			foreach (var player in log.Players)
+			{
+				if (player.GuildGuid != null)
+				{
+					RegisterGuild(player.GuildGuid);
+				}
 			}
 		}
 

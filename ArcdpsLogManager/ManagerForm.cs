@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -41,6 +40,7 @@ namespace GW2Scratch.ArcdpsLogManager
 
 		private ApiData ApiData { get; } = new ApiData(new GuildEndpoint());
 		private UploadProcessor UploadProcessor { get; set; }
+		private LogDataProcessor LogDataProcessor { get; set; }
 
 		private ObservableCollection<LogData> logs = new ObservableCollection<LogData>();
 		private FilterCollection<LogData> logsFiltered;
@@ -90,6 +90,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			LogCache = logCache ?? throw new ArgumentNullException(nameof(logCache));
 
 			UploadProcessor = new UploadProcessor(new DpsReportUploader(), LogCache);
+			LogDataProcessor = new LogDataProcessor(LogCache, ApiData, LogAnalytics);
 
 			Icon = Resources.GetProgramIcon();
 			Title = "arcdps Log Manager";
@@ -119,6 +120,16 @@ namespace GW2Scratch.ArcdpsLogManager
 				{
 					Title = "Uploads - arcdps Log Manager",
 					Content = new BackgroundProcessorDetail {BackgroundProcessor = UploadProcessor}
+				}.Show();
+			};
+
+			var logProcessingMenuItem = new ButtonMenuItem {Text = "&Parsing service"};
+			logProcessingMenuItem.Click += (sender, args) =>
+			{
+				new Form
+				{
+					Title = "Log parsing - arcdps Log Manager",
+					Content = new BackgroundProcessorDetail {BackgroundProcessor = LogDataProcessor}
 				}.Show();
 			};
 
@@ -160,6 +171,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			dataMenuItem.Items.Add(apiDataMenuItem);
 			dataMenuItem.Items.Add(new SeparatorMenuItem());
 			dataMenuItem.Items.Add(uploadServiceMenuItem);
+			dataMenuItem.Items.Add(logProcessingMenuItem);
 
 			var settingsMenuItem = new ButtonMenuItem {Text = "&Settings"};
 			settingsMenuItem.Items.Add(settingsFormMenuItem);
@@ -312,6 +324,20 @@ namespace GW2Scratch.ArcdpsLogManager
 			}
 			formLayout.EndVertical();
 
+			LogDataProcessor.Processed += (sender, args) =>
+			{
+				bool last = args.CurrentScheduledItems == 0;
+
+				if (last || gridRefreshCooldown.TryUse(DateTime.Now))
+				{
+					Application.Instance.AsyncInvoke(() =>
+					{
+						mainLogList.ReloadData();
+						UpdateFilterDropdown();
+					});
+				}
+			};
+
 			RecreateLogCollections(new ObservableCollection<LogData>(logs), mainLogList);
 
 			Shown += (sender, args) => InitializeManager();
@@ -357,20 +383,12 @@ namespace GW2Scratch.ArcdpsLogManager
 		}
 
 
-		private async Task LoadLogs(LogList logList, CancellationToken cancellationToken)
+		private void LoadLogs(LogList logList, CancellationToken cancellationToken)
 		{
 			Application.Instance.Invoke(() => { Status = "Finding logs..."; });
 			cancellationToken.ThrowIfCancellationRequested();
 
 			FindLogs(logList, cancellationToken);
-
-			cancellationToken.ThrowIfCancellationRequested();
-
-			Application.Instance.Invoke(() => { Status = "Parsing logs..."; });
-
-			cancellationToken.ThrowIfCancellationRequested();
-
-			ParseLogs(logList, cancellationToken);
 
 			Application.Instance.Invoke(() => { Status = "Saving cache..."; });
 			cancellationToken.ThrowIfCancellationRequested();
@@ -383,17 +401,19 @@ namespace GW2Scratch.ArcdpsLogManager
 			Application.Instance.AsyncInvoke(() => { Status = $"{logs.Count} logs found."; });
 		}
 
+		/// <summary>
+		/// Find logs
+		/// </summary>
+		/// <param name="logList">Logs</param>
+		/// <param name="cancellationToken">A cancellation token.</param>
 		private void FindLogs(LogList logList, CancellationToken cancellationToken)
 		{
+			LogDataProcessor.UnscheduleAll();
+			// TODO: Fix the counters being off if a log is currently being processed
+			LogDataProcessor.ResetTotalCounters();
+
 			try
 			{
-				// Because GridView updates are costly, adding thousands of logs creates significant performance issues.
-				// For this reason we add to a new copy of the ObservableCollection and update the GridView once in
-				// a few seconds. This is not the cleanest solution, but works for now. None of the invokes can be async
-				// or things will break.
-				var refreshCooldown = new Cooldown(TimeSpan.FromSeconds(3));
-				refreshCooldown.Reset(DateTime.Now);
-
 				var newLogs = new ObservableCollection<LogData>(logs);
 
 				//foreach (var log in LogFinder.GetTesting())
@@ -403,20 +423,16 @@ namespace GW2Scratch.ArcdpsLogManager
 
 					if (log.ParsingStatus == ParsingStatus.Parsed)
 					{
-						RegisterLogForApi(log);
+						ApiData.RegisterLog(log);
 					}
-
-					if (refreshCooldown.TryUse(DateTime.Now))
+					else
 					{
-						Application.Instance.Invoke(() => { RecreateLogCollections(newLogs, logList); });
-						// newLogs becomes logs, we recreate it now to avoid updating the GridView
-						newLogs = new ObservableCollection<LogData>(logs);
+						LogDataProcessor.Schedule(log);
 					}
 
 					cancellationToken.ThrowIfCancellationRequested();
 				}
 
-				// Add the remaining logs
 				Application.Instance.Invoke(() => { RecreateLogCollections(newLogs, logList); });
 			}
 			catch (Exception e) when (!(e is OperationCanceledException))
@@ -428,72 +444,6 @@ namespace GW2Scratch.ArcdpsLogManager
 				});
 			}
 		}
-
-		private void ParseLogs(LogList logList, CancellationToken cancellationToken, bool reparse = false)
-		{
-			IEnumerable<LogData> filteredLogs = logs;
-
-			if (!reparse)
-			{
-				// Skip already parsed logs
-				filteredLogs = filteredLogs.Where(x => x.ParsingStatus != ParsingStatus.Parsed);
-			}
-
-			var logsToParse = filteredLogs.ToArray();
-
-			for (var i = 0; i < logsToParse.Length; i++)
-			{
-				if (cancellationToken.IsCancellationRequested)
-				{
-					break;
-				}
-
-				var log = logsToParse[i];
-
-				bool failedBefore = log.ParsingStatus == ParsingStatus.Failed;
-
-				log.ParseData(LogAnalytics);
-				LogCache?.CacheLogData(log);
-
-				if (log.ParsingStatus == ParsingStatus.Parsed)
-				{
-					RegisterLogForApi(log);
-				}
-
-				int logNumber = i + 1;
-				Application.Instance.AsyncInvoke(() =>
-				{
-					Status = $"Parsing logs ({logNumber}/{logsToParse.Length})...";
-				});
-
-				// There is no point in reloading data if it was failed before and failed again
-				// because no data visible in the view has changed
-				if (!(failedBefore && log.ParsingStatus == ParsingStatus.Failed))
-				{
-					Application.Instance.AsyncInvoke(() =>
-					{
-						if (gridRefreshCooldown.TryUse(DateTime.Now))
-						{
-							var index = logsFiltered.IndexOf(log);
-							logList.ReloadData(index);
-							UpdateFilterDropdown();
-						}
-					});
-				}
-			}
-
-			Application.Instance.AsyncInvoke(() =>
-			{
-				logList.ReloadData();
-				UpdateFilterDropdown();
-				FilteredLogsUpdated();
-			});
-
-			// We have already broken out of the loop because of it,
-			// now we are just setting the task state to cancelled.
-			cancellationToken.ThrowIfCancellationRequested();
-		}
-
 
 		private bool FilterLog(LogData log)
 		{
@@ -605,17 +555,6 @@ namespace GW2Scratch.ArcdpsLogManager
 				.OrderByDescending(x => x.Logs.Count));
 
 			guildList.Refresh();
-		}
-
-		private void RegisterLogForApi(LogData log)
-		{
-			foreach (var player in log.Players)
-			{
-				if (player.GuildGuid != null)
-				{
-					ApiData.RegisterGuild(player.GuildGuid);
-				}
-			}
 		}
 
 		[NotifyPropertyChangedInvocator]
