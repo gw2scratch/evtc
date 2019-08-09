@@ -186,7 +186,9 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 					.Distinct()
 					.OrderBy(x => x)
 					.ToArray()
-				);
+				).ToArray();
+
+			encounterFilterDropDown.DataStore = encounterNames;
 
 			if (encounterNames.Contains(previousKey))
 			{
