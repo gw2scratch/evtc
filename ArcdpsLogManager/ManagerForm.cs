@@ -13,7 +13,6 @@ using GW2Scratch.ArcdpsLogManager.Commands;
 using GW2Scratch.ArcdpsLogManager.Controls;
 using GW2Scratch.ArcdpsLogManager.Data;
 using GW2Scratch.ArcdpsLogManager.Dialogs;
-using GW2Scratch.ArcdpsLogManager.GW2Api.V2;
 using GW2Scratch.ArcdpsLogManager.Logs;
 using GW2Scratch.ArcdpsLogManager.Properties;
 using GW2Scratch.ArcdpsLogManager.Sections;
@@ -23,6 +22,7 @@ using GW2Scratch.ArcdpsLogManager.Timing;
 using GW2Scratch.ArcdpsLogManager.Uploaders;
 using GW2Scratch.EVTCAnalytics;
 using GW2Scratch.EVTCAnalytics.Statistics.Encounters.Results;
+using Gw2Sharp;
 
 namespace GW2Scratch.ArcdpsLogManager
 {
@@ -38,7 +38,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		private LogAnalytics LogAnalytics { get; } =
 			new LogAnalytics(new EVTCParser(), new LogProcessor(), new LogAnalyser());
 
-		private ApiData ApiData { get; } = new ApiData(new GuildEndpoint());
+		private ApiData ApiData { get; } = new ApiData(new Gw2Client());
 		private UploadProcessor UploadProcessor { get; set; }
 		private LogDataProcessor LogDataProcessor { get; set; }
 
@@ -104,6 +104,8 @@ namespace GW2Scratch.ArcdpsLogManager
 				{
 					LogCache?.SaveToFile();
 				}
+
+				ApiData?.SaveDataToFile();
 			};
 
 			var logCacheMenuItem = new ButtonMenuItem {Text = "Log &cache"};
@@ -130,6 +132,16 @@ namespace GW2Scratch.ArcdpsLogManager
 				{
 					Title = "Log parsing - arcdps Log Manager",
 					Content = new BackgroundProcessorDetail {BackgroundProcessor = LogDataProcessor}
+				}.Show();
+			};
+
+			var apiServiceMenuItem = new ButtonMenuItem {Text = "API service"};
+			apiServiceMenuItem.Click += (sender, args) =>
+			{
+				new Form
+				{
+					Title = "GW2 API usage - arcdps Log Manager",
+					Content = new BackgroundProcessorDetail {BackgroundProcessor = ApiData}
 				}.Show();
 			};
 
@@ -172,6 +184,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			dataMenuItem.Items.Add(new SeparatorMenuItem());
 			dataMenuItem.Items.Add(uploadServiceMenuItem);
 			dataMenuItem.Items.Add(logProcessingMenuItem);
+			dataMenuItem.Items.Add(apiServiceMenuItem);
 
 			var settingsMenuItem = new ButtonMenuItem {Text = "&Settings"};
 			settingsMenuItem.Items.Add(settingsFormMenuItem);
@@ -338,6 +351,16 @@ namespace GW2Scratch.ArcdpsLogManager
 				}
 			};
 
+			ApiData.Processed += (sender, args) =>
+			{
+				bool last = args.CurrentScheduledItems == 0;
+
+				if (last)
+				{
+					ApiData.SaveDataToFile();
+				}
+			};
+
 			RecreateLogCollections(new ObservableCollection<LogData>(logs), mainLogList);
 
 			Shown += (sender, args) => InitializeManager();
@@ -365,18 +388,18 @@ namespace GW2Scratch.ArcdpsLogManager
 			{
 				if (Settings.UseGW2Api)
 				{
-					ApiData.StartApiWorker();
+					ApiData.StartBackgroundTask();
 				}
 
 				Settings.UseGW2ApiChanged += (sender, args) =>
 				{
 					if (Settings.UseGW2Api)
 					{
-						ApiData.StartApiWorker();
+						ApiData.StartBackgroundTask();
 					}
 					else
 					{
-						ApiData.StopApiWorker();
+						ApiData.StopBackgroundTask();
 					}
 				};
 			});

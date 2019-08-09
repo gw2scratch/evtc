@@ -10,6 +10,7 @@ namespace GW2Scratch.ArcdpsLogManager.Data
 	{
 		private readonly HashSet<T> queueSet = new HashSet<T>();
 		private readonly Queue<T> processingQueue = new Queue<T>();
+		private readonly HashSet<T> currentlyProcessing = new HashSet<T>();
 		private Task backgroundTask = Task.CompletedTask;
 		private CancellationTokenSource taskCancellation;
 
@@ -56,13 +57,25 @@ namespace GW2Scratch.ArcdpsLogManager.Data
 						{
 							item = processingQueue.Dequeue();
 							queueSet.Remove(item);
+							currentlyProcessing.Add(item);
 							dequeued = true;
 						}
 					}
 
 					if (dequeued)
 					{
-						await Process(item, cancellationToken);
+						try
+						{
+							await Process(item, cancellationToken);
+						}
+						finally
+						{
+							lock (queueLock)
+							{
+								currentlyProcessing.Remove(item);
+							}
+						}
+
 						Interlocked.Increment(ref processedItemCount);
 						Processed?.Invoke(this, BuildEventArgs());
 					}
@@ -74,6 +87,44 @@ namespace GW2Scratch.ArcdpsLogManager.Data
 			}
 
 			cancellationToken.ThrowIfCancellationRequested();
+		}
+
+		/// <summary>
+		/// Checks whether an item is currently scheduled for processing.
+		/// </summary>
+		/// <returns>A value indicating whether the <paramref name="item"/> is scheduled.</returns>
+		public bool IsScheduled(T item)
+		{
+			lock (queueLock)
+			{
+				return queueSet.Contains(item);
+			}
+		}
+
+		/// <summary>
+		/// Checks whether an item is currently being processed.
+		/// </summary>
+		/// <returns>A value indicating whether the <paramref name="item"/> is currently being processed.</returns>
+		public bool IsBeingProcessed(T item)
+		{
+			lock (queueLock)
+			{
+				return currentlyProcessing.Contains(item);
+			}
+		}
+
+		/// <summary>
+		/// Checks whether an item is currently scheduled or being processed.
+		/// </summary>
+		/// <remarks>This check is performed atomically unlike chaining <see cref="IsScheduled"/>
+		/// and <see cref="IsBeingProcessed"/> would be.</remarks>
+		/// <returns>A value indicating whether the <paramref name="item"/> is scheduled or being processed.</returns>
+		public bool IsScheduledOrBeingProcessed(T item)
+		{
+			lock (queueLock)
+			{
+				return queueSet.Contains(item) || currentlyProcessing.Contains(item);
+			}
 		}
 
 		/// <summary>

@@ -75,9 +75,9 @@ namespace GW2Scratch.ArcdpsLogManager.Dialogs
 				}
 			};
 
-			apiData.GuildAdded += OnGuildAdded;
+			apiData.Processed += OnGuildAdded;
 
-			Closed += (sender, args) => apiData.GuildAdded -= OnGuildAdded;
+			Closed += (sender, args) => apiData.Processed -= OnGuildAdded;
 		}
 
 		private void UpdateLabelTexts(ApiData apiData, Label countLabel, Label cacheSizeLabel)

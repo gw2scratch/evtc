@@ -2,36 +2,39 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Net;
 using System.Threading;
-using GW2Scratch.ArcdpsLogManager.GW2Api.V2;
+using System.Threading.Tasks;
+using GW2Scratch.ArcdpsLogManager.Data.Api;
 using GW2Scratch.ArcdpsLogManager.Logs;
+using Gw2Sharp;
+using Gw2Sharp.WebApi.Http;
+using Gw2Sharp.WebApi.V2.Models;
 using Newtonsoft.Json;
+using Emblem = GW2Scratch.ArcdpsLogManager.Data.Api.Emblem;
+using File = System.IO.File;
 
 namespace GW2Scratch.ArcdpsLogManager.Data
 {
-	public class ApiData
+	public class ApiData : BackgroundProcessor<string>
 	{
+		private static readonly TimeSpan TooManyRequestsDelay = TimeSpan.FromMinutes(1);
+		private const string NoGuildGuid = "00000000-0000-0000-0000-000000000000";
+
 		public static readonly ApiGuild NoGuild = new ApiGuild {Tag = "", Name = "No guild"};
 
-		private readonly GuildEndpoint guildEndpoint;
+		private readonly Gw2Client apiClient;
 
 		private readonly ConcurrentDictionary<string, ApiGuild> guildDataCache =
 			new ConcurrentDictionary<string, ApiGuild>();
 
-		private readonly ConcurrentQueue<string> pendingGuildGuids = new ConcurrentQueue<string>();
-
-		private Timer workerTimer;
-
-		public event EventHandler GuildAdded;
-
-		public int TotalRequestCount { get; private set; } = 0;
 		public int CachedGuildCount => guildDataCache.Count;
 
-		private bool changedSinceLastSave = false;
 
-		public ApiData(GuildEndpoint guildEndpoint)
+		public ApiData(Gw2Client apiClient)
 		{
-			this.guildEndpoint = guildEndpoint;
+			this.apiClient = apiClient;
 		}
 
 		public void LoadDataFromFile()
@@ -56,8 +59,6 @@ namespace GW2Scratch.ArcdpsLogManager.Data
 
 		public void SaveDataToFile()
 		{
-			changedSinceLastSave = false;
-
 			string directory = GetCacheDirectory();
 			string filename = GetCacheFilename();
 			string tmpFilename = filename + ".tmp";
@@ -86,62 +87,6 @@ namespace GW2Scratch.ArcdpsLogManager.Data
 			return new FileInfo(GetCacheFilename());
 		}
 
-		/// <summary>
-		/// Starts the worker that fetches requested API data periodically.
-		/// </summary>
-		public void StartApiWorker()
-		{
-			if (workerTimer == null)
-			{
-				workerTimer = new Timer(_ => FetchApiData(), null, TimeSpan.Zero, TimeSpan.FromSeconds(65));
-			}
-		}
-
-		/// <summary>
-		/// Stops the worker that fetches requested API data periodically.
-		/// </summary>
-		public void StopApiWorker()
-		{
-			workerTimer?.Dispose();
-			workerTimer = null;
-		}
-
-		private void FetchApiData()
-		{
-			int requests = 0;
-			while (requests < 500)
-			{
-				if (!pendingGuildGuids.TryDequeue(out string guid))
-				{
-					break;
-				}
-
-				if (guildDataCache.ContainsKey(guid))
-				{
-					continue;
-				}
-
-				try
-				{
-					changedSinceLastSave = true;
-					TotalRequestCount++;
-					var guild = guildEndpoint.GetGuild(guid);
-					guildDataCache[guid] = guild;
-					OnGuildAdded();
-					requests++;
-				}
-				catch
-				{
-					break;
-				}
-			}
-
-			if (changedSinceLastSave)
-			{
-				SaveDataToFile();
-			}
-		}
-
 		private ApiGuild GetApiGuild(string guid)
 		{
 			if (guid == null)
@@ -149,7 +94,7 @@ namespace GW2Scratch.ArcdpsLogManager.Data
 				throw new ArgumentNullException(nameof(guid));
 			}
 
-			if (guid == "00000000-0000-0000-0000-000000000000")
+			if (guid == NoGuildGuid)
 			{
 				return NoGuild;
 			}
@@ -162,12 +107,61 @@ namespace GW2Scratch.ArcdpsLogManager.Data
 			return null;
 		}
 
+		protected override async Task Process(string item, CancellationToken cancellationToken)
+		{
+			Guild guild = null;
+			bool retry;
+			do
+			{
+				try
+				{
+					guild = await apiClient.WebApi.V2.Guild[item].GetAsync(cancellationToken);
+					retry = false;
+				}
+				catch (UnexpectedStatusException e) when (e.Response.StatusCode == (HttpStatusCode) 429)
+				{
+					await Task.Delay(TooManyRequestsDelay, cancellationToken);
+					retry = true;
+				}
+				catch (NotFoundException)
+				{
+					guild = null;
+					retry = false;
+				}
+			} while (retry);
+
+			if (guild != null)
+			{
+				var apiGuild = new ApiGuild
+				{
+					Id = item,
+					Name = guild.Name,
+					Tag = guild.Tag,
+					Emblem = new Emblem
+					{
+						Background = new EmblemPart
+						{
+							Id = guild.Emblem.Background.Id,
+							Colors = guild.Emblem.Background.Colors.ToList()
+						},
+						Foreground = new EmblemPart
+						{
+							Id = guild.Emblem.Foreground.Id,
+							Colors = guild.Emblem.Foreground.Colors.ToList()
+						},
+						Flags = guild.Emblem.Flags.List.Select(x => x.RawValue).ToList()
+					}
+				};
+
+				guildDataCache[item] = apiGuild;
+			}
+		}
+
 		// Forgets all cached data.
 		public void Clear()
 		{
-			changedSinceLastSave = true;
 			guildDataCache.Clear();
-            SaveDataToFile();
+			SaveDataToFile();
 		}
 
 		/// <summary>
@@ -176,9 +170,14 @@ namespace GW2Scratch.ArcdpsLogManager.Data
 		/// <param name="guid">A guild GUID</param>
 		public void RegisterGuild(string guid)
 		{
-			if (!guildDataCache.ContainsKey(guid))
+			if (guid == NoGuildGuid)
 			{
-				pendingGuildGuids.Enqueue(guid);
+				return;
+			}
+
+			if (!guildDataCache.ContainsKey(guid) && !IsScheduledOrBeingProcessed(guid))
+			{
+				Schedule(guid, false);
 			}
 		}
 
@@ -216,11 +215,6 @@ namespace GW2Scratch.ArcdpsLogManager.Data
 		public string GetGuildTag(string guid, string unavailableDefault = "???")
 		{
 			return GetApiGuild(guid)?.Tag ?? unavailableDefault;
-		}
-
-		private void OnGuildAdded()
-		{
-			GuildAdded?.Invoke(this, EventArgs.Empty);
 		}
 
 		private static string GetCacheDirectory()
