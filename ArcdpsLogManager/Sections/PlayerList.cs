@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Eto.Drawing;
@@ -6,6 +7,7 @@ using Eto.Forms;
 using GW2Scratch.ArcdpsLogManager.Analytics;
 using GW2Scratch.ArcdpsLogManager.Controls;
 using GW2Scratch.ArcdpsLogManager.Data;
+using GW2Scratch.ArcdpsLogManager.Logs;
 using GW2Scratch.ArcdpsLogManager.Sections.Players;
 
 namespace GW2Scratch.ArcdpsLogManager.Sections
@@ -95,7 +97,31 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			EndVertical();
 		}
 
-		public void Refresh()
+		public void UpdateDataFromLogs(IEnumerable<LogData> logs)
+		{
+			var logsByAccountName = new Dictionary<string, List<LogData>>();
+			foreach (var log in logs)
+			{
+				if (log.ParsingStatus != ParsingStatus.Parsed) continue;
+
+				foreach (var player in log.Players)
+				{
+					if (!logsByAccountName.ContainsKey(player.AccountName))
+					{
+						logsByAccountName[player.AccountName] = new List<LogData>();
+					}
+
+					logsByAccountName[player.AccountName].Add(log);
+				}
+			}
+
+			DataStore = new ObservableCollection<PlayerData>(logsByAccountName
+				.Select(x => new PlayerData(x.Key, x.Value)).OrderByDescending(x => x.Logs.Count));
+
+			Refresh();
+		}
+
+		private void Refresh()
 		{
 			filtered.Refresh();
 			UpdateCountLabels();

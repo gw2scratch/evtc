@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Eto.Drawing;
@@ -6,6 +7,7 @@ using Eto.Forms;
 using GW2Scratch.ArcdpsLogManager.Analytics;
 using GW2Scratch.ArcdpsLogManager.Controls;
 using GW2Scratch.ArcdpsLogManager.Data;
+using GW2Scratch.ArcdpsLogManager.Logs;
 using GW2Scratch.ArcdpsLogManager.Sections.Guilds;
 
 namespace GW2Scratch.ArcdpsLogManager.Sections
@@ -93,7 +95,37 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			EndVertical();
 		}
 
-		public void Refresh()
+		public void UpdateDataFromLogs(IEnumerable<LogData> logs)
+		{
+			var dataByGuild = new Dictionary<string, (List<LogData> Logs, List<LogPlayer> Players)>();
+			foreach (var log in logs)
+			{
+				if (log.ParsingStatus != ParsingStatus.Parsed) continue;
+
+				foreach (var player in log.Players)
+				{
+					if (player.GuildGuid == null) continue;
+
+					if (!dataByGuild.ContainsKey(player.GuildGuid))
+					{
+						dataByGuild[player.GuildGuid] = (new List<LogData>(), new List<LogPlayer>());
+					}
+
+					var (guildLogs, guildPlayers) = dataByGuild[player.GuildGuid];
+
+					guildLogs.Add(log);
+					guildPlayers.Add(player);
+				}
+			}
+
+			DataStore = new ObservableCollection<GuildData>(dataByGuild
+				.Select(x => new GuildData(x.Key, x.Value.Logs.Distinct(), x.Value.Players))
+				.OrderByDescending(x => x.Logs.Count));
+
+			Refresh();
+		}
+
+		private void Refresh()
 		{
 			filtered.Refresh();
 			UpdateCountLabels();

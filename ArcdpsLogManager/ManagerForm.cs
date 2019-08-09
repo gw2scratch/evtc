@@ -16,20 +16,15 @@ using GW2Scratch.ArcdpsLogManager.Dialogs;
 using GW2Scratch.ArcdpsLogManager.Logs;
 using GW2Scratch.ArcdpsLogManager.Properties;
 using GW2Scratch.ArcdpsLogManager.Sections;
-using GW2Scratch.ArcdpsLogManager.Sections.Guilds;
-using GW2Scratch.ArcdpsLogManager.Sections.Players;
 using GW2Scratch.ArcdpsLogManager.Timing;
 using GW2Scratch.ArcdpsLogManager.Uploaders;
 using GW2Scratch.EVTCAnalytics;
-using GW2Scratch.EVTCAnalytics.Statistics.Encounters.Results;
 using Gw2Sharp;
 
 namespace GW2Scratch.ArcdpsLogManager
 {
 	public sealed class ManagerForm : Form, INotifyPropertyChanged
 	{
-		private static readonly DateTime GuildWars2ReleaseDate = new DateTime(2012, 8, 28);
-
 		private readonly Cooldown gridRefreshCooldown = new Cooldown(TimeSpan.FromSeconds(2));
 
 		private ImageProvider ImageProvider { get; } = new ImageProvider();
@@ -44,26 +39,6 @@ namespace GW2Scratch.ArcdpsLogManager
 
 		private ObservableCollection<LogData> logs = new ObservableCollection<LogData>();
 		private FilterCollection<LogData> logsFiltered;
-
-		private readonly DropDown encounterFilterDropDown;
-		private readonly LogList mainLogList;
-		private readonly PlayerList playerList;
-		private readonly GuildList guildList;
-
-		private const string EncounterFilterAll = "All";
-		private string EncounterFilter { get; set; } = EncounterFilterAll;
-
-		private bool ShowSuccessfulLogs { get; set; } = true;
-		private bool ShowFailedLogs { get; set; } = true;
-		private bool ShowUnknownLogs { get; set; } = true;
-
-		internal bool ShowParseUnparsedLogs { get; set; } = true;
-		internal bool ShowParseParsingLogs { get; set; } = true;
-		internal bool ShowParseParsedLogs { get; set; } = true;
-		internal bool ShowParseFailedLogs { get; set; } = true;
-
-		private DateTime? MinDateTimeFilter { get; set; } = GuildWars2ReleaseDate;
-		private DateTime? MaxDateTimeFilter { get; set; } = DateTime.Now.Date.AddDays(1);
 
 		private CancellationTokenSource logLoadTaskTokenSource = null;
 
@@ -98,6 +73,32 @@ namespace GW2Scratch.ArcdpsLogManager
 			var formLayout = new DynamicLayout();
 			Content = formLayout;
 
+			Menu = ConstructMenuBar();
+
+			formLayout.BeginVertical(new Padding(5), yscale: true);
+			{
+				formLayout.Add(ConstructLogFilters());
+				formLayout.Add(ConstructMainTabControl(), true);
+			}
+			formLayout.EndVertical();
+
+			formLayout.BeginVertical(new Padding(5), yscale: false);
+			{
+				formLayout.Add(ConstructStatusLabel());
+			}
+			formLayout.EndVertical();
+
+			ApiData.Processed += (sender, args) =>
+			{
+				bool last = args.CurrentScheduledItems == 0;
+
+				if (last)
+				{
+					ApiData.SaveDataToFile();
+				}
+			};
+
+			Shown += (sender, args) => InitializeManager();
 			Closing += (sender, args) =>
 			{
 				if (LogCache?.ChangedSinceLastSave ?? false)
@@ -108,6 +109,39 @@ namespace GW2Scratch.ArcdpsLogManager
 				ApiData?.SaveDataToFile();
 			};
 
+			RecreateLogCollections(new ObservableCollection<LogData>(logs));
+		}
+
+		private Label ConstructStatusLabel()
+		{
+			var label = new Label();
+			label.TextBinding.Bind(this, x => x.Status);
+
+			return label;
+		}
+
+		private LogFilterPanel ConstructLogFilters()
+		{
+			var filterPanel = new LogFilterPanel(ImageProvider);
+			filterPanel.FiltersUpdated += (sender, args) => logsFiltered.Refresh();
+			LogCollectionsRecreated += (sender, args) =>
+			{
+				filterPanel.UpdateLogs(logs);
+				logs.CollectionChanged += (s, a) => { filterPanel.UpdateLogs(logs); };
+
+				logsFiltered.Filter = filterPanel.FilterLog;
+				logsFiltered.Refresh();
+			};
+			LogDataProcessor.Processed += (sender, args) =>
+			{
+				Application.Instance.AsyncInvoke(() => filterPanel.UpdateLogs(logs));
+			};
+
+			return filterPanel;
+		}
+
+		private MenuBar ConstructMenuBar()
+		{
 			var logCacheMenuItem = new ButtonMenuItem {Text = "Log &cache"};
 			logCacheMenuItem.Click += (sender, args) => { new CacheDialog(this).ShowModal(this); };
 
@@ -196,146 +230,16 @@ namespace GW2Scratch.ArcdpsLogManager
 			var helpMenuItem = new ButtonMenuItem {Text = "Help"};
 			helpMenuItem.Items.Add(new About());
 
-			Menu = new MenuBar(arcdpsMenuItem, dataMenuItem, settingsMenuItem, helpMenuItem);
+			return new MenuBar(arcdpsMenuItem, dataMenuItem, settingsMenuItem, helpMenuItem);
+		}
 
-			formLayout.BeginVertical(new Padding(5), yscale: true);
-
-			encounterFilterDropDown = new DropDown();
-			UpdateFilterDropdown();
-			encounterFilterDropDown.SelectedKey = EncounterFilterAll;
-			encounterFilterDropDown.SelectedKeyBinding.Bind(this, x => x.EncounterFilter);
-
-			var successCheckBox = new CheckBox {Text = "Success"};
-			successCheckBox.CheckedBinding.Bind(this, x => x.ShowSuccessfulLogs);
-			var failureCheckBox = new CheckBox {Text = "Failure"};
-			failureCheckBox.CheckedBinding.Bind(this, x => x.ShowFailedLogs);
-			var unknownCheckBox = new CheckBox {Text = "Unknown"};
-			unknownCheckBox.CheckedBinding.Bind(this, x => x.ShowUnknownLogs);
-
-			var startDateTimePicker = new DateTimePicker {Mode = DateTimePickerMode.DateTime};
-			startDateTimePicker.ValueBinding.Bind(this, x => x.MinDateTimeFilter);
-			var endDateTimePicker = new DateTimePicker {Mode = DateTimePickerMode.DateTime};
-			endDateTimePicker.ValueBinding.Bind(this, x => x.MaxDateTimeFilter);
-
-			var lastDayButton = new Button {Text = "Last day"};
-			lastDayButton.Click += (sender, args) =>
-			{
-				startDateTimePicker.Value = DateTime.Now - TimeSpan.FromDays(1);
-				endDateTimePicker.Value = DateTime.Now;
-			};
-
-			var allTimeButton = new Button {Text = "All time"};
-			allTimeButton.Click += (sender, args) =>
-			{
-				startDateTimePicker.Value = GuildWars2ReleaseDate;
-				endDateTimePicker.Value = DateTime.Now;
-			};
-
-			var advancedFiltersButton = new Button {Text = "Advanced"};
-			advancedFiltersButton.Click += (sender, args) =>
-			{
-				var form = new Form
-				{
-					Title = "Advanced filters - arcdps Log Manager",
-					Content = new AdvancedFilters(this, ImageProvider)
-				};
-				form.Show();
-			};
-
-			var applyFilterButton = new Button {Text = "Apply"};
-			applyFilterButton.Click += (sender, args) => { logsFiltered.Refresh(); };
-
-			formLayout.BeginGroup("Filters", new Padding(5));
-			formLayout.BeginHorizontal();
-
-			formLayout.BeginVertical();
-			{
-				formLayout.BeginVertical(new Padding(5), new Size(4, 0));
-				{
-					formLayout.BeginHorizontal();
-					{
-						formLayout.Add(new Label {Text = "Encounter", VerticalAlignment = VerticalAlignment.Center});
-						formLayout.Add(encounterFilterDropDown);
-						formLayout.Add(new Label {Text = "Result", VerticalAlignment = VerticalAlignment.Center});
-						formLayout.Add(successCheckBox);
-						formLayout.Add(failureCheckBox);
-						formLayout.Add(unknownCheckBox);
-					}
-					formLayout.EndHorizontal();
-				}
-				formLayout.EndBeginVertical(new Padding(5), new Size(4, 0));
-				{
-					formLayout.BeginHorizontal();
-					{
-						formLayout.Add(
-							new Label {Text = "Encounter time between", VerticalAlignment = VerticalAlignment.Center});
-						formLayout.Add(startDateTimePicker);
-						formLayout.Add(new Label {Text = "and", VerticalAlignment = VerticalAlignment.Center});
-						formLayout.Add(endDateTimePicker);
-						formLayout.Add(lastDayButton);
-						formLayout.Add(allTimeButton);
-					}
-					formLayout.EndHorizontal();
-				}
-				formLayout.EndVertical();
-			}
-			formLayout.EndVertical();
-
-			formLayout.Add(null, true);
-
-			formLayout.BeginVertical(new Padding(5), new Size(0, 5));
-			{
-				formLayout.Add(advancedFiltersButton);
-				formLayout.Add(null, true);
-				formLayout.Add(applyFilterButton);
-			}
-			formLayout.EndVertical();
-
-			formLayout.EndHorizontal();
-			formLayout.EndGroup();
-
+		private TabControl ConstructMainTabControl()
+		{
 			var tabs = new TabControl();
 
-			// Log tab
-			mainLogList = new LogList(LogCache, ApiData, LogAnalytics, UploadProcessor, ImageProvider);
-			tabs.Pages.Add(new TabPage {Text = "Logs", Content = mainLogList});
-
-			// Player tab
-			playerList = new PlayerList(LogCache, ApiData, LogAnalytics, UploadProcessor, ImageProvider);
-			tabs.Pages.Add(new TabPage {Text = "Players", Content = playerList});
-
-			// Guild tab
-			guildList = new GuildList(LogCache, ApiData, LogAnalytics, UploadProcessor, ImageProvider);
-			tabs.Pages.Add(new TabPage {Text = "Guilds", Content = guildList});
-
-			// Statistics tab
-			var statistics = new Statistics(mainLogList, ImageProvider);
-			tabs.Pages.Add(new TabPage {Text = "Statistics", Content = statistics});
-
-			// Game data collecting tab
-			var gameDataCollecting = new GameDataCollecting(mainLogList);
-			var gameDataPage = new TabPage
-			{
-				Text = "Game data", Content = gameDataCollecting, Visible = Settings.ShowDebugData
-			};
-			Settings.ShowDebugDataChanged += (sender, args) => gameDataPage.Visible = Settings.ShowDebugData;
-			tabs.Pages.Add(gameDataPage);
-
-			formLayout.Add(tabs, true);
-
-			// This is needed to avoid a Gtk platform issue where the tab is changed to the game data one.
-			Shown += (sender, args) => tabs.SelectedIndex = 0;
-
-			formLayout.EndVertical();
-
-			var statusLabel = new Label();
-			statusLabel.TextBinding.Bind(this, x => x.Status);
-
-			formLayout.BeginVertical(new Padding(5), yscale: false);
-			{
-				formLayout.Add(statusLabel);
-			}
-			formLayout.EndVertical();
+			// Main log list
+			var logList = new LogList(LogCache, ApiData, LogAnalytics, UploadProcessor, ImageProvider);
+			LogCollectionsRecreated += (sender, args) => logList.DataStore = logsFiltered;
 
 			LogDataProcessor.Processed += (sender, args) =>
 			{
@@ -345,25 +249,36 @@ namespace GW2Scratch.ArcdpsLogManager
 				{
 					Application.Instance.AsyncInvoke(() =>
 					{
-						mainLogList.ReloadData();
-						UpdateFilterDropdown();
+						logList.ReloadData();
 					});
 				}
 			};
-
-			ApiData.Processed += (sender, args) =>
+			// Player list
+			var playerList = new PlayerList(LogCache, ApiData, LogAnalytics, UploadProcessor, ImageProvider);
+			FilteredLogsUpdated += (sender, args) => playerList.UpdateDataFromLogs(logsFiltered);
+			// Guild list
+			var guildList = new GuildList(LogCache, ApiData, LogAnalytics, UploadProcessor, ImageProvider);
+			FilteredLogsUpdated += (sender, args) => guildList.UpdateDataFromLogs(logsFiltered);
+			// Statistics
+			var statistics = new Statistics(logList, ImageProvider);
+			// Game data collecting
+			var gameDataCollecting = new GameDataCollecting(logList);
+			var gameDataPage = new TabPage
 			{
-				bool last = args.CurrentScheduledItems == 0;
-
-				if (last)
-				{
-					ApiData.SaveDataToFile();
-				}
+				Text = "Game data", Content = gameDataCollecting, Visible = Settings.ShowDebugData
 			};
+			Settings.ShowDebugDataChanged += (sender, args) => gameDataPage.Visible = Settings.ShowDebugData;
 
-			RecreateLogCollections(new ObservableCollection<LogData>(logs), mainLogList);
+			tabs.Pages.Add(new TabPage {Text = "Logs", Content = logList});
+			tabs.Pages.Add(new TabPage {Text = "Players", Content = playerList});
+			tabs.Pages.Add(new TabPage {Text = "Guilds", Content = guildList});
+			tabs.Pages.Add(new TabPage {Text = "Statistics", Content = statistics});
+			tabs.Pages.Add(gameDataPage);
 
-			Shown += (sender, args) => InitializeManager();
+			// This is needed to avoid a Gtk platform issue where the tab is changed to the last one.
+			Shown += (sender, args) => tabs.SelectedIndex = 0;
+
+			return tabs;
 		}
 
 		private void InitializeManager()
@@ -379,7 +294,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			logLoadTaskTokenSource = new CancellationTokenSource();
 
 			logs.Clear();
-			Task.Run(() => LoadLogs(mainLogList, logLoadTaskTokenSource.Token));
+			Task.Run(() => LoadLogs(logLoadTaskTokenSource.Token));
 		}
 
 		private void SetupApiWorker()
@@ -405,13 +320,13 @@ namespace GW2Scratch.ArcdpsLogManager
 			});
 		}
 
-
-		private void LoadLogs(LogList logList, CancellationToken cancellationToken)
+		// TODO: Do away with this method
+		private void LoadLogs(CancellationToken cancellationToken)
 		{
 			Application.Instance.Invoke(() => { Status = "Finding logs..."; });
 			cancellationToken.ThrowIfCancellationRequested();
 
-			FindLogs(logList, cancellationToken);
+			FindLogs(cancellationToken);
 
 			Application.Instance.Invoke(() => { Status = "Saving cache..."; });
 			cancellationToken.ThrowIfCancellationRequested();
@@ -425,11 +340,9 @@ namespace GW2Scratch.ArcdpsLogManager
 		}
 
 		/// <summary>
-		/// Find logs
+		/// Discover logs and process them.
 		/// </summary>
-		/// <param name="logList">Logs</param>
-		/// <param name="cancellationToken">A cancellation token.</param>
-		private void FindLogs(LogList logList, CancellationToken cancellationToken)
+		private void FindLogs(CancellationToken cancellationToken)
 		{
 			LogDataProcessor.UnscheduleAll();
 			// TODO: Fix the counters being off if a log is currently being processed
@@ -456,7 +369,7 @@ namespace GW2Scratch.ArcdpsLogManager
 					cancellationToken.ThrowIfCancellationRequested();
 				}
 
-				Application.Instance.Invoke(() => { RecreateLogCollections(newLogs, logList); });
+				Application.Instance.Invoke(() => { RecreateLogCollections(newLogs); });
 			}
 			catch (Exception e) when (!(e is OperationCanceledException))
 			{
@@ -468,117 +381,19 @@ namespace GW2Scratch.ArcdpsLogManager
 			}
 		}
 
-		private bool FilterLog(LogData log)
-		{
-			if (EncounterFilter != EncounterFilterAll)
-			{
-				if (log.ParsingStatus != ParsingStatus.Parsed)
-				{
-					return false;
-				}
-
-				if (log.EncounterName != EncounterFilter)
-				{
-					return false;
-				}
-			}
-
-			if (!ShowFailedLogs && log.EncounterResult == EncounterResult.Failure ||
-			    !ShowUnknownLogs && log.EncounterResult == EncounterResult.Unknown ||
-			    !ShowSuccessfulLogs && log.EncounterResult == EncounterResult.Success)
-			{
-				return false;
-			}
-
-			if (!ShowParseUnparsedLogs && log.ParsingStatus == ParsingStatus.Unparsed ||
-			    !ShowParseParsedLogs && log.ParsingStatus == ParsingStatus.Parsed ||
-			    !ShowParseParsingLogs && log.ParsingStatus == ParsingStatus.Parsing ||
-			    !ShowParseFailedLogs && log.ParsingStatus == ParsingStatus.Failed)
-			{
-				return false;
-			}
-
-			if (log.EncounterStartTime.LocalDateTime < MinDateTimeFilter ||
-			    log.EncounterStartTime.LocalDateTime > MaxDateTimeFilter)
-			{
-				return false;
-			}
-
-			return true;
-		}
-
-		private void UpdateFilterDropdown()
-		{
-			var previousKey = encounterFilterDropDown.SelectedKey;
-
-			encounterFilterDropDown.DataStore = new[] {EncounterFilterAll}.Concat(logs
-				.Where(x => x.ParsingStatus == ParsingStatus.Parsed)
-				.Select(x => x.EncounterName).Distinct().OrderBy(x => x).ToArray());
-
-			encounterFilterDropDown.SelectedKey = previousKey;
-		}
-
-		private void RecreateLogCollections(ObservableCollection<LogData> newLogCollection, LogList logList)
+		/// <summary>
+		/// Recreate log collections, this is significantly faster than updating the old one.
+		/// </summary>
+		private void RecreateLogCollections(ObservableCollection<LogData> newLogCollection)
 		{
 			logs = newLogCollection;
-
-			UpdateFilterDropdown();
-
-			logs.CollectionChanged += (sender, args) => { UpdateFilterDropdown(); };
-
 			logsFiltered = new FilterCollection<LogData>(logs);
-
-			logsFiltered.CollectionChanged += (sender, args) => FilteredLogsUpdated();
-
-			logList.DataStore = logsFiltered;
-
-			logsFiltered.Filter = FilterLog;
-			logsFiltered.Refresh();
+			logsFiltered.CollectionChanged += (sender, args) => FilteredLogsUpdated?.Invoke(this, EventArgs.Empty);
+			LogCollectionsRecreated?.Invoke(this, EventArgs.Empty);
 		}
 
-		private void FilteredLogsUpdated()
-		{
-			var logsByAccountName = new Dictionary<string, List<LogData>>();
-			var dataByGuild = new Dictionary<string, (List<LogData> Logs, List<LogPlayer> Players)>();
-			foreach (var log in logsFiltered)
-			{
-				if (log.ParsingStatus != ParsingStatus.Parsed) continue;
-
-				foreach (var player in log.Players)
-				{
-					if (!logsByAccountName.ContainsKey(player.AccountName))
-					{
-						logsByAccountName[player.AccountName] = new List<LogData>();
-					}
-
-					logsByAccountName[player.AccountName].Add(log);
-
-					if (player.GuildGuid != null)
-					{
-						if (!dataByGuild.ContainsKey(player.GuildGuid))
-						{
-							dataByGuild[player.GuildGuid] = (new List<LogData>(), new List<LogPlayer>());
-						}
-
-						var (guildLogs, guildPlayers) = dataByGuild[player.GuildGuid];
-
-						guildLogs.Add(log);
-						guildPlayers.Add(player);
-					}
-				}
-			}
-
-			playerList.DataStore = new ObservableCollection<PlayerData>(logsByAccountName
-				.Select(x => new PlayerData(x.Key, x.Value)).OrderByDescending(x => x.Logs.Count));
-
-			playerList.Refresh();
-
-			guildList.DataStore = new ObservableCollection<GuildData>(dataByGuild
-				.Select(x => new GuildData(x.Key, x.Value.Logs.Distinct(), x.Value.Players))
-				.OrderByDescending(x => x.Logs.Count));
-
-			guildList.Refresh();
-		}
+		private event EventHandler LogCollectionsRecreated;
+		private event EventHandler FilteredLogsUpdated;
 
 		[NotifyPropertyChangedInvocator]
 		private void OnPropertyChanged([CallerMemberName] string propertyName = null)
