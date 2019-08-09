@@ -148,37 +148,6 @@ namespace GW2Scratch.ArcdpsLogManager
 			var apiDataMenuItem = new ButtonMenuItem {Text = "&API data"};
 			apiDataMenuItem.Click += (sender, args) => { new ApiDialog(ApiData).ShowModal(this); };
 
-			// TODO: Remove, temporary
-			var uploadServiceMenuItem = new ButtonMenuItem {Text = "&Upload service"};
-			uploadServiceMenuItem.Click += (sender, args) =>
-			{
-				new Form
-				{
-					Title = "Uploads - arcdps Log Manager",
-					Content = new BackgroundProcessorDetail {BackgroundProcessor = UploadProcessor}
-				}.Show();
-			};
-
-			var logProcessingMenuItem = new ButtonMenuItem {Text = "&Parsing service"};
-			logProcessingMenuItem.Click += (sender, args) =>
-			{
-				new Form
-				{
-					Title = "Log parsing - arcdps Log Manager",
-					Content = new BackgroundProcessorDetail {BackgroundProcessor = LogDataProcessor}
-				}.Show();
-			};
-
-			var apiServiceMenuItem = new ButtonMenuItem {Text = "API service"};
-			apiServiceMenuItem.Click += (sender, args) =>
-			{
-				new Form
-				{
-					Title = "GW2 API usage - arcdps Log Manager",
-					Content = new BackgroundProcessorDetail {BackgroundProcessor = ApiData}
-				}.Show();
-			};
-
 			var settingsFormMenuItem = new ButtonMenuItem {Text = "&Settings"};
 			settingsFormMenuItem.Click += (sender, args) => { new SettingsForm(this).Show(); };
 
@@ -215,10 +184,6 @@ namespace GW2Scratch.ArcdpsLogManager
 			var dataMenuItem = new ButtonMenuItem {Text = "&Data"};
 			dataMenuItem.Items.Add(logCacheMenuItem);
 			dataMenuItem.Items.Add(apiDataMenuItem);
-			dataMenuItem.Items.Add(new SeparatorMenuItem());
-			dataMenuItem.Items.Add(uploadServiceMenuItem);
-			dataMenuItem.Items.Add(logProcessingMenuItem);
-			dataMenuItem.Items.Add(apiServiceMenuItem);
 
 			var settingsMenuItem = new ButtonMenuItem {Text = "&Settings"};
 			settingsMenuItem.Items.Add(settingsFormMenuItem);
@@ -235,8 +200,6 @@ namespace GW2Scratch.ArcdpsLogManager
 
 		private TabControl ConstructMainTabControl()
 		{
-			var tabs = new TabControl();
-
 			// Main log list
 			var logList = new LogList(LogCache, ApiData, LogAnalytics, UploadProcessor, ImageProvider);
 			LogCollectionsRecreated += (sender, args) => logList.DataStore = logsFiltered;
@@ -247,20 +210,20 @@ namespace GW2Scratch.ArcdpsLogManager
 
 				if (last || gridRefreshCooldown.TryUse(DateTime.Now))
 				{
-					Application.Instance.AsyncInvoke(() =>
-					{
-						logList.ReloadData();
-					});
+					Application.Instance.AsyncInvoke(() => { logList.ReloadData(); });
 				}
 			};
 			// Player list
 			var playerList = new PlayerList(LogCache, ApiData, LogAnalytics, UploadProcessor, ImageProvider);
 			FilteredLogsUpdated += (sender, args) => playerList.UpdateDataFromLogs(logsFiltered);
+
 			// Guild list
 			var guildList = new GuildList(LogCache, ApiData, LogAnalytics, UploadProcessor, ImageProvider);
 			FilteredLogsUpdated += (sender, args) => guildList.UpdateDataFromLogs(logsFiltered);
+
 			// Statistics
 			var statistics = new Statistics(logList, ImageProvider);
+
 			// Game data collecting
 			var gameDataCollecting = new GameDataCollecting(logList);
 			var gameDataPage = new TabPage
@@ -269,11 +232,39 @@ namespace GW2Scratch.ArcdpsLogManager
 			};
 			Settings.ShowDebugDataChanged += (sender, args) => gameDataPage.Visible = Settings.ShowDebugData;
 
+			// Service status
+			var serviceStatus = new DynamicLayout {Spacing = new Size(10, 10), Padding = new Padding(5)};
+			serviceStatus.AddRow(
+				new GroupBox
+				{
+					Text = "Uploads",
+					Content = new BackgroundProcessorDetail {BackgroundProcessor = UploadProcessor}
+				},
+				new GroupBox
+				{
+					Text = "Guild Wars 2 API",
+					Content = new BackgroundProcessorDetail {BackgroundProcessor = ApiData}
+				},
+				new GroupBox
+				{
+					Text = "Log parsing",
+					Content = new BackgroundProcessorDetail {BackgroundProcessor = LogDataProcessor}
+				},
+				null);
+			serviceStatus.AddRow(null);
+			var servicePage = new TabPage
+			{
+				Text = "Services", Content = serviceStatus, Visible = Settings.ShowDebugData
+			};
+			Settings.ShowDebugDataChanged += (sender, args) => servicePage.Visible = Settings.ShowDebugData;
+
+			var tabs = new TabControl();
 			tabs.Pages.Add(new TabPage {Text = "Logs", Content = logList});
 			tabs.Pages.Add(new TabPage {Text = "Players", Content = playerList});
 			tabs.Pages.Add(new TabPage {Text = "Guilds", Content = guildList});
 			tabs.Pages.Add(new TabPage {Text = "Statistics", Content = statistics});
 			tabs.Pages.Add(gameDataPage);
+			tabs.Pages.Add(servicePage);
 
 			// This is needed to avoid a Gtk platform issue where the tab is changed to the last one.
 			Shown += (sender, args) => tabs.SelectedIndex = 0;
