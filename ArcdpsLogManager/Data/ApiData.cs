@@ -118,26 +118,33 @@ namespace GW2Scratch.ArcdpsLogManager.Data
 					guild = await apiClient.WebApi.V2.Guild[item].GetAsync(cancellationToken);
 					retry = false;
 				}
-				catch (UnexpectedStatusException e) when (e.Response.StatusCode == (HttpStatusCode) 429)
+				catch (TooManyRequestsException)
 				{
 					await Task.Delay(TooManyRequestsDelay, cancellationToken);
 					retry = true;
 				}
+				catch (BadRequestException)
+				{
+					// Currently, for some guilds that do not exist the API return a 400 error.
+					retry = false;
+				}
 				catch (NotFoundException)
 				{
-					guild = null;
 					retry = false;
 				}
 			} while (retry);
 
 			if (guild != null)
 			{
-				var apiGuild = new ApiGuild
+				Emblem emblem;
+				if (guild.Emblem.Background.Id == 0 && guild.Emblem.Foreground.Id == 0)
 				{
-					Id = item,
-					Name = guild.Name,
-					Tag = guild.Tag,
-					Emblem = new Emblem
+					// This is a workaround for Gw2Sharp defining the Emblem even if it doesn't exist.
+					emblem = null;
+				}
+				else
+				{
+					emblem = new Emblem
 					{
 						Background = new EmblemPart
 						{
@@ -150,7 +157,15 @@ namespace GW2Scratch.ArcdpsLogManager.Data
 							Colors = guild.Emblem.Foreground.Colors.ToList()
 						},
 						Flags = guild.Emblem.Flags.List.Select(x => x.RawValue).ToList()
-					}
+					};
+				}
+
+				var apiGuild = new ApiGuild
+				{
+					Id = item,
+					Name = guild.Name,
+					Tag = guild.Tag,
+					Emblem = emblem
 				};
 
 				guildDataCache[item] = apiGuild;
