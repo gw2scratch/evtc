@@ -110,6 +110,7 @@ namespace GW2Scratch.ArcdpsLogManager.Data
 		protected override async Task Process(string item, CancellationToken cancellationToken)
 		{
 			Guild guild = null;
+			bool notFound = false;
 			bool retry;
 			do
 			{
@@ -126,10 +127,12 @@ namespace GW2Scratch.ArcdpsLogManager.Data
 				catch (BadRequestException)
 				{
 					// Currently, for some guilds that do not exist the API return a 400 error.
+					notFound = true;
 					retry = false;
 				}
 				catch (NotFoundException)
 				{
+					notFound = true;
 					retry = false;
 				}
 			} while (retry);
@@ -167,8 +170,11 @@ namespace GW2Scratch.ArcdpsLogManager.Data
 					Tag = guild.Tag,
 					Emblem = emblem
 				};
-
 				guildDataCache[item] = apiGuild;
+			}
+			else if (notFound)
+			{
+				guildDataCache[item] = null;
 			}
 		}
 
