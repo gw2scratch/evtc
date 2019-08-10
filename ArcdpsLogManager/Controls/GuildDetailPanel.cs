@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Eto.Drawing;
 using Eto.Forms;
-using GW2Scratch.ArcdpsLogManager.Analytics;
 using GW2Scratch.ArcdpsLogManager.Data;
 using GW2Scratch.ArcdpsLogManager.Logs;
 using GW2Scratch.ArcdpsLogManager.Properties;
@@ -19,9 +18,8 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 
 		private GuildData guildData = NullGuild;
 
-		private LogCache LogCache { get; }
 		private ApiData ApiData { get; }
-		private LogAnalytics LogAnalytics { get; }
+		private LogDataProcessor LogProcessor { get; }
 		private UploadProcessor UploadProcessor { get; }
 		private ImageProvider ImageProvider { get; }
 
@@ -43,13 +41,12 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 
 		public event PropertyChangedEventHandler PropertyChanged;
 
-		public GuildDetailPanel(LogCache logCache, ApiData apiData, LogAnalytics logAnalytics,
-			UploadProcessor uploadProcessor, ImageProvider imageProvider)
+		public GuildDetailPanel(ApiData apiData, LogDataProcessor logProcessor, UploadProcessor uploadProcessor,
+			ImageProvider imageProvider)
 		{
-			LogCache = logCache;
 			ImageProvider = imageProvider;
 			ApiData = apiData;
-			LogAnalytics = logAnalytics;
+			LogProcessor = logProcessor;
 			UploadProcessor = uploadProcessor;
 
 			Padding = new Padding(10);
@@ -142,7 +139,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			{
 				var form = new Form
 				{
-					Content = new LogList(LogCache, ApiData, LogAnalytics, UploadProcessor, ImageProvider)
+					Content = new LogList(ApiData, LogProcessor, UploadProcessor, ImageProvider)
 					{
 						DataStore = new FilterCollection<LogData>(GuildData.Logs)
 					},

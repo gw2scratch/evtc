@@ -11,7 +11,6 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 {
 	public sealed class LogDetailPanel : DynamicLayout
 	{
-		private LogAnalytics LogAnalytics { get; }
 		private UploadProcessor UploadProcessor { get; }
 		private ImageProvider ImageProvider { get; }
 
@@ -79,60 +78,9 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			}
 		}
 
-		private void UpdateUploadStatus()
-		{
-			if (logData == null)
-			{
-				return;
-			}
-
-			const string reuploadButtonText = "Reupload to dps.report (EI)";
-
-			bool uploadEnabled = false;
-			bool openEnabled = false;
-			string text = "";
-			string uploadButtonText;
-			var upload = logData.DpsReportEIUpload;
-			switch (upload.UploadState)
-			{
-				case UploadState.NotUploaded:
-					uploadButtonText = "Upload to dps.report (EI)";
-					uploadEnabled = true;
-					break;
-				case UploadState.Queued:
-				case UploadState.Uploading:
-					uploadButtonText = "Uploading...";
-					break;
-				case UploadState.UploadError:
-					uploadButtonText = reuploadButtonText;
-					uploadEnabled = true;
-					text = $"Upload failed: {upload.UploadError ?? "No error"}";
-					break;
-				case UploadState.ProcessingError:
-					uploadButtonText = reuploadButtonText;
-					uploadEnabled = true;
-					text = $"Processing failed: {upload.ProcessingError ?? "No error"}";
-					break;
-				case UploadState.Uploaded:
-					uploadButtonText = reuploadButtonText;
-					uploadEnabled = true;
-					openEnabled = true;
-					text = upload.Url;
-					break;
-				default:
-					throw new ArgumentOutOfRangeException();
-			}
-
-			dpsReportUploadButton.Text = uploadButtonText;
-			dpsReportUploadButton.Enabled = uploadEnabled;
-			dpsReportOpenButton.Enabled = openEnabled;
-			dpsReportTextBox.Text = text;
-		}
-
-		public LogDetailPanel(LogCache logCache, ApiData apiData, LogAnalytics logAnalytics, UploadProcessor uploadProcessor,
+		public LogDetailPanel(ApiData apiData, LogDataProcessor logProcessor, UploadProcessor uploadProcessor,
 			ImageProvider imageProvider)
 		{
-			LogAnalytics = logAnalytics;
 			UploadProcessor = uploadProcessor;
 			ImageProvider = imageProvider;
 
@@ -234,11 +182,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				dialog.Show();
 			};
 
-			reparseButton.Click += (sender, args) =>
-			{
-				logData.ParseData(LogAnalytics);
-				logCache.CacheLogData(logData);
-			};
+			reparseButton.Click += (sender, args) => logProcessor.Schedule(logData);
 
 			Settings.ShowDebugDataChanged += (sender, args) => { debugSection.Visible = Settings.ShowDebugData; };
 			Shown += (sender, args) =>
@@ -250,6 +194,56 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			uploadProcessor.Processed += OnUploadProcessorUpdate;
 			uploadProcessor.Unscheduled += OnUploadProcessorUpdate;
 			uploadProcessor.Scheduled += OnUploadProcessorUpdate;
+		}
+
+		private void UpdateUploadStatus()
+		{
+			if (logData == null)
+			{
+				return;
+			}
+
+			const string reuploadButtonText = "Reupload to dps.report (EI)";
+
+			bool uploadEnabled = false;
+			bool openEnabled = false;
+			string text = "";
+			string uploadButtonText;
+			var upload = logData.DpsReportEIUpload;
+			switch (upload.UploadState)
+			{
+				case UploadState.NotUploaded:
+					uploadButtonText = "Upload to dps.report (EI)";
+					uploadEnabled = true;
+					break;
+				case UploadState.Queued:
+				case UploadState.Uploading:
+					uploadButtonText = "Uploading...";
+					break;
+				case UploadState.UploadError:
+					uploadButtonText = reuploadButtonText;
+					uploadEnabled = true;
+					text = $"Upload failed: {upload.UploadError ?? "No error"}";
+					break;
+				case UploadState.ProcessingError:
+					uploadButtonText = reuploadButtonText;
+					uploadEnabled = true;
+					text = $"Processing failed: {upload.ProcessingError ?? "No error"}";
+					break;
+				case UploadState.Uploaded:
+					uploadButtonText = reuploadButtonText;
+					uploadEnabled = true;
+					openEnabled = true;
+					text = upload.Url;
+					break;
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
+
+			dpsReportUploadButton.Text = uploadButtonText;
+			dpsReportUploadButton.Enabled = uploadEnabled;
+			dpsReportOpenButton.Enabled = openEnabled;
+			dpsReportTextBox.Text = text;
 		}
 
 		private void OnUploadProcessorUpdate(object sender, EventArgs e)

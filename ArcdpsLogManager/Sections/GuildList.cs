@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Eto.Drawing;
 using Eto.Forms;
-using GW2Scratch.ArcdpsLogManager.Analytics;
 using GW2Scratch.ArcdpsLogManager.Controls;
 using GW2Scratch.ArcdpsLogManager.Data;
 using GW2Scratch.ArcdpsLogManager.Logs;
@@ -14,9 +13,8 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 {
 	public class GuildList : DynamicLayout
 	{
-		private LogCache LogCache { get; }
 		private ApiData ApiData { get; }
-		private LogAnalytics LogAnalytics { get; }
+		private LogDataProcessor LogProcessor { get; }
 		private UploadProcessor UploadProcessor { get; }
 		private ImageProvider ImageProvider { get; }
 
@@ -52,12 +50,11 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 
 		private string GuildFilter { get; set; } = "";
 
-		public GuildList(LogCache logCache, ApiData apiData, LogAnalytics logAnalytics, UploadProcessor uploadProcessor,
+		public GuildList(ApiData apiData, LogDataProcessor logProcessor, UploadProcessor uploadProcessor,
 			ImageProvider imageProvider)
 		{
-			LogCache = logCache;
 			ApiData = apiData;
-			LogAnalytics = logAnalytics;
+			LogProcessor = logProcessor;
 			UploadProcessor = uploadProcessor;
 			ImageProvider = imageProvider;
 
@@ -165,7 +162,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 
 		private GuildDetailPanel ConstructGuildDetailPanel()
 		{
-			return new GuildDetailPanel(LogCache, ApiData, LogAnalytics, UploadProcessor, ImageProvider);
+			return new GuildDetailPanel(ApiData, LogProcessor, UploadProcessor, ImageProvider);
 		}
 
 		private GridView<GuildData> ConstructGuildGridView(GuildDetailPanel guildDetailPanel)

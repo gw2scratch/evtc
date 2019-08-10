@@ -79,7 +79,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				logData.Where(x => x.DpsReportEIUpload.Url != null).Select(x => x.DpsReportEIUpload.Url));
 		}
 
-		public MultipleLogPanel(LogCache logCache, LogAnalytics logAnalytics, UploadProcessor uploadProcessor)
+		public MultipleLogPanel(LogDataProcessor logProcessor, UploadProcessor uploadProcessor)
 		{
 			Padding = new Padding(10);
 			Width = 350;
@@ -90,8 +90,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			{
 				foreach (var log in logData)
 				{
-					log.ParseData(logAnalytics);
-					logCache.CacheLogData(log);
+					logProcessor.Schedule(log);
 				}
 			};
 

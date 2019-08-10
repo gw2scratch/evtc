@@ -243,7 +243,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		private TabControl ConstructMainTabControl()
 		{
 			// Main log list
-			var logList = new LogList(LogCache, ApiData, LogAnalytics, UploadProcessor, ImageProvider);
+			var logList = new LogList(ApiData, LogDataProcessor, UploadProcessor, ImageProvider);
 			LogCollectionsRecreated += (sender, args) => logList.DataStore = logsFiltered;
 
 			LogDataProcessor.Processed += (sender, args) =>
@@ -256,11 +256,11 @@ namespace GW2Scratch.ArcdpsLogManager
 				}
 			};
 			// Player list
-			var playerList = new PlayerList(LogCache, ApiData, LogAnalytics, UploadProcessor, ImageProvider);
+			var playerList = new PlayerList(ApiData, LogDataProcessor, UploadProcessor, ImageProvider);
 			FilteredLogsUpdated += (sender, args) => playerList.UpdateDataFromLogs(logsFiltered);
 
 			// Guild list
-			var guildList = new GuildList(LogCache, ApiData, LogAnalytics, UploadProcessor, ImageProvider);
+			var guildList = new GuildList(ApiData, LogDataProcessor, UploadProcessor, ImageProvider);
 			FilteredLogsUpdated += (sender, args) => guildList.UpdateDataFromLogs(logsFiltered);
 
 			// Statistics
