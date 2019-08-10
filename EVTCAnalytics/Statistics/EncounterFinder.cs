@@ -225,6 +225,29 @@ namespace GW2Scratch.EVTCAnalytics.Statistics
 					);
 				}
 
+				if (boss.SpeciesId == SpeciesIds.Xera)
+				{
+					var secondPhaseXera = GetTargetBySpeciesId(log, SpeciesIds.XeraSecondPhase);
+
+					IResultDeterminer resultDeterminer;
+					if (secondPhaseXera == null)
+					{
+						resultDeterminer = new ConstantResultDeterminer(EncounterResult.Failure);
+					}
+					else
+					{
+						resultDeterminer = new AgentCombatExitDeterminer(secondPhaseXera);
+					}
+
+					return new BaseEncounter(
+						new[] {boss},
+						log.Events,
+						new PhaseSplitter(new StartTrigger(new PhaseDefinition("Default phase", boss))),
+						resultDeterminer,
+						new AgentNameEncounterNameProvider(boss)
+					);
+				}
+
 				if (boss.SpeciesId == SpeciesIds.SoullessHorror)
 				{
 					return new BaseEncounter(

@@ -24,6 +24,10 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		public const int Narella = 16125;
 		public const int TrioCagePrisoner = 16103;
 
+		// Wing 3
+		public const int Xera = 16246;
+		public const int XeraSecondPhase = 16286;
+
 		// Wing 4
 		// Deimos
 		public const int Deimos = 17154;
