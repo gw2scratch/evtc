@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Eto.Drawing;
@@ -14,7 +12,6 @@ using GW2Scratch.ArcdpsLogManager.Controls;
 using GW2Scratch.ArcdpsLogManager.Data;
 using GW2Scratch.ArcdpsLogManager.Dialogs;
 using GW2Scratch.ArcdpsLogManager.Logs;
-using GW2Scratch.ArcdpsLogManager.Properties;
 using GW2Scratch.ArcdpsLogManager.Sections;
 using GW2Scratch.ArcdpsLogManager.Timing;
 using GW2Scratch.ArcdpsLogManager.Uploaders;
@@ -23,7 +20,7 @@ using Gw2Sharp;
 
 namespace GW2Scratch.ArcdpsLogManager
 {
-	public sealed class ManagerForm : Form, INotifyPropertyChanged
+	public sealed class ManagerForm : Form
 	{
 		private readonly Cooldown gridRefreshCooldown = new Cooldown(TimeSpan.FromSeconds(2));
 
@@ -41,21 +38,6 @@ namespace GW2Scratch.ArcdpsLogManager
 		private FilterCollection<LogData> logsFiltered;
 
 		private CancellationTokenSource logLoadTaskTokenSource = null;
-
-		private string status = "";
-
-		private string Status
-		{
-			get => status;
-			set
-			{
-				if (value == status) return;
-				status = value;
-				OnPropertyChanged();
-			}
-		}
-
-		public event PropertyChangedEventHandler PropertyChanged;
 
 		public IEnumerable<LogData> LoadedLogs => logs;
 		public LogCache LogCache { get; }
@@ -84,7 +66,7 @@ namespace GW2Scratch.ArcdpsLogManager
 
 			formLayout.BeginVertical(new Padding(5), yscale: false);
 			{
-				formLayout.Add(ConstructStatusLabel());
+				formLayout.Add(ConstructStatusPanel());
 			}
 			formLayout.EndVertical();
 
@@ -112,12 +94,72 @@ namespace GW2Scratch.ArcdpsLogManager
 			RecreateLogCollections(new ObservableCollection<LogData>(logs));
 		}
 
-		private Label ConstructStatusLabel()
+		private DynamicLayout ConstructStatusPanel()
 		{
-			var label = new Label();
-			label.TextBinding.Bind(this, x => x.Status);
+			// Processing label
+			var processingLabel = new Label();
 
-			return label;
+			void UpdatingProcessingLabel(object sender, BackgroundProcessorEventArgs args)
+			{
+				Application.Instance.AsyncInvoke(() =>
+				{
+					bool finished = args.CurrentScheduledItems == 0;
+					processingLabel.Text = finished
+						? $"{logs.Count} logs found."
+						: $"Parsing logs {args.TotalProcessedItems}/{args.TotalScheduledItems}...";
+				});
+			}
+
+			LogDataProcessor.Processed += UpdatingProcessingLabel;
+			LogDataProcessor.Scheduled += UpdatingProcessingLabel;
+			LogDataProcessor.Unscheduled += UpdatingProcessingLabel;
+			LogSearchStarted += (sender, args) => processingLabel.Text = "Finding logs...";
+
+			// Upload state label
+			var uploadLabel = new Label();
+
+			void UpdateUploadLabel(object sender, BackgroundProcessorEventArgs args)
+			{
+				Application.Instance.AsyncInvoke(() =>
+				{
+					bool finished = args.CurrentScheduledItems == 0;
+					uploadLabel.Text = finished
+						? ""
+						: $"Uploading {args.TotalProcessedItems}/{args.TotalScheduledItems}...";
+				});
+			}
+
+			UploadProcessor.Processed += UpdateUploadLabel;
+			UploadProcessor.Scheduled += UpdateUploadLabel;
+			UploadProcessor.Unscheduled += UpdateUploadLabel;
+
+			// API state label
+			var apiLabel = new Label();
+
+			void UpdateApiLabel(object sender, BackgroundProcessorEventArgs args)
+			{
+				Application.Instance.AsyncInvoke(() =>
+				{
+					bool finished = args.CurrentScheduledItems == 0;
+					apiLabel.Text = finished ? "" : $"GW2 API {args.TotalProcessedItems}/{args.TotalScheduledItems}";
+				});
+			}
+
+			ApiData.Processed += UpdateApiLabel;
+			ApiData.Scheduled += UpdateApiLabel;
+			ApiData.Unscheduled += UpdateApiLabel;
+
+			// Layout of the status bar
+			var layout = new DynamicLayout();
+			layout.BeginHorizontal();
+			{
+				layout.Add(processingLabel, xscale: true);
+				layout.Add(uploadLabel, xscale: true);
+				layout.Add(apiLabel, xscale: true);
+			}
+			layout.EndHorizontal();
+
+			return layout;
 		}
 
 		private LogFilterPanel ConstructLogFilters()
@@ -285,7 +327,8 @@ namespace GW2Scratch.ArcdpsLogManager
 			logLoadTaskTokenSource = new CancellationTokenSource();
 
 			logs.Clear();
-			Task.Run(() => LoadLogs(logLoadTaskTokenSource.Token));
+			LogSearchStarted?.Invoke(this, EventArgs.Empty);
+			Task.Run(() => FindLogs(logLoadTaskTokenSource.Token));
 		}
 
 		private void SetupApiWorker()
@@ -309,25 +352,6 @@ namespace GW2Scratch.ArcdpsLogManager
 					}
 				};
 			});
-		}
-
-		// TODO: Do away with this method
-		private void LoadLogs(CancellationToken cancellationToken)
-		{
-			Application.Instance.Invoke(() => { Status = "Finding logs..."; });
-			cancellationToken.ThrowIfCancellationRequested();
-
-			FindLogs(cancellationToken);
-
-			Application.Instance.Invoke(() => { Status = "Saving cache..."; });
-			cancellationToken.ThrowIfCancellationRequested();
-
-			if (LogCache.ChangedSinceLastSave)
-			{
-				LogCache.SaveToFile();
-			}
-
-			Application.Instance.AsyncInvoke(() => { Status = $"{logs.Count} logs found."; });
 		}
 
 		/// <summary>
@@ -370,6 +394,11 @@ namespace GW2Scratch.ArcdpsLogManager
 						MessageBoxType.Error);
 				});
 			}
+
+			if (LogCache.ChangedSinceLastSave)
+			{
+				LogCache.SaveToFile();
+			}
 		}
 
 		/// <summary>
@@ -383,13 +412,8 @@ namespace GW2Scratch.ArcdpsLogManager
 			LogCollectionsRecreated?.Invoke(this, EventArgs.Empty);
 		}
 
+		private event EventHandler LogSearchStarted;
 		private event EventHandler LogCollectionsRecreated;
 		private event EventHandler FilteredLogsUpdated;
-
-		[NotifyPropertyChangedInvocator]
-		private void OnPropertyChanged([CallerMemberName] string propertyName = null)
-		{
-			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-		}
 	}
 }
