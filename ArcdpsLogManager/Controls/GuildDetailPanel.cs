@@ -6,9 +6,9 @@ using Eto.Drawing;
 using Eto.Forms;
 using GW2Scratch.ArcdpsLogManager.Data;
 using GW2Scratch.ArcdpsLogManager.Logs;
-using GW2Scratch.ArcdpsLogManager.Properties;
 using GW2Scratch.ArcdpsLogManager.Sections;
 using GW2Scratch.ArcdpsLogManager.Sections.Guilds;
+using JetBrains.Annotations;
 
 namespace GW2Scratch.ArcdpsLogManager.Controls
 {
