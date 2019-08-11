@@ -1,20 +1,17 @@
 using System.Linq;
 using Eto.Drawing;
 using Eto.Forms;
-using GW2Scratch.ArcdpsLogManager.Controls;
-using GW2Scratch.ArcdpsLogManager.Logs;
+using GW2Scratch.ArcdpsLogManager.Logs.Filters;
 
 namespace GW2Scratch.ArcdpsLogManager.Sections
 {
-	public class AdvancedFilters : DynamicLayout
+	public class AdvancedFilterPanel : DynamicLayout
 	{
-		private bool ShowParseUnparsedLogs { get; set; } = true;
-		private bool ShowParseParsingLogs { get; set; } = true;
-		private bool ShowParseParsedLogs { get; set; } = true;
-		private bool ShowParseFailedLogs { get; set; } = true;
+		private LogFilters Filters { get; }
 
-		public AdvancedFilters(LogFilterPanel filter, ImageProvider imageProvider)
+		public AdvancedFilterPanel(ImageProvider imageProvider, LogFilters filters)
 		{
+			Filters = filters;
 			BeginVertical(new Padding(5));
 			{
 				BeginGroup("Group composition", new Padding(5));
@@ -100,13 +97,13 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			EndVertical();
 
 			var unparsedCheckBox = new CheckBox {Text = "Unparsed"};
-			unparsedCheckBox.CheckedBinding.Bind(this, x => x.ShowParseUnparsedLogs);
+			unparsedCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowParseUnparsedLogs);
 			var parsingCheckBox = new CheckBox {Text = "Parsing"};
-			parsingCheckBox.CheckedBinding.Bind(this, x => x.ShowParseParsingLogs);
+			parsingCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowParseParsingLogs);
 			var parsedCheckBox = new CheckBox {Text = "Parsed"};
-			parsedCheckBox.CheckedBinding.Bind(this, x => x.ShowParseParsedLogs);
+			parsedCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowParseParsedLogs);
 			var failedCheckBox = new CheckBox {Text = "Failed"};
-			failedCheckBox.CheckedBinding.Bind(this, x => x.ShowParseFailedLogs);
+			failedCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowParseFailedLogs);
 			BeginVertical(new Padding(5));
 			{
 				BeginGroup("Parsing status", new Padding(5));
@@ -118,17 +115,5 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			EndVertical();
 		}
 
-		public bool FilterLog(LogData log)
-		{
-			if (!ShowParseUnparsedLogs && log.ParsingStatus == ParsingStatus.Unparsed ||
-			    !ShowParseParsedLogs && log.ParsingStatus == ParsingStatus.Parsed ||
-			    !ShowParseParsingLogs && log.ParsingStatus == ParsingStatus.Parsing ||
-			    !ShowParseFailedLogs && log.ParsingStatus == ParsingStatus.Failed)
-			{
-				return false;
-			}
-
-			return true;
-		}
 	}
 }

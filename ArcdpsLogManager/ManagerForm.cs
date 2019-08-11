@@ -12,6 +12,7 @@ using GW2Scratch.ArcdpsLogManager.Controls;
 using GW2Scratch.ArcdpsLogManager.Data;
 using GW2Scratch.ArcdpsLogManager.Dialogs;
 using GW2Scratch.ArcdpsLogManager.Logs;
+using GW2Scratch.ArcdpsLogManager.Logs.Filters;
 using GW2Scratch.ArcdpsLogManager.Sections;
 using GW2Scratch.ArcdpsLogManager.Timing;
 using GW2Scratch.ArcdpsLogManager.Uploaders;
@@ -41,6 +42,7 @@ namespace GW2Scratch.ArcdpsLogManager
 
 		public IEnumerable<LogData> LoadedLogs => logs;
 		public LogCache LogCache { get; }
+		private LogFilters Filters { get; } = new LogFilters();
 
 		public ManagerForm(LogCache logCache)
 		{
@@ -164,14 +166,14 @@ namespace GW2Scratch.ArcdpsLogManager
 
 		private LogFilterPanel ConstructLogFilters()
 		{
-			var filterPanel = new LogFilterPanel(ImageProvider);
+			var filterPanel = new LogFilterPanel(ImageProvider, Filters);
 			filterPanel.FiltersUpdated += (sender, args) => logsFiltered.Refresh();
 			LogCollectionsRecreated += (sender, args) =>
 			{
 				filterPanel.UpdateLogs(logs);
 				logs.CollectionChanged += (s, a) => { filterPanel.UpdateLogs(logs); };
 
-				logsFiltered.Filter = filterPanel.FilterLog;
+				logsFiltered.Filter = Filters.FilterLog;
 				logsFiltered.Refresh();
 			};
 			LogDataProcessor.Processed += (sender, args) =>
