@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing.Text;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -43,6 +45,8 @@ namespace GW2Scratch.ArcdpsLogManager
 		public IEnumerable<LogData> LoadedLogs => logs;
 		public LogCache LogCache { get; }
 		private LogFilters Filters { get; } = new LogFilters();
+
+		private List<FileSystemWatcher> fileSystemWatchers = new List<FileSystemWatcher>();
 
 		public ManagerForm(LogCache logCache)
 		{
@@ -331,6 +335,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			logs.Clear();
 			LogSearchStarted?.Invoke(this, EventArgs.Empty);
 			Task.Run(() => FindLogs(logLoadTaskTokenSource.Token));
+			SetupFileSystemWatchers();
 		}
 
 		private void SetupApiWorker()
@@ -354,6 +359,44 @@ namespace GW2Scratch.ArcdpsLogManager
 					}
 				};
 			});
+		}
+
+		private void SetupFileSystemWatchers()
+		{
+			foreach (var watcher in fileSystemWatchers)
+			{
+				watcher.Dispose();
+			}
+
+			foreach (var directory in Settings.LogRootPaths)
+			{
+				var watcher = new FileSystemWatcher(directory);
+				watcher.IncludeSubdirectories = true;
+				watcher.Filter = "*evtc"; // Matches both .evtc and .zevtc files.
+				watcher.Created += (sender, args) => AddNewLog(args.FullPath);
+				watcher.Renamed += (sender, args) => AddNewLog(args.FullPath);
+				watcher.EnableRaisingEvents = true;
+			}
+		}
+
+		private void AddNewLog(string fullName)
+		{
+			if (logs.Any(x => x.FileInfo.FullName == fullName))
+			{
+				return;
+			}
+
+			if (!LogCache.TryGetLogData(fullName, out var log))
+			{
+				log = new LogData(new FileInfo(fullName));
+			}
+
+			if (log.ParsingStatus != ParsingStatus.Parsed)
+			{
+				LogDataProcessor.Schedule(log);
+			}
+
+			logs.Add(log);
 		}
 
 		/// <summary>
