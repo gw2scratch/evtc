@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -45,7 +45,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		public LogCache LogCache { get; }
 		private LogFilters Filters { get; } = new LogFilters();
 
-		private List<FileSystemWatcher> fileSystemWatchers = new List<FileSystemWatcher>();
+		private readonly List<FileSystemWatcher> fileSystemWatchers = new List<FileSystemWatcher>();
 
 		public ManagerForm(LogCache logCache)
 		{
@@ -370,14 +370,26 @@ namespace GW2Scratch.ArcdpsLogManager
 				watcher.Dispose();
 			}
 
+			fileSystemWatchers.Clear();
+
 			foreach (var directory in Settings.LogRootPaths)
 			{
-				var watcher = new FileSystemWatcher(directory);
-				watcher.IncludeSubdirectories = true;
-				watcher.Filter = "*evtc"; // Matches both .evtc and .zevtc files.
-				watcher.Created += (sender, args) => AddNewLog(args.FullPath);
-				watcher.Renamed += (sender, args) => AddNewLog(args.FullPath);
-				watcher.EnableRaisingEvents = true;
+				try
+				{
+					var watcher = new FileSystemWatcher(directory);
+					watcher.IncludeSubdirectories = true;
+					watcher.Filter = "*evtc"; // Matches both .evtc and .zevtc files.
+					watcher.Created += (sender, args) => AddNewLog(args.FullPath);
+					watcher.Renamed += (sender, args) => AddNewLog(args.FullPath);
+					watcher.EnableRaisingEvents = true;
+
+					fileSystemWatchers.Add(watcher);
+				}
+				catch (Exception e)
+				{
+					// TODO: Replace with proper logging
+					Console.Error.WriteLine($"Failed to set up FileSystemWatcher: {e.Message}");
+				}
 			}
 		}
 
