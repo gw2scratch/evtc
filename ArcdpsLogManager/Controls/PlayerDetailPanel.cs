@@ -90,76 +90,88 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 
 				knownCharacters.Clear();
 				knownCharacters.BeginHorizontal();
-				knownCharacters.BeginVertical(spacing: new Size(5, 2));
-
-				knownCharacters.AddRow("", "Character name", "Log count", null);
-				foreach (var character in characters.OrderByDescending(x => x.Value.count))
 				{
-					var name = character.Key;
-					var showLogsButton = new LinkButton {Text = "Logs"};
-					showLogsButton.Click += (o, eventArgs) =>
+					knownCharacters.BeginVertical(spacing: new Size(5, 2));
 					{
-						var characterLogs = PlayerData.Logs.Where(log => log.Players.Any(x => x.Name == name));
-						var form = new Form
+						knownCharacters.AddRow("", "Character name", "Log count", null);
+						foreach (var character in characters.OrderByDescending(x => x.Value.count))
 						{
-							Content = new LogList(apiData, logProcessor, uploadProcessor, imageProvider)
-								{DataStore = new FilterCollection<LogData>(characterLogs)},
-							Width = 900,
-							Height = 700,
-							Title = $"arcdps Log Manager: logs with character {name}"
-						};
-						form.Show();
-					};
+							var name = character.Key;
+							var showLogsButton = new LinkButton {Text = "Logs"};
+							showLogsButton.Click += (o, eventArgs) =>
+							{
+								var characterLogs = PlayerData.Logs.Where(log => log.Players.Any(x => x.Name == name));
+								var form = new Form
+								{
+									Content = new LogList(apiData, logProcessor, uploadProcessor, imageProvider)
+										{DataStore = new FilterCollection<LogData>(characterLogs)},
+									Width = 900,
+									Height = 700,
+									Title = $"arcdps Log Manager: logs with character {name}"
+								};
+								form.Show();
+							};
 
-					knownCharacters.BeginHorizontal();
-					knownCharacters.Add(imageProvider.GetTinyProfessionIcon(character.Value.profession));
-					knownCharacters.Add(new Label {Text = name, VerticalAlignment = VerticalAlignment.Center});
-					knownCharacters.Add(new Label
-					{
-						Text = $"{character.Value.count}",
-						VerticalAlignment = VerticalAlignment.Center
-					});
-					knownCharacters.Add(showLogsButton);
+							knownCharacters.BeginHorizontal();
+							{
+								knownCharacters.Add(imageProvider.GetTinyProfessionIcon(character.Value.profession));
+								knownCharacters.Add(new Label
+									{Text = name, VerticalAlignment = VerticalAlignment.Center});
+								knownCharacters.Add(new Label
+								{
+									Text = $"{character.Value.count}",
+									VerticalAlignment = VerticalAlignment.Center
+								});
+								knownCharacters.Add(showLogsButton);
+								knownCharacters.Add(null);
+							}
+							knownCharacters.EndHorizontal();
+						}
+
+						knownCharacters.AddRow(null);
+					}
+					knownCharacters.EndVertical();
 					knownCharacters.Add(null);
-					knownCharacters.EndHorizontal();
 				}
-
-				knownCharacters.AddRow(null);
-				knownCharacters.EndVertical();
-				knownCharacters.Add(null);
 				knownCharacters.EndHorizontal();
 				knownCharacters.Create();
 			};
 
 			BeginVertical(spacing: new Size(0, 30));
-
-			BeginVertical();
-			Add(accountName);
-			Add(logCountLabel);
-			EndVertical();
-			BeginVertical(yscale: true);
-			Add(new Scrollable {Content = knownCharacters, Border = BorderType.None});
-			EndVertical();
-
-			var logListButton = new Button {Text = "Show logs with this player"};
-			logListButton.Click += (sender, args) =>
 			{
-				var form = new Form
+				BeginVertical();
 				{
-					Content = new LogList(apiData, logProcessor, uploadProcessor, imageProvider)
-					{
-						DataStore = new FilterCollection<LogData>(PlayerData.Logs)
-					},
-					Width = 900,
-					Height = 700,
-					Title = $"arcdps Log Manager: logs with {PlayerData.AccountName.Substring(1)}"
-				};
-				form.Show();
-			};
-			BeginVertical();
-			Add(logListButton);
-			EndVertical();
+					Add(accountName);
+					Add(logCountLabel);
+				}
+				EndVertical();
+				BeginVertical(yscale: true);
+				{
+					Add(new Scrollable {Content = knownCharacters, Border = BorderType.None});
+				}
+				EndVertical();
 
+				var logListButton = new Button {Text = "Show logs with this player"};
+				logListButton.Click += (sender, args) =>
+				{
+					var form = new Form
+					{
+						Content = new LogList(apiData, logProcessor, uploadProcessor, imageProvider)
+						{
+							DataStore = new FilterCollection<LogData>(PlayerData.Logs)
+						},
+						Width = 900,
+						Height = 700,
+						Title = $"arcdps Log Manager: logs with {PlayerData.AccountName.Substring(1)}"
+					};
+					form.Show();
+				};
+				BeginVertical();
+				{
+					Add(logListButton);
+				}
+				EndVertical();
+			}
 			EndVertical();
 		}
 

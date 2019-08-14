@@ -76,22 +76,32 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			};
 
 			BeginVertical(spacing: new Size(5, 5), padding: new Padding(5));
-			BeginHorizontal();
-			Add(new Label
-				{Text = "Filter by character or account name", VerticalAlignment = VerticalAlignment.Center});
-			Add(playerFilterBox);
-			Add(null, true);
-			BeginVertical(xscale: true);
-			Add(accountCountLabel);
-			Add(characterCountLabel);
-			EndVertical();
-			EndHorizontal();
+			{
+				BeginHorizontal();
+				{
+					Add(new Label
+						{Text = "Filter by character or account name", VerticalAlignment = VerticalAlignment.Center});
+					Add(playerFilterBox);
+					Add(null, true);
+					BeginVertical(xscale: true);
+					{
+						Add(accountCountLabel);
+						Add(characterCountLabel);
+					}
+					EndVertical();
+				}
+				EndHorizontal();
+			}
 			EndVertical();
 			BeginVertical(yscale: true);
-			BeginHorizontal();
-			Add(playerGridView, true);
-			Add(playerDetailPanel);
-			EndHorizontal();
+			{
+				BeginHorizontal();
+				{
+					Add(playerGridView, true);
+					Add(playerDetailPanel);
+				}
+				EndHorizontal();
+			}
 			EndVertical();
 		}
 

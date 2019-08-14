@@ -74,21 +74,31 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			};
 
 			BeginVertical(spacing: new Size(5, 5), padding: new Padding(5));
-			BeginHorizontal();
-			Add(new Label
-				{Text = "Filter by guild or member name", VerticalAlignment = VerticalAlignment.Center});
-			Add(playerFilterBox);
-			Add(null, true);
-			BeginVertical(xscale: true);
-			Add(guildCountLabel);
-			EndVertical();
-			EndHorizontal();
+			{
+				BeginHorizontal();
+				{
+					Add(new Label
+						{Text = "Filter by guild or member name", VerticalAlignment = VerticalAlignment.Center});
+					Add(playerFilterBox);
+					Add(null, true);
+					BeginVertical(xscale: true);
+					{
+						Add(guildCountLabel);
+					}
+					EndVertical();
+				}
+				EndHorizontal();
+			}
 			EndVertical();
 			BeginVertical(yscale: true);
-			BeginHorizontal();
-			Add(guildGridView, true);
-			Add(playerDetailPanel);
-			EndHorizontal();
+			{
+				BeginHorizontal();
+				{
+					Add(guildGridView, true);
+					Add(playerDetailPanel);
+				}
+				EndHorizontal();
+			}
 			EndVertical();
 		}
 

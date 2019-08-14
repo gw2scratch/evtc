@@ -51,11 +51,15 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 
 			var logLayout = new DynamicLayout();
 			logLayout.BeginVertical();
-			logLayout.BeginHorizontal();
-			logLayout.Add(logGridView, true);
-			logLayout.Add(logDetailPanel);
-			logLayout.Add(multipleLogPanel);
-			logLayout.EndHorizontal();
+			{
+				logLayout.BeginHorizontal();
+				{
+					logLayout.Add(logGridView, true);
+					logLayout.Add(logDetailPanel);
+					logLayout.Add(multipleLogPanel);
+				}
+				logLayout.EndHorizontal();
+			}
 			logLayout.EndVertical();
 
 			Content = logLayout;

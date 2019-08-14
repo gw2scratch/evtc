@@ -44,37 +44,38 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			SuspendLayout();
 			Clear();
 			BeginVertical();
-			foreach (var group in playersByGroups)
 			{
-				BeginGroup($"Subgroup {group.Key}", new Padding(5), new Size(5, 5));
-				foreach (var player in group)
+				foreach (var group in playersByGroups)
 				{
-					var icon = imageProvider.GetTinyProfessionIcon(player);
-					var imageView = new ImageView {Image = icon};
-
-					string guildTagSuffix = "";
-					if (player.GuildGuid != null && Settings.ShowGuildTagsInLogDetail)
+					BeginGroup($"Subgroup {group.Key}", new Padding(5), new Size(5, 5));
+					foreach (var player in group)
 					{
-						string guildTag = apiData.GetGuildTag(player.GuildGuid);
-						if (guildTag != "")
+						var icon = imageProvider.GetTinyProfessionIcon(player);
+						var imageView = new ImageView {Image = icon};
+
+						string guildTagSuffix = "";
+						if (player.GuildGuid != null && Settings.ShowGuildTagsInLogDetail)
 						{
-							guildTagSuffix = $" [{guildTag}]";
+							string guildTag = apiData.GetGuildTag(player.GuildGuid);
+							if (guildTag != "")
+							{
+								guildTagSuffix = $" [{guildTag}]";
+							}
 						}
+
+						string guildName = player.GuildGuid != null
+							? apiData.GetGuildName(player.GuildGuid)
+							: "No guild data";
+
+						var nameLabel = new Label {Text = $"{player.Name}{guildTagSuffix}", ToolTip = guildName};
+
+						AddRow(imageView, nameLabel, player.AccountName.Substring(1));
 					}
 
-					string guildName = player.GuildGuid != null
-						? apiData.GetGuildName(player.GuildGuid)
-						: "No guild data";
-
-					var nameLabel = new Label {Text = $"{player.Name}{guildTagSuffix}", ToolTip = guildName};
-
-					AddRow(imageView, nameLabel, player.AccountName.Substring(1));
+					Add(null);
+					EndGroup();
 				}
-
-				Add(null);
-				EndGroup();
 			}
-
 			EndVertical();
 			AddRow(null);
 			Create();
