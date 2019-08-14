@@ -12,11 +12,13 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 		public AdvancedFilterPanel(ImageProvider imageProvider, LogFilters filters)
 		{
 			Filters = filters;
+
+			// TODO: Implement squad composition filters
+			/*
 			BeginVertical(new Padding(5));
 			{
 				BeginGroup("Group composition", new Padding(5));
 				{
-					AddSeparateRow(new Label {Text = "Not implemented yet, doesn't do anything."});
 					BeginVertical();
 					{
 						BeginHorizontal();
@@ -95,6 +97,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 				EndGroup();
 			}
 			EndVertical();
+			*/
 
 			var unparsedCheckBox = new CheckBox {Text = "Unparsed"};
 			unparsedCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowParseUnparsedLogs);
