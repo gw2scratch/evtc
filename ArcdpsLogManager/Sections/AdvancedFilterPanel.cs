@@ -32,7 +32,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 							// Core professions
 							BeginVertical(spacing: new Size(2, 2));
 							{
-								foreach (var profession in GameData.Professions.Select(x => x.profession))
+								foreach (var profession in GameData.Professions.Select(x => x.Profession))
 								{
 									BeginHorizontal();
 									{
@@ -52,7 +52,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 							// HoT elite specializations
 							BeginVertical(spacing: new Size(2, 2));
 							{
-								foreach (var specialization in GameData.Professions.Select(x => x.hot))
+								foreach (var specialization in GameData.Professions.Select(x => x.HoT))
 								{
 									BeginHorizontal();
 									{
@@ -72,7 +72,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 							// PoF elite specializations
 							BeginVertical(spacing: new Size(2, 2));
 							{
-								foreach (var specialization in GameData.Professions.Select(x => x.pof))
+								foreach (var specialization in GameData.Professions.Select(x => x.PoF))
 								{
 									BeginHorizontal();
 									{

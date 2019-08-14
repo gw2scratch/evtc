@@ -5,7 +5,7 @@ namespace GW2Scratch.ArcdpsLogManager
 {
 	public static class GameData
 	{
-		public static IReadOnlyList<(Profession profession, EliteSpecialization hot, EliteSpecialization pof)>
+		public static IReadOnlyList<(Profession Profession, EliteSpecialization HoT, EliteSpecialization PoF)>
 			Professions { get; } = new[]
 		{
 			(Profession.Warrior, EliteSpecialization.Berserker, EliteSpecialization.Spellbreaker),
