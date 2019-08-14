@@ -1,7 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Drawing.Text;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -85,6 +84,8 @@ namespace GW2Scratch.ArcdpsLogManager
 					ApiData.SaveDataToFile();
 				}
 			};
+
+			Settings.LogRootPathChanged += (sender, args) => Application.Instance.Invoke(ReloadLogs);
 
 			Shown += (sender, args) => InitializeManager();
 			Closing += (sender, args) =>
@@ -197,7 +198,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			apiDataMenuItem.Click += (sender, args) => { new ApiDialog(ApiData).ShowModal(this); };
 
 			var settingsFormMenuItem = new ButtonMenuItem {Text = "&Settings"};
-			settingsFormMenuItem.Click += (sender, args) => { new SettingsForm(this).Show(); };
+			settingsFormMenuItem.Click += (sender, args) => { new SettingsForm().Show(); };
 
 			var debugDataMenuItem = new CheckMenuItem {Text = "Show &debug data"};
 			debugDataMenuItem.Checked = Settings.ShowDebugData;
@@ -270,7 +271,8 @@ namespace GW2Scratch.ArcdpsLogManager
 			FilteredLogsUpdated += (sender, args) => guildList.UpdateDataFromLogs(logsFiltered);
 
 			// Statistics
-			var statistics = new Statistics(logList, ImageProvider);
+			var statistics = new StatisticsSection(ImageProvider);
+			FilteredLogsUpdated += (sender, args) => statistics.UpdateDataFromLogs(logsFiltered);
 
 			// Game data collecting
 			var gameDataCollecting = new GameDataCollecting(logList);

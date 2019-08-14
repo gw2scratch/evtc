@@ -41,7 +41,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		{
 			Application.Instance.Invoke(() =>
 			{
-				var form = new SettingsForm(null);
+				var form = new SettingsForm();
 				form.Show();
 				Visible = false;
 				form.SettingsSaved += (sender, args) =>

@@ -12,7 +12,7 @@ namespace GW2Scratch.ArcdpsLogManager
 
 		public event EventHandler SettingsSaved;
 
-		public SettingsForm(ManagerForm managerForm)
+		public SettingsForm()
 		{
 			Title = "Settings - arcdps Log Manager";
 			ClientSize = new Size(400, -1);
@@ -43,8 +43,6 @@ namespace GW2Scratch.ArcdpsLogManager
 				if (locationTextBox.Text.Trim() != Settings.LogRootPaths.FirstOrDefault())
 				{
 					Settings.LogRootPaths = new [] {locationTextBox.Text};
-					// TODO: Subscribe from the manager form, and pass if location was changed through event args
-					managerForm?.ReloadLogs();
 				}
 
 				SettingsSaved?.Invoke(this, EventArgs.Empty);
