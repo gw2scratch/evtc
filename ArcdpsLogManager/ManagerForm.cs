@@ -376,8 +376,8 @@ namespace GW2Scratch.ArcdpsLogManager
 					var watcher = new FileSystemWatcher(directory);
 					watcher.IncludeSubdirectories = true;
 					watcher.Filter = "*evtc"; // Matches both .evtc and .zevtc files.
-					watcher.Created += (sender, args) => AddNewLog(args.FullPath);
-					watcher.Renamed += (sender, args) => AddNewLog(args.FullPath);
+					watcher.Created += (sender, args) => Application.Instance.AsyncInvoke(() => AddNewLog(args.FullPath));
+					watcher.Renamed += (sender, args) => Application.Instance.AsyncInvoke(() => AddNewLog(args.FullPath));
 					watcher.EnableRaisingEvents = true;
 
 					fileSystemWatchers.Add(watcher);
