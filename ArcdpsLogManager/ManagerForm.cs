@@ -134,8 +134,11 @@ namespace GW2Scratch.ArcdpsLogManager
 				Application.Instance.AsyncInvoke(() =>
 				{
 					bool finished = args.CurrentScheduledItems == 0;
-					processingLabel.Text = finished
-						? $"{logs.Count} logs found."
+					int logCount = logs.Count;
+					// The log count check is to prevent a log count of 0 being shown when logs are being loaded and
+					// log processing catches up with searching for logs.
+					processingLabel.Text = finished && logCount > 0
+						? $"{logCount} logs found."
 						: $"Parsing logs {args.TotalProcessedItems}/{args.TotalScheduledItems}...";
 				});
 			}
@@ -143,6 +146,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			LogDataProcessor.Processed += UpdatingProcessingLabel;
 			LogDataProcessor.Scheduled += UpdatingProcessingLabel;
 			LogDataProcessor.Unscheduled += UpdatingProcessingLabel;
+			LogCollectionsRecreated += (sender, args) => processingLabel.Text = $"{logs.Count} logs found.";
 			LogSearchStarted += (sender, args) => processingLabel.Text = "Finding logs...";
 
 			// Upload state label
