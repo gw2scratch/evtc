@@ -23,8 +23,8 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 
 		private readonly GridView<PlayerData> playerGridView;
 		private readonly GridViewSorter<PlayerData> sorter;
-		private readonly Label accountCountLabel = new Label();
-		private readonly Label characterCountLabel = new Label();
+		private readonly Label accountCountLabel = new Label {VerticalAlignment = VerticalAlignment.Center};
+		private readonly Label characterCountLabel = new Label {VerticalAlignment = VerticalAlignment.Center};
 
 		public ObservableCollection<PlayerData> DataStore
 		{
@@ -82,11 +82,8 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 						{Text = "Filter by character or account name", VerticalAlignment = VerticalAlignment.Center});
 					Add(playerFilterBox);
 					Add(null, true);
-					BeginVertical(xscale: true);
-					{
-						Add(accountCountLabel);
-						Add(characterCountLabel);
-					}
+					Add(accountCountLabel, true, true);
+					Add(characterCountLabel, true, true);
 					EndVertical();
 				}
 				EndHorizontal();

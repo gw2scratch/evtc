@@ -23,7 +23,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 
 		private readonly GridViewSorter<GuildData> sorter;
 		private readonly GridView<GuildData> guildGridView;
-		private readonly Label guildCountLabel = new Label();
+		private readonly Label guildCountLabel = new Label {VerticalAlignment = VerticalAlignment.Center};
 
 		public ObservableCollection<GuildData> DataStore
 		{
@@ -83,7 +83,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 					Add(null, true);
 					BeginVertical(xscale: true);
 					{
-						Add(guildCountLabel);
+						Add(guildCountLabel, true, true);
 					}
 					EndVertical();
 				}
