@@ -83,7 +83,17 @@ namespace GW2Scratch.ArcdpsLogManager.Sections.Statistics.Tabs
 					HeaderText = timeHeaderText,
 					DataCell = new TextBoxCell
 					{
-						Binding = new DelegateBinding<EncounterStats, string>(x => GetTime(x).ToString())
+						Binding = new DelegateBinding<EncounterStats, string>(x =>
+						{
+							var time = GetTime(x);
+							var str = $@"{time:hh\h\ mm\m\ ss\s}";
+							if (time.Days > 0)
+							{
+								str = $@"{time:%d\d} " + str;
+							}
+
+							return str;
+						})
 					}
 				};
 				gridView.Columns.Add(totalTimeColumn);
