@@ -83,33 +83,41 @@ namespace GW2Scratch.ArcdpsLogManager
 		{
 			if (sortColumn == null)
 			{
+				// No sort has been applied yet.
 				return;
 			}
 
-			if (gridView.DataStore is FilterCollection<T> collection)
+			if (gridView.DataStore == null)
 			{
-				Comparison<T> sort = null;
-				customSorts?.TryGetValue(sortColumn, out sort);
-
-				if (sort == null && sortColumn.DataCell is TextBoxCell textBoxCell)
-				{
-					sort = GetTextComparison(textBoxCell);
-				}
-
-				if (sort == null)
-				{
-					// If we don't know how to sort out the current column, we keep the old sort.
-					return;
-				}
-
-				if (!sortedAscending)
-				{
-					var sortToReverse = sort; // This copy is required
-					sort = (x, y) => -sortToReverse(x, y);
-				}
-
-				collection.Sort = sort;
+				return;
 			}
+
+			if (!(gridView.DataStore is FilterCollection<T> collection))
+			{
+				throw new NotSupportedException("Only FilterCollections can be sorted.");
+			}
+
+			Comparison<T> sort = null;
+			customSorts?.TryGetValue(sortColumn, out sort);
+
+			if (sort == null && sortColumn.DataCell is TextBoxCell textBoxCell)
+			{
+				sort = GetTextComparison(textBoxCell);
+			}
+
+			if (sort == null)
+			{
+				// If we don't know how to sort out the current column, we keep the old sort.
+				return;
+			}
+
+			if (!sortedAscending)
+			{
+				var sortToReverse = sort; // This copy is required
+				sort = (x, y) => -sortToReverse(x, y);
+			}
+
+			collection.Sort = sort;
 		}
 
 		private Comparison<T> GetTextComparison(TextBoxCell textBoxCell)

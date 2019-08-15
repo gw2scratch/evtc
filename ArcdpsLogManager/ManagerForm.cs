@@ -272,7 +272,7 @@ namespace GW2Scratch.ArcdpsLogManager
 
 			// Statistics
 			var statistics = new StatisticsSection(ImageProvider);
-			FilteredLogsUpdated += (sender, args) => statistics.UpdateDataFromLogs(logsFiltered);
+			FilteredLogsUpdated += (sender, args) => statistics.UpdateDataFromLogs(logsFiltered.ToList());
 
 			// Game data collecting
 			var gameDataCollecting = new GameDataCollecting(logList);
