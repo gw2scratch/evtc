@@ -42,7 +42,10 @@ namespace GW2Scratch.ArcdpsLogManager.Sections.Statistics.Tabs
 
 		private GridView<EncounterStats> ConstructGridView()
 		{
+			var customSorts = new Dictionary<GridColumn, Comparison<EncounterStats>>();
+
 			var gridView = new GridView<EncounterStats>();
+
 			gridView.Columns.Add(new GridColumn
 			{
 				HeaderText = "Encounter name",
@@ -55,13 +58,23 @@ namespace GW2Scratch.ArcdpsLogManager.Sections.Statistics.Tabs
 				DataCell = new TextBoxCell {Binding = new DelegateBinding<EncounterStats, string>(x => $"{x.LogCount}")}
 			});
 
+			var totalTimeColumn = new GridColumn
+			{
+				HeaderText = "Total time",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<EncounterStats, string>(x => FormatTimeSpan(x.GetTotalTimeSpent()))
+				}
+			};
+			gridView.Columns.Add(totalTimeColumn);
+			customSorts[totalTimeColumn] =
+				(left, right) => left.GetTotalTimeSpent().CompareTo(right.GetTotalTimeSpent());
+
 			var shownResults = new (EncounterResult Result, string CountHeaderText, string TimeHeaderText)[]
 			{
 				(EncounterResult.Success, "Successes", "Time in successes"),
 				(EncounterResult.Failure, "Failures", "Time in failures")
 			};
-
-			var customSorts = new Dictionary<GridColumn, Comparison<EncounterStats>>();
 
 			foreach ((var result, string countHeaderText, string timeHeaderText) in shownResults)
 			{
@@ -78,33 +91,46 @@ namespace GW2Scratch.ArcdpsLogManager.Sections.Statistics.Tabs
 				TimeSpan GetTime(EncounterStats x) =>
 					x.TimeSpentByResult.TryGetValue(result, out TimeSpan time) ? time : TimeSpan.Zero;
 
-				var totalTimeColumn = new GridColumn
+				var timeColumn = new GridColumn
 				{
 					HeaderText = timeHeaderText,
 					DataCell = new TextBoxCell
 					{
-						Binding = new DelegateBinding<EncounterStats, string>(x =>
-						{
-							var time = GetTime(x);
-							var str = $@"{time:hh\h\ mm\m\ ss\s}";
-							if (time.Days > 0)
-							{
-								str = $@"{time:%d\d} " + str;
-							}
-
-							return str;
-						})
+						Binding = new DelegateBinding<EncounterStats, string>(x => FormatTimeSpan(GetTime(x)))
 					}
 				};
-				gridView.Columns.Add(totalTimeColumn);
-				customSorts[totalTimeColumn] = (left, right) => GetTime(left).CompareTo(GetTime(right));
+				gridView.Columns.Add(timeColumn);
+				customSorts[timeColumn] = (left, right) => GetTime(left).CompareTo(GetTime(right));
 			}
+
+			var successRateColumn = new GridColumn
+			{
+				HeaderText = "Success rate",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<EncounterStats, string>(x => $"{x.GetSuccessRate() * 100:0.0}%")
+				}
+			};
+			gridView.Columns.Add(successRateColumn);
+			customSorts[successRateColumn] = (left, right) => left.GetSuccessRate().CompareTo(right.GetSuccessRate());
 
 			sorter = new GridViewSorter<EncounterStats>(gridView, customSorts);
 			sorter.EnableSorting();
 
 			return gridView;
 		}
+
+		private string FormatTimeSpan(TimeSpan time)
+		{
+			var str = $@"{time:hh\h\ mm\m\ ss\s}";
+			if (time.Days > 0)
+			{
+				str = $@"{time:%d\d} " + str;
+			}
+
+			return str;
+		}
+
 
 		public void UpdateDataFromLogs(IEnumerable<LogData> logs)
 		{
