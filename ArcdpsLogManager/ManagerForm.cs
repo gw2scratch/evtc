@@ -32,9 +32,9 @@ namespace GW2Scratch.ArcdpsLogManager
 		private LogAnalytics LogAnalytics { get; } =
 			new LogAnalytics(new EVTCParser(), new LogProcessor(), new LogAnalyser());
 
-		private ApiData ApiData { get; } = new ApiData(new Gw2Client());
-		private UploadProcessor UploadProcessor { get; set; }
-		private LogDataProcessor LogDataProcessor { get; set; }
+		private ApiProcessor ApiProcessor { get; }
+		private UploadProcessor UploadProcessor { get; }
+		private LogDataProcessor LogDataProcessor { get; }
 
 		private ObservableCollection<LogData> logs = new ObservableCollection<LogData>();
 		private FilterCollection<LogData> logsFiltered;
@@ -43,17 +43,38 @@ namespace GW2Scratch.ArcdpsLogManager
 
 		public IEnumerable<LogData> LoadedLogs => logs;
 		public LogCache LogCache { get; }
+		public ApiData ApiData { get; }
 		private LogFilters Filters { get; } = new LogFilters();
 
 		private readonly List<FileSystemWatcher> fileSystemWatchers = new List<FileSystemWatcher>();
 
-		public ManagerForm(LogCache logCache)
+		public ManagerForm(LogCache logCache, ApiData apiData)
 		{
 			LogCache = logCache ?? throw new ArgumentNullException(nameof(logCache));
+			ApiData = apiData ?? throw new ArgumentNullException(nameof(apiData));
 
+			// Background processors
 			UploadProcessor = new UploadProcessor(new DpsReportUploader(), LogCache);
-			LogDataProcessor = new LogDataProcessor(LogCache, ApiData, LogAnalytics);
+			LogDataProcessor = new LogDataProcessor(LogCache, ApiProcessor, LogAnalytics);
+			ApiProcessor = new ApiProcessor(ApiData, new Gw2Client());
+			if (Settings.UseGW2Api)
+			{
+				ApiProcessor.StartBackgroundTask();
+			}
 
+			Settings.UseGW2ApiChanged += (sender, args) =>
+			{
+				if (Settings.UseGW2Api)
+				{
+					ApiProcessor.StartBackgroundTask();
+				}
+				else
+				{
+					ApiProcessor.StopBackgroundTask();
+				}
+			};
+
+			// Form layout
 			Icon = Resources.GetProgramIcon();
 			Title = "arcdps Log Manager";
 			ClientSize = new Size(1024, 768);
@@ -75,7 +96,8 @@ namespace GW2Scratch.ArcdpsLogManager
 			}
 			formLayout.EndVertical();
 
-			ApiData.Processed += (sender, args) =>
+			// Event handlers
+			ApiProcessor.Processed += (sender, args) =>
 			{
 				bool last = args.CurrentScheduledItems == 0;
 
@@ -87,7 +109,7 @@ namespace GW2Scratch.ArcdpsLogManager
 
 			Settings.LogRootPathChanged += (sender, args) => Application.Instance.Invoke(ReloadLogs);
 
-			Shown += (sender, args) => InitializeManager();
+			Shown += (sender, args) => ReloadLogs();
 			Closing += (sender, args) =>
 			{
 				if (LogCache?.ChangedSinceLastSave ?? false)
@@ -98,6 +120,7 @@ namespace GW2Scratch.ArcdpsLogManager
 				ApiData?.SaveDataToFile();
 			};
 
+			// Collection initialization
 			RecreateLogCollections(new ObservableCollection<LogData>(logs));
 		}
 
@@ -152,9 +175,9 @@ namespace GW2Scratch.ArcdpsLogManager
 				});
 			}
 
-			ApiData.Processed += UpdateApiLabel;
-			ApiData.Scheduled += UpdateApiLabel;
-			ApiData.Unscheduled += UpdateApiLabel;
+			ApiProcessor.Processed += UpdateApiLabel;
+			ApiProcessor.Scheduled += UpdateApiLabel;
+			ApiProcessor.Unscheduled += UpdateApiLabel;
 
 			// Layout of the status bar
 			var layout = new DynamicLayout();
@@ -195,7 +218,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			logCacheMenuItem.Click += (sender, args) => { new CacheDialog(this).ShowModal(this); };
 
 			var apiDataMenuItem = new ButtonMenuItem {Text = "&API data"};
-			apiDataMenuItem.Click += (sender, args) => { new ApiDialog(ApiData).ShowModal(this); };
+			apiDataMenuItem.Click += (sender, args) => { new ApiDialog(ApiProcessor).ShowModal(this); };
 
 			var settingsFormMenuItem = new ButtonMenuItem {Text = "&Settings"};
 			settingsFormMenuItem.Click += (sender, args) => { new SettingsForm().Show(); };
@@ -293,7 +316,7 @@ namespace GW2Scratch.ArcdpsLogManager
 				new GroupBox
 				{
 					Text = "Guild Wars 2 API",
-					Content = new BackgroundProcessorDetail {BackgroundProcessor = ApiData}
+					Content = new BackgroundProcessorDetail {BackgroundProcessor = ApiProcessor}
 				},
 				new GroupBox
 				{
@@ -322,13 +345,6 @@ namespace GW2Scratch.ArcdpsLogManager
 			return tabs;
 		}
 
-		private void InitializeManager()
-		{
-			ReloadLogs();
-
-			SetupApiWorker();
-		}
-
 		public void ReloadLogs()
 		{
 			logLoadTaskTokenSource?.Cancel();
@@ -340,28 +356,6 @@ namespace GW2Scratch.ArcdpsLogManager
 			SetupFileSystemWatchers();
 		}
 
-		private void SetupApiWorker()
-		{
-			Task.Run(ApiData.LoadDataFromFile).ContinueWith(_ =>
-			{
-				if (Settings.UseGW2Api)
-				{
-					ApiData.StartBackgroundTask();
-				}
-
-				Settings.UseGW2ApiChanged += (sender, args) =>
-				{
-					if (Settings.UseGW2Api)
-					{
-						ApiData.StartBackgroundTask();
-					}
-					else
-					{
-						ApiData.StopBackgroundTask();
-					}
-				};
-			});
-		}
 
 		private void SetupFileSystemWatchers()
 		{
@@ -371,7 +365,6 @@ namespace GW2Scratch.ArcdpsLogManager
 			}
 
 			fileSystemWatchers.Clear();
-
 			foreach (var directory in Settings.LogRootPaths)
 			{
 				try
@@ -419,9 +412,9 @@ namespace GW2Scratch.ArcdpsLogManager
 		private void FindLogs(CancellationToken cancellationToken)
 		{
 			LogDataProcessor.UnscheduleAll();
+
 			// TODO: Fix the counters being off if a log is currently being processed
 			LogDataProcessor.ResetTotalCounters();
-
 			try
 			{
 				var newLogs = new ObservableCollection<LogData>(logs);
@@ -433,7 +426,7 @@ namespace GW2Scratch.ArcdpsLogManager
 
 					if (log.ParsingStatus == ParsingStatus.Parsed)
 					{
-						ApiData.RegisterLog(log);
+						ApiProcessor.RegisterLog(log);
 					}
 					else
 					{

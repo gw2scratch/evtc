@@ -65,10 +65,11 @@ namespace GW2Scratch.ArcdpsLogManager
 		private void LoadManager()
 		{
 			var cache = LogCache.LoadFromFile();
+			var apiData = ApiData.LoadFromFile();
 
 			Application.Instance.Invoke(() =>
 			{
-				var managerForm = new ManagerForm(cache);
+				var managerForm = new ManagerForm(cache, apiData);
 				Application.Instance.MainForm = managerForm;
 				managerForm.Show();
 

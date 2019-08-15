@@ -9,13 +9,13 @@ namespace GW2Scratch.ArcdpsLogManager.Data
 	{
 		private readonly LogAnalytics analytics;
 		private readonly LogCache logCache;
-		private readonly ApiData apiData;
+		private readonly ApiProcessor apiProcessor;
 
-		public LogDataProcessor(LogCache logCache, ApiData apiData, LogAnalytics analytics)
+		public LogDataProcessor(LogCache logCache, ApiProcessor apiProcessor, LogAnalytics analytics)
 		{
 			this.analytics = analytics;
 			this.logCache = logCache;
-			this.apiData = apiData;
+			this.apiProcessor = apiProcessor;
 		}
 
 		protected override Task Process(LogData item, CancellationToken cancellationToken)
@@ -26,7 +26,7 @@ namespace GW2Scratch.ArcdpsLogManager.Data
 				logCache.CacheLogData(item);
 				if (item.ParsingStatus == ParsingStatus.Parsed)
 				{
-					apiData.RegisterLog(item);
+					apiProcessor.RegisterLog(item);
 				}
 			}, cancellationToken);
 		}

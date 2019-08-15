@@ -8,7 +8,7 @@ namespace GW2Scratch.ArcdpsLogManager.Dialogs
 {
 	public class ApiDialog : Dialog
 	{
-		public ApiDialog(ApiData apiData)
+		public ApiDialog(ApiProcessor apiProcessor)
 		{
 			Title = "API data - arcdps Log Manager";
 			ClientSize = new Size(300, -1);
@@ -30,7 +30,7 @@ namespace GW2Scratch.ArcdpsLogManager.Dialogs
 			var guildCountLabel = new Label {Text = "Not loaded"};
 			var sizeLabel = new Label {Text = "No file"};
 
-			UpdateLabelTexts(apiData, guildCountLabel, sizeLabel);
+			UpdateLabelTexts(apiProcessor.ApiData, guildCountLabel, sizeLabel);
 
 			formLayout.BeginVertical(new Padding(10), new Size(5, 5));
 			{
@@ -56,28 +56,31 @@ namespace GW2Scratch.ArcdpsLogManager.Dialogs
 
 			void OnGuildAdded(object sender, EventArgs _)
 			{
-				Application.Instance.AsyncInvoke(() => { UpdateLabelTexts(apiData, guildCountLabel, sizeLabel); });
+				Application.Instance.AsyncInvoke(() =>
+				{
+					UpdateLabelTexts(apiProcessor.ApiData, guildCountLabel, sizeLabel);
+				});
 			}
 
 			deleteButton.Click += (sender, args) =>
 			{
 				if (MessageBox.Show(
-					    $"Delete the API cache? The API data of all {apiData.CachedGuildCount} guilds will be " +
-					    "forgotten. Renamed guilds will have their names/tags updated, but data of disbanded " +
-					    "guilds won't be retrievable anymore. You may have to restart the program for " +
+					    $"Delete the API cache? The API data of all {apiProcessor.ApiData.CachedGuildCount} guilds " +
+					    "will be forgotten. Renamed guilds will have their names/tags updated, but data of " +
+					    "disbanded guilds won't be retrievable anymore. You may have to restart the program for " +
 					    "everything to update.",
 					    MessageBoxButtons.OKCancel) == DialogResult.Ok)
 				{
-					apiData.Clear();
-					apiData.SaveDataToFile();
+					apiProcessor.ApiData.Clear();
+					apiProcessor.ApiData.SaveDataToFile();
 					MessageBox.Show("API Cache deleted.");
-					UpdateLabelTexts(apiData, guildCountLabel, sizeLabel);
+					UpdateLabelTexts(apiProcessor.ApiData, guildCountLabel, sizeLabel);
 				}
 			};
 
-			apiData.Processed += OnGuildAdded;
+			apiProcessor.Processed += OnGuildAdded;
 
-			Closed += (sender, args) => apiData.Processed -= OnGuildAdded;
+			Closed += (sender, args) => apiProcessor.Processed -= OnGuildAdded;
 		}
 
 		private void UpdateLabelTexts(ApiData apiData, Label countLabel, Label cacheSizeLabel)

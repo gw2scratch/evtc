@@ -2,42 +2,34 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
 using GW2Scratch.ArcdpsLogManager.Data.Api;
-using GW2Scratch.ArcdpsLogManager.Logs;
-using Gw2Sharp;
-using Gw2Sharp.WebApi.Http;
-using Gw2Sharp.WebApi.V2.Models;
 using Newtonsoft.Json;
-using Emblem = GW2Scratch.ArcdpsLogManager.Data.Api.Emblem;
-using File = System.IO.File;
 
 namespace GW2Scratch.ArcdpsLogManager.Data
 {
-	public class ApiData : BackgroundProcessor<string>
+	public class ApiData
 	{
-		private static readonly TimeSpan TooManyRequestsDelay = TimeSpan.FromMinutes(1);
-		private const string NoGuildGuid = "00000000-0000-0000-0000-000000000000";
-
+		public const string NoGuildGuid = "00000000-0000-0000-0000-000000000000";
 		public static readonly ApiGuild NoGuild = new ApiGuild {Tag = "", Name = "No guild"};
 
-		private readonly Gw2Client apiClient;
-
-		private readonly ConcurrentDictionary<string, ApiGuild> guildDataCache =
-			new ConcurrentDictionary<string, ApiGuild>();
+		private readonly ConcurrentDictionary<string, ApiGuild> guildDataCache;
 
 		public int CachedGuildCount => guildDataCache.Count;
 
-
-		public ApiData(Gw2Client apiClient)
+		private ApiData()
 		{
-			this.apiClient = apiClient;
+			guildDataCache = new ConcurrentDictionary<string, ApiGuild>();
 		}
 
-		public void LoadDataFromFile()
+		private ApiData(IReadOnlyDictionary<string, ApiGuild> cache)
+		{
+			guildDataCache = new ConcurrentDictionary<string, ApiGuild>(cache);
+		}
+
+		/// <summary>
+		/// Loads saved API data from the cache file.
+		/// </summary>
+		public static ApiData LoadFromFile()
 		{
 			string filename = GetCacheFilename();
 
@@ -49,14 +41,16 @@ namespace GW2Scratch.ArcdpsLogManager.Data
 					var dictionary = (Dictionary<string, ApiGuild>) serializer.Deserialize(reader,
 						typeof(Dictionary<string, ApiGuild>));
 
-					foreach (var pair in dictionary)
-					{
-						guildDataCache[pair.Key] = pair.Value;
-					}
+					return new ApiData(dictionary);
 				}
 			}
+
+			return new ApiData();
 		}
 
+		/// <summary>
+		/// Save data to the cache file.
+		/// </summary>
 		public void SaveDataToFile()
 		{
 			string directory = GetCacheDirectory();
@@ -82,138 +76,31 @@ namespace GW2Scratch.ArcdpsLogManager.Data
 			File.Move(tmpFilename, filename);
 		}
 
+		/// <summary>
+		/// Provides the <see cref="FileInfo"/> of the cache file.
+		/// </summary>
 		public FileInfo GetCacheFileInfo()
 		{
 			return new FileInfo(GetCacheFilename());
 		}
 
-		private ApiGuild GetApiGuild(string guid)
+		/// <summary>
+		/// Saves guild data for a specific GUID.
+		/// </summary>
+		public void AddGuildData(string guid, ApiGuild guild)
 		{
-			if (guid == null)
-			{
-				throw new ArgumentNullException(nameof(guid));
-			}
-
-			if (guid == NoGuildGuid)
-			{
-				return NoGuild;
-			}
-
-			if (guildDataCache.TryGetValue(guid, out var data))
-			{
-				return data;
-			}
-
-			return null;
+			guildDataCache[guid] = guild;
 		}
 
-		protected override async Task Process(string item, CancellationToken cancellationToken)
-		{
-			Guild guild = null;
-			bool notFound = false;
-			bool retry;
-			do
-			{
-				try
-				{
-					guild = await apiClient.WebApi.V2.Guild[item].GetAsync(cancellationToken);
-					retry = false;
-				}
-				catch (TooManyRequestsException)
-				{
-					await Task.Delay(TooManyRequestsDelay, cancellationToken);
-					retry = true;
-				}
-				catch (BadRequestException)
-				{
-					// Currently, for some guilds that do not exist the API return a 400 error.
-					notFound = true;
-					retry = false;
-				}
-				catch (NotFoundException)
-				{
-					notFound = true;
-					retry = false;
-				}
-			} while (retry);
+		public bool IsCached(string guid) => guildDataCache.ContainsKey(guid);
 
-			if (guild != null)
-			{
-				Emblem emblem;
-				if (guild.Emblem.Background.Id == 0 && guild.Emblem.Foreground.Id == 0)
-				{
-					// This is a workaround for Gw2Sharp defining the Emblem even if it doesn't exist.
-					emblem = null;
-				}
-				else
-				{
-					emblem = new Emblem
-					{
-						Background = new EmblemPart
-						{
-							Id = guild.Emblem.Background.Id,
-							Colors = guild.Emblem.Background.Colors.ToList()
-						},
-						Foreground = new EmblemPart
-						{
-							Id = guild.Emblem.Foreground.Id,
-							Colors = guild.Emblem.Foreground.Colors.ToList()
-						},
-						Flags = guild.Emblem.Flags.List.Select(x => x.RawValue).ToList()
-					};
-				}
-
-				var apiGuild = new ApiGuild
-				{
-					Id = item,
-					Name = guild.Name,
-					Tag = guild.Tag,
-					Emblem = emblem
-				};
-				guildDataCache[item] = apiGuild;
-			}
-			else if (notFound)
-			{
-				guildDataCache[item] = null;
-			}
-		}
-
-		// Forgets all cached data.
+		/// <summary>
+		/// Forgets all cached data.
+		/// </summary>
 		public void Clear()
 		{
 			guildDataCache.Clear();
 			SaveDataToFile();
-		}
-
-		/// <summary>
-		/// Register a guild GUID, potentially scheduling it for retrieval of data from the API.
-		/// </summary>
-		/// <param name="guid">A guild GUID</param>
-		public void RegisterGuild(string guid)
-		{
-			if (guid == NoGuildGuid)
-			{
-				return;
-			}
-
-			if (!guildDataCache.ContainsKey(guid) && !IsScheduledOrBeingProcessed(guid))
-			{
-				Schedule(guid, false);
-			}
-		}
-
-		/// <summary>
-		/// Register a log, potentially scheduling all possible data for retrieval from the API.
-		/// </summary>
-		public void RegisterLog(LogData log)
-		{
-			foreach (var player in log.Players)
-			{
-				if (player.GuildGuid != null)
-				{
-					RegisterGuild(player.GuildGuid);
-				}
-			}
 		}
 
 		/// <summary>
@@ -236,6 +123,26 @@ namespace GW2Scratch.ArcdpsLogManager.Data
 		public string GetGuildTag(string guid, string unavailableDefault = "???")
 		{
 			return GetApiGuild(guid)?.Tag ?? unavailableDefault;
+		}
+
+		private ApiGuild GetApiGuild(string guid)
+		{
+			if (guid == null)
+			{
+				throw new ArgumentNullException(nameof(guid));
+			}
+
+			if (guid == NoGuildGuid)
+			{
+				return NoGuild;
+			}
+
+			if (guildDataCache.TryGetValue(guid, out var data))
+			{
+				return data;
+			}
+
+			return null;
 		}
 
 		private static string GetCacheDirectory()
