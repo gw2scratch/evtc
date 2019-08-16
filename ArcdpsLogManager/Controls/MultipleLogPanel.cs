@@ -54,6 +54,8 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 
 		private void UpdateDpsReportUploadStatus()
 		{
+			if (logData == null) return;
+
 			int notUploaded = logData.Count(x => x.DpsReportEIUpload.UploadState == UploadState.NotUploaded);
 			int queued = logData.Count(x => x.DpsReportEIUpload.UploadState == UploadState.Queued);
 			int uploading = logData.Count(x => x.DpsReportEIUpload.UploadState == UploadState.Uploading);
