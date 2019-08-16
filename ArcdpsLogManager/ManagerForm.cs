@@ -44,7 +44,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		public IEnumerable<LogData> LoadedLogs => logs;
 		public LogCache LogCache { get; }
 		public ApiData ApiData { get; }
-		private LogFilters Filters { get; } = new LogFilters();
+		private LogFilters Filters { get; } = new LogFilters(new SettingsFilters());
 
 		private readonly List<FileSystemWatcher> fileSystemWatchers = new List<FileSystemWatcher>();
 

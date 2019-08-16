@@ -1,9 +1,10 @@
 using System;
+using System.Collections.Generic;
 using GW2Scratch.EVTCAnalytics.Statistics.Encounters.Results;
 
 namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 {
-	public class LogFilters
+	public class LogFilters : ILogFilter
 	{
 		public static readonly DateTime GuildWars2ReleaseDate = new DateTime(2012, 8, 28);
 		public const string EncounterFilterAll = "All";
@@ -21,8 +22,23 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 		public DateTime? MinDateTimeFilter { get; set; } = GuildWars2ReleaseDate;
 		public DateTime? MaxDateTimeFilter { get; set; } = DateTime.Now.Date.AddDays(1);
 
+		private readonly IReadOnlyList<ILogFilter> additionalFilters;
+
+		public LogFilters(params ILogFilter[] additionalFilters)
+		{
+			this.additionalFilters = additionalFilters;
+		}
+
 		public bool FilterLog(LogData log)
 		{
+			foreach (var filter in additionalFilters)
+			{
+				if (!filter.FilterLog(log))
+				{
+					return false;
+				}
+			}
+
 			return FilterByEncounterName(log) && FilterByResult(log) && FilterByParsingStatus(log) && FilterByTime(log);
 		}
 

@@ -36,14 +36,38 @@ namespace GW2Scratch.ArcdpsLogManager
 				}
 			};
 
+			var durationCheckBox = new CheckBox
+			{
+				Text = "Exclude short logs",
+				Checked = Settings.MinimumLogDurationSeconds.HasValue,
+				ThreeState = false
+			};
+
+			var durationTextBox = new NumericMaskedTextBox<int>
+			{
+				Value = Settings.MinimumLogDurationSeconds ?? 5,
+				Enabled = durationCheckBox.Checked ?? false,
+				Width = 50
+			};
+			durationCheckBox.CheckedChanged += (sender, args) =>
+				durationTextBox.Enabled = durationCheckBox.Checked ?? false;
+			var durationLabel = new Label
+			{
+				Text = "Minimum duration in seconds:", VerticalAlignment = VerticalAlignment.Center
+			};
+
+
 			var saveButton = new Button {Text = "Save"};
 			saveButton.Click += (sender, args) =>
 			{
 				Settings.UseGW2Api = apiDataCheckbox.Checked ?? false;
 				if (locationTextBox.Text.Trim() != Settings.LogRootPaths.FirstOrDefault())
 				{
-					Settings.LogRootPaths = new [] {locationTextBox.Text};
+					Settings.LogRootPaths = new[] {locationTextBox.Text};
 				}
+
+				Settings.MinimumLogDurationSeconds =
+					durationCheckBox.Checked.Value ? (int?) durationTextBox.Value : null;
 
 				SettingsSaved?.Invoke(this, EventArgs.Empty);
 
@@ -65,6 +89,12 @@ namespace GW2Scratch.ArcdpsLogManager
 					});
 					layout.AddRow(locationTextBox);
 					layout.AddRow(locationDialogButton);
+				}
+				layout.EndGroup();
+				layout.BeginGroup("Log filters", new Padding(5), new Size(5, 5));
+				{
+					layout.AddRow(durationCheckBox);
+					layout.AddRow(durationLabel, durationTextBox, null);
 				}
 				layout.EndGroup();
 				layout.BeginGroup("Data", new Padding(5), new Size(5, 5));

@@ -24,6 +24,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			public bool ShowGuildTagsInLogDetail { get; set; } = false;
 			public bool UseGW2Api { get; set; } = true;
 			public string DpsReportUserToken { get; set; } = string.Empty;
+			public int? MinimumLogDurationSeconds { get; set; } = null;
 
 			public static StoredSettings LoadFromFile()
 			{
@@ -54,6 +55,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			ShowGuildTagsInLogDetailChanged += (sender, args) => SaveToFile();
 			UseGW2ApiChanged += (sender, args) => SaveToFile();
 			DpsReportUserTokenChanged += (sender, args) => SaveToFile();
+			MinimumLogDurationSecondsChanged += (sender, args) => SaveToFile();
 
 			return StoredSettings.LoadFromFile();
 		});
@@ -172,12 +174,26 @@ namespace GW2Scratch.ArcdpsLogManager
 			}
 		}
 
+		public static int? MinimumLogDurationSeconds
+		{
+			get => Values.MinimumLogDurationSeconds;
+			set
+			{
+				if (Values.MinimumLogDurationSeconds != value)
+				{
+					Values.MinimumLogDurationSeconds = value;
+					OnMinimumLogDurationSecondsChanged();
+				}
+			}
+		}
+
 		public static event EventHandler<EventArgs> LogRootPathChanged;
 		public static event EventHandler<EventArgs> ShowDebugDataChanged;
 		public static event EventHandler<EventArgs> ShowSquadCompositionsChanged;
 		public static event EventHandler<EventArgs> ShowGuildTagsInLogDetailChanged;
 		public static event EventHandler<EventArgs> UseGW2ApiChanged;
 		public static event EventHandler<EventArgs> DpsReportUserTokenChanged;
+		public static event EventHandler<EventArgs> MinimumLogDurationSecondsChanged;
 
 		private static void OnLogRootPathsChanged()
 		{
@@ -207,6 +223,11 @@ namespace GW2Scratch.ArcdpsLogManager
 		private static void OnDpsReportUserTokenChanged()
 		{
 			DpsReportUserTokenChanged?.Invoke(null, EventArgs.Empty);
+		}
+
+		private static void OnMinimumLogDurationSecondsChanged()
+		{
+			MinimumLogDurationSecondsChanged?.Invoke(null, EventArgs.Empty);
 		}
 	}
 }
