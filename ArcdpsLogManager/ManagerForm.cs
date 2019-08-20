@@ -311,23 +311,24 @@ namespace GW2Scratch.ArcdpsLogManager
 
 			// Service status
 			var serviceStatus = new DynamicLayout {Spacing = new Size(10, 10), Padding = new Padding(5)};
-			serviceStatus.AddRow(
-				new GroupBox
+			serviceStatus.BeginHorizontal();
+			{
+				serviceStatus.Add(new GroupBox
 				{
 					Text = "Uploads",
 					Content = new BackgroundProcessorDetail {BackgroundProcessor = UploadProcessor}
-				},
-				new GroupBox
+				}, xscale: true);
+				serviceStatus.Add(new GroupBox
 				{
 					Text = "Guild Wars 2 API",
 					Content = new BackgroundProcessorDetail {BackgroundProcessor = ApiProcessor}
-				},
-				new GroupBox
+				}, xscale: true);
+				serviceStatus.Add(new GroupBox
 				{
 					Text = "Log parsing",
 					Content = new BackgroundProcessorDetail {BackgroundProcessor = LogDataProcessor}
-				},
-				null);
+				}, xscale: true);
+			}
 			serviceStatus.AddRow(null);
 			var servicePage = new TabPage
 			{
@@ -376,8 +377,10 @@ namespace GW2Scratch.ArcdpsLogManager
 					var watcher = new FileSystemWatcher(directory);
 					watcher.IncludeSubdirectories = true;
 					watcher.Filter = "*evtc"; // Matches both .evtc and .zevtc files.
-					watcher.Created += (sender, args) => Application.Instance.AsyncInvoke(() => AddNewLog(args.FullPath));
-					watcher.Renamed += (sender, args) => Application.Instance.AsyncInvoke(() => AddNewLog(args.FullPath));
+					watcher.Created += (sender, args) =>
+						Application.Instance.AsyncInvoke(() => AddNewLog(args.FullPath));
+					watcher.Renamed += (sender, args) =>
+						Application.Instance.AsyncInvoke(() => AddNewLog(args.FullPath));
 					watcher.EnableRaisingEvents = true;
 
 					fileSystemWatchers.Add(watcher);
