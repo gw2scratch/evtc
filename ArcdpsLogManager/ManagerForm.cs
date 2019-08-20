@@ -55,8 +55,8 @@ namespace GW2Scratch.ArcdpsLogManager
 
 			// Background processors
 			UploadProcessor = new UploadProcessor(new DpsReportUploader(), LogCache);
-			LogDataProcessor = new LogDataProcessor(LogCache, ApiProcessor, LogAnalytics);
 			ApiProcessor = new ApiProcessor(ApiData, new Gw2Client());
+			LogDataProcessor = new LogDataProcessor(LogCache, ApiProcessor, LogAnalytics);
 			if (Settings.UseGW2Api)
 			{
 				ApiProcessor.StartBackgroundTask();

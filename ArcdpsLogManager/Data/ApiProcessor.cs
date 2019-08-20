@@ -19,8 +19,8 @@ namespace GW2Scratch.ArcdpsLogManager.Data
 
 		public ApiProcessor(ApiData apiData, Gw2Client apiClient)
 		{
-			ApiData = apiData;
-			this.apiClient = apiClient;
+			ApiData = apiData ?? throw new ArgumentNullException(nameof(apiData));
+			this.apiClient = apiClient ?? throw new ArgumentNullException(nameof(apiClient));
 		}
 		protected override async Task Process(string item, CancellationToken cancellationToken)
 		{

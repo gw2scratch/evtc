@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using GW2Scratch.ArcdpsLogManager.Analytics;
@@ -13,9 +14,9 @@ namespace GW2Scratch.ArcdpsLogManager.Data
 
 		public LogDataProcessor(LogCache logCache, ApiProcessor apiProcessor, LogAnalytics analytics)
 		{
-			this.analytics = analytics;
-			this.logCache = logCache;
-			this.apiProcessor = apiProcessor;
+			this.analytics = analytics ?? throw new ArgumentNullException(nameof(analytics));
+			this.logCache = logCache ?? throw new ArgumentNullException(nameof(logCache));
+			this.apiProcessor = apiProcessor ?? throw new ArgumentNullException(nameof(apiProcessor));
 		}
 
 		protected override Task Process(LogData item, CancellationToken cancellationToken)

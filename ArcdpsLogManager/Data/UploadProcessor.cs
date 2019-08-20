@@ -73,8 +73,8 @@ namespace GW2Scratch.ArcdpsLogManager.Data
 
 		public UploadProcessor(DpsReportUploader dpsReportUploader, LogCache logCache)
 		{
-			DpsReportUploader = dpsReportUploader;
-			LogCache = logCache;
+			DpsReportUploader = dpsReportUploader ?? throw new ArgumentNullException(nameof(dpsReportUploader));
+			LogCache = logCache ?? throw new ArgumentNullException(nameof(logCache));
 
 			DpsReportUserToken = Settings.DpsReportUserToken;
 			Settings.DpsReportUserTokenChanged += (sender, args) => DpsReportUserToken = Settings.DpsReportUserToken;
