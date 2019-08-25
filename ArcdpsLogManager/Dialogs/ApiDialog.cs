@@ -32,12 +32,18 @@ namespace GW2Scratch.ArcdpsLogManager.Dialogs
 
 			UpdateLabelTexts(apiProcessor.ApiData, guildCountLabel, sizeLabel);
 
-			formLayout.BeginVertical(new Padding(10), new Size(5, 5));
+			formLayout.BeginVertical(new Padding(10), new Size(0, 0));
 			{
+				// This is a very hacky solution for WrapMode.Word not working properly on the Gtk platform
 				formLayout.AddRow(new Label
 				{
-					Text = "Guild names and tags have to be loaded from the official GW2 API as\n" +
-					       "the EVTC logs only contain GUID values."
+					Text = "Guild names and tags have to be loaded from the official GW2 API as",
+					Wrap = WrapMode.None
+				});
+				formLayout.AddRow(new Label
+				{
+					Text = "the EVTC logs only contain GUID values.",
+					Wrap = WrapMode.None
 				});
 			}
 			formLayout.EndVertical();
