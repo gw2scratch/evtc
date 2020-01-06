@@ -72,6 +72,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 
 		public IEncounterIdentifier EncounterIdentifier { get; set; } = new DefaultEncounterIdentifier();
 		public IEncounterNameProvider EncounterNameProvider { get; set; } = new LocalizedEncounterNameProvider();
+		public bool IgnoreUnknownEvents { get; set; } = true;
 
 		public Log GetProcessedLog(ParsedLog log)
 		{
@@ -536,7 +537,11 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					continue;
 				}
 
-				events.Add(GetEvent(agentsByAddress, skillsById, item));
+				var processedEvent = GetEvent(agentsByAddress, skillsById, item);
+				if (!(processedEvent is UnknownEvent) || !IgnoreUnknownEvents)
+				{
+					events.Add(processedEvent);
+				}
 			}
 
 			return new CombatItemData(events, startTime, endTime, pointOfView, languageId, gameBuild, gameShardId,
