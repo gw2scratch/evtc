@@ -50,6 +50,8 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		// River of Souls
 		public const int Desmina = 19828;
 		// Statues of Grenth
+		public const int BrokenKing = 19691;
+		public const int EaterOfSouls = 19536;
 		public const int EyeOfJudgment = 19651;
 		public const int EyeOfFate = 19844;
 		// Dhuum

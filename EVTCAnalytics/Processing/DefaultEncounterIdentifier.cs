@@ -440,6 +440,10 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						return Encounter.SoullessHorror;
 					case SpeciesIds.Desmina:
 						return Encounter.RiverOfSouls;
+					case SpeciesIds.BrokenKing:
+						return Encounter.BrokenKing;
+					case SpeciesIds.EaterOfSouls:
+						return Encounter.EaterOfSouls;
 					case SpeciesIds.EyeOfJudgment:
 					case SpeciesIds.EyeOfFate:
 						return Encounter.Eyes;
