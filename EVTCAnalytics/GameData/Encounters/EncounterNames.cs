@@ -14,6 +14,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 			{Encounter.BanditTrio, "Bandit Trio"},
 			{Encounter.Matthias, "Matthias Gabrel"},
 			{Encounter.KeepConstruct, "Keep Construct"},
+			{Encounter.TwistedCastle, "Twisted Castle"},
 			{Encounter.Xera, "Xera"},
 			{Encounter.Cairn, "Cairn the Indomitable"},
 			{Encounter.MursaatOverseer, "Mursaat Overseer"},

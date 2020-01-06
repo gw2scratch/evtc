@@ -16,6 +16,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 				{Encounter.BanditTrio, EncounterCategory.RaidWing2},
 				{Encounter.Matthias, EncounterCategory.RaidWing2},
 				{Encounter.KeepConstruct, EncounterCategory.RaidWing3},
+				{Encounter.TwistedCastle, EncounterCategory.RaidWing3},
 				{Encounter.Xera, EncounterCategory.RaidWing3},
 				{Encounter.Cairn, EncounterCategory.RaidWing4},
 				{Encounter.MursaatOverseer, EncounterCategory.RaidWing4},

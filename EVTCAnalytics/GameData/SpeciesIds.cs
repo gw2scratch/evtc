@@ -18,18 +18,30 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		public const int Karde = 15430;
 
 		// Wing 2
+		// Slothasor
+		public const int Slothasor = 16123;
 		// Trio
 		public const int Berg = 16088;
 		public const int Zane = 16137;
 		public const int Narella = 16125;
 		public const int TrioCagePrisoner = 16103;
+		// Matthias
+		public const int MatthiasGabrel = 16115;
 
 		// Wing 3
+		// Escort
+		// Keep Construct
+		public const int KeepConstruct = 16235;
+		// Twisted Castle
+		public const int HauntingStatue = 16247;
+		// Xera
 		public const int Xera = 16246;
 		public const int XeraSecondPhase = 16286;
 
 		// Wing 4
-		// Deimos
+		public const int CairnTheIndomitable = 17194;
+		public const int MursaatOverseer = 17172;
+		public const int Samarog = 17188;
 		public const int Deimos = 17154;
 
 		// Wing 5
@@ -56,6 +68,15 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		public const int WyvernMatriarch = 20997;
 		public const int WyvernPatriarch = 21183;
 
+		// Wing 7
+		// Cardinal Adina
+		public const int CardinalAdina = 22006;
+		// Cardinal Sabir
+		public const int CadinalSabir = 21964;
+		// Qadim the Peerless
+		public const int QadimThePeerless = 22000;
+
+
 		// Special Forces Training Area
 		public const int StandardKittyGolem = 16199;
 		public const int MediumKittyGolem = 19645;
@@ -63,11 +84,23 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		public const int MassiveKittyGolem = 16202;
 
 		// Fractals
+		// Nightmare CM
+		public const int MAMA = 17021;
+		public const int SiaxTheCorrupted = 17028;
+		public const int EnsolyssOfTheEndlessTorment = 16948;
 		// Shattered Observatory CM
+		public const int Skorvald = 17632;
 		public const int Artsariiv = 17949;
 		public const int Arkk = 17759;
 
 		// Festivals
 		public const int Freezie = 21333;
+
+		// Strike Missions
+		public const int IcebroodConstruct = 22154;
+		public const int VoiceOfTheFallen = 22343;
+		public const int ClawOfTheFallen = 22481;
+		public const int FraenirOfJormag = 22492;
+		public const int Boneskinner = 22521;
 	}
 }

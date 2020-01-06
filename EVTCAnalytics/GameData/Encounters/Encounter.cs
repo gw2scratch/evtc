@@ -11,7 +11,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 		 * Do not confuse the numbers with species ids of encounter bosses, they do not have a 1 to 1 mapping.
 		 *
 		 * When adding a new encounter, make sure to also:
-		 *   - Add an English name in EnglishEncounterNames
+		 *   - Add an English name in EncounterNames
 		 *   - Add a category in EncounterCategories
 		 */
 
@@ -29,6 +29,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 
 		// Raids - Wing 3
 		KeepConstruct = 32,
+		TwistedCastle = 33,
 		Xera = 34,
 
 		// Raids - Wing 4
