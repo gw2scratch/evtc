@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Eto.Forms;
 using GW2Scratch.ArcdpsLogManager.Logs;
-using GW2Scratch.EVTCAnalytics.Statistics.Encounters.Results;
+using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
 
 namespace GW2Scratch.ArcdpsLogManager.Sections.Statistics.Tabs
 {

@@ -5,7 +5,7 @@ using GW2Scratch.ArcdpsLogManager.Analytics;
 using GW2Scratch.ArcdpsLogManager.Data;
 using GW2Scratch.ArcdpsLogManager.Logs;
 using GW2Scratch.ArcdpsLogManager.Sections;
-using GW2Scratch.EVTCAnalytics.Statistics.Encounters.Results;
+using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
 
 namespace GW2Scratch.ArcdpsLogManager.Controls
 {

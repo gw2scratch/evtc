@@ -3,6 +3,7 @@ using Eto.Forms;
 using Eto.Generator;
 using GW2Scratch.EVTCAnalytics;
 using GW2Scratch.EVTCAnalytics.Model.Skills;
+using GW2Scratch.EVTCAnalytics.Statistics;
 
 namespace GW2Scratch.EVTCInspector
 {

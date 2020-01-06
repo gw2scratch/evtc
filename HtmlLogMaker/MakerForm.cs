@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using Eto.Drawing;
 using Eto.Forms;
 using GW2Scratch.EVTCAnalytics;
+using GW2Scratch.EVTCAnalytics.Processing;
+using GW2Scratch.EVTCAnalytics.Statistics;
 using ScratchLogHTMLGenerator;
 
 namespace GW2Scratch.HtmlLogMaker
@@ -68,7 +70,6 @@ namespace GW2Scratch.HtmlLogMaker
 
 					var parser = new EVTCParser();
 					var processor = new LogProcessor();
-					var analysis = new LogAnalyser();
 					var generator = new HtmlGenerator(ApiData);
 
 					int finishedTaskCount = 0;
@@ -95,7 +96,8 @@ namespace GW2Scratch.HtmlLogMaker
 							times.Add(("processing", (taskStopwatch.Elapsed - lastElapsed).TotalMilliseconds));
 							lastElapsed = taskStopwatch.Elapsed;
 
-							var stats = analysis.GetStatistics(processedLog, ApiData);
+							var analysis = new LogAnalyzer(processedLog, ApiData);
+							var stats = analysis.GetStatistics();
 
 							times.Add(("stats", (taskStopwatch.Elapsed - lastElapsed).TotalMilliseconds));
 							lastElapsed = taskStopwatch.Elapsed;

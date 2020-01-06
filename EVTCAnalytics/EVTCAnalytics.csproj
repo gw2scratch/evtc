@@ -6,6 +6,7 @@
     <AssemblyName>GW2Scratch.EVTCAnalytics</AssemblyName>
     <RootNamespace>GW2Scratch.EVTCAnalytics</RootNamespace>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />

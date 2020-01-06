@@ -1,5 +1,7 @@
 using System;
 using GW2Scratch.EVTCAnalytics;
+using GW2Scratch.EVTCAnalytics.Model;
+using GW2Scratch.EVTCAnalytics.Processing;
 
 namespace GW2Scratch.ArcdpsLogManager.Analytics
 {
@@ -7,13 +9,13 @@ namespace GW2Scratch.ArcdpsLogManager.Analytics
 	{
 		public EVTCParser Parser { get; }
 		public LogProcessor Processor { get; }
-		public LogAnalyser Analyser { get; }
+		public Func<Log, LogAnalyzer> AnalyzerFactory { get; }
 
-		public LogAnalytics(EVTCParser parser, LogProcessor processor, LogAnalyser analyser)
+		public LogAnalytics(EVTCParser parser, LogProcessor processor, Func<Log, LogAnalyzer> analyzerFactory)
 		{
 			Parser = parser ?? throw new ArgumentNullException(nameof(parser));
 			Processor = processor ?? throw new ArgumentNullException(nameof(processor));
-			Analyser = analyser ?? throw new ArgumentNullException(nameof(analyser));
+			AnalyzerFactory = analyzerFactory ?? throw new ArgumentNullException(nameof(analyzerFactory));
 		}
 	}
 }

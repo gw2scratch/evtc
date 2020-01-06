@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using GW2Scratch.ArcdpsLogManager.Analytics;
-using GW2Scratch.EVTCAnalytics.Statistics.Encounters.Results;
+using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
 
 namespace GW2Scratch.ArcdpsLogManager.Logs
 {
@@ -16,11 +16,13 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 		public IEnumerable<LogPlayer> Players { get; set; }
 		public EncounterResult EncounterResult { get; set; } = EncounterResult.Unknown;
 		public string EncounterName { get; set; } = "Unknown";
+
 		/// <summary>
 		/// Time when the encounter started.
 		/// Is only an estimate if <see cref="ParsingStatus"/> is not <see cref="Logs.ParsingStatus.Parsed"/>.
 		/// </summary>
 		public DateTimeOffset EncounterStartTime { get; set; }
+
 		public TimeSpan EncounterDuration { get; set; }
 
 		public LogUpload DpsReportEIUpload { get; set; } = new LogUpload();
@@ -73,17 +75,17 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 
 				var parsedLog = logAnalytics.Parser.ParseLog(FileInfo.FullName);
 				var log = logAnalytics.Processor.GetProcessedLog(parsedLog);
+				var analyzer = logAnalytics.AnalyzerFactory(log);
 
-				var encounter = logAnalytics.Analyser.GetEncounter(log);
-				EncounterName = encounter.GetName();
-				EncounterResult = encounter.GetResult();
-				Players = logAnalytics.Analyser.GetPlayers(log).Where(x => x.Identified).Select(x =>
+				EncounterName = log.EncounterName;
+				EncounterResult = analyzer.GetResult();
+				Players = analyzer.GetPlayers().Where(x => x.Identified).Select(x =>
 					new LogPlayer(x.Name, x.AccountName, x.Subgroup, x.Profession, x.EliteSpecialization,
 						GetGuildGuid(x.GuildGuid))
 				).ToArray();
 
 				EncounterStartTime = log.StartTime.ServerTime;
-				EncounterDuration = logAnalytics.Analyser.GetEncounterDuration(encounter);
+				EncounterDuration = analyzer.GetEncounterDuration();
 
 				stopwatch.Stop();
 
@@ -102,13 +104,13 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 		{
 			string GetPart(byte[] bytes, int from, int to)
 			{
-                var builder = new StringBuilder();
-                for (int i = from; i < to; i++)
-                {
-	                builder.Append($"{bytes[i]:x2}");
-                }
+				var builder = new StringBuilder();
+				for (int i = from; i < to; i++)
+				{
+					builder.Append($"{bytes[i]:x2}");
+				}
 
-                return builder.ToString();
+				return builder.ToString();
 			}
 
 			if (guidBytes == null) return null;

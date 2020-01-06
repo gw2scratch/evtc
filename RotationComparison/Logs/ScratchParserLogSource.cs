@@ -85,8 +85,7 @@ namespace GW2Scratch.RotationComparison.Logs
 		public string GetEncounterName()
 		{
 			var log = GetLog();
-			var analyser = new LogAnalyser();
-			return analyser.GetEncounter(log).GetName();
+			return log.EncounterName;
 		}
 
 

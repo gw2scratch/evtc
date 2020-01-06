@@ -18,6 +18,7 @@ using GW2Scratch.ArcdpsLogManager.Sections;
 using GW2Scratch.ArcdpsLogManager.Timing;
 using GW2Scratch.ArcdpsLogManager.Uploaders;
 using GW2Scratch.EVTCAnalytics;
+using GW2Scratch.EVTCAnalytics.Processing;
 using Gw2Sharp;
 
 namespace GW2Scratch.ArcdpsLogManager
@@ -30,7 +31,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		private LogFinder LogFinder { get; } = new LogFinder();
 
 		private LogAnalytics LogAnalytics { get; } =
-			new LogAnalytics(new EVTCParser(), new LogProcessor(), new LogAnalyser());
+			new LogAnalytics(new EVTCParser(), new LogProcessor(), log => new LogAnalyzer(log, null));
 
 		private ApiProcessor ApiProcessor { get; }
 		private UploadProcessor UploadProcessor { get; }

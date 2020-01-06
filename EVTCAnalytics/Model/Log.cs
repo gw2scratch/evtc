@@ -1,23 +1,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using GW2Scratch.EVTCAnalytics.Events;
+using GW2Scratch.EVTCAnalytics.GameData;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
 using GW2Scratch.EVTCAnalytics.Model.Skills;
-using GW2Scratch.EVTCAnalytics.Statistics.Encounters;
+using GW2Scratch.EVTCAnalytics.Processing.Encounters;
 
 namespace GW2Scratch.EVTCAnalytics.Model
 {
 	public class Log
 	{
-		private readonly Event[] events;
-		private readonly Agent[] agents;
-		private readonly Skill[] skills;
-
-		public IEnumerable<Event> Events => events;
-		public IEnumerable<Agent> Agents => agents;
-		public IEnumerable<Skill> Skills => skills;
+		public IReadOnlyList<Event> Events { get; }
+		public IReadOnlyList<Agent> Agents { get; }
+		public IReadOnlyList<Skill> Skills { get; }
 
 		public string EVTCVersion { get; }
+		public GameLanguage GameLanguage { get; }
 
 		public LogTime StartTime { get; }
 		public LogTime EndTime { get; }
@@ -30,12 +28,19 @@ namespace GW2Scratch.EVTCAnalytics.Model
 		public int? GameShardId { get; }
 		public int? MapId { get; }
 
+		public string EncounterName { get; }
+		public IEncounterData EncounterData { get; }
+
 		public Log(Agent mainTarget, LogType logType, IEnumerable<Event> events, IEnumerable<Agent> agents,
-			IEnumerable<Skill> skills, string evtcVersion, LogTime startTime, LogTime endTime, Player pointOfView,
-			int? language, int? gameBuild, int? gameShardId, int? mapId)
+			IEnumerable<Skill> skills, IEncounterData encounterData, string encounterName,
+			GameLanguage gameLanguage, string evtcVersion, LogTime startTime, LogTime endTime,
+			Player pointOfView, int? language, int? gameBuild, int? gameShardId, int? mapId)
 		{
 			MainTarget = mainTarget;
 			LogType = logType;
+			EncounterData = encounterData;
+			EncounterName = encounterName;
+			GameLanguage = gameLanguage;
 			EVTCVersion = evtcVersion;
 			StartTime = startTime;
 			EndTime = endTime;
@@ -44,10 +49,9 @@ namespace GW2Scratch.EVTCAnalytics.Model
 			GameBuild = gameBuild;
 			GameShardId = gameShardId;
 			MapId = mapId;
-			this.events = events as Event[] ?? events.ToArray();
-			this.agents = agents as Agent[] ?? agents.ToArray();
-			this.skills = skills as Skill[] ?? skills.ToArray();
+			Events = events as Event[] ?? events.ToArray();
+			Agents = agents as Agent[] ?? agents.ToArray();
+			Skills = skills as Skill[] ?? skills.ToArray();
 		}
-
 	}
 }

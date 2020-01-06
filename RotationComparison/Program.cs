@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GW2Scratch.EVTCAnalytics;
 using GW2Scratch.EVTCAnalytics.GW2Api.V2;
+using GW2Scratch.EVTCAnalytics.Statistics;
 using GW2Scratch.RotationComparison.GW2Api;
 using GW2Scratch.RotationComparison.Logs;
 

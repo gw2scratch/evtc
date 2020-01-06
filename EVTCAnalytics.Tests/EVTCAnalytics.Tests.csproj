@@ -43,6 +43,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GameData\Encounters\EncounterCategoryTests.cs" />
+    <Compile Include="GameData\Encounters\EncounterNameTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Statistics\Buffs\IntensityBuffStackCollectionTests.cs" />
   </ItemGroup>

@@ -10,6 +10,7 @@ using GW2Scratch.ArcdpsLogManager.Logs;
 using GW2Scratch.EVTCAnalytics;
 using GW2Scratch.EVTCAnalytics.Model;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
+using GW2Scratch.EVTCAnalytics.Processing;
 
 namespace GW2Scratch.ArcdpsLogManager.Sections
 {

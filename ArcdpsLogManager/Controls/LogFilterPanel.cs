@@ -6,7 +6,6 @@ using Eto.Forms;
 using GW2Scratch.ArcdpsLogManager.Logs;
 using GW2Scratch.ArcdpsLogManager.Logs.Filters;
 using GW2Scratch.ArcdpsLogManager.Sections;
-using GW2Scratch.EVTCAnalytics.Statistics.Encounters.Results;
 
 namespace GW2Scratch.ArcdpsLogManager.Controls
 {

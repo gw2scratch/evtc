@@ -13,6 +13,7 @@ using GW2Scratch.EVTCAnalytics.GW2Api.V2;
 using GW2Scratch.EVTCAnalytics.Model;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
 using GW2Scratch.EVTCAnalytics.Parsed;
+using GW2Scratch.EVTCAnalytics.Processing;
 using GW2Scratch.EVTCAnalytics.Statistics;
 using ScratchLogHTMLGenerator;
 
@@ -209,7 +210,6 @@ namespace GW2Scratch.EVTCInspector
 
 			var parser = new EVTCParser();
 			var processor = new LogProcessor();
-			var analysis = new LogAnalyser();
 			var generator = new HtmlGenerator(ApiData);
 
 			// Parsing
@@ -272,7 +272,8 @@ namespace GW2Scratch.EVTCInspector
 			sw.Restart();
 			try
 			{
-				stats = analysis.GetStatistics(processedLog, ApiData);
+				var analysis = new LogAnalyzer(processedLog, ApiData);
+				stats = analysis.GetStatistics();
 				var statsTime = sw.Elapsed;
 
 				statusStringBuilder.AppendLine($"Statistics generated in {statsTime}");

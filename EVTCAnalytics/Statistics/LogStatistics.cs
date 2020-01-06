@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
 using GW2Scratch.EVTCAnalytics.Model.Skills;
+using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
 using GW2Scratch.EVTCAnalytics.Statistics.Buffs;
-using GW2Scratch.EVTCAnalytics.Statistics.Encounters.Results;
 using GW2Scratch.EVTCAnalytics.Statistics.PlayerDataParts;
 
 namespace GW2Scratch.EVTCAnalytics.Statistics
