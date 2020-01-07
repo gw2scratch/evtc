@@ -32,6 +32,10 @@
 		StackActive     = 27,
 		StackReset      = 28,
 		Guild           = 29,
+		BuffInfo        = 30,
+		BuffFormula     = 31,
+		SkillInfo       = 32,
+		SkillTiming     = 33,
 		Unknown
 	};
 }

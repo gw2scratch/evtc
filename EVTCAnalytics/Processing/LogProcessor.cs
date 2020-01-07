@@ -671,6 +671,14 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					case StateChange.StackReset:
 						return new ResetBuffStackEvent(item.Time, GetAgentByAddress(item.SrcAgent), item.Padding,
 							item.Value);
+					case StateChange.BuffInfo:
+						// TODO: Figure out what the contents are
+					case StateChange.BuffFormula:
+						// TODO: Figure out what the contents are
+					case StateChange.SkillInfo:
+						// TODO: Figure out what the contents are
+					case StateChange.SkillTiming:
+						// TODO: Figure out what the contents are
 					case StateChange.Unknown:
 						return new UnknownEvent(item.Time, item);
 					default:

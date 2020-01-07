@@ -209,7 +209,10 @@ namespace GW2Scratch.EVTCInspector
 			var statusStringBuilder = new StringBuilder();
 
 			var parser = new EVTCParser();
-			var processor = new LogProcessor();
+			var processor = new LogProcessor()
+			{
+				IgnoreUnknownEvents = false
+			};
 			var generator = new HtmlGenerator(ApiData);
 
 			// Parsing
