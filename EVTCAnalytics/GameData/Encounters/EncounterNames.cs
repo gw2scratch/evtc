@@ -13,6 +13,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 			{Encounter.Slothasor, "Slothasor"},
 			{Encounter.BanditTrio, "Bandit Trio"},
 			{Encounter.Matthias, "Matthias Gabrel"},
+			{Encounter.Escort, "Escort"},
 			{Encounter.KeepConstruct, "Keep Construct"},
 			{Encounter.TwistedCastle, "Twisted Castle"},
 			{Encounter.Xera, "Xera"},

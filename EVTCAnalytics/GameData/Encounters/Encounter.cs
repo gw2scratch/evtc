@@ -28,6 +28,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 		Matthias = 23,
 
 		// Raids - Wing 3
+		Escort = 31,
 		KeepConstruct = 32,
 		TwistedCastle = 33,
 		Xera = 34,

@@ -422,6 +422,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						return Encounter.BanditTrio;
 					case SpeciesIds.MatthiasGabrel:
 						return Encounter.Matthias;
+					case SpeciesIds.MushroomKing:
+						return Encounter.Escort;
 					case SpeciesIds.KeepConstruct:
 						return Encounter.KeepConstruct;
 					case SpeciesIds.HauntingStatue:

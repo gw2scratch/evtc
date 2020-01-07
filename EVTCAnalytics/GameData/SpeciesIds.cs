@@ -30,6 +30,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 
 		// Wing 3
 		// Escort
+		public const int MushroomKing = 16255;
 		// Keep Construct
 		public const int KeepConstruct = 16235;
 		// Twisted Castle
