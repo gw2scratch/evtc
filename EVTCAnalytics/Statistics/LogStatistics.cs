@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
 using GW2Scratch.EVTCAnalytics.Model.Skills;
+using GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
 using GW2Scratch.EVTCAnalytics.Statistics.Buffs;
 using GW2Scratch.EVTCAnalytics.Statistics.PlayerDataParts;
@@ -19,6 +20,7 @@ namespace GW2Scratch.EVTCAnalytics.Statistics
 		public IEnumerable<PhaseStats> PhaseStats { get; }
 		public string EncounterName { get; }
 		public EncounterResult EncounterResult { get; }
+		public EncounterMode EncounterMode { get; }
 
 		public long FightTimeMs { get; }
 		public string LogVersion { get; }
@@ -34,13 +36,14 @@ namespace GW2Scratch.EVTCAnalytics.Statistics
 		public LogStatistics(DateTimeOffset fightStart, Player logAuthor, IEnumerable<PlayerData> playerData,
 			IEnumerable<PhaseStats> phaseStats, SquadDamageData fullFightSquadDamageData,
 			IEnumerable<TargetSquadDamageData> fullFightTargetDamageData, BuffData buffData,
-			EncounterResult encounterResult, string encounterName, string logVersion,
+			EncounterResult encounterResult, EncounterMode encounterMode, string encounterName, string logVersion,
 			IReadOnlyDictionary<string, int> eventCounts, IEnumerable<Agent> agents, IEnumerable<Skill> skills)
 		{
 			EncounterName = encounterName;
 			LogVersion = logVersion;
 			EncounterResult = encounterResult;
 			EventCounts = eventCounts;
+			EncounterMode = encounterMode;
 			FightStart = fightStart;
 			LogAuthor = logAuthor;
 			PlayerData = playerData.ToArray();

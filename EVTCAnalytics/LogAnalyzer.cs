@@ -6,6 +6,7 @@ using GW2Scratch.EVTCAnalytics.GameData;
 using GW2Scratch.EVTCAnalytics.Model;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
 using GW2Scratch.EVTCAnalytics.Model.Skills;
+using GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Phases;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
 using GW2Scratch.EVTCAnalytics.Statistics;
@@ -63,6 +64,7 @@ namespace GW2Scratch.EVTCAnalytics
 		private IReadOnlyList<Player> logPlayers = null;
 		private IReadOnlyList<PlayerData> logPlayerData = null;
 		private EncounterResult? logResult = null;
+		private EncounterMode? encounterMode = null;
 		private long? logEncounterStart = null;
 		private long? logEncounterEnd = null;
 
@@ -163,7 +165,7 @@ namespace GW2Scratch.EVTCAnalytics
 			var playerData = GetPlayerData();
 
 			return new LogStatistics(log.StartTime.ServerTime, log.PointOfView, playerData, phaseStats,
-				fullFightSquadDamageData, fullFightTargetDamageData, buffData, GetResult(),
+				fullFightSquadDamageData, fullFightTargetDamageData, buffData, GetResult(), GetMode(),
 				log.EncounterName, log.EVTCVersion, eventCountsByName, log.Agents, log.Skills);
 		}
 
@@ -200,6 +202,12 @@ namespace GW2Scratch.EVTCAnalytics
 		{
 			logResult ??= log.EncounterData.ResultDeterminer.GetResult(log.Events);
 			return logResult.Value;
+		}
+
+		public EncounterMode GetMode()
+		{
+			encounterMode ??= log.EncounterData.ModeDeterminer.GetMode(log);
+			return encounterMode.Value;
 		}
 
 		public IReadOnlyList<PlayerData> GetPlayerData()
