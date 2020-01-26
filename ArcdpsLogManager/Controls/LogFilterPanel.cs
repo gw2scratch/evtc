@@ -30,6 +30,11 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			var unknownCheckBox = new CheckBox {Text = "Unknown"};
 			unknownCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowUnknownLogs);
 
+			var normalModeCheckBox = new CheckBox {Text = "Normal"};
+			normalModeCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowNormalModeLogs);
+			var challengeModeCheckBox = new CheckBox {Text = "CM"};
+			challengeModeCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowChallengeModeLogs);
+
 			var startDateTimePicker = new DateTimePicker {Mode = DateTimePickerMode.DateTime};
 			startDateTimePicker.ValueBinding.Bind(this, x => x.Filters.MinDateTimeFilter);
 			var endDateTimePicker = new DateTimePicker {Mode = DateTimePickerMode.DateTime};
@@ -81,6 +86,10 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 								Add(successCheckBox);
 								Add(failureCheckBox);
 								Add(unknownCheckBox);
+								Add(new Label
+									{Text = "Mode", VerticalAlignment = VerticalAlignment.Center});
+								Add(normalModeCheckBox);
+								Add(challengeModeCheckBox);
 							}
 							EndHorizontal();
 						}

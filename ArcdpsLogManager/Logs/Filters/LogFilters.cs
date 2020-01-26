@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
 
 namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
@@ -18,6 +19,9 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 		public bool ShowSuccessfulLogs { get; set; } = true;
 		public bool ShowFailedLogs { get; set; } = true;
 		public bool ShowUnknownLogs { get; set; } = true;
+
+		public bool ShowNormalModeLogs { get; set; } = true;
+		public bool ShowChallengeModeLogs { get; set; } = true;
 
 		public DateTime? MinDateTimeFilter { get; set; } = GuildWars2ReleaseDate;
 		public DateTime? MaxDateTimeFilter { get; set; } = DateTime.Now.Date.AddDays(1);
@@ -39,7 +43,11 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 				}
 			}
 
-			return FilterByEncounterName(log) && FilterByResult(log) && FilterByParsingStatus(log) && FilterByTime(log);
+			return FilterByEncounterName(log)
+			       && FilterByResult(log)
+			       && FilterByParsingStatus(log)
+			       && FilterByTime(log)
+			       && FilterByEncounterMode(log);
 		}
 
 		private bool FilterByParsingStatus(LogData log)
@@ -67,6 +75,13 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 		{
 			return !(log.EncounterStartTime.LocalDateTime < MinDateTimeFilter) &&
 			       !(log.EncounterStartTime.LocalDateTime > MaxDateTimeFilter);
+		}
+
+		private bool FilterByEncounterMode(LogData log)
+		{
+			return (log.EncounterMode == EncounterMode.Normal && ShowNormalModeLogs) ||
+			       (log.EncounterMode == EncounterMode.Unknown && ShowNormalModeLogs) ||
+			       (log.EncounterMode == EncounterMode.Challenge && ShowChallengeModeLogs);
 		}
 	}
 }
