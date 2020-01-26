@@ -429,6 +429,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					case SpeciesIds.HauntingStatue:
 						return Encounter.TwistedCastle;
 					case SpeciesIds.Xera:
+					case SpeciesIds.XeraSecondPhase:
 						return Encounter.Xera;
 					case SpeciesIds.CairnTheIndomitable:
 						return Encounter.Cairn;
