@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using GW2Scratch.ArcdpsLogManager.Analytics;
+using GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
 
 namespace GW2Scratch.ArcdpsLogManager.Logs
@@ -15,6 +16,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 
 		public IEnumerable<LogPlayer> Players { get; set; }
 		public EncounterResult EncounterResult { get; set; } = EncounterResult.Unknown;
+		public EncounterMode EncounterMode { get; set; } = EncounterMode.Unknown;
 		public string EncounterName { get; set; } = "Unknown";
 
 		/// <summary>
@@ -79,6 +81,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 
 				EncounterName = log.EncounterName;
 				EncounterResult = analyzer.GetResult();
+				EncounterMode = analyzer.GetMode();
 				Players = analyzer.GetPlayers().Where(x => x.Identified).Select(x =>
 					new LogPlayer(x.Name, x.AccountName, x.Subgroup, x.Profession, x.EliteSpecialization,
 						GetGuildGuid(x.GuildGuid))
