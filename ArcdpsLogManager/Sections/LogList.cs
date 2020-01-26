@@ -7,6 +7,7 @@ using Eto.Forms;
 using GW2Scratch.ArcdpsLogManager.Controls;
 using GW2Scratch.ArcdpsLogManager.Data;
 using GW2Scratch.ArcdpsLogManager.Logs;
+using GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
 
 namespace GW2Scratch.ArcdpsLogManager.Sections
@@ -112,6 +113,28 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 								return "Failure";
 							case EncounterResult.Unknown:
 								return "Unknown";
+							default:
+								throw new ArgumentOutOfRangeException();
+						}
+					})
+				}
+			});
+
+			gridView.Columns.Add(new GridColumn()
+			{
+				HeaderText = "CM",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<LogData, string>(x =>
+					{
+						switch (x.EncounterMode)
+						{
+							case EncounterMode.Challenge:
+								return "Yes";
+							case EncounterMode.Normal:
+								return "No";
+							case EncounterMode.Unknown:
+								return "?";
 							default:
 								throw new ArgumentOutOfRangeException();
 						}
