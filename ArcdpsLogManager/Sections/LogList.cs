@@ -26,6 +26,8 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 		private GridViewSorter<LogData> sorter;
 		private FilterCollection<LogData> dataStore;
 
+        private bool mouseDown = false;
+
 		public FilterCollection<LogData> DataStore
 		{
 			get => dataStore;
@@ -240,7 +242,30 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			sorter.EnableSorting();
 			sorter.SortByDescending(dateColumn);
 
+            gridView.MouseDown += OnGridViewOnMouseDown;
+            gridView.MouseUp += GridViewOnMouseUp;
+            gridView.MouseLeave += GridViewOnMouseLeave;
+
 			return gridView;
 		}
-	}
+
+        private void GridViewOnMouseLeave(object sender, MouseEventArgs e)
+        {
+            if (!mouseDown) return;
+
+            var files = logGridView.SelectedItems.Select(x => new Uri(x.FileInfo.ToString())).ToArray();
+            var dob = new DataObject {Uris = files};
+            DoDragDrop(dob, DragEffects.Copy | DragEffects.Move);
+        }
+
+        private void GridViewOnMouseUp(object sender, MouseEventArgs e)
+        {
+            mouseDown = false;
+        }
+
+        private void OnGridViewOnMouseDown(object sender, MouseEventArgs args)
+        {
+            mouseDown = true;
+        }
+    }
 }
