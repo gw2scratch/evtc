@@ -7,44 +7,64 @@ using System.Text;
 using GW2Scratch.ArcdpsLogManager.Analytics;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
+using Newtonsoft.Json;
 
 namespace GW2Scratch.ArcdpsLogManager.Logs
 {
 	public class LogData
 	{
+		[JsonIgnore]
 		public FileInfo FileInfo { get; }
 
+		public string FileName => FileInfo.FullName;
+
+		[JsonProperty]
 		public IEnumerable<LogPlayer> Players { get; set; }
+		[JsonProperty]
 		public EncounterResult EncounterResult { get; set; } = EncounterResult.Unknown;
+		[JsonProperty]
 		public EncounterMode EncounterMode { get; set; } = EncounterMode.Unknown;
+		[JsonProperty]
 		public string EncounterName { get; set; } = "Unknown";
 
 		/// <summary>
 		/// Time when the encounter started.
 		/// Is only an estimate if <see cref="ParsingStatus"/> is not <see cref="Logs.ParsingStatus.Parsed"/>.
 		/// </summary>
+		[JsonProperty]
 		public DateTimeOffset EncounterStartTime { get; set; }
 
+		[JsonProperty]
 		public TimeSpan EncounterDuration { get; set; }
 
+		[JsonProperty]
 		public LogUpload DpsReportEIUpload { get; set; } = new LogUpload();
 
+		[JsonProperty]
 		public ParsingStatus ParsingStatus { get; set; } = ParsingStatus.Unparsed;
 
 		/// <summary>
 		/// Contains the time of when parsing of the log was finished, will be default unless <see cref="ParsingStatus"/> is <see cref="Logs.ParsingStatus.Parsed"/>
 		/// </summary>
+		[JsonProperty]
 		public DateTimeOffset ParseTime { get; set; }
 
 		/// <summary>
 		/// The amount of milliseconds the parsing of the log took or -1 if <see cref="ParsingStatus"/> is not <see cref="Logs.ParsingStatus.Parsed"/>
 		/// </summary>
+		[JsonProperty]
 		public long ParseMilliseconds { get; set; } = -1;
 
 		/// <summary>
 		/// An exception if one was thrown during parsing. Will be null unless <see cref="ParsingStatus"/> is <see cref="Logs.ParsingStatus.Failed"/>.
 		/// </summary>
+		[JsonProperty]
 		public Exception ParsingException { get; set; }
+
+		[JsonConstructor]
+		public LogData(string fileName) : this(new FileInfo(fileName))
+		{
+		}
 
 		public LogData(FileInfo fileInfo)
 		{
