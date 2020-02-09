@@ -1,4 +1,6 @@
 using System;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
 using Eto.Drawing;
 using Eto.Forms;
 using GW2Scratch.ArcdpsLogManager.Analytics;
@@ -18,7 +20,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 
 		private readonly Label nameLabel = new Label {Font = Fonts.Sans(16, FontStyle.Bold), Wrap = WrapMode.Word};
 		private readonly Label resultLabel = new Label {Font = Fonts.Sans(12)};
-		private readonly Label filenameLabel = new Label {TextAlignment = TextAlignment.Right};
+		private readonly LinkButton fileNameButton = new LinkButton();
 		private readonly GroupCompositionControl groupComposition;
 		private readonly Label parseTimeLabel = new Label();
 		private readonly Label parseStatusLabel = new Label();
@@ -63,7 +65,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				double seconds = logData.EncounterDuration.TotalSeconds;
 				string duration = $"{(int) seconds / 60:0}m {seconds % 60:0.0}s";
 
-				filenameLabel.Text = logData.FileInfo.Name;
+				fileNameButton.Text = logData.FileInfo.Name;
 
 				resultLabel.Text = $"{result} in {duration}";
 
@@ -165,14 +167,18 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			BeginVertical(spacing: new Size(10, 0));
 			{
 				Add(null, true);
-				Add(filenameLabel);
+				BeginHorizontal();
+				{
+					Add(null, true);
+					Add(fileNameButton);
+				}
 			}
 			EndVertical();
 
 			dpsReportUploadButton.Click += (sender, args) => { UploadProcessor.ScheduleDpsReportEIUpload(logData); };
 			dpsReportOpenButton.Click += (sender, args) =>
 			{
-				System.Diagnostics.Process.Start(logData.DpsReportEIUpload.Url);
+				Process.Start(logData.DpsReportEIUpload.Url);
 			};
 
 			debugButton.Click += (sender, args) =>
@@ -183,6 +189,18 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			};
 
 			reparseButton.Click += (sender, args) => logProcessor.Schedule(logData);
+
+			fileNameButton.Click += (sender, args) =>
+			{
+				if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+				{
+					Process.Start("explorer.exe", $"/select,\"{logData.FileName}\"");
+				}
+				else
+				{
+					Process.Start(logData.FileInfo.DirectoryName);
+				}
+			};
 
 			Settings.ShowDebugDataChanged += (sender, args) => { debugSection.Visible = Settings.ShowDebugData; };
 			Shown += (sender, args) =>
