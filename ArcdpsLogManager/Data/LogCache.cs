@@ -25,7 +25,6 @@ namespace GW2Scratch.ArcdpsLogManager.Data
 			}
 		}
 
-
 		private LogCache(Dictionary<string, LogData> logsByFilename)
 		{
 			this.logsByFilename = logsByFilename;
@@ -48,7 +47,6 @@ namespace GW2Scratch.ArcdpsLogManager.Data
 
 			return new LogCache(new Dictionary<string, LogData>());
 		}
-
 
 		public void SaveToFile()
 		{
@@ -85,6 +83,11 @@ namespace GW2Scratch.ArcdpsLogManager.Data
 				int loadedCount = logsByFilename.Values.ToList().Intersect(loadedLogs).Count();
 				return LogCount - loadedCount;
 			}
+		}
+
+		public static void DeleteFile()
+		{
+			File.Delete(GetCacheFilename());
 		}
 
 		public int Prune(IEnumerable<LogData> keptLogData)

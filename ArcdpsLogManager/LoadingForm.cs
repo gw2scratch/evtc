@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Eto.Drawing;
@@ -64,8 +65,98 @@ namespace GW2Scratch.ArcdpsLogManager
 
 		private void LoadManager()
 		{
-			var cache = LogCache.LoadFromFile();
-			var apiData = ApiData.LoadFromFile();
+			LogCache cache = null;
+			ApiData apiData = null;
+
+			do
+			{
+				try
+				{
+					cache = LogCache.LoadFromFile();
+				}
+				catch (Exception e)
+				{
+					bool abort = false;
+
+					Application.Instance.Invoke(() =>
+					{
+						var result = MessageBox.Show("An error has occured while loading the stored log data. " +
+						                             "This can be automatically resolved by deleting the cache file, " +
+						                             "however, all logs will have to be processed again. Delete the cache?" +
+						                             $"\n\nError: {e.Message}.", "Error loading the log cache.",
+							MessageBoxButtons.YesNo, MessageBoxType.Error);
+
+						if (result != DialogResult.Yes)
+						{
+							abort = true;
+						}
+						else
+						{
+							try
+							{
+								LogCache.DeleteFile();
+							}
+							catch (Exception deletionException)
+							{
+								MessageBox.Show("An error has occured while deleting the log cache. " +
+								                $"\nError: {deletionException.Message}.", "Error deleting the log cache.", MessageBoxType.Error);
+								abort = true;
+							}
+						}
+					});
+
+					if (abort)
+					{
+						Application.Instance.Invoke(Close);
+						return;
+					}
+				}
+			} while (cache == null);
+
+			do
+			{
+				try
+				{
+					apiData = ApiData.LoadFromFile();
+				}
+				catch (Exception e)
+				{
+					bool abort = false;
+
+					Application.Instance.Invoke(() =>
+					{
+						var result = MessageBox.Show("An error has occured while loading the stored API data. " +
+						                             "This can be automatically resolved by deleting the API cache file. " +
+						                             " Delete the cache?" +
+						                             $"\n\nError: {e.Message}.", "Error loading the API cache.",
+							MessageBoxButtons.YesNo, MessageBoxType.Error);
+
+						if (result != DialogResult.Yes)
+						{
+							abort = true;
+						}
+						else
+						{
+							try
+							{
+								ApiData.DeleteFile();
+							}
+							catch (Exception deletionException)
+							{
+								MessageBox.Show("An error has occured while deleting the API cache. " +
+								                $"\nError: {deletionException.Message}.", "Error deleting the API cache.", MessageBoxType.Error);
+								abort = true;
+							}
+						}
+					});
+
+					if (abort)
+					{
+						Application.Instance.Invoke(Close);
+						return;
+					}
+				}
+			} while (apiData == null);
 
 			Application.Instance.Invoke(() =>
 			{

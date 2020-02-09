@@ -77,6 +77,14 @@ namespace GW2Scratch.ArcdpsLogManager.Data
 		}
 
 		/// <summary>
+		/// Deletes the file used to store the cache.
+		/// </summary>
+		public static void DeleteFile()
+		{
+			File.Delete(GetCacheFilename());
+		}
+
+		/// <summary>
 		/// Provides the <see cref="FileInfo"/> of the cache file.
 		/// </summary>
 		public FileInfo GetCacheFileInfo()
