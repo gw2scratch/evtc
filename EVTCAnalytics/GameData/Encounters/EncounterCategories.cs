@@ -51,6 +51,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 				{Encounter.VoiceAndClawOfTheFallen, EncounterCategory.StrikeMission},
 				{Encounter.FraenirOfJormag, EncounterCategory.StrikeMission},
 				{Encounter.Boneskinner, EncounterCategory.StrikeMission},
+				{Encounter.WhisperOfJormag, EncounterCategory.StrikeMission},
 			};
 
 		public static EncounterCategory GetEncounterCategory(this Encounter encounter)

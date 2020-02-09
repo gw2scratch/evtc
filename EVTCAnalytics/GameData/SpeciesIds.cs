@@ -106,5 +106,6 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		public const int ClawOfTheFallen = 22481;
 		public const int FraenirOfJormag = 22492;
 		public const int Boneskinner = 22521;
+		public const int WhisperOfJormag = 22711;
 	}
 }

@@ -82,6 +82,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 		VoiceAndClawOfTheFallen = 40002,
 		FraenirOfJormag = 40003,
 		Boneskinner = 40004,
+		WhisperOfJormag = 40005,
 
 		// Other
 		WorldVersusWorld = 100000,

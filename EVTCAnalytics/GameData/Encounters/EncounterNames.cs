@@ -49,6 +49,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 			{Encounter.VoiceAndClawOfTheFallen, "The Voice and the Claw"},
 			{Encounter.FraenirOfJormag, "Fraenir of Jormag"},
 			{Encounter.Boneskinner, "Boneskinner"},
+			{Encounter.WhisperOfJormag, "Whisper of Jormag"},
 		};
 
 		public static bool TryGetNamesForLanguage(GameLanguage language, out IReadOnlyDictionary<Encounter, string> namesByEncounter)

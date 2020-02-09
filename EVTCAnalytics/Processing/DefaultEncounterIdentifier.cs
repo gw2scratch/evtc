@@ -577,6 +577,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						return Encounter.FraenirOfJormag;
 					case SpeciesIds.Boneskinner:
 						return Encounter.Boneskinner;
+					case SpeciesIds.WhisperOfJormag:
+						return Encounter.WhisperOfJormag;
 				}
 			}
 			else if (mainTarget is Gadget gadgetBoss)
