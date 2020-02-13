@@ -243,13 +243,12 @@ namespace GW2Scratch.ArcdpsLogManager
 			};
 
 			// TODO: Implement
-			var buildTemplateMenuItem = new ButtonMenuItem {Text = "&Build templates", Enabled = false};
-			// TODO: Implement
+			/*
 			var arcdpsSettingsMenuItem = new ButtonMenuItem {Text = "&arcdps settings", Enabled = false};
 
-			var arcdpsMenuItem = new ButtonMenuItem {Text = "&arcdps"};
+			var arcdpsMenuItem = new ButtonMenuItem {Text = "&arcdps", Enabled = false};
 			arcdpsMenuItem.Items.Add(arcdpsSettingsMenuItem);
-			arcdpsMenuItem.Items.Add(buildTemplateMenuItem);
+			*/
 
 			var dataMenuItem = new ButtonMenuItem {Text = "&Data"};
 			dataMenuItem.Items.Add(logCacheMenuItem);
@@ -264,7 +263,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			var helpMenuItem = new ButtonMenuItem {Text = "Help"};
 			helpMenuItem.Items.Add(new About());
 
-			return new MenuBar(arcdpsMenuItem, dataMenuItem, settingsMenuItem, helpMenuItem);
+			return new MenuBar(dataMenuItem, settingsMenuItem, helpMenuItem);
 		}
 
 		private TabControl ConstructMainTabControl()
