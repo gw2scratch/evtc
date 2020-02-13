@@ -235,13 +235,6 @@ namespace GW2Scratch.ArcdpsLogManager
 				Settings.ShowDebugData = debugDataMenuItem.Checked;
 			};
 
-			var showCompositionsMenuItem = new CheckMenuItem {Text = "Show &squad compositions in log list"};
-			showCompositionsMenuItem.Checked = Settings.ShowSquadCompositions;
-			showCompositionsMenuItem.CheckedChanged += (sender, args) =>
-			{
-				Settings.ShowSquadCompositions = showCompositionsMenuItem.Checked;
-			};
-
 			var showGuildTagsMenuItem = new CheckMenuItem {Text = "Show &guild tags in log details"};
 			showGuildTagsMenuItem.Checked = Settings.ShowGuildTagsInLogDetail;
 			showGuildTagsMenuItem.CheckedChanged += (sender, args) =>
@@ -264,7 +257,6 @@ namespace GW2Scratch.ArcdpsLogManager
 
 			var settingsMenuItem = new ButtonMenuItem {Text = "&Settings"};
 			settingsMenuItem.Items.Add(settingsFormMenuItem);
-			settingsMenuItem.Items.Add(showCompositionsMenuItem);
 			settingsMenuItem.Items.Add(showGuildTagsMenuItem);
 			settingsMenuItem.Items.Add(new SeparatorMenuItem());
 			settingsMenuItem.Items.Add(debugDataMenuItem);

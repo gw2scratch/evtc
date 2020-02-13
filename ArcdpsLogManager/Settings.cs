@@ -20,11 +20,11 @@ namespace GW2Scratch.ArcdpsLogManager
 		{
 			public List<string> LogRootPaths { get; set; } = new List<string>();
 			public bool ShowDebugData { get; set; } = false;
-			public bool ShowSquadCompositions { get; set; } = true;
 			public bool ShowGuildTagsInLogDetail { get; set; } = false;
 			public bool UseGW2Api { get; set; } = true;
 			public string DpsReportUserToken { get; set; } = string.Empty;
 			public int? MinimumLogDurationSeconds { get; set; } = null;
+			public List<string> HiddenLogListColumns { get; set; } = new List<string>();
 
 			public static StoredSettings LoadFromFile()
 			{
@@ -51,7 +51,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		{
 			LogRootPathChanged += (sender, args) => SaveToFile();
 			ShowDebugDataChanged += (sender, args) => SaveToFile();
-			ShowSquadCompositionsChanged += (sender, args) => SaveToFile();
+			HiddenLogListColumnsChanged += (sender, args) => SaveToFile();
 			ShowGuildTagsInLogDetailChanged += (sender, args) => SaveToFile();
 			UseGW2ApiChanged += (sender, args) => SaveToFile();
 			DpsReportUserTokenChanged += (sender, args) => SaveToFile();
@@ -122,15 +122,15 @@ namespace GW2Scratch.ArcdpsLogManager
 			}
 		}
 
-		public static bool ShowSquadCompositions
+		public static IReadOnlyList<string> HiddenLogListColumns
 		{
-			get => Values.ShowSquadCompositions;
+			get => Values.HiddenLogListColumns;
 			set
 			{
-				if (Values.ShowSquadCompositions != value)
+				if (!Equals(Values.HiddenLogListColumns, value))
 				{
-					Values.ShowSquadCompositions = value;
-					OnShowSquadCompositionsChanged();
+					Values.HiddenLogListColumns = value.ToList();
+					OnHiddenLogListColumnsChanged();
 				}
 			}
 		}
@@ -189,7 +189,7 @@ namespace GW2Scratch.ArcdpsLogManager
 
 		public static event EventHandler<EventArgs> LogRootPathChanged;
 		public static event EventHandler<EventArgs> ShowDebugDataChanged;
-		public static event EventHandler<EventArgs> ShowSquadCompositionsChanged;
+		public static event EventHandler<EventArgs> HiddenLogListColumnsChanged;
 		public static event EventHandler<EventArgs> ShowGuildTagsInLogDetailChanged;
 		public static event EventHandler<EventArgs> UseGW2ApiChanged;
 		public static event EventHandler<EventArgs> DpsReportUserTokenChanged;
@@ -203,11 +203,6 @@ namespace GW2Scratch.ArcdpsLogManager
 		private static void OnShowDebugDataChanged()
 		{
 			ShowDebugDataChanged?.Invoke(null, EventArgs.Empty);
-		}
-
-		private static void OnShowSquadCompositionsChanged()
-		{
-			ShowSquadCompositionsChanged?.Invoke(null, EventArgs.Empty);
 		}
 
 		private static void OnUseGW2ApiChanged()
@@ -228,6 +223,11 @@ namespace GW2Scratch.ArcdpsLogManager
 		private static void OnMinimumLogDurationSecondsChanged()
 		{
 			MinimumLogDurationSecondsChanged?.Invoke(null, EventArgs.Empty);
+		}
+
+		private static void OnHiddenLogListColumnsChanged()
+		{
+			HiddenLogListColumnsChanged?.Invoke(null, EventArgs.Empty);
 		}
 	}
 }

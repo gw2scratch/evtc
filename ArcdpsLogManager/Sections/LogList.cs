@@ -204,10 +204,17 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 
 			gridView.Columns.Add(compositionColumn);
 
-			compositionColumn.Visible = Settings.ShowSquadCompositions;
-			Settings.ShowSquadCompositionsChanged += (sender, args) =>
+			foreach (var column in gridView.Columns)
 			{
-				compositionColumn.Visible = Settings.ShowSquadCompositions;
+				column.Visible = !Settings.HiddenLogListColumns.Contains(column.HeaderText);
+			}
+
+			Settings.HiddenLogListColumnsChanged += (sender, args) =>
+			{
+				foreach (var column in gridView.Columns)
+				{
+					column.Visible = !Settings.HiddenLogListColumns.Contains(column.HeaderText);
+				}
 			};
 
 			// Some extra height is needed on the WPF platform to properly fit the icons
@@ -218,6 +225,8 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 				detailPanel.LogData = gridView.SelectedItem;
 				multipleLogPanel.LogData = gridView.SelectedItems;
 			};
+
+			gridView.ContextMenu = ConstructLogGridViewContextMenu(gridView);
 
 			sorter = new GridViewSorter<LogData>(gridView, new Dictionary<GridColumn, Comparison<LogData>>
 			{
@@ -241,6 +250,39 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			sorter.SortByDescending(dateColumn);
 
 			return gridView;
+		}
+
+		private ContextMenu ConstructLogGridViewContextMenu(GridView<LogData> gridView)
+		{
+			var contextMenu = new ContextMenu();
+			foreach (var column in gridView.Columns)
+			{
+				var menuItem = new CheckMenuItem
+				{
+					Checked = !Settings.HiddenLogListColumns.Contains(column.HeaderText),
+					Text = $"{column.HeaderText}"
+				};
+				menuItem.CheckedChanged += (item, args) =>
+				{
+					bool shown = menuItem.Checked;
+					if (!shown)
+					{
+						Settings.HiddenLogListColumns = Settings.HiddenLogListColumns.Append(column.HeaderText).Distinct().ToList();
+					}
+					else
+					{
+						Settings.HiddenLogListColumns = Settings.HiddenLogListColumns.Where(x => x != column.HeaderText).ToList();
+					}
+				};
+				Settings.HiddenLogListColumnsChanged += (sender, args) =>
+				{
+					bool shown = !Settings.HiddenLogListColumns.Contains(column.HeaderText);
+					menuItem.Checked = shown;
+				};
+				contextMenu.Items.Add(menuItem);
+			}
+
+			return contextMenu;
 		}
 	}
 }
