@@ -131,7 +131,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			{
 				AddCentered(
 					"Collects a list of all different agent species and skills found in logs (uses current filters).");
-				AddCentered("Requires all logs to be parsed again as this data is not cached.");
+				AddCentered("Requires all logs to be processed again as this data is not cached.");
 				BeginCentered(spacing: new Size(5, 5));
 				{
 					AddRow(gatherButton, cancelButton);

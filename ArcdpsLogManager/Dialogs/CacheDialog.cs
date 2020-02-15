@@ -34,12 +34,12 @@ namespace GW2Scratch.ArcdpsLogManager.Dialogs
 				// This is a very hacky solution for WrapMode.Word not working properly on the Gtk platform
 				formLayout.AddRow(new Label
 				{
-					Text = "The parsed contents of logs are saved in a cache file to save time. You can",
+					Text = "The processed contents of logs are saved in a cache file to save time. You can",
 					Wrap = WrapMode.None
 				});
 				formLayout.AddRow(new Label
 				{
-					Text = "delete the cached results here to parse the logs again or prune results for",
+					Text = "delete the cached results here to process the logs again or prune results for",
 					Wrap = WrapMode.None
 				});
 				formLayout.AddRow(new Label
