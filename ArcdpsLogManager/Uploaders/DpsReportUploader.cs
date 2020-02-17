@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,14 +10,44 @@ namespace GW2Scratch.ArcdpsLogManager.Uploaders
 {
 	public class DpsReportUploader : IDisposable
 	{
-		private const string UploadEndpoint = "https://dps.report/uploadContent";
+		public static readonly DpsReportDomain DefaultDomain = new DpsReportDomain("https://dps.report",
+			"Cloudflare. Supports HTTPS. May be unreliable in Eastern European and Asian countries");
+
+		private static readonly DpsReportDomain DomainA = new DpsReportDomain("http://a.dps.report",
+			"Imperva. Supports HTTP ONLY. Fairly reliable, use as last resort.");
+
+		private static readonly DpsReportDomain DomainB = new DpsReportDomain("https://b.dps.report",
+			"Stackpath. Supports HTTPS. New service domain, still testing.");
+
+		public static IReadOnlyList<DpsReportDomain> AvailableDomains { get; } = new[]
+		{
+			DefaultDomain, DomainA, DomainB
+		};
+
+		private const string UploadEndpoint = "/uploadContent";
 
 		private readonly HttpClient httpClient = new HttpClient();
+
+		public string Domain { get; set; }
+
+		public DpsReportUploader() : this(DefaultDomain)
+		{
+		}
+
+		public DpsReportUploader(DpsReportDomain domain)
+		{
+			Domain = domain.Domain;
+		}
+
+		public DpsReportUploader(string domain)
+		{
+			Domain = domain;
+		}
 
 		public async Task<DpsReportResponse> UploadLogAsync(LogData log, CancellationToken cancellationToken,
 			string userToken = null)
 		{
-			string query = UploadEndpoint + "?json=1&generator=ei";
+			string query = Domain + UploadEndpoint + "?json=1&generator=ei";
 			if (userToken != null)
 			{
 				query += $"&userToken={userToken}";

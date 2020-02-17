@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using GW2Scratch.ArcdpsLogManager.Uploaders;
 using Newtonsoft.Json;
 
 namespace GW2Scratch.ArcdpsLogManager
@@ -23,6 +25,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			public bool ShowGuildTagsInLogDetail { get; set; } = false;
 			public bool UseGW2Api { get; set; } = true;
 			public string DpsReportUserToken { get; set; } = string.Empty;
+			public string DpsReportDomain { get; set; } = DpsReportUploader.DefaultDomain.Domain;
 			public int? MinimumLogDurationSeconds { get; set; } = null;
 			public List<string> HiddenLogListColumns { get; set; } = new List<string>();
 
@@ -55,6 +58,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			ShowGuildTagsInLogDetailChanged += (sender, args) => SaveToFile();
 			UseGW2ApiChanged += (sender, args) => SaveToFile();
 			DpsReportUserTokenChanged += (sender, args) => SaveToFile();
+			DpsReportDomainChanged += (sender, args) => SaveToFile();
 			MinimumLogDurationSecondsChanged += (sender, args) => SaveToFile();
 
 			return StoredSettings.LoadFromFile();
@@ -187,12 +191,26 @@ namespace GW2Scratch.ArcdpsLogManager
 			}
 		}
 
+		public static string DpsReportDomain
+		{
+			get => Values.DpsReportDomain;
+			set
+			{
+				if (Values.DpsReportDomain != value)
+				{
+					Values.DpsReportDomain = value;
+					OnDpsReportDomainChanged();
+				}
+			}
+		}
+
 		public static event EventHandler<EventArgs> LogRootPathChanged;
 		public static event EventHandler<EventArgs> ShowDebugDataChanged;
 		public static event EventHandler<EventArgs> HiddenLogListColumnsChanged;
 		public static event EventHandler<EventArgs> ShowGuildTagsInLogDetailChanged;
 		public static event EventHandler<EventArgs> UseGW2ApiChanged;
 		public static event EventHandler<EventArgs> DpsReportUserTokenChanged;
+		public static event EventHandler<EventArgs> DpsReportDomainChanged;
 		public static event EventHandler<EventArgs> MinimumLogDurationSecondsChanged;
 
 		private static void OnLogRootPathsChanged()
@@ -228,6 +246,11 @@ namespace GW2Scratch.ArcdpsLogManager
 		private static void OnHiddenLogListColumnsChanged()
 		{
 			HiddenLogListColumnsChanged?.Invoke(null, EventArgs.Empty);
+		}
+
+		private static void OnDpsReportDomainChanged()
+		{
+			DpsReportDomainChanged?.Invoke(null, EventArgs.Empty);
 		}
 	}
 }

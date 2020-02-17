@@ -17,7 +17,12 @@ namespace GW2Scratch.ArcdpsLogManager
 			ClientSize = new Size(400, -1);
 			MinimumSize = new Size(400, 300);
 
-			var pages = new SettingsPage[] {new LogsSettingsPage(), new ApiSettingsPage()};
+			var pages = new SettingsPage[]
+			{
+				new LogsSettingsPage(),
+				new ApiSettingsPage(),
+				new DpsReportUploadSettingsPage()
+			};
 
 			var tabs = new TabControl();
 			foreach (var page in pages)

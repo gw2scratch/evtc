@@ -55,7 +55,8 @@ namespace GW2Scratch.ArcdpsLogManager
 			ApiData = apiData ?? throw new ArgumentNullException(nameof(apiData));
 
 			// Background processors
-			UploadProcessor = new UploadProcessor(new DpsReportUploader(), LogCache);
+			var dpsReportUploader = new DpsReportUploader();
+			UploadProcessor = new UploadProcessor(dpsReportUploader, LogCache);
 			ApiProcessor = new ApiProcessor(ApiData, new Gw2Client());
 			LogDataProcessor = new LogDataProcessor(LogCache, ApiProcessor, LogAnalytics);
 			if (Settings.UseGW2Api)
@@ -73,6 +74,11 @@ namespace GW2Scratch.ArcdpsLogManager
 				{
 					ApiProcessor.StopBackgroundTask();
 				}
+			};
+
+			Settings.DpsReportDomainChanged += (sender, args) =>
+			{
+				dpsReportUploader.Domain = Settings.DpsReportDomain;
 			};
 
 			// Form layout
@@ -209,10 +215,7 @@ namespace GW2Scratch.ArcdpsLogManager
 				logsFiltered.Filter = Filters.FilterLog;
 				logsFiltered.Refresh();
 			};
-			LogDataProcessor.Processed += (sender, args) =>
-			{
-				Application.Instance.AsyncInvoke(() => filterPanel.UpdateLogs(logs));
-			};
+			LogDataProcessor.Processed += (sender, args) => { Application.Instance.AsyncInvoke(() => filterPanel.UpdateLogs(logs)); };
 
 			return filterPanel;
 		}
@@ -230,17 +233,11 @@ namespace GW2Scratch.ArcdpsLogManager
 
 			var debugDataMenuItem = new CheckMenuItem {Text = "Show &debug data"};
 			debugDataMenuItem.Checked = Settings.ShowDebugData;
-			debugDataMenuItem.CheckedChanged += (sender, args) =>
-			{
-				Settings.ShowDebugData = debugDataMenuItem.Checked;
-			};
+			debugDataMenuItem.CheckedChanged += (sender, args) => { Settings.ShowDebugData = debugDataMenuItem.Checked; };
 
 			var showGuildTagsMenuItem = new CheckMenuItem {Text = "Show &guild tags in log details"};
 			showGuildTagsMenuItem.Checked = Settings.ShowGuildTagsInLogDetail;
-			showGuildTagsMenuItem.CheckedChanged += (sender, args) =>
-			{
-				Settings.ShowGuildTagsInLogDetail = showGuildTagsMenuItem.Checked;
-			};
+			showGuildTagsMenuItem.CheckedChanged += (sender, args) => { Settings.ShowGuildTagsInLogDetail = showGuildTagsMenuItem.Checked; };
 
 			// TODO: Implement
 			/*
