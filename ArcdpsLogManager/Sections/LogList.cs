@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -223,7 +224,10 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			gridView.SelectionChanged += (sender, args) =>
 			{
 				detailPanel.LogData = gridView.SelectedItem;
-				multipleLogPanel.LogData = gridView.SelectedItems;
+
+				// This is not ordered by default on some platforms (such as WPF), so we
+				// explicitly order the items according to the current sort of the grid.
+				multipleLogPanel.LogData = gridView.SelectedItems.OrderBy(x => x, Comparer<LogData>.Create(sorter.GetSort()));
 			};
 
 			gridView.ContextMenu = ConstructLogGridViewContextMenu(gridView);

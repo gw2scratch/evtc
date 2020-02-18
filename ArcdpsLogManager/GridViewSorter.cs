@@ -81,9 +81,11 @@ namespace GW2Scratch.ArcdpsLogManager
 
 		private void ApplySort()
 		{
-			if (sortColumn == null)
+			var sort = GetSort();
+
+			if (sort == null)
 			{
-				// No sort has been applied yet.
+				// No sort to apply.
 				return;
 			}
 
@@ -97,6 +99,21 @@ namespace GW2Scratch.ArcdpsLogManager
 				throw new NotSupportedException("Only FilterCollections can be sorted.");
 			}
 
+			collection.Sort = sort;
+		}
+
+		/// <summary>
+		/// Get the current sort for the grid view.
+		/// </summary>
+		/// <returns>The current used comparison or null if no sort is applicable.</returns>
+		public Comparison<T> GetSort()
+		{
+			if (sortColumn == null)
+			{
+				// No sort has been applied yet.
+				return null;
+			}
+
 			Comparison<T> sort = null;
 			customSorts?.TryGetValue(sortColumn, out sort);
 
@@ -107,8 +124,8 @@ namespace GW2Scratch.ArcdpsLogManager
 
 			if (sort == null)
 			{
-				// If we don't know how to sort out the current column, we keep the old sort.
-				return;
+				// We don't know how to sort out the current column
+				return null;
 			}
 
 			if (!sortedAscending)
@@ -117,7 +134,7 @@ namespace GW2Scratch.ArcdpsLogManager
 				sort = (x, y) => -sortToReverse(x, y);
 			}
 
-			collection.Sort = sort;
+			return sort;
 		}
 
 		private Comparison<T> GetTextComparison(TextBoxCell textBoxCell)
