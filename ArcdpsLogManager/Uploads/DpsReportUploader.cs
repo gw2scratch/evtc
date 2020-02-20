@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using GW2Scratch.ArcdpsLogManager.Logs;
 using Newtonsoft.Json;
 
-namespace GW2Scratch.ArcdpsLogManager.Uploaders
+namespace GW2Scratch.ArcdpsLogManager.Uploads
 {
 	public class DpsReportUploader : IDisposable
 	{

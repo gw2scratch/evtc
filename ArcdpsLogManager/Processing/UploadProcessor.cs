@@ -4,9 +4,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using GW2Scratch.ArcdpsLogManager.Logs;
-using GW2Scratch.ArcdpsLogManager.Uploaders;
+using GW2Scratch.ArcdpsLogManager.Uploads;
 
-namespace GW2Scratch.ArcdpsLogManager.Data
+namespace GW2Scratch.ArcdpsLogManager.Processing
 {
 	public class UploadProcessor : BackgroundProcessor<UploadProcessor.QueuedUpload>
 	{

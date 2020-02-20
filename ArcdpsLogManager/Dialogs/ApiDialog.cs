@@ -2,7 +2,8 @@ using System;
 using System.IO;
 using Eto.Drawing;
 using Eto.Forms;
-using GW2Scratch.ArcdpsLogManager.Data;
+using GW2Scratch.ArcdpsLogManager.Gw2Api;
+using GW2Scratch.ArcdpsLogManager.Processing;
 
 namespace GW2Scratch.ArcdpsLogManager.Dialogs
 {

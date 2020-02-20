@@ -1,4 +1,4 @@
-namespace GW2Scratch.ArcdpsLogManager.Uploaders
+namespace GW2Scratch.ArcdpsLogManager.Uploads
 {
 	public class DpsReportResponse
 	{

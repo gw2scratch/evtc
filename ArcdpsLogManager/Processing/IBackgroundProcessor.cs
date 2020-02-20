@@ -1,6 +1,6 @@
 using System;
 
-namespace GW2Scratch.ArcdpsLogManager.Data
+namespace GW2Scratch.ArcdpsLogManager.Processing
 {
 	public interface IBackgroundProcessor
 	{

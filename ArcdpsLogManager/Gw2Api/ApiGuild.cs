@@ -1,4 +1,4 @@
-namespace GW2Scratch.ArcdpsLogManager.Data.Api
+namespace GW2Scratch.ArcdpsLogManager.Gw2Api
 {
 	public class ApiGuild
 	{

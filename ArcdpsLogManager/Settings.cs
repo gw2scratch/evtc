@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using GW2Scratch.ArcdpsLogManager.Uploaders;
+using GW2Scratch.ArcdpsLogManager.Uploads;
 using Newtonsoft.Json;
 
 namespace GW2Scratch.ArcdpsLogManager

@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using Eto.Drawing;
 using Eto.Forms;
-using GW2Scratch.ArcdpsLogManager.Uploaders;
+using GW2Scratch.ArcdpsLogManager.Uploads;
 
 namespace GW2Scratch.ArcdpsLogManager.Configuration
 {

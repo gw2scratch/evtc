@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using GW2Scratch.ArcdpsLogManager.Analytics;
 using GW2Scratch.ArcdpsLogManager.Logs;
 
-namespace GW2Scratch.ArcdpsLogManager.Data
+namespace GW2Scratch.ArcdpsLogManager.Processing
 {
 	public class LogDataProcessor : BackgroundProcessor<LogData>
 	{

@@ -2,10 +2,9 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
-using GW2Scratch.ArcdpsLogManager.Data.Api;
 using Newtonsoft.Json;
 
-namespace GW2Scratch.ArcdpsLogManager.Data
+namespace GW2Scratch.ArcdpsLogManager.Gw2Api
 {
 	public class ApiData
 	{

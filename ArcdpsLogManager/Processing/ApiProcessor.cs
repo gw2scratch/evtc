@@ -2,14 +2,14 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using GW2Scratch.ArcdpsLogManager.Data.Api;
+using GW2Scratch.ArcdpsLogManager.Gw2Api;
 using GW2Scratch.ArcdpsLogManager.Logs;
 using Gw2Sharp;
 using Gw2Sharp.WebApi.Http;
 using Gw2Sharp.WebApi.V2.Models;
-using Emblem = GW2Scratch.ArcdpsLogManager.Data.Api.Emblem;
+using Emblem = GW2Scratch.ArcdpsLogManager.Gw2Api.Emblem;
 
-namespace GW2Scratch.ArcdpsLogManager.Data
+namespace GW2Scratch.ArcdpsLogManager.Processing
 {
 	public class ApiProcessor : BackgroundProcessor<string>
 	{

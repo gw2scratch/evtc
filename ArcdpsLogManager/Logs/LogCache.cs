@@ -2,10 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using GW2Scratch.ArcdpsLogManager.Logs;
 using Newtonsoft.Json;
 
-namespace GW2Scratch.ArcdpsLogManager.Data
+namespace GW2Scratch.ArcdpsLogManager.Logs
 {
 	public class LogCache
 	{
