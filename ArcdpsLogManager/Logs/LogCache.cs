@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using GW2Scratch.ArcdpsLogManager.Logs.Caching;
 using Newtonsoft.Json;
 
 namespace GW2Scratch.ArcdpsLogManager.Logs
@@ -34,14 +35,28 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 			string filename = GetCacheFilename();
 			if (File.Exists(filename))
 			{
-				using (var reader = File.OpenText(filename))
-				{
-					var serializer = new JsonSerializer();
-					var dictionary = (Dictionary<string, LogData>) serializer.Deserialize(reader,
-						typeof(Dictionary<string, LogData>));
+				using var reader = File.OpenText(filename);
+				using var jsonReader = new JsonTextReader(reader);
 
-					return new LogCache(dictionary);
+				var serializer = new JsonSerializer();
+				var data = serializer.Deserialize<LogCacheStorage>(jsonReader);
+
+				// Deserialize will not fail with old version, will just assign null instead
+				if (data.LogsByFilename == null)
+				{
+					throw new NotSupportedException("No log data found. This may be caused by trying " +
+					                                "to load data from an incompatible old version.");
+
 				}
+
+				if (data.Version == 2)
+				{
+					return new LogCache(data.LogsByFilename);
+				}
+
+				throw new NotSupportedException("Only version 2 of the log cache is supported. " +
+				                                "Are you sure you are not trying to load " +
+				                                "data from a newer version?");
 			}
 
 			return new LogCache(new Dictionary<string, LogData>());
@@ -63,7 +78,11 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 				using (var writer = new StreamWriter(tmpFilename))
 				{
 					var serializer = new JsonSerializer();
-					serializer.Serialize(writer, logsByFilename);
+					var storage = new LogCacheStorage()
+					{
+						LogsByFilename = logsByFilename
+					};
+					serializer.Serialize(writer, storage);
 				}
 
 				if (File.Exists(filename))

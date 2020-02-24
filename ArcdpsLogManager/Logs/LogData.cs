@@ -61,6 +61,12 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 		[JsonProperty]
 		public Exception ParsingException { get; set; }
 
+		/// <summary>
+		/// The version of the program that was used to parse this log. Will be null unless <see cref="ParsingStatus"/>
+		/// is <see cref="Logs.ParsingStatus.Parsed"/> or <see cref="Logs.ParsingStatus.Failed"/>.
+		/// </summary>
+		public Version ParsingVersion { get; set; }
+
 		[JsonConstructor]
 		public LogData(string fileName) : this(new FileInfo(fileName))
 		{
@@ -120,6 +126,10 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 			{
 				ParsingStatus = ParsingStatus.Failed;
 				ParsingException = e;
+			}
+			finally
+			{
+				ParsingVersion = typeof(LogAnalytics).Assembly.GetName().Version;
 			}
 		}
 

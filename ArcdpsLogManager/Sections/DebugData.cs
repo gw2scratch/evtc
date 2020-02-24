@@ -36,6 +36,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 					layout.AddRow("Parsing status", $"{logData.ParsingStatus}");
 					layout.AddRow("Parsing time", $"{logData.ParseMilliseconds} ms");
 					layout.AddRow("Parsed at date", $"{logData.ParseTime}");
+					layout.AddRow("Parsed with manager version", $"{logData.ParsingVersion}");
 					layout.AddRow("dps.report upload state", logData.DpsReportEIUpload.UploadState.ToString());
 					layout.AddRow("dps.report upload time", logData.DpsReportEIUpload.UploadTime?.ToString(CultureInfo.InvariantCulture));
 					layout.AddRow("dps.report url", logData.DpsReportEIUpload.Url);
