@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using GW2Scratch.ArcdpsLogManager.Analytics;
+using GW2Scratch.EVTCAnalytics.GameData;
 using GW2Scratch.EVTCAnalytics.GameData.Encounters;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
@@ -32,6 +33,30 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 
 		[JsonProperty]
 		public Encounter Encounter { get; set; } = Encounter.Other;
+
+		/// <summary>
+		/// The author of the log.
+		/// </summary>
+		[JsonProperty]
+		public PointOfView PointOfView { get; set; }
+
+		/// <summary>
+		/// The game version (build) used to generate this log.
+		/// </summary>
+		[JsonProperty]
+		public int? GameBuild { get; set; }
+
+		/// <summary>
+		/// The version of arcdps used to generate this log.
+		/// </summary>
+		[JsonProperty]
+		public string EvtcVersion { get; set; }
+
+		/// <summary>
+		/// The language of the game used to generate the log.
+		/// </summary>
+		[JsonProperty]
+		public GameLanguage GameLanguage { get; set; }
 
 		/// <summary>
 		/// The name of the main target of the encounter.
@@ -119,6 +144,14 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 				var log = logAnalytics.Processor.GetProcessedLog(parsedLog);
 				var analyzer = logAnalytics.AnalyzerFactory(log);
 
+				GameLanguage = log.GameLanguage;
+				GameBuild = log.GameBuild;
+				EvtcVersion = log.EVTCVersion;
+				PointOfView = new PointOfView
+				{
+					AccountName = log.PointOfView.AccountName,
+					CharacterName = log.PointOfView.Name
+				};
 				Encounter = log.EncounterData.Encounter;
 				MainTargetName = log.MainTarget?.Name ?? UnknownMainTargetName;
 				EncounterResult = analyzer.GetResult();
