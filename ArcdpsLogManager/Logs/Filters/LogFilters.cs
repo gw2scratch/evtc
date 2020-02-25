@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using GW2Scratch.ArcdpsLogManager.Logs.Naming;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
 
@@ -26,10 +27,12 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 		public DateTime? MinDateTimeFilter { get; set; } = GuildWars2ReleaseDate;
 		public DateTime? MaxDateTimeFilter { get; set; } = DateTime.Now.Date.AddDays(1);
 
+		private readonly ILogNameProvider nameProvider;
 		private readonly IReadOnlyList<ILogFilter> additionalFilters;
 
-		public LogFilters(params ILogFilter[] additionalFilters)
+		public LogFilters(ILogNameProvider nameProvider, params ILogFilter[] additionalFilters)
 		{
+			this.nameProvider = nameProvider;
 			this.additionalFilters = additionalFilters;
 		}
 
@@ -68,7 +71,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 		private bool FilterByEncounterName(LogData log)
 		{
 			return EncounterFilter == EncounterFilterAll ||
-			       log.ParsingStatus == ParsingStatus.Parsed && log.EncounterName == EncounterFilter;
+			       log.ParsingStatus == ParsingStatus.Parsed && nameProvider.GetName(log) == EncounterFilter;
 		}
 
 		private bool FilterByTime(LogData log)

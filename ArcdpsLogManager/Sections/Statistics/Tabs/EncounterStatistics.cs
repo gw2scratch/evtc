@@ -2,12 +2,14 @@ using System;
 using System.Collections.Generic;
 using Eto.Forms;
 using GW2Scratch.ArcdpsLogManager.Logs;
+using GW2Scratch.ArcdpsLogManager.Logs.Naming;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
 
 namespace GW2Scratch.ArcdpsLogManager.Sections.Statistics.Tabs
 {
 	public class EncounterStatistics : DynamicLayout
 	{
+		private readonly ILogNameProvider nameProvider;
 		private readonly GridView<EncounterStats> statsGridView;
 		private GridViewSorter<EncounterStats> sorter;
 
@@ -32,8 +34,9 @@ namespace GW2Scratch.ArcdpsLogManager.Sections.Statistics.Tabs
 			}
 		}
 
-		public EncounterStatistics()
+		public EncounterStatistics(ILogNameProvider nameProvider)
 		{
+			this.nameProvider = nameProvider;
 			statsGridView = ConstructGridView();
 			DataStore = new FilterCollection<EncounterStats>();
 
@@ -140,12 +143,13 @@ namespace GW2Scratch.ArcdpsLogManager.Sections.Statistics.Tabs
 			{
 				if (log.ParsingStatus != ParsingStatus.Parsed) continue;
 
-				if (!statsByEncounter.ContainsKey(log.EncounterName))
+				var encounterName = nameProvider.GetName(log);
+				if (!statsByEncounter.ContainsKey(encounterName))
 				{
-					statsByEncounter[log.EncounterName] = new EncounterStats(log.EncounterName);
+					statsByEncounter[encounterName] = new EncounterStats(encounterName);
 				}
 
-				var stats = statsByEncounter[log.EncounterName];
+				var stats = statsByEncounter[encounterName];
 
 				if (!stats.LogCountsByResult.ContainsKey(log.EncounterResult))
 				{

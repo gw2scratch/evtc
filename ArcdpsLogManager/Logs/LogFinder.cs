@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using GW2Scratch.EVTCAnalytics.GameData.Encounters;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
 
@@ -51,11 +52,11 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 			var duration2 = new TimeSpan(0, 2, 0);
 			var duration3 = new TimeSpan(0, 6, 0);
 
-			var log1 = new LogData(null, players, "Sabetha the Saboteur", EncounterResult.Failure, dateStart1,
+			var log1 = new LogData(null, players, Encounter.Sabetha, "Sabetha the Saboteur", EncounterResult.Failure, dateStart1,
 				duration1);
-			var log2 = new LogData(null, players, "Sabetha the Saboteur", EncounterResult.Failure, dateStart2,
+			var log2 = new LogData(null, players, Encounter.Sabetha, "Sabetha the Saboteur", EncounterResult.Failure, dateStart2,
 				duration2);
-			var log3 = new LogData(null, players, "Sabetha the Saboteur", EncounterResult.Success, dateStart3,
+			var log3 = new LogData(null, players, Encounter.Sabetha, "Sabetha the Saboteur", EncounterResult.Success, dateStart3,
 				duration3);
 
 			return Enumerable.Repeat(new[] {log1, log2, log3}, 8).SelectMany(x => x);

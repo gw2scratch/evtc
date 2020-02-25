@@ -8,6 +8,7 @@ using Eto.Forms;
 using GW2Scratch.ArcdpsLogManager.Controls;
 using GW2Scratch.ArcdpsLogManager.Gw2Api;
 using GW2Scratch.ArcdpsLogManager.Logs;
+using GW2Scratch.ArcdpsLogManager.Logs.Naming;
 using GW2Scratch.ArcdpsLogManager.Processing;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
@@ -20,6 +21,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 		private readonly LogDataProcessor logProcessor;
 		private readonly UploadProcessor uploadProcessor;
 		private readonly ImageProvider imageProvider;
+		private readonly ILogNameProvider nameProvider;
 		private readonly GridView<LogData> logGridView;
 
 		private const int PlayerIconSize = 20;
@@ -40,12 +42,13 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 		}
 
 		public LogList(ApiData apiData, LogDataProcessor logProcessor, UploadProcessor uploadProcessor,
-			ImageProvider imageProvider)
+			ImageProvider imageProvider, ILogNameProvider nameProvider)
 		{
 			this.apiData = apiData;
 			this.logProcessor = logProcessor;
 			this.uploadProcessor = uploadProcessor;
 			this.imageProvider = imageProvider;
+			this.nameProvider = nameProvider;
 
 			var logDetailPanel = ConstructLogDetailPanel();
 			var multipleLogPanel = ConstructMultipleLogPanel();
@@ -79,7 +82,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 
 		private LogDetailPanel ConstructLogDetailPanel()
 		{
-			return new LogDetailPanel(apiData, logProcessor, uploadProcessor, imageProvider);
+			return new LogDetailPanel(apiData, logProcessor, uploadProcessor, imageProvider, nameProvider);
 		}
 
 		private MultipleLogPanel ConstructMultipleLogPanel()
@@ -97,7 +100,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			gridView.Columns.Add(new GridColumn()
 			{
 				HeaderText = "Encounter",
-				DataCell = new TextBoxCell {Binding = new DelegateBinding<LogData, string>(x => x.EncounterName)}
+				DataCell = new TextBoxCell {Binding = new DelegateBinding<LogData, string>(x => nameProvider.GetName(x))}
 			});
 
 			gridView.Columns.Add(new GridColumn()

@@ -14,11 +14,13 @@ using GW2Scratch.ArcdpsLogManager.Dialogs;
 using GW2Scratch.ArcdpsLogManager.Gw2Api;
 using GW2Scratch.ArcdpsLogManager.Logs;
 using GW2Scratch.ArcdpsLogManager.Logs.Filters;
+using GW2Scratch.ArcdpsLogManager.Logs.Naming;
 using GW2Scratch.ArcdpsLogManager.Processing;
 using GW2Scratch.ArcdpsLogManager.Sections;
 using GW2Scratch.ArcdpsLogManager.Timing;
 using GW2Scratch.ArcdpsLogManager.Uploads;
 using GW2Scratch.EVTCAnalytics;
+using GW2Scratch.EVTCAnalytics.GameData;
 using GW2Scratch.EVTCAnalytics.Processing;
 using Gw2Sharp;
 
@@ -37,6 +39,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		private ApiProcessor ApiProcessor { get; }
 		private UploadProcessor UploadProcessor { get; }
 		private LogDataProcessor LogDataProcessor { get; }
+		private ILogNameProvider LogNameProvider { get; }
 
 		private ObservableCollection<LogData> logs = new ObservableCollection<LogData>();
 		private FilterCollection<LogData> logsFiltered;
@@ -46,7 +49,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		public IEnumerable<LogData> LoadedLogs => logs;
 		public LogCache LogCache { get; }
 		public ApiData ApiData { get; }
-		private LogFilters Filters { get; } = new LogFilters(new SettingsFilters());
+		private LogFilters Filters { get; }
 
 		private readonly List<FileSystemWatcher> fileSystemWatchers = new List<FileSystemWatcher>();
 
@@ -60,6 +63,10 @@ namespace GW2Scratch.ArcdpsLogManager
 			UploadProcessor = new UploadProcessor(dpsReportUploader, LogCache);
 			ApiProcessor = new ApiProcessor(ApiData, new Gw2Client());
 			LogDataProcessor = new LogDataProcessor(LogCache, ApiProcessor, LogAnalytics);
+			LogNameProvider = new TranslatedLogNameProvider(GameLanguage.English);
+
+			Filters = new LogFilters(LogNameProvider, new SettingsFilters());
+
 			if (Settings.UseGW2Api)
 			{
 				ApiProcessor.StartBackgroundTask();
@@ -206,7 +213,7 @@ namespace GW2Scratch.ArcdpsLogManager
 
 		private LogFilterPanel ConstructLogFilters()
 		{
-			var filterPanel = new LogFilterPanel(ImageProvider, Filters);
+			var filterPanel = new LogFilterPanel(ImageProvider, LogNameProvider, Filters);
 			filterPanel.FiltersUpdated += (sender, args) => logsFiltered.Refresh();
 			LogCollectionsRecreated += (sender, args) =>
 			{
@@ -267,7 +274,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		private TabControl ConstructMainTabControl()
 		{
 			// Main log list
-			var logList = new LogList(ApiData, LogDataProcessor, UploadProcessor, ImageProvider);
+			var logList = new LogList(ApiData, LogDataProcessor, UploadProcessor, ImageProvider, LogNameProvider);
 			LogCollectionsRecreated += (sender, args) => logList.DataStore = logsFiltered;
 
 			LogDataProcessor.Processed += (sender, args) =>
@@ -280,15 +287,15 @@ namespace GW2Scratch.ArcdpsLogManager
 				}
 			};
 			// Player list
-			var playerList = new PlayerList(ApiData, LogDataProcessor, UploadProcessor, ImageProvider);
+			var playerList = new PlayerList(ApiData, LogDataProcessor, UploadProcessor, ImageProvider, LogNameProvider);
 			FilteredLogsUpdated += (sender, args) => playerList.UpdateDataFromLogs(logsFiltered);
 
 			// Guild list
-			var guildList = new GuildList(ApiData, LogDataProcessor, UploadProcessor, ImageProvider);
+			var guildList = new GuildList(ApiData, LogDataProcessor, UploadProcessor, ImageProvider, LogNameProvider);
 			FilteredLogsUpdated += (sender, args) => guildList.UpdateDataFromLogs(logsFiltered);
 
 			// Statistics
-			var statistics = new StatisticsSection(ImageProvider);
+			var statistics = new StatisticsSection(ImageProvider, LogNameProvider);
 			FilteredLogsUpdated += (sender, args) => statistics.UpdateDataFromLogs(logsFiltered.ToList());
 
 			// Game data collecting

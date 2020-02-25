@@ -7,6 +7,7 @@ using Eto.Forms;
 using GW2Scratch.ArcdpsLogManager.Controls;
 using GW2Scratch.ArcdpsLogManager.Gw2Api;
 using GW2Scratch.ArcdpsLogManager.Logs;
+using GW2Scratch.ArcdpsLogManager.Logs.Naming;
 using GW2Scratch.ArcdpsLogManager.Processing;
 using GW2Scratch.ArcdpsLogManager.Sections.Players;
 
@@ -18,6 +19,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 		private LogDataProcessor LogProcessor { get; }
 		private UploadProcessor UploadProcessor { get; }
 		private ImageProvider ImageProvider { get; }
+		private ILogNameProvider LogNameProvider { get; }
 
 		private ObservableCollection<PlayerData> playerData;
 		private SelectableFilterCollection<PlayerData> filtered;
@@ -53,11 +55,12 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 		private string PlayerFilter { get; set; } = "";
 
 		public PlayerList(ApiData apiData, LogDataProcessor logProcessor, UploadProcessor uploadProcessor,
-			ImageProvider imageProvider)
+			ImageProvider imageProvider, ILogNameProvider logNameProvider)
 		{
 			ApiData = apiData;
 			LogProcessor = logProcessor;
 			ImageProvider = imageProvider;
+			LogNameProvider = logNameProvider;
 			UploadProcessor = uploadProcessor;
 
 			var playerDetailPanel = ConstructPlayerDetailPanel();
@@ -163,7 +166,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 
 		private PlayerDetailPanel ConstructPlayerDetailPanel()
 		{
-			return new PlayerDetailPanel(ApiData, LogProcessor, UploadProcessor, ImageProvider);
+			return new PlayerDetailPanel(ApiData, LogProcessor, UploadProcessor, ImageProvider, LogNameProvider);
 		}
 
 		private GridView<PlayerData> ConstructPlayerGridView(PlayerDetailPanel playerDetailPanel)

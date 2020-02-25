@@ -7,6 +7,7 @@ using Eto.Forms;
 using GW2Scratch.ArcdpsLogManager.Controls;
 using GW2Scratch.ArcdpsLogManager.Gw2Api;
 using GW2Scratch.ArcdpsLogManager.Logs;
+using GW2Scratch.ArcdpsLogManager.Logs.Naming;
 using GW2Scratch.ArcdpsLogManager.Processing;
 using GW2Scratch.ArcdpsLogManager.Sections.Guilds;
 
@@ -18,6 +19,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 		private LogDataProcessor LogProcessor { get; }
 		private UploadProcessor UploadProcessor { get; }
 		private ImageProvider ImageProvider { get; }
+		private ILogNameProvider LogNameProvider { get; }
 
 		private ObservableCollection<GuildData> guildData;
 		private SelectableFilterCollection<GuildData> filtered;
@@ -52,12 +54,13 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 		private string GuildFilter { get; set; } = "";
 
 		public GuildList(ApiData apiData, LogDataProcessor logProcessor, UploadProcessor uploadProcessor,
-			ImageProvider imageProvider)
+			ImageProvider imageProvider, ILogNameProvider logNameProvider)
 		{
 			ApiData = apiData;
 			LogProcessor = logProcessor;
 			UploadProcessor = uploadProcessor;
 			ImageProvider = imageProvider;
+			LogNameProvider = logNameProvider;
 
 			var playerDetailPanel = ConstructGuildDetailPanel();
 			guildGridView = ConstructGuildGridView(playerDetailPanel);
@@ -173,7 +176,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 
 		private GuildDetailPanel ConstructGuildDetailPanel()
 		{
-			return new GuildDetailPanel(ApiData, LogProcessor, UploadProcessor, ImageProvider);
+			return new GuildDetailPanel(ApiData, LogProcessor, UploadProcessor, ImageProvider, LogNameProvider);
 		}
 
 		private GridView<GuildData> ConstructGuildGridView(GuildDetailPanel guildDetailPanel)

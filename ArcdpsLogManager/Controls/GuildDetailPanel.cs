@@ -6,6 +6,7 @@ using Eto.Drawing;
 using Eto.Forms;
 using GW2Scratch.ArcdpsLogManager.Gw2Api;
 using GW2Scratch.ArcdpsLogManager.Logs;
+using GW2Scratch.ArcdpsLogManager.Logs.Naming;
 using GW2Scratch.ArcdpsLogManager.Processing;
 using GW2Scratch.ArcdpsLogManager.Sections;
 using GW2Scratch.ArcdpsLogManager.Sections.Guilds;
@@ -23,6 +24,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 		private LogDataProcessor LogProcessor { get; }
 		private UploadProcessor UploadProcessor { get; }
 		private ImageProvider ImageProvider { get; }
+		private ILogNameProvider LogNameProvider { get; }
 
 		public GuildData GuildData
 		{
@@ -43,9 +45,10 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		public GuildDetailPanel(ApiData apiData, LogDataProcessor logProcessor, UploadProcessor uploadProcessor,
-			ImageProvider imageProvider)
+			ImageProvider imageProvider, ILogNameProvider logNameProvider)
 		{
 			ImageProvider = imageProvider;
+			LogNameProvider = logNameProvider;
 			ApiData = apiData;
 			LogProcessor = logProcessor;
 			UploadProcessor = uploadProcessor;
@@ -140,7 +143,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			{
 				var form = new Form
 				{
-					Content = new LogList(ApiData, LogProcessor, UploadProcessor, ImageProvider)
+					Content = new LogList(ApiData, LogProcessor, UploadProcessor, ImageProvider, LogNameProvider)
 					{
 						DataStore = new FilterCollection<LogData>(GuildData.Logs)
 					},

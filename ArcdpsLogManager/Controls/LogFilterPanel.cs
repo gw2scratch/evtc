@@ -5,19 +5,22 @@ using Eto.Drawing;
 using Eto.Forms;
 using GW2Scratch.ArcdpsLogManager.Logs;
 using GW2Scratch.ArcdpsLogManager.Logs.Filters;
+using GW2Scratch.ArcdpsLogManager.Logs.Naming;
 using GW2Scratch.ArcdpsLogManager.Sections;
 
 namespace GW2Scratch.ArcdpsLogManager.Controls
 {
 	public class LogFilterPanel : DynamicLayout
 	{
+		private readonly ILogNameProvider logNameProvider;
 		private readonly DropDown encounterFilterDropDown;
 		public event EventHandler FiltersUpdated;
 
 		private LogFilters Filters { get; }
 
-		public LogFilterPanel(ImageProvider imageProvider, LogFilters filters)
+		public LogFilterPanel(ImageProvider imageProvider, ILogNameProvider logNameProvider, LogFilters filters)
 		{
+			this.logNameProvider = logNameProvider;
 			Filters = filters;
 
 			encounterFilterDropDown = new DropDown {SelectedKey = LogFilters.EncounterFilterAll};
@@ -143,7 +146,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			var encounterNames = new[] {LogFilters.EncounterFilterAll}
 				.Concat(logs
 					.Where(x => x.ParsingStatus == ParsingStatus.Parsed)
-					.Select(x => x.EncounterName)
+					.Select(x => logNameProvider.GetName(x))
 					.Distinct()
 					.OrderBy(x => x)
 					.ToArray()

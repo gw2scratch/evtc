@@ -6,6 +6,7 @@ using Eto.Drawing;
 using Eto.Forms;
 using GW2Scratch.ArcdpsLogManager.Gw2Api;
 using GW2Scratch.ArcdpsLogManager.Logs;
+using GW2Scratch.ArcdpsLogManager.Logs.Naming;
 using GW2Scratch.ArcdpsLogManager.Processing;
 using GW2Scratch.ArcdpsLogManager.Sections;
 using GW2Scratch.ArcdpsLogManager.Sections.Players;
@@ -37,7 +38,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 		}
 
 		public PlayerDetailPanel(ApiData apiData, LogDataProcessor logProcessor, UploadProcessor uploadProcessor,
-			ImageProvider imageProvider)
+			ImageProvider imageProvider, ILogNameProvider logNameProvider)
 		{
 			Padding = new Padding(10);
 			Width = 350;
@@ -104,7 +105,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 								var characterLogs = PlayerData.Logs.Where(log => log.Players.Any(x => x.Name == name));
 								var form = new Form
 								{
-									Content = new LogList(apiData, logProcessor, uploadProcessor, imageProvider)
+									Content = new LogList(apiData, logProcessor, uploadProcessor, imageProvider, logNameProvider)
 										{DataStore = new FilterCollection<LogData>(characterLogs)},
 									Width = 900,
 									Height = 700,
@@ -157,7 +158,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				{
 					var form = new Form
 					{
-						Content = new LogList(apiData, logProcessor, uploadProcessor, imageProvider)
+						Content = new LogList(apiData, logProcessor, uploadProcessor, imageProvider, logNameProvider)
 						{
 							DataStore = new FilterCollection<LogData>(PlayerData.Logs)
 						},

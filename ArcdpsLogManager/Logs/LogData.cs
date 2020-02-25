@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using GW2Scratch.ArcdpsLogManager.Analytics;
+using GW2Scratch.EVTCAnalytics.GameData.Encounters;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
 using Newtonsoft.Json;
@@ -13,6 +14,8 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 {
 	public class LogData
 	{
+		private const string UnknownMainTargetName = "Unknown";
+
 		[JsonIgnore]
 		public FileInfo FileInfo { get; }
 
@@ -20,12 +23,21 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 
 		[JsonProperty]
 		public IEnumerable<LogPlayer> Players { get; set; }
+
 		[JsonProperty]
 		public EncounterResult EncounterResult { get; set; } = EncounterResult.Unknown;
+
 		[JsonProperty]
 		public EncounterMode EncounterMode { get; set; } = EncounterMode.Unknown;
+
 		[JsonProperty]
-		public string EncounterName { get; set; } = "Unknown";
+		public Encounter Encounter { get; set; } = Encounter.Other;
+
+		/// <summary>
+		/// The name of the main target of the encounter.
+		/// </summary>
+		[JsonProperty]
+		public string MainTargetName { get; set; } = UnknownMainTargetName;
 
 		/// <summary>
 		/// Time when the encounter started.
@@ -65,6 +77,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 		/// The version of the program that was used to parse this log. Will be null unless <see cref="ParsingStatus"/>
 		/// is <see cref="Logs.ParsingStatus.Parsed"/> or <see cref="Logs.ParsingStatus.Failed"/>.
 		/// </summary>
+		[JsonProperty]
 		public Version ParsingVersion { get; set; }
 
 		[JsonConstructor]
@@ -78,14 +91,15 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 			EncounterStartTime = fileInfo.CreationTime;
 		}
 
-		internal LogData(FileInfo fileInfo, IEnumerable<LogPlayer> players, string encounterName,
-			EncounterResult encounterResult,
+		internal LogData(FileInfo fileInfo, IEnumerable<LogPlayer> players, Encounter encounter,
+			string mainTargetName, EncounterResult encounterResult,
 			DateTimeOffset encounterStartTime, TimeSpan encounterDuration, long parseMilliseconds = -1)
 		{
 			FileInfo = fileInfo;
 			Players = players.ToArray();
 			EncounterResult = encounterResult;
-			EncounterName = encounterName;
+			Encounter = encounter;
+			MainTargetName = mainTargetName;
 			EncounterStartTime = encounterStartTime;
 			EncounterDuration = encounterDuration;
 
@@ -105,7 +119,8 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 				var log = logAnalytics.Processor.GetProcessedLog(parsedLog);
 				var analyzer = logAnalytics.AnalyzerFactory(log);
 
-				EncounterName = log.EncounterName;
+				Encounter = log.EncounterData.Encounter;
+				MainTargetName = log.MainTarget?.Name ?? UnknownMainTargetName;
 				EncounterResult = analyzer.GetResult();
 				EncounterMode = analyzer.GetMode();
 				Players = analyzer.GetPlayers().Where(x => x.Identified).Select(x =>

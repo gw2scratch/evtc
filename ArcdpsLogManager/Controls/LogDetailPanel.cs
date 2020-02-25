@@ -5,6 +5,7 @@ using Eto.Drawing;
 using Eto.Forms;
 using GW2Scratch.ArcdpsLogManager.Gw2Api;
 using GW2Scratch.ArcdpsLogManager.Logs;
+using GW2Scratch.ArcdpsLogManager.Logs.Naming;
 using GW2Scratch.ArcdpsLogManager.Processing;
 using GW2Scratch.ArcdpsLogManager.Sections;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
@@ -15,6 +16,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 	{
 		private UploadProcessor UploadProcessor { get; }
 		private ImageProvider ImageProvider { get; }
+		private ILogNameProvider NameProvider { get; }
 
 		private LogData logData;
 
@@ -44,7 +46,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 
 				Visible = true;
 
-				nameLabel.Text = logData.EncounterName;
+				nameLabel.Text = NameProvider.GetName(logData);
 
 				string result;
 				switch (logData.EncounterResult)
@@ -81,10 +83,11 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 		}
 
 		public LogDetailPanel(ApiData apiData, LogDataProcessor logProcessor, UploadProcessor uploadProcessor,
-			ImageProvider imageProvider)
+			ImageProvider imageProvider, ILogNameProvider nameProvider)
 		{
 			UploadProcessor = uploadProcessor;
 			ImageProvider = imageProvider;
+			NameProvider = nameProvider;
 
 			Padding = new Padding(10, 10, 10, 2);
 			Width = 350;
