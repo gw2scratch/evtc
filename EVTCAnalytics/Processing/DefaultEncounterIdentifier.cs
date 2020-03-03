@@ -232,21 +232,11 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					}
 					else
 					{
-						long maxAwareTime = -1;
-						Gadget mainGadget = null;
-						foreach (var gadget in agents.OfType<Gadget>().Where(x => x.AttackTargets.Count == 1))
-						{
-							long aware = gadget.LastAwareTime - gadget.FirstAwareTime;
-							if (aware > maxAwareTime)
-							{
-								maxAwareTime = aware;
-								mainGadget = gadget;
-							}
-						}
+						Gadget mainGadget = agents.OfType<Gadget>().FirstOrDefault(x => x.VolatileId == GadgetIds.DeimosLastPhase);
 
 						if (mainGadget != null)
 						{
-							resultDeterminer = new TargetableDeterminer(mainGadget.AttackTargets.Single(), false);
+							resultDeterminer = new TargetableDeterminer(mainGadget.AttackTargets.Single(), true, false);
 						}
 						else
 						{

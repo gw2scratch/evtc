@@ -5,23 +5,46 @@ using GW2Scratch.EVTCAnalytics.Model.Agents;
 
 namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 {
+	/// <summary>
+	/// Return success if an attack target goes through a sequence of targetability changes.
+	/// </summary>
 	public class TargetableDeterminer : IResultDeterminer
 	{
 		private readonly Agent attackTarget;
-		private readonly bool targetableState;
+		private readonly bool[] targetableStates;
 
-		public TargetableDeterminer(AttackTarget attackTarget, bool targetableState)
+		/// <param name="attackTarget">The attack target whose targetability changes will be tracked</param>
+		/// <param name="targetableStates">
+		/// The sequence of states that has to be set for the encounter
+		/// to be successful. If a state is repeated, it is ignored.
+		/// </param>
+		public TargetableDeterminer(AttackTarget attackTarget, params bool[] targetableStates)
 		{
 			this.attackTarget = attackTarget;
-			this.targetableState = targetableState;
+			this.targetableStates = targetableStates;
 		}
 
 		public EncounterResult GetResult(IEnumerable<Event> events)
 		{
-			bool targetableSet = events.OfType<TargetableChangeEvent>()
-				.Any(x => x.AttackTarget == attackTarget && x.IsTargetable == targetableState);
+			if (targetableStates.Length == 0)
+			{
+				return EncounterResult.Success;
+			}
 
-			return targetableSet ? EncounterResult.Success : EncounterResult.Failure;
+			int currentState = 0;
+			foreach (var change in events.OfType<TargetableChangeEvent>().Where(x => x.AttackTarget == attackTarget))
+			{
+				if (targetableStates[currentState] == change.IsTargetable)
+				{
+					currentState++;
+					if (currentState == targetableStates.Length)
+					{
+						return EncounterResult.Success;
+					}
+				}
+			}
+
+			return EncounterResult.Failure;
 		}
 	}
 }
