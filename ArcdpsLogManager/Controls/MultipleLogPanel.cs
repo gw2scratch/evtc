@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Eto.Drawing;
 using Eto.Forms;
@@ -23,6 +24,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 		private readonly TextArea dpsReportLinkTextArea = new TextArea {ReadOnly = true};
 		private readonly Button dpsReportUploadButton = new Button();
 		private readonly Button dpsReportCancelButton = new Button {Text = "Cancel"};
+		private readonly Button dpsReportOpenButton = new Button {Text = "Open uploaded logs in a browser", Enabled = false};
 		private readonly ProgressBar dpsReportUploadProgressBar = new ProgressBar();
 		private readonly DynamicTable dpsReportUploadFailedRow;
 		private readonly DynamicTable dpsReportProcessingFailedRow;
@@ -76,6 +78,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			dpsReportUploadFailedRow.Table.Visible = uploadsFailed > 0;
 			dpsReportProcessingFailedLabel.Text = processingFailed.ToString();
 			dpsReportProcessingFailedRow.Table.Visible = processingFailed > 0;
+			dpsReportOpenButton.Enabled = uploaded > 0;
 			dpsReportLinkTextArea.Text = string.Join(Environment.NewLine,
 				logData.Where(x => x.DpsReportEIUpload.Url != null).Select(x => x.DpsReportEIUpload.Url));
 		}
@@ -103,6 +106,33 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 					if (state == UploadState.NotUploaded || state == UploadState.UploadError)
 					{
 						uploadProcessor.ScheduleDpsReportEIUpload(log);
+					}
+				}
+			};
+
+			dpsReportOpenButton.Click += (sender, args) =>
+			{
+				var uploadedLogs = logData.Where(x => x.DpsReportEIUpload.UploadState == UploadState.Uploaded).ToList();
+				if (uploadedLogs.Count > 5)
+				{
+					var result = MessageBox.Show(
+						$"Are you sure you want to open {uploadedLogs.Count} logs at once in a browser?",
+						"Open uploaded logs in a browser",
+						MessageBoxButtons.YesNo,
+						MessageBoxType.Question);
+
+					if (result != DialogResult.Yes)
+					{
+						return;
+					}
+				}
+
+				foreach (var log in logData)
+				{
+					var state = log.DpsReportEIUpload.UploadState;
+					if (state == UploadState.Uploaded)
+					{
+						Process.Start(log.DpsReportEIUpload.Url);
 					}
 				}
 			};
@@ -158,7 +188,16 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 					BeginVertical();
 					{
 						AddRow(dpsReportUploadProgressBar);
-						AddRow(dpsReportLinkTextArea);
+						BeginHorizontal(yscale: true);
+						{
+							Add(dpsReportLinkTextArea);
+						}
+						EndHorizontal();
+						BeginHorizontal(yscale: false);
+						{
+							AddRow(dpsReportOpenButton);
+						}
+						EndHorizontal();
 					}
 					EndVertical();
 				}
