@@ -1,3 +1,4 @@
+using System;
 using System.Globalization;
 using Eto.Drawing;
 using Eto.Forms;
@@ -45,7 +46,9 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 						layout.EndVertical();
 						layout.BeginVertical(new Padding(5), yscale: true);
 						layout.AddRow("Parsing exception");
-						layout.AddRow(new TextArea {Text = $"{logData.ParsingException}", ReadOnly = true});
+						string exceptionText = $"{logData.ParsingException.ExceptionName}: {logData.ParsingException.Message}\n" +
+						                    $"{logData.ParsingException.StackTrace}";
+						layout.AddRow(new TextArea {Text = exceptionText, ReadOnly = true});
 					}
 				}
 				layout.EndVertical();

@@ -96,7 +96,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 		/// An exception if one was thrown during parsing. Will be null unless <see cref="ParsingStatus"/> is <see cref="Logs.ParsingStatus.Failed"/>.
 		/// </summary>
 		[JsonProperty]
-		public Exception ParsingException { get; set; }
+		public ExceptionData ParsingException { get; set; }
 
 		/// <summary>
 		/// The version of the program that was used to parse this log. Will be null unless <see cref="ParsingStatus"/>
@@ -173,7 +173,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 			catch (Exception e)
 			{
 				ParsingStatus = ParsingStatus.Failed;
-				ParsingException = e;
+				ParsingException = new ExceptionData(e);
 			}
 			finally
 			{
