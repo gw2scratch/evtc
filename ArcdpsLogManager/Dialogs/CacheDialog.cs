@@ -9,6 +9,7 @@ namespace GW2Scratch.ArcdpsLogManager.Dialogs
 		public CacheDialog(ManagerForm managerForm)
 		{
 			Title = "Log cache - arcdps Log Manager";
+			ClientSize = new Size(500, -1);
 			var formLayout = new DynamicLayout();
 
 			var item = new Button {Text = "Close"};
@@ -31,21 +32,12 @@ namespace GW2Scratch.ArcdpsLogManager.Dialogs
 
 			formLayout.BeginVertical(new Padding(10), new Size(0, 0));
 			{
-				// This is a very hacky solution for WrapMode.Word not working properly on the Gtk platform
 				formLayout.AddRow(new Label
 				{
-					Text = "The processed contents of logs are saved in a cache file to save time. You can",
-					Wrap = WrapMode.None
-				});
-				formLayout.AddRow(new Label
-				{
-					Text = "delete the cached results here to process the logs again or prune results for",
-					Wrap = WrapMode.None
-				});
-				formLayout.AddRow(new Label
-				{
-					Text = "logs that are not in the scanned directory anymore.",
-					Wrap = WrapMode.None
+					Text = "The processed contents of logs are saved in a cache file to save time. " +
+					       "You can delete the cached results here to process the logs again or prune " +
+					       "results for logs that are not in the scanned directory anymore.",
+					Wrap = WrapMode.Word
 				});
 			}
 			formLayout.EndVertical();
