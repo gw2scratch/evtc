@@ -75,7 +75,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 								new PhaseDefinition("Split 2", split2Guardians)),
 							new BuffRemoveTrigger(mainTarget, SkillIds.Invulnerability, new PhaseDefinition("Phase 3", mainTarget))
 						),
-						new AgentDeadDeterminer(mainTarget),
+						new AgentKilledDeterminer(mainTarget),
 						new ConstantModeDeterminer(EncounterMode.Normal)
 					);
 				}
@@ -101,7 +101,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 							new BuffRemoveTrigger(mainTarget, SkillIds.GorsevalInvulnerability,
 								new PhaseDefinition("Phase 3", mainTarget))
 						),
-						new AgentDeadDeterminer(mainTarget),
+						new AgentKilledDeterminer(mainTarget),
 						new ConstantModeDeterminer(EncounterMode.Normal)
 					);
 				}
@@ -127,7 +127,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 								new PhaseDefinition("Karde", karde != null ? new Agent[] {karde} : new Agent[0])),
 							new BuffRemoveTrigger(mainTarget, SkillIds.Invulnerability, new PhaseDefinition("Phase 4", mainTarget))
 						),
-						new AgentDeadDeterminer(mainTarget),
+						new AgentKilledDeterminer(mainTarget),
 						new ConstantModeDeterminer(EncounterMode.Normal)
 					);
 				}
@@ -143,13 +143,10 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					if (berg != null && zane != null && narella != null && prisoner != null)
 					{
 						resultDeterminer = new AllCombinedResultDeterminer(
-							new AgentDeadDeterminer(berg), // Berg has to die
-							new AgentDeadDeterminer(zane), // So does Zane
+							new AgentKilledDeterminer(berg), // Berg has to die
+							new AgentKilledDeterminer(zane), // So does Zane
 							new AgentAliveDeterminer(prisoner), // The prisoner in the cage must survive
-							new AnyCombinedResultDeterminer( // And finally, Narella has to perish as well
-								new AgentKillingBlowDeterminer(narella),
-								new AgentDeadDeterminer(narella)
-							)
+							new AgentKilledDeterminer(narella) // And finally, Narella has to perish as well
 						);
 					}
 					else
@@ -196,7 +193,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						encounter,
 						new[] {mainTarget},
 						new PhaseSplitter(new StartTrigger(new PhaseDefinition("Default phase", mainTarget))),
-						new AgentDeadDeterminer(mainTarget),
+						new AgentKilledDeterminer(mainTarget),
 						new SkillPresentModeDeterminer(SkillIds.CairnCountdown));
 				}
 				case Encounter.MursaatOverseer:
@@ -205,7 +202,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						encounter,
 						new[] {mainTarget},
 						new PhaseSplitter(new StartTrigger(new PhaseDefinition("Default phase", mainTarget))),
-						new AgentDeadDeterminer(mainTarget),
+						new AgentKilledDeterminer(mainTarget),
 						new AgentHealthModeDeterminer(mainTarget, 29_000_000));
 				}
 				case Encounter.Samarog:
@@ -214,7 +211,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						encounter,
 						new[] {mainTarget},
 						new PhaseSplitter(new StartTrigger(new PhaseDefinition("Default phase", mainTarget))),
-						new AgentDeadDeterminer(mainTarget),
+						new AgentKilledDeterminer(mainTarget),
 						new AgentHealthModeDeterminer(mainTarget, 39_000_000));
 				}
 				case Encounter.Deimos:
@@ -310,7 +307,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						encounter,
 						new[] {mainTarget},
 						new PhaseSplitter(new StartTrigger(new PhaseDefinition("Default phase", mainTarget))),
-						new AgentDeadDeterminer(mainTarget),
+						new AgentKilledDeterminer(mainTarget),
 						new AgentHealthModeDeterminer(mainTarget, 39_000_000));
 				}
 				// Raids - Wing 6
@@ -342,8 +339,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 								new PhaseDefinition("Split phase", nikare, kenut))
 						),
 						new AllCombinedResultDeterminer(
-							new AgentDeadDeterminer(nikare),
-							new AgentDeadDeterminer(kenut)
+							new AgentKilledDeterminer(nikare),
+							new AgentKilledDeterminer(kenut)
 						),
 						new AgentHealthModeDeterminer(nikare, 19_000_000)
 					);
@@ -391,7 +388,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						encounter,
 						new[] {mainTarget},
 						new PhaseSplitter(new StartTrigger(new PhaseDefinition("Default phase", mainTarget))),
-						new AgentDeadDeterminer(mainTarget),
+						new AgentKilledDeterminer(mainTarget),
 						new AgentHealthModeDeterminer(mainTarget, 24_000_000));
 				}
 				case Encounter.Sabir:
@@ -400,7 +397,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						encounter,
 						new[] {mainTarget},
 						new PhaseSplitter(new StartTrigger(new PhaseDefinition("Default phase", mainTarget))),
-						new AgentDeadDeterminer(mainTarget),
+						new AgentKilledDeterminer(mainTarget),
 						new AgentHealthModeDeterminer(mainTarget, 32_000_000));
 				}
 				case Encounter.QadimThePeerless:
@@ -409,7 +406,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						encounter,
 						new[] {mainTarget},
 						new PhaseSplitter(new StartTrigger(new PhaseDefinition("Default phase", mainTarget))),
-						new AgentDeadDeterminer(mainTarget),
+						new AgentKilledDeterminer(mainTarget),
 						new AgentHealthModeDeterminer(mainTarget, 50_000_000));
 				}
 				// Challenge Mode fractals
@@ -417,27 +414,14 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				case Encounter.SiaxTheCorrupted:
 				case Encounter.EnsolyssOfTheEndlessTorment:
 				case Encounter.Skorvald:
-					return new BaseEncounterData(
-						encounter,
-						new[] {mainTarget},
-						new PhaseSplitter(new StartTrigger(new PhaseDefinition("Default phase", mainTarget))),
-						new AgentDeadDeterminer(mainTarget),
-						new ConstantModeDeterminer(EncounterMode.Challenge)
-					);
 				case Encounter.Artsariiv:
+				case Encounter.Arkk:
+					// Artsariiv and Arkk rely on the killing blow event
 					return new BaseEncounterData(
 						encounter,
 						new[] {mainTarget},
 						new PhaseSplitter(new StartTrigger(new PhaseDefinition("Default phase", mainTarget))),
-						new AgentKillingBlowDeterminer(mainTarget),
-						new ConstantModeDeterminer(EncounterMode.Challenge)
-					);
-				case Encounter.Arkk:
-					return new BaseEncounterData(
-						Encounter.Arkk,
-						new[] {mainTarget},
-						new PhaseSplitter(new StartTrigger(new PhaseDefinition("Default phase", mainTarget))),
-						new AgentKillingBlowDeterminer(mainTarget),
+						new AgentKilledDeterminer(mainTarget),
 						new ConstantModeDeterminer(EncounterMode.Challenge)
 					);
 				// TODO: Check if these are all the possible kitty golems
@@ -589,7 +573,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				encounter,
 				new[] {mainTarget},
 				new PhaseSplitter(new StartTrigger(new PhaseDefinition("Default phase", mainTarget))),
-				new AgentDeadDeterminer(mainTarget),
+				new AgentKilledDeterminer(mainTarget),
 				new ConstantModeDeterminer(EncounterMode.Normal));
 		}
 

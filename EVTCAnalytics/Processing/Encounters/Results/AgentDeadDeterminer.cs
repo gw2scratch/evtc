@@ -5,6 +5,9 @@ using GW2Scratch.EVTCAnalytics.Model.Agents;
 
 namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 {
+	/// <summary>
+	/// Returns success if the agent has a death event.
+	/// </summary>
 	public class AgentDeadDeterminer : IResultDeterminer
 	{
 		private readonly Agent agent;
