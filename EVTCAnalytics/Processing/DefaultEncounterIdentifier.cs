@@ -164,6 +164,18 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					);
 				}
 				// Raids - Wing 3
+				case Encounter.TwistedCastle:
+				{
+					// TODO: Success detection needs to be verified on a larger amount of logs, particularly ones that
+					// are successes when redoing this encounter within a single week
+					return new BaseEncounterData(
+						encounter,
+						new Agent[0],
+						new PhaseSplitter(new StartTrigger(new PhaseDefinition("Default phase", mainTarget))),
+						new RewardDeterminer(496),
+						new ConstantModeDeterminer(EncounterMode.Normal)
+					);
+				}
 				case Encounter.Xera:
 				{
 					var secondPhaseXera = GetTargetBySpeciesId(agents, SpeciesIds.XeraSecondPhase);
