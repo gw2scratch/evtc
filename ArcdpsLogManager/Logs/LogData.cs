@@ -141,12 +141,12 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 				ParsingStatus = ParsingStatus.Parsing;
 
 				var parsedLog = logAnalytics.Parser.ParseLog(FileInfo.FullName);
-				var log = logAnalytics.Processor.GetProcessedLog(parsedLog);
+				var log = logAnalytics.Processor.ProcessLog(parsedLog);
 				var analyzer = logAnalytics.AnalyzerFactory(log);
 
 				GameLanguage = log.GameLanguage;
 				GameBuild = log.GameBuild;
-				EvtcVersion = log.EVTCVersion;
+				EvtcVersion = log.EvtcVersion;
 				PointOfView = new PointOfView
 				{
 					AccountName = log.PointOfView.AccountName,

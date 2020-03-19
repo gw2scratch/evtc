@@ -7,6 +7,7 @@ using GW2Scratch.EVTCAnalytics.Model;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
 using GW2Scratch.EVTCAnalytics.Model.Skills;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes;
+using GW2Scratch.EVTCAnalytics.Processing.Encounters.Names;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Phases;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
 using GW2Scratch.EVTCAnalytics.Statistics;
@@ -82,8 +83,11 @@ namespace GW2Scratch.EVTCAnalytics
 		/// <summary>
 		/// Calculates most statistics for an encounter, such as damage done...
 		/// </summary>
+		[Obsolete("Use methods for individual statistics instead.")]
 		public LogStatistics GetStatistics()
 		{
+			// TODO: This method should be mostly moved to the HtmlGenerator.
+			// Phase calculations, however, should get a new method in the Analyzer.
 			var phaseStats = new List<PhaseStats>();
 
 			var might = log.Skills.FirstOrDefault(x => x.Id == SkillIds.Might);
@@ -164,9 +168,11 @@ namespace GW2Scratch.EVTCAnalytics
 
 			var playerData = GetPlayerData();
 
+			string encounterName = new LocalizedEncounterNameProvider().GetEncounterName(log.EncounterData, log.GameLanguage);
+
 			return new LogStatistics(log.StartTime.ServerTime, log.PointOfView, playerData, phaseStats,
 				fullFightSquadDamageData, fullFightTargetDamageData, buffData, GetResult(), GetMode(),
-				log.EncounterName, log.EVTCVersion, eventCountsByName, log.Agents, log.Skills);
+				encounterName, log.EvtcVersion, eventCountsByName, log.Agents, log.Skills);
 		}
 
 		public TimeSpan GetEncounterDuration()

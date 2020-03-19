@@ -248,7 +248,7 @@ namespace GW2Scratch.EVTCInspector
 			try
 			{
 				sw.Restart();
-				processedLog = processor.GetProcessedLog(parsedLog);
+				processedLog = processor.ProcessLog(parsedLog);
 				var processTime = sw.Elapsed;
 
 				statusStringBuilder.AppendLine($"Processed in {processTime}");

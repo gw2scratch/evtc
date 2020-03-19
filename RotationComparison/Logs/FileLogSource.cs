@@ -22,7 +22,7 @@ namespace GW2Scratch.RotationComparison.Logs
 				var parser = new EVTCParser();
 				var processor = new LogProcessor();
 				var parsedLog = parser.ParseLog(filename);
-				processedLog = processor.GetProcessedLog(parsedLog);
+				processedLog = processor.ProcessLog(parsedLog);
 			}
 
 			return processedLog;

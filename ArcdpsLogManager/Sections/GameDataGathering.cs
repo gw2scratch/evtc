@@ -309,7 +309,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 					try
 					{
 						var parsedLog = Parser.ParseLog(log.FileInfo.FullName);
-						processedLog = Processor.GetProcessedLog(parsedLog);
+						processedLog = Processor.ProcessLog(parsedLog);
 					}
 					catch
 					{

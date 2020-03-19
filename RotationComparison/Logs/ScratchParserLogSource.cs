@@ -3,6 +3,7 @@ using System.Linq;
 using GW2Scratch.EVTCAnalytics;
 using GW2Scratch.EVTCAnalytics.Model;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
+using GW2Scratch.EVTCAnalytics.Processing.Encounters.Names;
 using GW2Scratch.EVTCAnalytics.Statistics;
 using GW2Scratch.EVTCAnalytics.Statistics.RotationItems;
 using GW2Scratch.RotationComparison.Rotations;
@@ -85,7 +86,7 @@ namespace GW2Scratch.RotationComparison.Logs
 		public string GetEncounterName()
 		{
 			var log = GetLog();
-			return log.EncounterName;
+			return new LocalizedEncounterNameProvider().GetEncounterName(log.EncounterData, log.GameLanguage);
 		}
 
 

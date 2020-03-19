@@ -12,14 +12,12 @@ using GW2Scratch.EVTCAnalytics.Model.Skills;
 using GW2Scratch.EVTCAnalytics.Parsed;
 using GW2Scratch.EVTCAnalytics.Parsed.Enums;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters;
-using GW2Scratch.EVTCAnalytics.Processing.Encounters.Names;
 
 namespace GW2Scratch.EVTCAnalytics.Processing
 {
 	public class LogProcessor
 	{
-		// TODO: Move to GameData
-
+		// Professions in order of arcdps ids; id = index + 1
 		private static readonly Profession[] Professions =
 		{
 			Profession.Guardian,
@@ -33,59 +31,32 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			Profession.Revenant,
 		};
 
-		private static readonly Dictionary<Profession, EliteSpecialization> HeartOfThornsSpecializationsByProfession =
-			new Dictionary<Profession, EliteSpecialization>
-			{
-				{Profession.Guardian, EliteSpecialization.Dragonhunter},
-				{Profession.Warrior, EliteSpecialization.Berserker},
-				{Profession.Engineer, EliteSpecialization.Scrapper},
-				{Profession.Ranger, EliteSpecialization.Druid},
-				{Profession.Thief, EliteSpecialization.Daredevil},
-				{Profession.Elementalist, EliteSpecialization.Tempest},
-				{Profession.Mesmer, EliteSpecialization.Chronomancer},
-				{Profession.Necromancer, EliteSpecialization.Reaper},
-				{Profession.Revenant, EliteSpecialization.Herald}
-			};
-
-		private static readonly Dictionary<uint, EliteSpecialization> SpecializationsById =
-			new Dictionary<uint, EliteSpecialization>()
-			{
-				{5, EliteSpecialization.Druid},
-				{7, EliteSpecialization.Daredevil},
-				{18, EliteSpecialization.Berserker},
-				{27, EliteSpecialization.Dragonhunter},
-				{34, EliteSpecialization.Reaper},
-				{40, EliteSpecialization.Chronomancer},
-				{43, EliteSpecialization.Scrapper},
-				{48, EliteSpecialization.Tempest},
-				{52, EliteSpecialization.Herald},
-				{55, EliteSpecialization.Soulbeast},
-				{56, EliteSpecialization.Weaver},
-				{57, EliteSpecialization.Holosmith},
-				{58, EliteSpecialization.Deadeye},
-				{59, EliteSpecialization.Mirage},
-				{60, EliteSpecialization.Scourge},
-				{61, EliteSpecialization.Spellbreaker},
-				{62, EliteSpecialization.Firebrand},
-				{63, EliteSpecialization.Renegade}
-			};
-
 		public IEncounterIdentifier EncounterIdentifier { get; set; } = new DefaultEncounterIdentifier();
-		public IEncounterNameProvider EncounterNameProvider { get; set; } = new LocalizedEncounterNameProvider();
 		public bool IgnoreUnknownEvents { get; set; } = true;
 
-		public Log GetProcessedLog(ParsedLog log)
+		public Log ProcessLog(ParsedLog log)
 		{
-			var agents = GetAgents(log).ToList();
-			var skills = GetSkills(log).ToArray();
-			var combatItemData = GetDataFromCombatItems(agents, skills, log);
-			var events = combatItemData.Events.ToArray();
+			var context = new LogProcessorContext();
+			context.EvtcVersion = log.LogVersion.BuildVersion;
+
+			context.Agents = GetAgents(log).ToList();
+			context.Skills = GetSkills(log).ToList();
+			GetDataFromCombatItems(log, context);
 
 			Agent mainTarget = null;
-			LogType logType = LogType.PvE;
-			if (log.ParsedBossData.ID != 1)
+			context.LogType = LogType.PvE;
+			if (log.ParsedBossData.ID == 1)
 			{
-				foreach (var agent in agents)
+				context.LogType = LogType.WorldVersusWorld;
+			}
+			else
+			{
+				// The boss id be either an NPC species id or a Gadget id.
+				// Conflicts may happen, in that case the first found agent is chosen,
+				// as they are more likely to be the trigger. It is also possible to have
+				// multiple agents with the same id if they are not unique, in that case
+				// we once again choose the first one.
+				foreach (var agent in context.Agents)
 				{
 					if (agent is NPC npc && npc.SpeciesId == log.ParsedBossData.ID ||
 					    agent is Gadget gadget && gadget.VolatileId == log.ParsedBossData.ID)
@@ -95,33 +66,18 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					}
 				}
 			}
-			else
-			{
-				logType = LogType.WorldVersusWorld;
-			}
 
-			SetAgentAwareTimes(events);
-			AssignAgentMasters(log, agents); // Needs to be done after setting aware times
+			SetAgentAwareTimes(context);
+			AssignAgentMasters(log, context); // Has to be done after setting aware times
 
-			GameLanguage language = GameLanguage.Other;
-			if (combatItemData.LanguageId.HasValue)
-			{
-				language = GameLanguageIds.GetLanguageById(combatItemData.LanguageId.Value);
-			}
+			context.EncounterData = GetEncounterData(mainTarget, context);
 
-			var encounterData = GetEncounterData(mainTarget, events, agents, combatItemData.GameBuild, logType);
-			var name = EncounterNameProvider.GetEncounterName(encounterData, language);
-
-
-			return new Log(mainTarget, logType, events, agents, skills, encounterData, name, language, log.LogVersion.BuildVersion,
-				combatItemData.LogStartTime, combatItemData.LogEndTime, combatItemData.PointOfView,
-				combatItemData.LanguageId, combatItemData.GameBuild, combatItemData.GameShardId, combatItemData.MapId);
+			return new Log(mainTarget, context);
 		}
 
-		private IEncounterData GetEncounterData(Agent mainTarget, IReadOnlyList<Event> events,
-			IReadOnlyList<Agent> agents, int? gameBuild, LogType logType)
+		private IEncounterData GetEncounterData(Agent mainTarget, LogProcessorContext context)
 		{
-			return EncounterIdentifier.GetEncounterData(mainTarget, events, agents, gameBuild, logType);
+			return EncounterIdentifier.GetEncounterData(mainTarget, context.Events, context.Agents, context.GameBuild, context.LogType);
 		}
 
 		private IEnumerable<Skill> GetSkills(ParsedLog log)
@@ -160,11 +116,11 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					}
 					else if (agent.IsElite == 1)
 					{
-						specialization = HeartOfThornsSpecializationsByProfession[profession];
+						specialization = Characters.GetHeartOfThornsEliteSpecialization(profession);
 					}
 					else
 					{
-						specialization = SpecializationsById[agent.IsElite];
+						specialization = Characters.GetEliteSpecializationFromId(agent.IsElite);
 					}
 
 					if (!idsByAddress.TryGetValue(agent.Address, out int id))
@@ -239,9 +195,9 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			}
 		}
 
-		private void SetAgentAwareTimes(IReadOnlyCollection<Event> events)
+		private void SetAgentAwareTimes(LogProcessorContext context)
 		{
-			foreach (var ev in events)
+			foreach (var ev in context.Events)
 			{
 				if (ev is AgentEvent agentEvent)
 				{
@@ -288,11 +244,16 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					}
 				}
 			}
+
+			context.AwareTimesSet = true;
 		}
 
-		// Requires aware times to be set first
-		private void AssignAgentMasters(ParsedLog log, IReadOnlyCollection<Agent> agents)
+		private void AssignAgentMasters(ParsedLog log, LogProcessorContext context)
 		{
+			// Requires aware times to be set first
+			Debug.Assert(context.AwareTimesSet);
+			Debug.Assert(!context.MastersAssigned);
+
 			foreach (var combatItem in log.ParsedCombatItems)
 			{
 				if (combatItem.IsStateChange == StateChange.Normal)
@@ -302,7 +263,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						Agent minion = null;
 
 						// TODO: Look up by id with a dictionary first
-						foreach (var agent in agents)
+						foreach (var agent in context.Agents)
 						{
 							if (agent.Id == combatItem.SrcAgentId && agent.IsWithinAwareTime(combatItem.Time))
 							{
@@ -314,7 +275,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						if (minion != null && minion.Master == null)
 						{
 							Agent master = null;
-							foreach (var agent in agents)
+							foreach (var agent in context.Agents)
 							{
 								if (!(agent is Gadget) && agent.Id == combatItem.SrcMasterId &&
 								    agent.IsWithinAwareTime(combatItem.Time))
@@ -338,6 +299,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 										inCycle = true;
 										break;
 									}
+
 									masterParent = masterParent.Master;
 								}
 
@@ -358,7 +320,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 
 					AttackTarget target = null;
 					Gadget master = null;
-					foreach (var agent in agents)
+					foreach (var agent in context.Agents)
 					{
 						switch (agent)
 						{
@@ -378,39 +340,18 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					}
 				}
 			}
+
+			context.MastersAssigned = true;
 		}
 
-		private class CombatItemData
+		private void GetDataFromCombatItems(ParsedLog log, LogProcessorContext context)
 		{
-			public IEnumerable<Event> Events { get; }
-			public LogTime LogStartTime { get; }
-			public LogTime LogEndTime { get; }
-			public Player PointOfView { get; }
-			public int? LanguageId { get; }
-			public int? GameBuild { get; }
-			public int? GameShardId { get; }
-			public int? MapId { get; }
+			Debug.Assert(context.Agents != null);
+			Debug.Assert(context.Skills != null);
 
-			public CombatItemData(IEnumerable<Event> events, LogTime logStartTime, LogTime logEndTime,
-				Player pointOfView, int? languageId, int? gameBuild, int? gameShardId, int? mapId)
-			{
-				Events = events;
-				LogStartTime = logStartTime;
-				LogEndTime = logEndTime;
-				PointOfView = pointOfView;
-				LanguageId = languageId;
-				GameBuild = gameBuild;
-				GameShardId = gameShardId;
-				MapId = mapId;
-			}
-		}
-
-		private CombatItemData GetDataFromCombatItems(IEnumerable<Agent> agents, IEnumerable<Skill> skills,
-			ParsedLog log)
-		{
-			var agentsByAddress = agents.ToDictionary(x => x.Address);
+			var agentsByAddress = context.Agents.ToDictionary(x => x.Address);
 			var skillsById = new Dictionary<uint, Skill>();
-			foreach (var skill in skills)
+			foreach (var skill in context.Skills)
 			{
 				// Rarely, in old logs a skill may be duplicated (typically a skill with id 0),
 				// so we only use the first definition
@@ -420,19 +361,13 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				}
 			}
 
+			context.GameLanguage = GameLanguage.Other;
 			var events = new List<Event>();
-			LogTime startTime = null;
-			LogTime endTime = null;
-			Player pointOfView = null;
-			int? languageId = null;
-			int? gameBuild = null;
-			int? gameShardId = null;
-			int? mapId = null;
 			foreach (var item in log.ParsedCombatItems)
 			{
 				if (item.IsStateChange == StateChange.LogStart)
 				{
-					if (startTime != null)
+					if (context.LogStartTime != null)
 					{
 						throw new LogProcessingException("Multiple log start combat items found");
 					}
@@ -440,13 +375,13 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					var serverTime = DateTimeOffset.FromUnixTimeSeconds(item.Value);
 					var localTime = DateTimeOffset.FromUnixTimeSeconds(item.BuffDmg);
 
-					startTime = new LogTime(localTime, serverTime, item.Time);
+					context.LogStartTime = new LogTime(localTime, serverTime, item.Time);
 					continue;
 				}
 
 				if (item.IsStateChange == StateChange.LogEnd)
 				{
-					if (endTime != null)
+					if (context.LogEndTime != null)
 					{
 						throw new LogProcessingException("Multiple log end combat items found");
 					}
@@ -454,7 +389,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					var serverTime = DateTimeOffset.FromUnixTimeSeconds(item.Value);
 					var localTime = DateTimeOffset.FromUnixTimeSeconds(item.BuffDmg);
 
-					endTime = new LogTime(localTime, serverTime, item.Time);
+					context.LogEndTime = new LogTime(localTime, serverTime, item.Time);
 					continue;
 				}
 
@@ -462,8 +397,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				{
 					if (agentsByAddress.TryGetValue(item.SrcAgent, out var agent))
 					{
-						pointOfView = agent as Player ??
-						              throw new LogProcessingException("The point of view agent is not a player");
+						context.PointOfView = agent as Player ??
+						                      throw new LogProcessingException("The point of view agent is not a player");
 					}
 
 					continue;
@@ -471,25 +406,27 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 
 				if (item.IsStateChange == StateChange.Language)
 				{
-					languageId = (int) item.SrcAgent;
+					int languageId = (int) item.SrcAgent;
+					context.GameLanguageId = languageId;
+					context.GameLanguage = GameLanguageIds.GetLanguageById(languageId);
 					continue;
 				}
 
 				if (item.IsStateChange == StateChange.GWBuild)
 				{
-					gameBuild = (int) item.SrcAgent;
+					context.GameBuild = (int) item.SrcAgent;
 					continue;
 				}
 
 				if (item.IsStateChange == StateChange.ShardId)
 				{
-					gameShardId = (int) item.SrcAgent;
+					context.GameShardId = (int) item.SrcAgent;
 					continue;
 				}
 
 				if (item.IsStateChange == StateChange.MapId)
 				{
-					mapId = (int) item.SrcAgent;
+					context.MapId = (int) item.SrcAgent;
 					continue;
 				}
 
@@ -544,8 +481,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				}
 			}
 
-			return new CombatItemData(events, startTime, endTime, pointOfView, languageId, gameBuild, gameShardId,
-				mapId);
+			context.Events = events;
 		}
 
 		private Event GetEvent(IReadOnlyDictionary<ulong, Agent> agentsByAddress,
@@ -672,13 +608,13 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						return new ResetBuffStackEvent(item.Time, GetAgentByAddress(item.SrcAgent), item.Padding,
 							item.Value);
 					case StateChange.BuffInfo:
-						// TODO: Figure out what the contents are
+					// TODO: Figure out what the contents are
 					case StateChange.BuffFormula:
-						// TODO: Figure out what the contents are
+					// TODO: Figure out what the contents are
 					case StateChange.SkillInfo:
-						// TODO: Figure out what the contents are
+					// TODO: Figure out what the contents are
 					case StateChange.SkillTiming:
-						// TODO: Figure out what the contents are
+					// TODO: Figure out what the contents are
 					case StateChange.Unknown:
 						return new UnknownEvent(item.Time, item);
 					default:

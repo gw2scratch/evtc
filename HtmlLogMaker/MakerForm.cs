@@ -92,7 +92,7 @@ namespace GW2Scratch.HtmlLogMaker
 							times.Add(("parsing", (taskStopwatch.Elapsed - lastElapsed).TotalMilliseconds));
 							lastElapsed = taskStopwatch.Elapsed;
 
-							var processedLog = processor.GetProcessedLog(parsedLog);
+							var processedLog = processor.ProcessLog(parsedLog);
 							times.Add(("processing", (taskStopwatch.Elapsed - lastElapsed).TotalMilliseconds));
 							lastElapsed = taskStopwatch.Elapsed;
 

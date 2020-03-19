@@ -61,7 +61,7 @@ namespace GW2Scratch.EVTCAnalytics.Benchmark
 			var parsedTime = stopwatch.Elapsed;
 
 			stopwatch.Restart();
-			var processedLog = processor.GetProcessedLog(log);
+			var processedLog = processor.ProcessLog(log);
 
 			var processedTime = stopwatch.Elapsed;
 
