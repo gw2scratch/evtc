@@ -10,6 +10,7 @@ using GW2Scratch.EVTCAnalytics.Processing.Encounters;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Phases;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
+using GW2Scratch.EVTCAnalytics.Processing.Steps;
 
 namespace GW2Scratch.EVTCAnalytics.Processing
 {
@@ -63,10 +64,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						? new[] {blueGuardians[1], greenGuardians[1], redGuardians[1]}
 						: new Agent[0];
 
-					return new BaseEncounterData(
-						encounter,
-						new[] {mainTarget},
-						new PhaseSplitter(
+					return GetDefaultBuilder(encounter, mainTarget)
+						.WithPhases(new PhaseSplitter(
 							new StartTrigger(new PhaseDefinition("Phase 1", mainTarget)),
 							new BuffAddTrigger(mainTarget, SkillIds.Invulnerability,
 								new PhaseDefinition("Split 1", split1Guardians)),
@@ -74,10 +73,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 							new BuffAddTrigger(mainTarget, SkillIds.Invulnerability,
 								new PhaseDefinition("Split 2", split2Guardians)),
 							new BuffRemoveTrigger(mainTarget, SkillIds.Invulnerability, new PhaseDefinition("Phase 3", mainTarget))
-						),
-						new AgentKilledDeterminer(mainTarget),
-						new ConstantModeDeterminer(EncounterMode.Normal)
-					);
+						)).Build();
 				}
 				case Encounter.Gorseval:
 				{
@@ -87,10 +83,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					var split1Souls = chargedSouls.Length >= 4 ? chargedSouls.Take(4).ToArray() : new Agent[0];
 					var split2Souls = chargedSouls.Length >= 8 ? chargedSouls.Skip(4).Take(4).ToArray() : new Agent[0];
 
-					return new BaseEncounterData(
-						encounter,
-						new[] {mainTarget},
-						new PhaseSplitter(
+					return GetDefaultBuilder(encounter, mainTarget)
+						.WithPhases(new PhaseSplitter(
 							new StartTrigger(new PhaseDefinition("Phase 1", mainTarget)),
 							new BuffAddTrigger(mainTarget, SkillIds.GorsevalInvulnerability,
 								new PhaseDefinition("Split 1", split1Souls)),
@@ -100,10 +94,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 								new PhaseDefinition("Split 2", split2Souls)),
 							new BuffRemoveTrigger(mainTarget, SkillIds.GorsevalInvulnerability,
 								new PhaseDefinition("Phase 3", mainTarget))
-						),
-						new AgentKilledDeterminer(mainTarget),
-						new ConstantModeDeterminer(EncounterMode.Normal)
-					);
+						)).Build();
 				}
 				case Encounter.Sabetha:
 				{
@@ -111,10 +102,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					var knuckles = GetTargetBySpeciesId(agents, SpeciesIds.Knuckles);
 					var karde = GetTargetBySpeciesId(agents, SpeciesIds.Karde);
 
-					return new BaseEncounterData(
-						encounter,
-						new[] {mainTarget},
-						new PhaseSplitter(
+					return GetDefaultBuilder(encounter, mainTarget)
+						.WithPhases(new PhaseSplitter(
 							new StartTrigger(new PhaseDefinition("Phase 1", mainTarget)),
 							new BuffAddTrigger(mainTarget, SkillIds.Invulnerability,
 								new PhaseDefinition("Kernan", kernan != null ? new Agent[] {kernan} : new Agent[0])),
@@ -126,10 +115,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 							new BuffAddTrigger(mainTarget, SkillIds.Invulnerability,
 								new PhaseDefinition("Karde", karde != null ? new Agent[] {karde} : new Agent[0])),
 							new BuffRemoveTrigger(mainTarget, SkillIds.Invulnerability, new PhaseDefinition("Phase 4", mainTarget))
-						),
-						new AgentKilledDeterminer(mainTarget),
-						new ConstantModeDeterminer(EncounterMode.Normal)
-					);
+						)).Build();
 				}
 				// Raids - Wing 2
 				case Encounter.BanditTrio:
@@ -139,96 +125,70 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					var narella = GetTargetBySpeciesId(agents, SpeciesIds.Narella);
 					var prisoner = GetTargetBySpeciesId(agents, SpeciesIds.TrioCagePrisoner);
 
-					IResultDeterminer resultDeterminer;
+					var targets = new Agent[] {berg, zane, narella}.Where(x => x != null).ToArray();
+					var builder = GetDefaultBuilder(encounter, targets);
 					if (berg != null && zane != null && narella != null && prisoner != null)
 					{
-						resultDeterminer = new AllCombinedResultDeterminer(
+						builder.WithResult(new AllCombinedResultDeterminer(
 							new AgentKilledDeterminer(berg), // Berg has to die
 							new AgentKilledDeterminer(zane), // So does Zane
 							new AgentAliveDeterminer(prisoner), // The prisoner in the cage must survive
 							new AgentKilledDeterminer(narella) // And finally, Narella has to perish as well
-						);
+						));
 					}
 					else
 					{
-						resultDeterminer = new ConstantResultDeterminer(EncounterResult.Unknown);
+						builder.WithResult(new ConstantResultDeterminer(EncounterResult.Unknown));
 					}
 
-					var targets = new Agent[] {berg, zane, narella}.Where(x => x != null).ToArray();
-					return new BaseEncounterData(
-						encounter,
-						targets,
-						new PhaseSplitter(new StartTrigger(new PhaseDefinition("Default phase", targets))),
-						resultDeterminer,
-						new ConstantModeDeterminer(EncounterMode.Normal)
-					);
+					return builder.Build();
 				}
 				// Raids - Wing 3
 				case Encounter.TwistedCastle:
 				{
-					// TODO: Success detection needs to be verified on a larger amount of logs, particularly ones that
-					// are successes when redoing this encounter within a single week
-					return new BaseEncounterData(
-						encounter,
-						new Agent[0],
-						new PhaseSplitter(new StartTrigger(new PhaseDefinition("Default phase", mainTarget))),
-						new RewardDeterminer(496),
-						new ConstantModeDeterminer(EncounterMode.Normal)
-					);
+					return GetDefaultBuilder(encounter, new Agent[0])
+						.WithResult(new RewardDeterminer(496))
+						.Build();
 				}
 				case Encounter.Xera:
 				{
 					var secondPhaseXera = GetTargetBySpeciesId(agents, SpeciesIds.XeraSecondPhase);
 
-					IResultDeterminer resultDeterminer;
+					var builder = GetDefaultBuilder(encounter, mainTarget);
 					if (secondPhaseXera == null)
 					{
-						resultDeterminer = new ConstantResultDeterminer(EncounterResult.Failure);
+						builder.WithResult(new ConstantResultDeterminer(EncounterResult.Failure));
 					}
 					else
 					{
-						resultDeterminer = new AgentCombatExitDeterminer(secondPhaseXera);
+						builder.WithResult(new AgentCombatExitDeterminer(secondPhaseXera))
+							.WithTargets(new List<Agent>() {mainTarget, secondPhaseXera});
 					}
 
-					return new BaseEncounterData(
-						encounter,
-						new[] {mainTarget},
-						new PhaseSplitter(new StartTrigger(new PhaseDefinition("Default phase", mainTarget))),
-						resultDeterminer,
-						new ConstantModeDeterminer(EncounterMode.Normal)
-					);
+					return builder.Build();
 				}
 				// Raids - Wing 4
 				case Encounter.Cairn:
 				{
-					return new BaseEncounterData(
-						encounter,
-						new[] {mainTarget},
-						new PhaseSplitter(new StartTrigger(new PhaseDefinition("Default phase", mainTarget))),
-						new AgentKilledDeterminer(mainTarget),
-						new SkillPresentModeDeterminer(SkillIds.CairnCountdown));
+					return GetDefaultBuilder(encounter, mainTarget)
+						.WithModes(new SkillPresentModeDeterminer(SkillIds.CairnCountdown))
+						.Build();
 				}
 				case Encounter.MursaatOverseer:
 				{
-					return new BaseEncounterData(
-						encounter,
-						new[] {mainTarget},
-						new PhaseSplitter(new StartTrigger(new PhaseDefinition("Default phase", mainTarget))),
-						new AgentKilledDeterminer(mainTarget),
-						new AgentHealthModeDeterminer(mainTarget, 29_000_000));
+					return GetDefaultBuilder(encounter, mainTarget)
+						.WithModes(new AgentHealthModeDeterminer(mainTarget, 29_000_000))
+						.Build();
 				}
 				case Encounter.Samarog:
 				{
-					return new BaseEncounterData(
-						encounter,
-						new[] {mainTarget},
-						new PhaseSplitter(new StartTrigger(new PhaseDefinition("Default phase", mainTarget))),
-						new AgentKilledDeterminer(mainTarget),
-						new AgentHealthModeDeterminer(mainTarget, 39_000_000));
+					return GetDefaultBuilder(encounter, mainTarget)
+						.WithModes(new AgentHealthModeDeterminer(mainTarget, 39_000_000))
+						.Build();
 				}
 				case Encounter.Deimos:
 				{
-					IResultDeterminer resultDeterminer;
+					var builder = GetDefaultBuilder(encounter, mainTarget);
 					if (gameBuild != null && gameBuild < GameBuilds.AhdashimRelease)
 					{
 						// This release reworked rewards, currently a reward event is not present if an encounter was
@@ -237,7 +197,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 
 						// We cannot use the targetable detection method before they were introduced, and there was
 						// a long period of time when logs did not contain the main gadget so we need to rely on this.
-						resultDeterminer = new RewardDeterminer(525);
+						builder.WithResult(new RewardDeterminer(525));
 					}
 					else
 					{
@@ -245,92 +205,73 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 
 						if (mainGadget != null)
 						{
-							resultDeterminer = new TargetableDeterminer(mainGadget.AttackTargets.Single(), true, false);
+							builder.WithResult(new TargetableDeterminer(mainGadget.AttackTargets.Single(), true, false));
+							builder.WithTargets(new List<Agent>() {mainTarget, mainGadget});
 						}
 						else
 						{
-							resultDeterminer = new ConstantResultDeterminer(EncounterResult.Unknown);
+							builder.WithResult(new ConstantResultDeterminer(EncounterResult.Unknown));
 						}
 					}
 
-					return new BaseEncounterData(
-						encounter,
-						new[] {mainTarget},
-						new PhaseSplitter(new StartTrigger(new PhaseDefinition("Default phase", mainTarget))),
-						resultDeterminer,
-						new AgentHealthModeDeterminer(mainTarget, 42_000_000)
-					);
+					return builder.WithModes(new AgentHealthModeDeterminer(mainTarget, 42_000_000))
+						.Build();
 				}
 				// Raids - Wing 5
 				case Encounter.SoullessHorror:
-					return new BaseEncounterData(
-						encounter,
-						new[] {mainTarget},
-						new PhaseSplitter(new StartTrigger(new PhaseDefinition("Default phase", mainTarget))),
-						new AgentBuffGainedDeterminer(mainTarget, SkillIds.SoullessHorrorDetermined),
+				{
+					return GetDefaultBuilder(encounter, mainTarget)
+						.WithResult(new AgentBuffGainedDeterminer(mainTarget, SkillIds.SoullessHorrorDetermined))
 						// Necrosis is applied faster in Challenge Mode. It is first removed and then reapplied
 						// so we check the remaining time of the removed buff.
-						new RemovedBuffStackRemainingTimeModeDeterminer(SkillIds.Necrosis,
-							EncounterMode.Challenge, 23000, EncounterMode.Normal, 18000, EncounterMode.Normal)
-					);
+						.WithModes(new RemovedBuffStackRemainingTimeModeDeterminer(SkillIds.Necrosis,
+							EncounterMode.Challenge, 23000, EncounterMode.Normal, 18000, EncounterMode.Normal))
+						.Build();
+				}
 				case Encounter.RiverOfSouls:
 				{
 					long startTime = events.FirstOrDefault()?.Time ?? -1;
-					return new BaseEncounterData(
-						Encounter.RiverOfSouls,
-						new[] {mainTarget},
-						new PhaseSplitter(new StartTrigger(new PhaseDefinition("Default phase", mainTarget))),
+					return GetDefaultBuilder(encounter, mainTarget)
 						// At the end of the event, 8 of the rifts become untargetable
-						new GroupedEventDeterminer<TargetableChangeEvent>(
-							e => e.Time - startTime > 3000 && e.IsTargetable == false, 8, 1000),
-						new ConstantModeDeterminer(EncounterMode.Normal)
-					);
+						.WithResult(new GroupedEventDeterminer<TargetableChangeEvent>(
+							e => e.Time - startTime > 3000 && e.IsTargetable == false, 8, 1000))
+						.Build();
 				}
 				case Encounter.Eyes:
 				{
 					var fate = GetTargetBySpeciesId(agents, SpeciesIds.EyeOfFate);
 					var judgment = GetTargetBySpeciesId(agents, SpeciesIds.EyeOfJudgment);
 
-					IResultDeterminer resultDeterminer;
+					var builder = GetDefaultBuilder(encounter, new[] {fate, judgment});
 					if (fate == null || judgment == null)
 					{
-						resultDeterminer = new ConstantResultDeterminer(EncounterResult.Unknown);
+						builder.WithResult(new ConstantResultDeterminer(EncounterResult.Unknown));
+						builder.WithTargets(new Agent[] {fate, judgment}.Where(x => x != null).ToList());
 					}
 					else
 					{
-						resultDeterminer = new AnyCombinedResultDeterminer(
+						builder.WithResult(new AnyCombinedResultDeterminer(
 							new AgentDeadDeterminer(judgment),
 							new AgentDeadDeterminer(fate)
-						);
+						));
 					}
 
-					var targets = new[] {fate, judgment}.Where(x => x != null).ToArray();
-					return new BaseEncounterData(
-						encounter,
-						targets,
-						new PhaseSplitter(new StartTrigger(new PhaseDefinition("Default phase", targets))),
-						resultDeterminer,
-						new ConstantModeDeterminer(EncounterMode.Normal)
-					);
+					return builder.Build();
 				}
 				case Encounter.Dhuum:
 				{
-					return new BaseEncounterData(
-						encounter,
-						new[] {mainTarget},
-						new PhaseSplitter(new StartTrigger(new PhaseDefinition("Default phase", mainTarget))),
-						new AgentKilledDeterminer(mainTarget),
-						new AgentHealthModeDeterminer(mainTarget, 39_000_000));
+					return GetDefaultBuilder(encounter, mainTarget)
+						.WithModes(new AgentHealthModeDeterminer(mainTarget, 39_000_000))
+						.Build();
 				}
 				// Raids - Wing 6
 				case Encounter.ConjuredAmalgamate:
-					return new BaseEncounterData(
-						encounter,
-						new[] {mainTarget},
-						new PhaseSplitter(new StartTrigger(new PhaseDefinition("Default phase", mainTarget))),
-						new NPCSpawnDeterminer(SpeciesIds.RoleplayZommoros),
-						new GroupedSpawnModeDeterminer(agent => agent is NPC npc && npc.SpeciesId == SpeciesIds.ConjuredGreatsword, 3, 200)
-					);
+				{
+					return GetDefaultBuilder(encounter, mainTarget)
+						.WithResult(new NPCSpawnDeterminer(SpeciesIds.RoleplayZommoros))
+						.WithModes(new GroupedSpawnModeDeterminer(agent => agent is NPC npc && npc.SpeciesId == SpeciesIds.ConjuredGreatsword, 3, 200))
+						.Build();
+				}
 				case Encounter.TwinLargos:
 				{
 					var nikare = GetTargetBySpeciesId(agents, SpeciesIds.Nikare);
@@ -340,22 +281,33 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					if (nikare != null) bosses.Add(nikare);
 					if (kenut != null) bosses.Add(kenut);
 
-					return new BaseEncounterData(
-						encounter,
-						bosses,
-						new PhaseSplitter(
+					var builder = GetDefaultBuilder(encounter, bosses);
+					if (nikare == null || kenut == null)
+					{
+						builder.WithResult(new ConstantResultDeterminer(EncounterResult.Unknown));
+						builder.WithTargets(new Agent[] {nikare, kenut}.Where(x => x != null).ToList());
+					}
+					else
+					{
+						builder.WithResult(new AnyCombinedResultDeterminer(
+							new AgentDeadDeterminer(nikare),
+							new AgentDeadDeterminer(kenut)
+						));
+						builder.WithPhases(new PhaseSplitter(
 							new StartTrigger(new PhaseDefinition("Nikare's platform", nikare)),
 							new BuffAddTrigger(nikare, SkillIds.Determined,
 								new PhaseDefinition("Kenut's platform", kenut)),
 							new BuffAddTrigger(kenut, SkillIds.Determined,
-								new PhaseDefinition("Split phase", nikare, kenut))
-						),
-						new AllCombinedResultDeterminer(
-							new AgentKilledDeterminer(nikare),
-							new AgentKilledDeterminer(kenut)
-						),
-						new AgentHealthModeDeterminer(nikare, 19_000_000)
-					);
+								new PhaseDefinition("Split phase", nikare, kenut)))
+						);
+					}
+
+					if (nikare != null)
+					{
+						builder.WithModes(new AgentHealthModeDeterminer(nikare, 19_000_000));
+					}
+
+					return builder.Build();
 				}
 				case Encounter.Qadim:
 				{
@@ -364,10 +316,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					var matriarch = GetTargetBySpeciesId(agents, SpeciesIds.WyvernMatriarch);
 					var patriarch = GetTargetBySpeciesId(agents, SpeciesIds.WyvernPatriarch);
 
-					return new BaseEncounterData(
-						encounter,
-						new[] {mainTarget},
-						new PhaseSplitter(
+					return GetDefaultBuilder(encounter, mainTarget)
+						.WithPhases(new PhaseSplitter(
 							new AgentEventTrigger<TeamChangeEvent>(mainTarget,
 								new PhaseDefinition("Hydra phase", hydra != null ? new Agent[] {hydra} : new Agent[0])),
 							new BuffRemoveTrigger(mainTarget, SkillIds.QadimFlameArmor,
@@ -388,38 +338,29 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 									? new Agent[] {matriarch, patriarch}
 									: new Agent[0]),
 							new BuffRemoveTrigger(mainTarget, SkillIds.QadimFlameArmor,
-								new PhaseDefinition("Qadim 33-0%", mainTarget))),
-						new AgentCombatExitDeterminer(mainTarget),
-						new AgentHealthModeDeterminer(mainTarget, 21_000_000)
-					);
+								new PhaseDefinition("Qadim 33-0%", mainTarget))))
+						.WithResult(new AgentCombatExitDeterminer(mainTarget))
+						.WithModes(new AgentHealthModeDeterminer(mainTarget, 21_000_000))
+						.Build();
 				}
 				// Raids - Wing 7
 				case Encounter.Adina:
 				{
-					return new BaseEncounterData(
-						encounter,
-						new[] {mainTarget},
-						new PhaseSplitter(new StartTrigger(new PhaseDefinition("Default phase", mainTarget))),
-						new AgentKilledDeterminer(mainTarget),
-						new AgentHealthModeDeterminer(mainTarget, 24_000_000));
+					return GetDefaultBuilder(encounter, mainTarget)
+						.WithModes(new AgentHealthModeDeterminer(mainTarget, 24_000_000))
+						.Build();
 				}
 				case Encounter.Sabir:
 				{
-					return new BaseEncounterData(
-						encounter,
-						new[] {mainTarget},
-						new PhaseSplitter(new StartTrigger(new PhaseDefinition("Default phase", mainTarget))),
-						new AgentKilledDeterminer(mainTarget),
-						new AgentHealthModeDeterminer(mainTarget, 32_000_000));
+					return GetDefaultBuilder(encounter, mainTarget)
+						.WithModes(new AgentHealthModeDeterminer(mainTarget, 32_000_000))
+						.Build();
 				}
 				case Encounter.QadimThePeerless:
 				{
-					return new BaseEncounterData(
-						encounter,
-						new[] {mainTarget},
-						new PhaseSplitter(new StartTrigger(new PhaseDefinition("Default phase", mainTarget))),
-						new AgentKilledDeterminer(mainTarget),
-						new AgentHealthModeDeterminer(mainTarget, 50_000_000));
+					return GetDefaultBuilder(encounter, mainTarget)
+						.WithModes(new AgentHealthModeDeterminer(mainTarget, 50_000_000))
+						.Build();
 				}
 				// Challenge Mode fractals
 				case Encounter.MAMA:
@@ -428,40 +369,33 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				case Encounter.Skorvald:
 				case Encounter.Artsariiv:
 				case Encounter.Arkk:
-					// Artsariiv and Arkk rely on the killing blow event
-					return new BaseEncounterData(
-						encounter,
-						new[] {mainTarget},
-						new PhaseSplitter(new StartTrigger(new PhaseDefinition("Default phase", mainTarget))),
-						new AgentKilledDeterminer(mainTarget),
-						new ConstantModeDeterminer(EncounterMode.Challenge)
-					);
+				{
+					// TODO: Artsariiv and Arkk currently rely on the killing blow event, which is error-prone
+					return GetDefaultBuilder(encounter, mainTarget)
+						.WithModes(new ConstantModeDeterminer(EncounterMode.Challenge))
+						.Build();
+				}
 				// TODO: Check if these are all the possible kitty golems
 				case Encounter.StandardKittyGolem:
 				case Encounter.MediumKittyGolem:
 				case Encounter.LargeKittyGolem:
 				case Encounter.MassiveKittyGolem:
+				{
 					// TODO: Improve the success detection if possible
-					return new BaseEncounterData(
-						encounter,
-						new[] {mainTarget},
-						new PhaseSplitter(new StartTrigger(new PhaseDefinition("Default phase", mainTarget))),
-						new TransformResultDeterminer(
+					return GetDefaultBuilder(encounter, mainTarget)
+						.WithResult(new TransformResultDeterminer(
 							new AgentKillingBlowDeterminer(mainTarget),
-							result => result == EncounterResult.Failure ? EncounterResult.Unknown : result
-						),
-						new ConstantModeDeterminer(EncounterMode.Normal)
-					);
+							result => result == EncounterResult.Failure ? EncounterResult.Unknown : result)
+						).Build();
+				}
 				case Encounter.Freezie:
-					return new BaseEncounterData(
-						encounter,
-						new[] {mainTarget},
-						new PhaseSplitter(new StartTrigger(new PhaseDefinition("Default phase", mainTarget))),
-						new AgentBuffGainedDeterminer(mainTarget, SkillIds.Determined),
-						new ConstantModeDeterminer(EncounterMode.Normal)
-					);
+				{
+					return GetDefaultBuilder(encounter, mainTarget)
+						.WithResult(new AgentBuffGainedDeterminer(mainTarget, SkillIds.Determined))
+						.Build();
+				}
 				default:
-					return GetDefaultEncounterData(encounter, mainTarget);
+					return GetDefaultBuilder(encounter, mainTarget).Build();
 			}
 		}
 
@@ -579,16 +513,33 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			return Encounter.Other;
 		}
 
-		private static IEncounterData GetDefaultEncounterData(Encounter encounter, Agent mainTarget)
+		private static EncounterIdentifierBuilder GetDefaultBuilder(Encounter encounter, Agent mainTarget)
 		{
-			return new BaseEncounterData(
+			return new EncounterIdentifierBuilder(
 				encounter,
-				new[] {mainTarget},
+				new List<Agent> {mainTarget},
 				new PhaseSplitter(new StartTrigger(new PhaseDefinition("Default phase", mainTarget))),
 				new AgentKilledDeterminer(mainTarget),
-				new ConstantModeDeterminer(EncounterMode.Normal));
+				new ConstantModeDeterminer(EncounterMode.Normal)
+			);
 		}
 
+		private static EncounterIdentifierBuilder GetDefaultBuilder(Encounter encounter, IEnumerable<Agent> mainTargets)
+		{
+			var targets = mainTargets.ToArray();
+			return new EncounterIdentifierBuilder(
+				encounter,
+				targets.ToList(),
+				new PhaseSplitter(new StartTrigger(new PhaseDefinition("Default phase", targets))),
+				new AllCombinedResultDeterminer(targets
+					.Select<Agent, IResultDeterminer>(target => new AgentKilledDeterminer(target))
+					.ToArray()
+				),
+				new ConstantModeDeterminer(EncounterMode.Normal)
+			);
+		}
+
+		// TODO: Remove
 		private NPC GetTargetBySpeciesId(IEnumerable<Agent> agents, int speciesId)
 		{
 			// When leaving the detection range and returning, another copy of the NPC may appear in the log.

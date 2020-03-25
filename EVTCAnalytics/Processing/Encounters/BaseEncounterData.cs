@@ -7,6 +7,7 @@ using GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Names;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Phases;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
+using GW2Scratch.EVTCAnalytics.Processing.Steps;
 
 namespace GW2Scratch.EVTCAnalytics.Processing.Encounters
 {
@@ -16,20 +17,23 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters
 		public PhaseSplitter PhaseSplitter { get; }
 		public IResultDeterminer ResultDeterminer { get; }
 		public IModeDeterminer ModeDeterminer { get; }
-		public IReadOnlyList<Agent> Targets { get; }
+		public IReadOnlyList<IPostProcessingStep> ProcessingSteps { get; }
+		public List<Agent> Targets { get; }
 
 		public BaseEncounterData(
 			Encounter encounter,
 			IEnumerable<Agent> importantAgents,
 			PhaseSplitter phaseSplitter,
 			IResultDeterminer resultDeterminer,
-			IModeDeterminer modeDeterminer)
+			IModeDeterminer modeDeterminer,
+			IReadOnlyList<IPostProcessingStep> processingSteps)
 		{
 			Targets = importantAgents.ToList();
 			Encounter = encounter;
 			PhaseSplitter = phaseSplitter;
 			ResultDeterminer = resultDeterminer;
 			ModeDeterminer = modeDeterminer;
+			ProcessingSteps = processingSteps;
 		}
 	}
 }

@@ -94,8 +94,8 @@ namespace GW2Scratch.EVTCAnalytics.Events
 	public abstract class DamageEvent : Event
 	{
 		public Skill Skill { get; }
-		public Agent Attacker { get; }
-		public Agent Defender { get; }
+		public Agent Attacker { get; internal set; }
+		public Agent Defender { get; internal set; }
 		public int Damage { get; }
 		public bool IsMoving { get; }
 		public bool IsNinety { get; }

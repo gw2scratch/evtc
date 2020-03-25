@@ -6,7 +6,7 @@ namespace GW2Scratch.EVTCAnalytics.Events
 	public abstract class BuffEvent : AgentEvent
 	{
 		public Skill Buff { get; }
-		public Agent SourceAgent { get; }
+		public Agent SourceAgent { get; internal set; }
 
 		protected BuffEvent(long time, Agent agent, Skill buff, Agent sourceAgent) : base(time, agent)
 		{

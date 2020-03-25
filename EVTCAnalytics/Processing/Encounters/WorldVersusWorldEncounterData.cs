@@ -7,6 +7,7 @@ using GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Names;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Phases;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
+using GW2Scratch.EVTCAnalytics.Processing.Steps;
 
 namespace GW2Scratch.EVTCAnalytics.Processing.Encounters
 {
@@ -21,7 +22,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters
 				Enumerable.Empty<Agent>(),
 				new PhaseSplitter(new StartTrigger(new PhaseDefinition("Combat"))),
 				new ConstantResultDeterminer(EncounterResult.Unknown),
-				new ConstantModeDeterminer(EncounterMode.Normal)
+				new ConstantModeDeterminer(EncounterMode.Normal),
+				new IPostProcessingStep[0]
 			)
 		{
 			Enemies = enemies.ToArray();

@@ -72,6 +72,11 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 
 			context.EncounterData = GetEncounterData(mainTarget, context);
 
+			foreach (var step in context.EncounterData.ProcessingSteps)
+			{
+				step.Process(context);
+			}
+
 			return new Log(mainTarget, context);
 		}
 

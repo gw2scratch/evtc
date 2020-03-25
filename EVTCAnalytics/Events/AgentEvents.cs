@@ -7,7 +7,7 @@ namespace GW2Scratch.EVTCAnalytics.Events
 {
 	public abstract class AgentEvent : Event
 	{
-		public Agent Agent { get; }
+		public Agent Agent { get; internal set; }
 
 		protected AgentEvent(long time, Agent agent) : base(time)
 		{

@@ -46,6 +46,7 @@
     <Compile Include="GameData\Encounters\EncounterCategoryTests.cs" />
     <Compile Include="GameData\Encounters\EncounterNameTests.cs" />
     <Compile Include="GameData\CharactersTests.cs" />
+    <Compile Include="Processing\Steps\MergeSimpletonNPCTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Statistics\Buffs\IntensityBuffStackCollectionTests.cs" />
   </ItemGroup>
