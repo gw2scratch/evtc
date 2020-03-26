@@ -1,9 +1,8 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace EVTCAnalytics.LogTests
+namespace GW2Scratch.EVTCAnalytics.LogTests
 {
 	public class TestRunner
 	{

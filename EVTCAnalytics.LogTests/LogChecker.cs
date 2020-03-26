@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using GW2Scratch.EVTCAnalytics;
 using GW2Scratch.EVTCAnalytics.GameData.Encounters;
 using GW2Scratch.EVTCAnalytics.Processing;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
 
-namespace EVTCAnalytics.LogTests
+namespace GW2Scratch.EVTCAnalytics.LogTests
 {
 	public class LogChecker
 	{

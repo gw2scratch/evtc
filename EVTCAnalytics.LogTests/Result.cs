@@ -1,4 +1,4 @@
-namespace EVTCAnalytics.LogTests
+namespace GW2Scratch.EVTCAnalytics.LogTests
 {
 	public class Result<T>
 	{

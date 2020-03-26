@@ -3,7 +3,7 @@ using GW2Scratch.EVTCAnalytics.GameData.Encounters;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
 
-namespace EVTCAnalytics.LogTests
+namespace GW2Scratch.EVTCAnalytics.LogTests
 {
 	public class LogDefinition
 	{

@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
-        <RootNamespace>EVTCAnalytics.LogTests</RootNamespace>
-        <AssemblyName>EVTCAnalytics.LogTests</AssemblyName>
+        <RootNamespace>GW2Scratch.EVTCAnalytics.LogTests</RootNamespace>
+        <AssemblyName>GW2Scratch.EVTCAnalytics.LogTests</AssemblyName>
         <OutputType>WinExe</OutputType>
         <LangVersion>latest</LangVersion>
         <Version>0.6</Version>
