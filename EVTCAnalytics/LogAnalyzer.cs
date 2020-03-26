@@ -74,7 +74,7 @@ namespace GW2Scratch.EVTCAnalytics
 		/// </summary>
 		/// <param name="log">The processed log that will be analyzed.</param>
 		/// <param name="apiData">Data from the GW2 API, may be null, some statistics won't be calculated.</param>
-		public LogAnalyzer(Log log, GW2ApiData apiData)
+		public LogAnalyzer(Log log, GW2ApiData apiData = null)
 		{
 			this.log = log;
 			ApiData = apiData;
