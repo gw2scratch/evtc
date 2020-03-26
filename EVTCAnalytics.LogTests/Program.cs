@@ -10,17 +10,32 @@ namespace EVTCAnalytics.LogTests
 	{
 		public static void Main(string[] args)
 		{
-			string filename = "log-config.json";
-			string serialized = null;
-			try
+			List<string> configFilenames = new List<string>();
+			for (int i = 0; i < args.Length - 1; i++)
 			{
-				serialized = File.ReadAllText(filename);
+				if (args[i] == "--local")
+				{
+					configFilenames.Add(args[i + 1]);
+					i++;
+				}
 			}
-			catch (Exception e)
+
+			var logs = new List<LogDefinition>();
+			foreach (var filename in configFilenames)
 			{
-				Console.Error.WriteLine($"Failed to read log definitions {filename}:\n{e}");
+				string serialized = null;
+				try
+				{
+					serialized = File.ReadAllText(filename);
+				}
+				catch (Exception e)
+				{
+					Console.Error.WriteLine($"Failed to read log definitions {filename}:\n{e}");
+				}
+
+				var definitions = JsonConvert.DeserializeObject<List<LogDefinition>>(serialized, new StringEnumConverter());
+				logs.AddRange(definitions);
 			}
-			var logs = JsonConvert.DeserializeObject<List<LogDefinition>>(serialized, new StringEnumConverter());
 
 			var testRunner = new TestRunner();
 			testRunner.TestLogs(logs, Console.Out);
