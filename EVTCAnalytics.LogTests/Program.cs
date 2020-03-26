@@ -21,7 +21,7 @@ namespace GW2Scratch.EVTCAnalytics.LogTests
 			}
 
 			var logs = new List<LogDefinition>();
-			foreach (var filename in configFilenames)
+			foreach (string filename in configFilenames)
 			{
 				string serialized = null;
 				try
@@ -34,6 +34,12 @@ namespace GW2Scratch.EVTCAnalytics.LogTests
 				}
 
 				var definitions = JsonConvert.DeserializeObject<List<LogDefinition>>(serialized, new StringEnumConverter());
+				foreach (var definition in definitions)
+				{
+					// Paths in the config are relative to the location of the config.
+					definition.Filename = Path.Combine(Path.GetDirectoryName(filename), definition.Filename);
+				}
+
 				logs.AddRange(definitions);
 			}
 
