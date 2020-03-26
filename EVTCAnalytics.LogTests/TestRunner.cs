@@ -18,6 +18,13 @@ namespace GW2Scratch.EVTCAnalytics.LogTests
 				var result = checker.CheckLog(log);
 				results.Add(result);
 
+				if (result.ProcessingFailed)
+				{
+					writer.WriteLine($"FAILED {log.Filename} {log.Comment}");
+					writer.WriteLine($"\tException: {result.ProcessingException}");
+					continue;
+				}
+
 				writer.WriteLine($"{(result.Correct ? "OK" : "WRONG")} {log.Filename} {log.Comment}");
 				if (!result.Correct)
 				{
@@ -30,7 +37,7 @@ namespace GW2Scratch.EVTCAnalytics.LogTests
 
 			writer.WriteLine("");
 			writer.WriteLine($"{results.Count(x => x.Correct)}/{results.Count} OK");
-			writer.WriteLine($"{results.Count(x => !x.Correct)}/{results.Count} WRONG");
+			writer.WriteLine($"{results.Count(x => !x.Correct && !x.ProcessingFailed)}/{results.Count} WRONG");
 			writer.WriteLine($"{results.Count(x => x.ProcessingFailed)}/{results.Count} FAILED");
 		}
 
