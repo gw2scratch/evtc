@@ -542,14 +542,24 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 		private static EncounterIdentifierBuilder GetDefaultBuilder(Encounter encounter, IEnumerable<Agent> mainTargets)
 		{
 			var targets = mainTargets.ToArray();
+			IResultDeterminer result;
+			if (targets.Length > 0)
+			{
+				result = new AllCombinedResultDeterminer(targets
+					.Select<Agent, IResultDeterminer>(target => new AgentKilledDeterminer(target))
+					.ToArray()
+				);
+			}
+			else
+			{
+				result = new ConstantResultDeterminer(EncounterResult.Unknown);
+			}
+
 			return new EncounterIdentifierBuilder(
 				encounter,
 				targets.ToList(),
 				new PhaseSplitter(new StartTrigger(new PhaseDefinition("Default phase", targets))),
-				new AllCombinedResultDeterminer(targets
-					.Select<Agent, IResultDeterminer>(target => new AgentKilledDeterminer(target))
-					.ToArray()
-				),
+				result,
 				new ConstantModeDeterminer(EncounterMode.Normal)
 			);
 		}
