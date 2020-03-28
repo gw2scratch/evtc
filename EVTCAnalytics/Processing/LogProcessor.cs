@@ -40,6 +40,25 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			context.EvtcVersion = log.LogVersion.BuildVersion;
 
 			context.Agents = GetAgents(log).ToList();
+			context.AgentsByAddress = new Dictionary<ulong, Agent>();
+			context.AgentsById = new Dictionary<int, List<Agent>>();
+			foreach (var agent in context.Agents)
+			{
+				foreach (var origin in agent.AgentOrigin.OriginalAgentData)
+				{
+					context.AgentsByAddress[origin.Address] = agent;
+
+					int id = origin.Id;
+					if (!context.AgentsById.TryGetValue(id, out var agentsWithId))
+					{
+						agentsWithId = new List<Agent>();
+						context.AgentsById[id] = agentsWithId;
+					}
+
+					agentsWithId.Add(agent);
+				}
+			}
+
 			context.Skills = GetSkills(log).ToList();
 			GetDataFromCombatItems(log, context);
 
@@ -156,7 +175,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 
 					playerAddresses.Add(agent.Address);
 
-					yield return new Player(agent.Address, id, characterName, agent.Toughness, agent.Concentration,
+					var origin = new AgentOrigin(new OriginalAgentData(agent.Address, id));
+					yield return new Player(origin, characterName, agent.Toughness, agent.Concentration,
 						agent.Healing, agent.Condition, agent.HitboxWidth, agent.HitboxHeight, accountName, profession,
 						specialization, subgroup, identified);
 				}
@@ -168,17 +188,18 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						int volatileId = (int) (agent.Prof & 0xFFFF);
 						string name = agent.Name.Trim('\0');
 
+						var origin = new AgentOrigin(new OriginalAgentData(agent.Address, volatileId));
 						if (name.StartsWith("at"))
 						{
 							// The attack target name is structured as "at[MasterAddress]-[GadgetId]-[MasterId]"
 							// Preferably, the AttackTarget statechange would be used to detect if this is an
 							// attack target to not rely on the name which could change in the future
-							yield return new AttackTarget(agent.Address, volatileId, name, agent.HitboxWidth,
+							yield return new AttackTarget(origin, volatileId, name, agent.HitboxWidth,
 								agent.HitboxHeight);
 						}
 						else
 						{
-							yield return new Gadget(agent.Address, volatileId, name, agent.HitboxWidth,
+							yield return new Gadget(origin, volatileId, name, agent.HitboxWidth,
 								agent.HitboxHeight);
 						}
 					}
@@ -193,7 +214,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						string name = agent.Name.Trim('\0');
 						int speciesId = (int) (agent.Prof & 0xFFFF);
 
-						yield return new NPC(agent.Address, id, name, speciesId, agent.Toughness, agent.Concentration,
+						var origin = new AgentOrigin(new OriginalAgentData(agent.Address, id));
+						yield return new NPC(origin, name, speciesId, agent.Toughness, agent.Concentration,
 							agent.Healing, agent.Condition, agent.HitboxWidth, agent.HitboxHeight);
 					}
 				}
@@ -258,6 +280,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			// Requires aware times to be set first
 			Debug.Assert(context.AwareTimesSet);
 			Debug.Assert(!context.MastersAssigned);
+			Debug.Assert(context.AgentsByAddress != null);
+			Debug.Assert(context.AgentsById != null);
 
 			foreach (var combatItem in log.ParsedCombatItems)
 			{
@@ -267,26 +291,30 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					{
 						Agent minion = null;
 
-						// TODO: Look up by id with a dictionary first
-						foreach (var agent in context.Agents)
+						if (context.AgentsById.TryGetValue(combatItem.SrcAgentId, out var agentsWithId))
 						{
-							if (agent.Id == combatItem.SrcAgentId && agent.IsWithinAwareTime(combatItem.Time))
+							foreach (var agent in agentsWithId)
 							{
-								minion = agent;
-								break;
+								if (agent.IsWithinAwareTime(combatItem.Time))
+								{
+									minion = agent;
+									break;
+								}
 							}
 						}
 
 						if (minion != null && minion.Master == null)
 						{
 							Agent master = null;
-							foreach (var agent in context.Agents)
+							if (context.AgentsById.TryGetValue(combatItem.SrcMasterId, out var potentialMasters))
 							{
-								if (!(agent is Gadget) && agent.Id == combatItem.SrcMasterId &&
-								    agent.IsWithinAwareTime(combatItem.Time))
+								foreach (var agent in potentialMasters)
 								{
-									master = agent;
-									break;
+									if (!(agent is Gadget) && agent.IsWithinAwareTime(combatItem.Time))
+									{
+										master = agent;
+										break;
+									}
 								}
 							}
 
@@ -329,10 +357,10 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					{
 						switch (agent)
 						{
-							case Gadget gadget when gadget.Address == masterGadgetAddress:
+							case Gadget gadget when gadget.AgentOrigin.OriginalAgentData.Any(x=> x.Address == masterGadgetAddress):
 								master = gadget;
 								break;
-							case AttackTarget attackTarget when attackTarget.Address == attackTargetAddress:
+							case AttackTarget attackTarget when attackTarget.AgentOrigin.OriginalAgentData.Any(x => x.Address == attackTargetAddress):
 								target = attackTarget;
 								break;
 						}
@@ -353,8 +381,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 		{
 			Debug.Assert(context.Agents != null);
 			Debug.Assert(context.Skills != null);
+			Debug.Assert(context.AgentsByAddress != null);
 
-			var agentsByAddress = context.Agents.ToDictionary(x => x.Address);
 			var skillsById = new Dictionary<uint, Skill>();
 			foreach (var skill in context.Skills)
 			{
@@ -400,7 +428,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 
 				if (item.IsStateChange == StateChange.PointOfView)
 				{
-					if (agentsByAddress.TryGetValue(item.SrcAgent, out var agent))
+					if (context.AgentsByAddress.TryGetValue(item.SrcAgent, out var agent))
 					{
 						context.PointOfView = agent as Player ??
 						                      throw new LogProcessingException("The point of view agent is not a player");
@@ -437,7 +465,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 
 				if (item.IsStateChange == StateChange.Guild)
 				{
-					if (agentsByAddress.TryGetValue(item.SrcAgent, out Agent agent))
+					if (context.AgentsByAddress.TryGetValue(item.SrcAgent, out Agent agent))
 					{
 						var player = (Player) agent;
 						var guid = new byte[16];
@@ -479,7 +507,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					continue;
 				}
 
-				var processedEvent = GetEvent(agentsByAddress, skillsById, item);
+				var processedEvent = GetEvent(context, skillsById, item);
 				if (!(processedEvent is UnknownEvent) || !IgnoreUnknownEvents)
 				{
 					events.Add(processedEvent);
@@ -489,12 +517,14 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			context.Events = events;
 		}
 
-		private Event GetEvent(IReadOnlyDictionary<ulong, Agent> agentsByAddress,
+		private Event GetEvent(LogProcessorContext context,
 			IReadOnlyDictionary<uint, Skill> skillsById, ParsedCombatItem item)
 		{
+			Debug.Assert(context.AgentsByAddress != null);
+
 			Agent GetAgentByAddress(ulong address)
 			{
-				if (agentsByAddress.TryGetValue(address, out Agent agent))
+				if (context.AgentsByAddress.TryGetValue(address, out Agent agent))
 				{
 					return agent;
 				}

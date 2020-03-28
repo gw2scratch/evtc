@@ -118,6 +118,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						)).Build();
 				}
 				// Raids - Wing 2
+				case Encounter.Slothasor:
+					return GetDefaultBuilder(encounter, mainTarget).Build();
 				case Encounter.BanditTrio:
 				{
 					var berg = GetTargetBySpeciesId(agents, SpeciesIds.Berg);
@@ -143,7 +145,13 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 
 					return builder.Build();
 				}
+				case Encounter.Matthias:
+					return GetDefaultBuilder(encounter, mainTarget).Build();
 				// Raids - Wing 3
+				case Encounter.Escort:
+					return GetDefaultBuilder(encounter, new Agent[0]).Build();
+				case Encounter.KeepConstruct:
+					return GetDefaultBuilder(encounter, mainTarget).Build();
 				case Encounter.TwistedCastle:
 				{
 					return GetDefaultBuilder(encounter, new Agent[0])
@@ -395,7 +403,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						.Build();
 				}
 				default:
-					return GetDefaultBuilder(encounter, mainTarget).Build();
+					return GetDefaultBuilder(encounter, mainTarget, mergeMainTarget: false).Build();
 			}
 		}
 
@@ -513,15 +521,22 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			return Encounter.Other;
 		}
 
-		private static EncounterIdentifierBuilder GetDefaultBuilder(Encounter encounter, Agent mainTarget)
+		private static EncounterIdentifierBuilder GetDefaultBuilder(Encounter encounter, Agent mainTarget, bool mergeMainTarget = true)
 		{
-			return new EncounterIdentifierBuilder(
+			var builder = new EncounterIdentifierBuilder(
 				encounter,
 				new List<Agent> {mainTarget},
 				new PhaseSplitter(new StartTrigger(new PhaseDefinition("Default phase", mainTarget))),
 				new AgentKilledDeterminer(mainTarget),
 				new ConstantModeDeterminer(EncounterMode.Normal)
 			);
+			if (mergeMainTarget && mainTarget is NPC npc)
+			{
+				// Gadgets do not have to be merged as they never go out of reporting range.
+				builder.AddPostProcessingStep(new MergeSingletonNPC(npc.SpeciesId));
+			}
+
+			return builder;
 		}
 
 		private static EncounterIdentifierBuilder GetDefaultBuilder(Encounter encounter, IEnumerable<Agent> mainTargets)

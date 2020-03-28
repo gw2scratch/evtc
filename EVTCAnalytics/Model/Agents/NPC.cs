@@ -8,8 +8,8 @@ namespace GW2Scratch.EVTCAnalytics.Model.Agents
 		public int Healing { get; }
 		public int Condition { get; }
 
-		public NPC(ulong address, int id, string name, int speciesId, int toughness, int concentration, int healing,
-			int condition, int hitboxWidth, int hitboxHeight) : base(address, id, name, hitboxWidth, hitboxHeight)
+		public NPC(AgentOrigin agentOrigin, string name, int speciesId, int toughness, int concentration, int healing,
+			int condition, int hitboxWidth, int hitboxHeight) : base(agentOrigin, name, hitboxWidth, hitboxHeight)
 		{
 			SpeciesId = speciesId;
 			Toughness = toughness;

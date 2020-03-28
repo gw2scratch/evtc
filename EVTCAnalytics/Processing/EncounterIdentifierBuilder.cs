@@ -17,9 +17,9 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 		private Encounter Encounter { get; set; }
 		private PhaseSplitter PhaseSplitter { get; set; }
 		private IResultDeterminer ResultDeterminer { get; set; }
-		private IModeDeterminer DefaultModeDeterminer { get; set; }
-		private IReadOnlyList<IPostProcessingStep> DefaultProcessingSteps { get; set; }
-		private List<Agent> DefaultTargets { get; set; }
+		private IModeDeterminer ModeDeterminer { get; set; }
+		private List<IPostProcessingStep> ProcessingSteps { get; set; }
+		private List<Agent> Targets { get; set; }
 
 		public EncounterIdentifierBuilder(
 			Encounter defaultEncounter,
@@ -27,15 +27,15 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			PhaseSplitter defaultPhaseSplitter,
 			IResultDeterminer defaultResultDeterminer,
 			IModeDeterminer defaultModeDeterminer,
-			IReadOnlyList<IPostProcessingStep> defaultProcessingSteps = null
+			IEnumerable<IPostProcessingStep> defaultProcessingSteps = null
 		)
 		{
 			Encounter = defaultEncounter;
-			DefaultTargets = defaultTargets ?? throw new ArgumentNullException(nameof(defaultTargets));
+			Targets = defaultTargets ?? throw new ArgumentNullException(nameof(defaultTargets));
 			PhaseSplitter = defaultPhaseSplitter ?? throw new ArgumentNullException(nameof(defaultPhaseSplitter));
 			ResultDeterminer = defaultResultDeterminer ?? throw new ArgumentNullException(nameof(defaultResultDeterminer));
-			DefaultModeDeterminer = defaultModeDeterminer ?? throw new ArgumentNullException(nameof(defaultModeDeterminer));
-			DefaultProcessingSteps = defaultProcessingSteps ?? new IPostProcessingStep[0];
+			ModeDeterminer = defaultModeDeterminer ?? throw new ArgumentNullException(nameof(defaultModeDeterminer));
+			ProcessingSteps = (defaultProcessingSteps ?? Enumerable.Empty<IPostProcessingStep>()).ToList();
 		}
 
 		public EncounterIdentifierBuilder WithEncounter(Encounter encounter)
@@ -58,25 +58,31 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 
 		public EncounterIdentifierBuilder WithModes(IModeDeterminer determiner)
 		{
-			DefaultModeDeterminer = determiner;
+			ModeDeterminer = determiner;
+			return this;
+		}
+
+		public EncounterIdentifierBuilder AddPostProcessingStep(IPostProcessingStep step)
+		{
+			ProcessingSteps.Add(step);
 			return this;
 		}
 
 		public EncounterIdentifierBuilder WithPostProcessingSteps(params IPostProcessingStep[] steps)
 		{
-			DefaultProcessingSteps = steps;
+			ProcessingSteps = steps.ToList();
 			return this;
 		}
 
 		public EncounterIdentifierBuilder WithPostProcessingSteps(IEnumerable<IPostProcessingStep> steps)
 		{
-			DefaultProcessingSteps = steps.ToList();
+			ProcessingSteps = steps.ToList();
 			return this;
 		}
 
 		public EncounterIdentifierBuilder WithTargets(List<Agent> targets)
 		{
-			DefaultTargets = targets;
+			Targets = targets;
 			return this;
 		}
 
@@ -84,11 +90,11 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 		{
 			return new BaseEncounterData(
 				Encounter,
-				DefaultTargets,
+				Targets,
 				PhaseSplitter,
 				ResultDeterminer,
-				DefaultModeDeterminer,
-				DefaultProcessingSteps ?? new IPostProcessingStep[0]
+				ModeDeterminer,
+				ProcessingSteps
 			);
 		}
 	}

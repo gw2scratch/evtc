@@ -11,10 +11,10 @@ namespace GW2Scratch.EVTCAnalytics.Model.Agents
 
 		public IReadOnlyList<AttackTarget> AttackTargets => attackTargets;
 
-		public Gadget(ulong address, int id, string name, int hitboxWidth, int hitboxHeight)
-			: base(address, id, name, hitboxWidth, hitboxHeight)
+		public Gadget(AgentOrigin agentOrigin, int volatileId, string name, int hitboxWidth, int hitboxHeight)
+			: base(agentOrigin, name, hitboxWidth, hitboxHeight)
 		{
-			VolatileId = id;
+			VolatileId = volatileId;
 		}
 
 		internal void AddAttackTarget(AttackTarget target)

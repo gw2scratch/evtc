@@ -47,6 +47,11 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Steps
 				return;
 			}
 
+			// Update agent origins to properly reflect the merge
+			resultingAgent.AgentOrigin.OriginalAgentData = agentsToMerge
+				.SelectMany(x => x.AgentOrigin.OriginalAgentData)
+				.ToList();
+
 			// TODO: Consider finding all Agent properties by reflection and perhaps
 			// compiling expressions to effectively update those. Newly introduced events
 			// with agent properties now have to be manually added here.
@@ -118,11 +123,9 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Steps
 					context.EncounterData.Targets[i] = resultingAgent;
 				}
 			}
+
 			resultingAgent.FirstAwareTime = agentsToMerge.Min(x => x.FirstAwareTime);
 			resultingAgent.LastAwareTime = agentsToMerge.Max(x => x.LastAwareTime);
-
-			// TODO: Save information about merge somewhere in agent
-			throw new NotImplementedException();
 		}
 	}
 }

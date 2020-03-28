@@ -11,6 +11,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 	public class LogProcessorContext
 	{
 		public List<Agent> Agents { get; set; }
+		public Dictionary<ulong, Agent> AgentsByAddress { get; set; }
+		public Dictionary<int, List<Agent>> AgentsById { get; set; }
 		public List<Skill> Skills { get; set; }
 		public List<Event> Events { get; set; }
 		public LogTime LogStartTime { get; set; }

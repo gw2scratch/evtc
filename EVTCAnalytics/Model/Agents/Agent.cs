@@ -4,8 +4,7 @@ namespace GW2Scratch.EVTCAnalytics.Model.Agents
 {
 	public abstract class Agent
 	{
-		public ulong Address { get; }
-		public int Id { get; }
+		public AgentOrigin AgentOrigin { get; }
 		public string Name { get; }
 		public int HitboxWidth { get; }
 		public int HitboxHeight { get; }
@@ -13,16 +12,15 @@ namespace GW2Scratch.EVTCAnalytics.Model.Agents
 		public long LastAwareTime { get; internal set; } = long.MaxValue;
 
 		internal List<Agent> MinionList { get; } = new List<Agent>();
-		public IEnumerable<Agent> Minions => MinionList;
+		public IReadOnlyList<Agent> Minions => MinionList;
 		public Agent Master { get; internal set; }
 
-		protected Agent(ulong address, int id, string name, int hitboxWidth, int hitboxHeight)
+		protected Agent(AgentOrigin agentOrigin, string name, int hitboxWidth, int hitboxHeight)
 		{
-			Id = id;
+			AgentOrigin = agentOrigin;
 			Name = name;
 			HitboxWidth = hitboxWidth;
 			HitboxHeight = hitboxHeight;
-			Address = address;
 		}
 
 		public bool IsWithinAwareTime(long time)

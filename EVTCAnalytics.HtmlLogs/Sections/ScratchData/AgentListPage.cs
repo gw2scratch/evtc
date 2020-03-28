@@ -21,7 +21,6 @@ namespace ScratchLogHTMLGenerator.Sections.ScratchData
         <thead>
         <tr>
             <th>Agent type</th>
-            <th>ID</th>
 			<th>Name</th>
 			<th>Master</th>
 			<th><abbr title='Toughness'>Tgh</abbr></th>
@@ -43,7 +42,6 @@ namespace ScratchLogHTMLGenerator.Sections.ScratchData
 					writer.WriteLine($@"
             <tr>
                 <td>Player</td>
-                <td>{player.Id}</td>
                 <td>{player.Name}</td>
                 <td>{player.Master?.Name ?? ""}</td>
                 <td>{player.Toughness}</td>
@@ -62,7 +60,6 @@ namespace ScratchLogHTMLGenerator.Sections.ScratchData
 					writer.WriteLine($@"
             <tr>
                 <td>NPC</td>
-                <td>{npc.Id}</td>
                 <td>{npc.Name}</td>
                 <td>{npc.Master?.Name ?? ""}</td>
                 <td>{npc.Toughness}</td>
@@ -81,7 +78,6 @@ namespace ScratchLogHTMLGenerator.Sections.ScratchData
 					writer.WriteLine($@"
             <tr>
                 <td>Gadget</td>
-                <td>{gadget.Id}</td>
                 <td>{gadget.Name}</td>
                 <td>{gadget.Master?.Name ?? ""}</td>
                 <td></td>

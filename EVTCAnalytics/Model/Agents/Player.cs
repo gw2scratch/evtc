@@ -19,10 +19,10 @@ namespace GW2Scratch.EVTCAnalytics.Model.Agents
 		public int Condition { get; }
 		public byte[] GuildGuid { get; internal set; }
 
-		public Player(ulong address, int id, string name, int toughness, int concentration, int healing, int condition,
+		public Player(AgentOrigin agentOrigin, string name, int toughness, int concentration, int healing, int condition,
 			int hitboxWidth, int hitboxHeight, string accountName, Profession profession,
 			EliteSpecialization eliteSpecialization, int subgroup, bool identified)
-			: base(address, id, name, hitboxWidth, hitboxHeight)
+			: base(agentOrigin, name, hitboxWidth, hitboxHeight)
 		{
 			Toughness = toughness;
 			Concentration = concentration;
