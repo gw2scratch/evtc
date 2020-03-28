@@ -34,6 +34,9 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 		[JsonProperty]
 		public Encounter Encounter { get; set; } = Encounter.Other;
 
+		[JsonProperty]
+		public int? MapId { get; set; }
+
 		/// <summary>
 		/// The author of the log.
 		/// </summary>
@@ -153,6 +156,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 					CharacterName = log.PointOfView.Name
 				};
 				Encounter = log.EncounterData.Encounter;
+				MapId = log.MapId;
 				MainTargetName = log.MainTarget?.Name ?? UnknownMainTargetName;
 				EncounterResult = analyzer.GetResult();
 				EncounterMode = analyzer.GetMode();
