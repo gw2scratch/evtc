@@ -182,6 +182,16 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			};
 			gridView.Columns.Add(durationColumn);
 
+			gridView.Columns.Add(new GridColumn
+			{
+				HeaderText = "Character",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<LogData, string>(x => x.PointOfView?.CharacterName ?? "Unknown")
+				}
+			});
+
+
 			var compositionCell = new DrawableCell();
 			compositionCell.Paint += (sender, args) =>
 			{
@@ -208,6 +218,33 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			};
 
 			gridView.Columns.Add(compositionColumn);
+
+			gridView.Columns.Add(new GridColumn
+			{
+				HeaderText = "Map ID",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<LogData, string>(x => x.MapId?.ToString() ?? "Unknown")
+				}
+			});
+
+			gridView.Columns.Add(new GridColumn
+			{
+				HeaderText = "Game Version",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<LogData, string>(x => x.GameBuild?.ToString() ?? "Unknown")
+				}
+			});
+
+			gridView.Columns.Add(new GridColumn
+			{
+				HeaderText = "arcdps Version",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<LogData, string>(x => x.EvtcVersion)
+				}
+			});
 
 			foreach (var column in gridView.Columns)
 			{
