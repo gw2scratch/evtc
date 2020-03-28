@@ -128,6 +128,25 @@ namespace GW2Scratch.EVTCInspector
 					Binding = new DelegateBinding<object, string>(x => x.GetType().Name)
 				}
 			});
+			var originColumn = agentsGridView.Columns.FirstOrDefault(x => x.HeaderText == nameof(AgentOrigin));
+			if (originColumn != null)
+			{
+				originColumn.DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Agent, string>(x => x.AgentOrigin.Merged
+						? "Merged"
+						: $"{x.AgentOrigin.OriginalAgentData[0].Address} | {x.AgentOrigin.OriginalAgentData[0].Id}")
+				};
+			}
+
+			var masterColumn = agentsGridView.Columns.FirstOrDefault(x => x.HeaderText == nameof(Agent.Master));
+			if (masterColumn != null)
+			{
+				masterColumn.DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Agent, string>(x => x.Master?.Name ?? "")
+				};
+			}
 
 			new GridViewSorter<Agent>(agentsGridView, agents).EnableSorting();
 
