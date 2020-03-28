@@ -209,7 +209,11 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					}
 					else
 					{
-						Gadget mainGadget = agents.OfType<Gadget>().FirstOrDefault(x => x.VolatileId == GadgetIds.DeimosLastPhase);
+						// Deimos, the NPC, is replaced with a gadget for the last 10% of the fight.
+						// There may sometimes be other gadgets with the same id. They do not, however,
+						// have an attack target. They also have lower maximum health values.
+						Gadget mainGadget = agents.OfType<Gadget>()
+							.FirstOrDefault(x => x.VolatileId == GadgetIds.DeimosLastPhase && x.AttackTargets.Count == 1);
 
 						if (mainGadget != null)
 						{
