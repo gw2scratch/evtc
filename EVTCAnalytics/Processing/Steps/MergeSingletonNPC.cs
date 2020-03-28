@@ -37,7 +37,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Steps
 				}
 			}
 
-			if (agentsToMerge.Count == 0)
+			if (agentsToMerge.Count < 2)
 			{
 				return;
 			}
