@@ -213,7 +213,16 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 
 						if (mainGadget != null)
 						{
-							builder.WithResult(new TargetableDeterminer(mainGadget.AttackTargets.Single(), true, false));
+							var attackTarget = mainGadget.AttackTargets.SingleOrDefault();
+							if (attackTarget == null)
+							{
+								builder.WithResult(new ConstantResultDeterminer(EncounterResult.Unknown));
+							}
+							else
+							{
+								builder.WithResult(new TargetableDeterminer(attackTarget, true, false));
+							}
+
 							builder.WithTargets(new List<Agent>() {mainTarget, mainGadget});
 						}
 						else
