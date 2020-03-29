@@ -84,11 +84,15 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 								Add(new Label
 									{Text = "Encounter", VerticalAlignment = VerticalAlignment.Center});
 								Add(encounterFilterDropDown);
+								Add(null, xscale: false);
+								Add(null, xscale: false);
 								Add(new Label
 									{Text = "Result", VerticalAlignment = VerticalAlignment.Center});
 								Add(successCheckBox);
 								Add(failureCheckBox);
 								Add(unknownCheckBox);
+								Add(null, xscale: false);
+								Add(null, xscale: false);
 								Add(new Label
 									{Text = "Mode", VerticalAlignment = VerticalAlignment.Center});
 								Add(normalModeCheckBox);
