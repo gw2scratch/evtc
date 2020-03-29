@@ -6,7 +6,7 @@
     <OutputType>WinExe</OutputType>
     <LangVersion>latest</LangVersion>
     <Title>arcdps Log Manager</Title>
-    <Version>0.6</Version>
+    <Version>0.7</Version>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Costura.Fody" Version="4.0.0" />
