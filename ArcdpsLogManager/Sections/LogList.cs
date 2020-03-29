@@ -135,9 +135,9 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 						switch (x.EncounterMode)
 						{
 							case EncounterMode.Challenge:
-								return "Yes";
+								return "CM";
 							case EncounterMode.Normal:
-								return "No";
+								return "";
 							case EncounterMode.Unknown:
 								return "?";
 							default:
