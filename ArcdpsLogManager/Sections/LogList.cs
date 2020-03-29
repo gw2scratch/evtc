@@ -30,6 +30,11 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 		private GridViewSorter<LogData> sorter;
 		private FilterCollection<LogData> dataStore;
 
+		private static readonly Dictionary<string, string> Abbreviations = new Dictionary<string, string>
+		{
+			{"CM", "Challenge Mode"}
+		};
+
 		public FilterCollection<LogData> DataStore
 		{
 			get => dataStore;
@@ -307,6 +312,12 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 					Checked = !Settings.HiddenLogListColumns.Contains(column.HeaderText),
 					Text = $"{column.HeaderText}"
 				};
+
+				if (Abbreviations.TryGetValue(menuItem.Text, out string fullName))
+				{
+					menuItem.Text = $"{menuItem.Text} ({fullName})";
+				}
+
 				menuItem.CheckedChanged += (item, args) =>
 				{
 					bool shown = menuItem.Checked;
