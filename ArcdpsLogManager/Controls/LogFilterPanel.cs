@@ -47,7 +47,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			lastDayButton.Click += (sender, args) =>
 			{
 				startDateTimePicker.Value = DateTime.Now - TimeSpan.FromDays(1);
-				endDateTimePicker.Value = DateTime.Now;
+				endDateTimePicker.Value = DateTime.Now.Date.AddDays(1);
 			};
 
 			var allTimeButton = new Button {Text = "All time"};
