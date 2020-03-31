@@ -310,7 +310,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					}
 					else
 					{
-						builder.WithResult(new AnyCombinedResultDeterminer(
+						builder.WithResult(new AllCombinedResultDeterminer(
 							new AgentDeadDeterminer(nikare),
 							new AgentDeadDeterminer(kenut)
 						));
