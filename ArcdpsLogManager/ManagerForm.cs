@@ -18,6 +18,7 @@ using GW2Scratch.ArcdpsLogManager.Logs.Naming;
 using GW2Scratch.ArcdpsLogManager.Processing;
 using GW2Scratch.ArcdpsLogManager.Sections;
 using GW2Scratch.ArcdpsLogManager.Timing;
+using GW2Scratch.ArcdpsLogManager.Updates;
 using GW2Scratch.ArcdpsLogManager.Uploads;
 using GW2Scratch.EVTCAnalytics;
 using GW2Scratch.EVTCAnalytics.GameData;
@@ -40,6 +41,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		private UploadProcessor UploadProcessor { get; }
 		private LogDataProcessor LogDataProcessor { get; }
 		private ILogNameProvider LogNameProvider { get; }
+		private LogDataUpdater LogDataUpdater { get; } = new LogDataUpdater();
 
 		private ObservableCollection<LogData> logs = new ObservableCollection<LogData>();
 		private FilterCollection<LogData> logsFiltered;
@@ -84,10 +86,7 @@ namespace GW2Scratch.ArcdpsLogManager
 				}
 			};
 
-			Settings.DpsReportDomainChanged += (sender, args) =>
-			{
-				dpsReportUploader.Domain = Settings.DpsReportDomain;
-			};
+			Settings.DpsReportDomainChanged += (sender, args) => { dpsReportUploader.Domain = Settings.DpsReportDomain; };
 
 			// Form layout
 			Icon = Resources.GetProgramIcon();
@@ -133,6 +132,14 @@ namespace GW2Scratch.ArcdpsLogManager
 				}
 
 				ApiData?.SaveDataToFile();
+			};
+			LogSearchFinished += (sender, args) =>
+			{
+				var updates = LogDataUpdater.GetUpdates(logs).ToList();
+				if (updates.Count > 0)
+				{
+					new UpdateDialog(LogDataProcessor, updates).ShowModal(this);
+				}
 			};
 
 			// Collection initialization
@@ -230,6 +237,9 @@ namespace GW2Scratch.ArcdpsLogManager
 
 		private MenuBar ConstructMenuBar()
 		{
+			var updateMenuItem = new ButtonMenuItem {Text = "&Update"};
+			updateMenuItem.Click += (sender, args) => { new UpdateDialog(LogDataProcessor, LogDataUpdater.GetUpdates(logs).ToList()).ShowModal(this); };
+
 			var logCacheMenuItem = new ButtonMenuItem {Text = "Log &cache"};
 			logCacheMenuItem.Click += (sender, args) => { new CacheDialog(this).ShowModal(this); };
 
@@ -256,6 +266,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			*/
 
 			var dataMenuItem = new ButtonMenuItem {Text = "&Data"};
+			dataMenuItem.Items.Add(updateMenuItem);
 			dataMenuItem.Items.Add(logCacheMenuItem);
 			dataMenuItem.Items.Add(apiDataMenuItem);
 
@@ -354,7 +365,9 @@ namespace GW2Scratch.ArcdpsLogManager
 
 			logs.Clear();
 			LogSearchStarted?.Invoke(this, EventArgs.Empty);
-			Task.Run(() => FindLogs(logLoadTaskTokenSource.Token));
+			Task.Run(() => FindLogs(logLoadTaskTokenSource.Token))
+				.ContinueWith(t => Application.Instance.Invoke(() => LogSearchFinished?.Invoke(null, EventArgs.Empty)));
+
 			SetupFileSystemWatchers();
 		}
 
@@ -469,6 +482,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		}
 
 		private event EventHandler LogSearchStarted;
+		private event EventHandler LogSearchFinished;
 		private event EventHandler LogCollectionsRecreated;
 		private event EventHandler FilteredLogsUpdated;
 	}
