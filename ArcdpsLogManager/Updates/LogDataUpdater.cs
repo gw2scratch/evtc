@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GW2Scratch.ArcdpsLogManager.Logs;
 using GW2Scratch.EVTCAnalytics.GameData.Encounters;
+using GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
 
 namespace GW2Scratch.ArcdpsLogManager.Updates
@@ -15,7 +16,12 @@ namespace GW2Scratch.ArcdpsLogManager.Updates
 			                     && log.ParsingVersion < new Version(0, 8)
 			                     && log.Encounter == Encounter.TwinLargos
 			                     && log.EncounterResult == EncounterResult.Success,
-				"Twin Largos logs were marked successful even if only one of the largos died.")
+				"Twin Largos logs were marked successful even if only one of the largos died."),
+			new LogUpdate(log => log.ParsingVersion >= new Version(0, 7)
+			                     && log.ParsingVersion < new Version(0, 8)
+			                     && log.Encounter == Encounter.Deimos
+			                     && log.EncounterMode == EncounterMode.Challenge,
+				"Old Deimos logs were sometimes detected as CM when they were in fact normal mode.")
 		};
 
 		public IEnumerable<LogUpdateList> GetUpdates(IEnumerable<LogData> logs)

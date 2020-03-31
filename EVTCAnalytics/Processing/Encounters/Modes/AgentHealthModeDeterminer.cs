@@ -10,6 +10,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes
 	/// </summary>
 	public class AgentHealthModeDeterminer : IModeDeterminer
 	{
+		private const ulong MaximumValidValue = 1152921504606846976; // 2^60; old logs sometimes have max health events with nonsensical values such as 2^63.
+
 		private readonly Agent agent;
 		private readonly ulong maxHealth;
 		private readonly EncounterMode enoughHealthMode;
@@ -33,9 +35,13 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes
 			{
 				return EncounterMode.Unknown;
 			}
-
 			foreach (var maxHealthUpdate in log.Events.OfType<AgentMaxHealthUpdateEvent>().Where(x => x.Agent == agent))
 			{
+				if (maxHealthUpdate.NewMaxHealth >= MaximumValidValue)
+				{
+					continue;
+				}
+
 				if (maxHealthUpdate.NewMaxHealth >= maxHealth)
 				{
 					return enoughHealthMode;
