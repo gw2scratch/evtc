@@ -4,6 +4,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 	{
 		// Wing 4
 		// Deimos
+		public const int ShackledPrisoner = 53040;
 		public const int DeimosLastPhase = 24660;
 
 		// Wing 6

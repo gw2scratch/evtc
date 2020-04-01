@@ -214,17 +214,27 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						// have an attack target. They also have lower maximum health values.
 						Gadget mainGadget = agents.OfType<Gadget>()
 							.FirstOrDefault(x => x.VolatileId == GadgetIds.DeimosLastPhase && x.AttackTargets.Count == 1);
+						Gadget prisoner = agents.OfType<Gadget>().FirstOrDefault(x => x.VolatileId == GadgetIds.ShackledPrisoner);
 
 						if (mainGadget != null)
 						{
 							var attackTarget = mainGadget.AttackTargets.SingleOrDefault();
-							if (attackTarget == null)
+							if (attackTarget != null && prisoner != null)
 							{
-								builder.WithResult(new ConstantResultDeterminer(EncounterResult.Unknown));
+								builder.WithResult(new AllCombinedResultDeterminer(
+									new TargetableDeterminer(attackTarget, true, false),
+									// If the log continues recording for longer than usual, it will record the attack target going untargetable.
+									// However, at the same time it will also record the Shackled Prisoner having their health reset.
+									// This health reset cannot happen in a successful log as there is no Shackled Prisoner at that point.
+									new TransformResultDeterminer(
+										new AgentHealthResetDeterminer(prisoner),
+										result => result == EncounterResult.Success ? EncounterResult.Failure : EncounterResult.Success
+									)
+								));
 							}
 							else
 							{
-								builder.WithResult(new TargetableDeterminer(attackTarget, true, false));
+								builder.WithResult(new ConstantResultDeterminer(EncounterResult.Unknown));
 							}
 
 							builder.WithTargets(new List<Agent>() {mainTarget, mainGadget});

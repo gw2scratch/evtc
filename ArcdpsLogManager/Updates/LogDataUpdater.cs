@@ -21,7 +21,12 @@ namespace GW2Scratch.ArcdpsLogManager.Updates
 			                     && log.ParsingVersion < new Version(0, 8)
 			                     && log.Encounter == Encounter.Deimos
 			                     && log.EncounterMode == EncounterMode.Challenge,
-				"Old Deimos logs were sometimes detected as CM when they were in fact normal mode.")
+				"Old Deimos logs were sometimes detected as CM when they were in fact normal mode."),
+			new LogUpdate(log => log.ParsingVersion >= new Version(0, 7)
+			                     && log.ParsingVersion < new Version(0, 8)
+			                     && log.Encounter == Encounter.Deimos
+			                     && log.EncounterResult == EncounterResult.Success,
+				"Very rarely, Deimos logs were detected as success when they were in fact a failure.")
 		};
 
 		public IEnumerable<LogUpdateList> GetUpdates(IEnumerable<LogData> logs)
