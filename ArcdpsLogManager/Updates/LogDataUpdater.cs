@@ -12,18 +12,15 @@ namespace GW2Scratch.ArcdpsLogManager.Updates
 	{
 		public static readonly IReadOnlyList<LogUpdate> Updates = new List<LogUpdate>()
 		{
-			new LogUpdate(log => log.ParsingVersion >= new Version(0, 7)
-			                     && log.ParsingVersion < new Version(0, 7, 1)
+			new LogUpdate(log => log.ParsingVersion < new Version(0, 7, 1)
 			                     && log.Encounter == Encounter.TwinLargos
 			                     && log.EncounterResult == EncounterResult.Success,
 				"Twin Largos logs were marked successful even if only one of the largos died."),
-			new LogUpdate(log => log.ParsingVersion >= new Version(0, 7)
-			                     && log.ParsingVersion < new Version(0, 7, 1)
+			new LogUpdate(log => log.ParsingVersion < new Version(0, 7, 1)
 			                     && log.Encounter == Encounter.Deimos
 			                     && log.EncounterMode == EncounterMode.Challenge,
 				"Old Deimos logs were sometimes detected as CM when they were in fact normal mode."),
-			new LogUpdate(log => log.ParsingVersion >= new Version(0, 7)
-			                     && log.ParsingVersion < new Version(0, 7, 1)
+			new LogUpdate(log => log.ParsingVersion < new Version(0, 7, 1)
 			                     && log.Encounter == Encounter.Deimos
 			                     && log.EncounterResult == EncounterResult.Success,
 				"Very rarely, Deimos logs were detected as success when they were in fact a failure."),
