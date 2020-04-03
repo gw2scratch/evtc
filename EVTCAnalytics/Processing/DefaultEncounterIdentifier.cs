@@ -394,10 +394,17 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						.Build();
 				}
 				// Challenge Mode fractals
+				case Encounter.Skorvald:
+				{
+					// Skorvald the Shattered is the same species in Challenge and Normal mode,
+					// unlike most other fractal CM encounters
+					return GetDefaultBuilder(encounter, mainTarget)
+						.WithModes(new AgentHealthModeDeterminer(mainTarget, 5_550_000))
+						.Build();
+				}
 				case Encounter.MAMA:
 				case Encounter.SiaxTheCorrupted:
 				case Encounter.EnsolyssOfTheEndlessTorment:
-				case Encounter.Skorvald:
 				case Encounter.Artsariiv:
 				case Encounter.Arkk:
 				{
