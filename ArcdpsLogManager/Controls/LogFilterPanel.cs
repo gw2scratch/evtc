@@ -54,7 +54,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			allTimeButton.Click += (sender, args) =>
 			{
 				startDateTimePicker.Value = LogFilters.GuildWars2ReleaseDate;
-				endDateTimePicker.Value = DateTime.Now;
+				endDateTimePicker.Value = DateTime.Now.Date.AddDays(1);
 			};
 
 			var advancedFiltersButton = new Button {Text = "Advanced"};
