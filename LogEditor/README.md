@@ -8,7 +8,7 @@ Requires .NET Core 3.1 or newer.
  - Removing reward events. This is useful for testing success detection for kills that are repeated within a reward period. As of GW2 build 97235, reward chests are not awarded at all if a raid boss is repeated twice in a week.
 
 ## Example of usage
-The following command will remove players:
+The following command will replace players character and account with anonymous names:
 ```
 ./LogEditor --anonymized --output-zevtc --input input.zevtc --output output.zevtc
 ```
