@@ -2,9 +2,9 @@ namespace GW2Scratch.EVTCAnalytics.Parsed
 {
 	public class ParsedBossData
 	{
-		public int ID { get; }
+		public ushort ID { get; }
 
-		public ParsedBossData(int id)
+		public ParsedBossData(ushort id)
 		{
 			ID = id;
 		}

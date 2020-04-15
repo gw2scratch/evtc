@@ -335,9 +335,9 @@ namespace GW2Scratch.EVTCInspector
 				statusStringBuilder.AppendLine(
 					$"Build version: {parsedLog?.LogVersion?.BuildVersion}, revision {parsedLog?.LogVersion?.Revision}");
 				statusStringBuilder.AppendLine(
-					$"Parsed: {parsedLog?.ParsedAgents?.Length} agents, {parsedLog?.ParsedSkills?.Length} skills, {parsedLog?.ParsedCombatItems?.Length} combat items.");
+					$"Parsed: {parsedLog?.ParsedAgents?.Count} agents, {parsedLog?.ParsedSkills?.Count} skills, {parsedLog?.ParsedCombatItems?.Count} combat items.");
 				statusStringBuilder.AppendLine(
-					$"Processed: {processedLog?.Events?.Count()} events, {processedLog?.Agents?.Count()} agents.");
+					$"Processed: {processedLog?.Events?.Count} events, {processedLog?.Agents?.Count} agents.");
 				parsedStateLabel.Text = statusStringBuilder.ToString();
 			});
 		}

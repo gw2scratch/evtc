@@ -38,9 +38,9 @@ namespace GW2Scratch.EVTCAnalytics
 
 			var logVersion = ParseLogData(reader);
 			var bossData = ParseBossData(reader);
-			var agents = ParseAgents(reader).ToArray();
-			var skills = ParseSkills(reader).ToArray();
-			var combatItems = ParseCombatItems(logVersion.Revision, reader).ToArray();
+			var agents = ParseAgents(reader).ToList();
+			var skills = ParseSkills(reader).ToList();
+			var combatItems = ParseCombatItems(logVersion.Revision, reader).ToList();
 
 			return new ParsedLog(logVersion, bossData, agents, skills, combatItems);
 		}
@@ -91,23 +91,22 @@ namespace GW2Scratch.EVTCAnalytics
 				uint isElite = reader.ReadUInt32();
 
 				// 2 bytes: toughness
-				int toughness = reader.ReadInt16();
+				short toughness = reader.ReadInt16();
 				// 2 bytes: concentration
-				int concentration = reader.ReadInt16();
+				short concentration = reader.ReadInt16();
 				// 2 bytes: healing
-				int healing = reader.ReadInt16();
+				short healing = reader.ReadInt16();
 				// 2 bytes: hb_width
-				int hitboxWidth = reader.ReadInt16();
+				short hitboxWidth = reader.ReadInt16();
 				// 2 bytes: condition
-				int condition = reader.ReadInt16();
+				short condition = reader.ReadInt16();
 				// 2 bytes: hb_height
-				int hitboxHeight = reader.ReadInt16();
+				short hitboxHeight = reader.ReadInt16();
 				// 68 bytes: name
-				String name = reader.ReadString(68);
+				string name = reader.ReadString(68);
 
-				ParsedAgent parsedAgent = new ParsedAgent(address, name, prof, isElite, toughness, concentration,
-					healing, condition,
-					hitboxWidth, hitboxHeight);
+				var parsedAgent = new ParsedAgent(address, name, prof, isElite, toughness, concentration,
+					healing, condition, hitboxWidth, hitboxHeight);
 
 				yield return parsedAgent;
 			}

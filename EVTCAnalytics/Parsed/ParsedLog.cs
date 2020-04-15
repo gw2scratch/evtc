@@ -1,14 +1,22 @@
+using System.Collections.Generic;
+
 namespace GW2Scratch.EVTCAnalytics.Parsed
 {
 	public class ParsedLog
 	{
 		public LogVersion LogVersion { get; }
 		public ParsedBossData ParsedBossData { get; }
-		public ParsedAgent[] ParsedAgents { get; }
-		public ParsedSkill[] ParsedSkills { get; }
-		public ParsedCombatItem[] ParsedCombatItems { get; }
+		public List<ParsedAgent> ParsedAgents { get; }
+		public List<ParsedSkill> ParsedSkills { get; }
+		public List<ParsedCombatItem> ParsedCombatItems { get; }
 
-		public ParsedLog(LogVersion logVersion, ParsedBossData bossData, ParsedAgent[] parsedAgents, ParsedSkill[] skills, ParsedCombatItem[] combatItems)
+		public ParsedLog(
+			LogVersion logVersion,
+			ParsedBossData bossData,
+			List<ParsedAgent> parsedAgents,
+			List<ParsedSkill> skills,
+			List<ParsedCombatItem> combatItems
+		)
 		{
 			LogVersion = logVersion;
 			ParsedBossData = bossData;
