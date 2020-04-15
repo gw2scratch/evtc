@@ -18,6 +18,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RotationComparison", "Rotat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVTCAnalytics.LogTests", "EVTCAnalytics.LogTests\EVTCAnalytics.LogTests.csproj", "{327293C9-155C-4415-812E-F81E3420D243}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogEditor", "LogEditor\LogEditor.csproj", "{1487967D-C775-4EFA-91CA-E7CB719A591E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,5 +62,9 @@ Global
 		{327293C9-155C-4415-812E-F81E3420D243}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{327293C9-155C-4415-812E-F81E3420D243}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{327293C9-155C-4415-812E-F81E3420D243}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1487967D-C775-4EFA-91CA-E7CB719A591E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1487967D-C775-4EFA-91CA-E7CB719A591E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1487967D-C775-4EFA-91CA-E7CB719A591E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1487967D-C775-4EFA-91CA-E7CB719A591E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
