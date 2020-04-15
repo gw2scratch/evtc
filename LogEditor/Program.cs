@@ -24,7 +24,7 @@ namespace LogEditor
 					getDefaultValue: () => false,
 					description: "Remove all reward events from the log"),
 				new Option<bool>(
-					"--zevtc",
+					"--output-zevtc",
 					getDefaultValue: () => true,
 					description: "Compress output as a .zevtc file"),
 				new Option<string>(
@@ -41,10 +41,10 @@ namespace LogEditor
 				}
 			};
 
-			command.Description = "Edit arcdps EVTC Logs";
+			command.Description = "Edit arcdps EVTC logs";
 
 			command.Handler = CommandHandler.Create<bool, bool, bool, string, string>(
-				(anonymize, removeRewards, zevtc, input, output) =>
+				(anonymize, removeRewards, outputZevtc, input, output) =>
 				{
 					var parser = new EVTCParser();
 					var editor = new ParsedLogEditor();
@@ -64,7 +64,7 @@ namespace LogEditor
 						Console.Write("Removing rewards...");
 					}
 
-					if (zevtc)
+					if (outputZevtc)
 					{
 						using var zip = ZipFile.Open(output, ZipArchiveMode.Create);
 						var entry = zip.CreateEntry("1");
