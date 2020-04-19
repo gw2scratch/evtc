@@ -71,53 +71,67 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			var applyFilterButton = new Button {Text = "Apply"};
 			applyFilterButton.Click += (sender, args) => { OnFiltersUpdated(); };
 
-			BeginGroup("Filters", new Padding(5));
+			BeginGroup("Filters", new Padding(5, 0, 5, 5));
 			{
 				BeginHorizontal();
 				{
 					BeginVertical();
 					{
-						BeginVertical(new Padding(5), new Size(4, 0));
+						BeginVertical(spacing: new Size(4, 0));
 						{
 							BeginHorizontal();
 							{
-								Add(new Label
-									{Text = "Encounter", VerticalAlignment = VerticalAlignment.Center});
-								Add(encounterFilterDropDown);
-								Add(null, xscale: false);
-								Add(null, xscale: false);
-								Add(new Label
-									{Text = "Result", VerticalAlignment = VerticalAlignment.Center});
-								Add(successCheckBox);
-								Add(failureCheckBox);
-								Add(unknownCheckBox);
-								Add(null, xscale: false);
-								Add(null, xscale: false);
-								Add(new Label
-									{Text = "Mode", VerticalAlignment = VerticalAlignment.Center});
-								Add(normalModeCheckBox);
-								Add(challengeModeCheckBox);
+								BeginGroup("Encounter");
+								{
+									Add(encounterFilterDropDown);
+								}
+								EndGroup();
+								BeginGroup("Result", new Padding(4, 0, 4, 2), spacing: new Size(4, 0));
+								{
+									BeginHorizontal();
+									{
+										Add(successCheckBox);
+										Add(failureCheckBox);
+										Add(unknownCheckBox);
+									}
+									EndHorizontal();
+								}
+								EndGroup();
+								BeginGroup("Mode", new Padding(4, 0, 4, 2), spacing: new Size(4, 0));
+								{
+									BeginHorizontal();
+									{
+										Add(normalModeCheckBox);
+										Add(challengeModeCheckBox);
+									}
+									EndHorizontal();
+								}
+								EndGroup();
+								Add(null);
 							}
 							EndHorizontal();
 						}
-						EndBeginVertical(new Padding(5), new Size(4, 0));
+						EndBeginVertical(spacing: new Size(4, 0));
 						{
-							BeginHorizontal();
+							BeginGroup("Time", new Padding(4, 0, 4, 2), spacing: new Size(4, 0));
 							{
-								Add(
-									new Label
+								BeginHorizontal();
+								{
+									Add(new Label
 									{
-										Text = "Encounter time between",
+										Text = "Between",
 										VerticalAlignment = VerticalAlignment.Center
 									});
-								Add(startDateTimePicker);
-								Add(new Label
-									{Text = "and", VerticalAlignment = VerticalAlignment.Center});
-								Add(endDateTimePicker);
-								Add(lastDayButton);
-								Add(allTimeButton);
+									Add(startDateTimePicker);
+									Add(new Label {Text = "and", VerticalAlignment = VerticalAlignment.Center});
+									Add(endDateTimePicker);
+									Add(lastDayButton);
+									Add(allTimeButton);
+								}
+								EndHorizontal();
 							}
-							EndHorizontal();
+							EndGroup();
+							Add(null);
 						}
 						EndVertical();
 					}
