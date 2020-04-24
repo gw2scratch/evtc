@@ -54,6 +54,18 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 				{Encounter.WhisperOfJormag, EncounterCategory.StrikeMission},
 			};
 
+		private static readonly HashSet<EncounterCategory> RaidCategories =
+			new HashSet<EncounterCategory>()
+			{
+				EncounterCategory.RaidWing1,
+				EncounterCategory.RaidWing2,
+				EncounterCategory.RaidWing3,
+				EncounterCategory.RaidWing4,
+				EncounterCategory.RaidWing5,
+				EncounterCategory.RaidWing6,
+				EncounterCategory.RaidWing7,
+			};
+
 		public static EncounterCategory GetEncounterCategory(this Encounter encounter)
 		{
 			if (Categories.TryGetValue(encounter, out var category))
@@ -62,6 +74,17 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 			}
 
 			throw new ArgumentException("Category not defined for the specified encounter", nameof(encounter));
+		}
+
+		public static bool IsRaid(this EncounterCategory category)
+		{
+			return RaidCategories.Contains(category);
+		}
+
+		public static bool IsRaid(this Encounter encounter)
+		{
+			var category = encounter.GetEncounterCategory();
+			return RaidCategories.Contains(category);
 		}
 	}
 }
