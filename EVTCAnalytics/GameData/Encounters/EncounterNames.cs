@@ -71,5 +71,17 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 					throw new ArgumentOutOfRangeException();
 			}
 		}
+
+		public static bool TryGetEncounterNameForLanguage(GameLanguage language, Encounter encounter, out string encounterName)
+		{
+			if (TryGetNamesForLanguage(language, out var names) && names.TryGetValue(encounter, out string name))
+			{
+				encounterName = name;
+				return true;
+			}
+
+			encounterName = null;
+			return false;
+		}
 	}
 }

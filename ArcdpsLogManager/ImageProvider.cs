@@ -34,6 +34,13 @@ namespace GW2Scratch.ArcdpsLogManager
 		private Lazy<Image> TinyIconWeaver { get; } = new Lazy<Image>(Resources.GetTinyIconWeaver);
 		private Lazy<Image> TinyIconChronomancer { get; } = new Lazy<Image>(Resources.GetTinyIconChronomancer);
 		private Lazy<Image> TinyIconMirage { get; } = new Lazy<Image>(Resources.GetTinyIconMirage);
+		private Lazy<Image> TinyIconRaid { get; } = new Lazy<Image>(Resources.GetTinyIconRaid);
+		private Lazy<Image> TinyIconFractals { get; } = new Lazy<Image>(Resources.GetTinyIconFractals);
+		private Lazy<Image> TinyIconLog { get; } = new Lazy<Image>(Resources.GetTinyIconGuildRegistrar);
+
+		public Image GetTinyLogIcon() => TinyIconLog.Value;
+		public Image GetTinyFractalsIcon() => TinyIconFractals.Value;
+		public Image GetTinyRaidIcon() => TinyIconRaid.Value;
 
 		public Image GetTinyProfessionIcon(Profession profession)
 		{

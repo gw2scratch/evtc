@@ -97,15 +97,23 @@ namespace GW2Scratch.ArcdpsLogManager
 
 			Menu = ConstructMenuBar();
 
-			formLayout.BeginVertical(new Padding(5), yscale: true);
+			var rightSide = new DynamicLayout();
+			rightSide.BeginVertical(new Padding(5, 0), new Size(0, 8), yscale: true);
 			{
-				formLayout.Add(ConstructLogFilters());
-				formLayout.Add(ConstructMainTabControl(), true);
+				rightSide.Add(ConstructLogFilters());
+				rightSide.Add(ConstructMainTabControl(), true);
 			}
-			formLayout.EndVertical();
+			rightSide.EndVertical();
 
 			formLayout.BeginVertical(new Padding(5), yscale: false);
 			{
+				formLayout.Add(new Splitter
+				{
+					Orientation = Orientation.Horizontal,
+					Panel1 = ConstructEncounterFilterTree(),
+					Panel2 = rightSide,
+					Position = 200
+				}, yscale: true);
 				formLayout.Add(ConstructStatusPanel());
 			}
 			formLayout.EndVertical();
@@ -132,6 +140,11 @@ namespace GW2Scratch.ArcdpsLogManager
 				}
 
 				ApiData?.SaveDataToFile();
+			};
+			LogCollectionsRecreated += (sender, args) =>
+			{
+				logsFiltered.Filter = Filters.FilterLog;
+				logsFiltered.Refresh();
 			};
 			LogSearchFinished += (sender, args) =>
 			{
@@ -218,19 +231,24 @@ namespace GW2Scratch.ArcdpsLogManager
 			return layout;
 		}
 
-		private LogFilterPanel ConstructLogFilters()
+		private LogEncounterFilterTree ConstructEncounterFilterTree()
 		{
-			var filterPanel = new LogFilterPanel(ImageProvider, LogNameProvider, Filters);
-			filterPanel.FiltersUpdated += (sender, args) => logsFiltered.Refresh();
+			var tree = new LogEncounterFilterTree(ImageProvider, Filters);
+			tree.FiltersUpdated += (sender, args) => logsFiltered.Refresh();
 			LogCollectionsRecreated += (sender, args) =>
 			{
-				filterPanel.UpdateLogs(logs);
-				logs.CollectionChanged += (s, a) => { filterPanel.UpdateLogs(logs); };
-
-				logsFiltered.Filter = Filters.FilterLog;
-				logsFiltered.Refresh();
+				tree.UpdateLogs(logs);
+				logs.CollectionChanged += (s, a) => { tree.UpdateLogs(logs); };
 			};
-			LogDataProcessor.Processed += (sender, args) => { Application.Instance.AsyncInvoke(() => filterPanel.UpdateLogs(logs)); };
+			LogDataProcessor.Processed += (sender, args) => { Application.Instance.AsyncInvoke(() => tree.UpdateLogs(logs)); };
+
+			return tree;
+		}
+
+		private LogFilterPanel ConstructLogFilters()
+		{
+			var filterPanel = new LogFilterPanel(ImageProvider, Filters);
+			filterPanel.FiltersUpdated += (sender, args) => logsFiltered.Refresh();
 
 			return filterPanel;
 		}

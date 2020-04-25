@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using GW2Scratch.ArcdpsLogManager.Logs.Filters.Groups;
 using GW2Scratch.ArcdpsLogManager.Logs.Naming;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
@@ -9,13 +11,12 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 	public class LogFilters : ILogFilter
 	{
 		public static readonly DateTime GuildWars2ReleaseDate = new DateTime(2012, 8, 28);
-		public const string EncounterFilterAll = "All";
 
 		public bool ShowParseUnparsedLogs { get; set; } = true;
 		public bool ShowParseParsingLogs { get; set; } = true;
 		public bool ShowParseParsedLogs { get; set; } = true;
 		public bool ShowParseFailedLogs { get; set; } = true;
-		public string EncounterFilter { get; set; } = EncounterFilterAll;
+		public List<LogGroup> LogGroups { get; set; } = new List<LogGroup> {new RootLogGroup(Enumerable.Empty<LogData>())};
 
 		public bool ShowSuccessfulLogs { get; set; } = true;
 		public bool ShowFailedLogs { get; set; } = true;
@@ -70,8 +71,8 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 
 		private bool FilterByEncounterName(LogData log)
 		{
-			return EncounterFilter == EncounterFilterAll ||
-			       log.ParsingStatus == ParsingStatus.Parsed && nameProvider.GetName(log) == EncounterFilter;
+			return LogGroups.Any(x => x.FilterLog(log))
+			       && log.ParsingStatus == ParsingStatus.Parsed;
 		}
 
 		private bool FilterByTime(LogData log)

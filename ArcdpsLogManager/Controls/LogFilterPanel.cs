@@ -1,30 +1,20 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using Eto.Drawing;
 using Eto.Forms;
-using GW2Scratch.ArcdpsLogManager.Logs;
 using GW2Scratch.ArcdpsLogManager.Logs.Filters;
-using GW2Scratch.ArcdpsLogManager.Logs.Naming;
 using GW2Scratch.ArcdpsLogManager.Sections;
 
 namespace GW2Scratch.ArcdpsLogManager.Controls
 {
 	public class LogFilterPanel : DynamicLayout
 	{
-		private readonly ILogNameProvider logNameProvider;
-		private readonly DropDown encounterFilterDropDown;
 		public event EventHandler FiltersUpdated;
 
 		private LogFilters Filters { get; }
 
-		public LogFilterPanel(ImageProvider imageProvider, ILogNameProvider logNameProvider, LogFilters filters)
+		public LogFilterPanel(ImageProvider imageProvider, LogFilters filters)
 		{
-			this.logNameProvider = logNameProvider;
 			Filters = filters;
-
-			encounterFilterDropDown = new DropDown {SelectedKey = LogFilters.EncounterFilterAll};
-			encounterFilterDropDown.SelectedKeyBinding.Bind(this, x => x.Filters.EncounterFilter);
 
 			var successCheckBox = new CheckBox {Text = "Success"};
 			successCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowSuccessfulLogs);
@@ -81,11 +71,6 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 						{
 							BeginHorizontal();
 							{
-								BeginGroup("Encounter");
-								{
-									Add(encounterFilterDropDown);
-								}
-								EndGroup();
 								BeginGroup("Result", new Padding(4, 0, 4, 2), spacing: new Size(4, 0));
 								{
 									BeginHorizontal();
@@ -150,36 +135,6 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				EndHorizontal();
 			}
 			EndGroup();
-		}
-
-		/// <summary>
-		/// Needs to be called to update selections that depend on the available logs, such as
-		/// filtering by encounter name.
-		/// </summary>
-		/// <param name="logs">A logs which will be filtered in the future.</param>
-		public void UpdateLogs(IEnumerable<LogData> logs)
-		{
-			string previousKey = encounterFilterDropDown.SelectedKey;
-
-			var encounterNames = new[] {LogFilters.EncounterFilterAll}
-				.Concat(logs
-					.Where(x => x.ParsingStatus == ParsingStatus.Parsed)
-					.Select(x => logNameProvider.GetName(x))
-					.Distinct()
-					.OrderBy(x => x)
-					.ToArray()
-				).ToArray();
-
-			encounterFilterDropDown.DataStore = encounterNames;
-
-			if (encounterNames.Contains(previousKey))
-			{
-				encounterFilterDropDown.SelectedKey = previousKey;
-			}
-			else
-			{
-				encounterFilterDropDown.SelectedKey = LogFilters.EncounterFilterAll;
-			}
 		}
 
 		private void OnFiltersUpdated()

@@ -108,5 +108,17 @@
     <Content Include="Images\Weaver_tango_icon_20px.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Remove="Images\fractals_icon_32px.png" />
+    <Content Include="Images\fractals_icon_32px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="Images\guild_registrar_icon_26px.png" />
+    <Content Include="Images\guild_registrar_icon_26px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="Images\raid_icon_32px.png" />
+    <Content Include="Images\raid_icon_32px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 </Project>

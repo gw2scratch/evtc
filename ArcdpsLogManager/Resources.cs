@@ -158,5 +158,20 @@ namespace GW2Scratch.ArcdpsLogManager
 		{
 			return GetImage("Mirage_tango_icon_20px.png");
 		}
+
+		public static Image GetTinyIconRaid()
+		{
+			return GetImage("raid_icon_32px.png");
+		}
+
+		public static Image GetTinyIconFractals()
+		{
+			return GetImage("fractals_icon_32px.png");
+		}
+
+		public static Image GetTinyIconGuildRegistrar()
+		{
+			return GetImage("guild_registrar_icon_26px.png");
+		}
 	}
 }
