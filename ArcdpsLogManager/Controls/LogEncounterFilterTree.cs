@@ -32,8 +32,6 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 		private readonly ImageProvider imageProvider;
 		private LogFilters Filters { get; }
 
-		public event EventHandler FiltersUpdated;
-
 		public LogEncounterFilterTree(ImageProvider imageProvider, LogFilters filters)
 		{
 			this.imageProvider = imageProvider;
@@ -69,7 +67,6 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			SelectionChanged += (sender, args) =>
 			{
 				Filters.LogGroups = SelectedItems.Select(x => ((GroupFilterTreeItem) x).LogGroup).ToList();
-				OnFiltersUpdated();
 			};
 		}
 
@@ -77,7 +74,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 		/// Needs to be called to update selections that depend on the available logs, such as
 		/// filtering by encounter name.
 		/// </summary>
-		/// <param name="logs">Logs which will be filtered in the future.</param>
+		/// <param name="logs">Logs to be available for filtering.</param>
 		public void UpdateLogs(IReadOnlyList<LogData> logs)
 		{
 			// We construct a tree of groups. Everything is under an "All logs" node that can be used to easily select all.
@@ -127,12 +124,6 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			}
 
 			return null;
-		}
-
-
-		private void OnFiltersUpdated()
-		{
-			FiltersUpdated?.Invoke(this, EventArgs.Empty);
 		}
 	}
 }

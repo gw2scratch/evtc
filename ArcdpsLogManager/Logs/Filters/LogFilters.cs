@@ -1,39 +1,167 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using GW2Scratch.ArcdpsLogManager.Logs.Filters.Groups;
-using GW2Scratch.ArcdpsLogManager.Logs.Naming;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
+using JetBrains.Annotations;
 
 namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 {
-	public class LogFilters : ILogFilter
+	public sealed class LogFilters : ILogFilter, INotifyPropertyChanged
 	{
 		public static readonly DateTime GuildWars2ReleaseDate = new DateTime(2012, 8, 28);
 
-		public bool ShowParseUnparsedLogs { get; set; } = true;
-		public bool ShowParseParsingLogs { get; set; } = true;
-		public bool ShowParseParsedLogs { get; set; } = true;
-		public bool ShowParseFailedLogs { get; set; } = true;
-		public List<LogGroup> LogGroups { get; set; } = new List<LogGroup> {new RootLogGroup(Enumerable.Empty<LogData>())};
-
-		public bool ShowSuccessfulLogs { get; set; } = true;
-		public bool ShowFailedLogs { get; set; } = true;
-		public bool ShowUnknownLogs { get; set; } = true;
-
-		public bool ShowNormalModeLogs { get; set; } = true;
-		public bool ShowChallengeModeLogs { get; set; } = true;
-
-		public DateTime? MinDateTimeFilter { get; set; } = GuildWars2ReleaseDate;
-		public DateTime? MaxDateTimeFilter { get; set; } = DateTime.Now.Date.AddDays(1);
-
-		private readonly ILogNameProvider nameProvider;
+		private bool showParseUnparsedLogs = true;
+		private bool showParseParsingLogs = true;
+		private bool showParseParsedLogs = true;
+		private bool showParseFailedLogs = true;
+		private IReadOnlyList<LogGroup> logGroups = new List<LogGroup> {new RootLogGroup(Enumerable.Empty<LogData>())};
+		private bool showSuccessfulLogs = true;
+		private bool showFailedLogs = true;
+		private bool showUnknownLogs = true;
+		private bool showNormalModeLogs = true;
+		private bool showChallengeModeLogs = true;
+		private DateTime? minDateTime = GuildWars2ReleaseDate;
+		private DateTime? maxDateTime = DateTime.Now.Date.AddDays(1);
 		private readonly IReadOnlyList<ILogFilter> additionalFilters;
 
-		public LogFilters(ILogNameProvider nameProvider, params ILogFilter[] additionalFilters)
+		public bool ShowParseUnparsedLogs
 		{
-			this.nameProvider = nameProvider;
+			get => showParseUnparsedLogs;
+			set
+			{
+				if (value == showParseUnparsedLogs) return;
+				showParseUnparsedLogs = value;
+				OnPropertyChanged();
+			}
+		}
+
+		public bool ShowParseParsingLogs
+		{
+			get => showParseParsingLogs;
+			set
+			{
+				if (value == showParseParsingLogs) return;
+				showParseParsingLogs = value;
+				OnPropertyChanged();
+			}
+		}
+
+		public bool ShowParseParsedLogs
+		{
+			get => showParseParsedLogs;
+			set
+			{
+				if (value == showParseParsedLogs) return;
+				showParseParsedLogs = value;
+				OnPropertyChanged();
+			}
+		}
+
+		public bool ShowParseFailedLogs
+		{
+			get => showParseFailedLogs;
+			set
+			{
+				if (value == showParseFailedLogs) return;
+				showParseFailedLogs = value;
+				OnPropertyChanged();
+			}
+		}
+
+		public IReadOnlyList<LogGroup> LogGroups
+		{
+			get => logGroups;
+			set
+			{
+				if (Equals(value, logGroups)) return;
+				logGroups = value;
+				OnPropertyChanged();
+			}
+		}
+
+		public bool ShowSuccessfulLogs
+		{
+			get => showSuccessfulLogs;
+			set
+			{
+				if (value == showSuccessfulLogs) return;
+				showSuccessfulLogs = value;
+				OnPropertyChanged();
+			}
+		}
+
+		public bool ShowFailedLogs
+		{
+			get => showFailedLogs;
+			set
+			{
+				if (value == showFailedLogs) return;
+				showFailedLogs = value;
+				OnPropertyChanged();
+			}
+		}
+
+		public bool ShowUnknownLogs
+		{
+			get => showUnknownLogs;
+			set
+			{
+				if (value == showUnknownLogs) return;
+				showUnknownLogs = value;
+				OnPropertyChanged();
+			}
+		}
+
+		public bool ShowNormalModeLogs
+		{
+			get => showNormalModeLogs;
+			set
+			{
+				if (value == showNormalModeLogs) return;
+				showNormalModeLogs = value;
+				OnPropertyChanged();
+			}
+		}
+
+		public bool ShowChallengeModeLogs
+		{
+			get => showChallengeModeLogs;
+			set
+			{
+				if (value == showChallengeModeLogs) return;
+				showChallengeModeLogs = value;
+				OnPropertyChanged();
+			}
+		}
+
+		public DateTime? MinDateTime
+		{
+			get => minDateTime;
+			set
+			{
+				if (Nullable.Equals(value, minDateTime)) return;
+				minDateTime = value;
+				OnPropertyChanged();
+			}
+		}
+
+		public DateTime? MaxDateTime
+		{
+			get => maxDateTime;
+			set
+			{
+				if (Nullable.Equals(value, maxDateTime)) return;
+				maxDateTime = value;
+				OnPropertyChanged();
+			}
+		}
+
+		public LogFilters(params ILogFilter[] additionalFilters)
+		{
 			this.additionalFilters = additionalFilters;
 		}
 
@@ -77,8 +205,8 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 
 		private bool FilterByTime(LogData log)
 		{
-			return !(log.EncounterStartTime.LocalDateTime < MinDateTimeFilter) &&
-			       !(log.EncounterStartTime.LocalDateTime > MaxDateTimeFilter);
+			return !(log.EncounterStartTime.LocalDateTime < MinDateTime) &&
+			       !(log.EncounterStartTime.LocalDateTime > MaxDateTime);
 		}
 
 		private bool FilterByEncounterMode(LogData log)
@@ -86,6 +214,14 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 			return (log.EncounterMode == EncounterMode.Normal && ShowNormalModeLogs) ||
 			       (log.EncounterMode == EncounterMode.Unknown && ShowNormalModeLogs) ||
 			       (log.EncounterMode == EncounterMode.Challenge && ShowChallengeModeLogs);
+		}
+
+		public event PropertyChangedEventHandler PropertyChanged;
+
+		[NotifyPropertyChangedInvocator]
+		private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+		{
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 		}
 	}
 }
