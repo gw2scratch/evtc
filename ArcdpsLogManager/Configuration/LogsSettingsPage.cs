@@ -68,7 +68,7 @@ namespace GW2Scratch.ArcdpsLogManager.Configuration
 						       "are also searched, do not choose a parent directory containing more " +
 						       "irrelevant files unless you like extra waiting.",
 						Wrap = WrapMode.Word,
-						Height = 50
+						Height = 70
 					});
 					layout.AddRow(locationTextBox);
 					layout.AddRow(locationDialogButton);
