@@ -24,7 +24,7 @@ namespace GW2Scratch.ArcdpsLogManager.Updates
 			                     && log.Encounter == Encounter.Deimos
 			                     && log.EncounterResult == EncounterResult.Success,
 				"Very rarely, Deimos logs were detected as success when they were in fact a failure."),
-			new LogUpdate(log => log.ParsingVersion < new Version(0, 8)
+			new LogUpdate(log => log.ParsingVersion < new Version(0, 7, 2)
 			                     && log.Encounter == Encounter.Skorvald,
 				"Skorvald the Shattered logs did not differentiate between normal and challenge mode.")
 		};
