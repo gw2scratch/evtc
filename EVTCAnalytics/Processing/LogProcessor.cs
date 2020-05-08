@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.Http.Headers;
 using GW2Scratch.EVTCAnalytics.Events;
 using GW2Scratch.EVTCAnalytics.Exceptions;
 using GW2Scratch.EVTCAnalytics.GameData;
@@ -414,6 +415,13 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 
 				if (item.IsStateChange == StateChange.LogEnd)
 				{
+					if (item.Value == 0 && item.BuffDmg == 0)
+					{
+						// This is an erroneous extra log end without any data,
+						// we ignore it. Happened in every log with EVTC20200506.
+						continue;
+					}
+
 					if (context.LogEndTime != null)
 					{
 						throw new LogProcessingException("Multiple log end combat items found");
