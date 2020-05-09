@@ -32,8 +32,11 @@ namespace GW2Scratch.ArcdpsLogManager.Updates
 		public IEnumerable<LogUpdateList> GetUpdates(IEnumerable<LogData> logs)
 		{
 			// If there are multiple updates for a log, the log is added to the first one encountered.
+			var groups = logs
+				.Where(x => x.ParsingVersion != null)
+				.GroupBy(log => Updates.FirstOrDefault(u => u.Filter.FilterLog(log)));
 
-			foreach (var group in logs.GroupBy(log => Updates.FirstOrDefault(u => u.Filter.FilterLog(log))))
+			foreach (var group in groups)
 			{
 				var update = group.Key;
 				if (update != null)
