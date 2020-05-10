@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Eto.Forms;
+using Gtk;
 using GW2Scratch.ArcdpsLogManager.Logs;
 using GW2Scratch.ArcdpsLogManager.Logs.Filters;
 using GW2Scratch.ArcdpsLogManager.Logs.Filters.Groups;
@@ -69,6 +70,48 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			{
 				Filters.LogGroups = SelectedItems.Select(x => ((GroupFilterTreeItem) x).LogGroup).ToList();
 			};
+
+			var expandAll = new ButtonMenuItem {Text = "Expand all"};
+			expandAll.Click += (sender, args) =>
+			{
+				DoForAllItems(item =>
+				{
+					item.Expanded = true;
+				});
+				ReloadData();
+			};
+			var collapseAll = new ButtonMenuItem {Text = "Collapse all"};
+			collapseAll.Click += (sender, args) =>
+			{
+				DoForAllItems(item =>
+				{
+					item.Expanded = false;
+				});
+				ReloadData();
+			};
+			ContextMenu = new ContextMenu();
+			ContextMenu.Items.Add(expandAll);
+			ContextMenu.Items.Add(collapseAll);
+		}
+
+		private void DoForAllItems(Action<GroupFilterTreeItem> action)
+		{
+			if (DataStore.Count == 0)
+			{
+				return;
+			}
+
+			void DoForAllChildren(GroupFilterTreeItem item)
+			{
+				action(item);
+				foreach (var child in item.Children)
+				{
+					DoForAllChildren((GroupFilterTreeItem) child);
+				}
+			}
+
+			var root = (GroupFilterTreeItem) DataStore[0];
+			DoForAllChildren(root);
 		}
 
 		/// <summary>
