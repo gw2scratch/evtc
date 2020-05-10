@@ -69,7 +69,7 @@ namespace GW2Scratch.ArcdpsLogManager.Dialogs
 				int unloadedLogs = managerForm.LogCache?.GetUnloadedLogCount(managerForm.LoadedLogs) ?? 0;
 				if (MessageBox.Show(
 					    $"Prune the cache? {unloadedLogs} results of currently unloaded logs will be forgotten. " +
-					    "If the logs are added back in the future, they will have to be parsed again.",
+					    "If the logs are added back in the future, they will have to be processed again.",
 					    MessageBoxButtons.OKCancel) == DialogResult.Ok)
 				{
 					int pruned = managerForm.LogCache?.Prune(managerForm.LoadedLogs) ?? 0;
@@ -85,7 +85,7 @@ namespace GW2Scratch.ArcdpsLogManager.Dialogs
 				int logCount = managerForm.LogCache?.LogCount ?? 0;
 				if (MessageBox.Show(
 					    $"Delete the cache? The results of all {logCount} cached logs will be forgotten. " +
-					    "All logs will have to be parsed again.",
+					    "All logs will have to be processed again.",
 					    MessageBoxButtons.OKCancel) == DialogResult.Ok)
 				{
 					managerForm.LogCache?.Clear();

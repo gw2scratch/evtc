@@ -34,10 +34,10 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 					layout.AddRow("File size", $"{logData.FileInfo.Length / 1000f / 1000f:0.000} MB");
 					layout.AddRow("File creation", $"{logData.FileInfo.CreationTime}");
 					layout.AddRow(null);
-					layout.AddRow("Parsing status", $"{logData.ParsingStatus}");
-					layout.AddRow("Parsing time", $"{logData.ParseMilliseconds} ms");
-					layout.AddRow("Parsed at date", $"{logData.ParseTime}");
-					layout.AddRow("Parsed with manager version", $"{logData.ParsingVersion}");
+					layout.AddRow("Processing status", $"{logData.ParsingStatus}");
+					layout.AddRow("Processing time", $"{logData.ParseMilliseconds} ms");
+					layout.AddRow("Processed at date", $"{logData.ParseTime}");
+					layout.AddRow("Processed with manager version", $"{logData.ParsingVersion}");
 					layout.AddRow("dps.report upload state", logData.DpsReportEIUpload.UploadState.ToString());
 					layout.AddRow("dps.report upload time", logData.DpsReportEIUpload.UploadTime?.ToString(CultureInfo.InvariantCulture));
 					layout.AddRow("dps.report url", logData.DpsReportEIUpload.Url);
@@ -45,7 +45,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 					{
 						layout.EndVertical();
 						layout.BeginVertical(new Padding(5), yscale: true);
-						layout.AddRow("Parsing exception");
+						layout.AddRow("Processing exception");
 						string exceptionText = $"{logData.ParsingException.ExceptionName}: {logData.ParsingException.Message}\n" +
 						                    $"{logData.ParsingException.StackTrace}";
 						layout.AddRow(new TextArea {Text = exceptionText, ReadOnly = true});

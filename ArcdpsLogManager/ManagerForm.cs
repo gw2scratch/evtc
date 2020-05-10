@@ -161,7 +161,7 @@ namespace GW2Scratch.ArcdpsLogManager
 					// log processing catches up with searching for logs.
 					processingLabel.Text = finished && logCount > 0
 						? $"{logCount} logs found."
-						: $"Parsing logs {args.TotalProcessedItems}/{args.TotalScheduledItems}...";
+						: $"Processing logs {args.TotalProcessedItems}/{args.TotalScheduledItems}...";
 				});
 			}
 

@@ -97,7 +97,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 
 			DynamicTable debugSection;
 			var debugButton = new Button {Text = "Debug data"};
-			var reparseButton = new Button {Text = "Reparse"};
+			var reparseButton = new Button {Text = "Reprocess"};
 
 			BeginVertical(spacing: new Size(0, 30), yscale: true);
 			{
@@ -121,8 +121,8 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 						{
 							BeginVertical(xscale: true, spacing: new Size(5, 0));
 							{
-								AddRow("Time spent parsing", parseTimeLabel);
-								AddRow("Parsing status", parseStatusLabel);
+								AddRow("Time spent processing", parseTimeLabel);
+								AddRow("Processing status", parseStatusLabel);
 							}
 							EndVertical();
 							BeginVertical();

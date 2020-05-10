@@ -99,17 +99,17 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			EndVertical();
 			*/
 
-			var unparsedCheckBox = new CheckBox {Text = "Unparsed"};
+			var unparsedCheckBox = new CheckBox {Text = "Unprocessed"};
 			unparsedCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowParseUnparsedLogs);
-			var parsingCheckBox = new CheckBox {Text = "Parsing"};
+			var parsingCheckBox = new CheckBox {Text = "Processing"};
 			parsingCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowParseParsingLogs);
-			var parsedCheckBox = new CheckBox {Text = "Parsed"};
+			var parsedCheckBox = new CheckBox {Text = "Processed"};
 			parsedCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowParseParsedLogs);
 			var failedCheckBox = new CheckBox {Text = "Failed"};
 			failedCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowParseFailedLogs);
 			BeginVertical(new Padding(5));
 			{
-				BeginGroup("Parsing status", new Padding(5));
+				BeginGroup("Processing status", new Padding(5));
 				{
 					AddRow(unparsedCheckBox, parsingCheckBox, parsedCheckBox, failedCheckBox);
 				}

@@ -89,7 +89,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			Width = 350;
 			Visible = false;
 
-			var reparseButton = new Button {Text = "Reparse all"};
+			var reparseButton = new Button {Text = "Reprocess all"};
 			reparseButton.Click += (sender, args) =>
 			{
 				foreach (var log in logData)
