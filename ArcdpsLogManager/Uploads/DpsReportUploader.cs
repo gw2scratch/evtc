@@ -26,7 +26,10 @@ namespace GW2Scratch.ArcdpsLogManager.Uploads
 
 		private const string UploadEndpoint = "/uploadContent";
 
-		private readonly HttpClient httpClient = new HttpClient();
+		private readonly HttpClient httpClient = new HttpClient
+		{
+			Timeout = TimeSpan.MaxValue
+		};
 
 		public string Domain { get; set; }
 
