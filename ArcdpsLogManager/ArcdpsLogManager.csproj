@@ -24,100 +24,97 @@
     <ProjectReference Include="..\EVTCInspector\EVTCInspector.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Images\Berserker_tango_icon_20px.png">
+    <Content Include="Images\ArenaNet\fractals_icon_32px.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\Chronomancer_tango_icon_20px.png">
+    <Content Include="Images\ArenaNet\guild_registrar_icon_26px.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\Daredevil_tango_icon_20px.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Deadeye_tango_icon_20px.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Dragonhunter_tango_icon_20px.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Druid_tango_icon_20px.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Elementalist_tango_icon_20px.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Engineer_tango_icon_20px.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Firebrand_tango_icon_20px.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Guardian_tango_icon_20px.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Herald_tango_icon_20px.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Holosmith_tango_icon_20px.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Mesmer_tango_icon_20px.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Mirage_tango_icon_20px.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\Necromancer_tango_icon_20px.png">
+    <Content Include="Images\ArenaNet\raid_icon_32px.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\program_icon.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\Ranger_tango_icon_20px.png">
+    <Content Include="Images\Tango\Berserker_tango_icon_20px.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\Reaper_tango_icon_20px.png">
+    <Content Include="Images\Tango\Chronomancer_tango_icon_20px.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\Renegade_tango_icon_20px.png">
+    <Content Include="Images\Tango\Daredevil_tango_icon_20px.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\Revenant_tango_icon_20px.png">
+    <Content Include="Images\Tango\Deadeye_tango_icon_20px.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\Scourge_tango_icon_20px.png">
+    <Content Include="Images\Tango\Dragonhunter_tango_icon_20px.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\Scrapper_tango_icon_20px.png">
+    <Content Include="Images\Tango\Druid_tango_icon_20px.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\Soulbeast_tango_icon_20px.png">
+    <Content Include="Images\Tango\Elementalist_tango_icon_20px.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\Spellbreaker_tango_icon_20px.png">
+    <Content Include="Images\Tango\Engineer_tango_icon_20px.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\Tempest_tango_icon_20px.png">
+    <Content Include="Images\Tango\Firebrand_tango_icon_20px.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\Thief_tango_icon_20px.png">
+    <Content Include="Images\Tango\Guardian_tango_icon_20px.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\Warrior_tango_icon_20px.png">
+    <Content Include="Images\Tango\Herald_tango_icon_20px.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\Weaver_tango_icon_20px.png">
+    <Content Include="Images\Tango\Holosmith_tango_icon_20px.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Remove="Images\fractals_icon_32px.png" />
-    <Content Include="Images\fractals_icon_32px.png">
+    <Content Include="Images\Tango\Mesmer_tango_icon_20px.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Remove="Images\guild_registrar_icon_26px.png" />
-    <Content Include="Images\guild_registrar_icon_26px.png">
+    <Content Include="Images\Tango\Mirage_tango_icon_20px.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Remove="Images\raid_icon_32px.png" />
-    <Content Include="Images\raid_icon_32px.png">
+    <Content Include="Images\Tango\Necromancer_tango_icon_20px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\Tango\Ranger_tango_icon_20px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\Tango\Reaper_tango_icon_20px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\Tango\Renegade_tango_icon_20px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\Tango\Revenant_tango_icon_20px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\Tango\Scourge_tango_icon_20px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\Tango\Scrapper_tango_icon_20px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\Tango\Soulbeast_tango_icon_20px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\Tango\Spellbreaker_tango_icon_20px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\Tango\Tempest_tango_icon_20px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\Tango\Thief_tango_icon_20px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\Tango\Warrior_tango_icon_20px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\Tango\Weaver_tango_icon_20px.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

@@ -1,0 +1,11 @@
+The files in this directory are NOT available under the MIT license.
+
+They come from the Guild Wars 2 API and as such they are copyrighted by ArenaNet.
+
+©2010–2018 ArenaNet, LLC. All rights reserved. Guild Wars, Guild Wars 2,
+Heart of Thorns, Guild Wars 2: Path of Fire, ArenaNet, NCSOFT, the Interlocking NC Logo,
+and all associated logos and designs are trademarks or registered trademarks of NCSOFT Corporation.
+All other trademarks are the property of their respective owners.
+
+The Terms of Use are further detailed on the following URL:
+https://www.guildwars2.com/en/legal/guild-wars-2-content-terms-of-use/
