@@ -12,7 +12,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 {
 	public class LogEncounterFilterTree : TreeGridView
 	{
-		public class GroupFilterTreeItem : TreeGridItem
+		private sealed class GroupFilterTreeItem : TreeGridItem
 		{
 			public LogGroup LogGroup { get; }
 			public Image Icon { get; set; }
@@ -21,11 +21,16 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			public GroupFilterTreeItem(LogGroup group)
 			{
 				LogGroup = group;
+
+				if (LogGroup is RootLogGroup || LogGroup is RaidLogGroup)
+				{
+					Expanded = true;
+				}
+
 				foreach (var subgroup in group.Subgroups)
 				{
 					Children.Add(new GroupFilterTreeItem(subgroup));
 				}
-
 			}
 		}
 
@@ -59,10 +64,6 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			});
 
 			RowHeight = 22;
-
-			// TODO: Fully implement binding to filters (<- direction when creating)
-			// TODO: Save selection state
-			// TODO: Save expansion state
 
 			SelectionChanged += (sender, args) =>
 			{
