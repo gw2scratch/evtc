@@ -60,7 +60,13 @@ namespace GW2Scratch.ArcdpsLogManager.Uploads
 			using (var content = new MultipartFormDataContent())
 			using (var stream = log.FileInfo.OpenRead())
 			{
-				content.Add(new StreamContent(stream), "file", log.FileInfo.Name);
+				// In case a log file does not have an extension, add the standard .evtc.
+				// dps.report is unable to handle files without an extension.
+				string filename = log.FileInfo.Extension == ""
+					? $"{log.FileInfo.Name}.evtc"
+					: log.FileInfo.Name;
+
+				content.Add(new StreamContent(stream), "file", filename);
 				response = await httpClient.PostAsync(query, content, cancellationToken);
 			}
 
