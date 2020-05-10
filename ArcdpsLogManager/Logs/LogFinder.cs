@@ -18,8 +18,8 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 		/// <returns>Logs that were found.</returns>
 		public IEnumerable<LogData> GetFromDirectory(string directoryPath, LogCache logCache = null)
 		{
-			var files = Directory.EnumerateFiles(directoryPath, "*evtc*", SearchOption.AllDirectories)
-				.Where(x => x.EndsWith(".evtc") || x.EndsWith(".evtc.zip") || x.EndsWith(".zevtc"));
+			var files = Directory.EnumerateFiles(directoryPath, "*", SearchOption.AllDirectories)
+				.Where(IsLikelyEvtcLog);
 
 			return files.Select(file =>
 			{
@@ -35,6 +35,29 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 
 				return new LogData(fileInfo);
 			});
+		}
+
+		private bool IsLikelyEvtcLog(string filename)
+		{
+			if (filename.EndsWith(".evtc") || filename.EndsWith(".evtc.zip") || filename.EndsWith(".zevtc"))
+			{
+				return true;
+			}
+
+			try
+			{
+				using var reader = new StreamReader(filename);
+				var buffer = new char[4];
+				reader.Read(buffer, 0, buffer.Length);
+
+				// TODO: Check contents of zips as well. Not as important because arcdps has never created those without a specified extension.
+
+				return buffer[0] == 'E' && buffer[1] == 'V' && buffer[2] == 'T' && buffer[3] == 'C';
+			}
+			catch
+			{
+				return false;
+			}
 		}
 
 		public IEnumerable<LogData> GetTesting()
