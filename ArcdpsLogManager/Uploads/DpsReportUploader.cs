@@ -28,7 +28,7 @@ namespace GW2Scratch.ArcdpsLogManager.Uploads
 
 		private readonly HttpClient httpClient = new HttpClient
 		{
-			Timeout = TimeSpan.MaxValue
+			Timeout = Timeout.InfiniteTimeSpan
 		};
 
 		public string Domain { get; set; }
