@@ -23,6 +23,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			public List<string> LogRootPaths { get; set; } = new List<string>();
 			public bool ShowDebugData { get; set; } = false;
 			public bool ShowGuildTagsInLogDetail { get; set; } = false;
+			public bool ShowFilterSidebar { get; set; } = true;
 			public bool UseGW2Api { get; set; } = true;
 			public string DpsReportUserToken { get; set; } = string.Empty;
 			public string DpsReportDomain { get; set; } = DpsReportUploader.DefaultDomain.Domain;
@@ -56,6 +57,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			ShowDebugDataChanged += (sender, args) => SaveToFile();
 			HiddenLogListColumnsChanged += (sender, args) => SaveToFile();
 			ShowGuildTagsInLogDetailChanged += (sender, args) => SaveToFile();
+			ShowFilterSidebarChanged += (sender, args) => SaveToFile();
 			UseGW2ApiChanged += (sender, args) => SaveToFile();
 			DpsReportUserTokenChanged += (sender, args) => SaveToFile();
 			DpsReportDomainChanged += (sender, args) => SaveToFile();
@@ -152,6 +154,19 @@ namespace GW2Scratch.ArcdpsLogManager
 			}
 		}
 
+		public static bool ShowFilterSidebar
+		{
+			get => Values.ShowFilterSidebar;
+			set
+			{
+				if (Values.ShowFilterSidebar != value)
+				{
+					Values.ShowFilterSidebar = value;
+					OnShowFilterSidebarChanged();
+				}
+			}
+		}
+
 		public static bool UseGW2Api
 		{
 			get => Values.UseGW2Api;
@@ -208,6 +223,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		public static event EventHandler<EventArgs> ShowDebugDataChanged;
 		public static event EventHandler<EventArgs> HiddenLogListColumnsChanged;
 		public static event EventHandler<EventArgs> ShowGuildTagsInLogDetailChanged;
+		public static event EventHandler<EventArgs> ShowFilterSidebarChanged;
 		public static event EventHandler<EventArgs> UseGW2ApiChanged;
 		public static event EventHandler<EventArgs> DpsReportUserTokenChanged;
 		public static event EventHandler<EventArgs> DpsReportDomainChanged;
@@ -231,6 +247,11 @@ namespace GW2Scratch.ArcdpsLogManager
 		private static void OnShowGuildTagsInLogDetailChanged()
 		{
 			ShowGuildTagsInLogDetailChanged?.Invoke(null, EventArgs.Empty);
+		}
+
+		private static void OnShowFilterSidebarChanged()
+		{
+			ShowFilterSidebarChanged?.Invoke(null, EventArgs.Empty);
 		}
 
 		private static void OnDpsReportUserTokenChanged()

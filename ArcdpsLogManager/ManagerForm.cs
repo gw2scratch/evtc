@@ -100,13 +100,7 @@ namespace GW2Scratch.ArcdpsLogManager
 
 			formLayout.BeginVertical(new Padding(5), yscale: false);
 			{
-				formLayout.Add(new Splitter
-				{
-					Orientation = Orientation.Horizontal,
-					Panel1 = ConstructLogFilters(),
-					Panel2 = ConstructMainTabControl(),
-					Position = 300
-				}, yscale: true);
+				formLayout.Add(ConstructMainSplitter(), yscale: true);
 				formLayout.Add(ConstructStatusPanel());
 			}
 			formLayout.EndVertical();
@@ -150,6 +144,80 @@ namespace GW2Scratch.ArcdpsLogManager
 
 			// Collection initialization
 			RecreateLogCollections(new ObservableCollection<LogData>(logs));
+		}
+
+		private Splitter ConstructMainSplitter()
+		{
+			var filters = ConstructLogFilters();
+			var tabs = ConstructMainTabControl();
+
+			var sidebar = new Panel {Content = filters};
+			var filterPage = new TabPage {Text = "Filters", Visible = false};
+			tabs.Pages.Insert(0, filterPage);
+
+			var mainSplitter = new Splitter
+			{
+				Orientation = Orientation.Horizontal,
+				Panel1 = sidebar,
+				Panel2 = tabs,
+				Position = 300
+			};
+
+			// This is a workaround for an Eto 2.4 bug.
+			// See comment below when value is checked.
+			bool updatingSidebar = true;
+			void UpdateSidebarFromSetting()
+			{
+				updatingSidebar = true;
+				// The filters from the sidebar are moved into
+				// their own tab when the sidebar is collapsed
+				if (Settings.ShowFilterSidebar)
+				{
+					filterPage.Content = null;
+					filterPage.Visible = false;
+					sidebar.Content = filters;
+					// This may be called when enlarging the sidebar, we don't want to change the size in that case.
+					if (mainSplitter.Position == 0)
+					{
+						mainSplitter.Position = 300;
+					}
+				}
+				else
+				{
+					sidebar.Content = null;
+					mainSplitter.Position = 0;
+					filterPage.Content = filters;
+					filterPage.Visible = true;
+				}
+
+				updatingSidebar = false;
+			}
+
+			UpdateSidebarFromSetting();
+			Settings.ShowFilterSidebarChanged += (sender, args) => UpdateSidebarFromSetting();
+
+			mainSplitter.PositionChanged += (sender, args) =>
+			{
+				if (updatingSidebar)
+				{
+					// This is a workaround for an Eto 2.4 bug on WPF where setting mainSplitter.Position = 300
+					// invokes this event while Position is still set to 0. This results in an infinite loop and
+					// ultimately a stack-overflow exception.
+					// TODO: Remove on Eto 2.5 if fixed.
+					return;
+				}
+
+				if (mainSplitter.Position <= 10)
+				{
+					Settings.ShowFilterSidebar = false;
+				}
+				else
+				{
+					Settings.ShowFilterSidebar = true;
+				}
+			};
+
+			return mainSplitter;
 		}
 
 		private DynamicLayout ConstructStatusPanel()
@@ -242,10 +310,10 @@ namespace GW2Scratch.ArcdpsLogManager
 			var updateMenuItem = new ButtonMenuItem {Text = "&Update"};
 			updateMenuItem.Click += (sender, args) => { new UpdateDialog(LogDataProcessor, LogDataUpdater.GetUpdates(logs).ToList()).ShowModal(this); };
 
-			var logCacheMenuItem = new ButtonMenuItem {Text = "Log &cache"};
+			var logCacheMenuItem = new ButtonMenuItem {Text = "&Log cache"};
 			logCacheMenuItem.Click += (sender, args) => { new CacheDialog(this).ShowModal(this); };
 
-			var apiDataMenuItem = new ButtonMenuItem {Text = "&API data"};
+			var apiDataMenuItem = new ButtonMenuItem {Text = "&API cache"};
 			apiDataMenuItem.Click += (sender, args) => { new ApiDialog(ApiProcessor).ShowModal(this); };
 
 			var settingsFormMenuItem = new ButtonMenuItem {Text = "&Settings"};
@@ -259,6 +327,11 @@ namespace GW2Scratch.ArcdpsLogManager
 			showGuildTagsMenuItem.Checked = Settings.ShowGuildTagsInLogDetail;
 			showGuildTagsMenuItem.CheckedChanged += (sender, args) => { Settings.ShowGuildTagsInLogDetail = showGuildTagsMenuItem.Checked; };
 
+			var showSidebarMenuItem = new CheckMenuItem {Text = "Show &filters in a sidebar"};
+			showSidebarMenuItem.Checked = Settings.ShowFilterSidebar;
+			Settings.ShowFilterSidebarChanged += (sender, args) => showSidebarMenuItem.Checked = Settings.ShowFilterSidebar;
+			showSidebarMenuItem.CheckedChanged += (sender, args) => { Settings.ShowFilterSidebar = showSidebarMenuItem.Checked; };
+
 			// TODO: Implement
 			/*
 			var arcdpsSettingsMenuItem = new ButtonMenuItem {Text = "&arcdps settings", Enabled = false};
@@ -269,19 +342,23 @@ namespace GW2Scratch.ArcdpsLogManager
 
 			var dataMenuItem = new ButtonMenuItem {Text = "&Data"};
 			dataMenuItem.Items.Add(updateMenuItem);
+			dataMenuItem.Items.Add(new SeparatorMenuItem());
 			dataMenuItem.Items.Add(logCacheMenuItem);
 			dataMenuItem.Items.Add(apiDataMenuItem);
 
+			var viewMenuItem = new ButtonMenuItem {Text = "&View"};
+			viewMenuItem.Items.Add(showSidebarMenuItem);
+			viewMenuItem.Items.Add(showGuildTagsMenuItem);
+			viewMenuItem.Items.Add(new SeparatorMenuItem());
+			viewMenuItem.Items.Add(debugDataMenuItem);
+
 			var settingsMenuItem = new ButtonMenuItem {Text = "&Settings"};
 			settingsMenuItem.Items.Add(settingsFormMenuItem);
-			settingsMenuItem.Items.Add(showGuildTagsMenuItem);
-			settingsMenuItem.Items.Add(new SeparatorMenuItem());
-			settingsMenuItem.Items.Add(debugDataMenuItem);
 
 			var helpMenuItem = new ButtonMenuItem {Text = "Help"};
 			helpMenuItem.Items.Add(new About());
 
-			return new MenuBar(dataMenuItem, settingsMenuItem, helpMenuItem);
+			return new MenuBar(dataMenuItem, viewMenuItem, settingsMenuItem, helpMenuItem);
 		}
 
 		private TabControl ConstructMainTabControl()
@@ -355,7 +432,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			tabs.Pages.Add(servicePage);
 
 			// This is needed to avoid a Gtk platform issue where the tab is changed to the last one.
-			Shown += (sender, args) => tabs.SelectedIndex = 0;
+			Shown += (sender, args) => tabs.SelectedIndex = 1;
 
 			return tabs;
 		}
