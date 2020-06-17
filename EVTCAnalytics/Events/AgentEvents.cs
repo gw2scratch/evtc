@@ -97,6 +97,19 @@ namespace GW2Scratch.EVTCAnalytics.Events
 		}
 	}
 
+	public class AgentTagEvent : AgentEvent
+	{
+		/// <summary>
+		/// The ID of the tag may be volatile and change with each game build.
+		/// </summary>
+		public int Id { get; }
+
+		public AgentTagEvent(long time, Agent agent, int id) : base(time, agent)
+		{
+			Id = id;
+		}
+	}
+
 	public class InitialBuffEvent : AgentEvent
 	{
 		public Skill Skill { get; }

@@ -36,6 +36,10 @@
 		BuffFormula     = 31,
 		SkillInfo       = 32,
 		SkillTiming     = 33,
+		BreakbarState   = 34,
+		BreakbarPercent = 35,
+		Error           = 36,
+		Tag             = 37,
 		Unknown
 	};
 }
