@@ -1,5 +1,8 @@
 namespace GW2Scratch.EVTCAnalytics.Events
 {
+	/// <summary>
+	/// An event specifying a reward chest was awarded to the recording player.
+	/// </summary>
 	public class RewardEvent : Event
 	{
 		public ulong RewardId { get; }

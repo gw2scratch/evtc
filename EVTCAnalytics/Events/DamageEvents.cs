@@ -1,9 +1,11 @@
 using GW2Scratch.EVTCAnalytics.Model.Agents;
 using GW2Scratch.EVTCAnalytics.Model.Skills;
-using GW2Scratch.EVTCAnalytics.Model;
 
 namespace GW2Scratch.EVTCAnalytics.Events
 {
+	/// <summary>
+	/// An event specifying that an <see cref="Agent"/> avoided being damaged directly by a <see cref="Skill"/>.
+	/// </summary>
 	public class IgnoredPhysicalDamageEvent : PhysicalDamageEvent
 	{
 		public enum Reason
@@ -28,6 +30,9 @@ namespace GW2Scratch.EVTCAnalytics.Events
 		}
 	}
 
+	/// <summary>
+	/// An event specifying that an <see cref="Agent"/> was damaged directly by a <see cref="Skill"/>.
+	/// </summary>
 	public class PhysicalDamageEvent : DamageEvent
 	{
 		public enum Result
@@ -53,6 +58,9 @@ namespace GW2Scratch.EVTCAnalytics.Events
 		}
 	}
 
+	/// <summary>
+	/// An event specifying that an <see cref="Agent"/> avoided being damaged by a buff.
+	/// </summary>
 	public class IgnoredBuffDamageEvent : BuffDamageEvent
 	{
 		public enum Reason
@@ -73,6 +81,9 @@ namespace GW2Scratch.EVTCAnalytics.Events
 		}
 	}
 
+	/// <summary>
+	/// An event specifying that an <see cref="Agent"/> was damaged by a buff.
+	/// </summary>
 	public class BuffDamageEvent : DamageEvent
 	{
 		public BuffDamageEvent(long time, Agent attacker, Agent defender, Skill buff, int damage, bool isMoving,
@@ -82,6 +93,10 @@ namespace GW2Scratch.EVTCAnalytics.Events
 		}
 	}
 
+	/// <summary>
+	/// An event specifying that an <see cref="Agent"/> was damaged by a buff in an unscheduled update.
+	/// An example of this would buffs that not only do damage over time, but also trigger on skill casts.
+	/// </summary>
 	public class OffCycleBuffDamageEvent : BuffDamageEvent
 	{
 		public OffCycleBuffDamageEvent(long time, Agent attacker, Agent defender, Skill skill, int damage,
@@ -91,6 +106,13 @@ namespace GW2Scratch.EVTCAnalytics.Events
 		}
 	}
 
+	/// <summary>
+	/// An event specifying damage inflicted to an agent.
+	/// </summary>
+	/// <remarks>
+	/// This event does not an <see cref="AgentEvent"/> as it is not clear whether it would be
+	/// classified under the attacker or the defender.
+	/// </remarks>
 	public abstract class DamageEvent : Event
 	{
 		public Skill Skill { get; }
