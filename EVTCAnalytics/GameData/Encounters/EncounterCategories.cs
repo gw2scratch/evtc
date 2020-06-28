@@ -52,6 +52,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 				{Encounter.FraenirOfJormag, EncounterCategory.StrikeMission},
 				{Encounter.Boneskinner, EncounterCategory.StrikeMission},
 				{Encounter.WhisperOfJormag, EncounterCategory.StrikeMission},
+				{Encounter.VariniaStormsounder, EncounterCategory.StrikeMission},
 			};
 
 		private static readonly HashSet<EncounterCategory> RaidCategories =

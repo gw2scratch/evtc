@@ -83,6 +83,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 		FraenirOfJormag = 40003,
 		Boneskinner = 40004,
 		WhisperOfJormag = 40005,
+		VariniaStormsounder = 40006, // Last enemy in Strike Mission: Cold War
 
 		// Other
 		WorldVersusWorld = 100000,

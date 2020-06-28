@@ -107,5 +107,6 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		public const int FraenirOfJormag = 22492;
 		public const int Boneskinner = 22521;
 		public const int WhisperOfJormag = 22711;
+		public const int VariniaStormsounder = 22836;
 	}
 }
