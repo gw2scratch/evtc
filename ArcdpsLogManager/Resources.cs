@@ -173,5 +173,10 @@ namespace GW2Scratch.ArcdpsLogManager
 		{
 			return GetImage("ArenaNet/guild_registrar_icon_26px.png");
 		}
+
+		public static Image GetTinyIconCommander()
+		{
+			return GetImage("ArenaNet/commander_tag_red_32px.png");
+		}
 	}
 }

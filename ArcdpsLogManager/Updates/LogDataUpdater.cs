@@ -26,7 +26,10 @@ namespace GW2Scratch.ArcdpsLogManager.Updates
 				"Very rarely, Deimos logs were detected as success when they were in fact a failure."),
 			new LogUpdate(log => log.ParsingVersion < new Version(0, 7, 2)
 			                     && log.Encounter == Encounter.Skorvald,
-				"Skorvald the Shattered logs did not differentiate between normal and challenge mode.")
+				"Skorvald the Shattered logs did not differentiate between normal and challenge mode."),
+			new LogUpdate(log => log.ParsingVersion < new Version(0, 8, 0)
+			                     && string.Compare(log.EvtcVersion, "EVTC20200609", StringComparison.OrdinalIgnoreCase) >= 0,
+				"Commander tag identification is now available.")
 		};
 
 		public IEnumerable<LogUpdateList> GetUpdates(IEnumerable<LogData> logs)

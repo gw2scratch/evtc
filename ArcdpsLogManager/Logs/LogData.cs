@@ -5,8 +5,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using GW2Scratch.ArcdpsLogManager.Analytics;
+using GW2Scratch.EVTCAnalytics.Events;
 using GW2Scratch.EVTCAnalytics.GameData;
 using GW2Scratch.EVTCAnalytics.GameData.Encounters;
+using GW2Scratch.EVTCAnalytics.Model.Agents;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
 using Newtonsoft.Json;
@@ -160,9 +162,13 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 				MainTargetName = log.MainTarget?.Name ?? UnknownMainTargetName;
 				EncounterResult = analyzer.GetResult();
 				EncounterMode = analyzer.GetMode();
-				Players = analyzer.GetPlayers().Where(x => x.Identified).Select(x =>
-					new LogPlayer(x.Name, x.AccountName, x.Subgroup, x.Profession, x.EliteSpecialization,
-						GetGuildGuid(x.GuildGuid))
+				var tagEvents = log.Events.OfType<AgentTagEvent>().Where(x => x.Id != 0 && x.Agent is Player);
+				Players = analyzer.GetPlayers().Where(x => x.Identified).Select(p =>
+					new LogPlayer(p.Name, p.AccountName, p.Subgroup, p.Profession, p.EliteSpecialization,
+						GetGuildGuid(p.GuildGuid))
+					{
+						Tag = tagEvents.Any(e => e.Agent == p) ? PlayerTag.Commander : PlayerTag.None
+					}
 				).ToArray();
 
 				EncounterStartTime = log.StartTime.ServerTime;

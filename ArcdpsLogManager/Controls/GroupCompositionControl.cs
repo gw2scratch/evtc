@@ -4,6 +4,8 @@ using Eto.Drawing;
 using Eto.Forms;
 using GW2Scratch.ArcdpsLogManager.Gw2Api;
 using GW2Scratch.ArcdpsLogManager.Logs;
+using Image = Eto.Drawing.Image;
+using Label = Eto.Forms.Label;
 
 namespace GW2Scratch.ArcdpsLogManager.Controls
 {
@@ -40,6 +42,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			}
 
 			var playersByGroups = players.GroupBy(x => x.Subgroup).OrderBy(x => x.Key);
+			bool anyPlayerTag = players.Any(x => x.Tag != PlayerTag.None);
 
 			SuspendLayout();
 			Clear();
@@ -69,7 +72,24 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 
 						var nameLabel = new Label {Text = $"{player.Name}{guildTagSuffix}", ToolTip = guildName};
 
-						AddRow(imageView, nameLabel, player.AccountName.Substring(1));
+						if (anyPlayerTag)
+						{
+							Image tagIcon = player.Tag == PlayerTag.Commander ? imageProvider.GetTinyCommanderIcon() : null;
+							string tagToolTip = player.Tag == PlayerTag.Commander ? "Commander" : null;
+							var tagImageView = new ImageView
+							{
+								Image = tagIcon,
+								ToolTip = tagToolTip,
+								Size = new Size(16, 17)
+							};
+
+							AddRow(tagImageView, imageView, nameLabel, player.AccountName.Substring(1));
+						}
+						else
+						{
+							// If no player has a tag, we don't waste space on it and omit the empty image views.
+							AddRow(imageView, nameLabel, player.AccountName.Substring(1));
+						}
 					}
 
 					Add(null);
