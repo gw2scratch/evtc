@@ -27,7 +27,7 @@ namespace GW2Scratch.ArcdpsLogManager.Updates
 			new LogUpdate(log => log.ParsingVersion < new Version(0, 7, 2)
 			                     && log.Encounter == Encounter.Skorvald,
 				"Skorvald the Shattered logs did not differentiate between normal and challenge mode."),
-			new LogUpdate(log => log.ParsingVersion < new Version(0, 8, 0)
+			new LogUpdate(log => log.ParsingVersion < new Version(1, 0, 0)
 			                     && string.Compare(log.EvtcVersion, "EVTC20200609", StringComparison.OrdinalIgnoreCase) >= 0,
 				"Commander tag identification is now available.")
 		};
