@@ -307,8 +307,19 @@ namespace GW2Scratch.ArcdpsLogManager
 
 		private MenuBar ConstructMenuBar()
 		{
-			var updateMenuItem = new ButtonMenuItem {Text = "&Update"};
+			var updateMenuItem = new ButtonMenuItem {Text = "&Update logs with outdated data…"};
 			updateMenuItem.Click += (sender, args) => { new UpdateDialog(LogDataProcessor, LogDataUpdater.GetUpdates(logs).ToList()).ShowModal(this); };
+			LogSearchFinished += (sender, args) =>
+			{
+				updateMenuItem.Enabled = LogDataUpdater.GetUpdates(logs).Any();
+			};
+			LogDataProcessor.Processed += (sender, args) =>
+			{
+				if (args.CurrentScheduledItems == 0)
+				{
+					updateMenuItem.Enabled = LogDataUpdater.GetUpdates(logs).Any();
+				}
+			};
 
 			var logCacheMenuItem = new ButtonMenuItem {Text = "&Log cache"};
 			logCacheMenuItem.Click += (sender, args) => { new CacheDialog(this).ShowModal(this); };
