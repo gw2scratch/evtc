@@ -33,6 +33,10 @@ namespace GW2Scratch.ArcdpsLogManager.Updates
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 0, 0)
 					&& log.EncounterResult == EncounterResult.Failure,
 				"Add health percentage for failed logs"),
+			new LogUpdate(log => log.ParsingVersion < new Version(1, 0, 0)
+					&& log.Encounter == Encounter.TwinLargos
+					&& log.EncounterResult == EncounterResult.Unknown,
+				"Twin Largos logs had Unknown results if Kenut did not appear in the log."),
 		};
 
 		public IEnumerable<LogUpdateList> GetUpdates(IEnumerable<LogData> logs)

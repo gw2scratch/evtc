@@ -315,7 +315,16 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					var builder = GetDefaultBuilder(encounter, bosses);
 					if (nikare == null || kenut == null)
 					{
-						builder.WithResult(new ConstantResultDeterminer(EncounterResult.Unknown));
+						if (kenut == null)
+						{
+							// If the fight does not progress far enough, Kenut might not be present in the log.
+							builder.WithResult(new ConstantResultDeterminer(EncounterResult.Failure));
+						}
+						else
+						{
+							builder.WithResult(new ConstantResultDeterminer(EncounterResult.Unknown));
+						}
+
 						builder.WithTargets(new Agent[] {nikare, kenut}.Where(x => x != null).ToList());
 					}
 					else
