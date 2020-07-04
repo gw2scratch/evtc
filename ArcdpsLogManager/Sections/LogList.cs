@@ -119,7 +119,14 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 							case EncounterResult.Success:
 								return "Success";
 							case EncounterResult.Failure:
-								return "Failure";
+								if (Settings.ShowFailurePercentagesInLogList && x.HealthPercentage.HasValue)
+								{
+									return $"Failure ({x.HealthPercentage * 100:0.00}%)";
+								}
+								else
+								{
+									return "Failure";
+								}
 							case EncounterResult.Unknown:
 								return "Unknown";
 							default:

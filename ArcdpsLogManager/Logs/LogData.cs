@@ -8,6 +8,7 @@ using GW2Scratch.ArcdpsLogManager.Analytics;
 using GW2Scratch.EVTCAnalytics.Events;
 using GW2Scratch.EVTCAnalytics.GameData;
 using GW2Scratch.EVTCAnalytics.GameData.Encounters;
+using GW2Scratch.EVTCAnalytics.Model;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
@@ -68,6 +69,13 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 		/// </summary>
 		[JsonProperty]
 		public string MainTargetName { get; set; } = UnknownMainTargetName;
+
+		/// <summary>
+		/// The health percentage of the target of the encounter. If there are multiple targets,
+		/// the highest percentage is provided.
+		/// </summary>
+		[JsonProperty]
+		public float? HealthPercentage { get; set; }
 
 		/// <summary>
 		/// Time when the encounter started.
@@ -162,6 +170,12 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 				MainTargetName = log.MainTarget?.Name ?? UnknownMainTargetName;
 				EncounterResult = analyzer.GetResult();
 				EncounterMode = analyzer.GetMode();
+				HealthPercentage = GetHealthPercentage(log);
+				if (EncounterResult == EncounterResult.Success)
+				{
+					HealthPercentage = 0;
+				}
+
 				var tagEvents = log.Events.OfType<AgentTagEvent>().Where(x => x.Id != 0 && x.Agent is Player);
 				Players = analyzer.GetPlayers().Where(x => x.Identified).Select(p =>
 					new LogPlayer(p.Name, p.AccountName, p.Subgroup, p.Profession, p.EliteSpecialization,
@@ -189,6 +203,26 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 			{
 				ParsingVersion = typeof(LogAnalytics).Assembly.GetName().Version;
 			}
+		}
+
+		private float? GetHealthPercentage(Log log)
+		{
+			var targets = log.EncounterData.Targets.ToHashSet();
+			if (targets.Count == 0)
+			{
+				return null;
+			}
+
+			float healthPercentage = log.Events.OfType<AgentHealthUpdateEvent>()
+				.Where(e => targets.Contains(e.Agent))
+				.GroupBy(e => e.Agent)
+				.Select(agentGroup => agentGroup
+					.Select(agent => agent.HealthFraction)
+					.DefaultIfEmpty(1)
+					.Last()
+				).Max();
+
+			return healthPercentage;
 		}
 
 		private string GetGuildGuid(byte[] guidBytes)

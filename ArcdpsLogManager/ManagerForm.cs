@@ -338,6 +338,10 @@ namespace GW2Scratch.ArcdpsLogManager
 			showGuildTagsMenuItem.Checked = Settings.ShowGuildTagsInLogDetail;
 			showGuildTagsMenuItem.CheckedChanged += (sender, args) => { Settings.ShowGuildTagsInLogDetail = showGuildTagsMenuItem.Checked; };
 
+			var showFailurePercentagesMenuItem = new CheckMenuItem {Text = "Show failure health &percentages in log list"};
+			showFailurePercentagesMenuItem.Checked = Settings.ShowFailurePercentagesInLogList;
+			showFailurePercentagesMenuItem.CheckedChanged += (sender, args) => { Settings.ShowFailurePercentagesInLogList = showFailurePercentagesMenuItem.Checked; };
+
 			var showSidebarMenuItem = new CheckMenuItem {Text = "Show &filters in a sidebar"};
 			showSidebarMenuItem.Checked = Settings.ShowFilterSidebar;
 			Settings.ShowFilterSidebarChanged += (sender, args) => showSidebarMenuItem.Checked = Settings.ShowFilterSidebar;
@@ -360,6 +364,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			var viewMenuItem = new ButtonMenuItem {Text = "&View"};
 			viewMenuItem.Items.Add(showSidebarMenuItem);
 			viewMenuItem.Items.Add(showGuildTagsMenuItem);
+			viewMenuItem.Items.Add(showFailurePercentagesMenuItem);
 			viewMenuItem.Items.Add(new SeparatorMenuItem());
 			viewMenuItem.Items.Add(debugDataMenuItem);
 

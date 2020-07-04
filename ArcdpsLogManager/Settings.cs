@@ -23,6 +23,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			public List<string> LogRootPaths { get; set; } = new List<string>();
 			public bool ShowDebugData { get; set; } = false;
 			public bool ShowGuildTagsInLogDetail { get; set; } = false;
+			public bool ShowFailurePercentagesInLogList { get; set; } = true;
 			public bool ShowFilterSidebar { get; set; } = true;
 			public bool UseGW2Api { get; set; } = true;
 			public string DpsReportUserToken { get; set; } = string.Empty;
@@ -57,6 +58,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			ShowDebugDataChanged += (sender, args) => SaveToFile();
 			HiddenLogListColumnsChanged += (sender, args) => SaveToFile();
 			ShowGuildTagsInLogDetailChanged += (sender, args) => SaveToFile();
+			ShowFailurePercentagesInLogListChanged += (sender, args) => SaveToFile();
 			ShowFilterSidebarChanged += (sender, args) => SaveToFile();
 			UseGW2ApiChanged += (sender, args) => SaveToFile();
 			DpsReportUserTokenChanged += (sender, args) => SaveToFile();
@@ -154,6 +156,19 @@ namespace GW2Scratch.ArcdpsLogManager
 			}
 		}
 
+		public static bool ShowFailurePercentagesInLogList
+		{
+			get => Values.ShowFailurePercentagesInLogList;
+			set
+			{
+				if (Values.ShowFailurePercentagesInLogList != value)
+				{
+					Values.ShowFailurePercentagesInLogList = value;
+					OnShowFailurePercentagesInLogListChanged();
+				}
+			}
+		}
+
 		public static bool ShowFilterSidebar
 		{
 			get => Values.ShowFilterSidebar;
@@ -223,6 +238,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		public static event EventHandler<EventArgs> ShowDebugDataChanged;
 		public static event EventHandler<EventArgs> HiddenLogListColumnsChanged;
 		public static event EventHandler<EventArgs> ShowGuildTagsInLogDetailChanged;
+		public static event EventHandler<EventArgs> ShowFailurePercentagesInLogListChanged;
 		public static event EventHandler<EventArgs> ShowFilterSidebarChanged;
 		public static event EventHandler<EventArgs> UseGW2ApiChanged;
 		public static event EventHandler<EventArgs> DpsReportUserTokenChanged;
@@ -247,6 +263,11 @@ namespace GW2Scratch.ArcdpsLogManager
 		private static void OnShowGuildTagsInLogDetailChanged()
 		{
 			ShowGuildTagsInLogDetailChanged?.Invoke(null, EventArgs.Empty);
+		}
+
+		private static void OnShowFailurePercentagesInLogListChanged()
+		{
+			ShowFailurePercentagesInLogListChanged?.Invoke(null, EventArgs.Empty);
 		}
 
 		private static void OnShowFilterSidebarChanged()

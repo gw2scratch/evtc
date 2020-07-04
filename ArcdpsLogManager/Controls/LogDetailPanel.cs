@@ -55,7 +55,9 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 						result = "Success";
 						break;
 					case EncounterResult.Failure:
-						result = "Failure";
+						result = logData.HealthPercentage.HasValue
+							? $"Failure ({logData.HealthPercentage * 100:0.00}% health)"
+							: "Failure";
 						break;
 					case EncounterResult.Unknown:
 						result = "Unknown";
