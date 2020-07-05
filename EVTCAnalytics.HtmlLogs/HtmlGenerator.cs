@@ -6,7 +6,6 @@ using GW2Scratch.EVTCAnalytics;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
 using GW2Scratch.EVTCAnalytics.Statistics;
 using ScratchLogHTMLGenerator.Sections.General;
-using ScratchLogHTMLGenerator.Sections.Phases;
 using ScratchLogHTMLGenerator.Sections.ScratchData;
 
 namespace ScratchLogHTMLGenerator
@@ -30,13 +29,11 @@ namespace ScratchLogHTMLGenerator
 			var defaultPage = summaryPage; // Has be a top-level page, not a subpage
 
 			IEnumerable<Page> bossPages = stats.FullFightBossDamageData.Select(x => new BossPage(x, Theme));
-			IEnumerable<Page> phasePages = stats.PhaseStats.Select(x => new PhasePage(x, Theme));
 
 			var sections = new[]
 			{
 				new Section("General", summaryPage, playerPage, rotationPage),
 				new Section("Bosses", bossPages.ToArray()),
-				new Section("Phases", phasePages.ToArray()),
 				new Section("Scratch data",
 					//new BuffDataPage(stats.BuffData, Theme),
 					new EventDataPage(stats.EventCounts, Theme),

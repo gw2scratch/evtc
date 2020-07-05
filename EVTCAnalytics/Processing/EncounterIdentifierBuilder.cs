@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using GW2Scratch.EVTCAnalytics.GameData.Encounters;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes;
-using GW2Scratch.EVTCAnalytics.Processing.Encounters.Phases;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
 using GW2Scratch.EVTCAnalytics.Processing.Steps;
 
@@ -15,7 +13,6 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 	public class EncounterIdentifierBuilder
 	{
 		private Encounter Encounter { get; set; }
-		private PhaseSplitter PhaseSplitter { get; set; }
 		private IResultDeterminer ResultDeterminer { get; set; }
 		private IModeDeterminer ModeDeterminer { get; set; }
 		private List<IPostProcessingStep> ProcessingSteps { get; set; }
@@ -24,7 +21,6 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 		public EncounterIdentifierBuilder(
 			Encounter defaultEncounter,
 			List<Agent> defaultTargets,
-			PhaseSplitter defaultPhaseSplitter,
 			IResultDeterminer defaultResultDeterminer,
 			IModeDeterminer defaultModeDeterminer,
 			IEnumerable<IPostProcessingStep> defaultProcessingSteps = null
@@ -32,7 +28,6 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 		{
 			Encounter = defaultEncounter;
 			Targets = defaultTargets ?? throw new ArgumentNullException(nameof(defaultTargets));
-			PhaseSplitter = defaultPhaseSplitter ?? throw new ArgumentNullException(nameof(defaultPhaseSplitter));
 			ResultDeterminer = defaultResultDeterminer ?? throw new ArgumentNullException(nameof(defaultResultDeterminer));
 			ModeDeterminer = defaultModeDeterminer ?? throw new ArgumentNullException(nameof(defaultModeDeterminer));
 			ProcessingSteps = (defaultProcessingSteps ?? Enumerable.Empty<IPostProcessingStep>()).ToList();
@@ -41,12 +36,6 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 		public EncounterIdentifierBuilder WithEncounter(Encounter encounter)
 		{
 			Encounter = encounter;
-			return this;
-		}
-
-		public EncounterIdentifierBuilder WithPhases(PhaseSplitter splitter)
-		{
-			PhaseSplitter = splitter;
 			return this;
 		}
 
@@ -91,7 +80,6 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			return new BaseEncounterData(
 				Encounter,
 				Targets,
-				PhaseSplitter,
 				ResultDeterminer,
 				ModeDeterminer,
 				ProcessingSteps

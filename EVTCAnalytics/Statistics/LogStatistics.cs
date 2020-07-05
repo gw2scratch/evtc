@@ -17,7 +17,6 @@ namespace GW2Scratch.EVTCAnalytics.Statistics
 
 		public IEnumerable<PlayerData> PlayerData { get; }
 
-		public IEnumerable<PhaseStats> PhaseStats { get; }
 		public string EncounterName { get; }
 		public EncounterResult EncounterResult { get; }
 		public EncounterMode EncounterMode { get; }
@@ -34,7 +33,7 @@ namespace GW2Scratch.EVTCAnalytics.Statistics
 		public IEnumerable<TargetSquadDamageData> FullFightBossDamageData { get; }
 
 		public LogStatistics(DateTimeOffset fightStart, Player logAuthor, IEnumerable<PlayerData> playerData,
-			IEnumerable<PhaseStats> phaseStats, SquadDamageData fullFightSquadDamageData,
+			SquadDamageData fullFightSquadDamageData,
 			IEnumerable<TargetSquadDamageData> fullFightTargetDamageData, BuffData buffData,
 			EncounterResult encounterResult, EncounterMode encounterMode, string encounterName, string logVersion,
 			IReadOnlyDictionary<string, int> eventCounts, IEnumerable<Agent> agents, IEnumerable<Skill> skills)
@@ -51,8 +50,7 @@ namespace GW2Scratch.EVTCAnalytics.Statistics
 			BuffData = buffData;
 			FullFightBossDamageData = fullFightTargetDamageData.ToArray();
 
-			PhaseStats = phaseStats as PhaseStats[] ?? phaseStats.ToArray();
-			FightTimeMs = PhaseStats.Sum(x => x.PhaseDuration);
+			FightTimeMs = fullFightSquadDamageData.TimeMs;
 			Agents = agents as Agent[] ?? agents.ToArray();
 			Skills = skills as Skill[] ?? skills.ToArray();
 		}

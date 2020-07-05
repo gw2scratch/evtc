@@ -8,7 +8,6 @@ using GW2Scratch.EVTCAnalytics.Model;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes;
-using GW2Scratch.EVTCAnalytics.Processing.Encounters.Phases;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
 using GW2Scratch.EVTCAnalytics.Processing.Steps;
 
@@ -44,79 +43,11 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			{
 				// Raids - Wing 1
 				case Encounter.ValeGuardian:
-				{
-					var redGuardians = agents.OfType<NPC>().Where(x => x.SpeciesId == SpeciesIds.RedGuardian)
-						.ToArray();
-					var greenGuardians = agents.OfType<NPC>().Where(x => x.SpeciesId == SpeciesIds.GreenGuardian)
-						.ToArray();
-					var blueGuardians = agents.OfType<NPC>().Where(x => x.SpeciesId == SpeciesIds.BlueGuardian)
-						.ToArray();
-
-					bool firstGuardians =
-						redGuardians.Length >= 1 && greenGuardians.Length >= 1 && blueGuardians.Length >= 1;
-					bool secondGuardians =
-						redGuardians.Length >= 2 && greenGuardians.Length >= 2 && blueGuardians.Length >= 2;
-
-					var split1Guardians = firstGuardians
-						? new[] {blueGuardians[0], greenGuardians[0], redGuardians[0]}
-						: new Agent[0];
-					var split2Guardians = secondGuardians
-						? new[] {blueGuardians[1], greenGuardians[1], redGuardians[1]}
-						: new Agent[0];
-
-					return GetDefaultBuilder(encounter, mainTarget)
-						.WithPhases(new PhaseSplitter(
-							new StartTrigger(new PhaseDefinition("Phase 1", mainTarget)),
-							new BuffAddTrigger(mainTarget, SkillIds.Invulnerability,
-								new PhaseDefinition("Split 1", split1Guardians)),
-							new BuffRemoveTrigger(mainTarget, SkillIds.Invulnerability, new PhaseDefinition("Phase 2", mainTarget)),
-							new BuffAddTrigger(mainTarget, SkillIds.Invulnerability,
-								new PhaseDefinition("Split 2", split2Guardians)),
-							new BuffRemoveTrigger(mainTarget, SkillIds.Invulnerability, new PhaseDefinition("Phase 3", mainTarget))
-						)).Build();
-				}
+					return GetDefaultBuilder(encounter, mainTarget).Build();
 				case Encounter.Gorseval:
-				{
-					var chargedSouls = agents.OfType<NPC>().Where(x => x.SpeciesId == SpeciesIds.ChargedSoul)
-						.ToArray();
-
-					var split1Souls = chargedSouls.Length >= 4 ? chargedSouls.Take(4).ToArray() : new Agent[0];
-					var split2Souls = chargedSouls.Length >= 8 ? chargedSouls.Skip(4).Take(4).ToArray() : new Agent[0];
-
-					return GetDefaultBuilder(encounter, mainTarget)
-						.WithPhases(new PhaseSplitter(
-							new StartTrigger(new PhaseDefinition("Phase 1", mainTarget)),
-							new BuffAddTrigger(mainTarget, SkillIds.GorsevalInvulnerability,
-								new PhaseDefinition("Split 1", split1Souls)),
-							new BuffRemoveTrigger(mainTarget, SkillIds.GorsevalInvulnerability,
-								new PhaseDefinition("Phase 2", mainTarget)),
-							new BuffAddTrigger(mainTarget, SkillIds.GorsevalInvulnerability,
-								new PhaseDefinition("Split 2", split2Souls)),
-							new BuffRemoveTrigger(mainTarget, SkillIds.GorsevalInvulnerability,
-								new PhaseDefinition("Phase 3", mainTarget))
-						)).Build();
-				}
+					return GetDefaultBuilder(encounter, mainTarget).Build();
 				case Encounter.Sabetha:
-				{
-					var kernan = GetTargetBySpeciesId(agents, SpeciesIds.Kernan);
-					var knuckles = GetTargetBySpeciesId(agents, SpeciesIds.Knuckles);
-					var karde = GetTargetBySpeciesId(agents, SpeciesIds.Karde);
-
-					return GetDefaultBuilder(encounter, mainTarget)
-						.WithPhases(new PhaseSplitter(
-							new StartTrigger(new PhaseDefinition("Phase 1", mainTarget)),
-							new BuffAddTrigger(mainTarget, SkillIds.Invulnerability,
-								new PhaseDefinition("Kernan", kernan != null ? new Agent[] {kernan} : new Agent[0])),
-							new BuffRemoveTrigger(mainTarget, SkillIds.Invulnerability, new PhaseDefinition("Phase 2", mainTarget)),
-							new BuffAddTrigger(mainTarget, SkillIds.Invulnerability,
-								new PhaseDefinition("Knuckles",
-									knuckles != null ? new Agent[] {knuckles} : new Agent[0])),
-							new BuffRemoveTrigger(mainTarget, SkillIds.Invulnerability, new PhaseDefinition("Phase 3", mainTarget)),
-							new BuffAddTrigger(mainTarget, SkillIds.Invulnerability,
-								new PhaseDefinition("Karde", karde != null ? new Agent[] {karde} : new Agent[0])),
-							new BuffRemoveTrigger(mainTarget, SkillIds.Invulnerability, new PhaseDefinition("Phase 4", mainTarget))
-						)).Build();
-				}
+					return GetDefaultBuilder(encounter, mainTarget).Build();
 				// Raids - Wing 2
 				case Encounter.Slothasor:
 					return GetDefaultBuilder(encounter, mainTarget).Build();
@@ -333,13 +264,6 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 							new AgentDeadDeterminer(nikare),
 							new AgentDeadDeterminer(kenut)
 						));
-						builder.WithPhases(new PhaseSplitter(
-							new StartTrigger(new PhaseDefinition("Nikare's platform", nikare)),
-							new BuffAddTrigger(nikare, SkillIds.Determined,
-								new PhaseDefinition("Kenut's platform", kenut)),
-							new BuffAddTrigger(kenut, SkillIds.Determined,
-								new PhaseDefinition("Split phase", nikare, kenut)))
-						);
 					}
 
 					if (nikare != null)
@@ -351,34 +275,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				}
 				case Encounter.Qadim:
 				{
-					var hydra = GetTargetBySpeciesId(agents, SpeciesIds.AncientInvokedHydra);
-					var destroyer = GetTargetBySpeciesId(agents, SpeciesIds.ApocalypseBringer);
-					var matriarch = GetTargetBySpeciesId(agents, SpeciesIds.WyvernMatriarch);
-					var patriarch = GetTargetBySpeciesId(agents, SpeciesIds.WyvernPatriarch);
-
 					return GetDefaultBuilder(encounter, mainTarget)
-						.WithPhases(new PhaseSplitter(
-							new AgentEventTrigger<TeamChangeEvent>(mainTarget,
-								new PhaseDefinition("Hydra phase", hydra != null ? new Agent[] {hydra} : new Agent[0])),
-							new BuffRemoveTrigger(mainTarget, SkillIds.QadimFlameArmor,
-								new PhaseDefinition("Qadim 100-66%", mainTarget)),
-							new BuffAddTrigger(mainTarget, SkillIds.QadimFlameArmor,
-								new PhaseDefinition("Destroyer phase",
-									destroyer != null ? new Agent[] {destroyer} : new Agent[0])),
-							new BuffRemoveTrigger(mainTarget, SkillIds.QadimFlameArmor,
-								new PhaseDefinition("Qadim 66-33%", mainTarget)),
-							new BuffAddTrigger(mainTarget, SkillIds.QadimFlameArmor,
-								new PhaseDefinition("Wyvern phase",
-									matriarch != null && patriarch != null
-										? new Agent[] {matriarch, patriarch}
-										: new Agent[0])),
-							new MultipleAgentsDeadTrigger(
-								new PhaseDefinition("Jumping puzzle"),
-								matriarch != null && patriarch != null
-									? new Agent[] {matriarch, patriarch}
-									: new Agent[0]),
-							new BuffRemoveTrigger(mainTarget, SkillIds.QadimFlameArmor,
-								new PhaseDefinition("Qadim 33-0%", mainTarget))))
 						.WithResult(new AgentCombatExitDeterminer(mainTarget))
 						.WithModes(new AgentHealthModeDeterminer(mainTarget, 21_000_000))
 						.Build();
@@ -567,7 +464,6 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			var builder = new EncounterIdentifierBuilder(
 				encounter,
 				new List<Agent> {mainTarget},
-				new PhaseSplitter(new StartTrigger(new PhaseDefinition("Default phase", mainTarget))),
 				new AgentKilledDeterminer(mainTarget),
 				new ConstantModeDeterminer(EncounterMode.Normal)
 			);
@@ -599,7 +495,6 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			return new EncounterIdentifierBuilder(
 				encounter,
 				targets.ToList(),
-				new PhaseSplitter(new StartTrigger(new PhaseDefinition("Default phase", targets))),
 				result,
 				new ConstantModeDeterminer(EncounterMode.Normal)
 			);

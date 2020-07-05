@@ -8,7 +8,6 @@ using GW2Scratch.EVTCAnalytics.Model.Agents;
 using GW2Scratch.EVTCAnalytics.Model.Skills;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Names;
-using GW2Scratch.EVTCAnalytics.Processing.Encounters.Phases;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
 using GW2Scratch.EVTCAnalytics.Statistics;
 using GW2Scratch.EVTCAnalytics.Statistics.Buffs;
@@ -61,7 +60,6 @@ namespace GW2Scratch.EVTCAnalytics
 		public GW2ApiData ApiData { get; set; } = null;
 
 		private readonly Log log;
-		private IReadOnlyList<Phase> logPhases = null;
 		private IReadOnlyList<Player> logPlayers = null;
 		private IReadOnlyList<PlayerData> logPlayerData = null;
 		private EncounterResult? logResult = null;
@@ -87,8 +85,6 @@ namespace GW2Scratch.EVTCAnalytics
 		public LogStatistics GetStatistics()
 		{
 			// TODO: This method should be mostly moved to the HtmlGenerator.
-			// Phase calculations, however, should get a new method in the Analyzer.
-			var phaseStats = new List<PhaseStats>();
 
 			var might = log.Skills.FirstOrDefault(x => x.Id == SkillIds.Might);
 			var vulnerability = log.Skills.FirstOrDefault(x => x.Id == SkillIds.Vulnerability);
@@ -98,38 +94,6 @@ namespace GW2Scratch.EVTCAnalytics
 			var buffData = BuffSimulator.SimulateBuffs(log.Agents, log.Events.OfType<BuffEvent>(), GetEncounterEnd());
 
 			var players = GetPlayers();
-
-			foreach (var phase in GetPhases())
-			{
-				var targetDamageData = new List<TargetSquadDamageData>();
-				long phaseDuration = phase.EndTime - phase.StartTime;
-				foreach (var target in phase.ImportantEnemies)
-				{
-					var damageData = GetDamageData(
-						players,
-						phase.Events
-							.OfType<DamageEvent>()
-							.Where(x => x.Defender == target),
-						phase.Events.OfType<SkillCastEvent>(),
-						buffData,
-						log.Skills,
-						phaseDuration);
-					targetDamageData.Add(new TargetSquadDamageData(target, phaseDuration, damageData.Values));
-				}
-
-				var totalDamageData = new SquadDamageData(phaseDuration,
-					GetDamageData(
-						players,
-						phase.Events.OfType<DamageEvent>(),
-						phase.Events.OfType<SkillCastEvent>(),
-						buffData,
-						log.Skills,
-						phaseDuration).Values
-				);
-
-				phaseStats.Add(new PhaseStats(phase.Name, phase.StartTime, phase.EndTime, targetDamageData,
-					totalDamageData));
-			}
 
 			var fightDurationMs = GetEncounterEnd() - GetEncounterStart();
 			var fullFightSquadDamageData = new SquadDamageData(fightDurationMs,
@@ -170,7 +134,7 @@ namespace GW2Scratch.EVTCAnalytics
 
 			string encounterName = new LocalizedEncounterNameProvider().GetEncounterName(log.EncounterData, log.GameLanguage);
 
-			return new LogStatistics(log.StartTime.ServerTime, log.PointOfView, playerData, phaseStats,
+			return new LogStatistics(log.StartTime.ServerTime, log.PointOfView, playerData,
 				fullFightSquadDamageData, fullFightTargetDamageData, buffData, GetResult(), GetMode(),
 				encounterName, log.EvtcVersion, eventCountsByName, log.Agents, log.Skills);
 		}
@@ -182,20 +146,14 @@ namespace GW2Scratch.EVTCAnalytics
 
 		public long GetEncounterEnd()
 		{
-			logEncounterEnd ??= GetPhases().Max(x => x.EndTime);
+			logEncounterEnd ??= log.StartTime.TimeMilliseconds;
 			return logEncounterEnd.Value;
 		}
 
 		public long GetEncounterStart()
 		{
-			logEncounterStart ??= GetPhases().Min(x => x.StartTime);
+			logEncounterStart ??= log.EndTime.TimeMilliseconds;
 			return logEncounterStart.Value;
-		}
-
-		public IReadOnlyList<Phase> GetPhases()
-		{
-			logPhases ??= log.EncounterData.PhaseSplitter.GetEventsByPhases(log.Events).ToList();
-			return logPhases;
 		}
 
 		public IReadOnlyList<Player> GetPlayers()

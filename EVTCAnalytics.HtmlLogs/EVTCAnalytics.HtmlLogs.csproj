@@ -53,8 +53,6 @@
     <Compile Include="Sections\General\BossPage.cs" />
     <Compile Include="Sections\General\SquadRotationPage.cs" />
     <Compile Include="Sections\General\SummaryPage.cs" />
-    <Compile Include="Sections\Phases\PhasePage.cs" />
-    <Compile Include="Sections\Phases\PhaseTargetPage.cs" />
     <Compile Include="Sections\ScratchData\AgentListPage.cs" />
     <Compile Include="Sections\ScratchData\BuffDataPage.cs" />
     <Compile Include="Sections\ScratchData\EventDataPage.cs" />
