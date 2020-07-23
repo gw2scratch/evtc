@@ -15,7 +15,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 			this.count = count;
 		}
 
-		public EncounterResult GetResult(IEnumerable<Event> events)
+		public ResultDeterminerResult GetResult(IEnumerable<Event> events)
 		{
 			int agentCount = 0;
 			foreach (var e in events)
@@ -25,12 +25,12 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 					agentCount++;
 					if (agentCount >= count)
 					{
-						return EncounterResult.Success;
+						return new ResultDeterminerResult(EncounterResult.Success, e.Time);
 					}
 				}
 			}
 
-			return EncounterResult.Failure;
+			return new ResultDeterminerResult(EncounterResult.Failure, null);
 		}
 	}
 }

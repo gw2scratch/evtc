@@ -22,7 +22,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 			this.timeSpan = timeSpan;
 		}
 
-		public EncounterResult GetResult(IEnumerable<Event> events)
+		public ResultDeterminerResult GetResult(IEnumerable<Event> events)
 		{
 			var countedEvents = new LinkedList<T>();
 
@@ -37,11 +37,11 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 
 				if (countedEvents.Count >= count)
 				{
-					return EncounterResult.Success;
+					return new ResultDeterminerResult(EncounterResult.Success, current.Time);
 				}
 			}
 
-			return EncounterResult.Failure;
+			return new ResultDeterminerResult(EncounterResult.Failure, null);
 		}
 	}
 }

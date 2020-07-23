@@ -5,7 +5,7 @@ using GW2Scratch.EVTCAnalytics.Model.Agents;
 
 namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 {
-	public class AgentBuffGainedDeterminer : IResultDeterminer
+	public class AgentBuffGainedDeterminer : EventFoundResultDeterminer
 	{
 		private readonly Agent agent;
 		private readonly int buffId;
@@ -16,11 +16,9 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 			this.buffId = buffId;
 		}
 
-		public EncounterResult GetResult(IEnumerable<Event> events)
+		protected override Event GetEvent(IEnumerable<Event> events)
 		{
-			bool buffApplied = events.OfType<BuffApplyEvent>().Any(x => x.Agent == agent && x.Buff.Id == buffId);
-
-			return buffApplied ? EncounterResult.Success : EncounterResult.Failure;
+			return events.OfType<BuffApplyEvent>().FirstOrDefault(x => x.Agent == agent && x.Buff.Id == buffId);
 		}
 	}
 }

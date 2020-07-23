@@ -7,7 +7,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 	/// <summary>
 	/// Returns success if there was a reward event with a specified reward id
 	/// </summary>
-	public class RewardDeterminer : IResultDeterminer
+	public class RewardDeterminer : EventFoundResultDeterminer
 	{
 		private readonly ulong rewardId;
 
@@ -16,11 +16,9 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 			this.rewardId = rewardId;
 		}
 
-		public EncounterResult GetResult(IEnumerable<Event> events)
+		protected override Event GetEvent(IEnumerable<Event> events)
 		{
-			bool rewardFound = events.OfType<RewardEvent>().Any(x => x.RewardId == rewardId);
-
-			return rewardFound ? EncounterResult.Success : EncounterResult.Failure;
+			return events.OfType<RewardEvent>().FirstOrDefault(x => x.RewardId == rewardId);
 		}
 	}
 }

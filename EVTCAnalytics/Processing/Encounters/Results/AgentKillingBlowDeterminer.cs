@@ -8,7 +8,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 	/// <summary>
 	/// Returns success if there was a killing blow towards an agent
 	/// </summary>
-	public class AgentKillingBlowDeterminer : IResultDeterminer
+	public class AgentKillingBlowDeterminer : EventFoundResultDeterminer
 	{
 		private readonly Agent agent;
 
@@ -17,13 +17,10 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 			this.agent = agent;
 		}
 
-		public EncounterResult GetResult(IEnumerable<Event> events)
+		protected override Event GetEvent(IEnumerable<Event> events)
 		{
-			bool agentDead = events
-				.OfType<PhysicalDamageEvent>()
-				.Any(x => x.Defender == agent && x.HitResult == PhysicalDamageEvent.Result.KillingBlow);
-
-			return agentDead ? EncounterResult.Success : EncounterResult.Failure;
+			return events.OfType<PhysicalDamageEvent>()
+				.FirstOrDefault(x => x.Defender == agent && x.HitResult == PhysicalDamageEvent.Result.KillingBlow);
 		}
 	}
 }

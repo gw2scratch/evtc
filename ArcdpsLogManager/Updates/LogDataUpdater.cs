@@ -37,6 +37,8 @@ namespace GW2Scratch.ArcdpsLogManager.Updates
 					&& log.Encounter == Encounter.TwinLargos
 					&& log.EncounterResult == EncounterResult.Unknown,
 				"Twin Largos logs had Unknown results if Kenut did not appear in the log."),
+			new LogUpdate(log => log.ParsingVersion < new Version(1, 0, 0),
+				"Durations reflect the duration of the encounter instead of the duration of the log."),
 		};
 
 		public IEnumerable<LogUpdateList> GetUpdates(IEnumerable<LogData> logs)

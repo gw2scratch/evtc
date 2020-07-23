@@ -24,11 +24,11 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 			this.targetableStates = targetableStates;
 		}
 
-		public EncounterResult GetResult(IEnumerable<Event> events)
+		public ResultDeterminerResult GetResult(IEnumerable<Event> events)
 		{
 			if (targetableStates.Length == 0)
 			{
-				return EncounterResult.Success;
+				return new ResultDeterminerResult(EncounterResult.Success, null);
 			}
 
 			int currentState = 0;
@@ -39,12 +39,12 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 					currentState++;
 					if (currentState == targetableStates.Length)
 					{
-						return EncounterResult.Success;
+						return new ResultDeterminerResult(EncounterResult.Success, change.Time);
 					}
 				}
 			}
 
-			return EncounterResult.Failure;
+			return new ResultDeterminerResult(EncounterResult.Failure, null);
 		}
 	}
 }

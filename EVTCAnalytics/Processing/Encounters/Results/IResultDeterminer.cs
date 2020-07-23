@@ -5,6 +5,6 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 {
 	public interface IResultDeterminer
 	{
-		EncounterResult GetResult(IEnumerable<Event> events);
+		ResultDeterminerResult GetResult(IEnumerable<Event> events);
 	}
 }
