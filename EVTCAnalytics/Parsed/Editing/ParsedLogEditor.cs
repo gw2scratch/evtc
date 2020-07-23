@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml;
 using GW2Scratch.EVTCAnalytics.Parsed.Enums;
 
 namespace GW2Scratch.EVTCAnalytics.Parsed.Editing
@@ -13,7 +14,7 @@ namespace GW2Scratch.EVTCAnalytics.Parsed.Editing
 		public static readonly IReadOnlyList<byte> SupportedRevisions = new List<byte> {0, 1};
 
 		/// <summary>
-		/// Update the names of players in order to hide their identity.
+		/// Update the names of players in order to hide their identity. Also removes guild data.
 		/// </summary>
 		/// <param name="log">The log data that will be updated.</param>
 		/// <exception cref="NotSupportedException">Thrown if the log is not a supported revision.</exception>
@@ -54,6 +55,24 @@ namespace GW2Scratch.EVTCAnalytics.Parsed.Editing
 
 				log.ParsedAgents[i] = updatedAgent;
 				playerIndex++;
+			}
+
+			for (int i = 0; i < log.ParsedCombatItems.Count; i++)
+			{
+				var item = log.ParsedCombatItems[i];
+				if (item.IsStateChange != StateChange.Guild)
+				{
+					continue;
+				}
+				// We cannot just remove the events as that would break expectations for present for a specific log version.
+				// Instead we set the guild guid to zero, which corresponds to having no guild.
+
+				// dst, value and buffdmg have to be zeroed
+				var updatedItem = new ParsedCombatItem(item.Time, item.SrcAgent, 0, 0, 0, item.OverstackValue, item.SkillId, item.SrcAgentId,
+					item.DstAgentId, item.SrcMasterId, item.DstMasterId, item.Iff, item.Buff, item.Result, item.IsActivation, item.IsBuffRemove, item.IsNinety,
+					item.IsFifty, item.IsMoving, item.IsStateChange, item.IsFlanking, item.IsShields, item.IsOffCycle, item.Padding);
+
+				log.ParsedCombatItems[i] = updatedItem;
 			}
 		}
 
