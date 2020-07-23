@@ -53,7 +53,7 @@ namespace GW2Scratch.EVTCAnalytics
 		private readonly Log log;
 		private IReadOnlyList<Player> logPlayers = null;
 		private IReadOnlyList<PlayerData> logPlayerData = null;
-		private EncounterResult? logResult = null;
+		private ResultDeterminerResult logResult = null;
 		private EncounterMode? encounterMode = null;
 		private long? logEncounterStart = null;
 		private long? logEncounterEnd = null;
@@ -79,16 +79,21 @@ namespace GW2Scratch.EVTCAnalytics
 			return new TimeSpan(0, 0, 0, 0, (int)(GetEncounterEnd() - GetEncounterStart()));
 		}
 
-		public long GetEncounterEnd()
-		{
-			logEncounterEnd ??= log.EndTime?.TimeMilliseconds ?? log.Events.Last().Time;
-			return logEncounterEnd.Value;
-		}
-
 		public long GetEncounterStart()
 		{
-			logEncounterStart ??= log.StartTime?.TimeMilliseconds ?? log.Events.First().Time;
+			logEncounterStart ??= log.StartTime.TimeMilliseconds;
 			return logEncounterStart.Value;
+		}
+
+		public long GetEncounterEnd()
+		{
+			if (logEncounterEnd == null)
+			{
+				logResult ??= log.EncounterData.ResultDeterminer.GetResult(log.Events);
+				logEncounterEnd = logResult.Time ?? log.EndTime.TimeMilliseconds;
+			}
+
+			return logEncounterEnd.Value;
 		}
 
 		public IReadOnlyList<Player> GetPlayers()
@@ -100,7 +105,7 @@ namespace GW2Scratch.EVTCAnalytics
 		public EncounterResult GetResult()
 		{
 			logResult ??= log.EncounterData.ResultDeterminer.GetResult(log.Events);
-			return logResult.Value;
+			return logResult.EncounterResult;
 		}
 
 		public EncounterMode GetMode()

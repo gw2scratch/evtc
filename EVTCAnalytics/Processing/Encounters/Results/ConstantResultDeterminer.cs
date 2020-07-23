@@ -15,9 +15,9 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 			this.result = result;
 		}
 
-		public EncounterResult GetResult(IEnumerable<Event> events)
+		public ResultDeterminerResult GetResult(IEnumerable<Event> events)
 		{
-			return result;
+			return new ResultDeterminerResult(result, null);
 		}
 	}
 }
