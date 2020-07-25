@@ -3,6 +3,8 @@
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
         <TargetFramework>netcoreapp3.1</TargetFramework>
+        <RootNamespace>GW2Scratch.ArcdpsLogManager.Wpf</RootNamespace>
+        <AssemblyName>GW2Scratch.ArcdpsLogManager.Wpf</AssemblyName>
         <UseWPF>true</UseWPF>
     </PropertyGroup>
 

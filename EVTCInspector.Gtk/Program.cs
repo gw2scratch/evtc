@@ -1,8 +1,7 @@
 ﻿using System;
 using Eto.Forms;
-using GW2Scratch.EVTCInspector;
 
-namespace EVTCInspector.Gtk
+namespace GW2Scratch.EVTCInspector.Gtk
 {
 	class Program
 	{

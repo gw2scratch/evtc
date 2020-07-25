@@ -2,7 +2,7 @@
 using Eto.Forms;
 using GW2Scratch.ArcdpsLogManager;
 
-namespace ArcdpsLogManager.Gtk
+namespace GW2Scratch.ArcdpsLogManager.Gtk
 {
 	class Program
 	{

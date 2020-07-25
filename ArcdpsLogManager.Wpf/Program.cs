@@ -2,7 +2,7 @@
 using Eto.Forms;
 using GW2Scratch.ArcdpsLogManager;
 
-namespace EVTCInspector.Wpf
+namespace GW2Scratch.ArcdpsLogManager.Wpf
 {
 	class Startup
 	{

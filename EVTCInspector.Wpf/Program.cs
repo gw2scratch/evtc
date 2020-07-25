@@ -2,7 +2,7 @@
 using Eto.Forms;
 using GW2Scratch.EVTCInspector;
 
-namespace EVTCInspector.Wpf
+namespace GW2Scratch.EVTCInspector.Wpf
 {
 	class Startup
 	{
