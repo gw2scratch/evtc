@@ -45,8 +45,8 @@ jobs:
           mv artifacts/manager/win64-sc/GW2Scratch.ArcdpsLogManager.Wpf.exe artifacts/manager/win64-sc/ArcdpsLogManager.exe
           mv artifacts/manager/linux64/GW2Scratch.ArcdpsLogManager.Gtk artifacts/manager/linux64/ArcdpsLogManager
           mv artifacts/manager/linux64-sc/GW2Scratch.ArcdpsLogManager.Gtk artifacts/manager/linux64-sc/ArcdpsLogManager
-          mv artifacts/inspector/win64/GW2Scratch.EVTCInspector.Wpf.exe artifacts/manager/win64/EVTCInspector.exe
-          mv artifacts/inspector/linux64/GW2Scratch.EVTCInspector.Gtk artifacts/manager/linux64/EVTCInspector
+          mv artifacts/inspector/win64/GW2Scratch.EVTCInspector.Wpf.exe artifacts/inspector/win64/EVTCInspector.exe
+          mv artifacts/inspector/linux64/GW2Scratch.EVTCInspector.Gtk artifacts/inspector/linux64/EVTCInspector
     - name: Upload Log Manager (Windows)
       uses: actions/upload-artifact@v2
       with:
