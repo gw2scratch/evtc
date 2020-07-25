@@ -44,6 +44,9 @@ namespace GW2Scratch.EVTCInspector
 		private readonly FilterCollection<Agent> agents = new FilterCollection<Agent>();
 		private readonly AgentControl agentControl;
 
+		// Statistics
+		private readonly JsonSerializationControl statisticsJsonControl = new JsonSerializationControl();
+
 		// API data
 		private readonly ApiDataSection apiDataSection;
 		private GW2ApiData apiData = null;
@@ -160,12 +163,16 @@ namespace GW2Scratch.EVTCInspector
 			processedTabControl.Pages.Add(new TabPage(eventsDetailLayout) {Text = "Events"});
 			processedTabControl.Pages.Add(new TabPage(agentSplitter) {Text = "Agents"});
 
+			var statisticsLayout = new DynamicLayout();
+			statisticsLayout.Add(statisticsJsonControl);
+
 			apiDataSection = new ApiDataSection();
 
 			mainTabControl.Pages.Add(new TabPage(parsedTabControl) {Text = "Parsed data", Padding = MainTabPadding});
 			mainTabControl.Pages.Add(new TabPage(processedTabControl)
 				{Text = "Processed data", Padding = MainTabPadding});
 			mainTabControl.Pages.Add(new TabPage(parsedStateLabel) {Text = "Log", Padding = MainTabPadding});
+			mainTabControl.Pages.Add(new TabPage(statisticsLayout) {Text = "Statistics", Padding = MainTabPadding});
 			mainTabControl.Pages.Add(new TabPage(apiDataSection) {Text = "Api data", Padding = MainTabPadding});
 
 			formLayout.BeginVertical();
@@ -262,18 +269,24 @@ namespace GW2Scratch.EVTCInspector
 			}
 
 			// Statistics
-			LogStatistics stats = null;
+			Statistics stats = null;
 			sw.Restart();
 			try
 			{
-				var analysis = new LogAnalyzer(processedLog, ApiData);
-				stats = analysis.GetStatistics();
+				var analyzer = new LogAnalyzer(processedLog, ApiData);
+				stats = new Statistics(processedLog.StartTime.LocalTime,
+					processedLog.PointOfView,
+					analyzer.GetResult(),
+					analyzer.GetMode(),
+					analyzer.GetEncounter(),
+					processedLog.EvtcVersion,
+					analyzer.GetEncounterDuration());
+
 				var statsTime = sw.Elapsed;
 
 				statusStringBuilder.AppendLine($"Statistics generated in {statsTime}");
 
-				// Way too huge by now
-				//Application.Instance.Invoke(() => { statisticsJsonControl.Object = stats; });
+				Application.Instance.Invoke(() => { statisticsJsonControl.Object = stats; });
 			}
 			catch (Exception ex)
 			{

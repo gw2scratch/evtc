@@ -67,7 +67,9 @@ namespace GW2Scratch.EVTCAnalytics.Benchmark
 
 			stopwatch.Restart();
 			var analyzer = new LogAnalyzer(processedLog, apiData);
-			var statistics = analyzer.GetStatistics();
+			var result = analyzer.GetResult();
+			var duration = analyzer.GetEncounterDuration();
+			var mode = analyzer.GetMode();
 
 			var statisticsTime = stopwatch.Elapsed;
 
