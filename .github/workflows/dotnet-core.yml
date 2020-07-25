@@ -1,0 +1,49 @@
+name: .NET Core
+
+on:
+  push:
+    branches: [ netcore ]
+  pull_request:
+    branches: [ netcore ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.301
+    - name: Build
+      run: dotnet build --configuration Release
+    - name: Test
+      run: dotnet test --no-restore --verbosity normal
+    - name: Package Log Manager (Windows, WPF)
+      run: dotnet publish ArcdpsLogManager.Wpf --configuration Release -r win-x64 --self-contained=false -p:PublishSingleFile=true -o artifacts/win64/
+    - name: Package Log Manager (Windows, WPF, self-contained)
+      run: dotnet publish ArcdpsLogManager.Wpf --configuration Release -r win-x64 --self-contained=true -p:PublishSingleFile=true -o artifacts/win64-sc/
+    - name: Package Log Manager (Linux, GTK)
+      run: dotnet publish ArcdpsLogManager.Gtk --configuration Release -r linux-x64 --self-contained=false -p:PublishSingleFile=true -o artifacts/linux64/
+    - name: Package Log Manager (Linux, GTK, self-contained)
+      run: dotnet publish ArcdpsLogManager.Gtk --configuration Release -r linux-x64 --self-contained=true -p:PublishSingleFile=true -o artifacts/linux64-sc/
+    - name: Upload artifact (Windows)
+      uses: actions/upload-artifact@v2
+      with:
+        name: Log Manager (Windows)
+        path: artifacts/win64/
+    - name: Upload artifact (Windows, self-contained)
+      uses: actions/upload-artifact@v2
+      with:
+        name: Log Manager (Windows, self-contained)
+        path: artifacts/win64-sc/
+    - name: Upload artifact (Linux)
+      uses: actions/upload-artifact@v2
+      with:
+        name: Log Manager (Linux)
+        path: artifacts/linux64/
+    - name: Upload artifact (Linux, self-contained)
+      uses: actions/upload-artifact@v2
+      with:
+        name: Log Manager (Linux, self-contained)
+        path: artifacts/linux64-sc/
