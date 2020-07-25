@@ -12,12 +12,12 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Caching
 		// https://github.com/dotnet/corefx/pull/28516/files
 		// This converter counteracts that, restoring the previous behavior for serialization
 
-		public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
+		public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
 		{
 			throw new NotSupportedException();
 		}
 
-		public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
+		public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
 		{
 			if (reader.TokenType == JsonToken.StartObject)
 			{
