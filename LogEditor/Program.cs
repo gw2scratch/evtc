@@ -7,7 +7,7 @@ using GW2Scratch.EVTCAnalytics;
 using GW2Scratch.EVTCAnalytics.Parsed.Editing;
 using GW2Scratch.EVTCAnalytics.Parsed.Enums;
 
-namespace LogEditor
+namespace GW2Scratch.LogEditor
 {
 	class Program
 	{
