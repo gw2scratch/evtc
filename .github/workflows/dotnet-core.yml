@@ -20,44 +20,64 @@ jobs:
     - name: Test
       run: dotnet test --no-restore --verbosity normal
     - name: Package Log Manager (Windows, WPF)
-      run: dotnet publish ArcdpsLogManager.Wpf --configuration Release -r win-x64 --self-contained=false -p:PublishSingleFile=true -o artifacts/win64/
+      run: dotnet publish ArcdpsLogManager.Wpf --configuration Release -r win-x64 --self-contained=false -p:PublishSingleFile=true -o artifacts/manager/win64/
     - name: Package Log Manager (Windows, WPF, self-contained)
-      run: dotnet publish ArcdpsLogManager.Wpf --configuration Release -r win-x64 --self-contained=true -p:PublishSingleFile=true -o artifacts/win64-sc/
+      run: dotnet publish ArcdpsLogManager.Wpf --configuration Release -r win-x64 --self-contained=true -p:PublishSingleFile=true -o artifacts/manager/win64-sc/
     - name: Package Log Manager (Linux, GTK)
-      run: dotnet publish ArcdpsLogManager.Gtk --configuration Release -r linux-x64 --self-contained=false -p:PublishSingleFile=true -o artifacts/linux64/
+      run: dotnet publish ArcdpsLogManager.Gtk --configuration Release -r linux-x64 --self-contained=false -p:PublishSingleFile=true -o artifacts/manager/linux64/
     - name: Package Log Manager (Linux, GTK, self-contained)
-      run: dotnet publish ArcdpsLogManager.Gtk --configuration Release -r linux-x64 --self-contained=true -p:PublishSingleFile=true -o artifacts/linux64-sc/
+      run: dotnet publish ArcdpsLogManager.Gtk --configuration Release -r linux-x64 --self-contained=true -p:PublishSingleFile=true -o artifacts/manager/linux64-sc/
+    - name: Package EVTC Inspector (Windows, WPF)
+      run: dotnet publish EVTCInspector.Wpf --configuration Release -r win-x64 --self-contained=false -p:PublishSingleFile=true -o artifacts/inspector/win64/
+    - name: Package EVTC Inspector (Linux, GTK)
+      run: dotnet publish EVTCInspector.Gtk --configuration Release -r linux-x64 --self-contained=false -p:PublishSingleFile=true -o artifacts/inspector/linux64/
     # The PDB files for the self-contained versions should be the same as the non-self-contained version, so we only keep one.
     - name: Bundle PDBs
-      run: mkdir artifacts/pdb/
-          | mv artifacts/win64/*.pdb artifacts/pdb/
-          | mv artifacts/linux64/*.pdb artifacts/pdb/
+      run: |
+          mkdir artifacts/pdb/
+          mv artifacts/manager/win64/*.pdb artifacts/pdb/
+          mv artifacts/manager/linux64/*.pdb artifacts/pdb/
+          mv artifacts/inspector/win64/*.pdb artifacts/pdb/
+          mv artifacts/inspector/linux64/*.pdb artifacts/pdb/
     - name: Prettify executable filenames
-      run: mv artifacts/win64/GW2Scratch.ArcdpsLogManager.Wpf.exe artifacts/win64/ArcdpsLogManager.exe
-          | mv artifacts/win64-sc/GW2Scratch.ArcdpsLogManager.Wpf.exe artifacts/win64-sc/ArcdpsLogManager.exe
-          | mv artifacts/linux64/GW2Scratch.ArcdpsLogManager.Gtk artifacts/linux64/ArcdpsLogManager
-          | mv artifacts/linux64-sc/GW2Scratch.ArcdpsLogManager.Gtk artifacts/linux64-sc/ArcdpsLogManager
-    - name: Upload artifact (Windows)
+      run: |
+          mv artifacts/manager/win64/GW2Scratch.ArcdpsLogManager.Wpf.exe artifacts/manager/win64/ArcdpsLogManager.exe
+          mv artifacts/manager/win64-sc/GW2Scratch.ArcdpsLogManager.Wpf.exe artifacts/manager/win64-sc/ArcdpsLogManager.exe
+          mv artifacts/manager/linux64/GW2Scratch.ArcdpsLogManager.Gtk artifacts/manager/linux64/ArcdpsLogManager
+          mv artifacts/manager/linux64-sc/GW2Scratch.ArcdpsLogManager.Gtk artifacts/manager/linux64-sc/ArcdpsLogManager
+          mv artifacts/inspector/win64/GW2Scratch.EVTCInspector.Wpf.exe artifacts/manager/win64/EVTCInspector.exe
+          mv artifacts/inspector/linux64/GW2Scratch.EVTCInspector.Gtk artifacts/manager/linux64/EVTCInspector
+    - name: Upload Log Manager (Windows)
       uses: actions/upload-artifact@v2
       with:
         name: Log Manager (Windows)
-        path: artifacts/win64/ArcdpsLogManager.exe
-    - name: Upload artifact (Windows, self-contained)
+        path: artifacts/manager/win64/ArcdpsLogManager.exe
+    - name: Upload Log Manager (Windows, self-contained)
       uses: actions/upload-artifact@v2
       with:
         name: Log Manager (Windows, self-contained)
-        path: artifacts/win64-sc/ArcdpsLogManager.exe
-    - name: Upload artifact (Linux)
+        path: artifacts/manager/win64-sc/ArcdpsLogManager.exe
+    - name: Upload Log Manager (Linux)
       uses: actions/upload-artifact@v2
       with:
         name: Log Manager (Linux)
-        path: artifacts/linux64/ArcdpsLogManager
-    - name: Upload artifact (Linux, self-contained)
+        path: artifacts/manager/linux64/ArcdpsLogManager
+    - name: Upload Log Manager (Linux, self-contained)
       uses: actions/upload-artifact@v2
       with:
         name: Log Manager (Linux, self-contained)
-        path: artifacts/linux64-sc/ArcdpsLogManager
-    - name: Upload artifact (PDB files)
+        path: artifacts/manager/linux64-sc/ArcdpsLogManager
+    - name: Upload EVTC Inspector (Windows)
+      uses: actions/upload-artifact@v2
+      with:
+        name: EVTC Inspector (Windows)
+        path: artifacts/inspector/win64/EVTCInspector
+    - name: Upload EVTC Inspector (Linux)
+      uses: actions/upload-artifact@v2
+      with:
+        name: EVTC Inspector (Linux)
+        path: artifacts/inspector/linux64/EVTCInspector
+    - name: Upload PDB files
       uses: actions/upload-artifact@v2
       with:
         name: PDB files
