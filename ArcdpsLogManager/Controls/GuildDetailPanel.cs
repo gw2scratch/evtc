@@ -10,7 +10,6 @@ using GW2Scratch.ArcdpsLogManager.Logs.Naming;
 using GW2Scratch.ArcdpsLogManager.Processing;
 using GW2Scratch.ArcdpsLogManager.Sections;
 using GW2Scratch.ArcdpsLogManager.Sections.Guilds;
-using JetBrains.Annotations;
 
 namespace GW2Scratch.ArcdpsLogManager.Controls
 {
@@ -242,7 +241,6 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			return gridView;
 		}
 
-		[NotifyPropertyChangedInvocator]
 		private void OnPropertyChanged([CallerMemberName] string propertyName = null)
 		{
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

@@ -1,9 +1,10 @@
 ﻿using System;
 using Eto.Forms;
+using GW2Scratch.ArcdpsLogManager;
 
-namespace GW2Scratch.ArcdpsLogManager
+namespace ArcdpsLogManager.Gtk
 {
-	internal class Program
+	class Program
 	{
 		[STAThread]
 		static void Main()

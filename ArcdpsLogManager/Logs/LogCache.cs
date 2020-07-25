@@ -39,6 +39,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 				using var jsonReader = new JsonTextReader(reader);
 
 				var serializer = new JsonSerializer();
+				serializer.Converters.Add(new VersionConverter());
 				var data = serializer.Deserialize<LogCacheStorage>(jsonReader);
 
 				// Deserialize will not fail with old version, will just assign null instead

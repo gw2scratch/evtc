@@ -6,7 +6,6 @@ using System.Runtime.CompilerServices;
 using GW2Scratch.ArcdpsLogManager.Logs.Filters.Groups;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
-using JetBrains.Annotations;
 
 namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 {
@@ -218,7 +217,6 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 
 		public event PropertyChangedEventHandler PropertyChanged;
 
-		[NotifyPropertyChangedInvocator]
 		private void OnPropertyChanged([CallerMemberName] string propertyName = null)
 		{
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
