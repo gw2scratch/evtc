@@ -1,10 +1,10 @@
-name: .NET Core
+name: Build and test (.NET Core)
 
 on:
   push:
-    branches: [ netcore ]
+    branches: [ master, netcore ]
   pull_request:
-    branches: [ netcore ]
+    branches: [ master, netcore ]
 
 jobs:
   build:
@@ -27,23 +27,38 @@ jobs:
       run: dotnet publish ArcdpsLogManager.Gtk --configuration Release -r linux-x64 --self-contained=false -p:PublishSingleFile=true -o artifacts/linux64/
     - name: Package Log Manager (Linux, GTK, self-contained)
       run: dotnet publish ArcdpsLogManager.Gtk --configuration Release -r linux-x64 --self-contained=true -p:PublishSingleFile=true -o artifacts/linux64-sc/
+    # The PDB files for the self-contained versions should be the same as the non-self-contained version, so we only keep one.
+    - name: Bundle PDBs
+      run: mkdir artifacts/pdb/
+          | mv artifacts/win64/*.pdb artifacts/pdb/
+          | mv artifacts/linux64/*.pdb artifacts/pdb/
+    - name: Prettify executable filenames
+      run: mv artifacts/win64/GW2Scratch.ArcdpsLogManager.Wpf.exe artifacts/win64/ArcdpsLogManager.exe
+          | mv artifacts/win64-sc/GW2Scratch.ArcdpsLogManager.Wpf.exe artifacts/win64-sc/ArcdpsLogManager.exe
+          | mv artifacts/linux64/GW2Scratch.ArcdpsLogManager.Gtk artifacts/linux64/ArcdpsLogManager
+          | mv artifacts/linux64-sc/GW2Scratch.ArcdpsLogManager.Gtk artifacts/linux64-sc/ArcdpsLogManager
     - name: Upload artifact (Windows)
       uses: actions/upload-artifact@v2
       with:
         name: Log Manager (Windows)
-        path: artifacts/win64/
+        path: artifacts/win64/ArcdpsLogManager.exe
     - name: Upload artifact (Windows, self-contained)
       uses: actions/upload-artifact@v2
       with:
         name: Log Manager (Windows, self-contained)
-        path: artifacts/win64-sc/
+        path: artifacts/win64-sc/ArcdpsLogManager.exe
     - name: Upload artifact (Linux)
       uses: actions/upload-artifact@v2
       with:
         name: Log Manager (Linux)
-        path: artifacts/linux64/
+        path: artifacts/linux64/ArcdpsLogManager
     - name: Upload artifact (Linux, self-contained)
       uses: actions/upload-artifact@v2
       with:
         name: Log Manager (Linux, self-contained)
-        path: artifacts/linux64-sc/
+        path: artifacts/linux64-sc/ArcdpsLogManager
+    - name: Upload artifact (PDB files)
+      uses: actions/upload-artifact@v2
+      with:
+        name: PDB files
+        path: artifacts/pdb/
