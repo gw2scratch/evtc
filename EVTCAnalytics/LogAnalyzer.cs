@@ -82,13 +82,13 @@ namespace GW2Scratch.EVTCAnalytics
 
 		public long GetEncounterEnd()
 		{
-			logEncounterEnd ??= log.StartTime.TimeMilliseconds;
+			logEncounterEnd ??= log.EndTime.TimeMilliseconds;
 			return logEncounterEnd.Value;
 		}
 
 		public long GetEncounterStart()
 		{
-			logEncounterStart ??= log.EndTime.TimeMilliseconds;
+			logEncounterStart ??= log.StartTime.TimeMilliseconds;
 			return logEncounterStart.Value;
 		}
 
