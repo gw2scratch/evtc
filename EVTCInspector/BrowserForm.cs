@@ -15,7 +15,6 @@ using GW2Scratch.EVTCAnalytics.Model.Agents;
 using GW2Scratch.EVTCAnalytics.Parsed;
 using GW2Scratch.EVTCAnalytics.Processing;
 using GW2Scratch.EVTCAnalytics.Statistics;
-using ScratchLogHTMLGenerator;
 
 namespace GW2Scratch.EVTCInspector
 {
@@ -45,11 +44,8 @@ namespace GW2Scratch.EVTCInspector
 		private readonly FilterCollection<Agent> agents = new FilterCollection<Agent>();
 		private readonly AgentControl agentControl;
 
-		// HTML
-		private readonly ButtonMenuItem saveHtmlMenuItem;
-		private readonly SaveFileDialog saveHtmlFileDialog;
-		private readonly WebView webView = new WebView();
-		private string LogHtml { get; set; } = "";
+		// Statistics
+		private readonly JsonSerializationControl statisticsJsonControl = new JsonSerializationControl();
 
 		// API data
 		private readonly ApiDataSection apiDataSection;
@@ -75,13 +71,9 @@ namespace GW2Scratch.EVTCInspector
 			var openFileMenuItem = new ButtonMenuItem {Text = "&Open EVTC log"};
 			openFileMenuItem.Click += OpenFileButtonOnClick;
 			openFileMenuItem.Shortcut = Application.Instance.CommonModifier | Keys.O;
-			saveHtmlMenuItem = new ButtonMenuItem {Text = "&Save HTML output", Enabled = false};
-			saveHtmlMenuItem.Click += SaveHtmlButtonOnClick;
-			saveHtmlMenuItem.Shortcut = Application.Instance.CommonModifier | Keys.S;
 
 			var fileMenuItem = new ButtonMenuItem {Text = "&File"};
 			fileMenuItem.Items.Add(openFileMenuItem);
-			fileMenuItem.Items.Add(saveHtmlMenuItem);
 
 			var loadApiDataButton = new ButtonMenuItem {Text = "&Load Data from GW2 API"};
 			loadApiDataButton.Click += LoadApiData;
@@ -94,9 +86,6 @@ namespace GW2Scratch.EVTCInspector
 
 			openFileDialog = new OpenFileDialog();
 			openFileDialog.Filters.Add(new FileFilter("EVTC logs", ".evtc", ".evtc.zip", ".zevtc"));
-
-			saveHtmlFileDialog = new SaveFileDialog();
-			saveHtmlFileDialog.Filters.Add(new FileFilter("HTML files", ".html", ".htm", "*.*"));
 
 			parsedStateLabel = new Label {Text = "No log parsed yet."};
 
@@ -174,16 +163,16 @@ namespace GW2Scratch.EVTCInspector
 			processedTabControl.Pages.Add(new TabPage(eventsDetailLayout) {Text = "Events"});
 			processedTabControl.Pages.Add(new TabPage(agentSplitter) {Text = "Agents"});
 
-			var htmlLayout = new DynamicLayout();
-			htmlLayout.AddRow(webView);
+			var statisticsLayout = new DynamicLayout();
+			statisticsLayout.Add(statisticsJsonControl);
 
 			apiDataSection = new ApiDataSection();
 
 			mainTabControl.Pages.Add(new TabPage(parsedTabControl) {Text = "Parsed data", Padding = MainTabPadding});
 			mainTabControl.Pages.Add(new TabPage(processedTabControl)
 				{Text = "Processed data", Padding = MainTabPadding});
-			mainTabControl.Pages.Add(new TabPage(htmlLayout) {Text = "HTML", Padding = MainTabPadding});
 			mainTabControl.Pages.Add(new TabPage(parsedStateLabel) {Text = "Log", Padding = MainTabPadding});
+			mainTabControl.Pages.Add(new TabPage(statisticsLayout) {Text = "Statistics", Padding = MainTabPadding});
 			mainTabControl.Pages.Add(new TabPage(apiDataSection) {Text = "Api data", Padding = MainTabPadding});
 
 			formLayout.BeginVertical();
@@ -195,15 +184,6 @@ namespace GW2Scratch.EVTCInspector
 		{
 			var apiData = await GW2ApiData.LoadFromApiAsync(new ApiSkillRepository());
 			Application.Instance.Invoke(() => { ApiData = apiData; });
-		}
-
-		private void SaveHtmlButtonOnClick(object sender, EventArgs e)
-		{
-			var result = saveHtmlFileDialog.ShowDialog(this);
-			if (result == DialogResult.Ok)
-			{
-				File.WriteAllText(saveHtmlFileDialog.FileName, LogHtml);
-			}
 		}
 
 		private void AgentGridViewOnSelectedKeyChanged(object sender, EventArgs e)
@@ -232,7 +212,6 @@ namespace GW2Scratch.EVTCInspector
 			{
 				IgnoreUnknownEvents = false
 			};
-			var generator = new HtmlGenerator(ApiData);
 
 			// Parsing
 			var sw = Stopwatch.StartNew();
@@ -290,44 +269,28 @@ namespace GW2Scratch.EVTCInspector
 			}
 
 			// Statistics
-			LogStatistics stats = null;
+			Statistics stats = null;
 			sw.Restart();
 			try
 			{
-				var analysis = new LogAnalyzer(processedLog, ApiData);
-				stats = analysis.GetStatistics();
+				var analyzer = new LogAnalyzer(processedLog, ApiData);
+				stats = new Statistics(processedLog.StartTime.LocalTime,
+					processedLog.PointOfView,
+					analyzer.GetResult(),
+					analyzer.GetMode(),
+					analyzer.GetEncounter(),
+					processedLog.EvtcVersion,
+					analyzer.GetEncounterDuration());
+
 				var statsTime = sw.Elapsed;
 
 				statusStringBuilder.AppendLine($"Statistics generated in {statsTime}");
 
-				// Way too huge by now
-				//Application.Instance.Invoke(() => { statisticsJsonControl.Object = stats; });
+				Application.Instance.Invoke(() => { statisticsJsonControl.Object = stats; });
 			}
 			catch (Exception ex)
 			{
 				statusStringBuilder.AppendLine($"Statistics generation failed: {ex.Message}\n{ex.StackTrace}");
-			}
-
-			// HTML
-			var htmlStringWriter = new StringWriter();
-			sw.Restart();
-			try
-			{
-				generator.WriteHtml(htmlStringWriter, stats);
-				var htmlTime = sw.Elapsed;
-
-				statusStringBuilder.AppendLine($"HTML generated in {htmlTime}");
-
-				Application.Instance.Invoke(() =>
-				{
-					webView.LoadHtml(htmlStringWriter.ToString());
-					LogHtml = htmlStringWriter.ToString();
-					saveHtmlMenuItem.Enabled = true;
-				});
-			}
-			catch (Exception ex)
-			{
-				statusStringBuilder.AppendLine($"HTML generation failed: {ex.Message}\n{ex.StackTrace}");
 			}
 
 			Application.Instance.Invoke(() =>

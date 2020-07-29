@@ -4,18 +4,27 @@ This is the full changelog of the arcdps Log Manager.
 
 ## Log Manager v1.0.0 (in development)
 
-_**New features**_
+#### Important
+
+The Log Manager is now a .NET Core program. It is available in two versions:
+- standard (smaller file size, requires .NET Core 3.1 runtime installed)
+- self-contained (bigger file size, does not require .NET Core installed)
+
+.NET Core 3.1 runtime is available [here](https://dotnet.microsoft.com/download/dotnet-core/3.1/runtime).
+
+#### New features
 - Added better filtering UI for encounters that allows selecting multiple bosses (issue #66)
 - Commander tags are shown in log details for logs from arcdps version 2020-06-09 and newer (issue #72)
 - Added support for Varinia Stormsounder, the main boss in Strike Mission: Cold War (issue #77)
 - Added boss health percentage to failures, both in log list and log details (issue #63)
 
-_**Changes**_
+#### Changes
+- The manager now requires .NET Core 3.1 or newer
 - Moved the filtering UI to the left side, can be collapsed and moved to a tab instead (issue #66)
 - Changed all filters to change shown logs instantly
 - EVTC files are detected correctly if they do not have an extension
 
-_**Fixes**_
+#### Fixes
 - Fixed uploading logs without an extension to dps.report
 - Fixed log uploads failing after 100 seconds (issue #65)
 - Fixed short Twin Largos failures being classified as Unknown result

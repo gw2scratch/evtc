@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net472</TargetFramework>
-    <OutputType>WinExe</OutputType>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>GW2Scratch.EVTCInspector</RootNamespace>
     <AssemblyName>GW2Scratch.EVTCInspector</AssemblyName>
   </PropertyGroup>
@@ -11,14 +10,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Eto.Forms" Version="2.4.1" />
-    <PackageReference Include="Eto.Platform.Gtk" Version="2.4.1" />
-    <PackageReference Include="Eto.Platform.Windows" Version="2.4.1" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="Eto.Forms" Version="2.5.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EVTCAnalytics\EVTCAnalytics.csproj" />
-    <ProjectReference Include="..\EVTCAnalytics.HtmlLogs\EVTCAnalytics.HtmlLogs.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties" />

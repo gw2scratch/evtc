@@ -183,7 +183,12 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			dpsReportUploadButton.Click += (sender, args) => { UploadProcessor.ScheduleDpsReportEIUpload(logData); };
 			dpsReportOpenButton.Click += (sender, args) =>
 			{
-				Process.Start(logData.DpsReportEIUpload.Url);
+				var processInfo = new ProcessStartInfo()
+				{
+					FileName = logData.DpsReportEIUpload.Url,
+					UseShellExecute = true
+				};
+				Process.Start(processInfo);
 			};
 
 			debugButton.Click += (sender, args) =>
@@ -203,7 +208,12 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				}
 				else
 				{
-					Process.Start(logData.FileInfo.DirectoryName);
+					var processInfo = new ProcessStartInfo()
+					{
+						FileName = logData.FileInfo.DirectoryName,
+						UseShellExecute = true
+					};
+					Process.Start(processInfo);
 				}
 			};
 

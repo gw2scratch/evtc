@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using GW2Scratch.EVTCAnalytics.Events;
 using GW2Scratch.EVTCAnalytics.GameData;
+using GW2Scratch.EVTCAnalytics.GameData.Encounters;
 using GW2Scratch.EVTCAnalytics.Model;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
 using GW2Scratch.EVTCAnalytics.Model.Skills;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes;
-using GW2Scratch.EVTCAnalytics.Processing.Encounters.Names;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
 using GW2Scratch.EVTCAnalytics.Statistics;
 using GW2Scratch.EVTCAnalytics.Statistics.Buffs;
@@ -18,9 +18,6 @@ namespace GW2Scratch.EVTCAnalytics
 	/// <summary>
 	/// The Log Analyzer calculates potentially performance-heavy statistics.
 	/// All calculations are cached within the object and not repeated.
-	/// <br/>
-	/// Calling <see cref="GetStatistics"/> will return a <see cref="LogStatistics"/> object
-	/// that contains most of the available results.
 	/// </summary>
 	public class LogAnalyzer
 	{
@@ -78,67 +75,6 @@ namespace GW2Scratch.EVTCAnalytics
 			ApiData = apiData;
 		}
 
-		/// <summary>
-		/// Calculates most statistics for an encounter, such as damage done...
-		/// </summary>
-		[Obsolete("Use methods for individual statistics instead.")]
-		public LogStatistics GetStatistics()
-		{
-			// TODO: This method should be mostly moved to the HtmlGenerator.
-
-			var might = log.Skills.FirstOrDefault(x => x.Id == SkillIds.Might);
-			var vulnerability = log.Skills.FirstOrDefault(x => x.Id == SkillIds.Vulnerability);
-			if (might != null) BuffSimulator.TrackBuff(might, BuffSimulationType.Intensity, 25);
-			if (vulnerability != null) BuffSimulator.TrackBuff(vulnerability, BuffSimulationType.Intensity, 25);
-
-			var buffData = BuffSimulator.SimulateBuffs(log.Agents, log.Events.OfType<BuffEvent>(), GetEncounterEnd());
-
-			var players = GetPlayers();
-
-			var fightDurationMs = GetEncounterEnd() - GetEncounterStart();
-			var fullFightSquadDamageData = new SquadDamageData(fightDurationMs,
-				GetDamageData(players, log.Events.OfType<DamageEvent>(),
-					log.Events.OfType<SkillCastEvent>(), buffData, log.Skills, fightDurationMs).Values);
-
-			var fullFightTargetDamageData = new List<TargetSquadDamageData>();
-			foreach (var target in log.EncounterData.Targets)
-			{
-				var damageData = GetDamageData(
-					players,
-					log.Events
-						.OfType<DamageEvent>()
-						.Where(x => x.Defender == target),
-					log.Events.OfType<SkillCastEvent>(),
-					buffData,
-					log.Skills,
-					fightDurationMs);
-				fullFightTargetDamageData.Add(new TargetSquadDamageData(target, fightDurationMs, damageData.Values));
-			}
-
-			var eventCounts = new Dictionary<Type, int>();
-			foreach (var e in log.Events)
-			{
-				var type = e.GetType();
-				if (!eventCounts.ContainsKey(type))
-				{
-					eventCounts[type] = 0;
-				}
-
-				eventCounts[type]++;
-			}
-
-			var eventCountsByName =
-				eventCounts.Select(x => (x.Key.Name, x.Value)).ToDictionary(x => x.Item1, x => x.Item2);
-
-			var playerData = GetPlayerData();
-
-			string encounterName = new LocalizedEncounterNameProvider().GetEncounterName(log.EncounterData, log.GameLanguage);
-
-			return new LogStatistics(log.StartTime.ServerTime, log.PointOfView, playerData,
-				fullFightSquadDamageData, fullFightTargetDamageData, buffData, GetResult(), GetMode(),
-				encounterName, log.EvtcVersion, eventCountsByName, log.Agents, log.Skills);
-		}
-
 		public TimeSpan GetEncounterDuration()
 		{
 			return new TimeSpan(0, 0, 0, 0, (int)(GetEncounterEnd() - GetEncounterStart()));
@@ -146,13 +82,13 @@ namespace GW2Scratch.EVTCAnalytics
 
 		public long GetEncounterEnd()
 		{
-			logEncounterEnd ??= log.StartTime.TimeMilliseconds;
+			logEncounterEnd ??= log.EndTime.TimeMilliseconds;
 			return logEncounterEnd.Value;
 		}
 
 		public long GetEncounterStart()
 		{
-			logEncounterStart ??= log.EndTime.TimeMilliseconds;
+			logEncounterStart ??= log.StartTime.TimeMilliseconds;
 			return logEncounterStart.Value;
 		}
 
@@ -172,6 +108,11 @@ namespace GW2Scratch.EVTCAnalytics
 		{
 			encounterMode ??= log.EncounterData.ModeDeterminer.GetMode(log);
 			return encounterMode.Value;
+		}
+
+		public Encounter GetEncounter()
+		{
+			return log.EncounterData.Encounter;
 		}
 
 		public IReadOnlyList<PlayerData> GetPlayerData()

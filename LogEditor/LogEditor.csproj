@@ -3,6 +3,8 @@
         <OutputType>Exe</OutputType>
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <LangVersion>latest</LangVersion>
+        <AssemblyName>GW2Scratch.LogEditor</AssemblyName>
+        <RootNamespace>GW2Scratch.LogEditor</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

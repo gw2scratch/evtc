@@ -12,7 +12,7 @@ namespace GW2Scratch.ArcdpsLogManager.Dialogs
 		public ApiDialog(ApiProcessor apiProcessor)
 		{
 			Title = "API data - arcdps Log Manager";
-			ClientSize = new Size(300, -1);
+			ClientSize = new Size(500, -1);
 			var formLayout = new DynamicLayout();
 			Content = formLayout;
 
@@ -35,16 +35,10 @@ namespace GW2Scratch.ArcdpsLogManager.Dialogs
 
 			formLayout.BeginVertical(new Padding(10), new Size(0, 0));
 			{
-				// This is a very hacky solution for WrapMode.Word not working properly on the Gtk platform
 				formLayout.AddRow(new Label
 				{
-					Text = "Guild names and tags have to be loaded from the official GW2 API as",
-					Wrap = WrapMode.None
-				});
-				formLayout.AddRow(new Label
-				{
-					Text = "the EVTC logs only contain GUID values.",
-					Wrap = WrapMode.None
+					Text = "Guild names and tags have to be loaded from the official GW2 API as the EVTC logs only contain GUID values.",
+					Wrap = WrapMode.Word
 				});
 			}
 			formLayout.EndVertical();

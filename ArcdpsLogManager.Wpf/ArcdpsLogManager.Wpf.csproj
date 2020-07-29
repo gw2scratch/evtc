@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <RootNamespace>GW2Scratch.ArcdpsLogManager.Wpf</RootNamespace>
+        <AssemblyName>GW2Scratch.ArcdpsLogManager.Wpf</AssemblyName>
+        <UseWPF>true</UseWPF>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Eto.Platform.Wpf" Version="2.5.3" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\ArcdpsLogManager\ArcdpsLogManager.csproj" />
+    </ItemGroup>
+</Project>
