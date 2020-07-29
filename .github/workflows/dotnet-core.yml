@@ -2,9 +2,9 @@ name: Build and test (.NET Core)
 
 on:
   push:
-    branches: [ master, netcore ]
+    branches: [ master ]
   pull_request:
-    branches: [ master, netcore ]
+    branches: [ master ]
 
 jobs:
   build:
