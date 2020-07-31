@@ -23,6 +23,7 @@ The Log Manager is now a .NET Core program. It is available in two versions:
 - Moved the filtering UI to the left side, can be collapsed and moved to a tab instead (issue #66)
 - Changed all filters to change shown logs instantly
 - EVTC files are detected correctly if they do not have an extension
+- Uncompressed logs are automatically compressed when uploading to dps.report
 
 #### Fixes
 - Fixed uploading logs without an extension to dps.report

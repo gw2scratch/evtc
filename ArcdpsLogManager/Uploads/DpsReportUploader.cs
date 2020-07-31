@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -56,18 +58,38 @@ namespace GW2Scratch.ArcdpsLogManager.Uploads
 				query += $"&userToken={userToken}";
 			}
 
+			bool isZipped = IsZippedLog(log.FileName);
+
 			HttpResponseMessage response;
 			using (var content = new MultipartFormDataContent())
-			using (var stream = log.FileInfo.OpenRead())
 			{
-				// In case a log file does not have an extension, add the standard .evtc.
-				// dps.report is unable to handle files without an extension.
-				string filename = log.FileInfo.Extension == ""
-					? $"{log.FileInfo.Name}.evtc"
-					: log.FileInfo.Name;
+				if (isZipped)
+				{
+					await using (var stream = log.FileInfo.OpenRead())
+					{
+						content.Add(new StreamContent(stream), "file", log.FileInfo.Name);
+						response = await httpClient.PostAsync(query, content, cancellationToken);
+					}
+				}
+				else
+				{
+					string filename = $"{log.FileInfo.Name}.zevtc";
 
-				content.Add(new StreamContent(stream), "file", filename);
-				response = await httpClient.PostAsync(query, content, cancellationToken);
+					await using var evtcStream = log.FileInfo.OpenRead();
+
+					await using var archiveMemoryStream = new MemoryStream();
+					using (var archive = new ZipArchive(archiveMemoryStream, ZipArchiveMode.Create, true))
+					{
+						var entry = archive.CreateEntry(filename);
+
+						await using var entryStream = entry.Open();
+						evtcStream.CopyTo(entryStream);
+					}
+
+					archiveMemoryStream.Seek(0, SeekOrigin.Begin);
+					content.Add(new StreamContent(archiveMemoryStream), "file", filename);
+					response = await httpClient.PostAsync(query, content, cancellationToken);
+				}
 			}
 
 			string json = await response.Content.ReadAsStringAsync();
@@ -84,6 +106,21 @@ namespace GW2Scratch.ArcdpsLogManager.Uploads
 		public void Dispose()
 		{
 			httpClient?.Dispose();
+		}
+
+		private bool IsZippedLog(string filename)
+		{
+			// This is not exactly the best approach, but as far as I know there is no built-in
+			// function for checking if a zip is valid.
+			try
+			{
+				using var archive = ZipFile.OpenRead(filename);
+				return archive.Entries.Count > 0;
+			}
+			catch
+			{
+				return false;
+			}
 		}
 	}
 }
