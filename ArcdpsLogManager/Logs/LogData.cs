@@ -213,14 +213,16 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 				return null;
 			}
 
-			float healthPercentage = log.Events.OfType<AgentHealthUpdateEvent>()
+			float? healthPercentage = log.Events.OfType<AgentHealthUpdateEvent>()
 				.Where(e => targets.Contains(e.Agent))
 				.GroupBy(e => e.Agent)
 				.Select(agentGroup => agentGroup
-					.Select(agent => agent.HealthFraction)
+					.Select(agent => (float?) agent.HealthFraction)
 					.DefaultIfEmpty(1)
 					.Last()
-				).Max();
+				)
+				.DefaultIfEmpty(null)
+				.Max();
 
 			return healthPercentage;
 		}
