@@ -19,7 +19,11 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 				logData = value;
 				var layout = new DynamicLayout();
 
-				var browserButton = new Button {Text = "Open in Scratch EVTC Inspector"};
+				var browserButton = new Button
+				{
+					Text = "Open in Scratch EVTC Inspector",
+					Height = 120
+				};
 
 				layout.BeginVertical(new Padding(5), new Size(5, 5));
 				{
