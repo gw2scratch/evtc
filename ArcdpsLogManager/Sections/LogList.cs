@@ -107,7 +107,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 				DataCell = new TextBoxCell {Binding = new DelegateBinding<LogData, string>(x => nameProvider.GetName(x))}
 			});
 
-			gridView.Columns.Add(new GridColumn()
+			var resultColumn = new GridColumn()
 			{
 				HeaderText = "Result",
 				DataCell = new TextBoxCell
@@ -134,7 +134,8 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 						}
 					})
 				}
-			});
+			};
+			gridView.Columns.Add(resultColumn);
 
 			gridView.Columns.Add(new GridColumn()
 			{
@@ -296,6 +297,19 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 				},
 				{
 					dateColumn, (x, y) => x.EncounterStartTime.CompareTo(y.EncounterStartTime)
+				},
+				{
+					resultColumn, (x, y) =>
+					{
+						if (x.EncounterResult == EncounterResult.Failure && y.EncounterResult == EncounterResult.Failure)
+						{
+							float xHealth = x.HealthPercentage ?? -1.0f;
+							float yHealth = y.HealthPercentage ?? -1.0f;
+							return yHealth.CompareTo(xHealth); // Smaller is closer to success
+						}
+
+						return x.EncounterResult.CompareTo(y.EncounterResult);
+					}
 				}
 			});
 
