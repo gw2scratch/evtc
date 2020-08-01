@@ -18,7 +18,7 @@ using GW2Scratch.EVTCAnalytics.Statistics;
 
 namespace GW2Scratch.EVTCInspector
 {
-	public class BrowserForm : Form
+	public class InspectorForm : Form
 	{
 		private static readonly Padding MainTabPadding = new Padding(2);
 
@@ -61,7 +61,7 @@ namespace GW2Scratch.EVTCInspector
 			}
 		}
 
-		public BrowserForm()
+		public InspectorForm()
 		{
 			Title = "Scratch EVTC Inspector";
 			ClientSize = new Size(800, 600);

@@ -8,7 +8,7 @@ namespace GW2Scratch.EVTCInspector
 		[STAThread]
 		static void Main()
 		{
-			new Application().Run(new BrowserForm());
+			new Application().Run(new InspectorForm());
 		}
 	}
 }

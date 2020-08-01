@@ -15,7 +15,7 @@ namespace GW2Scratch.EVTCInspector.Wpf
 			Style.Add<Eto.Wpf.Forms.DialogHandler>(null, handler => TextOptions.SetTextFormattingMode(handler.Control, TextFormattingMode.Display));
 			*/
 
-			new Application().Run(new BrowserForm());
+			new Application().Run(new InspectorForm());
 		}
 
 	}
