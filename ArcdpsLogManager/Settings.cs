@@ -43,6 +43,7 @@ namespace GW2Scratch.ArcdpsLogManager
 				using (var reader = File.OpenText(filename))
 				{
 					var serializer = new JsonSerializer();
+					serializer.ObjectCreationHandling = ObjectCreationHandling.Replace;
 					return (StoredSettings) serializer.Deserialize(reader, typeof(StoredSettings));
 				}
 			}
