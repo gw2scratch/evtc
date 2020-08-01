@@ -198,8 +198,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 
 		private bool FilterByEncounterName(LogData log)
 		{
-			return LogGroups.Any(x => x.FilterLog(log))
-			       && log.ParsingStatus == ParsingStatus.Parsed;
+			return LogGroups.Any(x => x.FilterLog(log));
 		}
 
 		private bool FilterByTime(LogData log)
