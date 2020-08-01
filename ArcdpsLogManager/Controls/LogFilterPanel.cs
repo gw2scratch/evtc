@@ -66,7 +66,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			{
 				BeginVertical(spacing: new Size(4, 4));
 				{
-					BeginGroup("Result", new Padding(4, 0, 4, 2), spacing: new Size(4, 0));
+					BeginGroup("Result", new Padding(4, 0, 4, 2), spacing: new Size(6, 0));
 					{
 						BeginHorizontal();
 						{
@@ -77,7 +77,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 						EndHorizontal();
 					}
 					EndGroup();
-					BeginGroup("Mode", new Padding(4, 0, 4, 2), spacing: new Size(4, 0));
+					BeginGroup("Mode", new Padding(4, 0, 4, 2), spacing: new Size(6, 0));
 					{
 						BeginHorizontal();
 						{
@@ -87,7 +87,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 						EndHorizontal();
 					}
 					EndGroup();
-					BeginGroup("Time", new Padding(4, 0, 4, 2), spacing: new Size(4, 2));
+					BeginGroup("Time", new Padding(4, 0, 4, 2), spacing: new Size(4, 4));
 					{
 						BeginVertical(spacing: new Size(4, 2));
 						{
