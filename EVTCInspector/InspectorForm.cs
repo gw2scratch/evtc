@@ -106,39 +106,7 @@ namespace GW2Scratch.EVTCInspector
 
 			eventListControl = new EventListControl();
 
-			var agentsGridView = new GridViewGenerator().GetGridView<Agent>();
-			agentsGridView.DataStore = agents;
-			agentsGridView.SelectedItemsChanged += AgentGridViewOnSelectedKeyChanged;
-			agentsGridView.Columns.Insert(0, new GridColumn()
-			{
-				HeaderText = "Type",
-				DataCell = new TextBoxCell()
-				{
-					Binding = new DelegateBinding<object, string>(x => x.GetType().Name)
-				}
-			});
-			var originColumn = agentsGridView.Columns.FirstOrDefault(x => x.HeaderText == nameof(AgentOrigin));
-			if (originColumn != null)
-			{
-				originColumn.DataCell = new TextBoxCell
-				{
-					Binding = new DelegateBinding<Agent, string>(x => x.AgentOrigin.Merged
-						? "Merged"
-						: $"{x.AgentOrigin.OriginalAgentData[0].Address} | {x.AgentOrigin.OriginalAgentData[0].Id}")
-				};
-			}
-
-			var masterColumn = agentsGridView.Columns.FirstOrDefault(x => x.HeaderText == nameof(Agent.Master));
-			if (masterColumn != null)
-			{
-				masterColumn.DataCell = new TextBoxCell
-				{
-					Binding = new DelegateBinding<Agent, string>(x => x.Master?.Name ?? "")
-				};
-			}
-
-			new GridViewSorter<Agent>(agentsGridView, agents).EnableSorting();
-
+			var agentsGridView = ConstructAgentGridView();
 			agentControl = new AgentControl();
 			var mainTabControl = new TabControl();
 
@@ -303,6 +271,92 @@ namespace GW2Scratch.EVTCInspector
 					$"Processed: {processedLog?.Events?.Count} events, {processedLog?.Agents?.Count} agents.");
 				parsedStateLabel.Text = statusStringBuilder.ToString();
 			});
+		}
+
+		private GridView<Agent> ConstructAgentGridView()
+		{
+			var agentsGridView = new GridView<Agent>();
+			agentsGridView.Columns.Add(new GridColumn
+			{
+				HeaderText = "Type",
+				DataCell = new TextBoxCell()
+				{
+					Binding = new DelegateBinding<object, string>(x => x.GetType().Name)
+				}
+			});
+			agentsGridView.Columns.Add(new GridColumn
+			{
+				HeaderText = "Agent Origin",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Agent, string>(x => x.AgentOrigin.Merged
+						? "Merged"
+						: $"{x.AgentOrigin.OriginalAgentData[0].Address} | {x.AgentOrigin.OriginalAgentData[0].Id}")
+				}
+			});
+			agentsGridView.Columns.Add(new GridColumn
+			{
+				HeaderText = "Name",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Agent, string>(x => x.Name)
+				}
+			});
+			agentsGridView.Columns.Add(new GridColumn
+			{
+				HeaderText = "Hitbox Width",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Agent, string>(x => x.HitboxWidth.ToString())
+				}
+			});
+			agentsGridView.Columns.Add(new GridColumn
+			{
+				HeaderText = "Hitbox Height",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Agent, string>(x => x.HitboxHeight.ToString())
+				}
+			});
+			agentsGridView.Columns.Add(new GridColumn
+			{
+				HeaderText = "First Aware Time",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Agent, string>(x => x.FirstAwareTime.ToString())
+				}
+			});
+			agentsGridView.Columns.Add(new GridColumn
+			{
+				HeaderText = "Last Aware Time",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Agent, string>(x => x.LastAwareTime.ToString())
+				}
+			});
+			agentsGridView.Columns.Add(new GridColumn
+			{
+				HeaderText = "Minions",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Agent, string>(x => x.Minions.Count.ToString())
+				}
+			});
+			agentsGridView.Columns.Add(new GridColumn
+			{
+				HeaderText = "Master",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Agent, string>(x => x.Master?.Name ?? "")
+				}
+			});
+
+			agentsGridView.DataStore = agents;
+			agentsGridView.SelectedItemsChanged += AgentGridViewOnSelectedKeyChanged;
+
+			new GridViewSorter<Agent>(agentsGridView, agents).EnableSorting();
+
+			return agentsGridView;
 		}
 	}
 }
