@@ -79,7 +79,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 
 		/// <summary>
 		/// Time when the encounter started.
-		/// Is only an estimate if <see cref="ParsingStatus"/> is not <see cref="Logs.ParsingStatus.Parsed"/>.
+		/// Is only an estimate if <see cref="IsEncounterStartTimePrecise"/> is false.
 		/// </summary>
 		[JsonProperty]
 		public DateTimeOffset EncounterStartTime { get; set; }
@@ -117,6 +117,14 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 		/// </summary>
 		[JsonProperty]
 		public Version ParsingVersion { get; set; }
+
+		/// <summary>
+		/// Indicates whether the start time of the log is precise, or if it's an approximation based on the file modification date.
+		/// </summary>
+		public bool IsEncounterStartTimePrecise => ParsingStatus == ParsingStatus.Parsed && !MissingEncounterStart;
+
+		[JsonProperty]
+		private bool MissingEncounterStart { get; set; } = false;
 
 		[JsonConstructor]
 		public LogData(string fileName) : this(new FileInfo(fileName))
@@ -185,7 +193,15 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 					}
 				).ToArray();
 
-				EncounterStartTime = log.StartTime.ServerTime;
+				if (log.StartTime != null)
+				{
+					EncounterStartTime = log.StartTime.ServerTime;
+				}
+				else
+				{
+					MissingEncounterStart = true;
+				}
+
 				EncounterDuration = analyzer.GetEncounterDuration();
 
 				stopwatch.Stop();

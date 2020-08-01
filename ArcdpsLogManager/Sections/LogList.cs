@@ -170,7 +170,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 							return "Unknown";
 						}
 
-						string prefix = x.ParsingStatus != ParsingStatus.Parsed ? "~" : "";
+						string prefix = x.IsEncounterStartTimePrecise ? "" : "~";
 						string encounterTime = x.EncounterStartTime.ToLocalTime().DateTime
 							.ToString(CultureInfo.CurrentCulture);
 						return $"{prefix}{encounterTime}";
