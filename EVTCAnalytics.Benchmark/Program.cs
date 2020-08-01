@@ -37,6 +37,7 @@ namespace GW2Scratch.EVTCAnalytics.Benchmark
 				return;
 			}
 
+			Console.WriteLine("Filename,Parsing,Processing,Statistics,Total");
 			foreach (string filename in Directory.EnumerateFiles(directory))
 			{
 				if (!filename.EndsWith(".evtc", StringComparison.InvariantCultureIgnoreCase) &&
