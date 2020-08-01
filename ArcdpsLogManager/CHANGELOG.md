@@ -21,6 +21,7 @@ The Log Manager is now a .NET Core program. It is available in two versions:
 #### Changes
 - The manager now requires .NET Core 3.1 or newer
 - Moved the filtering UI to the left side, can be collapsed and moved to a tab instead (issue #66)
+- Increased the default width of the manager window
 - Changed all filters to change shown logs instantly
 - EVTC files are detected correctly if they do not have an extension
 - Uncompressed logs are automatically compressed when uploading to dps.report
@@ -29,6 +30,7 @@ The Log Manager is now a .NET Core program. It is available in two versions:
 - Fixed uploading logs without an extension to dps.report
 - Fixed log uploads failing after 100 seconds (issue #65)
 - Fixed short Twin Largos failures being classified as Unknown result
+- Fixed saving hidden log list columns
 
 ## Log Manager v0.7.2
 
