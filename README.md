@@ -1,4 +1,3 @@
-[![Build Status](https://travis-ci.org/gw2scratch/evtc.svg?branch=master)](https://travis-ci.org/gw2scratch/evtc)
 [![Discord](https://img.shields.io/discord/543804828808249374?label=discord&logo=discord&logoColor=white)](https://discord.gg/TnHpN34)
 
 # GW2Scratch EVTC Tools
