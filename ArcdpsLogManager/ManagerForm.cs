@@ -92,7 +92,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			// Form layout
 			Icon = Resources.GetProgramIcon();
 			Title = "arcdps Log Manager";
-			ClientSize = new Size(1024, 768);
+			ClientSize = new Size(1300, 768);
 			var formLayout = new DynamicLayout();
 			Content = formLayout;
 
