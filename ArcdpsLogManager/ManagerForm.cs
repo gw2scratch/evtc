@@ -195,6 +195,7 @@ namespace GW2Scratch.ArcdpsLogManager
 
 			UpdateSidebarFromSetting();
 			Settings.ShowFilterSidebarChanged += (sender, args) => UpdateSidebarFromSetting();
+			Settings.LogRootPathChanged += (sender, args) => SetupFileSystemWatchers();
 
 			mainSplitter.PositionChanged += (sender, args) =>
 			{
@@ -481,11 +482,21 @@ namespace GW2Scratch.ArcdpsLogManager
 				{
 					var watcher = new FileSystemWatcher(directory);
 					watcher.IncludeSubdirectories = true;
-					watcher.Filter = "*evtc"; // Matches both .evtc and .zevtc files.
+					watcher.Filter = "*";
 					watcher.Created += (sender, args) =>
-						Application.Instance.AsyncInvoke(() => AddNewLog(args.FullPath));
+					{
+						if (LogFinder.IsLikelyEvtcLog(args.FullPath))
+						{
+							Application.Instance.AsyncInvoke(() => AddNewLog(args.FullPath));
+						}
+					};
 					watcher.Renamed += (sender, args) =>
-						Application.Instance.AsyncInvoke(() => AddNewLog(args.FullPath));
+					{
+						if (LogFinder.IsLikelyEvtcLog(args.FullPath))
+						{
+							Application.Instance.AsyncInvoke(() => AddNewLog(args.FullPath));
+						}
+					};
 					watcher.EnableRaisingEvents = true;
 
 					fileSystemWatchers.Add(watcher);

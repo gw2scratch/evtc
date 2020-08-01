@@ -37,7 +37,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 			});
 		}
 
-		private bool IsLikelyEvtcLog(string filename)
+		public bool IsLikelyEvtcLog(string filename)
 		{
 			if (filename.EndsWith(".evtc") || filename.EndsWith(".evtc.zip") || filename.EndsWith(".zevtc"))
 			{
