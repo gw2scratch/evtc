@@ -162,8 +162,8 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 				EvtcVersion = log.EvtcVersion;
 				PointOfView = new PointOfView
 				{
-					AccountName = log.PointOfView.AccountName,
-					CharacterName = log.PointOfView.Name
+					AccountName = log.PointOfView?.AccountName ?? "Unknown",
+					CharacterName = log.PointOfView?.Name ?? "Unknown"
 				};
 				Encounter = log.EncounterData.Encounter;
 				MapId = log.MapId;
