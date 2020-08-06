@@ -132,7 +132,12 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 					var state = log.DpsReportEIUpload.UploadState;
 					if (state == UploadState.Uploaded)
 					{
-						Process.Start(log.DpsReportEIUpload.Url);
+						var processInfo = new ProcessStartInfo()
+						{
+							FileName = log.DpsReportEIUpload.Url,
+							UseShellExecute = true
+						};
+						Process.Start(processInfo);
 					}
 				}
 			};
