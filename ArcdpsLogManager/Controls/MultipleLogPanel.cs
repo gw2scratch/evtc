@@ -72,12 +72,6 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 					currentTags.IntersectWith(tagSet);
 				}
 				return currentTags;
-				//return LogData.Select(it => it.Tags)
-				//.Skip(1)
-				//.Aggregate(
-				//	new HashSet<TagInfo>(logData.First().Tags),
-				//	(h, e) => { h.IntersectWith(e); return h; }
-				//);
 			}
 		}
 

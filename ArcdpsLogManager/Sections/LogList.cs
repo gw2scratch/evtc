@@ -351,7 +351,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 						return x.EncounterResult.CompareTo(y.EncounterResult);
 					}
 				}
-			}); ;
+			});
 
 			sorter.EnableSorting();
 			sorter.SortByDescending(dateColumn);

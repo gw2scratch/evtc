@@ -29,7 +29,6 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 		private readonly GroupCompositionControl groupComposition;
 		private readonly Label parseTimeLabel = new Label();
 		private readonly Label parseStatusLabel = new Label();
-		private readonly Label tagList = new Label();
 		private readonly Button dpsReportUploadButton;
 		private readonly TextBox dpsReportTextBox;
 		private readonly Button dpsReportOpenButton; 

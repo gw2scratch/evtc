@@ -114,7 +114,6 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 					Add(addTagButton, false);
 				}
 				EndHorizontal();
-//				AddRow(new Label { Text = "Add a tag: " }, tagTextBox, addTagButton);
 				Add(null);
 				EndGroup();
 			}
