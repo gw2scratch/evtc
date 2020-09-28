@@ -6,6 +6,7 @@ using Eto.Drawing;
 using Eto.Forms;
 using GW2Scratch.ArcdpsLogManager.Logs;
 using GW2Scratch.ArcdpsLogManager.Processing;
+using static GW2Scratch.ArcdpsLogManager.Logs.LogData;
 using Button = Eto.Forms.Button;
 using Label = Eto.Forms.Label;
 
@@ -21,6 +22,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 		private readonly Label dpsReportUploadedLabel = new Label();
 		private readonly Label dpsReportProcessingFailedLabel = new Label();
 		private readonly Label dpsReportUploadFailedLabel = new Label();
+		private readonly Label dpsReportTagsLabel = new Label() { Text = "Tags" };
 		private readonly TextArea dpsReportLinkTextArea = new TextArea {ReadOnly = true};
 		private readonly Button dpsReportUploadButton = new Button();
 		private readonly Button dpsReportCancelButton = new Button {Text = "Cancel"};
@@ -28,6 +30,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 		private readonly ProgressBar dpsReportUploadProgressBar = new ProgressBar();
 		private readonly DynamicTable dpsReportUploadFailedRow;
 		private readonly DynamicTable dpsReportProcessingFailedRow;
+		private readonly TagControl tagControl;
 
 		public IEnumerable<LogData> LogData
 		{
@@ -49,7 +52,32 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 
 				UpdateDpsReportUploadStatus();
 
+				tagControl.Tags = Tags;
+
 				ResumeLayout();
+			}
+		}
+
+		private IEnumerable<TagInfo> Tags
+		{
+			get
+			{
+				if (logData?.Any() != true) return Enumerable.Empty<TagInfo>();
+
+				var allTags = logData.Select(it => it.Tags);
+
+				var currentTags = new HashSet<TagInfo>(allTags.First());
+				foreach(var tagSet in allTags.Skip(1))
+				{
+					currentTags.IntersectWith(tagSet);
+				}
+				return currentTags;
+				//return LogData.Select(it => it.Tags)
+				//.Skip(1)
+				//.Aggregate(
+				//	new HashSet<TagInfo>(logData.First().Tags),
+				//	(h, e) => { h.IntersectWith(e); return h; }
+				//);
 			}
 		}
 
@@ -146,6 +174,33 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 
 			DynamicTable debugSection;
 
+			tagControl = new TagControl(Tags);
+			tagControl.RaiseTagAdded += (sender, args) => {
+
+				var added = false;
+				foreach (var log in logData)
+				{
+					added |= log.Tags.Add(new TagInfo(args.Name, "user"));
+					if (added)
+					{
+						logProcessor.CacheData(log);
+					}
+				}
+			};
+
+			tagControl.RaiseTagRemoved += (sender, args) => {
+				
+				var removed = false;
+				foreach (var log in logData)
+				{
+					removed |= log.Tags.Remove(new TagInfo(args.Name, "user"));
+					if (removed)
+					{
+						logProcessor.CacheData(log);
+					}
+				}
+			};
+
 			BeginVertical(spacing: new Size(0, 30));
 			{
 				BeginVertical();
@@ -159,6 +214,12 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 					Add(reparseButton);
 				}
 				EndVertical();
+
+				BeginHorizontal();
+				{
+					Add(new Scrollable { Content = tagControl, Border = BorderType.None });
+				}
+				EndHorizontal();
 
 				BeginVertical(spacing: new Size(0, 5));
 				{
