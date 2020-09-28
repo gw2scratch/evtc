@@ -19,9 +19,9 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters.Groups
 		public override string Name => Tag.Name;
 		public override IEnumerable<LogGroup> Subgroups => Enumerable.Empty<LogGroup>();
 
-		public TagLogGroup(string tagType, string tagName)
+		public TagLogGroup(string tagName, string tagType)
 		{
-			Tag = new TagInfo(tagType, tagName);
+			Tag = new TagInfo(tagName, tagType);
 		}
 
 		public TagLogGroup(TagInfo tag)

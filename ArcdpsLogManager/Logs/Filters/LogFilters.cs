@@ -18,6 +18,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 		private bool showParseParsedLogs = true;
 		private bool showParseFailedLogs = true;
 		private IReadOnlyList<LogGroup> logGroups = new List<LogGroup> {new RootLogGroup(Enumerable.Empty<LogData>())};
+		private IReadOnlyList<LogGroup> tagGroups = new List<LogGroup> { new RootLogGroup(Enumerable.Empty<LogData>()) };
 		private bool showSuccessfulLogs = true;
 		private bool showFailedLogs = true;
 		private bool showUnknownLogs = true;
@@ -78,6 +79,17 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 			{
 				if (Equals(value, logGroups)) return;
 				logGroups = value;
+				OnPropertyChanged();
+			}
+		}
+
+		public IReadOnlyList<LogGroup> TagGroups
+		{
+			get => tagGroups;
+			set
+			{
+				if (Equals(value, tagGroups)) return;
+				tagGroups = value;
 				OnPropertyChanged();
 			}
 		}
@@ -178,7 +190,8 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 			       && FilterByResult(log)
 			       && FilterByParsingStatus(log)
 			       && FilterByTime(log)
-			       && FilterByEncounterMode(log);
+			       && FilterByEncounterMode(log)
+				   && FilterByTags(log);
 		}
 
 		private bool FilterByParsingStatus(LogData log)
@@ -199,6 +212,11 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 		private bool FilterByEncounterName(LogData log)
 		{
 			return LogGroups.Any(x => x.FilterLog(log));
+		}
+
+		private bool FilterByTags(LogData log)
+		{
+			return TagGroups.All(x => x.FilterLog(log));
 		}
 
 		private bool FilterByTime(LogData log)
