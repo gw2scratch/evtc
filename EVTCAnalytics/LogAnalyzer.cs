@@ -34,12 +34,6 @@ namespace GW2Scratch.EVTCAnalytics
 		public WeaponSkillData WeaponSkillData { get; set; } = new WeaponSkillData();
 
 		/// <summary>
-		/// Definitions of methods that can be used to detect trait specializations.
-		/// If replaced after specializations were detected, they will not be updated.
-		/// </summary>
-		public SpecializationDetections SpecializationDetections { get; set; } = new SpecializationDetections();
-
-		/// <summary>
 		/// Definitions of skill detections used to determine which skills a player was using.
 		/// If replaced after skills were detected, they will not be updated.
 		/// </summary>
@@ -306,32 +300,11 @@ namespace GW2Scratch.EVTCAnalytics
 				utilitySkills?.RemoveWhere(x => ignoredSkills.Contains(x.Id));
 				eliteSkills?.RemoveWhere(x => ignoredSkills.Contains(x.Id));
 
-				var specializationDetections =
-					SpecializationDetections.GetSpecializationDetections(player.Profession).ToArray();
-				var badges = new List<PlayerBadge>();
-
-				var specializations = new HashSet<CoreSpecialization>();
-				foreach (var e in log.Events)
-				{
-					foreach (var detection in specializationDetections)
-					{
-						if (detection.Detection.IsDetected(player, e))
-						{
-							specializations.Add(detection.Specialization);
-						}
-					}
-				}
-
-				foreach (var spec in specializations.OrderBy(x => x.ToString()))
-				{
-					badges.Add(new PlayerBadge(spec.ToString(), BadgeType.Specialization));
-				}
-
 				var rotation = RotationCalculator.GetRotation(log, player);
 
 				var data = new PlayerData(player, downCounts[player], deathCounts[player], rotation, usedSkills[player],
 					healingSkills, utilitySkills, eliteSkills, land1Weapon1, land1Weapon2, land2Weapon1, land2Weapon2,
-					land1WeaponSkills, land2WeaponSkills, badges);
+					land1WeaponSkills, land2WeaponSkills);
 
 				playerData.Add(data);
 			}
