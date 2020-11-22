@@ -58,6 +58,11 @@ namespace GW2Scratch.EVTCAnalytics
 		private long? logEncounterStart = null;
 		private long? logEncounterEnd = null;
 
+		// Since the health fraction result is float?, we cannot rely on the value being null
+		// meaning that we haven't calculated the health fraction yet
+		private bool healthFractionCalculated = false;
+		private float? healthFraction = null;
+
 		/// <summary>
 		/// Creates a new instance of a log analyzer for a provided log.
 		/// </summary>
@@ -102,6 +107,19 @@ namespace GW2Scratch.EVTCAnalytics
 		{
 			encounterMode ??= log.EncounterData.ModeDeterminer.GetMode(log);
 			return encounterMode.Value;
+		}
+
+		public float? GetMainEnemyHealthFraction()
+		{
+			if (healthFractionCalculated)
+			{
+				return healthFraction;
+			}
+
+			healthFraction = log.EncounterData.HealthDeterminer.GetMainEnemyHealthFraction(log);
+			healthFractionCalculated = true;
+
+			return healthFraction;
 		}
 
 		public Encounter GetEncounter()

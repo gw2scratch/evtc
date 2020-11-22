@@ -9,6 +9,7 @@ using GW2Scratch.EVTCAnalytics.Model.Agents;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
+using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health;
 using GW2Scratch.EVTCAnalytics.Processing.Steps;
 
 namespace GW2Scratch.EVTCAnalytics.Processing
@@ -162,6 +163,12 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 										result => result == EncounterResult.Success ? EncounterResult.Failure : EncounterResult.Success
 									)
 								));
+								// The health of the Deimos gadget on the upper platform is set to 10% only after
+								// the NPC used in the first part of the fight reaches 10% of its health.
+
+								// If there has already been an attempt in this instance before, the gadget
+								// retains its health from the previous attempt until the last phase is reached again.
+								builder.WithHealthDeterminer(new SequentialHealthDeterminer(mainTarget, mainGadget));
 							}
 							else
 							{
@@ -465,7 +472,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				encounter,
 				new List<Agent> {mainTarget},
 				new AgentKilledDeterminer(mainTarget),
-				new ConstantModeDeterminer(EncounterMode.Normal)
+				new ConstantModeDeterminer(EncounterMode.Normal),
+				new MaxMinHealthDeterminer()
 			);
 			if (mergeMainTarget && mainTarget is NPC npc)
 			{
@@ -496,7 +504,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				encounter,
 				targets.ToList(),
 				result,
-				new ConstantModeDeterminer(EncounterMode.Normal)
+				new ConstantModeDeterminer(EncounterMode.Normal),
+				new MaxMinHealthDeterminer()
 			);
 		}
 

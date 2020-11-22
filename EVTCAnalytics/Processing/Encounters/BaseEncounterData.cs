@@ -1,11 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
-using GW2Scratch.EVTCAnalytics.Events;
 using GW2Scratch.EVTCAnalytics.GameData.Encounters;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes;
-using GW2Scratch.EVTCAnalytics.Processing.Encounters.Names;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
+using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health;
 using GW2Scratch.EVTCAnalytics.Processing.Steps;
 
 namespace GW2Scratch.EVTCAnalytics.Processing.Encounters
@@ -15,6 +14,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters
 		public Encounter Encounter { get; }
 		public IResultDeterminer ResultDeterminer { get; }
 		public IModeDeterminer ModeDeterminer { get; }
+		public IHealthDeterminer HealthDeterminer { get; }
 		public IReadOnlyList<IPostProcessingStep> ProcessingSteps { get; }
 		public List<Agent> Targets { get; }
 
@@ -23,12 +23,14 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters
 			IEnumerable<Agent> importantAgents,
 			IResultDeterminer resultDeterminer,
 			IModeDeterminer modeDeterminer,
+			IHealthDeterminer healthDeterminer,
 			IReadOnlyList<IPostProcessingStep> processingSteps)
 		{
 			Targets = importantAgents.ToList();
 			Encounter = encounter;
 			ResultDeterminer = resultDeterminer;
 			ModeDeterminer = modeDeterminer;
+			HealthDeterminer = healthDeterminer;
 			ProcessingSteps = processingSteps;
 		}
 	}

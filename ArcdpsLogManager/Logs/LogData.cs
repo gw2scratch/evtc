@@ -8,7 +8,6 @@ using GW2Scratch.ArcdpsLogManager.Analytics;
 using GW2Scratch.EVTCAnalytics.Events;
 using GW2Scratch.EVTCAnalytics.GameData;
 using GW2Scratch.EVTCAnalytics.GameData.Encounters;
-using GW2Scratch.EVTCAnalytics.Model;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
@@ -178,7 +177,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 				MainTargetName = log.MainTarget?.Name ?? UnknownMainTargetName;
 				EncounterResult = analyzer.GetResult();
 				EncounterMode = analyzer.GetMode();
-				HealthPercentage = GetHealthPercentage(log);
+				HealthPercentage = analyzer.GetMainEnemyHealthFraction();
 				if (EncounterResult == EncounterResult.Success)
 				{
 					HealthPercentage = 0;
@@ -219,28 +218,6 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 			{
 				ParsingVersion = typeof(LogAnalytics).Assembly.GetName().Version;
 			}
-		}
-
-		private float? GetHealthPercentage(Log log)
-		{
-			var targets = log.EncounterData.Targets.ToHashSet();
-			if (targets.Count == 0)
-			{
-				return null;
-			}
-
-			float? healthPercentage = log.Events.OfType<AgentHealthUpdateEvent>()
-				.Where(e => targets.Contains(e.Agent))
-				.GroupBy(e => e.Agent)
-				.Select(agentGroup => agentGroup
-					.Select(agent => (float?) agent.HealthFraction)
-					.DefaultIfEmpty(1)
-					.Last()
-				)
-				.DefaultIfEmpty(null)
-				.Max();
-
-			return healthPercentage;
 		}
 
 		private string GetGuildGuid(byte[] guidBytes)
