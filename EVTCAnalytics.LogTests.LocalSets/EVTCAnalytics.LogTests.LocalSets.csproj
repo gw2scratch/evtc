@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
-        <RootNamespace>GW2Scratch.EVTCAnalytics.LogTests</RootNamespace>
-        <AssemblyName>GW2Scratch.EVTCAnalytics.LogTests</AssemblyName>
+        <RootNamespace>GW2Scratch.EVTCAnalytics.LogTests.LocalSets</RootNamespace>
+        <AssemblyName>GW2Scratch.EVTCAnalytics.LogTests.LocalSets</AssemblyName>
         <OutputType>Exe</OutputType>
         <LangVersion>latest</LangVersion>
     </PropertyGroup>
