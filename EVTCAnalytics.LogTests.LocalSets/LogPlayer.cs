@@ -1,7 +1,7 @@
 using System;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
 
-namespace GW2Scratch.EVTCAnalytics.LogTests
+namespace GW2Scratch.EVTCAnalytics.LogTests.LocalSets
 {
 	public class LogPlayer : IEquatable<LogPlayer>
 	{

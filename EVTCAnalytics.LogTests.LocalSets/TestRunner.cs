@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace GW2Scratch.EVTCAnalytics.LogTests
+namespace GW2Scratch.EVTCAnalytics.LogTests.LocalSets
 {
 	public class TestRunner
 	{

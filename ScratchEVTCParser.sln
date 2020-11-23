@@ -12,7 +12,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVTCAnalytics.Benchmark", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RotationComparison", "RotationComparison\RotationComparison.csproj", "{E20EFF93-9A56-4B0C-9272-E7B0B2331372}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVTCAnalytics.LogTests", "EVTCAnalytics.LogTests\EVTCAnalytics.LogTests.csproj", "{327293C9-155C-4415-812E-F81E3420D243}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVTCAnalytics.LogTests.LocalSets", "EVTCAnalytics.LogTests.LocalSets\EVTCAnalytics.LogTests.LocalSets.csproj", "{327293C9-155C-4415-812E-F81E3420D243}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogEditor", "LogEditor\LogEditor.csproj", "{1487967D-C775-4EFA-91CA-E7CB719A591E}"
 EndProject
