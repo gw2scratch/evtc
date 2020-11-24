@@ -14,15 +14,7 @@ namespace GW2Scratch.EVTCAnalytics.LogTests.EliteInsights
 		{
 			var results = new List<CheckResult>();
 
-			var firstFilename = Directory.EnumerateFiles(directory)
-				.FirstOrDefault(x => x.EndsWith(".evtc") || x.EndsWith(".evtc.zip") || x.EndsWith(".zevtc"));
-			if (firstFilename == null)
-			{
-				Console.Error.WriteLine("No logs found.");
-				return;
-			}
-
-			foreach (string filename in Directory.EnumerateFiles(directory))
+			foreach (string filename in Directory.EnumerateFiles(directory, "*", SearchOption.AllDirectories))
 			{
 				if (!filename.EndsWith(".evtc", StringComparison.InvariantCultureIgnoreCase) &&
 				    !filename.EndsWith(".evtc.zip", StringComparison.InvariantCultureIgnoreCase) &&
