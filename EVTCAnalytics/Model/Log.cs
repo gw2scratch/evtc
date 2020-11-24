@@ -21,6 +21,12 @@ namespace GW2Scratch.EVTCAnalytics.Model
 		public GameLanguage GameLanguage { get; }
 
 		public LogTime StartTime { get; }
+		/// <summary>
+		/// The time of the log ending. This may be <see langword="null"/> in cases when the log ends abruptly.
+		/// </summary>
+		/// <remarks>
+		/// Older versions of arcdps have often had their log end events missing, which makes <see langword="null"/> values here common.
+		/// </remarks>
 		public LogTime EndTime { get; }
 
 		public LogType LogType { get; }
