@@ -90,7 +90,7 @@ namespace GW2Scratch.EVTCAnalytics
 			if (logEncounterEnd == null)
 			{
 				logResult ??= log.EncounterData.ResultDeterminer.GetResult(log.Events);
-				logEncounterEnd = logResult.Time ?? log.EndTime.TimeMilliseconds;
+				logEncounterEnd = logResult.Time ?? log.EndTime?.TimeMilliseconds ?? log.Events[^1].Time;
 			}
 
 			return logEncounterEnd.Value;
