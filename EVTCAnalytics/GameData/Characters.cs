@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
 
@@ -99,6 +100,38 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		public static EliteSpecialization GetPathOfFireEliteSpecialization(Profession profession)
 		{
 			return PathOfFireSpecializationsByProfession[profession];
+		}
+
+		/// <summary>
+		/// Provides the base profession for an elite specialization.
+		/// </summary>
+		/// <param name="specialization">An elite specialization</param>
+		/// <returns>The base <see cref="Profession"/> of the specified <see cref="EliteSpecialization"/>.</returns>
+		/// <exception cref="ArgumentException">Thrown if <see cref="EliteSpecialization.None"/> is passed as <paramref name="specialization"/>.</exception>
+		public static Profession GetProfession(EliteSpecialization specialization)
+		{
+			if (specialization == EliteSpecialization.None)
+			{
+				throw new ArgumentException("No elite specialization specified", nameof(specialization));
+			}
+
+			foreach (var (profession, spec) in HeartOfThornsSpecializationsByProfession)
+			{
+				if (specialization == spec)
+				{
+					return profession;
+				}
+			}
+
+			foreach (var (profession, spec) in PathOfFireSpecializationsByProfession)
+			{
+				if (specialization == spec)
+				{
+					return profession;
+				}
+			}
+
+			throw new NotSupportedException("Profession of elite specialization not found");
 		}
 	}
 }

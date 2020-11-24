@@ -4,7 +4,7 @@ using GW2Scratch.EVTCAnalytics.GameData.Encounters;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
 
-namespace GW2Scratch.EVTCAnalytics.LogTests.LocalSets
+namespace GW2Scratch.EVTCAnalytics.LogTests
 {
 	public class CheckResult
 	{
@@ -15,5 +15,6 @@ namespace GW2Scratch.EVTCAnalytics.LogTests.LocalSets
 		public Result<EncounterResult> Result { get; set; }
 		public Result<EncounterMode> Mode { get; set; }
 		public Result<List<LogPlayer>> Players { get; set; }
+		public Result<TimeSpan> Duration { get; set; }
 	}
 }
