@@ -1,31 +1,48 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace GW2Scratch.EVTCAnalytics.LogTests.LocalSets
+namespace GW2Scratch.EVTCAnalytics.LogTests.EliteInsights
 {
 	public class TestRunner
 	{
 		public bool PrintUnchecked { get; set; } = false;
+		public EliteInsightsLogChecker Checker { get; set; } = new EliteInsightsLogChecker();
 
-		public void TestLogs(IEnumerable<LogDefinition> logs, TextWriter writer)
+		public void TestLogs(string directory, TextWriter writer)
 		{
-			var checker = new DefinitionLogChecker();
 			var results = new List<CheckResult>();
 
-			foreach (var log in logs)
+			var firstFilename = Directory.EnumerateFiles(directory)
+				.FirstOrDefault(x => x.EndsWith(".evtc") || x.EndsWith(".evtc.zip") || x.EndsWith(".zevtc"));
+			if (firstFilename == null)
 			{
-				var result = checker.CheckLog(log);
+				Console.Error.WriteLine("No logs found.");
+				return;
+			}
+
+			foreach (string filename in Directory.EnumerateFiles(directory))
+			{
+				if (!filename.EndsWith(".evtc", StringComparison.InvariantCultureIgnoreCase) &&
+				    !filename.EndsWith(".evtc.zip", StringComparison.InvariantCultureIgnoreCase) &&
+				    !filename.EndsWith(".zevtc", StringComparison.InvariantCultureIgnoreCase))
+				{
+					Console.Error.WriteLine($"Ignoring file: {filename}");
+					continue;
+				}
+
+				var result = Checker.CheckLog(filename);
 				results.Add(result);
 
 				if (result.ProcessingFailed)
 				{
-					writer.WriteLine($"FAILED {log.Filename} {log.Comment}");
+					writer.WriteLine($"FAILED {filename}");
 					writer.WriteLine($"\tException: {result.ProcessingException}");
 					continue;
 				}
 
-				writer.WriteLine($"{(result.Correct ? "OK" : "WRONG")} {log.Filename} {log.Comment}");
+				writer.WriteLine($"{(result.Correct ? "OK" : "WRONG")} {filename}");
 				if (!result.Correct)
 				{
 					PrintResult(result.Encounter, "Encounter", writer);
@@ -51,6 +68,7 @@ namespace GW2Scratch.EVTCAnalytics.LogTests.LocalSets
 				{
 					writer.WriteLine($"\t\t\t{player.CharacterName} {player.AccountName} {player.Profession} {player.EliteSpecialization} {player.Subgroup}");
 				}
+
 				writer.WriteLine($"\t\tActual ({result.ActualValue.Count}):");
 				foreach (var player in result.ActualValue)
 				{

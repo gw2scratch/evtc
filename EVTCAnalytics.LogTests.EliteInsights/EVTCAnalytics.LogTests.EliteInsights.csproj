@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <RootNamespace>GW2Scratch.EVTCAnalytics.LogTests.EliteInsights</RootNamespace>
+        <AssemblyName>GW2Scratch.EVTCAnalytics.LogTests.EliteInsights</AssemblyName>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <DefaultItemExcludes>$(DefaultItemExcludes);EI\**\*</DefaultItemExcludes>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\EVTCAnalytics.LogTests\EVTCAnalytics.LogTests.csproj" />
+        <ProjectReference Include="..\EVTCAnalytics\EVTCAnalytics.csproj" />
+        <ProjectReference Include="..\EI\GW2EIEvtcParser\GW2EIEvtcParser.csproj" />
+    </ItemGroup>
+    
+    <Target Name="CheckSubmodule" BeforeTargets="BeforeResolveReferences">
+        <Warning Condition="!Exists('..\EI\GW2EIEvtcParser\GW2EIEvtcParser.csproj')" Text="Elite Insights is included in a submodule that does not seem to be present. Consider running git submodule init and git submodule update." />
+    </Target>
+
+</Project>

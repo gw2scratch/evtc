@@ -1,0 +1,3 @@
+[submodule "EI"]
+	path = EI
+	url = https://github.com/baaron4/GW2-Elite-Insights-Parser.git

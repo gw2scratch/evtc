@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+        <RootNamespace>GW2Scratch.EVTCAnalytics.LogTests</RootNamespace>
+        <AssemblyName>GW2Scratch.EVTCAnalytics.LogTests</AssemblyName>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\EVTCAnalytics\EVTCAnalytics.csproj" />
+    </ItemGroup>
+
+</Project>

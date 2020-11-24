@@ -1,0 +1,138 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using GW2EIEvtcParser;
+using GW2Scratch.EVTCAnalytics.GameData.Encounters;
+using GW2Scratch.EVTCAnalytics.Model.Agents;
+using GW2Scratch.EVTCAnalytics.Processing;
+using GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes;
+using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
+
+namespace GW2Scratch.EVTCAnalytics.LogTests.EliteInsights
+{
+	public class EliteInsightsLogChecker
+	{
+		public bool CheckPlayers { get; set; } = true;
+		public bool CheckMode { get; set; } = true;
+		public bool CheckResult { get; set; } = true;
+		public bool CheckDuration { get; set; } = true;
+
+		public TimeSpan DurationEpsilon { get; set; } = TimeSpan.FromMilliseconds(10);
+
+		private class EIController : ParserController
+		{
+			public EIController() : base(new Version(0, 0))
+			{
+			}
+		}
+
+		public CheckResult CheckLog(string filename)
+		{
+			try
+			{
+				var parser = new EVTCParser();
+				var processor = new LogProcessor();
+
+				var parsedLog = parser.ParseLog(filename);
+				var log = processor.ProcessLog(parsedLog);
+				var analyzer = new LogAnalyzer(log);
+
+				var encounter = log.EncounterData.Encounter;
+				var mode = analyzer.GetMode();
+				var result = analyzer.GetResult();
+				var players = analyzer.GetPlayers()
+					.Select(p => new LogPlayer
+					{
+						CharacterName = p.Name,
+						AccountName = p.AccountName,
+						Profession = p.Profession,
+						EliteSpecialization = p.EliteSpecialization,
+						Subgroup = p.Subgroup
+					}).ToList();
+				var duration = analyzer.GetEncounterDuration();
+
+
+				var eiParser = new EvtcParser(new EvtcParserSettings(false, false, true, false, false, 0));
+				var eiLog = eiParser.ParseLog(new EIController(), new FileInfo(filename));
+
+				var eiDuration = TimeSpan.FromMilliseconds(eiLog.FightData.FightEnd - eiLog.FightData.FightStart);
+				var eiResult = eiLog.FightData.Success ? EncounterResult.Success : EncounterResult.Failure;
+				var eiPlayers = eiLog.PlayerList
+					.Select(p =>
+					{
+						Profession profession;
+						if (Enum.TryParse(p.Prof, out EliteSpecialization specialization))
+						{
+							profession = GameData.Characters.GetProfession(specialization);
+						}
+						else
+						{
+							specialization = EliteSpecialization.None;
+							if (!Enum.TryParse(p.Prof, out profession))
+							{
+								throw new Exception("Unknown profession found in Elite Insights data.");
+							}
+						}
+
+						return new LogPlayer
+						{
+							CharacterName = p.Character,
+							// EI strips the leading : in account names, so we re-add it
+							AccountName = $":{p.Account}",
+							Profession = profession,
+							EliteSpecialization = specialization,
+							Subgroup = p.Group
+						};
+					}).ToList();
+
+				var eiMode = eiLog.FightData.IsCM ? EncounterMode.Challenge : EncounterMode.Normal;
+
+				// There is no reasonable way to compare EI and Analytics encounters
+				var encounterResult = Result<Encounter>.UncheckedResult(encounter);
+
+				var resultResult = CheckResult
+					? Result<EncounterResult>.CheckedResult(eiResult, result)
+					: Result<EncounterResult>.UncheckedResult(result);
+
+				var modeResult = CheckMode
+					? Result<EncounterMode>.CheckedResult(eiMode, mode)
+					: Result<EncounterMode>.UncheckedResult(mode);
+
+				var playerResult = CheckPlayers
+					? players.ToHashSet().SetEquals(eiPlayers)
+						? Result<List<LogPlayer>>.CorrectResult(players)
+						: Result<List<LogPlayer>>.IncorrectResult(eiPlayers, players)
+					: Result<List<LogPlayer>>.UncheckedResult(players);
+
+				var durationResult = CheckDuration
+					? (eiDuration - duration) < DurationEpsilon
+						? Result<TimeSpan>.CorrectResult(duration)
+						: Result<TimeSpan>.IncorrectResult(eiDuration, duration)
+					: Result<TimeSpan>.UncheckedResult(duration);
+
+				bool correct = encounterResult.Correct && resultResult.Correct && modeResult.Correct && playerResult.Correct;
+
+				return new CheckResult
+				{
+					Correct = correct,
+					ProcessingFailed = false,
+					Encounter = encounterResult,
+					Mode = modeResult,
+					Result = resultResult,
+					Players = playerResult,
+					Duration = durationResult
+				};
+			}
+			catch (Exception e)
+			{
+				return new CheckResult
+				{
+					Correct = false,
+					ProcessingFailed = true,
+					ProcessingException = e
+				};
+			}
+		}
+	}
+}
