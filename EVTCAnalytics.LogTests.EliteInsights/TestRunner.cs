@@ -40,6 +40,7 @@ namespace GW2Scratch.EVTCAnalytics.LogTests.EliteInsights
 					PrintResult(result.Encounter, "Encounter", writer);
 					PrintResult(result.Result, "Result", writer);
 					PrintResult(result.Mode, "Mode", writer);
+					PrintResult(result.Duration, "Duration", writer);
 					PrintPlayerResult(result.Players, "Players", writer);
 				}
 			}

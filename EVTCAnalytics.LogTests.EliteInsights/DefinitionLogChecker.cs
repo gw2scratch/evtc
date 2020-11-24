@@ -111,7 +111,7 @@ namespace GW2Scratch.EVTCAnalytics.LogTests.EliteInsights
 						: Result<TimeSpan>.IncorrectResult(eiDuration, duration)
 					: Result<TimeSpan>.UncheckedResult(duration);
 
-				bool correct = encounterResult.Correct && resultResult.Correct && modeResult.Correct && playerResult.Correct;
+				bool correct = encounterResult.Correct && resultResult.Correct && modeResult.Correct && playerResult.Correct && durationResult.Correct;
 
 				return new CheckResult
 				{
