@@ -27,6 +27,12 @@ namespace GW2Scratch.EVTCAnalytics.LogTests.EliteInsights
 				var result = Checker.CheckLog(filename);
 				results.Add(result);
 
+				if (result.Ignored)
+				{
+					writer.WriteLine($"IGNORED {filename}");
+					continue;
+				}
+
 				if (result.ProcessingFailed)
 				{
 					writer.WriteLine($"FAILED {filename}");

@@ -18,6 +18,12 @@ namespace GW2Scratch.EVTCAnalytics.LogTests.LocalSets
 				var result = checker.CheckLog(log);
 				results.Add(result);
 
+				if (result.Ignored)
+				{
+					writer.WriteLine($"IGNORED {log.Filename} {log.Comment}");
+					continue;
+				}
+
 				if (result.ProcessingFailed)
 				{
 					writer.WriteLine($"FAILED {log.Filename} {log.Comment}");
