@@ -8,6 +8,7 @@ namespace GW2Scratch.EVTCAnalytics.LogTests
 {
 	public class CheckResult
 	{
+		public bool Ignored { get; set; }
 		public bool Correct { get; set; }
 		public bool ProcessingFailed { get; set; }
 		public Exception ProcessingException { get; set; }

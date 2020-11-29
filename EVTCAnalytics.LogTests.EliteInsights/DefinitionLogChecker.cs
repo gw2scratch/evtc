@@ -52,6 +52,24 @@ namespace GW2Scratch.EVTCAnalytics.LogTests.EliteInsights
 					}).ToList();
 				var duration = analyzer.GetEncounterDuration();
 
+				// This combination of builds resulted in logs that did not contain NPCs other than the main target.
+				// There is not much of a point in checking these.
+				// This outdated version of arcdps was commonly used for extended periods of time due to it being
+				// the last version that had working arcdps build templates.
+				if (log.EvtcVersion == "EVTC20191001" && (log.GameBuild ?? 0) >= 100565)
+				{
+					return new CheckResult
+					{
+						Ignored = true,
+						Correct = false,
+						ProcessingFailed = false,
+						Encounter = Result<Encounter>.UncheckedResult(encounter),
+						Mode = Result<EncounterMode>.UncheckedResult(mode),
+						Result = Result<EncounterResult>.UncheckedResult(result),
+						Players = Result<List<LogPlayer>>.UncheckedResult(players),
+						Duration = Result<TimeSpan>.UncheckedResult(duration)
+					};
+				}
 
 				var eiParser = new EvtcParser(new EvtcParserSettings(false, false, true, false, false, 0));
 				var eiLog = eiParser.ParseLog(new EIController(), new FileInfo(filename));
@@ -71,7 +89,7 @@ namespace GW2Scratch.EVTCAnalytics.LogTests.EliteInsights
 							specialization = EliteSpecialization.None;
 							if (!Enum.TryParse(p.Prof, out profession))
 							{
-								throw new Exception("Unknown profession found in Elite Insights data.");
+								throw new Exception($"Unknown profession {p.Prof} found in Elite Insights data.");
 							}
 						}
 

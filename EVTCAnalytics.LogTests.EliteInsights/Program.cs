@@ -1,18 +1,11 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
-using GW2EIEvtcParser;
 using GW2EIGW2API;
-using GW2Scratch.EVTCAnalytics.Processing;
-using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
 
 namespace GW2Scratch.EVTCAnalytics.LogTests.EliteInsights
 {
 	class Program
 	{
-		public static EVTCParser Parser { get; set; } = new EVTCParser();
-		public static LogProcessor Processor { get; set; } = new LogProcessor();
-
 		public static void Main(string[] args)
 		{
 			if (args.Length < 1)
@@ -44,7 +37,8 @@ namespace GW2Scratch.EVTCAnalytics.LogTests.EliteInsights
 
 			var testRunner = new TestRunner
 			{
-				Checker = {CheckPlayers = false}
+				Checker = {CheckPlayers = false},
+				PrintUnchecked = true
 			};
 			testRunner.TestLogs(directory, Console.Out);
 		}
