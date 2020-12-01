@@ -37,7 +37,11 @@ namespace GW2Scratch.EVTCAnalytics.LogTests.EliteInsights
 
 			var testRunner = new TestRunner
 			{
-				Checker = {CheckPlayers = false},
+				Checker =
+				{
+					CheckPlayers = false,
+					DurationEpsilon = TimeSpan.FromMilliseconds(200)
+				},
 				PrintUnchecked = true
 			};
 			testRunner.TestLogs(directory, Console.Out);
