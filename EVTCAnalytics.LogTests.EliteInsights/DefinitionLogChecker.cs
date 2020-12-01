@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using GW2EIEvtcParser;
+using GW2EIEvtcParser.Exceptions;
 using GW2Scratch.EVTCAnalytics.GameData.Encounters;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
 using GW2Scratch.EVTCAnalytics.Processing;
@@ -141,6 +142,14 @@ namespace GW2Scratch.EVTCAnalytics.LogTests.EliteInsights
 					Result = resultResult,
 					Players = playerResult,
 					Duration = durationResult
+				};
+			}
+			catch (TooShortException)
+			{
+				return new CheckResult
+				{
+					Ignored = true,
+					Correct = false
 				};
 			}
 			catch (Exception e)
