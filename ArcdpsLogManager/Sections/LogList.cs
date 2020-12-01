@@ -104,6 +104,28 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			return new MultipleLogPanel(logProcessor, uploadProcessor);
 		}
 
+		private void Favorites_CellClick(object sender, GridCellMouseEventArgs args)
+		{
+			if(args.Column == 0) // favorites
+			{
+				if(args.Item is LogData)
+				{
+					var data = args.Item as LogData;
+					if (data.IsFavorite())
+					{
+						data.Tags.Remove(TagInfo.Favorites);
+					} else
+					{
+						data.Tags.Add(TagInfo.Favorites);
+					}
+
+					logProcessor.CacheData(data);
+
+					(sender as GridView).Invalidate();
+				}				
+			}
+		}
+
 		private GridView<LogData> ConstructLogGridView(LogDetailPanel detailPanel, MultipleLogPanel multipleLogPanel)
 		{
 			var gridView = new GridView<LogData>
@@ -111,29 +133,26 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 				AllowMultipleSelection = true
 			};
 
+			gridView.CellClick += Favorites_CellClick;
+
 			var favoritesColumn = new GridColumn()
 			{
-				HeaderText = "⭐",
-				DataCell = new CheckBoxCell
+				HeaderText = "★",
+				DataCell = new TextBoxCell
 				{
-					Binding = new DelegateBinding<LogData, bool?>(
-					   getValue: data => data.IsFavorite(),
-					   setValue: (data, fav) =>
-					   {
-						   // This seems like a thing I would normally have a ViewModel do.
-						   if (fav == true && !data.IsFavorite())
+					Binding = new DelegateBinding<LogData, string>(
+					   data => {
+						   if (data.IsFavorite())
 						   {
-							   data.Tags.Add(TagInfo.Favorites);
-						   }
-						   if (fav == false && data.IsFavorite())
+							   return "★";
+						   } else
 						   {
-							   data.Tags.Remove(TagInfo.Favorites);
+							   return "☆";
 						   }
-						   logProcessor.CacheData(data);
-					   }
-					)
-				},
-				Editable = true
+						}
+					), 
+					
+				}
 			};
 
 			gridView.Columns.Add(favoritesColumn);
