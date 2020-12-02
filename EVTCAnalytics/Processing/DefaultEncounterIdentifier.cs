@@ -101,7 +101,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					}
 					else
 					{
-						builder.WithHealthDeterminer(new SequentialHealthDeterminer(mainTarget, secondPhaseXera));
+						builder.WithHealth(new SequentialHealthDeterminer(mainTarget, secondPhaseXera));
 						builder.WithResult(new AgentCombatExitDeterminer(secondPhaseXera))
 							.WithTargets(new List<Agent>() {mainTarget, secondPhaseXera});
 					}
@@ -169,7 +169,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 
 								// If there has already been an attempt in this instance before, the gadget
 								// retains its health from the previous attempt until the last phase is reached again.
-								builder.WithHealthDeterminer(new SequentialHealthDeterminer(mainTarget, mainGadget));
+								builder.WithHealth(new SequentialHealthDeterminer(mainTarget, mainGadget));
 							}
 							else
 							{

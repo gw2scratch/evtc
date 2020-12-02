@@ -55,7 +55,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			return this;
 		}
 
-		public EncounterIdentifierBuilder WithHealthDeterminer(IHealthDeterminer determiner)
+		public EncounterIdentifierBuilder WithHealth(IHealthDeterminer determiner)
 		{
 			HealthDeterminer = determiner;
 			return this;
