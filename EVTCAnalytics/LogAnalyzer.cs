@@ -81,7 +81,7 @@ namespace GW2Scratch.EVTCAnalytics
 
 		public long GetEncounterStart()
 		{
-			logEncounterStart ??= log.StartTime.TimeMilliseconds;
+			logEncounterStart ??= log.StartTime?.TimeMilliseconds ?? log.Events[0].Time;
 			return logEncounterStart.Value;
 		}
 
