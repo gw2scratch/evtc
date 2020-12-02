@@ -101,6 +101,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					}
 					else
 					{
+						builder.WithHealthDeterminer(new SequentialHealthDeterminer(mainTarget, secondPhaseXera));
 						builder.WithResult(new AgentCombatExitDeterminer(secondPhaseXera))
 							.WithTargets(new List<Agent>() {mainTarget, secondPhaseXera});
 					}
