@@ -92,6 +92,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				}
 				case Encounter.Xera:
 				{
+					// On Xera, there is a gliding phase once you reach 50% of her health. Afterwards, the original Xera NPC
+					// gets replaced with a different NPC (with higher maximum health, even) that is set to 50% of its health.
 					var secondPhaseXera = GetTargetBySpeciesId(agents, SpeciesIds.XeraSecondPhase);
 
 					var builder = GetDefaultBuilder(encounter, mainTarget);
@@ -102,7 +104,12 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					else
 					{
 						builder.WithHealth(new SequentialHealthDeterminer(mainTarget, secondPhaseXera));
-						builder.WithResult(new AgentCombatExitDeterminer(secondPhaseXera))
+						// Second phase Xera may infrequently appear drop out of combat for a moment at the start of the phase
+						// before entering combat again. By enforcing a minimum time since her spawn, we can fairly safely
+						// ensure that this will be ignored. It is also very unlikely the boss would be defeated in such a short time,
+						// barring extreme exploits of broken game skills.
+						// Even such exploits from the past would have trouble meeting this time requirement (Shadow Flare, Renegade Invoke Torment).
+						builder.WithResult(new AgentCombatExitDeterminer(secondPhaseXera) {MinTimeSinceSpawn = 10000})
 							.WithTargets(new List<Agent>() {mainTarget, secondPhaseXera});
 					}
 
