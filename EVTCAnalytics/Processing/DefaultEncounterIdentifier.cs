@@ -387,6 +387,10 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 							new AgentDeadDeterminer(claw)
 						));
 					}
+					else
+					{
+						builder.WithResult(new ConstantResultDeterminer(EncounterResult.Unknown));
+					}
 					return builder.Build();
 				}
 				default:
