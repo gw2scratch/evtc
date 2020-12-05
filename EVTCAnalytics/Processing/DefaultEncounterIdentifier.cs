@@ -370,6 +370,25 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						.WithResult(new AgentBuffGainedDeterminer(mainTarget, SkillIds.Determined))
 						.Build();
 				}
+				case Encounter.VoiceAndClawOfTheFallen:
+				{
+					var voice = GetTargetBySpeciesId(agents, SpeciesIds.VoiceOfTheFallen);
+					var claw = GetTargetBySpeciesId(agents, SpeciesIds.ClawOfTheFallen);
+
+					var bosses = new List<NPC>();
+					if (voice != null) bosses.Add(voice);
+					if (claw != null) bosses.Add(claw);
+
+					var builder = GetDefaultBuilder(encounter, bosses);
+					if (voice != null && claw != null)
+					{
+						builder.WithResult(new AllCombinedResultDeterminer(
+							new AgentDeadDeterminer(voice),
+							new AgentDeadDeterminer(claw)
+						));
+					}
+					return builder.Build();
+				}
 				default:
 					return GetDefaultBuilder(encounter, mainTarget, mergeMainTarget: false).Build();
 			}
