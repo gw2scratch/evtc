@@ -2,13 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using GW2EIGW2API;
 
 namespace GW2Scratch.EVTCAnalytics.LogTests.EliteInsights
 {
 	public class TestRunner
 	{
 		public bool PrintUnchecked { get; set; } = false;
-		public EliteInsightsLogChecker Checker { get; set; } = new EliteInsightsLogChecker();
+		public EliteInsightsLogChecker Checker { get; set; } = new EliteInsightsLogChecker(new GW2APIController());
 
 		public void TestLogs(string directory, TextWriter writer)
 		{
@@ -16,9 +17,7 @@ namespace GW2Scratch.EVTCAnalytics.LogTests.EliteInsights
 
 			foreach (string filename in Directory.EnumerateFiles(directory, "*", SearchOption.AllDirectories))
 			{
-				if (!filename.EndsWith(".evtc", StringComparison.InvariantCultureIgnoreCase) &&
-				    !filename.EndsWith(".evtc.zip", StringComparison.InvariantCultureIgnoreCase) &&
-				    !filename.EndsWith(".zevtc", StringComparison.InvariantCultureIgnoreCase))
+				if (!IsLikelyEvtcLog(filename))
 				{
 					Console.Error.WriteLine($"Ignoring file: {filename}");
 					continue;
@@ -94,6 +93,27 @@ namespace GW2Scratch.EVTCAnalytics.LogTests.EliteInsights
 			else if (PrintUnchecked)
 			{
 				writer.WriteLine($"\tNot checked {name}, Actual: {result.ActualValue}");
+			}
+		}
+
+		private bool IsLikelyEvtcLog(string filename)
+		{
+			if (filename.EndsWith(".evtc") || filename.EndsWith(".evtc.zip") || filename.EndsWith(".zevtc"))
+			{
+				return true;
+			}
+
+			try
+			{
+				using var reader = new StreamReader(filename);
+				var buffer = new char[4];
+				reader.Read(buffer, 0, buffer.Length);
+
+				return buffer[0] == 'E' && buffer[1] == 'V' && buffer[2] == 'T' && buffer[3] == 'C';
+			}
+			catch
+			{
+				return false;
 			}
 		}
 	}
