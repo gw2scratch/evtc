@@ -1,4 +1,5 @@
 using GW2Scratch.EVTCAnalytics.Model.Agents;
+using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Transformers;
 
 namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 {

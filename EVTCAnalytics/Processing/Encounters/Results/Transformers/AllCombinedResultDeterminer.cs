@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GW2Scratch.EVTCAnalytics.Events;
 
-namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
+namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Transformers
 {
 	/// <summary>
 	/// Combines the result of multiple determiners, returning success if all succeed, unknown if any

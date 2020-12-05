@@ -10,6 +10,7 @@ using GW2Scratch.EVTCAnalytics.Processing.Encounters;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health;
+using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Transformers;
 using GW2Scratch.EVTCAnalytics.Processing.Steps;
 
 namespace GW2Scratch.EVTCAnalytics.Processing
@@ -340,11 +341,27 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				case Encounter.LargeKittyGolem:
 				case Encounter.MassiveKittyGolem:
 				{
-					// TODO: Improve the success detection if possible
+					// The kitty golems encounters do not seem to have any way to reliably detect their outcome.
+					// They do not die, and if the console is used to remove the golem,
+					// the resulting log removes the golem in the same way as if the golem was killed.
+
+					// For this reason we adopt the same error-prone approach as Elite Insights,
+					// but we also recognize if a killing blow was dealt against the golem.
+					// Killing blows do not appear for some condition-based damage sources,
+					// but the 1 million health golem is the only one where 2% damage of its
+					// health is likely to be dealt in one hit, and is very likely to result
+					// in a killing blow.
+
+					// We do not want to use position data to detect players approaching the console,
+					// as they are not sampled often enough to detect teleports, and it is possible
+					// that a player may decide to kill the golem from the console at range.
+
+					// A better detection method would be very much appreciated here.
 					return GetDefaultBuilder(encounter, mainTarget)
-						.WithResult(new TransformResultDeterminer(
+						.WithResult(new AnyCombinedResultDeterminer(
 							new AgentKillingBlowDeterminer(mainTarget),
-							result => result == EncounterResult.Failure ? EncounterResult.Unknown : result)
+							new IgnoreTimeResultDeterminerWrapper(new AgentBelowHealthThresholdDeterminer(mainTarget, 0.02f))
+							)
 						).Build();
 				}
 				case Encounter.Freezie:
