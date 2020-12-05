@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using GW2EIEvtcParser;
 using GW2EIEvtcParser.Exceptions;
+using GW2EIGW2API;
 using GW2Scratch.EVTCAnalytics.GameData.Encounters;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
 using GW2Scratch.EVTCAnalytics.Processing;
@@ -20,12 +22,15 @@ namespace GW2Scratch.EVTCAnalytics.LogTests.EliteInsights
 		public bool CheckDuration { get; set; } = true;
 
 		public TimeSpan DurationEpsilon { get; set; } = TimeSpan.FromMilliseconds(10);
+		private readonly GW2APIController eiApiController;
+
+		public EliteInsightsLogChecker(GW2APIController eiApiController)
+		{
+			this.eiApiController = eiApiController;
+		}
 
 		private class EIController : ParserController
 		{
-			public EIController() : base(new Version(0, 0))
-			{
-			}
 		}
 
 		public CheckResult CheckLog(string filename)
@@ -35,7 +40,9 @@ namespace GW2Scratch.EVTCAnalytics.LogTests.EliteInsights
 				var parser = new EVTCParser();
 				var processor = new LogProcessor();
 
-				var parsedLog = parser.ParseLog(filename);
+				var bytes = ReadLogFileBytes(filename);
+
+				var parsedLog = parser.ParseLog(bytes);
 				var log = processor.ProcessLog(parsedLog);
 				var analyzer = new LogAnalyzer(log);
 
@@ -72,8 +79,13 @@ namespace GW2Scratch.EVTCAnalytics.LogTests.EliteInsights
 					};
 				}
 
-				var eiParser = new EvtcParser(new EvtcParserSettings(false, false, true, false, false, 0));
-				var eiLog = eiParser.ParseLog(new EIController(), new FileInfo(filename));
+				var eiSettings = new EvtcParserSettings(false, false, true, false, false, 0);
+				var eiParser = new EvtcParser(eiSettings, eiApiController);
+				var eiLog = eiParser.ParseLog(new EIController(), new MemoryStream(bytes), out var eiFailureReason);
+				if (eiLog == null)
+				{
+					eiFailureReason.Throw();
+				}
 
 				var eiDuration = TimeSpan.FromMilliseconds(eiLog.FightData.FightEnd - eiLog.FightData.FightStart);
 				var eiResult = eiLog.FightData.Success ? EncounterResult.Success : EncounterResult.Failure;
@@ -161,6 +173,24 @@ namespace GW2Scratch.EVTCAnalytics.LogTests.EliteInsights
 					ProcessingException = e
 				};
 			}
+		}
+
+		private byte[] ReadLogFileBytes(string filename)
+		{
+			if (filename.EndsWith(".zip", StringComparison.OrdinalIgnoreCase) ||
+			    filename.EndsWith(".zevtc", StringComparison.OrdinalIgnoreCase))
+			{
+				using (var fileStream = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read))
+				using (var arch = new ZipArchive(fileStream, ZipArchiveMode.Read))
+				using (var data = arch.Entries[0].Open())
+				{
+					var bytes = new byte[arch.Entries[0].Length];
+					data.Read(bytes, 0, bytes.Length);
+					return bytes;
+				}
+			}
+
+			return File.ReadAllBytes(filename);
 		}
 	}
 }
