@@ -52,7 +52,7 @@ namespace GW2Scratch.EVTCAnalytics.LogTests.EliteInsights
 
 			writer.WriteLine("");
 			writer.WriteLine($"{results.Count(x => x.Correct)}/{results.Count} OK");
-			writer.WriteLine($"{results.Count(x => !x.Correct && !x.ProcessingFailed)}/{results.Count} WRONG");
+			writer.WriteLine($"{results.Count(x => !x.Correct && !x.ProcessingFailed && !x.Ignored)}/{results.Count} WRONG");
 			writer.WriteLine($"{results.Count(x => x.ProcessingFailed)}/{results.Count} FAILED");
 		}
 
