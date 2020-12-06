@@ -11,6 +11,6 @@
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\EVTCAnalytics.LogTests\EVTCAnalytics.LogTests.csproj" />
-        <ProjectReference Include="..\EVTCAnalytics\EVTCAnalytics.csproj" />
+        <ProjectReference Include="..\..\EVTCAnalytics\EVTCAnalytics.csproj" />
     </ItemGroup>
 </Project>
