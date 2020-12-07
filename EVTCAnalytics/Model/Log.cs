@@ -20,7 +20,19 @@ namespace GW2Scratch.EVTCAnalytics.Model
 		public string EvtcVersion { get; }
 		public GameLanguage GameLanguage { get; }
 
+		/// <summary>
+		/// The time of the log ending. This may be <see langword="null"/> in cases when the log is missing the start event.
+		/// </summary>
+		/// <remarks>
+		/// Some versions of arcdps, such as 20181211, have had their log start events missing.
+		/// </remarks>
 		public LogTime StartTime { get; }
+		/// <summary>
+		/// The time of the log ending. This may be <see langword="null"/> in cases when the log ends abruptly.
+		/// </summary>
+		/// <remarks>
+		/// Older versions of arcdps have often had their log end events missing, which makes <see langword="null"/> values here common.
+		/// </remarks>
 		public LogTime EndTime { get; }
 
 		public LogType LogType { get; }

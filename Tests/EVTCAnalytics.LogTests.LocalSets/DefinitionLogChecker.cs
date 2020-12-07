@@ -6,9 +6,9 @@ using GW2Scratch.EVTCAnalytics.Processing;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
 
-namespace GW2Scratch.EVTCAnalytics.LogTests
+namespace GW2Scratch.EVTCAnalytics.LogTests.LocalSets
 {
-	public class LogChecker
+	public class DefinitionLogChecker
 	{
 		public CheckResult CheckLog(LogDefinition definition)
 		{

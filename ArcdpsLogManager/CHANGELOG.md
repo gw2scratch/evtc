@@ -16,6 +16,7 @@ The Log Manager is now a .NET Core program. It is available in two versions:
 - Added better filtering UI for encounters that allows selecting multiple bosses (issue #66)
 - Commander tags are shown in log details for logs from arcdps version 2020-06-09 and newer (issue #72)
 - Added support for Varinia Stormsounder, the main boss in Strike Mission: Cold War (issue #77)
+- Added support for Ai, Keeper of the Peak, the CM boss in the Sunqua Peak fractal (issue #89)
 - Added boss health percentage to failures, both in log list and log details (issue #63)
 
 #### Changes
@@ -23,13 +24,17 @@ The Log Manager is now a .NET Core program. It is available in two versions:
 - Moved the filtering UI to the left side, can be collapsed and moved to a tab instead (issue #66)
 - Increased the default width of the manager window
 - Changed all filters to change shown logs instantly
+- Improved encounter durations to closely match Elite Insights times
 - EVTC files are detected correctly if they do not have an extension
 - Uncompressed logs are automatically compressed when uploading to dps.report
+- Kitty Golems (Special Forces Training Area) now have somewhat reliable success detection
 
 #### Fixes
+- Fixed Voice and Claw success detection
+- Fixed some very rare Xera false successes
+- Fixed short Twin Largos failures being classified as Unknown result
 - Fixed uploading logs without an extension to dps.report
 - Fixed log uploads failing after 100 seconds (issue #65)
-- Fixed short Twin Largos failures being classified as Unknown result
 - Fixed saving hidden log list columns
 
 ## Log Manager v0.7.2

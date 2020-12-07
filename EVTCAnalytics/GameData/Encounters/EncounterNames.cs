@@ -39,6 +39,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 			{Encounter.Skorvald, "Skorvald the Shattered"},
 			{Encounter.Artsariiv, "Artsariiv"},
 			{Encounter.Arkk, "Arkk"},
+			{Encounter.AiKeeperOfThePeak, "Ai, Keeper of the Peak"},
 			{Encounter.Freezie, "Freezie"},
 			{Encounter.StandardKittyGolem, "Standard Kitty Golem"},
 			{Encounter.MediumKittyGolem, "Medium Kitty Golem"},

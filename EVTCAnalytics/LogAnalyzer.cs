@@ -34,12 +34,6 @@ namespace GW2Scratch.EVTCAnalytics
 		public WeaponSkillData WeaponSkillData { get; set; } = new WeaponSkillData();
 
 		/// <summary>
-		/// Definitions of methods that can be used to detect trait specializations.
-		/// If replaced after specializations were detected, they will not be updated.
-		/// </summary>
-		public SpecializationDetections SpecializationDetections { get; set; } = new SpecializationDetections();
-
-		/// <summary>
 		/// Definitions of skill detections used to determine which skills a player was using.
 		/// If replaced after skills were detected, they will not be updated.
 		/// </summary>
@@ -59,10 +53,15 @@ namespace GW2Scratch.EVTCAnalytics
 		private readonly Log log;
 		private IReadOnlyList<Player> logPlayers = null;
 		private IReadOnlyList<PlayerData> logPlayerData = null;
-		private EncounterResult? logResult = null;
+		private ResultDeterminerResult logResult = null;
 		private EncounterMode? encounterMode = null;
 		private long? logEncounterStart = null;
 		private long? logEncounterEnd = null;
+
+		// Since the health fraction result is float?, we cannot rely on the value being null
+		// meaning that we haven't calculated the health fraction yet
+		private bool healthFractionCalculated = false;
+		private float? healthFraction = null;
 
 		/// <summary>
 		/// Creates a new instance of a log analyzer for a provided log.
@@ -80,16 +79,21 @@ namespace GW2Scratch.EVTCAnalytics
 			return new TimeSpan(0, 0, 0, 0, (int)(GetEncounterEnd() - GetEncounterStart()));
 		}
 
-		public long GetEncounterEnd()
-		{
-			logEncounterEnd ??= log.EndTime?.TimeMilliseconds ?? log.Events.Last().Time;
-			return logEncounterEnd.Value;
-		}
-
 		public long GetEncounterStart()
 		{
-			logEncounterStart ??= log.StartTime?.TimeMilliseconds ?? log.Events.First().Time;
+			logEncounterStart ??= log.StartTime?.TimeMilliseconds ?? log.Events[0].Time;
 			return logEncounterStart.Value;
+		}
+
+		public long GetEncounterEnd()
+		{
+			if (logEncounterEnd == null)
+			{
+				logResult ??= log.EncounterData.ResultDeterminer.GetResult(log.Events);
+				logEncounterEnd = logResult.Time ?? log.EndTime?.TimeMilliseconds ?? log.Events[^1].Time;
+			}
+
+			return logEncounterEnd.Value;
 		}
 
 		public IReadOnlyList<Player> GetPlayers()
@@ -101,13 +105,26 @@ namespace GW2Scratch.EVTCAnalytics
 		public EncounterResult GetResult()
 		{
 			logResult ??= log.EncounterData.ResultDeterminer.GetResult(log.Events);
-			return logResult.Value;
+			return logResult.EncounterResult;
 		}
 
 		public EncounterMode GetMode()
 		{
 			encounterMode ??= log.EncounterData.ModeDeterminer.GetMode(log);
 			return encounterMode.Value;
+		}
+
+		public float? GetMainEnemyHealthFraction()
+		{
+			if (healthFractionCalculated)
+			{
+				return healthFraction;
+			}
+
+			healthFraction = log.EncounterData.HealthDeterminer.GetMainEnemyHealthFraction(log);
+			healthFractionCalculated = true;
+
+			return healthFraction;
 		}
 
 		public Encounter GetEncounter()
@@ -306,32 +323,11 @@ namespace GW2Scratch.EVTCAnalytics
 				utilitySkills?.RemoveWhere(x => ignoredSkills.Contains(x.Id));
 				eliteSkills?.RemoveWhere(x => ignoredSkills.Contains(x.Id));
 
-				var specializationDetections =
-					SpecializationDetections.GetSpecializationDetections(player.Profession).ToArray();
-				var badges = new List<PlayerBadge>();
-
-				var specializations = new HashSet<CoreSpecialization>();
-				foreach (var e in log.Events)
-				{
-					foreach (var detection in specializationDetections)
-					{
-						if (detection.Detection.IsDetected(player, e))
-						{
-							specializations.Add(detection.Specialization);
-						}
-					}
-				}
-
-				foreach (var spec in specializations.OrderBy(x => x.ToString()))
-				{
-					badges.Add(new PlayerBadge(spec.ToString(), BadgeType.Specialization));
-				}
-
 				var rotation = RotationCalculator.GetRotation(log, player);
 
 				var data = new PlayerData(player, downCounts[player], deathCounts[player], rotation, usedSkills[player],
 					healingSkills, utilitySkills, eliteSkills, land1Weapon1, land1Weapon2, land2Weapon1, land2Weapon2,
-					land1WeaponSkills, land2WeaponSkills, badges);
+					land1WeaponSkills, land2WeaponSkills);
 
 				playerData.Add(data);
 			}

@@ -24,7 +24,6 @@ namespace GW2Scratch.EVTCAnalytics.Statistics.PlayerDataParts
 		public IEnumerable<SkillData> LandSet1WeaponSkills { get; }
 		public IEnumerable<SkillData> LandSet2WeaponSkills { get; }
 
-		public IEnumerable<PlayerBadge> Badges { get; }
 		public PlayerRotation Rotation { get; }
 
 		/// <summary>
@@ -44,12 +43,11 @@ namespace GW2Scratch.EVTCAnalytics.Statistics.PlayerDataParts
 		/// <param name="landSet2Weapon2">Off-hand weapon in second land weapon set.</param>
 		/// <param name="land1WeaponSkills">Weapon skills for first equipped land weapon set. null if unknown.</param>
 		/// <param name="land2WeaponSkills">Weapon skills for second equipped land weapon set. null if unknown.</param>
-		/// <param name="badges">Player badges showing interesting data about the player.</param>
 		public PlayerData(Player player, int downCount, int deathCount, PlayerRotation rotation,
 			IEnumerable<Skill> usedSkills, IEnumerable<SkillData> healingSkills, IEnumerable<SkillData> utilitySkills,
 			IEnumerable<SkillData> eliteSkills, WeaponType landSet1Weapon1, WeaponType landSet1Weapon2,
 			WeaponType landSet2Weapon1, WeaponType landSet2Weapon2, IEnumerable<SkillData> land1WeaponSkills,
-			IEnumerable<SkillData> land2WeaponSkills, IEnumerable<PlayerBadge> badges)
+			IEnumerable<SkillData> land2WeaponSkills)
 		{
 			Player = player;
 			DownCount = downCount;
@@ -59,7 +57,6 @@ namespace GW2Scratch.EVTCAnalytics.Statistics.PlayerDataParts
 			LandSet1Weapon2 = landSet1Weapon2;
 			LandSet2Weapon1 = landSet2Weapon1;
 			LandSet2Weapon2 = landSet2Weapon2;
-			Badges = badges?.ToArray() ?? Enumerable.Empty<PlayerBadge>();
 			LandSet1WeaponSkills = land1WeaponSkills?.ToArray();
 			LandSet2WeaponSkills = land2WeaponSkills?.ToArray();
 			UsedSkills = usedSkills.ToArray();

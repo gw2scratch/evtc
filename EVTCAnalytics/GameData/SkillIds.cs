@@ -30,6 +30,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		/* Buffs */
 		public const int Invulnerability = 757;
 		public const int Determined = 762;
+		public const int Determined895 = 895;
 		public const int GorsevalInvulnerability = 31790;
 		public const int QadimFlameArmor = 52568;
 		public const int SoullessHorrorDetermined = 895;
@@ -85,5 +86,9 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		/* Raids - Wing 5 */
 		// Soulless Horror - Stacking debuff that increases incoming damage, applied to fixated players
 		public const int Necrosis = 47414;
+
+		/* Fractals */
+		// Ai, the Keeper of the Peak, a skill without a name that she casts early into the dark phase.
+		public const int AiDarkEarlySkill = 61356;
 	}
 }

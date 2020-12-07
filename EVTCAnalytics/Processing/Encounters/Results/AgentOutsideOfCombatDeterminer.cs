@@ -13,23 +13,27 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 			this.agent = agent;
 		}
 
-		public EncounterResult GetResult(IEnumerable<Event> events)
+		public ResultDeterminerResult GetResult(IEnumerable<Event> events)
 		{
 			bool outOfCombat = true;
+			long? lastChangeTime = null;
 			foreach (var e in events)
 			{
 				switch (e)
 				{
 					case AgentEnterCombatEvent enter when enter.Agent == agent:
 						outOfCombat = false;
+						lastChangeTime = enter.Time;
 						break;
 					case AgentExitCombatEvent exit when exit.Agent == agent:
 						outOfCombat = true;
+						lastChangeTime = exit.Time;
 						break;
 				}
 			}
 
-			return outOfCombat ? EncounterResult.Success : EncounterResult.Failure;
+			var result = outOfCombat ? EncounterResult.Success : EncounterResult.Failure;
+			return new ResultDeterminerResult(result, lastChangeTime);
 		}
 	}
 }

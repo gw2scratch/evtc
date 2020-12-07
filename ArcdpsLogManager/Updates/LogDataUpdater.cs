@@ -27,16 +27,23 @@ namespace GW2Scratch.ArcdpsLogManager.Updates
 			new LogUpdate(log => log.ParsingVersion < new Version(0, 7, 2)
 			                     && log.Encounter == Encounter.Skorvald,
 				"Skorvald the Shattered logs did not differentiate between normal and challenge mode."),
-			new LogUpdate(log => log.ParsingVersion < new Version(1, 0, 0)
+			new LogUpdate(log => log.ParsingVersion < new Version(1, 0, 0, 0)
 			                     && string.Compare(log.EvtcVersion, "EVTC20200609", StringComparison.OrdinalIgnoreCase) >= 0,
 				"Commander tag identification is now available."),
-			new LogUpdate(log => log.ParsingVersion < new Version(1, 0, 0)
+			new LogUpdate(log => log.ParsingVersion < new Version(1, 0, 0, 0)
 					&& log.EncounterResult == EncounterResult.Failure,
 				"Add health percentage for failed logs"),
-			new LogUpdate(log => log.ParsingVersion < new Version(1, 0, 0)
+			new LogUpdate(log => log.ParsingVersion < new Version(1, 0, 0, 0)
 					&& log.Encounter == Encounter.TwinLargos
 					&& log.EncounterResult == EncounterResult.Unknown,
 				"Twin Largos logs had Unknown results if Kenut did not appear in the log."),
+			new LogUpdate(log => log.ParsingVersion < new Version(1, 0, 0, 0),
+				"Durations are significantly more accurate."),
+			new LogUpdate(log => log.ParsingVersion < new Version(1, 0, 0, 1)
+					&& log.Encounter == Encounter.Other,
+				"Support for Ai, Keeper of the Peak"),
+			// When adding a new update, you need to increase the revision (last value) of the version in the .csproj file
+			// unless the version changes more significantly, in that case it can be reset to 0.
 		};
 
 		public IEnumerable<LogUpdateList> GetUpdates(IEnumerable<LogData> logs)

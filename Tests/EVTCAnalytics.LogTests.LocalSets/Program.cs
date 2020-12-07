@@ -4,7 +4,7 @@ using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace GW2Scratch.EVTCAnalytics.LogTests
+namespace GW2Scratch.EVTCAnalytics.LogTests.LocalSets
 {
 	internal class Program
 	{

@@ -1,4 +1,4 @@
-# GW2Scratch.EVTCAnalytics.LogTests
+# GW2Scratch.EVTCAnalytics.LogTests.LocalSets
 
 A simple and small program for testing processing EVTC logs in sets with GW2Scratch.EVTCAnalytics.
 

@@ -96,6 +96,8 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		public const int Skorvald = 17632;
 		public const int Artsariiv = 17949;
 		public const int Arkk = 17759;
+		// Sunqua Peak
+		public const int AiKeeperOfThePeak = 23254;
 
 		// Festivals
 		public const int Freezie = 21333;

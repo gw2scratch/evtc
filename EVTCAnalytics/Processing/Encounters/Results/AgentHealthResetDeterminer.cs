@@ -18,7 +18,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 			this.agent = agent;
 		}
 
-		public EncounterResult GetResult(IEnumerable<Event> events)
+		public ResultDeterminerResult GetResult(IEnumerable<Event> events)
 		{
 			float lastHealth = 1f;
 			foreach (var healthUpdate in events.OfType<AgentHealthUpdateEvent>())
@@ -31,13 +31,13 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 				bool healthResetToFull = Math.Abs(healthUpdate.HealthFraction - 1f) <= 0.00001f;
 				if (healthUpdate.HealthFraction > lastHealth && healthResetToFull)
 				{
-					return EncounterResult.Success;
+					return new ResultDeterminerResult(EncounterResult.Success, healthUpdate.Time);
 				}
 
 				lastHealth = healthUpdate.HealthFraction;
 			}
 
-			return EncounterResult.Failure;
+			return new ResultDeterminerResult(EncounterResult.Failure, null);
 		}
 	}
 }

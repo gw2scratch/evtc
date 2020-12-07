@@ -8,7 +8,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 	/// <summary>
 	/// Returns success if the agent has a death event.
 	/// </summary>
-	public class AgentDeadDeterminer : IResultDeterminer
+	public class AgentDeadDeterminer : EventFoundResultDeterminer
 	{
 		private readonly Agent agent;
 
@@ -17,11 +17,9 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 			this.agent = agent;
 		}
 
-		public EncounterResult GetResult(IEnumerable<Event> events)
+		protected override Event GetEvent(IEnumerable<Event> events)
 		{
-			bool agentDead = events.OfType<AgentDeadEvent>().Any(x => x.Agent == agent);
-
-			return agentDead ? EncounterResult.Success : EncounterResult.Failure;
+			return events.OfType<AgentDeadEvent>().FirstOrDefault(x => x.Agent == agent);
 		}
 	}
 }

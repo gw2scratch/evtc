@@ -9,6 +9,8 @@ using GW2Scratch.EVTCAnalytics.Model.Agents;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
+using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health;
+using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Transformers;
 using GW2Scratch.EVTCAnalytics.Processing.Steps;
 
 namespace GW2Scratch.EVTCAnalytics.Processing
@@ -91,6 +93,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				}
 				case Encounter.Xera:
 				{
+					// On Xera, there is a gliding phase once you reach 50% of her health. Afterwards, the original Xera NPC
+					// gets replaced with a different NPC (with higher maximum health, even) that is set to 50% of its health.
 					var secondPhaseXera = GetTargetBySpeciesId(agents, SpeciesIds.XeraSecondPhase);
 
 					var builder = GetDefaultBuilder(encounter, mainTarget);
@@ -100,7 +104,13 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					}
 					else
 					{
-						builder.WithResult(new AgentCombatExitDeterminer(secondPhaseXera))
+						builder.WithHealth(new SequentialHealthDeterminer(mainTarget, secondPhaseXera));
+						// Second phase Xera may infrequently appear drop out of combat for a moment at the start of the phase
+						// before entering combat again. By enforcing a minimum time since her spawn, we can fairly safely
+						// ensure that this will be ignored. It is also very unlikely the boss would be defeated in such a short time,
+						// barring extreme exploits of broken game skills.
+						// Even such exploits from the past would have trouble meeting this time requirement (Shadow Flare, Renegade Invoke Torment).
+						builder.WithResult(new AgentCombatExitDeterminer(secondPhaseXera) {MinTimeSinceSpawn = 10000})
 							.WithTargets(new List<Agent>() {mainTarget, secondPhaseXera});
 					}
 
@@ -162,6 +172,12 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 										result => result == EncounterResult.Success ? EncounterResult.Failure : EncounterResult.Success
 									)
 								));
+								// The health of the Deimos gadget on the upper platform is set to 10% only after
+								// the NPC used in the first part of the fight reaches 10% of its health.
+
+								// If there has already been an attempt in this instance before, the gadget
+								// retains its health from the previous attempt until the last phase is reached again.
+								builder.WithHealth(new SequentialHealthDeterminer(mainTarget, mainGadget));
 							}
 							else
 							{
@@ -319,17 +335,54 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						.WithModes(new ConstantModeDeterminer(EncounterMode.Challenge))
 						.Build();
 				}
+				case Encounter.AiKeeperOfThePeak:
+				{
+					// This encounter has two phases with the same enemy. The enemy gains short invulnerability
+					// and regains full health between these two phases.
+					// However, if the fight has been progressed into the second (dark) phase and failed, the next attempt
+					// starts at the second phase, so the first phase might not be in the log.
+
+					// 895 - Determined, applied at end of first phase along with 762 Determined and a short Daze
+					// 53569 - nameless skill used when transitioning between phases, only in the log if both phases are present
+					// 61356 - nameless skill cast early in phase 2
+					// 895 - Determined, applied at end of second phase along with 762 Determined and a short Daze
+
+					// No 61356 - always a failure, did not reach dark phase, health +100%
+					// 61356 && no determined afterwards -> failure in the second (dark) phase
+					// 61356 && Determined afterwards -> success
+					return GetDefaultBuilder(encounter, mainTarget)
+						.WithResult(new BuffAppliedAfterSkillCastDeterminer(mainTarget, SkillIds.AiDarkEarlySkill, SkillIds.Determined895))
+						.WithHealth(new ExtraHealthIfSkillPresentHealthDeterminer(SkillIds.AiDarkEarlySkill, 1))
+						.WithModes(new ConstantModeDeterminer(EncounterMode.Challenge))
+						.Build();
+				}
 				// TODO: Check if these are all the possible kitty golems
 				case Encounter.StandardKittyGolem:
 				case Encounter.MediumKittyGolem:
 				case Encounter.LargeKittyGolem:
 				case Encounter.MassiveKittyGolem:
 				{
-					// TODO: Improve the success detection if possible
+					// The kitty golems encounters do not seem to have any way to reliably detect their outcome.
+					// They do not die, and if the console is used to remove the golem,
+					// the resulting log removes the golem in the same way as if the golem was killed.
+
+					// For this reason we adopt the same error-prone approach as Elite Insights,
+					// but we also recognize if a killing blow was dealt against the golem.
+					// Killing blows do not appear for some condition-based damage sources,
+					// but the 1 million health golem is the only one where 2% damage of its
+					// health is likely to be dealt in one hit, and is very likely to result
+					// in a killing blow.
+
+					// We do not want to use position data to detect players approaching the console,
+					// as they are not sampled often enough to detect teleports, and it is possible
+					// that a player may decide to kill the golem from the console at range.
+
+					// A better detection method would be very much appreciated here.
 					return GetDefaultBuilder(encounter, mainTarget)
-						.WithResult(new TransformResultDeterminer(
+						.WithResult(new AnyCombinedResultDeterminer(
 							new AgentKillingBlowDeterminer(mainTarget),
-							result => result == EncounterResult.Failure ? EncounterResult.Unknown : result)
+							new IgnoreTimeResultDeterminerWrapper(new AgentBelowHealthThresholdDeterminer(mainTarget, 0.02f))
+							)
 						).Build();
 				}
 				case Encounter.Freezie:
@@ -337,6 +390,29 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					return GetDefaultBuilder(encounter, mainTarget)
 						.WithResult(new AgentBuffGainedDeterminer(mainTarget, SkillIds.Determined))
 						.Build();
+				}
+				case Encounter.VoiceAndClawOfTheFallen:
+				{
+					var voice = GetTargetBySpeciesId(agents, SpeciesIds.VoiceOfTheFallen);
+					var claw = GetTargetBySpeciesId(agents, SpeciesIds.ClawOfTheFallen);
+
+					var bosses = new List<NPC>();
+					if (voice != null) bosses.Add(voice);
+					if (claw != null) bosses.Add(claw);
+
+					var builder = GetDefaultBuilder(encounter, bosses);
+					if (voice != null && claw != null)
+					{
+						builder.WithResult(new AllCombinedResultDeterminer(
+							new AgentDeadDeterminer(voice),
+							new AgentDeadDeterminer(claw)
+						));
+					}
+					else
+					{
+						builder.WithResult(new ConstantResultDeterminer(EncounterResult.Unknown));
+					}
+					return builder.Build();
 				}
 				default:
 					return GetDefaultBuilder(encounter, mainTarget, mergeMainTarget: false).Build();
@@ -430,6 +506,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						return Encounter.Artsariiv;
 					case SpeciesIds.Arkk:
 						return Encounter.Arkk;
+					case SpeciesIds.AiKeeperOfThePeak:
+						return Encounter.AiKeeperOfThePeak;
 					case SpeciesIds.Freezie:
 						return Encounter.Freezie;
 					case SpeciesIds.IcebroodConstruct:
@@ -465,7 +543,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				encounter,
 				new List<Agent> {mainTarget},
 				new AgentKilledDeterminer(mainTarget),
-				new ConstantModeDeterminer(EncounterMode.Normal)
+				new ConstantModeDeterminer(EncounterMode.Normal),
+				new MaxMinHealthDeterminer()
 			);
 			if (mergeMainTarget && mainTarget is NPC npc)
 			{
@@ -496,7 +575,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				encounter,
 				targets.ToList(),
 				result,
-				new ConstantModeDeterminer(EncounterMode.Normal)
+				new ConstantModeDeterminer(EncounterMode.Normal),
+				new MaxMinHealthDeterminer()
 			);
 		}
 

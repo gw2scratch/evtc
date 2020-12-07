@@ -5,7 +5,7 @@ using GW2Scratch.EVTCAnalytics.Model.Agents;
 
 namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 {
-	public class AgentAliveDeterminer : IResultDeterminer
+	public class AgentAliveDeterminer : EventFoundResultDeterminer
 	{
 		private readonly Agent agent;
 
@@ -14,11 +14,12 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 			this.agent = agent;
 		}
 
-		public EncounterResult GetResult(IEnumerable<Event> events)
-		{
-			bool agentDead = events.OfType<AgentDeadEvent>().Any(x => x.Agent == agent);
+		protected override EncounterResult EventFound { get; } = EncounterResult.Failure;
+		protected override EncounterResult EventNotFound { get; } = EncounterResult.Success;
 
-			return agentDead ? EncounterResult.Failure : EncounterResult.Success;
+		protected override Event GetEvent(IEnumerable<Event> events)
+		{
+			return events.OfType<AgentDeadEvent>().FirstOrDefault(x => x.Agent == agent);
 		}
 	}
 }

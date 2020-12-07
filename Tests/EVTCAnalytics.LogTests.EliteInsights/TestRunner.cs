@@ -1,43 +1,58 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using GW2EIGW2API;
 
-namespace GW2Scratch.EVTCAnalytics.LogTests
+namespace GW2Scratch.EVTCAnalytics.LogTests.EliteInsights
 {
 	public class TestRunner
 	{
 		public bool PrintUnchecked { get; set; } = false;
+		public EliteInsightsLogChecker Checker { get; set; } = new EliteInsightsLogChecker(new GW2APIController());
 
-		public void TestLogs(IEnumerable<LogDefinition> logs, TextWriter writer)
+		public void TestLogs(string directory, TextWriter writer)
 		{
-			var checker = new LogChecker();
 			var results = new List<CheckResult>();
 
-			foreach (var log in logs)
+			foreach (string filename in Directory.EnumerateFiles(directory, "*", SearchOption.AllDirectories))
 			{
-				var result = checker.CheckLog(log);
+				if (!IsLikelyEvtcLog(filename))
+				{
+					Console.Error.WriteLine($"Ignoring file: {filename}");
+					continue;
+				}
+
+				var result = Checker.CheckLog(filename);
 				results.Add(result);
+
+				if (result.Ignored)
+				{
+					writer.WriteLine($"IGNORED {filename}");
+					continue;
+				}
 
 				if (result.ProcessingFailed)
 				{
-					writer.WriteLine($"FAILED {log.Filename} {log.Comment}");
+					writer.WriteLine($"FAILED {filename}");
 					writer.WriteLine($"\tException: {result.ProcessingException}");
 					continue;
 				}
 
-				writer.WriteLine($"{(result.Correct ? "OK" : "WRONG")} {log.Filename} {log.Comment}");
+				writer.WriteLine($"{(result.Correct ? "OK" : "WRONG")} {filename}");
 				if (!result.Correct)
 				{
 					PrintResult(result.Encounter, "Encounter", writer);
 					PrintResult(result.Result, "Result", writer);
 					PrintResult(result.Mode, "Mode", writer);
+					PrintResult(result.Duration, "Duration", writer);
 					PrintPlayerResult(result.Players, "Players", writer);
 				}
 			}
 
 			writer.WriteLine("");
 			writer.WriteLine($"{results.Count(x => x.Correct)}/{results.Count} OK");
-			writer.WriteLine($"{results.Count(x => !x.Correct && !x.ProcessingFailed)}/{results.Count} WRONG");
+			writer.WriteLine($"{results.Count(x => !x.Correct && !x.ProcessingFailed && !x.Ignored)}/{results.Count} WRONG");
 			writer.WriteLine($"{results.Count(x => x.ProcessingFailed)}/{results.Count} FAILED");
 		}
 
@@ -51,6 +66,7 @@ namespace GW2Scratch.EVTCAnalytics.LogTests
 				{
 					writer.WriteLine($"\t\t\t{player.CharacterName} {player.AccountName} {player.Profession} {player.EliteSpecialization} {player.Subgroup}");
 				}
+
 				writer.WriteLine($"\t\tActual ({result.ActualValue.Count}):");
 				foreach (var player in result.ActualValue)
 				{
@@ -77,6 +93,27 @@ namespace GW2Scratch.EVTCAnalytics.LogTests
 			else if (PrintUnchecked)
 			{
 				writer.WriteLine($"\tNot checked {name}, Actual: {result.ActualValue}");
+			}
+		}
+
+		private bool IsLikelyEvtcLog(string filename)
+		{
+			if (filename.EndsWith(".evtc") || filename.EndsWith(".evtc.zip") || filename.EndsWith(".zevtc"))
+			{
+				return true;
+			}
+
+			try
+			{
+				using var reader = new StreamReader(filename);
+				var buffer = new char[4];
+				reader.Read(buffer, 0, buffer.Length);
+
+				return buffer[0] == 'E' && buffer[1] == 'V' && buffer[2] == 'T' && buffer[3] == 'C';
+			}
+			catch
+			{
+				return false;
 			}
 		}
 	}

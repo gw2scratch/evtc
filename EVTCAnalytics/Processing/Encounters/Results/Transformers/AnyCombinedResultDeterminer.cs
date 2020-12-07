@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GW2Scratch.EVTCAnalytics.Events;
 
-namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
+namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Transformers
 {
 	/// <summary>
 	/// Combines the result of multiple determiners, returning success if any succeeded, then unknown if any
@@ -23,14 +23,23 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 			this.determiners = determiners;
 		}
 
-		public EncounterResult GetResult(IEnumerable<Event> events)
+		public ResultDeterminerResult GetResult(IEnumerable<Event> events)
 		{
 			var e = events as Event[] ?? events.ToArray();
 			var results = determiners.Select(x => x.GetResult(e)).ToArray();
 
-			if (results.Any(x => x == EncounterResult.Success)) return EncounterResult.Success;
-			if (results.Any(x => x == EncounterResult.Unknown)) return EncounterResult.Unknown;
-			return EncounterResult.Failure;
+			var firstSuccess = results.OrderBy(x => x.Time).FirstOrDefault(x => x.EncounterResult == EncounterResult.Success);
+			if (firstSuccess != null)
+			{
+				return firstSuccess;
+			}
+
+			if (results.Any(x => x.EncounterResult == EncounterResult.Unknown))
+			{
+				return new ResultDeterminerResult(EncounterResult.Unknown, null);
+			}
+
+			return new ResultDeterminerResult(EncounterResult.Failure, null);
 		}
 	}
 }

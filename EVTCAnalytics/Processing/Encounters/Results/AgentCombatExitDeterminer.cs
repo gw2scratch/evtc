@@ -1,12 +1,13 @@
 using System.Collections.Generic;
-using System.Linq;
 using GW2Scratch.EVTCAnalytics.Events;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
 
 namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 {
-	public class AgentCombatExitDeterminer : IResultDeterminer
+	public class AgentCombatExitDeterminer : EventFoundResultDeterminer
 	{
+		public long MinTimeSinceSpawn { get; set; } = 0;
+
 		private readonly Agent agent;
 
 		public AgentCombatExitDeterminer(Agent agent)
@@ -14,11 +15,29 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 			this.agent = agent;
 		}
 
-		public EncounterResult GetResult(IEnumerable<Event> events)
+		protected override Event GetEvent(IEnumerable<Event> events)
 		{
-			bool combatExited = events.OfType<AgentExitCombatEvent>().Any(x => x.Agent == agent);
+			long? firstTime = null;
+			foreach (var e in events)
+			{
+				if (firstTime == null)
+				{
+					if (e is AgentEvent agentEvent && agentEvent.Agent == agent)
+					{
+						firstTime = agentEvent.Time;
+					}
+				}
 
-			return combatExited ? EncounterResult.Success : EncounterResult.Failure;
+				if (firstTime != null)
+				{
+					if (e is AgentExitCombatEvent combatExit && combatExit.Agent == agent && combatExit.Time > firstTime + MinTimeSinceSpawn)
+					{
+						return e;
+					}
+				}
+			}
+
+			return null;
 		}
 	}
 }
