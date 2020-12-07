@@ -39,6 +39,9 @@ namespace GW2Scratch.ArcdpsLogManager.Updates
 				"Twin Largos logs had Unknown results if Kenut did not appear in the log."),
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 0, 0, 0),
 				"Durations are significantly more accurate."),
+			new LogUpdate(log => log.ParsingVersion < new Version(1, 0, 0, 1)
+					&& log.Encounter == Encounter.Other,
+				"Support for Ai, Keeper of the Peak"),
 			// When adding a new update, you need to increase the revision (last value) of the version in the .csproj file
 			// unless the version changes more significantly, in that case it can be reset to 0.
 		};

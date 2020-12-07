@@ -41,6 +41,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 				{Encounter.Skorvald, EncounterCategory.Fractal},
 				{Encounter.Artsariiv, EncounterCategory.Fractal},
 				{Encounter.Arkk, EncounterCategory.Fractal},
+				{Encounter.AiKeeperOfThePeak, EncounterCategory.Fractal},
 				{Encounter.Freezie, EncounterCategory.Festival},
 				{Encounter.StandardKittyGolem, EncounterCategory.SpecialForcesTrainingArea},
 				{Encounter.MediumKittyGolem, EncounterCategory.SpecialForcesTrainingArea},

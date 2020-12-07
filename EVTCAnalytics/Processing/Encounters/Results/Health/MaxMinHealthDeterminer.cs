@@ -13,7 +13,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health
 	/// </remarks>
 	public class MaxMinHealthDeterminer : IHealthDeterminer
 	{
-		public float? GetMainEnemyHealthFraction(Log log)
+		public virtual float? GetMainEnemyHealthFraction(Log log)
 		{
 			var targets = log.EncounterData.Targets.ToHashSet();
 			if (targets.Count == 0)

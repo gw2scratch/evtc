@@ -335,6 +335,27 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						.WithModes(new ConstantModeDeterminer(EncounterMode.Challenge))
 						.Build();
 				}
+				case Encounter.AiKeeperOfThePeak:
+				{
+					// This encounter has two phases with the same enemy. The enemy gains short invulnerability
+					// and regains full health between these two phases.
+					// However, if the fight has been progressed into the second (dark) phase and failed, the next attempt
+					// starts at the second phase, so the first phase might not be in the log.
+
+					// 895 - Determined, applied at end of first phase along with 762 Determined and a short Daze
+					// 53569 - nameless skill used when transitioning between phases, only in the log if both phases are present
+					// 61356 - nameless skill cast early in phase 2
+					// 895 - Determined, applied at end of second phase along with 762 Determined and a short Daze
+
+					// No 61356 - always a failure, did not reach dark phase, health +100%
+					// 61356 && no determined afterwards -> failure in the second (dark) phase
+					// 61356 && Determined afterwards -> success
+					return GetDefaultBuilder(encounter, mainTarget)
+						.WithResult(new BuffAppliedAfterSkillCastDeterminer(mainTarget, SkillIds.AiDarkEarlySkill, SkillIds.Determined895))
+						.WithHealth(new ExtraHealthIfSkillPresentHealthDeterminer(SkillIds.AiDarkEarlySkill, 1))
+						.WithModes(new ConstantModeDeterminer(EncounterMode.Challenge))
+						.Build();
+				}
 				// TODO: Check if these are all the possible kitty golems
 				case Encounter.StandardKittyGolem:
 				case Encounter.MediumKittyGolem:
@@ -485,6 +506,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						return Encounter.Artsariiv;
 					case SpeciesIds.Arkk:
 						return Encounter.Arkk;
+					case SpeciesIds.AiKeeperOfThePeak:
+						return Encounter.AiKeeperOfThePeak;
 					case SpeciesIds.Freezie:
 						return Encounter.Freezie;
 					case SpeciesIds.IcebroodConstruct:

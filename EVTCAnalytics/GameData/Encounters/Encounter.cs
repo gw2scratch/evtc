@@ -67,6 +67,9 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 		Artsariiv = 10012,
 		Arkk = 10013,
 
+		// Fractals - Sunqua Peak
+		AiKeeperOfThePeak = 10021,
+
 		// Festivals - Wintersday
 		Freezie = 20001,
 
