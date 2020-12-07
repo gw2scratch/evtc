@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Runtime.InteropServices;
 using Eto.Drawing;
 using Eto.Forms;
@@ -9,6 +11,7 @@ using GW2Scratch.ArcdpsLogManager.Logs.Naming;
 using GW2Scratch.ArcdpsLogManager.Processing;
 using GW2Scratch.ArcdpsLogManager.Sections;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
+using static GW2Scratch.ArcdpsLogManager.Logs.LogData;
 
 namespace GW2Scratch.ArcdpsLogManager.Controls
 {
@@ -28,7 +31,8 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 		private readonly Label parseStatusLabel = new Label();
 		private readonly Button dpsReportUploadButton;
 		private readonly TextBox dpsReportTextBox;
-		private readonly Button dpsReportOpenButton;
+		private readonly Button dpsReportOpenButton; 
+		private readonly TagControl tagControl;
 
 		public LogData LogData
 		{
@@ -80,7 +84,18 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 
 				UpdateUploadStatus();
 
+				tagControl.Tags = Tags;
+
 				ResumeLayout();
+			}
+		}
+
+		private IEnumerable<TagInfo> Tags
+		{
+			get
+			{
+				if (logData == null) return Enumerable.Empty<TagInfo>();
+				return logData.Tags;
 			}
 		}
 
@@ -96,10 +111,27 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			Visible = false;
 
 			groupComposition = new GroupCompositionControl(apiData, imageProvider);
+			tagControl = new TagControl(Tags);
 
 			DynamicTable debugSection;
 			var debugButton = new Button {Text = "Debug data"};
 			var reparseButton = new Button {Text = "Reprocess"};
+
+			tagControl.RaiseTagAdded +=  (sender, args) => {
+				if (logData.Tags.Add(new TagInfo(args.Name, "user")))
+				{
+					// cache changed since last save ++
+					logProcessor.CacheData(logData);
+				}
+			};
+
+			tagControl.RaiseTagRemoved += (sender, args) => {
+				if (logData.Tags.Remove(new TagInfo(args.Name, "user")))
+				{
+					// cache changed since last save ++
+					logProcessor.CacheData(logData);
+				}
+			};
 
 			BeginVertical(spacing: new Size(0, 30), yscale: true);
 			{
@@ -137,6 +169,11 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 						EndHorizontal();
 					}
 					EndVertical();
+					BeginHorizontal();
+					{
+						Add(new Scrollable { Content = tagControl, Border = BorderType.None });
+					}
+					EndHorizontal();
 
 					dpsReportUploadButton = new Button();
 					dpsReportTextBox = new TextBox {ReadOnly = true};

@@ -4,7 +4,9 @@ using Eto.Drawing;
 using Eto.Forms;
 using GW2Scratch.ArcdpsLogManager.Logs;
 using GW2Scratch.ArcdpsLogManager.Logs.Filters;
+using GW2Scratch.ArcdpsLogManager.Logs.Filters.Groups;
 using GW2Scratch.ArcdpsLogManager.Sections;
+using static GW2Scratch.ArcdpsLogManager.Logs.LogData;
 
 namespace GW2Scratch.ArcdpsLogManager.Controls
 {
@@ -31,6 +33,17 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			normalModeCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowNormalModeLogs);
 			var challengeModeCheckBox = new CheckBox {Text = "CM"};
 			challengeModeCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowChallengeModeLogs);
+
+			var favoritesCheckBox = new CheckBox { Text = "Favorites" };
+			var tagText = new TextBox();
+			favoritesCheckBox.CheckedChanged += (source, args) =>
+			{
+				UpdateTagFilters(tagText, favoritesCheckBox);
+			};
+			tagText.TextChanged += (source, args) =>
+			{
+				UpdateTagFilters(tagText, favoritesCheckBox);
+			};
 
 			var startDateTimePicker = new DateTimePicker {Mode = DateTimePickerMode.DateTime};
 			startDateTimePicker.ValueBinding.Bind(this, x => x.Filters.MinDateTime);
@@ -124,12 +137,50 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 						EndVertical();
 					}
 					EndGroup();
+					BeginGroup("Tags (comma-separated)", new Padding(4, 0, 4, 2), spacing: new Size(6, 4));
+					{
+						BeginHorizontal();
+						{
+							Add(favoritesCheckBox);
+						}
+						EndHorizontal();
+						BeginVertical();
+						{
+							BeginHorizontal();
+							{
+								Add(tagText);
+							}
+							EndHorizontal();
+						}
+					}
+					EndVertical();
+					EndGroup();
+
 					Add(encounterTree, yscale: true);
 					Add(advancedFiltersButton);
 				}
 				EndVertical();
 			}
 			//EndGroup();
+		}
+
+		public void UpdateTagFilters(TextBox tagText, CheckBox favoritesCheckBox)
+		{
+			var text = tagText.Text;
+			var tagsToFilterBy = text.Split(',');
+			var tagFilters = new List<TagLogGroup>();
+			foreach (var tag in tagsToFilterBy)
+			{
+				if (tag.Trim().Length != 0)
+				{
+					tagFilters.Add(new TagLogGroup(tag.Trim(), "user"));
+				}
+			}
+			if (favoritesCheckBox.Checked == true)
+			{
+				tagFilters.Add(new TagLogGroup(TagInfo.Favorites));
+			}
+			Filters.TagGroups = tagFilters;
 		}
 
 		/// <summary>

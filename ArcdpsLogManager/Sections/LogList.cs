@@ -1,7 +1,8 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Eto.Drawing;
 using Eto.Forms;
 using GW2Scratch.ArcdpsLogManager.Controls;
@@ -11,9 +12,18 @@ using GW2Scratch.ArcdpsLogManager.Logs.Naming;
 using GW2Scratch.ArcdpsLogManager.Processing;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
+using static GW2Scratch.ArcdpsLogManager.Logs.LogData;
 
 namespace GW2Scratch.ArcdpsLogManager.Sections
 {
+	static class Extensions
+	{
+		internal static bool IsFavorite(this LogData data)
+		{
+			return data.Tags.Contains(TagInfo.Favorites);
+		}
+	}
+
 	public class LogList : Panel
 	{
 		private readonly ApiData apiData;
@@ -94,6 +104,28 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			return new MultipleLogPanel(logProcessor, uploadProcessor);
 		}
 
+		private void Favorites_CellClick(object sender, GridCellMouseEventArgs args)
+		{
+			if(args.Column == 0) // favorites
+			{
+				if(args.Item is LogData)
+				{
+					var data = args.Item as LogData;
+					if (data.IsFavorite())
+					{
+						data.Tags.Remove(TagInfo.Favorites);
+					} else
+					{
+						data.Tags.Add(TagInfo.Favorites);
+					}
+
+					logProcessor.CacheData(data);
+
+					(sender as GridView).Invalidate();
+				}				
+			}
+		}
+
 		private GridView<LogData> ConstructLogGridView(LogDetailPanel detailPanel, MultipleLogPanel multipleLogPanel)
 		{
 			var gridView = new GridView<LogData>
@@ -101,10 +133,34 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 				AllowMultipleSelection = true
 			};
 
+			gridView.CellClick += Favorites_CellClick;
+
+			var favoritesColumn = new GridColumn()
+			{
+				HeaderText = "★",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<LogData, string>(
+					   data => {
+						   if (data.IsFavorite())
+						   {
+							   return "★";
+						   } else
+						   {
+							   return "☆";
+						   }
+						}
+					), 
+					
+				}
+			};
+
+			gridView.Columns.Add(favoritesColumn);
+
 			gridView.Columns.Add(new GridColumn()
 			{
 				HeaderText = "Encounter",
-				DataCell = new TextBoxCell {Binding = new DelegateBinding<LogData, string>(x => nameProvider.GetName(x))}
+				DataCell = new TextBoxCell { Binding = new DelegateBinding<LogData, string>(x => nameProvider.GetName(x))}
 			});
 
 			var resultColumn = new GridColumn()
@@ -285,6 +341,9 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			sorter = new GridViewSorter<LogData>(gridView, new Dictionary<GridColumn, Comparison<LogData>>
 			{
 				{
+					favoritesColumn, (x, y) => x.IsFavorite().CompareTo(y.IsFavorite())
+				},
+				{
 					compositionColumn, (x, y) =>
 					{
 						int xPlayerCount = x.Players?.Count() ?? -1;
@@ -358,4 +417,6 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			return contextMenu;
 		}
 	}
+
+
 }
