@@ -19,21 +19,12 @@ namespace GW2Scratch.ArcdpsLogManager.Dialogs
 			{
 				layout.BeginVertical(spacing: new Size(0, 0));
 				{
-					// This is a very hacky solution for WrapMode.Word not working properly on the Gtk platform
 					layout.AddRow(new Label
 					{
-						Text = "This new version of the log manager brings improvements for processing some of the ",
-						Wrap = WrapMode.None
-					});
-					layout.AddRow(new Label
-					{
-						Text = "logs. They have to be processed again to correctly update the data. Affected logs are ",
-						Wrap = WrapMode.None
-					});
-					layout.AddRow(new Label
-					{
-						Text = "listed below. Do you wish to do so now?",
-						Wrap = WrapMode.None
+						Text = "This new version of the log manager brings improvements for processing some of the logs. " +
+						       "They have to be processed again to correctly update the data. " +
+						       "Affected logs are listed below. Do you wish to do so now?",
+						Wrap = WrapMode.Word
 					});
 					layout.AddRow(null);
 				}
