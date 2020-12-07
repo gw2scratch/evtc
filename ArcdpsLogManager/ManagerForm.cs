@@ -151,7 +151,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			var filters = ConstructLogFilters();
 			var tabs = ConstructMainTabControl();
 
-			var sidebar = new Panel {Content = filters};
+			var sidebar = new Panel {Content = filters, Padding = new Padding(0, 0, 4, 2)};
 			var filterPage = new TabPage {Text = "Filters", Visible = false};
 			tabs.Pages.Insert(0, filterPage);
 
