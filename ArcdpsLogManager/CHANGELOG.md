@@ -16,8 +16,8 @@ The Log Manager is now a .NET Core program. It is available in two versions:
 - Added better filtering UI for encounters that allows selecting multiple bosses (issue #66)
 - Commander tags are shown in log details for logs from arcdps version 2020-06-09 and newer (issue #72)
 - Added support for Varinia Stormsounder, the main boss in Strike Mission: Cold War (issue #77)
+- Added support for Ai, Keeper of the Peak, the CM boss in the Sunqua Peak fractal (issue #89)
 - Added boss health percentage to failures, both in log list and log details (issue #63)
-- Health percentage of bosses is shown for failures
 
 #### Changes
 - The manager now requires .NET Core 3.1 or newer
