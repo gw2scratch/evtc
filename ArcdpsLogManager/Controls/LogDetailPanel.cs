@@ -171,29 +171,21 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 					dpsReportTextBox = new TextBox {ReadOnly = true};
 					dpsReportOpenButton = new Button {Text = "Open"};
 
-					BeginVertical(spacing: new Size(0, 5));
+					BeginGroup("Upload to dps.report (Elite Insights)", new Padding(5), new Size(0, 5));
 					{
-						BeginVertical(spacing: new Size(5, 5));
-						{
-							BeginHorizontal();
-							{
-								Add(dpsReportUploadButton);
-							}
-							EndHorizontal();
-						}
-						EndVertical();
 						BeginVertical(spacing: new Size(5, 5));
 						{
 							BeginHorizontal();
 							{
 								Add(dpsReportTextBox, true);
 								Add(dpsReportOpenButton);
+								Add(dpsReportUploadButton);
 							}
 							EndHorizontal();
 						}
 						EndVertical();
 					}
-					EndVertical();
+					EndGroup();
 				}
 				EndVertical();
 			}
@@ -265,7 +257,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				return;
 			}
 
-			const string reuploadButtonText = "Reupload to dps.report";
+			const string reuploadButtonText = "Reupload";
 
 			bool uploadEnabled = false;
 			bool openEnabled = false;
@@ -275,7 +267,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			switch (upload.UploadState)
 			{
 				case UploadState.NotUploaded:
-					uploadButtonText = "Upload to dps.report";
+					uploadButtonText = "Upload";
 					uploadEnabled = true;
 					break;
 				case UploadState.Queued:
@@ -306,6 +298,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			dpsReportUploadButton.Enabled = uploadEnabled;
 			dpsReportOpenButton.Enabled = openEnabled;
 			dpsReportTextBox.Text = text;
+			dpsReportTextBox.Enabled = text != null;
 		}
 
 		private void OnUploadProcessorUpdate(object sender, EventArgs e)

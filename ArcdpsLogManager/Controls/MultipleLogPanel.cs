@@ -218,11 +218,10 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				}
 				EndHorizontal();
 
-				BeginVertical(spacing: new Size(0, 5));
+				BeginGroup("Upload to dps.report (Elite Insights)", spacing: new Size(0, 5));
 				{
 					BeginVertical(spacing: new Size(5, 5));
 					{
-						AddRow(new Label {Text = "Upload to dps.report (EI)", Font = Fonts.Sans(12)});
 						AddRow("Not uploaded:", dpsReportNotUploadedLabel);
 						AddRow("Uploading:", dpsReportUploadingLabel);
 						AddRow("Uploaded:", dpsReportUploadedLabel);
@@ -266,7 +265,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				}
 				EndVertical();
 			}
-			EndVertical();
+			EndGroup();
 
 			Settings.ShowDebugDataChanged += (sender, args) => { debugSection.Visible = Settings.ShowDebugData; };
 			Shown += (sender, args) =>

@@ -34,9 +34,9 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			var challengeModeCheckBox = new CheckBox {Text = "CM"};
 			challengeModeCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowChallengeModeLogs);
 
-			var nonFavoritesCheckBox = new CheckBox {Text = "☆"};
+			var nonFavoritesCheckBox = new CheckBox {Text = "☆ Non-favorites"};
 			nonFavoritesCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowNonFavoriteLogs);
-			var favoritesCheckBox = new CheckBox {Text = "★"};
+			var favoritesCheckBox = new CheckBox {Text = "★ Favorites"};
 			favoritesCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowFavoriteLogs);
 
 			// TODO: This is currently only a one-way binding

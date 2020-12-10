@@ -100,7 +100,11 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 						};
 					}
 
-					Add(null);
+					if (tags.Count > 0)
+					{
+						Add(null);
+					}
+
 					BeginHorizontal();
 					{
 						// This double-embedding is required to have both the label and the TextBox only occupy one horizontal slot in the table
