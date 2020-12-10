@@ -18,6 +18,7 @@ The Log Manager is now a .NET Core program. It is available in two versions:
 - Added support for Varinia Stormsounder, the main boss in Strike Mission: Cold War (issue #77)
 - Added support for Ai, Keeper of the Peak, the CM boss in the Sunqua Peak fractal (issue #89)
 - Added boss health percentage to failures, both in log list and log details (issue #63)
+- Added an option to tag and favorite logs (by [@jcogilvie](https://github.com/jcogilvie), issue #70)
 
 #### Changes
 - The manager now requires .NET Core 3.1 or newer
@@ -36,6 +37,9 @@ The Log Manager is now a .NET Core program. It is available in two versions:
 - Fixed uploading logs without an extension to dps.report
 - Fixed log uploads failing after 100 seconds (issue #65)
 - Fixed saving hidden log list columns
+
+#### Contributors
+
 
 ## Log Manager v0.7.2
 
