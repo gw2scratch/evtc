@@ -131,7 +131,6 @@ namespace GW2Scratch.ArcdpsLogManager
 			LogCollectionsRecreated += (sender, args) =>
 			{
 				logsFiltered.Filter = Filters.FilterLog;
-				logsFiltered.Refresh();
 			};
 			LogSearchFinished += (sender, args) =>
 			{
