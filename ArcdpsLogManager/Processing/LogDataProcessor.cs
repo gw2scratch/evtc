@@ -19,13 +19,6 @@ namespace GW2Scratch.ArcdpsLogManager.Processing
 			this.apiProcessor = apiProcessor ?? throw new ArgumentNullException(nameof(apiProcessor));
 		}
 
-		// not really sure on the best way to expose this to the Panels, since they now need to be able to
-		// save their data after modifying tags.
-		public void CacheData(LogData data)
-		{
-			logCache.CacheLogData(data);
-		}
-
 		protected override Task Process(LogData item, CancellationToken cancellationToken)
 		{
 			return Task.Run(() =>

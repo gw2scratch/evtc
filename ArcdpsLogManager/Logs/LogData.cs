@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using GW2Scratch.ArcdpsLogManager.Analytics;
+using GW2Scratch.ArcdpsLogManager.Logs.Tagging;
 using GW2Scratch.EVTCAnalytics.Events;
 using GW2Scratch.EVTCAnalytics.GameData;
 using GW2Scratch.EVTCAnalytics.GameData.Encounters;
@@ -123,52 +124,13 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 		public bool IsEncounterStartTimePrecise => ParsingStatus == ParsingStatus.Parsed && !MissingEncounterStart;
 
 		/// <summary>
-		/// The tags (and info about tags) applied to this log.  Set of <see cref="TagInfo"/> rather than Set of string for extensibility's sake.  
+		/// The tags (and info about tags) applied to this log. Set of <see cref="TagInfo"/> rather than Set of string for extensibility's sake.
 		/// </summary>
 		[JsonProperty]
 		public ISet<TagInfo> Tags { get; set; } = new HashSet<TagInfo>();
 
-		[DebuggerDisplay("{Type}:{Name}")]
-		public class TagInfo : IEquatable<TagInfo>
-		{
-			[JsonIgnore]
-			public static TagInfo Favorites = new TagInfo("favorite", "system");
-
-			/// <summary>
-			/// The name of this tag
-			/// </summary>
-			[JsonProperty]
-			public string Name { get; set; }
-
-			/// <summary>
-			/// The type of this tag (system vs. user-applied; for instance we can use this for a "star" or "favorite" system
-			/// </summary>
-			[JsonProperty]
-			public string Type { get; set; }
-
-			public TagInfo(string name, string type)
-			{
-				Name = name;
-				Type = type;
-			}
-
-			public override bool Equals(object obj)
-			{
-				return Equals(obj as TagInfo);
-			}
-
-			public bool Equals(TagInfo other)
-			{
-				return other != null &&
-					   Name == other.Name &&
-					   Type == other.Type;
-			}
-
-			public override int GetHashCode()
-			{
-				return HashCode.Combine(Name, Type);
-			}
-		}
+		[JsonProperty]
+		public bool IsFavorite { get; set; } = false;
 
 		[JsonProperty]
 		private bool MissingEncounterStart { get; set; } = false;

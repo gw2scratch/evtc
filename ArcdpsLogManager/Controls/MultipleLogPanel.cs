@@ -5,6 +5,8 @@ using System.Linq;
 using Eto.Drawing;
 using Eto.Forms;
 using GW2Scratch.ArcdpsLogManager.Logs;
+using GW2Scratch.ArcdpsLogManager.Logs.Filters;
+using GW2Scratch.ArcdpsLogManager.Logs.Tagging;
 using GW2Scratch.ArcdpsLogManager.Processing;
 using static GW2Scratch.ArcdpsLogManager.Logs.LogData;
 using Button = Eto.Forms.Button;
@@ -22,7 +24,6 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 		private readonly Label dpsReportUploadedLabel = new Label();
 		private readonly Label dpsReportProcessingFailedLabel = new Label();
 		private readonly Label dpsReportUploadFailedLabel = new Label();
-		private readonly Label dpsReportTagsLabel = new Label() { Text = "Tags" };
 		private readonly TextArea dpsReportLinkTextArea = new TextArea {ReadOnly = true};
 		private readonly Button dpsReportUploadButton = new Button();
 		private readonly Button dpsReportCancelButton = new Button {Text = "Cancel"};
@@ -52,27 +53,29 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 
 				UpdateDpsReportUploadStatus();
 
-				tagControl.Tags = Tags;
+				UpdateTags();
 
 				ResumeLayout();
 			}
 		}
 
-		private IEnumerable<TagInfo> Tags
+		private void UpdateTags()
 		{
-			get
+			if (logData?.Any() != true)
 			{
-				if (logData?.Any() != true) return Enumerable.Empty<TagInfo>();
-
-				var allTags = logData.Select(it => it.Tags);
-
-				var currentTags = new HashSet<TagInfo>(allTags.First());
-				foreach(var tagSet in allTags.Skip(1))
-				{
-					currentTags.IntersectWith(tagSet);
-				}
-				return currentTags;
+				tagControl.Tags = Enumerable.Empty<TagInfo>();
+				return;
 			}
+
+			var allTags = logData.Select(it => it.Tags).ToList();
+
+			var commonTags = new HashSet<TagInfo>(allTags.First());
+			foreach (var tagSet in allTags.Skip(1))
+			{
+				commonTags.IntersectWith(tagSet);
+			}
+
+			tagControl.Tags = commonTags;
 		}
 
 		private void UpdateDpsReportUploadStatus()
@@ -105,7 +108,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				logData.Where(x => x.DpsReportEIUpload.Url != null).Select(x => x.DpsReportEIUpload.Url));
 		}
 
-		public MultipleLogPanel(LogDataProcessor logProcessor, UploadProcessor uploadProcessor)
+		public MultipleLogPanel(LogCache logCache, LogDataProcessor logProcessor, UploadProcessor uploadProcessor)
 		{
 			Padding = new Padding(10);
 			Width = 350;
@@ -168,29 +171,29 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 
 			DynamicTable debugSection;
 
-			tagControl = new TagControl(Tags);
-			tagControl.RaiseTagAdded += (sender, args) => {
-
+			tagControl = new TagControl();
+			tagControl.TagAdded += (sender, args) =>
+			{
 				var added = false;
 				foreach (var log in logData)
 				{
-					added |= log.Tags.Add(new TagInfo(args.Name, "user"));
+					added |= log.Tags.Add(new TagInfo(args.Name));
 					if (added)
 					{
-						logProcessor.CacheData(log);
+						logCache.CacheLogData(log);
 					}
 				}
 			};
 
-			tagControl.RaiseTagRemoved += (sender, args) => {
-				
+			tagControl.TagRemoved += (sender, args) =>
+			{
 				var removed = false;
 				foreach (var log in logData)
 				{
-					removed |= log.Tags.Remove(new TagInfo(args.Name, "user"));
+					removed |= log.Tags.Remove(new TagInfo(args.Name));
 					if (removed)
 					{
-						logProcessor.CacheData(log);
+						logCache.CacheLogData(log);
 					}
 				}
 			};
@@ -211,7 +214,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 
 				BeginHorizontal();
 				{
-					Add(new Scrollable { Content = tagControl, Border = BorderType.None });
+					Add(new Scrollable {Content = tagControl, Border = BorderType.None});
 				}
 				EndHorizontal();
 

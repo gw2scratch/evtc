@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using Eto.Drawing;
 using Eto.Forms;
 using GW2Scratch.ArcdpsLogManager.Controls;
@@ -12,20 +11,12 @@ using GW2Scratch.ArcdpsLogManager.Logs.Naming;
 using GW2Scratch.ArcdpsLogManager.Processing;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
-using static GW2Scratch.ArcdpsLogManager.Logs.LogData;
 
 namespace GW2Scratch.ArcdpsLogManager.Sections
 {
-	static class Extensions
-	{
-		internal static bool IsFavorite(this LogData data)
-		{
-			return data.Tags.Contains(TagInfo.Favorites);
-		}
-	}
-
 	public class LogList : Panel
 	{
+		private readonly LogCache logCache;
 		private readonly ApiData apiData;
 		private readonly LogDataProcessor logProcessor;
 		private readonly UploadProcessor uploadProcessor;
@@ -55,9 +46,10 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			}
 		}
 
-		public LogList(ApiData apiData, LogDataProcessor logProcessor, UploadProcessor uploadProcessor,
+		public LogList(LogCache logCache, ApiData apiData, LogDataProcessor logProcessor, UploadProcessor uploadProcessor,
 			ImageProvider imageProvider, ILogNameProvider nameProvider)
 		{
+			this.logCache = logCache;
 			this.apiData = apiData;
 			this.logProcessor = logProcessor;
 			this.uploadProcessor = uploadProcessor;
@@ -96,34 +88,12 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 
 		private LogDetailPanel ConstructLogDetailPanel()
 		{
-			return new LogDetailPanel(apiData, logProcessor, uploadProcessor, imageProvider, nameProvider);
+			return new LogDetailPanel(logCache, apiData, logProcessor, uploadProcessor, imageProvider, nameProvider);
 		}
 
 		private MultipleLogPanel ConstructMultipleLogPanel()
 		{
-			return new MultipleLogPanel(logProcessor, uploadProcessor);
-		}
-
-		private void Favorites_CellClick(object sender, GridCellMouseEventArgs args)
-		{
-			if(args.Column == 0) // favorites
-			{
-				if(args.Item is LogData)
-				{
-					var data = args.Item as LogData;
-					if (data.IsFavorite())
-					{
-						data.Tags.Remove(TagInfo.Favorites);
-					} else
-					{
-						data.Tags.Add(TagInfo.Favorites);
-					}
-
-					logProcessor.CacheData(data);
-
-					(sender as GridView).Invalidate();
-				}				
-			}
+			return new MultipleLogPanel(logCache, logProcessor, uploadProcessor);
 		}
 
 		private GridView<LogData> ConstructLogGridView(LogDetailPanel detailPanel, MultipleLogPanel multipleLogPanel)
@@ -133,25 +103,25 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 				AllowMultipleSelection = true
 			};
 
-			gridView.CellClick += Favorites_CellClick;
-
 			var favoritesColumn = new GridColumn()
 			{
 				HeaderText = "★",
 				DataCell = new TextBoxCell
 				{
-					Binding = new DelegateBinding<LogData, string>(
-					   data => {
-						   if (data.IsFavorite())
-						   {
-							   return "★";
-						   } else
-						   {
-							   return "☆";
-						   }
-						}
-					), 
-					
+					Binding = new DelegateBinding<LogData, string>(data => data.IsFavorite ? "★" : "☆")
+				}
+			};
+
+			gridView.CellClick += (sender, args) =>
+			{
+				if (args.GridColumn == favoritesColumn)
+				{
+					var data = (LogData) args.Item;
+					data.IsFavorite = !data.IsFavorite;
+
+					logCache.CacheLogData(data);
+
+					(sender as GridView)?.Invalidate();
 				}
 			};
 
@@ -160,7 +130,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			gridView.Columns.Add(new GridColumn()
 			{
 				HeaderText = "Encounter",
-				DataCell = new TextBoxCell { Binding = new DelegateBinding<LogData, string>(x => nameProvider.GetName(x))}
+				DataCell = new TextBoxCell {Binding = new DelegateBinding<LogData, string>(x => nameProvider.GetName(x))}
 			});
 
 			var resultColumn = new GridColumn()
@@ -341,7 +311,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			sorter = new GridViewSorter<LogData>(gridView, new Dictionary<GridColumn, Comparison<LogData>>
 			{
 				{
-					favoritesColumn, (x, y) => x.IsFavorite().CompareTo(y.IsFavorite())
+					favoritesColumn, (x, y) => x.IsFavorite.CompareTo(y.IsFavorite)
 				},
 				{
 					compositionColumn, (x, y) =>
@@ -417,6 +387,4 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			return contextMenu;
 		}
 	}
-
-
 }

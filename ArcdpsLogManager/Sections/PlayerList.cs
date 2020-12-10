@@ -15,6 +15,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 {
 	public class PlayerList : DynamicLayout
 	{
+		private LogCache LogCache { get; }
 		private ApiData ApiData { get; }
 		private LogDataProcessor LogProcessor { get; }
 		private UploadProcessor UploadProcessor { get; }
@@ -54,9 +55,10 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 
 		private string PlayerFilter { get; set; } = "";
 
-		public PlayerList(ApiData apiData, LogDataProcessor logProcessor, UploadProcessor uploadProcessor,
+		public PlayerList(LogCache logCache, ApiData apiData, LogDataProcessor logProcessor, UploadProcessor uploadProcessor,
 			ImageProvider imageProvider, ILogNameProvider logNameProvider)
 		{
+			LogCache = logCache;
 			ApiData = apiData;
 			LogProcessor = logProcessor;
 			ImageProvider = imageProvider;
@@ -166,7 +168,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 
 		private PlayerDetailPanel ConstructPlayerDetailPanel()
 		{
-			return new PlayerDetailPanel(ApiData, LogProcessor, UploadProcessor, ImageProvider, LogNameProvider);
+			return new PlayerDetailPanel(LogCache, ApiData, LogProcessor, UploadProcessor, ImageProvider, LogNameProvider);
 		}
 
 		private GridView<PlayerData> ConstructPlayerGridView(PlayerDetailPanel playerDetailPanel)

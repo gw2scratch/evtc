@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Tracing;
+using System.Linq;
 using Eto.Drawing;
 using Eto.Forms;
 using GW2Scratch.ArcdpsLogManager.Logs;
 using GW2Scratch.ArcdpsLogManager.Logs.Filters;
-using GW2Scratch.ArcdpsLogManager.Logs.Filters.Groups;
 using GW2Scratch.ArcdpsLogManager.Sections;
-using static GW2Scratch.ArcdpsLogManager.Logs.LogData;
 
 namespace GW2Scratch.ArcdpsLogManager.Controls
 {
@@ -34,15 +34,17 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			var challengeModeCheckBox = new CheckBox {Text = "CM"};
 			challengeModeCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowChallengeModeLogs);
 
-			var favoritesCheckBox = new CheckBox { Text = "Favorites" };
+			var nonFavoritesCheckBox = new CheckBox {Text = "☆"};
+			nonFavoritesCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowNonFavoriteLogs);
+			var favoritesCheckBox = new CheckBox {Text = "★"};
+			favoritesCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowFavoriteLogs);
+
+			// TODO: This is currently only a one-way binding
 			var tagText = new TextBox();
-			favoritesCheckBox.CheckedChanged += (source, args) =>
-			{
-				UpdateTagFilters(tagText, favoritesCheckBox);
-			};
 			tagText.TextChanged += (source, args) =>
 			{
-				UpdateTagFilters(tagText, favoritesCheckBox);
+				var tags = tagText.Text.Split(",", StringSplitOptions.RemoveEmptyEntries).Select(tag => tag.Trim()).ToList();
+				filters.RequiredTags = tags;
 			};
 
 			var startDateTimePicker = new DateTimePicker {Mode = DateTimePickerMode.DateTime};
@@ -75,112 +77,94 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				form.Show();
 			};
 
-			//BeginGroup("Filters", new Padding(5, 0, 5, 5));
+			BeginVertical(spacing: new Size(4, 4));
 			{
-				BeginVertical(spacing: new Size(4, 4));
+				BeginGroup("Result", new Padding(4, 0, 4, 2), spacing: new Size(6, 0));
 				{
-					BeginGroup("Result", new Padding(4, 0, 4, 2), spacing: new Size(6, 0));
+					BeginHorizontal();
+					{
+						Add(successCheckBox);
+						Add(failureCheckBox);
+						Add(unknownCheckBox);
+					}
+					EndHorizontal();
+				}
+				EndGroup();
+				BeginGroup("Mode", new Padding(4, 0, 4, 2), spacing: new Size(6, 0));
+				{
+					BeginHorizontal();
+					{
+						Add(normalModeCheckBox);
+						Add(challengeModeCheckBox);
+					}
+					EndHorizontal();
+				}
+				EndGroup();
+				BeginGroup("Time", new Padding(4, 0, 4, 2), spacing: new Size(4, 4));
+				{
+					BeginVertical(spacing: new Size(4, 2));
 					{
 						BeginHorizontal();
 						{
-							Add(successCheckBox);
-							Add(failureCheckBox);
-							Add(unknownCheckBox);
+							Add(new Label
+							{
+								Text = "Between",
+								VerticalAlignment = VerticalAlignment.Center
+							});
+							Add(startDateTimePicker);
+							Add(null, xscale: true);
 						}
 						EndHorizontal();
-					}
-					EndGroup();
-					BeginGroup("Mode", new Padding(4, 0, 4, 2), spacing: new Size(6, 0));
-					{
 						BeginHorizontal();
 						{
-							Add(normalModeCheckBox);
-							Add(challengeModeCheckBox);
+							Add(new Label {Text = "and", VerticalAlignment = VerticalAlignment.Center});
+							Add(endDateTimePicker);
+							Add(null, xscale: true);
 						}
 						EndHorizontal();
-					}
-					EndGroup();
-					BeginGroup("Time", new Padding(4, 0, 4, 2), spacing: new Size(4, 4));
-					{
-						BeginVertical(spacing: new Size(4, 2));
-						{
-							BeginHorizontal();
-							{
-								Add(new Label
-								{
-									Text = "Between",
-									VerticalAlignment = VerticalAlignment.Center
-								});
-								Add(startDateTimePicker);
-								Add(null, xscale: true);
-							}
-							EndHorizontal();
-							BeginHorizontal();
-							{
-								Add(new Label {Text = "and", VerticalAlignment = VerticalAlignment.Center});
-								Add(endDateTimePicker);
-								Add(null, xscale: true);
-							}
-							EndHorizontal();
-						}
-						EndVertical();
-						BeginVertical(spacing: new Size(4, 0));
-						{
-							BeginHorizontal();
-							{
-								Add(allTimeButton, xscale: false);
-								Add(lastDayButton, xscale: false);
-								Add(null, xscale: true);
-							}
-							EndHorizontal();
-						}
-						EndVertical();
-					}
-					EndGroup();
-					BeginGroup("Tags (comma-separated)", new Padding(4, 0, 4, 2), spacing: new Size(6, 4));
-					{
-						BeginHorizontal();
-						{
-							Add(favoritesCheckBox);
-						}
-						EndHorizontal();
-						BeginVertical();
-						{
-							BeginHorizontal();
-							{
-								Add(tagText);
-							}
-							EndHorizontal();
-						}
 					}
 					EndVertical();
-					EndGroup();
-
-					Add(encounterTree, yscale: true);
-					Add(advancedFiltersButton);
+					BeginVertical(spacing: new Size(4, 0));
+					{
+						BeginHorizontal();
+						{
+							Add(allTimeButton, xscale: false);
+							Add(lastDayButton, xscale: false);
+							Add(null, xscale: true);
+						}
+						EndHorizontal();
+					}
+					EndVertical();
 				}
-				EndVertical();
-			}
-			//EndGroup();
-		}
-
-		public void UpdateTagFilters(TextBox tagText, CheckBox favoritesCheckBox)
-		{
-			var text = tagText.Text;
-			var tagsToFilterBy = text.Split(',');
-			var tagFilters = new List<TagLogGroup>();
-			foreach (var tag in tagsToFilterBy)
-			{
-				if (tag.Trim().Length != 0)
+				EndGroup();
+				BeginGroup("Favorites", new Padding(4, 0, 4, 2), spacing: new Size(6, 4));
 				{
-					tagFilters.Add(new TagLogGroup(tag.Trim(), "user"));
+					BeginHorizontal();
+					{
+						Add(nonFavoritesCheckBox);
+						Add(favoritesCheckBox);
+					}
+					EndHorizontal();
 				}
+				EndGroup();
+				BeginGroup("Tags (comma-separated)", new Padding(4, 0, 4, 2), spacing: new Size(6, 4));
+				{
+					BeginVertical();
+					{
+						BeginHorizontal();
+						{
+							Add(tagText);
+						}
+						EndHorizontal();
+					}
+					EndVertical();
+				}
+				EndGroup();
+
+				Add(encounterTree, yscale: true);
+				Add(advancedFiltersButton);
 			}
-			if (favoritesCheckBox.Checked == true)
-			{
-				tagFilters.Add(new TagLogGroup(TagInfo.Favorites));
-			}
-			Filters.TagGroups = tagFilters;
+			EndVertical();
 		}
 
 		/// <summary>

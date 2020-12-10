@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using GW2Scratch.ArcdpsLogManager.Logs.Filters.Groups;
+using GW2Scratch.ArcdpsLogManager.Logs.Tagging;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
 
@@ -18,12 +19,14 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 		private bool showParseParsedLogs = true;
 		private bool showParseFailedLogs = true;
 		private IReadOnlyList<LogGroup> logGroups = new List<LogGroup> {new RootLogGroup(Enumerable.Empty<LogData>())};
-		private IReadOnlyList<LogGroup> tagGroups = new List<LogGroup> { new RootLogGroup(Enumerable.Empty<LogData>()) };
+		private IReadOnlyList<string> requiredTags = new List<string>();
 		private bool showSuccessfulLogs = true;
 		private bool showFailedLogs = true;
 		private bool showUnknownLogs = true;
 		private bool showNormalModeLogs = true;
 		private bool showChallengeModeLogs = true;
+		private bool showNonFavoriteLogs = true;
+		private bool showFavoriteLogs = true;
 		private DateTime? minDateTime = GuildWars2ReleaseDate;
 		private DateTime? maxDateTime = DateTime.Now.Date.AddDays(1);
 		private readonly IReadOnlyList<ILogFilter> additionalFilters;
@@ -83,13 +86,13 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 			}
 		}
 
-		public IReadOnlyList<LogGroup> TagGroups
+		public IReadOnlyList<string> RequiredTags
 		{
-			get => tagGroups;
+			get => requiredTags;
 			set
 			{
-				if (Equals(value, tagGroups)) return;
-				tagGroups = value;
+				if (Equals(value, requiredTags)) return;
+				requiredTags = value;
 				OnPropertyChanged();
 			}
 		}
@@ -149,6 +152,28 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 			}
 		}
 
+		public bool ShowNonFavoriteLogs
+		{
+			get => showNonFavoriteLogs;
+			set
+			{
+				if (value == showNonFavoriteLogs) return;
+				showNonFavoriteLogs = value;
+				OnPropertyChanged();
+			}
+		}
+
+		public bool ShowFavoriteLogs
+		{
+			get => showFavoriteLogs;
+			set
+			{
+				if (value == showFavoriteLogs) return;
+				showFavoriteLogs = value;
+				OnPropertyChanged();
+			}
+		}
+
 		public DateTime? MinDateTime
 		{
 			get => minDateTime;
@@ -191,7 +216,8 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 			       && FilterByParsingStatus(log)
 			       && FilterByTime(log)
 			       && FilterByEncounterMode(log)
-				   && FilterByTags(log);
+			       && FilterByFavoriteStatus(log)
+			       && FilterByTags(log);
 		}
 
 		private bool FilterByParsingStatus(LogData log)
@@ -216,7 +242,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 
 		private bool FilterByTags(LogData log)
 		{
-			return TagGroups.All(x => x.FilterLog(log));
+			return requiredTags.All(tag => log.Tags.Contains(new TagInfo(tag)));
 		}
 
 		private bool FilterByTime(LogData log)
@@ -230,6 +256,11 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 			return (log.EncounterMode == EncounterMode.Normal && ShowNormalModeLogs) ||
 			       (log.EncounterMode == EncounterMode.Unknown && ShowNormalModeLogs) ||
 			       (log.EncounterMode == EncounterMode.Challenge && ShowChallengeModeLogs);
+		}
+
+		private bool FilterByFavoriteStatus(LogData log)
+		{
+			return (log.IsFavorite && ShowFavoriteLogs) || (!log.IsFavorite && ShowNonFavoriteLogs);
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;

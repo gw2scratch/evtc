@@ -3,10 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Eto.Drawing;
 using Eto.Forms;
-using GW2Scratch.ArcdpsLogManager.Gw2Api;
-using GW2Scratch.ArcdpsLogManager.Logs;
-using static GW2Scratch.ArcdpsLogManager.Logs.LogData;
-using Image = Eto.Drawing.Image;
+using GW2Scratch.ArcdpsLogManager.Logs.Tagging;
 using Label = Eto.Forms.Label;
 
 namespace GW2Scratch.ArcdpsLogManager.Controls
@@ -18,26 +15,21 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			get => tags;
 			set
 			{
-				var valueArray = value?.ToArray();
-				Array.Sort(valueArray, (a, b) => StringComparer.CurrentCultureIgnoreCase.Compare(a.Name, b.Name));
-				tags = valueArray;
+				var hashSet = value?.ToHashSet() ?? new HashSet<TagInfo>();
+				tags = hashSet;
 				RecreateLayout();
 			}
 		}
 
-		private TagInfo[] tags;
+		private HashSet<TagInfo> tags;
 
-		public TagControl(IEnumerable<TagInfo> tags)
-		{
-			Tags = tags.ToArray();
-		}
-
-		public event EventHandler<TagAddedEventArgs> RaiseTagAdded;
-		public event EventHandler<TagRemovedEventArgs> RaiseTagRemoved;
+		public event EventHandler<TagAddedEventArgs> TagAdded;
+		public event EventHandler<TagRemovedEventArgs> TagRemoved;
 
 		public class TagAddedEventArgs : EventArgs
 		{
-			public string Name { get; set; }
+			public string Name { get; }
+
 			public TagAddedEventArgs(string tagName)
 			{
 				Name = tagName;
@@ -46,7 +38,8 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 
 		public class TagRemovedEventArgs : EventArgs
 		{
-			public string Name { get; set; }
+			public string Name { get; }
+
 			public TagRemovedEventArgs(string tagName)
 			{
 				Name = tagName;
@@ -63,17 +56,19 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				return;
 			}
 
-			// TODO:  a nice "+" icon?
-			var addTagButton = new Button { Text = "+" };
+			// TODO: a nice "+" icon?
+			var addTagButton = new Button {Text = "+"};
 
 			var tagTextBox = new TextBox();
 
-			addTagButton.Click += (sender, args) => {
-				var tagText = tagTextBox.Text;
-				if (tagText == "") return;
+			addTagButton.Click += (sender, args) =>
+			{
+				string tagName = tagTextBox.Text.Trim();
+				if (tagName == "") return;
 
-				RaiseTagAdded?.Invoke(this, new TagAddedEventArgs(tagText));
-				Tags = Tags.Append(new TagInfo(tagText, "user"));
+				tags.Add(new TagInfo(tagName));
+				RecreateLayout();
+				TagAdded?.Invoke(this, new TagAddedEventArgs(tagName));
 
 				tagTextBox.Text = "";
 			};
@@ -82,43 +77,43 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			Clear();
 			BeginVertical();
 			{
-				var group = BeginGroup("Tags", new Padding(5), new Size(5, 5));
-				foreach (var tag in tags)
+				BeginGroup("Tags", new Padding(5), new Size(5, 5));
 				{
-					var removeButton = new Button { Text = "-" };
-
-					if (tag.Type == "user")
+					foreach (var tag in tags.OrderBy(x => x.Name))
 					{
-						var row = AddRow(new Label { Text = tag.Name }, removeButton);
+						var removeButton = new Button {Text = "-"};
+
+						AddRow(new Label {Text = tag.Name, VerticalAlignment = VerticalAlignment.Center}, removeButton);
 
 						removeButton.Click += (s, e) =>
 						{
-							RaiseTagRemoved?.Invoke(this, new TagRemovedEventArgs(tag.Name));
-							group.Rows.Remove(row);
+							tags.Remove(tag);
+							TagRemoved?.Invoke(this, new TagRemovedEventArgs(tag.Name));
+							RecreateLayout();
 						};
-					} else
-					{
-						var row = AddRow(new Label { Text = tag.Name });
 					}
-				}
-				Add(null);
-				BeginHorizontal();
-				{
-					Add(new Label { Text = "Add a tag: " }, xscale: true);
+
 					Add(null);
+					BeginHorizontal();
+					{
+						// This double-embedding is required to have both the label and the TextBox only occupy one horizontal slot in the table
+						BeginVertical(xscale: true);
+						{
+							BeginHorizontal();
+							{
+								Add(new Label {Text = "New tag: ", VerticalAlignment = VerticalAlignment.Center});
+								Add(tagTextBox, xscale: true);
+							}
+							EndHorizontal();
+						}
+						EndVertical();
+						Add(addTagButton, false);
+					}
+					EndHorizontal();
 				}
-				EndHorizontal();
-				BeginHorizontal();
-				{
-					Add(tagTextBox, xscale: true);
-					Add(addTagButton, false);
-				}
-				EndHorizontal();
-				Add(null);
 				EndGroup();
 			}
 			EndVertical();
-			AddRow(null);
 			Create();
 			ResumeLayout();
 		}

@@ -8,6 +8,7 @@ using Eto.Forms;
 using GW2Scratch.ArcdpsLogManager.Gw2Api;
 using GW2Scratch.ArcdpsLogManager.Logs;
 using GW2Scratch.ArcdpsLogManager.Logs.Naming;
+using GW2Scratch.ArcdpsLogManager.Logs.Tagging;
 using GW2Scratch.ArcdpsLogManager.Processing;
 using GW2Scratch.ArcdpsLogManager.Sections;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
@@ -31,7 +32,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 		private readonly Label parseStatusLabel = new Label();
 		private readonly Button dpsReportUploadButton;
 		private readonly TextBox dpsReportTextBox;
-		private readonly Button dpsReportOpenButton; 
+		private readonly Button dpsReportOpenButton;
 		private readonly TagControl tagControl;
 
 		public LogData LogData
@@ -84,22 +85,13 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 
 				UpdateUploadStatus();
 
-				tagControl.Tags = Tags;
+				tagControl.Tags = logData.Tags;
 
 				ResumeLayout();
 			}
 		}
 
-		private IEnumerable<TagInfo> Tags
-		{
-			get
-			{
-				if (logData == null) return Enumerable.Empty<TagInfo>();
-				return logData.Tags;
-			}
-		}
-
-		public LogDetailPanel(ApiData apiData, LogDataProcessor logProcessor, UploadProcessor uploadProcessor,
+		public LogDetailPanel(LogCache logCache, ApiData apiData, LogDataProcessor logProcessor, UploadProcessor uploadProcessor,
 			ImageProvider imageProvider, ILogNameProvider nameProvider)
 		{
 			UploadProcessor = uploadProcessor;
@@ -111,25 +103,25 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			Visible = false;
 
 			groupComposition = new GroupCompositionControl(apiData, imageProvider);
-			tagControl = new TagControl(Tags);
+			tagControl = new TagControl();
 
 			DynamicTable debugSection;
 			var debugButton = new Button {Text = "Debug data"};
 			var reparseButton = new Button {Text = "Reprocess"};
 
-			tagControl.RaiseTagAdded +=  (sender, args) => {
-				if (logData.Tags.Add(new TagInfo(args.Name, "user")))
+			tagControl.TagAdded += (sender, args) =>
+			{
+				if (logData.Tags.Add(new TagInfo(args.Name)))
 				{
-					// cache changed since last save ++
-					logProcessor.CacheData(logData);
+					logCache.CacheLogData(logData);
 				}
 			};
 
-			tagControl.RaiseTagRemoved += (sender, args) => {
-				if (logData.Tags.Remove(new TagInfo(args.Name, "user")))
+			tagControl.TagRemoved += (sender, args) =>
+			{
+				if (logData.Tags.Remove(new TagInfo(args.Name)))
 				{
-					// cache changed since last save ++
-					logProcessor.CacheData(logData);
+					logCache.CacheLogData(logData);
 				}
 			};
 
@@ -171,7 +163,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 					EndVertical();
 					BeginHorizontal();
 					{
-						Add(new Scrollable { Content = tagControl, Border = BorderType.None });
+						Add(new Scrollable {Content = tagControl, Border = BorderType.None});
 					}
 					EndHorizontal();
 
