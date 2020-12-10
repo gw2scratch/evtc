@@ -133,7 +133,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 					Add(resultLabel);
 				}
 				EndVertical();
-				BeginVertical();
+				BeginVertical(spacing: new Size(0, 5));
 				{
 					BeginHorizontal(true);
 					{
@@ -265,7 +265,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				return;
 			}
 
-			const string reuploadButtonText = "Reupload to dps.report (EI)";
+			const string reuploadButtonText = "Reupload to dps.report";
 
 			bool uploadEnabled = false;
 			bool openEnabled = false;
@@ -275,7 +275,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			switch (upload.UploadState)
 			{
 				case UploadState.NotUploaded:
-					uploadButtonText = "Upload to dps.report (EI)";
+					uploadButtonText = "Upload to dps.report";
 					uploadEnabled = true;
 					break;
 				case UploadState.Queued:
