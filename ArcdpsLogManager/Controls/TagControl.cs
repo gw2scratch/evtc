@@ -60,6 +60,13 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			var addTagButton = new Button {Text = "+"};
 
 			var tagTextBox = new TextBox();
+			tagTextBox.KeyDown += (sender, args) =>
+			{
+				if (args.Key == Keys.Enter)
+				{
+					addTagButton.PerformClick();
+				}
+			};
 
 			addTagButton.Click += (sender, args) =>
 			{
