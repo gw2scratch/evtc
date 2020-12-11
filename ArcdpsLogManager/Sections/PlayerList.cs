@@ -127,8 +127,6 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 
 			DataStore = new ObservableCollection<PlayerData>(logsByAccountName
 				.Select(x => new PlayerData(x.Key, x.Value)).OrderByDescending(x => x.Logs.Count));
-
-			Refresh();
 		}
 
 		private void Refresh()
