@@ -141,6 +141,14 @@ namespace GW2Scratch.ArcdpsLogManager
 			logsFiltered.CollectionChanged += (sender, args) => FilteredLogsUpdated?.Invoke(this, EventArgs.Empty);
 			logsFiltered.Filter = Filters.FilterLog;
 			LogCollectionsInitialized?.Invoke(this, EventArgs.Empty);
+			LogDataProcessor.Processed += (sender, args) =>
+			{
+				bool last = args.CurrentScheduledItems == 0;
+				if (last)
+				{
+					Application.Instance.AsyncInvoke(logsFiltered.Refresh);
+				}
+			};
 
 			Shown += (sender, args) => ReloadLogs();
 		}
