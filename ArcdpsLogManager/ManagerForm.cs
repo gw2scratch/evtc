@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -8,6 +7,7 @@ using System.Threading.Tasks;
 using Eto.Drawing;
 using Eto.Forms;
 using GW2Scratch.ArcdpsLogManager.Analytics;
+using GW2Scratch.ArcdpsLogManager.Collections;
 using GW2Scratch.ArcdpsLogManager.Commands;
 using GW2Scratch.ArcdpsLogManager.Controls;
 using GW2Scratch.ArcdpsLogManager.Dialogs;
@@ -43,8 +43,8 @@ namespace GW2Scratch.ArcdpsLogManager
 		private ILogNameProvider LogNameProvider { get; }
 		private LogDataUpdater LogDataUpdater { get; } = new LogDataUpdater();
 
-		private ObservableCollection<LogData> logs = new ObservableCollection<LogData>();
-		private FilterCollection<LogData> logsFiltered;
+		private readonly BulkObservableCollection<LogData> logs = new BulkObservableCollection<LogData>();
+		private readonly FilterCollection<LogData> logsFiltered;
 
 		private CancellationTokenSource logLoadTaskTokenSource = null;
 
@@ -118,7 +118,6 @@ namespace GW2Scratch.ArcdpsLogManager
 
 			Settings.LogRootPathChanged += (sender, args) => Application.Instance.Invoke(ReloadLogs);
 
-			Shown += (sender, args) => ReloadLogs();
 			Closing += (sender, args) =>
 			{
 				if (LogCache?.ChangedSinceLastSave ?? false)
@@ -127,10 +126,6 @@ namespace GW2Scratch.ArcdpsLogManager
 				}
 
 				ApiData?.SaveDataToFile();
-			};
-			LogCollectionsRecreated += (sender, args) =>
-			{
-				logsFiltered.Filter = Filters.FilterLog;
 			};
 			LogSearchFinished += (sender, args) =>
 			{
@@ -142,7 +137,12 @@ namespace GW2Scratch.ArcdpsLogManager
 			};
 
 			// Collection initialization
-			RecreateLogCollections(new ObservableCollection<LogData>(logs));
+			logsFiltered = new FilterCollection<LogData>(logs);
+			logsFiltered.CollectionChanged += (sender, args) => FilteredLogsUpdated?.Invoke(this, EventArgs.Empty);
+			logsFiltered.Filter = Filters.FilterLog;
+			LogCollectionsInitialized?.Invoke(this, EventArgs.Empty);
+
+			Shown += (sender, args) => ReloadLogs();
 		}
 
 		private Splitter ConstructMainSplitter()
@@ -242,8 +242,8 @@ namespace GW2Scratch.ArcdpsLogManager
 			LogDataProcessor.Processed += UpdatingProcessingLabel;
 			LogDataProcessor.Scheduled += UpdatingProcessingLabel;
 			LogDataProcessor.Unscheduled += UpdatingProcessingLabel;
-			LogCollectionsRecreated += (sender, args) => processingLabel.Text = $"{logs.Count} logs found.";
 			LogSearchStarted += (sender, args) => processingLabel.Text = "Finding logs...";
+			LogSearchFinished += (sender, args) => processingLabel.Text = $"{logs.Count} logs found.";
 
 			// Upload state label
 			var uploadLabel = new Label();
@@ -295,11 +295,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		private LogFilterPanel ConstructLogFilters()
 		{
 			var filterPanel = new LogFilterPanel(ImageProvider, Filters);
-			LogCollectionsRecreated += (sender, args) =>
-			{
-				filterPanel.UpdateLogs(logs);
-				logs.CollectionChanged += (s, a) => { filterPanel.UpdateLogs(logs); };
-			};
+			LogCollectionsInitialized += (sender, args) => logs.CollectionChanged += (s, a) => { filterPanel.UpdateLogs(logs); };
 			LogDataProcessor.Processed += (sender, args) => { Application.Instance.AsyncInvoke(() => filterPanel.UpdateLogs(logs)); };
 
 			return filterPanel;
@@ -381,7 +377,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		{
 			// Main log list
 			var logList = new LogList(LogCache, ApiData, LogDataProcessor, UploadProcessor, ImageProvider, LogNameProvider);
-			LogCollectionsRecreated += (sender, args) => logList.DataStore = logsFiltered;
+			LogCollectionsInitialized += (sender, args) => logList.DataStore = logsFiltered;
 
 			LogDataProcessor.Processed += (sender, args) =>
 			{
@@ -539,7 +535,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			LogDataProcessor.ResetTotalCounters();
 			try
 			{
-				var newLogs = new ObservableCollection<LogData>(logs);
+				var newLogs = new List<LogData>();
 
 				//foreach (var log in LogFinder.GetTesting())
 				foreach (var log in Settings.LogRootPaths.SelectMany(x => LogFinder.GetFromDirectory(x, LogCache)))
@@ -558,7 +554,10 @@ namespace GW2Scratch.ArcdpsLogManager
 					cancellationToken.ThrowIfCancellationRequested();
 				}
 
-				Application.Instance.Invoke(() => { RecreateLogCollections(newLogs); });
+				Application.Instance.Invoke(() =>
+				{
+					logs.AddRange(newLogs);
+				});
 			}
 			catch (Exception e) when (!(e is OperationCanceledException))
 			{
@@ -575,20 +574,9 @@ namespace GW2Scratch.ArcdpsLogManager
 			}
 		}
 
-		/// <summary>
-		/// Recreate log collections, this is significantly faster than updating the old one.
-		/// </summary>
-		private void RecreateLogCollections(ObservableCollection<LogData> newLogCollection)
-		{
-			logs = newLogCollection;
-			logsFiltered = new FilterCollection<LogData>(logs);
-			logsFiltered.CollectionChanged += (sender, args) => FilteredLogsUpdated?.Invoke(this, EventArgs.Empty);
-			LogCollectionsRecreated?.Invoke(this, EventArgs.Empty);
-		}
-
 		private event EventHandler LogSearchStarted;
 		private event EventHandler LogSearchFinished;
-		private event EventHandler LogCollectionsRecreated;
 		private event EventHandler FilteredLogsUpdated;
+		private event EventHandler LogCollectionsInitialized;
 	}
 }
