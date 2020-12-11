@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.InteropServices;
 using Eto.Drawing;
 using Eto.Forms;
@@ -12,7 +10,6 @@ using GW2Scratch.ArcdpsLogManager.Logs.Tagging;
 using GW2Scratch.ArcdpsLogManager.Processing;
 using GW2Scratch.ArcdpsLogManager.Sections;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
-using static GW2Scratch.ArcdpsLogManager.Logs.LogData;
 
 namespace GW2Scratch.ArcdpsLogManager.Controls
 {
@@ -34,6 +31,9 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 		private readonly TextBox dpsReportTextBox;
 		private readonly Button dpsReportOpenButton;
 		private readonly TagControl tagControl;
+		private readonly DynamicTable groupCompositionSection;
+		private readonly DynamicTable failedProcessingSection;
+		private readonly TextArea exceptionTextArea = new TextArea {ReadOnly = true};
 
 		public LogData LogData
 		{
@@ -87,6 +87,28 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 
 				tagControl.Tags = logData.Tags;
 
+				if (logData.ParsingStatus == ParsingStatus.Failed)
+				{
+					if (logData.ParsingException != null)
+					{
+						string exceptionText = $"{logData.ParsingException.ExceptionName}: {logData.ParsingException.Message}\n" +
+						                       $"{logData.ParsingException.StackTrace}";
+						exceptionTextArea.Text = exceptionText;
+					}
+
+					if (logData.Players == null)
+					{
+						groupCompositionSection.Visible = false;
+					}
+
+					failedProcessingSection.Visible = true;
+				}
+				else
+				{
+					groupCompositionSection.Visible = true;
+					failedProcessingSection.Visible = false;
+				}
+
 				ResumeLayout();
 			}
 		}
@@ -135,11 +157,20 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				EndVertical();
 				BeginVertical(spacing: new Size(0, 5));
 				{
-					BeginHorizontal(true);
+					groupCompositionSection = BeginVertical(yscale: true);
 					{
-						Add(new Scrollable {Content = groupComposition, Border = BorderType.None});
+						AddRow(new Scrollable {Content = groupComposition, Border = BorderType.None});
 					}
-					EndHorizontal();
+					EndVertical();
+
+					failedProcessingSection = BeginVertical(spacing: new Size(10, 10), yscale: true);
+					{
+						AddRow("Processing of this log failed. This may be a malformed log, " +
+						       "often caused by versions of arcdps incompatible with a specific Guild Wars 2 release.");
+						AddRow("Reason for failed processing:");
+						AddRow(exceptionTextArea);
+					}
+					EndVertical();
 
 					debugSection = BeginGroup("Debug data", new Padding(5));
 					{
