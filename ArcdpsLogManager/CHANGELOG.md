@@ -29,6 +29,7 @@ The Log Manager is now a .NET Core program. It is available in two versions:
 - EVTC files are detected correctly if they do not have an extension
 - Uncompressed logs are automatically compressed when uploading to dps.report
 - Kitty Golems (Special Forces Training Area) now have somewhat reliable success detection
+- Significantly improved loading time of the manager (issue #16)
 
 #### Fixes
 - Fixed Voice and Claw success detection
@@ -37,6 +38,7 @@ The Log Manager is now a .NET Core program. It is available in two versions:
 - Fixed uploading logs without an extension to dps.report
 - Fixed log uploads failing after 100 seconds (issue #65)
 - Fixed saving hidden log list columns
+- Fixed newly generated logs sometimes not appearing properly (issue #40)
 
 #### Contributors
 
