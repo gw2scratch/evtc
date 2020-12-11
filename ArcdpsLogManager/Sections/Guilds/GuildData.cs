@@ -22,14 +22,34 @@ namespace GW2Scratch.ArcdpsLogManager.Sections.Guilds
 
 	        var members = logMembers.ToArray();
 	        var accounts = members.GroupBy(x => x.AccountName);
+	        var logsByAccount = new Dictionary<string, List<LogData>>();
+	        var logsByCharacter = new Dictionary<string, List<LogData>>();
+	        foreach (var log in Logs)
+	        {
+		        foreach (var player in log.Players)
+		        {
+			        if (!logsByAccount.TryGetValue(player.AccountName, out var accountLogs))
+			        {
+				        var newAccountList = new List<LogData>();
+				        logsByAccount[player.AccountName] = newAccountList;
+				        accountLogs = newAccountList;
+			        }
+			        accountLogs.Add(log);
+
+			        if (!logsByCharacter.TryGetValue(player.Name, out var characterLogs))
+			        {
+				        var newCharacterList = new List<LogData>();
+				        logsByCharacter[player.Name] = newCharacterList;
+				        characterLogs = newCharacterList;
+			        }
+			        characterLogs.Add(log);
+		        }
+	        }
 	        foreach (var accountGrouping in accounts)
 	        {
 		        string accountName = accountGrouping.Key;
 
-		        var accountLogs = Logs
-			        .Where(l => l.Players.Any(p => p.AccountName == accountName && p.GuildGuid == guid))
-			        .Distinct()
-			        .ToArray();
+		        var accountLogs = logsByAccount[accountName];
 		        var account = new GuildMember(accountName, accountLogs);
 
 		        var accountCharacters = new List<GuildCharacter>();
@@ -39,9 +59,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections.Guilds
 		        {
 			        (string characterName, var profession) = characterGrouping.Key;
 
-			        var characterLogs = accountLogs
-				        .Where(l => l.Players.Any(p => p.Name == characterName && p.GuildGuid == guid))
-				        .Distinct();
+			        var characterLogs = logsByCharacter[characterName];
 					var character = new GuildCharacter(account, profession, characterName, characterLogs);
 					accountCharacters.Add(character);
 		        }
