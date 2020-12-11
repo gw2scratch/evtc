@@ -303,7 +303,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			dpsReportUploadButton.Enabled = uploadEnabled;
 			dpsReportOpenButton.Enabled = openEnabled;
 			dpsReportTextBox.Text = text;
-			dpsReportTextBox.Enabled = text != null;
+			dpsReportTextBox.Enabled = text != "";
 		}
 
 		private void OnUploadProcessorUpdate(object sender, EventArgs e)
