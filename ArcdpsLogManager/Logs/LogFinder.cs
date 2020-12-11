@@ -39,6 +39,11 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 
 		public bool IsLikelyEvtcLog(string filename)
 		{
+			if (!File.Exists(filename))
+			{
+				return false;
+			}
+
 			if (filename.EndsWith(".evtc") || filename.EndsWith(".evtc.zip") || filename.EndsWith(".zevtc"))
 			{
 				return true;

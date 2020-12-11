@@ -478,6 +478,10 @@ namespace GW2Scratch.ArcdpsLogManager
 				watcher.Dispose();
 			}
 
+			// We do not want to process logs before they are fully written,
+			// mid-compression and the like, so we add a delay after detecting one.
+			var delay = TimeSpan.FromSeconds(5);
+
 			fileSystemWatchers.Clear();
 			foreach (var directory in Settings.LogRootPaths)
 			{
@@ -488,17 +492,25 @@ namespace GW2Scratch.ArcdpsLogManager
 					watcher.Filter = "*";
 					watcher.Created += (sender, args) =>
 					{
-						if (LogFinder.IsLikelyEvtcLog(args.FullPath))
+						Task.Run(async () =>
 						{
-							Application.Instance.AsyncInvoke(() => AddNewLog(args.FullPath));
-						}
+							await Task.Delay(delay);
+							if (LogFinder.IsLikelyEvtcLog(args.FullPath))
+							{
+								Application.Instance.AsyncInvoke(() => AddNewLog(args.FullPath));
+							}
+						});
 					};
 					watcher.Renamed += (sender, args) =>
 					{
-						if (LogFinder.IsLikelyEvtcLog(args.FullPath))
+						Task.Run(async () =>
 						{
-							Application.Instance.AsyncInvoke(() => AddNewLog(args.FullPath));
-						}
+							await Task.Delay(delay);
+							if (LogFinder.IsLikelyEvtcLog(args.FullPath))
+							{
+								Application.Instance.AsyncInvoke(() => AddNewLog(args.FullPath));
+							}
+						});
 					};
 					watcher.EnableRaisingEvents = true;
 
