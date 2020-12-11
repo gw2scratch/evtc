@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using Eto.Drawing;
 using Eto.Forms;
 using GW2Scratch.ArcdpsLogManager.Controls;
@@ -109,24 +110,34 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 
 		public void UpdateDataFromLogs(IEnumerable<LogData> logs)
 		{
-			var logsByAccountName = new Dictionary<string, List<LogData>>();
-			foreach (var log in logs)
+			// There is potential for a race condition here.
+			// TODO: Ensure that the task gets cancelled if its still running from a previous UpdateDataFromLogs() call
+			Task.Run(() =>
 			{
-				if (log.ParsingStatus != ParsingStatus.Parsed) continue;
-
-				foreach (var player in log.Players)
+				var logsByAccountName = new Dictionary<string, List<LogData>>();
+				foreach (var log in logs)
 				{
-					if (!logsByAccountName.ContainsKey(player.AccountName))
+					if (log.ParsingStatus != ParsingStatus.Parsed) continue;
+
+					foreach (var player in log.Players)
 					{
-						logsByAccountName[player.AccountName] = new List<LogData>();
+						if (!logsByAccountName.ContainsKey(player.AccountName))
+						{
+							logsByAccountName[player.AccountName] = new List<LogData>();
+						}
+
+						logsByAccountName[player.AccountName].Add(log);
 					}
-
-					logsByAccountName[player.AccountName].Add(log);
 				}
-			}
 
-			DataStore = new ObservableCollection<PlayerData>(logsByAccountName
-				.Select(x => new PlayerData(x.Key, x.Value)).OrderByDescending(x => x.Logs.Count));
+				var collection = new ObservableCollection<PlayerData>(logsByAccountName
+					.Select(x => new PlayerData(x.Key, x.Value)).OrderByDescending(x => x.Logs.Count));
+
+				Application.Instance.Invoke(() =>
+				{
+					DataStore = collection;
+				});
+			});
 		}
 
 		private void Refresh()

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using Eto.Drawing;
 using Eto.Forms;
 using GW2Scratch.ArcdpsLogManager.Controls;
@@ -110,32 +111,40 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 
 		public void UpdateDataFromLogs(IEnumerable<LogData> logs)
 		{
-			var dataByGuild = new Dictionary<string, (List<LogData> Logs, List<LogPlayer> Players)>();
-			foreach (var log in logs)
+			// There is potential for a race condition here.
+			// TODO: Ensure that the task gets cancelled if its still running from a previous UpdateDataFromLogs() call
+			Task.Run(() =>
 			{
-				if (log.ParsingStatus != ParsingStatus.Parsed) continue;
-
-				foreach (var player in log.Players)
+				var dataByGuild = new Dictionary<string, (List<LogData> Logs, List<LogPlayer> Players)>();
+				foreach (var log in logs)
 				{
-					if (player.GuildGuid == null) continue;
+					if (log.ParsingStatus != ParsingStatus.Parsed) continue;
 
-					if (!dataByGuild.ContainsKey(player.GuildGuid))
+					foreach (var player in log.Players)
 					{
-						dataByGuild[player.GuildGuid] = (new List<LogData>(), new List<LogPlayer>());
+						if (player.GuildGuid == null) continue;
+
+						if (!dataByGuild.ContainsKey(player.GuildGuid))
+						{
+							dataByGuild[player.GuildGuid] = (new List<LogData>(), new List<LogPlayer>());
+						}
+
+						var (guildLogs, guildPlayers) = dataByGuild[player.GuildGuid];
+
+						guildLogs.Add(log);
+						guildPlayers.Add(player);
 					}
-
-					var (guildLogs, guildPlayers) = dataByGuild[player.GuildGuid];
-
-					guildLogs.Add(log);
-					guildPlayers.Add(player);
 				}
-			}
 
-			DataStore = new ObservableCollection<GuildData>(dataByGuild
-				.Select(x => new GuildData(x.Key, x.Value.Logs.Distinct(), x.Value.Players))
-				.OrderByDescending(x => x.Logs.Count));
+				var collection = new ObservableCollection<GuildData>(dataByGuild
+					.Select(x => new GuildData(x.Key, x.Value.Logs.Distinct(), x.Value.Players))
+					.OrderByDescending(x => x.Logs.Count));
 
-			Refresh();
+				Application.Instance.Invoke(() =>
+				{
+					DataStore = collection;
+				});
+			});
 		}
 
 		private void Refresh()
