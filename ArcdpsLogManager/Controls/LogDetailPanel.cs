@@ -105,7 +105,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			groupComposition = new GroupCompositionControl(apiData, imageProvider);
 			tagControl = new TagControl();
 
-			DynamicTable debugSection;
+			DynamicGroup debugSection;
 			var debugButton = new Button {Text = "Debug data"};
 			var reparseButton = new Button {Text = "Reprocess"};
 
@@ -141,17 +141,17 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 					}
 					EndHorizontal();
 
-					debugSection = BeginVertical();
+					debugSection = BeginGroup("Debug data", new Padding(5));
 					{
 						BeginHorizontal();
 						{
-							BeginVertical(xscale: true, spacing: new Size(5, 0));
+							BeginVertical(xscale: true, spacing: new Size(5, 5));
 							{
 								AddRow("Time spent processing", parseTimeLabel);
 								AddRow("Processing status", parseStatusLabel);
 							}
 							EndVertical();
-							BeginVertical();
+							BeginVertical(spacing: new Size(5, 5));
 							{
 								AddRow(debugButton);
 								AddRow(reparseButton);
@@ -160,7 +160,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 						}
 						EndHorizontal();
 					}
-					EndVertical();
+					EndGroup();
 					BeginHorizontal();
 					{
 						Add(new Scrollable {Content = tagControl, Border = BorderType.None});
@@ -238,11 +238,16 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				}
 			};
 
-			Settings.ShowDebugDataChanged += (sender, args) => { debugSection.Visible = Settings.ShowDebugData; };
+			Settings.ShowDebugDataChanged += (sender, args) =>
+			{
+				debugSection.Visible = Settings.ShowDebugData;
+				debugSection.GroupBox.Visible = Settings.ShowDebugData;
+			};
 			Shown += (sender, args) =>
 			{
 				// Assigning visibility in the constructor does not work
 				debugSection.Visible = Settings.ShowDebugData;
+				debugSection.GroupBox.Visible = Settings.ShowDebugData;
 			};
 
 			uploadProcessor.Processed += OnUploadProcessorUpdate;
