@@ -37,6 +37,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			{
 				SuspendLayout();
 				Clear();
+				Create();
 				ResumeLayout();
 				return;
 			}
