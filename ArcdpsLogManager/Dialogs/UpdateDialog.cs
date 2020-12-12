@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using Eto.Drawing;
 using Eto.Forms;
+using GW2Scratch.ArcdpsLogManager.Logs.Updates;
 using GW2Scratch.ArcdpsLogManager.Processing;
-using GW2Scratch.ArcdpsLogManager.Updates;
 
 namespace GW2Scratch.ArcdpsLogManager.Dialogs
 {

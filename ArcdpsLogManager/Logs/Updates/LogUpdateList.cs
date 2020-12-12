@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
-using GW2Scratch.ArcdpsLogManager.Logs;
 
-namespace GW2Scratch.ArcdpsLogManager.Updates
+namespace GW2Scratch.ArcdpsLogManager.Logs.Updates
 {
 	public class LogUpdateList
 	{

@@ -1,12 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using GW2Scratch.ArcdpsLogManager.Logs;
 using GW2Scratch.EVTCAnalytics.GameData.Encounters;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
 
-namespace GW2Scratch.ArcdpsLogManager.Updates
+namespace GW2Scratch.ArcdpsLogManager.Logs.Updates
 {
 	public class LogDataUpdater
 	{

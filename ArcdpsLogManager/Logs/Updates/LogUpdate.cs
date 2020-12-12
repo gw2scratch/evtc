@@ -1,8 +1,7 @@
 using System;
-using GW2Scratch.ArcdpsLogManager.Logs;
 using GW2Scratch.ArcdpsLogManager.Logs.Filters;
 
-namespace GW2Scratch.ArcdpsLogManager.Updates
+namespace GW2Scratch.ArcdpsLogManager.Logs.Updates
 {
 	public class LogUpdate
 	{
