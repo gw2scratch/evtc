@@ -14,7 +14,7 @@ Runs on Windows and Linux, requires .NET Core 3.1 or newer
 
 ## Screenshot
 
-![image](https://user-images.githubusercontent.com/998408/78283346-eeda3280-751d-11ea-87c8-6cc2ddbdbc5c.png)
+![image](https://user-images.githubusercontent.com/998408/101987958-29908f00-3c97-11eb-951c-806862d169da.png)
 
 ## Contributing
 
