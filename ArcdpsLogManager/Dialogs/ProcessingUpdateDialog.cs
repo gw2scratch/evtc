@@ -6,9 +6,9 @@ using GW2Scratch.ArcdpsLogManager.Processing;
 
 namespace GW2Scratch.ArcdpsLogManager.Dialogs
 {
-	public class UpdateDialog : Dialog
+	public class ProcessingUpdateDialog : Dialog
 	{
-		public UpdateDialog(LogDataProcessor logProcessor, IReadOnlyList<LogUpdateList> updates)
+		public ProcessingUpdateDialog(LogDataProcessor logProcessor, IReadOnlyList<LogUpdateList> updates)
 		{
 			Title = "Manager update - arcdps Log Manager";
 			ClientSize = new Size(500, -1);

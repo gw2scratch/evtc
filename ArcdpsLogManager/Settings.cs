@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using GW2Scratch.ArcdpsLogManager.Uploads;
@@ -26,10 +25,12 @@ namespace GW2Scratch.ArcdpsLogManager
 			public bool ShowFailurePercentagesInLogList { get; set; } = true;
 			public bool ShowFilterSidebar { get; set; } = true;
 			public bool UseGW2Api { get; set; } = true;
+			public bool CheckForUpdates { get; set; } = true;
 			public string DpsReportUserToken { get; set; } = string.Empty;
 			public string DpsReportDomain { get; set; } = DpsReportUploader.DefaultDomain.Domain;
 			public int? MinimumLogDurationSeconds { get; set; } = null;
 			public List<string> HiddenLogListColumns { get; set; } = new List<string>() {"Character", "Map ID", "Game Version", "arcdps Version"};
+			public List<string> IgnoredUpdateVersions { get; set; } = new List<string>();
 
 			public static StoredSettings LoadFromFile()
 			{
@@ -62,9 +63,11 @@ namespace GW2Scratch.ArcdpsLogManager
 			ShowFailurePercentagesInLogListChanged += (sender, args) => SaveToFile();
 			ShowFilterSidebarChanged += (sender, args) => SaveToFile();
 			UseGW2ApiChanged += (sender, args) => SaveToFile();
+			CheckForUpdatesChanged += (sender, args) => SaveToFile();
 			DpsReportUserTokenChanged += (sender, args) => SaveToFile();
 			DpsReportDomainChanged += (sender, args) => SaveToFile();
 			MinimumLogDurationSecondsChanged += (sender, args) => SaveToFile();
+			IgnoredUpdateVersionsChanged += (sender, args) => SaveToFile();
 
 			return StoredSettings.LoadFromFile();
 		});
@@ -196,6 +199,32 @@ namespace GW2Scratch.ArcdpsLogManager
 			}
 		}
 
+		public static bool CheckForUpdates
+		{
+			get => Values.CheckForUpdates;
+			set
+			{
+				if (Values.CheckForUpdates != value)
+				{
+					Values.CheckForUpdates = value;
+					OnCheckForUpdatesChanged();
+				}
+			}
+		}
+
+		public static IReadOnlyList<string> IgnoredUpdateVersions
+		{
+			get => Values.IgnoredUpdateVersions;
+			set
+			{
+				if (!Equals(Values.IgnoredUpdateVersions, value))
+				{
+					Values.IgnoredUpdateVersions = value.ToList();
+					OnIgnoredUpdateVersionsChanged();
+				}
+			}
+		}
+
 		public static string DpsReportUserToken
 		{
 			get => Values.DpsReportUserToken;
@@ -242,9 +271,11 @@ namespace GW2Scratch.ArcdpsLogManager
 		public static event EventHandler<EventArgs> ShowFailurePercentagesInLogListChanged;
 		public static event EventHandler<EventArgs> ShowFilterSidebarChanged;
 		public static event EventHandler<EventArgs> UseGW2ApiChanged;
+		public static event EventHandler<EventArgs> CheckForUpdatesChanged;
 		public static event EventHandler<EventArgs> DpsReportUserTokenChanged;
 		public static event EventHandler<EventArgs> DpsReportDomainChanged;
 		public static event EventHandler<EventArgs> MinimumLogDurationSecondsChanged;
+		public static event EventHandler<EventArgs> IgnoredUpdateVersionsChanged;
 
 		private static void OnLogRootPathsChanged()
 		{
@@ -259,6 +290,11 @@ namespace GW2Scratch.ArcdpsLogManager
 		private static void OnUseGW2ApiChanged()
 		{
 			UseGW2ApiChanged?.Invoke(null, EventArgs.Empty);
+		}
+
+		private static void OnCheckForUpdatesChanged()
+		{
+			CheckForUpdatesChanged?.Invoke(null, EventArgs.Empty);
 		}
 
 		private static void OnShowGuildTagsInLogDetailChanged()
@@ -294,6 +330,11 @@ namespace GW2Scratch.ArcdpsLogManager
 		private static void OnDpsReportDomainChanged()
 		{
 			DpsReportDomainChanged?.Invoke(null, EventArgs.Empty);
+		}
+
+		private static void OnIgnoredUpdateVersionsChanged()
+		{
+			IgnoredUpdateVersionsChanged?.Invoke(null, EventArgs.Empty);
 		}
 	}
 }

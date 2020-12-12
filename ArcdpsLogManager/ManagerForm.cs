@@ -19,6 +19,7 @@ using GW2Scratch.ArcdpsLogManager.Logs.Updates;
 using GW2Scratch.ArcdpsLogManager.Processing;
 using GW2Scratch.ArcdpsLogManager.Sections;
 using GW2Scratch.ArcdpsLogManager.Timing;
+using GW2Scratch.ArcdpsLogManager.Updates;
 using GW2Scratch.ArcdpsLogManager.Uploads;
 using GW2Scratch.EVTCAnalytics;
 using GW2Scratch.EVTCAnalytics.GameData;
@@ -31,6 +32,7 @@ namespace GW2Scratch.ArcdpsLogManager
 	{
 		private readonly Cooldown gridRefreshCooldown = new Cooldown(TimeSpan.FromSeconds(2));
 
+		private ProgramUpdateChecker ProgramUpdateChecker { get; } = new ProgramUpdateChecker("http://localhost:8080/releases/manager.json");
 		private ImageProvider ImageProvider { get; } = new ImageProvider();
 		private LogFinder LogFinder { get; } = new LogFinder();
 
@@ -132,7 +134,7 @@ namespace GW2Scratch.ArcdpsLogManager
 				var updates = LogDataUpdater.GetUpdates(logs).ToList();
 				if (updates.Count > 0)
 				{
-					new UpdateDialog(LogDataProcessor, updates).ShowModal(this);
+					new ProcessingUpdateDialog(LogDataProcessor, updates).ShowModal(this);
 				}
 			};
 
@@ -151,6 +153,24 @@ namespace GW2Scratch.ArcdpsLogManager
 			};
 
 			Shown += (sender, args) => ReloadLogs();
+			Shown += (sender, args) => CheckUpdates();
+		}
+
+		private void CheckUpdates()
+		{
+			if (!Settings.CheckForUpdates)
+			{
+				return;
+			}
+
+			Task.Run(ProgramUpdateChecker.CheckUpdates).ContinueWith(t =>
+			{
+				var release = t.Result;
+				if (release != null)
+				{
+					Application.Instance.Invoke(() => new ProgramUpdateDialog(release).ShowModal(this));
+				}
+			});
 		}
 
 		private Splitter ConstructMainSplitter()
@@ -312,11 +332,11 @@ namespace GW2Scratch.ArcdpsLogManager
 		private MenuBar ConstructMenuBar()
 		{
 			var updateMenuItem = new ButtonMenuItem {Text = "&Update logs with outdated data…"};
-			updateMenuItem.Click += (sender, args) => { new UpdateDialog(LogDataProcessor, LogDataUpdater.GetUpdates(logs).ToList()).ShowModal(this); };
-			LogSearchFinished += (sender, args) =>
+			updateMenuItem.Click += (sender, args) =>
 			{
-				updateMenuItem.Enabled = LogDataUpdater.GetUpdates(logs).Any();
+				new ProcessingUpdateDialog(LogDataProcessor, LogDataUpdater.GetUpdates(logs).ToList()).ShowModal(this);
 			};
+			LogSearchFinished += (sender, args) => { updateMenuItem.Enabled = LogDataUpdater.GetUpdates(logs).Any(); };
 			LogDataProcessor.Processed += (sender, args) =>
 			{
 				if (args.CurrentScheduledItems == 0)
@@ -344,7 +364,10 @@ namespace GW2Scratch.ArcdpsLogManager
 
 			var showFailurePercentagesMenuItem = new CheckMenuItem {Text = "Show failure health &percentages in log list"};
 			showFailurePercentagesMenuItem.Checked = Settings.ShowFailurePercentagesInLogList;
-			showFailurePercentagesMenuItem.CheckedChanged += (sender, args) => { Settings.ShowFailurePercentagesInLogList = showFailurePercentagesMenuItem.Checked; };
+			showFailurePercentagesMenuItem.CheckedChanged += (sender, args) =>
+			{
+				Settings.ShowFailurePercentagesInLogList = showFailurePercentagesMenuItem.Checked;
+			};
 
 			var showSidebarMenuItem = new CheckMenuItem {Text = "Show &filters in a sidebar"};
 			showSidebarMenuItem.Checked = Settings.ShowFilterSidebar;
@@ -574,10 +597,7 @@ namespace GW2Scratch.ArcdpsLogManager
 					cancellationToken.ThrowIfCancellationRequested();
 				}
 
-				Application.Instance.Invoke(() =>
-				{
-					logs.AddRange(newLogs);
-				});
+				Application.Instance.Invoke(() => { logs.AddRange(newLogs); });
 			}
 			catch (Exception e) when (!(e is OperationCanceledException))
 			{

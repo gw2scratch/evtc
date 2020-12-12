@@ -21,7 +21,8 @@ namespace GW2Scratch.ArcdpsLogManager
 			{
 				new LogsSettingsPage(),
 				new ApiSettingsPage(),
-				new DpsReportUploadSettingsPage()
+				new DpsReportUploadSettingsPage(),
+				new UpdateSettingsPage()
 			};
 
 			var tabs = new TabControl();
