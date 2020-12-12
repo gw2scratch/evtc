@@ -163,7 +163,13 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 					}
 					EndVertical();
 
-					failedProcessingSection = BeginVertical(spacing: new Size(10, 10), yscale: true);
+					// The WPF platform also considers invisible sections in layout when their yscale is set to true.
+					// To work around this, we disable it for WPF. As the same issue also affects the group composition
+					// section above, the layout does not fully collapse, and the failed processing section appears in
+					// the lower half of the panel, which is good enough and doesn't even look that much out of place.
+					bool yscaleFailedSection = !Application.Instance.Platform.IsWpf;
+
+					failedProcessingSection = BeginVertical(spacing: new Size(10, 10), yscale: yscaleFailedSection);
 					{
 						AddRow("Processing of this log failed. This may be a malformed log, " +
 						       "often caused by versions of arcdps incompatible with a specific Guild Wars 2 release.");
