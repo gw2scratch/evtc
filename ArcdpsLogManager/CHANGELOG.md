@@ -2,6 +2,11 @@
 
 This is the full changelog of the arcdps Log Manager.
 
+## Log Manager v1.0.1
+
+#### Fixes
+- Fixed update notifications
+
 ## Log Manager v1.0.0
 
 #### Important
