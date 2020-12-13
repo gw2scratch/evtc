@@ -2,6 +2,12 @@
 
 This is the full changelog of the arcdps Log Manager.
 
+## Log Manager v1.0.2
+
+#### Fixes
+- Fixed a crash when tagging logs in the window opened by "Show all logs with this guild"
+- Fixed a long UI freeze when scheduling a lot of logs for reprocessing due to an update
+
 ## Log Manager v1.0.1
 
 #### Fixes
