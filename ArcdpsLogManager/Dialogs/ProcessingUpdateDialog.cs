@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Eto.Drawing;
 using Eto.Forms;
 using GW2Scratch.ArcdpsLogManager.Logs.Updates;
@@ -38,13 +39,16 @@ namespace GW2Scratch.ArcdpsLogManager.Dialogs
 			later.Click += (sender, args) => Close();
 			yes.Click += (sender, args) =>
 			{
-				foreach (var update in updates)
+				Task.Run(() =>
 				{
-					foreach (var log in update.UpdateableLogs)
+					foreach (var update in updates)
 					{
-						logProcessor.Schedule(log);
+						foreach (var log in update.UpdateableLogs)
+						{
+							logProcessor.Schedule(log);
+						}
 					}
-				}
+				});
 				Close();
 			};
 
