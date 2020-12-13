@@ -47,6 +47,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 		public GuildDetailPanel(LogCache logCache, ApiData apiData, LogDataProcessor logProcessor, UploadProcessor uploadProcessor,
 			ImageProvider imageProvider, ILogNameProvider logNameProvider)
 		{
+			LogCache = logCache;
 			ImageProvider = imageProvider;
 			LogNameProvider = logNameProvider;
 			ApiData = apiData;
