@@ -90,7 +90,7 @@ namespace GW2Scratch.EVTCAnalytics.LogTests.EliteInsights
 				var eiDuration = TimeSpan.FromMilliseconds(eiLog.FightData.FightEnd - eiLog.FightData.FightStart);
 				var eiResult = eiLog.FightData.Success ? EncounterResult.Success : EncounterResult.Failure;
 				var eiPlayers = eiLog.PlayerList
-					.Where(p => p.Prof != "Sword")
+					.Where(p => !p.IsFakeActor)
 					.Select(p =>
 					{
 						Profession profession;
