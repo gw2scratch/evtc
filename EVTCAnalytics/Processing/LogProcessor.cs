@@ -650,6 +650,22 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					case StateChange.StackReset:
 						return new ResetBuffStackEvent(item.Time, GetAgentByAddress(item.SrcAgent), item.Padding,
 							item.Value);
+					case StateChange.BreakbarState:
+						var breakbarState = item.Value switch
+						{
+							0 => DefianceBarStateUpdateEvent.DefianceBarState.Active,
+							1 => DefianceBarStateUpdateEvent.DefianceBarState.Recovering,
+							2 => DefianceBarStateUpdateEvent.DefianceBarState.Immune,
+							3 => DefianceBarStateUpdateEvent.DefianceBarState.None,
+							_ => DefianceBarStateUpdateEvent.DefianceBarState.Unknown
+						};
+						return new DefianceBarStateUpdateEvent(item.Time, GetAgentByAddress(item.SrcAgent),
+							breakbarState);
+					case StateChange.BreakbarPercent:
+						// This encoding is inconsistent with the health update.
+						float breakbarHealthFraction = BitConversions.ToSingle(item.Value);
+						return new DefianceBarHealthUpdateEvent(item.Time, GetAgentByAddress(item.SrcAgent),
+							breakbarHealthFraction);
 					case StateChange.BuffInfo:
 					// TODO: Figure out what the contents are
 					case StateChange.BuffFormula:
@@ -658,10 +674,6 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					// TODO: Figure out what the contents are
 					case StateChange.SkillTiming:
 					// TODO: Figure out what the contents are
-					case StateChange.BreakbarState:
-					// TODO: Implement
-					case StateChange.BreakbarPercent:
-					// TODO: Implement
 					case StateChange.Error:
 					// TODO: Implement
 						return new UnknownEvent(item.Time, item);

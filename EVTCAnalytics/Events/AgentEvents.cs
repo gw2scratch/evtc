@@ -256,4 +256,47 @@ namespace GW2Scratch.EVTCAnalytics.Events
 			IsTargetable = targetable;
 		}
 	}
+	
+	/// <summary>
+	/// An event specifying that the health percentage of the defiance bar of an <see cref="Agent"/> has been changed.
+	/// </summary>
+	/// <remarks>
+	/// This event is typically only provided once per a period, even if health changes more often.
+	/// <br/>
+	/// Introduced in EVTC20200506.
+	/// </remarks>
+	public class DefianceBarHealthUpdateEvent : AgentEvent
+	{
+		public float HealthFraction { get; }
+
+		public DefianceBarHealthUpdateEvent(long time, Agent agent, float healthFraction) : base(time, agent)
+		{
+			HealthFraction = healthFraction;
+		}
+	}
+	
+	/// <summary>
+	/// An event specifying that the state of the defiance bar of an <see cref="Agent"/> has been changed.
+	/// </summary>
+	/// <remarks>
+	/// Introduced in EVTC20200506.
+	/// </remarks>
+	public class DefianceBarStateUpdateEvent : AgentEvent
+	{
+		public enum DefianceBarState
+		{
+			Active,
+			Recovering,
+			Immune,
+			None,
+			Unknown
+		}
+		
+		public DefianceBarState State { get; }
+
+		public DefianceBarStateUpdateEvent(long time, Agent agent, DefianceBarState state) : base(time, agent)
+		{
+			State = state;
+		}
+	}
 }
