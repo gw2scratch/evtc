@@ -1,5 +1,8 @@
 namespace GW2Scratch.EVTCAnalytics.Model.Skills
 {
+	/// <summary>
+	/// Represents an attribute of a buff formula.
+	/// </summary>
 	public enum BuffFormulaAttribute
 	{
 		None,

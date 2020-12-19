@@ -1,5 +1,16 @@
 namespace GW2Scratch.EVTCAnalytics.Model.Skills
 {
+	/// <summary>
+	/// A slot for skills used by players in the game.
+	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// Some slots may only be accessible for certain <see cref="Model.Agents.Profession"/>s.
+	/// </para>
+	/// <para>
+	/// A player may have access to multiple slots of the same kind (notably the <see cref="Utility"/> slot).
+	/// </para>
+	/// </remarks>
 	public enum SkillSlot
 	{
 		Weapon1,
