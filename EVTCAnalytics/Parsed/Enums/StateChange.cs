@@ -1,5 +1,8 @@
 ﻿namespace GW2Scratch.EVTCAnalytics.Parsed.Enums
 {
+	/// <summary>
+	/// The type of a state change as defined by the <c>cbtstatechange</c> arcdps enum.
+	/// </summary>
 	public enum StateChange : byte
 	{
 		Normal          =  0,

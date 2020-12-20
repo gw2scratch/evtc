@@ -1,9 +1,12 @@
 namespace GW2Scratch.EVTCAnalytics.Parsed
 {
+	/// <summary>
+	/// Log version data.
+	/// </summary>
 	public class LogVersion
 	{
 		/// <summary>
-		/// The version of arcdps. The typical format is EVTCYYYYMMDD, where YYYY-MM-DD
+		/// Gets the version of arcdps. The typical format is EVTCYYYYMMDD, where YYYY-MM-DD
 		/// is the release date of this arcdps build.
 		/// <remarks>
 		/// The author of arcdps tries to avoid releasing two builds on the same day,
@@ -13,7 +16,7 @@ namespace GW2Scratch.EVTCAnalytics.Parsed
 		public string BuildVersion { get; }
 
 		/// <summary>
-		/// The revision of the binary log storage format.
+		/// Gets the revision of the binary log storage format.
 		/// </summary>
 		public byte Revision { get; }
 

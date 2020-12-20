@@ -2,6 +2,13 @@ using GW2Scratch.EVTCAnalytics.Parsed.Enums;
 
 namespace GW2Scratch.EVTCAnalytics.Parsed
 {
+	/// <summary>
+	/// Gets the raw data from a <c>cbtevent</c> struct as defined by arcdps.
+	/// </summary>
+	/// <remarks>
+	/// The values of this struct encode values for different types of events
+	/// in various ways, see the arcdps EVTC readme for the main documentation.
+	/// </remarks>
 	public class ParsedCombatItem
 	{
 		public long Time { get; }

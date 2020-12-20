@@ -11,6 +11,9 @@ namespace GW2Scratch.EVTCAnalytics.Parsed.Editing
 	/// </summary>
 	public class ParsedLogEditor
 	{
+		/// <summary>
+		/// The list of supported EVTC log revisions.
+		/// </summary>
 		public static readonly IReadOnlyList<byte> SupportedRevisions = new List<byte> {0, 1};
 
 		/// <summary>

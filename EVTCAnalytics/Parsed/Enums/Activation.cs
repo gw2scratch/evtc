@@ -1,5 +1,8 @@
 ﻿namespace GW2Scratch.EVTCAnalytics.Parsed.Enums
 {
+	/// <summary>
+	/// A skill activation type as defined by the <c>cbtactivation</c> arcdps enum.
+	/// </summary>
 	public enum Activation : byte
 	{
 		None         = 0,
