@@ -16,6 +16,10 @@ using GW2Scratch.EVTCAnalytics.Processing.Encounters;
 
 namespace GW2Scratch.EVTCAnalytics.Processing
 {
+	/// <summary>
+	/// The log processor responsible for turning raw log data into
+	/// easy-to-use objects and providing encounter-specific data.
+	/// </summary>
 	public class LogProcessor
 	{
 		// Professions in order of arcdps ids; id = index + 1
@@ -32,7 +36,18 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			Profession.Revenant,
 		};
 
+		/// <summary>
+		/// Gets or sets the encounter identifier.
+		/// </summary>
+		/// <remarks>
+		/// This may be used to add support for more encounters by extending the default encounter identifier
+		/// or it could be used to override the default logic.
+		/// </remarks>
 		public IEncounterIdentifier EncounterIdentifier { get; set; } = new DefaultEncounterIdentifier();
+
+		/// <summary>
+		/// Gets or sets the handling method for unknown events. The default value is <see langword="true"/>.
+		/// </summary>
 		public bool IgnoreUnknownEvents { get; set; } = true;
 
 		public Log ProcessLog(ParsedLog log)

@@ -4,7 +4,8 @@ using GW2Scratch.EVTCAnalytics.Model;
 namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health
 {
 	/// <summary>
-	/// This is a health determiner that adds a specified health fraction to the resulting health if a skill is present in the log.
+	/// A health determiner that adds a specified health fraction to the resulting
+	/// health if a skill is present in the log.
 	/// </summary>
 	public class ExtraHealthIfSkillPresentHealthDeterminer : MaxMinHealthDeterminer
 	{

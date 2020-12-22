@@ -6,7 +6,8 @@ using GW2Scratch.EVTCAnalytics.Events;
 namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 {
 	/// <summary>
-	/// Returns success if an event fulfilling a condition occurred at least a given amount of times in a timespan.
+	/// A result determiner that returns success if an event fulfilling a condition
+	/// occurred at least a given amount of times in a timespan.
 	/// </summary>
 	/// <typeparam name="T">The type of the event to be considered</typeparam>
 	public class GroupedEventDeterminer<T> : IResultDeterminer where T : Event
@@ -15,6 +16,12 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 		private readonly int count;
 		private readonly long timeSpan;
 
+		/// <summary>
+		/// Creates a new <see cref="GroupedEventDeterminer{T}"/>.
+		/// </summary>
+		/// <param name="eventCounted">A predicate checking whether an event is counted or not.</param>
+		/// <param name="count">The required amount of counted events to result in success.</param>
+		/// <param name="timeSpan">The time span in which <paramref name="count"/> events have to occur.</param>
 		public GroupedEventDeterminer(Func<T, bool> eventCounted, int count, long timeSpan)
 		{
 			this.eventCounted = eventCounted ?? throw new ArgumentNullException(nameof(eventCounted));

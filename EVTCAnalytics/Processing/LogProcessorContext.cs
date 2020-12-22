@@ -8,6 +8,9 @@ using GW2Scratch.EVTCAnalytics.Processing.Encounters;
 
 namespace GW2Scratch.EVTCAnalytics.Processing
 {
+	/// <summary>
+	/// Contains the state of the log processor.
+	/// </summary>
 	public class LogProcessorContext
 	{
 		public List<Agent> Agents { get; set; }

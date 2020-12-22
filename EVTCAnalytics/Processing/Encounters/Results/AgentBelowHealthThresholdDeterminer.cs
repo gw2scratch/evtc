@@ -17,6 +17,12 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 		private readonly Agent agent;
 		private readonly float healthThreshold;
 
+		/// <summary>
+		/// Creates a new <see cref="AgentBelowHealthThresholdDeterminer"/>.
+		/// </summary>
+		/// <param name="agent">The agent to be checked.</param>
+		/// <param name="healthThreshold">The health threshold that has to be reached,
+		/// where 1 is 100% and 0 is 0% of maximum health of the <paramref name="agent"/>.</param>
 		public AgentBelowHealthThresholdDeterminer(Agent agent, float healthThreshold)
 		{
 			this.agent = agent;

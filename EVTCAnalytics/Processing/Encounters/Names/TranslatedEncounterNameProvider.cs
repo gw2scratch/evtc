@@ -5,6 +5,15 @@ using GW2Scratch.EVTCAnalytics.GameData.Encounters;
 
 namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Names
 {
+	/// <summary>
+	/// An encounter name provider that uses a specified language.
+	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// If no translation is available in <see cref="EncounterNames"/> for the specified language,
+	/// the provider falls back to a <see cref="BossEncounterNameProvider"/>.
+	/// </para>
+	/// </remarks>
 	public class TranslatedEncounterNameProvider : IEncounterNameProvider
 	{
 		public const string UnknownName = "Unknown Encounter";

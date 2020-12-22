@@ -4,7 +4,7 @@ using GW2Scratch.EVTCAnalytics.Events;
 namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 {
 	/// <summary>
-	/// Always returns the same provided result.
+	/// A result determiner that always returns the same provided result.
 	/// </summary>
 	public class ConstantResultDeterminer : IResultDeterminer
 	{

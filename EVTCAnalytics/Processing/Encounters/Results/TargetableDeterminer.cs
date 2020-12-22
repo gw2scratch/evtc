@@ -6,7 +6,7 @@ using GW2Scratch.EVTCAnalytics.Model.Agents;
 namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 {
 	/// <summary>
-	/// Return success if an attack target goes through a sequence of targetability changes.
+	/// A result determiner that returns success if an attack target goes through a sequence of targetability changes.
 	/// </summary>
 	public class TargetableDeterminer : IResultDeterminer
 	{

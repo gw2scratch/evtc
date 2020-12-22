@@ -4,6 +4,9 @@ using GW2Scratch.EVTCAnalytics.Model.Agents;
 
 namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 {
+	/// <summary>
+	/// A result determiner that results in success in case an agent is out of combat when the log ends.
+	/// </summary>
 	public class AgentOutsideOfCombatDeterminer : IResultDeterminer
 	{
 		private readonly Agent agent;

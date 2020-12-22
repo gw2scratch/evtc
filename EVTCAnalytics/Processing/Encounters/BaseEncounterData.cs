@@ -9,6 +9,9 @@ using GW2Scratch.EVTCAnalytics.Processing.Steps;
 
 namespace GW2Scratch.EVTCAnalytics.Processing.Encounters
 {
+	/// <summary>
+	/// A simple encounter data container with all properties configurable on creation.
+	/// </summary>
 	public class BaseEncounterData : IEncounterData
 	{
 		public Encounter Encounter { get; }

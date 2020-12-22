@@ -6,7 +6,7 @@ using GW2Scratch.EVTCAnalytics.Model.Agents;
 namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 {
 	/// <summary>
-	/// Returns success if there was a killing blow towards an agent
+	/// A result determiner that returns success if there was a killing blow towards an agent
 	/// </summary>
 	public class AgentKillingBlowDeterminer : EventFoundResultDeterminer
 	{

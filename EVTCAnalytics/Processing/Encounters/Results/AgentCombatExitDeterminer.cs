@@ -4,6 +4,9 @@ using GW2Scratch.EVTCAnalytics.Model.Agents;
 
 namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 {
+	/// <summary>
+	/// A result determiner that results in success if an agent exits combat.
+	/// </summary>
 	public class AgentCombatExitDeterminer : EventFoundResultDeterminer
 	{
 		public long MinTimeSinceSpawn { get; set; } = 0;

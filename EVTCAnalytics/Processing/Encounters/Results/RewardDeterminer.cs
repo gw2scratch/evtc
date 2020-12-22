@@ -5,7 +5,7 @@ using GW2Scratch.EVTCAnalytics.Events;
 namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 {
 	/// <summary>
-	/// Returns success if there was a reward event with a specified reward id
+	/// A result determiner that returns success if there was a reward event with a specified reward id
 	/// </summary>
 	public class RewardDeterminer : EventFoundResultDeterminer
 	{

@@ -4,6 +4,9 @@ using GW2Scratch.EVTCAnalytics.Events;
 
 namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Transformers
 {
+	/// <summary>
+	/// Transforms a result from a <see cref="IResultDeterminer"/> by using a specified function afterwards.
+	/// </summary>
 	public class TransformResultDeterminer : IResultDeterminer
 	{
 		private readonly IResultDeterminer resultDeterminer;

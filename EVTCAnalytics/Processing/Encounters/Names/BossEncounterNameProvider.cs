@@ -3,6 +3,13 @@ using GW2Scratch.EVTCAnalytics.GameData;
 
 namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Names
 {
+	/// <summary>
+	/// An encounter name provider that uses the name of the main target of the log.
+	/// </summary>
+	/// <remarks>
+	/// The name is always localized according to the <see cref="GameLanguage"/> used by the game client
+	/// that recorded the log.
+	/// </remarks>
 	public class BossEncounterNameProvider : IEncounterNameProvider
 	{
 		private readonly int bossIndex;

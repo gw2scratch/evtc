@@ -15,6 +15,9 @@ using GW2Scratch.EVTCAnalytics.Processing.Steps;
 
 namespace GW2Scratch.EVTCAnalytics.Processing
 {
+	/// <summary>
+	/// The encounter identifier used by default.
+	/// </summary>
 	public class DefaultEncounterIdentifier : IEncounterIdentifier
 	{
 		public IEncounterData GetEncounterData(Agent mainTarget, IReadOnlyList<Event> events, IReadOnlyList<Agent> agents, int? gameBuild, LogType logType)

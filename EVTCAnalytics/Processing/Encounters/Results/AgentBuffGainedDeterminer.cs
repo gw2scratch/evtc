@@ -5,6 +5,9 @@ using GW2Scratch.EVTCAnalytics.Model.Agents;
 
 namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 {
+	/// <summary>
+	/// A result determiner that results in success if an agent gains a specified buff.
+	/// </summary>
 	public class AgentBuffGainedDeterminer : EventFoundResultDeterminer
 	{
 		private readonly Agent agent;

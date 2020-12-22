@@ -9,6 +9,9 @@ using GW2Scratch.EVTCAnalytics.Processing.Steps;
 
 namespace GW2Scratch.EVTCAnalytics.Processing.Encounters
 {
+	/// <summary>
+	/// Encounter data for an World versus World encounter.
+	/// </summary>
 	public class WorldVersusWorldEncounterData : BaseEncounterData
 	{
 		public IReadOnlyList<Player> Enemies { get; }

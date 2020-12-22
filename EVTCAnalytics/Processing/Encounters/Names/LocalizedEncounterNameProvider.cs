@@ -5,6 +5,20 @@ using GW2Scratch.EVTCAnalytics.GameData.Encounters;
 
 namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Names
 {
+	/// <summary>
+	/// An encounter name provider that uses the language of the log.
+	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// If no translation is available in <see cref="EncounterNames"/>
+	/// for the language of the log, the <see cref="DefaultLanguage"/> is used instead.
+	/// </para>
+	/// <para>
+	/// If no name is available even for the <see cref="DefaultLanguage"/>, this
+	/// falls back to a <see cref="BossEncounterNameProvider"/>.
+	/// </para>
+	/// <see cref="EncounterNames"/>
+	/// </remarks>
 	public class LocalizedEncounterNameProvider : IEncounterNameProvider
 	{
 		public const GameLanguage DefaultLanguage = GameLanguage.English;

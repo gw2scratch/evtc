@@ -2,6 +2,9 @@ using GW2Scratch.EVTCAnalytics.GameData;
 
 namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Names
 {
+	/// <summary>
+	/// An interface for providers of encounter names for logs.
+	/// </summary>
 	public interface IEncounterNameProvider
 	{
 		/// <summary>

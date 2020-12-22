@@ -7,6 +7,13 @@ using GW2Scratch.EVTCAnalytics.Model.Agents;
 
 namespace GW2Scratch.EVTCAnalytics.Processing.Steps
 {
+	/// <summary>
+	/// A post-processing step that merges NPCs that are unique in an encounter,
+	/// but were split into multiple raw agents because of game limitations.
+	/// </summary>
+	/// <remarks>
+	/// The main reason for NPCs being split is leaving the reporting range of the recording player.
+	/// </remarks>
 	public class MergeSingletonNPC : IPostProcessingStep
 	{
 		public int SpeciesId { get; }

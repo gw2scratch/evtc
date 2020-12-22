@@ -5,10 +5,11 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Transformers
 {
 	/// <summary>
 	/// Removes the time information from a wrapped <see cref="IResultDeterminer"/>.
-	///
+	/// </summary>
+	/// <remarks>
 	/// This is useful in cases where an event does not occur at the end of a log,
 	/// but there is nothing reliable that can actually be checked at the end of the log.
-	/// </summary>
+	/// </remarks>
 	public class IgnoreTimeResultDeterminerWrapper : IResultDeterminer
 	{
 		private readonly IResultDeterminer resultDeterminer;

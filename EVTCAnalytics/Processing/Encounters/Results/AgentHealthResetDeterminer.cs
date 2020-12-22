@@ -7,7 +7,7 @@ using GW2Scratch.EVTCAnalytics.Model.Agents;
 namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 {
 	/// <summary>
-	/// Returns success if an agent resets their health
+	/// A result determiner that returns success if an agent resets their health
 	/// </summary>
 	public class AgentHealthResetDeterminer : IResultDeterminer
 	{

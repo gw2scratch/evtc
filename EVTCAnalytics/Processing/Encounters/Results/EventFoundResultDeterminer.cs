@@ -3,6 +3,9 @@ using GW2Scratch.EVTCAnalytics.Events;
 
 namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 {
+	/// <summary>
+	/// A result determiner base that returns success if an event was found.
+	/// </summary>
 	public abstract class EventFoundResultDeterminer : IResultDeterminer
 	{
 		public ResultDeterminerResult GetResult(IEnumerable<Event> events)
@@ -15,9 +18,19 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 			return new ResultDeterminerResult(result, time);
 		}
 
+		/// <summary>
+		/// Gets the result returned if an event is found.
+		/// </summary>
 		protected virtual EncounterResult EventFound { get; } = EncounterResult.Success;
+
+		/// <summary>
+		/// Gets the result returned if no event is found.
+		/// </summary>
 		protected virtual EncounterResult EventNotFound { get; } = EncounterResult.Failure;
 
+		/// <summary>
+		/// Finds an event or returns <see langword="null"/> if no event was found.
+		/// </summary>
 		protected abstract Event GetEvent(IEnumerable<Event> events);
 	}
 }

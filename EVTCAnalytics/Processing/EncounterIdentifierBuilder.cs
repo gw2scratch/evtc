@@ -11,6 +11,9 @@ using GW2Scratch.EVTCAnalytics.Processing.Steps;
 
 namespace GW2Scratch.EVTCAnalytics.Processing
 {
+	/// <summary>
+	/// A convenient builder for fluently building encounter data.
+	/// </summary>
 	public class EncounterIdentifierBuilder
 	{
 		private Encounter Encounter { get; set; }

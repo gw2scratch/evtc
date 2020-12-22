@@ -4,6 +4,9 @@ using GW2Scratch.EVTCAnalytics.Model.Agents;
 
 namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 {
+	/// <summary>
+	/// A result determiner that returns success if a specified NPC spawns.
+	/// </summary>
 	public class NPCSpawnDeterminer : IResultDeterminer
 	{
 		private readonly int speciesId;
