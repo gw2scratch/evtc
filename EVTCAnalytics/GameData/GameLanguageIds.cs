@@ -10,6 +10,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 			{2, GameLanguage.French},
 			{3, GameLanguage.German},
 			{4, GameLanguage.Spanish},
+			{5, GameLanguage.Chinese},
 		};
 
 		public static GameLanguage GetLanguageById(int id)
