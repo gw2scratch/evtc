@@ -19,7 +19,7 @@ namespace GW2Scratch.ArcdpsLogManager.Uploads
 			"Imperva. Supports HTTP ONLY. Fairly reliable, use as last resort.");
 
 		private static readonly DpsReportDomain DomainB = new DpsReportDomain("https://b.dps.report",
-			"Stackpath. Supports HTTPS. New service domain, still testing.");
+			"Stackpath. Supports HTTPS. Alternative service domain that supports HTTPS.");
 
 		public static IReadOnlyList<DpsReportDomain> AvailableDomains { get; } = new[]
 		{
