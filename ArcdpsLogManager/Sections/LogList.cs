@@ -32,6 +32,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 
 		private static readonly Dictionary<string, string> Abbreviations = new Dictionary<string, string>
 		{
+			{"★", "Favorite"},
 			{"CM", "Challenge Mode"}
 		};
 
