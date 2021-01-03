@@ -232,7 +232,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 						EndVertical();
 						dpsReportProcessingFailedRow = BeginVertical(spacing: new Size(5, 5));
 						{
-							AddRow("Processing failed:", dpsReportProcessingFailedLabel);
+							AddRow("dps.report error:", dpsReportProcessingFailedLabel);
 						}
 						EndVertical();
 					}
