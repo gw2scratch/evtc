@@ -24,6 +24,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections.Guilds
 	        var accounts = members.GroupBy(x => x.AccountName);
 	        var logsByAccount = new Dictionary<string, List<LogData>>();
 	        var logsByCharacter = new Dictionary<string, List<LogData>>();
+
 	        foreach (var log in Logs)
 	        {
 		        foreach (var player in log.Players)
@@ -45,6 +46,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections.Guilds
 			        characterLogs.Add(log);
 		        }
 	        }
+
 	        foreach (var accountGrouping in accounts)
 	        {
 		        string accountName = accountGrouping.Key;

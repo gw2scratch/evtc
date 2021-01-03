@@ -324,7 +324,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				case UploadState.ProcessingError:
 					uploadButtonText = reuploadButtonText;
 					uploadEnabled = true;
-					text = $"Processing failed: {upload.ProcessingError ?? "No error"}";
+					text = $"dps.report error: {upload.ProcessingError ?? "No error"}";
 					break;
 				case UploadState.Uploaded:
 					uploadButtonText = reuploadButtonText;
