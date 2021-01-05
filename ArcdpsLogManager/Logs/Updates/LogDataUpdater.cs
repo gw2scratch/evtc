@@ -41,6 +41,9 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Updates
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 0, 0, 1)
 					&& log.Encounter == Encounter.Other,
 				"Support for Ai, Keeper of the Peak"),
+			new LogUpdate(log => log.ParsingVersion < new Version(1, 0, 3, 1)
+					&& log.Encounter == Encounter.KeepConstruct,
+				"Keep Construct CM detection"),
 			// When adding a new update, you need to increase the revision (last value) of the version in the .csproj file
 			// unless the version changes more significantly, in that case it can be reset to 0.
 		};

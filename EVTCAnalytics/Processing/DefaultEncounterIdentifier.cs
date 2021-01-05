@@ -87,7 +87,9 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				case Encounter.Escort:
 					return GetDefaultBuilder(encounter, new Agent[0]).Build();
 				case Encounter.KeepConstruct:
-					return GetDefaultBuilder(encounter, mainTarget).Build();
+					return GetDefaultBuilder(encounter, mainTarget)
+						.WithModes(new SkillPresentModeDeterminer(34958))
+						.Build();
 				case Encounter.TwistedCastle:
 				{
 					return GetDefaultBuilder(encounter, new Agent[0])
