@@ -341,7 +341,8 @@ namespace GW2Scratch.ArcdpsLogManager
 			{
 				if (args.CurrentScheduledItems == 0)
 				{
-					updateMenuItem.Enabled = LogDataUpdater.GetUpdates(logs).Any();
+					bool updatesFound = LogDataUpdater.GetUpdates(logs).Any();
+					Application.Instance.AsyncInvoke(() => updateMenuItem.Enabled = updatesFound);
 				}
 			};
 
