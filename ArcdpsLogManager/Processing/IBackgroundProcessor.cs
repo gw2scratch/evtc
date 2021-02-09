@@ -51,5 +51,10 @@ namespace GW2Scratch.ArcdpsLogManager.Processing
 		/// Invoked when the background thread is stopping.
 		/// </summary>
 		event EventHandler<EventArgs> Stopping;
+		
+		/// <summary>
+		/// Invoked when the background thread stopped with an exception.
+		/// </summary>
+		event EventHandler<BackgroundProcessorErrorEventArgs> StoppingWithError;
 	}
 }

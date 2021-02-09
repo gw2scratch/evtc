@@ -39,7 +39,16 @@ namespace GW2Scratch.ArcdpsLogManager.Processing
 
 			taskCancellation = new CancellationTokenSource();
 			backgroundTask = ProcessQueue(taskCancellation.Token);
-			OnStarting();
+			Starting?.Invoke(this, EventArgs.Empty);
+			backgroundTask.ContinueWith(HandleStoppingBackgroundTask);
+		}
+
+		private void HandleStoppingBackgroundTask(Task task)
+		{
+			if (task.IsFaulted)
+			{
+				StoppingWithError?.Invoke(this, new BackgroundProcessorErrorEventArgs(task.Exception));
+			}
 		}
 
 		private async Task ProcessQueue(CancellationToken cancellationToken)
@@ -156,7 +165,7 @@ namespace GW2Scratch.ArcdpsLogManager.Processing
 
 			if (stopped)
 			{
-				OnStopping();
+				Stopping?.Invoke(this, EventArgs.Empty);
 			}
 		}
 
@@ -290,6 +299,11 @@ namespace GW2Scratch.ArcdpsLogManager.Processing
 		/// Invoked when the background thread is stopping.
 		/// </summary>
 		public event EventHandler<EventArgs> Stopping;
+		
+		/// <summary>
+		/// Invoked when the background thread stopped with an exception.
+		/// </summary>
+		public event EventHandler<BackgroundProcessorErrorEventArgs> StoppingWithError;
 
 		/// <summary>
 		/// Creates event args, locks.
@@ -297,16 +311,6 @@ namespace GW2Scratch.ArcdpsLogManager.Processing
 		private BackgroundProcessorEventArgs BuildEventArgs()
 		{
 			return new BackgroundProcessorEventArgs(GetScheduledItemCount(), ProcessedItemCount, TotalScheduledCount);
-		}
-
-		private void OnStarting()
-		{
-			Starting?.Invoke(this, EventArgs.Empty);
-		}
-
-		private void OnStopping()
-		{
-			Stopping?.Invoke(this, EventArgs.Empty);
 		}
 	}
 }

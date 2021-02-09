@@ -26,6 +26,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				{
 					backgroundProcessor.Starting -= OnProcessorStatusChange;
 					backgroundProcessor.Stopping -= OnProcessorStatusChange;
+					backgroundProcessor.StoppingWithError -= OnProcessorStatusChange;
 					backgroundProcessor.Scheduled -= OnProcessorStatusChange;
 					backgroundProcessor.Unscheduled -= OnProcessorStatusChange;
 					backgroundProcessor.Processed -= OnProcessorStatusChange;
@@ -38,6 +39,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				{
 					backgroundProcessor.Starting += OnProcessorStatusChange;
 					backgroundProcessor.Stopping += OnProcessorStatusChange;
+					backgroundProcessor.StoppingWithError += OnProcessorStatusChange;
 					backgroundProcessor.Scheduled += OnProcessorStatusChange;
 					backgroundProcessor.Unscheduled += OnProcessorStatusChange;
 					backgroundProcessor.Processed += OnProcessorStatusChange;

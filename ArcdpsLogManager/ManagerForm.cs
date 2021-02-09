@@ -69,6 +69,27 @@ namespace GW2Scratch.ArcdpsLogManager
 			LogDataProcessor = new LogDataProcessor(LogCache, ApiProcessor, LogAnalytics);
 			LogNameProvider = new TranslatedLogNameProvider(GameLanguage.English);
 
+			LogDataProcessor.StoppingWithError += (sender, args) =>
+			{
+				Application.Instance.InvokeAsync(() => MessageBox.Show(this,
+					$"The background processor for logs has failed critically. " +
+					$"Please report the following error:\n\nException: {args.Exception}", "Error", MessageBoxType.Error));
+			};
+			
+			ApiProcessor.StoppingWithError += (sender, args) =>
+			{
+				Application.Instance.InvokeAsync(() => MessageBox.Show(this,
+					$"The background processor for API requests has failed critically. " +
+					$"Please report the following error:\n\nException: {args.Exception}", "Error", MessageBoxType.Error));
+			};
+			
+			UploadProcessor.StoppingWithError += (sender, args) =>
+			{
+				Application.Instance.InvokeAsync(() => MessageBox.Show(this,
+					$"The background processor for log uploads has failed critically. " +
+					$"Please report the following error:\n\nException: {args.Exception}", "Error", MessageBoxType.Error));
+			};
+
 			Filters = new LogFilters(new SettingsFilters());
 			Filters.PropertyChanged += (sender, args) => logsFiltered.Refresh();
 
