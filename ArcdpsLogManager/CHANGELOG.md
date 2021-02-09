@@ -2,6 +2,15 @@
 
 This is the full changelog of the arcdps Log Manager.
 
+## Log Manager v1.0.3
+
+#### New features
+- Added CM detection for Keep Construct
+
+#### Fixes
+- Fixed an issue with the last processed log not updating the UI correctly on Windows (status stuck on "Processing 51/52...")
+- Fixed some controls looking very old on Windows
+
 ## Log Manager v1.0.2
 
 #### Fixes
