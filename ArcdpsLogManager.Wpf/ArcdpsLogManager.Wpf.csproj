@@ -8,10 +8,19 @@
         <UseWPF>true</UseWPF>
     </PropertyGroup>
 
+    <PropertyGroup>
+        <ApplicationManifest>app.manifest</ApplicationManifest>
+    </PropertyGroup>
+
     <ItemGroup>
         <PackageReference Include="Eto.Platform.Wpf" Version="2.5.8" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\ArcdpsLogManager\ArcdpsLogManager.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <None Update="app.manifest">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 </Project>
