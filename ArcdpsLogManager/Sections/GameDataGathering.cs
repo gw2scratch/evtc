@@ -6,7 +6,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Eto.Drawing;
 using Eto.Forms;
+using GW2Scratch.ArcdpsLogManager.Gw2Api;
 using GW2Scratch.ArcdpsLogManager.Logs;
+using GW2Scratch.ArcdpsLogManager.Logs.Naming;
+using GW2Scratch.ArcdpsLogManager.Processing;
 using GW2Scratch.EVTCAnalytics;
 using GW2Scratch.EVTCAnalytics.Model;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
@@ -20,7 +23,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 		{
 			public int SpeciesId { get; }
 			public string Name { get; }
-			public int Count { get; set; } = 1;
+			public List<LogData> Logs { get; } = new List<LogData>();
 
 			public SpeciesData(int speciesId, string name)
 			{
@@ -63,7 +66,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 		{
 			public uint SkillId { get; }
 			public string Name { get; }
-			public int Count { get; set; } = 1;
+			public List<LogData> Logs { get; } = new List<LogData>();
 
 			public SkillData(uint skillId, string name)
 			{
@@ -106,7 +109,8 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 		private LogProcessor Processor { get; } = new LogProcessor();
 		private CancellationTokenSource cancellationTokenSource;
 
-		public GameDataCollecting(LogList logList)
+		public GameDataCollecting(LogList logList, LogCache logCache, ApiData apiData, LogDataProcessor logProcessor,
+			UploadProcessor uploadProcessor, ImageProvider imageProvider, ILogNameProvider nameProvider)
 		{
 			var gatherButton = new Button {Text = "Collect data"};
 			var cancelButton = new Button {Text = "Cancel"};
@@ -170,10 +174,42 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 				HeaderText = "Times seen",
 				DataCell = new TextBoxCell()
 				{
-					Binding = new DelegateBinding<SpeciesData, string>(x => x.Count.ToString())
+					Binding = new DelegateBinding<SpeciesData, string>(x => x.Logs.Count.ToString())
 				}
 			});
 
+			var speciesLogsColumn = new GridColumn
+			{
+				HeaderText = "Logs",
+				DataCell = new TextBoxCell()
+				{
+					Binding = new DelegateBinding<SpeciesData, string>(x => "Click me to open log list"),
+				}
+			};
+			speciesGridView.Columns.Add(speciesLogsColumn);
+
+			speciesGridView.CellClick += (sender, args) =>
+			{
+				if (args.GridColumn == speciesLogsColumn)
+				{
+					if (args.Item is SpeciesData speciesData)
+					{
+						var form = new Form
+						{
+							Content = new LogList(logCache, apiData, logProcessor, uploadProcessor, imageProvider,
+								nameProvider)
+							{
+								DataStore = new FilterCollection<LogData>(speciesData.Logs)
+							},
+							Width = 900,
+							Height = 700,
+							Title = $"arcdps Log Manager: logs containing species {speciesData.Name} (ID {speciesData.SpeciesId})"
+						};
+						form.Show();
+					}
+				}
+			};
+			
 			skillGridView.Columns.Add(new GridColumn
 			{
 				HeaderText = "Skill ID",
@@ -195,9 +231,40 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 				HeaderText = "Times seen",
 				DataCell = new TextBoxCell()
 				{
-					Binding = new DelegateBinding<SkillData, string>(x => x.Count.ToString())
+					Binding = new DelegateBinding<SkillData, string>(x => x.Logs.Count.ToString())
 				}
 			});
+			var skillLogsColumn = new GridColumn
+			{
+				HeaderText = "Logs",
+				DataCell = new TextBoxCell()
+				{
+					Binding = new DelegateBinding<SkillData, string>(x => "Click me to open log list"),
+				}
+			};
+			skillGridView.Columns.Add(skillLogsColumn);
+
+			skillGridView.CellClick += (sender, args) =>
+			{
+				if (args.GridColumn == skillLogsColumn)
+				{
+					if (args.Item is SkillData skillData)
+					{
+						var form = new Form
+						{
+							Content = new LogList(logCache, apiData, logProcessor, uploadProcessor, imageProvider,
+								nameProvider)
+							{
+								DataStore = new FilterCollection<LogData>(skillData.Logs)
+							},
+							Width = 900,
+							Height = 700,
+							Title = $"arcdps Log Manager: logs containing skill {skillData.Name} (ID {skillData.SkillId})"
+						};
+						form.Show();
+					}
+				}
+			};
 
 			var speciesSorter = new GridViewSorter<SpeciesData>(speciesGridView);
 			var skillSorter = new GridViewSorter<SkillData>(skillGridView);
@@ -225,7 +292,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 					writer.WriteLine("ID,Name,Times seen");
 					foreach (var data in skillData)
 					{
-						writer.WriteLine($"{data.SkillId},{data.Name},{data.Count}");
+						writer.WriteLine($"{data.SkillId},{data.Name},{data.Logs.Count}");
 					}
 				}
 			}
@@ -241,7 +308,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 					writer.WriteLine("ID,Name,Times seen");
 					foreach (var data in speciesData)
 					{
-						writer.WriteLine($"{data.SpeciesId},{data.Name},{data.Count}");
+						writer.WriteLine($"{data.SpeciesId},{data.Name},{data.Logs.Count}");
 					}
 				}
 			}
@@ -290,8 +357,8 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 		{
 			return Task.Run(() =>
 			{
-				var species = new Dictionary<int, Dictionary<SpeciesData, int>>();
-				var skills = new Dictionary<uint, Dictionary<SkillData, int>>();
+				var species = new Dictionary<int, Dictionary<SpeciesData, List<LogData>>>();
+				var skills = new Dictionary<uint, Dictionary<SkillData, List<LogData>>>();
 
 				int done = 0;
 				int failed = 0;
@@ -322,15 +389,15 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 						var speciesData = new SpeciesData(id, name);
 						if (!species.ContainsKey(id))
 						{
-							species[id] = new Dictionary<SpeciesData, int>();
+							species[id] = new Dictionary<SpeciesData, List<LogData>>();
 						}
 
 						if (!species[id].ContainsKey(speciesData))
 						{
-							species[id][speciesData] = 0;
+							species[id][speciesData] = new List<LogData>();
 						}
 
-						species[id][speciesData]++;
+						species[id][speciesData].Add(log);
 					}
 
 					foreach (var skill in processedLog.Skills)
@@ -344,15 +411,15 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 						var skillData = new SkillData(id, name);
 						if (!skills.ContainsKey(id))
 						{
-							skills[id] = new Dictionary<SkillData, int>();
+							skills[id] = new Dictionary<SkillData, List<LogData>>();
 						}
 
 						if (!skills[id].ContainsKey(skillData))
 						{
-							skills[id][skillData] = 0;
+							skills[id][skillData] = new List<LogData>();
 						}
 
-						skills[id][skillData]++;
+						skills[id][skillData].Add(log);
 					}
 
 					done++;
@@ -362,14 +429,14 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 				var speciesEnumerable = (IEnumerable<SpeciesData>) species.Values.SelectMany(x => x).Select(x =>
 					{
 						var key = x.Key;
-						key.Count = x.Value;
+						key.Logs.AddRange(x.Value);
 						return key;
 					}).OrderBy(x => x.SpeciesId)
 					.ThenBy(x => x.Name);
 				var skillEnumerable = (IEnumerable<SkillData>) skills.Values.SelectMany(x => x).Select(x =>
 					{
 						var key = x.Key;
-						key.Count = x.Value;
+						key.Logs.AddRange(x.Value);
 						return key;
 					}).OrderBy(x => x.SkillId)
 					.ThenBy(x => x.Name);
