@@ -29,15 +29,7 @@ namespace GW2Scratch.EVTCAnalytics.LogTests
 
 		public override int GetHashCode()
 		{
-			unchecked
-			{
-				int hashCode = (CharacterName != null ? CharacterName.GetHashCode() : 0);
-				hashCode = (hashCode * 397) ^ (AccountName != null ? AccountName.GetHashCode() : 0);
-				hashCode = (hashCode * 397) ^ (int) Profession;
-				hashCode = (hashCode * 397) ^ (int) EliteSpecialization;
-				hashCode = (hashCode * 397) ^ Subgroup;
-				return hashCode;
-			}
+			return HashCode.Combine(CharacterName, AccountName, (int) Profession, (int) EliteSpecialization, Subgroup);
 		}
 
 		public static bool operator ==(LogPlayer left, LogPlayer right)

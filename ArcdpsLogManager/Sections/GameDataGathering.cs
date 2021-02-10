@@ -45,10 +45,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 
 			public override int GetHashCode()
 			{
-				unchecked
-				{
-					return (SpeciesId * 397) ^ (Name != null ? Name.GetHashCode() : 0);
-				}
+				return HashCode.Combine(SpeciesId, Name);
 			}
 
 			public static bool operator ==(SpeciesData left, SpeciesData right)
@@ -91,10 +88,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 
 			public override int GetHashCode()
 			{
-				unchecked
-				{
-					return ((int) SkillId * 397) ^ (Name != null ? Name.GetHashCode() : 0);
-				}
+				return HashCode.Combine(SkillId, Name);
 			}
 
 			public static bool operator ==(SkillData left, SkillData right)
