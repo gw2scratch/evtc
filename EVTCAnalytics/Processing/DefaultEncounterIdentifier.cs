@@ -451,6 +451,13 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					case SpeciesIds.HauntingStatue:
 						return Encounter.TwistedCastle;
 					case SpeciesIds.Xera:
+						// Twisted Castle logs sometimes get Xera as the main target when the player is too close to her
+						if (agents.OfType<NPC>().Any(x => x.SpeciesId == SpeciesIds.HauntingStatue))
+						{
+							return Encounter.TwistedCastle;
+						}
+
+						return Encounter.Xera;
 					case SpeciesIds.XeraSecondPhase:
 						return Encounter.Xera;
 					case SpeciesIds.CairnTheIndomitable:
