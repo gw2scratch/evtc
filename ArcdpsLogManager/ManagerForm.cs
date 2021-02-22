@@ -382,6 +382,9 @@ namespace GW2Scratch.ArcdpsLogManager
 				}
 			};
 
+			var compressLogsItem = new ButtonMenuItem {Text = "&Compress logs"};
+			compressLogsItem.Click += (sender, args) => { new CompressDialog(this).ShowModal(); };
+
 			var logCacheMenuItem = new ButtonMenuItem {Text = "&Log cache"};
 			logCacheMenuItem.Click += (sender, args) => { new CacheDialog(this).ShowModal(this); };
 
@@ -421,6 +424,7 @@ namespace GW2Scratch.ArcdpsLogManager
 
 			var dataMenuItem = new ButtonMenuItem {Text = "&Data"};
 			dataMenuItem.Items.Add(updateMenuItem);
+			dataMenuItem.Items.Add(compressLogsItem);
 			dataMenuItem.Items.Add(new SeparatorMenuItem());
 			dataMenuItem.Items.Add(logCacheMenuItem);
 			dataMenuItem.Items.Add(apiDataMenuItem);
