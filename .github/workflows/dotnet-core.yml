@@ -54,7 +54,6 @@ jobs:
           mkdir -p artifacts/pdb/inspector/win64/
           mkdir -p artifacts/pdb/inspector/linux64/
           mkdir -p artifacts/pdb/rotcomp/win64/
-          mkdir -p artifacts/pdb/manager/win64/
           mv artifacts/manager/win64/*.pdb artifacts/pdb/manager/win64/
           mv artifacts/manager/linux64/*.pdb artifacts/pdb/manager/linux64/
           mv artifacts/inspector/win64/*.pdb artifacts/pdb/inspector/win64/
