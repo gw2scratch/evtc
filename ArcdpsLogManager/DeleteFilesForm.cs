@@ -18,7 +18,7 @@ namespace GW2Scratch.ArcdpsLogManager
 	/// </summary>
 	public class DeleteFilesForm : Form
 	{
-		private FilterCollection<LogData> dataStore;
+		private FilterCollection<LogData> DataStore;
 
 		private readonly Button ConfirmDeleteButton = new Button() { Text = "Delete files" };
 		private readonly Button CloseWindowButton = new Button() { Text = "Close" };
@@ -27,7 +27,7 @@ namespace GW2Scratch.ArcdpsLogManager
 
 		public DeleteFilesForm(IEnumerable<LogData> files)
 		{
-			dataStore = new FilterCollection<LogData>(files);
+			DataStore = new FilterCollection<LogData>(files);
 			var layout = new DynamicLayout();
 
 			Icon = Resources.GetProgramIcon();
@@ -36,7 +36,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			Resizable = true;
 			Content = layout;
 
-			var FileNameColumn = new GridColumn()
+			var fileNameColumn = new GridColumn()
 			{
 				HeaderText = "Files",
 				DataCell = new TextBoxCell
@@ -45,7 +45,7 @@ namespace GW2Scratch.ArcdpsLogManager
 				}
 			};
 
-			var BossNameColumn = new GridColumn()
+			var bossNameColumn = new GridColumn()
 			{
 				HeaderText = "Boss",
 				DataCell = new TextBoxCell
@@ -54,7 +54,7 @@ namespace GW2Scratch.ArcdpsLogManager
 				}
 			};
 
-			var EncounterModeColumn = new GridColumn()
+			var encounterModeColumn = new GridColumn()
 			{
 				HeaderText = "Mode",
 				DataCell = new TextBoxCell
@@ -63,7 +63,7 @@ namespace GW2Scratch.ArcdpsLogManager
 				}
 			};
 
-			var EncounterResultColumn = new GridColumn()
+			var encounterResultColumn = new GridColumn()
 			{
 				HeaderText = "Result",
 				DataCell = new TextBoxCell
@@ -72,12 +72,12 @@ namespace GW2Scratch.ArcdpsLogManager
 				}
 			};
 
-			LogGrid.DataStore = dataStore;
+			LogGrid.DataStore = DataStore;
 			LogGrid.AllowMultipleSelection = true;
-			LogGrid.Columns.Add(FileNameColumn);
-			LogGrid.Columns.Add(BossNameColumn);
-			LogGrid.Columns.Add(EncounterModeColumn);
-			LogGrid.Columns.Add(EncounterResultColumn);
+			LogGrid.Columns.Add(fileNameColumn);
+			LogGrid.Columns.Add(bossNameColumn);
+			LogGrid.Columns.Add(encounterModeColumn);
+			LogGrid.Columns.Add(encounterResultColumn);
 
 			CloseWindowButton.Click += (sender, args) => Close();
 			ConfirmDeleteButton.Click += ConfirmDeleteButtonClicked;
@@ -105,14 +105,14 @@ namespace GW2Scratch.ArcdpsLogManager
 
 		private void RemoveSelectedButtonClicked(object sender, EventArgs e)
 		{
-			dataStore = new FilterCollection<LogData>(dataStore.Where(log => !LogGrid.SelectedItems.Contains(log)));
-			LogGrid.DataStore = dataStore;
+			DataStore = new FilterCollection<LogData>(DataStore.Where(log => !LogGrid.SelectedItems.Contains(log)));
+			LogGrid.DataStore = DataStore;
 		}
 
 		private void ConfirmDeleteButtonClicked(object sender, EventArgs e)
 		{
 			//Call the delete function on the 
-			DeleteFiles(dataStore.Select(log => log.FileName));
+			DeleteFiles(DataStore.Select(log => log.FileName));
 			Close();
 		}
 
