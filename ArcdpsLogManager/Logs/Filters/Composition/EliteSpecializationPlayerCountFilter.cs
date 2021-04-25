@@ -1,4 +1,3 @@
-using System.Linq;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
 
 namespace GW2Scratch.ArcdpsLogManager.Logs.Filters.Composition
@@ -14,7 +13,22 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters.Composition
 		
 		protected override int GetPlayerCount(LogData log)
 		{
-			return log.Players?.Count(x => x.EliteSpecialization == EliteSpecialization) ?? 0;
+			// This is not LINQ for performance purposes.
+			if (log.Players == null)
+			{
+				return 0;
+			}
+			
+			int count = 0;
+			foreach (var player in log.Players)
+			{
+				if (player.EliteSpecialization == EliteSpecialization)
+				{
+					count++;
+				}
+			}
+
+			return count;
 		}
 	}
 }

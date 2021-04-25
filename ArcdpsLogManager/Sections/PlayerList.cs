@@ -34,8 +34,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 		public ObservableCollection<PlayerData> DataStore
 		{
 			get => playerData;
-			set
-			{
+			set {
 				if (value == null)
 				{
 					value = new ObservableCollection<PlayerData>();
@@ -50,14 +49,14 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 					sorter.UpdateDataStore();
 				}
 
-				UpdateCountLabels();
+				StartBackgroundCountLabelUpdate();
 			}
 		}
 
 		private string PlayerFilter { get; set; } = "";
 
-		public PlayerList(LogCache logCache, ApiData apiData, LogDataProcessor logProcessor, UploadProcessor uploadProcessor,
-			ImageProvider imageProvider, ILogNameProvider logNameProvider)
+		public PlayerList(LogCache logCache, ApiData apiData, LogDataProcessor logProcessor,
+			UploadProcessor uploadProcessor, ImageProvider imageProvider, ILogNameProvider logNameProvider)
 		{
 			LogCache = logCache;
 			ApiData = apiData;
@@ -75,8 +74,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 
 			var playerFilterBox = new TextBox();
 			playerFilterBox.TextBinding.Bind(this, x => x.PlayerFilter);
-			playerFilterBox.TextChanged += (sender, args) =>
-			{
+			playerFilterBox.TextChanged += (sender, args) => {
 				playerGridView.UnselectAll();
 				Refresh();
 			};
@@ -112,8 +110,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 		{
 			// There is potential for a race condition here.
 			// TODO: Ensure that the task gets cancelled if its still running from a previous UpdateDataFromLogs() call
-			Task.Run(() =>
-			{
+			Task.Run(() => {
 				var logsByAccountName = new Dictionary<string, List<LogData>>();
 				foreach (var log in logs)
 				{
@@ -133,29 +130,35 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 				var collection = new ObservableCollection<PlayerData>(logsByAccountName
 					.Select(x => new PlayerData(x.Key, x.Value)).OrderByDescending(x => x.Logs.Count));
 
-				Application.Instance.Invoke(() =>
-				{
-					DataStore = collection;
-				});
+				Application.Instance.Invoke(() => { DataStore = collection; });
 			});
 		}
 
 		private void Refresh()
 		{
 			filtered.Refresh();
-			UpdateCountLabels();
+			StartBackgroundCountLabelUpdate();
 		}
 
-		private void UpdateCountLabels()
+		private void StartBackgroundCountLabelUpdate()
 		{
-			accountCountLabel.Text = $"{filtered.Count} accounts";
-			int characterCount = filtered
-				.SelectMany(x =>
-					x.Logs.SelectMany(log => log.Players).Where(player => player.AccountName == x.AccountName))
-				.Select(x => x.Name)
-				.Distinct()
-				.Count();
+			// TODO: There is potential for race conditions here if multiple updates are started
+			// and earlier ones are significantly slower than later ones.
+			Task.Run(() => {
+				int accountCount = filtered.Count;
+				int characterCount = filtered
+					.SelectMany(x =>
+						x.Logs.SelectMany(log => log.Players).Where(player => player.AccountName == x.AccountName))
+					.Select(x => x.Name)
+					.Distinct()
+					.Count();
+				Application.Instance.AsyncInvoke(() => UpdateCountLabels(accountCount, characterCount));
+			});
+		}
 
+		private void UpdateCountLabels(int accountCount, int characterCount)
+		{
+			accountCountLabel.Text = $"{accountCount} accounts";
 			characterCountLabel.Text = $"{characterCount} characters";
 		}
 
@@ -177,27 +180,25 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 
 		private PlayerDetailPanel ConstructPlayerDetailPanel()
 		{
-			return new PlayerDetailPanel(LogCache, ApiData, LogProcessor, UploadProcessor, ImageProvider, LogNameProvider);
+			return new PlayerDetailPanel(LogCache, ApiData, LogProcessor, UploadProcessor, ImageProvider,
+				LogNameProvider);
 		}
 
 		private GridView<PlayerData> ConstructPlayerGridView(PlayerDetailPanel playerDetailPanel)
 		{
 			var gridView = new GridView<PlayerData>();
-			gridView.Columns.Add(new GridColumn()
-			{
+			gridView.Columns.Add(new GridColumn {
 				HeaderText = "Account name",
 				DataCell = new TextBoxCell
 					{Binding = new DelegateBinding<PlayerData, string>(x => x.AccountName.Substring(1))}
 			});
-			gridView.Columns.Add(new GridColumn()
-			{
+			gridView.Columns.Add(new GridColumn {
 				HeaderText = "Log count",
 				DataCell = new TextBoxCell
 					{Binding = new DelegateBinding<PlayerData, string>(x => x.Logs.Count.ToString())}
 			});
 
-			gridView.SelectionChanged += (sender, args) =>
-			{
+			gridView.SelectionChanged += (sender, args) => {
 				if (gridView.SelectedItem != null)
 				{
 					playerDetailPanel.PlayerData = gridView.SelectedItem;
