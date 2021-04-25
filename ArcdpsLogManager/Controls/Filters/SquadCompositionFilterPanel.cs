@@ -11,6 +11,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 	{
 		public SquadCompositionFilterPanel(ImageProvider imageProvider, LogFilters filters)
 		{
+			var filterSnapshot = filters.CompositionFilters.DeepClone();
 			BeginVertical(spacing: new Size(5, 5));
 			{
 				BeginHorizontal();
@@ -18,7 +19,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 					// Core professions
 					BeginVertical(spacing: new Size(2, 2));
 					{
-						foreach (var filter in filters.CompositionFilters.CoreProfessionFilters)
+						foreach (var filter in filterSnapshot.CoreProfessionFilters)
 						{
 							BeginHorizontal();
 							{
@@ -38,8 +39,8 @@ namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 					
 					// Elite specializations
 					var specializationFilterGroups = new[] {
-						filters.CompositionFilters.HeartOfThornsSpecializationFilters,
-						filters.CompositionFilters.PathOfFireSpecializationFilters
+						filterSnapshot.HeartOfThornsSpecializationFilters,
+						filterSnapshot.PathOfFireSpecializationFilters
 					};
 					foreach (var specializationFilters in specializationFilterGroups)
 					{
@@ -67,20 +68,42 @@ namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 				EndHorizontal();
 			}
 			EndVertical();
-			
-			BeginVertical(new Padding(5, 5));
-			AddRow(null, ConstructResetButton(filters));
+
+			var applyButton = ConstructApplyButton(filters, filterSnapshot);
+			BeginVertical(new Padding(5, 5), new Size(5, 5));
+			{
+				AddRow(null, ConstructResetButton(filterSnapshot), applyButton);
+			}
 			EndVertical();
+			
+			filterSnapshot.PropertyChanged += (_, _) => {
+				applyButton.Enabled = !Equals(filters.CompositionFilters, filterSnapshot);
+			};
 		}
 
-		private Button ConstructResetButton(LogFilters filters)
+		private Control ConstructApplyButton(LogFilters filters, CompositionFilters filterSnapshot)
+		{
+			var applyButton = new Button {
+				Text = "Apply",
+				Enabled = !Equals(filters.CompositionFilters, filterSnapshot)
+			};
+			
+			applyButton.Click += (_, _) => {
+				filters.CompositionFilters = filterSnapshot.DeepClone();
+				applyButton.Enabled = !Equals(filters.CompositionFilters, filterSnapshot);
+			};
+
+			return applyButton;
+		}
+
+		private Button ConstructResetButton(CompositionFilters filterSnapshot)
 		{
 			var resetButton = new Button {Text = "Reset composition"};
 			resetButton.Click += (_, _) => {
 				var filterGroups = new IReadOnlyList<PlayerCountFilter>[] {
-					filters.CompositionFilters.CoreProfessionFilters,
-					filters.CompositionFilters.HeartOfThornsSpecializationFilters,
-					filters.CompositionFilters.PathOfFireSpecializationFilters,
+					filterSnapshot.CoreProfessionFilters,
+					filterSnapshot.HeartOfThornsSpecializationFilters,
+					filterSnapshot.PathOfFireSpecializationFilters,
 				};
 				foreach (var group in filterGroups)
 				{

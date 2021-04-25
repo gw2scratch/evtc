@@ -1,3 +1,4 @@
+using System;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
 
 namespace GW2Scratch.ArcdpsLogManager.Logs.Filters.Composition
@@ -29,6 +30,36 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters.Composition
 			}
 
 			return count;
+		}
+		
+		public EliteSpecializationPlayerCountFilter DeepClone()
+		{
+			var filter = new EliteSpecializationPlayerCountFilter(EliteSpecialization) {
+				PlayerCount = PlayerCount,
+				FilterType = FilterType
+			};
+
+			return filter;
+		}
+		
+		protected bool Equals(EliteSpecializationPlayerCountFilter other)
+		{
+			return EliteSpecialization == other.EliteSpecialization &&
+			       PlayerCount == other.PlayerCount &&
+			       FilterType == other.FilterType;
+		}
+
+		public override bool Equals(object obj)
+		{
+			if (ReferenceEquals(null, obj)) return false;
+			if (ReferenceEquals(this, obj)) return true;
+			if (obj.GetType() != this.GetType()) return false;
+			return Equals((EliteSpecializationPlayerCountFilter) obj);
+		}
+
+		public override int GetHashCode()
+		{
+			return HashCode.Combine(EliteSpecialization, PlayerCount, FilterType);
 		}
 	}
 }

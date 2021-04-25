@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -12,21 +13,24 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 		public IReadOnlyList<EliteSpecializationPlayerCountFilter> HeartOfThornsSpecializationFilters { get; }
 		public IReadOnlyList<EliteSpecializationPlayerCountFilter> PathOfFireSpecializationFilters { get; }
 
-		public CompositionFilters()
+		public CompositionFilters() : this(
+			GameData.Professions.Select(x => x.Profession)
+				.Select(profession => new CoreProfessionPlayerCountFilter(profession)),
+			GameData.Professions.Select(x => x.HoT)
+				.Select(specialization => new EliteSpecializationPlayerCountFilter(specialization)),
+			GameData.Professions.Select(x => x.PoF)
+				.Select(specialization => new EliteSpecializationPlayerCountFilter(specialization))
+		)
 		{
-			var coreFilters = GameData.Professions.Select(x => x.Profession)
-				.Select(profession => new CoreProfessionPlayerCountFilter(profession))
-				.ToList();
-			var hotFilters = GameData.Professions.Select(x => x.HoT)
-				.Select(specialization => new EliteSpecializationPlayerCountFilter(specialization))
-				.ToList();
-			var pofFilters = GameData.Professions.Select(x => x.PoF)
-				.Select(specialization => new EliteSpecializationPlayerCountFilter(specialization))
-				.ToList();
+		}
 
-			CoreProfessionFilters = coreFilters;
-			HeartOfThornsSpecializationFilters = hotFilters;
-			PathOfFireSpecializationFilters = pofFilters;
+		private CompositionFilters(IEnumerable<CoreProfessionPlayerCountFilter> coreFilters,
+			IEnumerable<EliteSpecializationPlayerCountFilter> hotFilters,
+			IEnumerable<EliteSpecializationPlayerCountFilter> pofFilters)
+		{
+			CoreProfessionFilters = coreFilters.ToList();
+			HeartOfThornsSpecializationFilters = hotFilters.ToList();
+			PathOfFireSpecializationFilters = pofFilters.ToList();
 
 			foreach (var filter in CoreProfessionFilters)
 			{
@@ -56,6 +60,51 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 		protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
 		{
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		}
+
+		public CompositionFilters DeepClone()
+		{
+			return new CompositionFilters(
+				CoreProfessionFilters.Select(x => x.DeepClone()),
+				HeartOfThornsSpecializationFilters.Select(x => x.DeepClone()),
+				PathOfFireSpecializationFilters.Select(x => x.DeepClone())
+			);
+		}
+
+		protected bool Equals(CompositionFilters other)
+		{
+			return CoreProfessionFilters.SequenceEqual(other.CoreProfessionFilters)
+			       && HeartOfThornsSpecializationFilters.SequenceEqual(other.HeartOfThornsSpecializationFilters)
+			       && PathOfFireSpecializationFilters.SequenceEqual(other.PathOfFireSpecializationFilters);
+		}
+
+		public override bool Equals(object obj)
+		{
+			if (ReferenceEquals(null, obj)) return false;
+			if (ReferenceEquals(this, obj)) return true;
+			if (obj.GetType() != this.GetType()) return false;
+			return Equals((CompositionFilters) obj);
+		}
+
+		public override int GetHashCode()
+		{
+			var code = new HashCode();
+			foreach (var filter in CoreProfessionFilters)
+			{
+				code.Add(filter.GetHashCode());
+			}
+
+			foreach (var filter in HeartOfThornsSpecializationFilters)
+			{
+				code.Add(filter.GetHashCode());
+			}
+			
+			foreach (var filter in PathOfFireSpecializationFilters)
+			{
+				code.Add(filter.GetHashCode());
+			}
+
+			return code.ToHashCode();
 		}
 	}
 }

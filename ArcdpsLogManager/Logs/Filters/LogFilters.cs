@@ -29,6 +29,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 		private bool showFavoriteLogs = true;
 		private DateTime? minDateTime = GuildWars2ReleaseDate;
 		private DateTime? maxDateTime = DateTime.Now.Date.AddDays(1);
+		private CompositionFilters compositionFilters = new CompositionFilters();
 		private readonly IReadOnlyList<ILogFilter> additionalFilters;
 
 		public bool ShowParseUnparsedLogs
@@ -196,7 +197,16 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 			}
 		}
 
-		public CompositionFilters CompositionFilters { get; }
+		public CompositionFilters CompositionFilters
+		{
+			get => compositionFilters;
+			set
+			{
+				if (compositionFilters.Equals(value)) return;
+				compositionFilters = value;
+				OnPropertyChanged();
+			}
+		}
 
 		public LogFilters(params ILogFilter[] additionalFilters)
 		{
