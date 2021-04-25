@@ -36,7 +36,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 						}
 					}
 					EndVertical();
-					
+
 					// Elite specializations
 					var specializationFilterGroups = new[] {
 						filterSnapshot.HeartOfThornsSpecializationFilters,
@@ -69,16 +69,12 @@ namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 			}
 			EndVertical();
 
-			var applyButton = ConstructApplyButton(filters, filterSnapshot);
 			BeginVertical(new Padding(5, 5), new Size(5, 5));
 			{
-				AddRow(null, ConstructResetButton(filterSnapshot), applyButton);
+				AddRow(null,  ConstructResetButton(filterSnapshot), ConstructApplyButton(filters, filterSnapshot));
 			}
 			EndVertical();
-			
-			filterSnapshot.PropertyChanged += (_, _) => {
-				applyButton.Enabled = !Equals(filters.CompositionFilters, filterSnapshot);
-			};
+
 		}
 
 		private Control ConstructApplyButton(LogFilters filters, CompositionFilters filterSnapshot)
@@ -87,9 +83,13 @@ namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 				Text = "Apply",
 				Enabled = !Equals(filters.CompositionFilters, filterSnapshot)
 			};
-			
+
 			applyButton.Click += (_, _) => {
 				filters.CompositionFilters = filterSnapshot.DeepClone();
+				applyButton.Enabled = !Equals(filters.CompositionFilters, filterSnapshot);
+			};
+			
+			filterSnapshot.PropertyChanged += (_, _) => {
 				applyButton.Enabled = !Equals(filters.CompositionFilters, filterSnapshot);
 			};
 
@@ -113,6 +113,10 @@ namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 						filter.FilterType = PlayerCountFilterType.GreaterOrEqual;
 					}
 				}
+			};
+			
+			filterSnapshot.PropertyChanged += (_, _) => {
+				resetButton.Enabled = !Equals(new CompositionFilters(), filterSnapshot);
 			};
 
 			return resetButton;
