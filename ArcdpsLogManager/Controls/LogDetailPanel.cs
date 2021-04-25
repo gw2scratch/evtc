@@ -36,6 +36,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 		private readonly DynamicTable failedProcessingSection;
 		private readonly TextArea exceptionTextArea = new TextArea {ReadOnly = true};
 		private readonly MistlockInstabilityList instabilityList;
+		private readonly Button deleteButton = new Button() { Text = "Delete Log" };
 
 		public LogData LogData
 		{
@@ -136,6 +137,8 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			DynamicGroup debugSection;
 			var debugButton = new Button {Text = "Debug data"};
 			var reparseButton = new Button {Text = "Reprocess"};
+
+			deleteButton.Click += (sender, args) => new DeleteFilesForm(new LogData[] { LogData });
 
 			tagControl.TagAdded += (sender, args) =>
 			{
@@ -242,16 +245,21 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				EndVertical();
 			}
 			EndVertical();
-			BeginVertical(spacing: new Size(10, 0));
+			BeginGroup("File Management", new Padding(5), new Size(0, 5));
 			{
-				Add(null, true);
-				BeginHorizontal();
+				BeginVertical(spacing: new Size(10, 0));
 				{
 					Add(null, true);
-					Add(fileNameButton);
+					BeginHorizontal();
+					{
+						Add(deleteButton);
+						Add(fileNameButton);
+					}
+					EndHorizontal();
 				}
+				EndVertical();
 			}
-			EndVertical();
+			EndGroup();
 
 			dpsReportUploadButton.Click += (sender, args) => { UploadProcessor.ScheduleDpsReportEIUpload(logData); };
 			dpsReportOpenButton.Click += (sender, args) =>

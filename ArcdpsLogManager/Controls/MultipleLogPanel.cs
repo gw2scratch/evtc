@@ -33,6 +33,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 		private readonly DynamicTable dpsReportUploadFailedRow;
 		private readonly DynamicTable dpsReportProcessingFailedRow;
 		private readonly TagControl tagControl;
+		private readonly Button deleteButton = new Button() { Text = "Delete Logs" };
 
 		public IEnumerable<LogData> LogData
 		{
