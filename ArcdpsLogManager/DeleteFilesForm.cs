@@ -17,9 +17,9 @@ namespace GW2Scratch.ArcdpsLogManager
 	{
 		private FilterCollection<LogData> dataStore;
 
-		private readonly Button ConfirmButton = new Button() { Text = "Confirm" };
-		private readonly Button CancelButton = new Button() { Text = "Cancel" };
-		private readonly Button RemoveSelectedButton = new Button() { Text = "Remove Selected" };
+		private readonly Button ConfirmDeleteButton = new Button() { Text = "Delete files" };
+		private readonly Button CloseWindowButton = new Button() { Text = "Close" };
+		private readonly Button RemoveSelectedButton = new Button() { Text = "Remove selected from list" };
 		private readonly GridView LogGrid = new GridView();
 
 		public DeleteFilesForm(IEnumerable<LogData> files)
@@ -33,11 +33,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			Resizable = true;
 			Content = layout;
 
-
-			LogGrid.DataStore = dataStore;
-			LogGrid.AllowMultipleSelection = true;
-
-			var fileNameColumn = new GridColumn()
+			var FileNameColumn = new GridColumn()
 			{
 				HeaderText = "Files",
 				DataCell = new TextBoxCell
@@ -45,9 +41,8 @@ namespace GW2Scratch.ArcdpsLogManager
 					Binding = new DelegateBinding<LogData, string>(data => data.FileName)
 				}
 			};
-			LogGrid.Columns.Add(fileNameColumn);
 
-			var bossNameColumn = new GridColumn()
+			var BossNameColumn = new GridColumn()
 			{
 				HeaderText = "Boss",
 				DataCell = new TextBoxCell
@@ -55,12 +50,35 @@ namespace GW2Scratch.ArcdpsLogManager
 					Binding = new DelegateBinding<LogData, string>(data => data.Encounter.ToString())
 				}
 			};
-			LogGrid.Columns.Add(bossNameColumn);
 
-			CancelButton.Click += (sender, args) => Close();
-			ConfirmButton.Click += ConfirmButtonClicked;
+			var EncounterModeColumn = new GridColumn()
+			{
+				HeaderText = "Mode",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<LogData, string>(data => data.EncounterMode.ToString())
+				}
+			};
+
+			var EncounterResultColumn = new GridColumn()
+			{
+				HeaderText = "Result",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<LogData, string>(data => data.EncounterResult.ToString())
+				}
+			};
+
+			LogGrid.DataStore = dataStore;
+			LogGrid.AllowMultipleSelection = true;
+			LogGrid.Columns.Add(FileNameColumn);
+			LogGrid.Columns.Add(BossNameColumn);
+			LogGrid.Columns.Add(EncounterModeColumn);
+			LogGrid.Columns.Add(EncounterResultColumn);
+
+			CloseWindowButton.Click += (sender, args) => Close();
+			ConfirmDeleteButton.Click += ConfirmDeleteButtonClicked;
 			RemoveSelectedButton.Click += RemoveSelectedButtonClicked;
-
 
 			layout.BeginGroup("Files Locations", new Padding(5), new Size(0, 5));
 			{
@@ -68,18 +86,17 @@ namespace GW2Scratch.ArcdpsLogManager
 				layout.Add(null, yscale: false);
 				layout.BeginVertical();
 				{
-					layout.Add(RemoveSelectedButton, xscale: false);
 					layout.BeginHorizontal();
 					{
-						layout.Add(ConfirmButton, xscale: true);
-						layout.Add(CancelButton, xscale: true);
+						layout.Add(RemoveSelectedButton, xscale: true);
+						layout.Add(ConfirmDeleteButton, xscale: true);
+						layout.Add(CloseWindowButton, xscale: true);
 					}
 					layout.EndHorizontal();
 				}
 				layout.EndVertical();
 			}
 			layout.EndGroup();
-
 			Show();
 		}
 
@@ -89,7 +106,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			LogGrid.DataStore = dataStore;
 		}
 
-		private void ConfirmButtonClicked(object sender, EventArgs e)
+		private void ConfirmDeleteButtonClicked(object sender, EventArgs e)
 		{
 			//Call the delete function on the 
 			DeleteFiles(dataStore.Select(log => log.FileName));

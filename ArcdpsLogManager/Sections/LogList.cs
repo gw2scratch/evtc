@@ -230,7 +230,6 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 				}
 			});
 
-
 			var compositionCell = new DrawableCell();
 			compositionCell.Paint += (sender, args) =>
 			{
