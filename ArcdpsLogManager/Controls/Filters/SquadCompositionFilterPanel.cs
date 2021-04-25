@@ -71,10 +71,9 @@ namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 
 			BeginVertical(new Padding(5, 5), new Size(5, 5));
 			{
-				AddRow(null,  ConstructResetButton(filterSnapshot), ConstructApplyButton(filters, filterSnapshot));
+				AddRow(null, ConstructResetButton(filterSnapshot), ConstructApplyButton(filters, filterSnapshot));
 			}
 			EndVertical();
-
 		}
 
 		private Control ConstructApplyButton(LogFilters filters, CompositionFilters filterSnapshot)
@@ -88,7 +87,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 				filters.CompositionFilters = filterSnapshot.DeepClone();
 				applyButton.Enabled = !Equals(filters.CompositionFilters, filterSnapshot);
 			};
-			
+
 			filterSnapshot.PropertyChanged += (_, _) => {
 				applyButton.Enabled = !Equals(filters.CompositionFilters, filterSnapshot);
 			};
@@ -114,7 +113,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 					}
 				}
 			};
-			
+
 			filterSnapshot.PropertyChanged += (_, _) => {
 				resetButton.Enabled = !Equals(new CompositionFilters(), filterSnapshot);
 			};
