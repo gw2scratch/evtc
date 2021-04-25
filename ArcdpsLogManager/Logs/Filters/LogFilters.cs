@@ -29,6 +29,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 		private bool showFavoriteLogs = true;
 		private DateTime? minDateTime = GuildWars2ReleaseDate;
 		private DateTime? maxDateTime = DateTime.Now.Date.AddDays(1);
+		private CompositionFilters compositionFilters = new CompositionFilters();
 		private readonly IReadOnlyList<ILogFilter> additionalFilters;
 
 		public bool ShowParseUnparsedLogs
@@ -196,9 +197,22 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 			}
 		}
 
+		public CompositionFilters CompositionFilters
+		{
+			get => compositionFilters;
+			set
+			{
+				if (compositionFilters.Equals(value)) return;
+				compositionFilters = value;
+				OnPropertyChanged();
+			}
+		}
+
 		public LogFilters(params ILogFilter[] additionalFilters)
 		{
 			this.additionalFilters = additionalFilters;
+			CompositionFilters = new CompositionFilters();
+			CompositionFilters.PropertyChanged += (_, _) => OnPropertyChanged(nameof(CompositionFilters));
 		}
 
 		public bool FilterLog(LogData log)
@@ -217,7 +231,8 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 			       && FilterByTime(log)
 			       && FilterByEncounterMode(log)
 			       && FilterByFavoriteStatus(log)
-			       && FilterByTags(log);
+			       && FilterByTags(log)
+			       && FilterByComposition(log);
 		}
 
 		private bool FilterByParsingStatus(LogData log)
@@ -261,6 +276,11 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 		private bool FilterByFavoriteStatus(LogData log)
 		{
 			return (log.IsFavorite && ShowFavoriteLogs) || (!log.IsFavorite && ShowNonFavoriteLogs);
+		}
+
+		private bool FilterByComposition(LogData log)
+		{
+			return CompositionFilters.FilterLog(log);
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;
