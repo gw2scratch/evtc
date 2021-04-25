@@ -18,16 +18,16 @@ namespace GW2Scratch.ArcdpsLogManager
 	/// </summary>
 	public class DeleteFilesForm : Form
 	{
-		private FilterCollection<LogData> DataStore;
+		private FilterCollection<LogData> dataStore;
 
-		private readonly Button ConfirmDeleteButton = new Button() { Text = "Delete files" };
-		private readonly Button CloseWindowButton = new Button() { Text = "Close" };
-		private readonly Button RemoveSelectedButton = new Button() { Text = "Remove selected from list" };
-		private readonly GridView LogGrid = new GridView();
+		private readonly Button confirmDeleteButton = new Button() { Text = "Delete files" };
+		private readonly Button closeWindowButton = new Button() { Text = "Close" };
+		private readonly Button removeSelectedButton = new Button() { Text = "Remove selected from list" };
+		private readonly GridView logGrid = new GridView();
 
 		public DeleteFilesForm(IEnumerable<LogData> files)
 		{
-			DataStore = new FilterCollection<LogData>(files);
+			dataStore = new FilterCollection<LogData>(files);
 			var layout = new DynamicLayout();
 
 			Icon = Resources.GetProgramIcon();
@@ -72,28 +72,28 @@ namespace GW2Scratch.ArcdpsLogManager
 				}
 			};
 
-			LogGrid.DataStore = DataStore;
-			LogGrid.AllowMultipleSelection = true;
-			LogGrid.Columns.Add(fileNameColumn);
-			LogGrid.Columns.Add(bossNameColumn);
-			LogGrid.Columns.Add(encounterModeColumn);
-			LogGrid.Columns.Add(encounterResultColumn);
+			logGrid.DataStore = dataStore;
+			logGrid.AllowMultipleSelection = true;
+			logGrid.Columns.Add(fileNameColumn);
+			logGrid.Columns.Add(bossNameColumn);
+			logGrid.Columns.Add(encounterModeColumn);
+			logGrid.Columns.Add(encounterResultColumn);
 
-			CloseWindowButton.Click += (sender, args) => Close();
-			ConfirmDeleteButton.Click += ConfirmDeleteButtonClicked;
-			RemoveSelectedButton.Click += RemoveSelectedButtonClicked;
+			closeWindowButton.Click += (sender, args) => Close();
+			confirmDeleteButton.Click += ConfirmDeleteButtonClicked;
+			removeSelectedButton.Click += RemoveSelectedButtonClicked;
 
 			layout.BeginGroup("Files Locations", new Padding(5), new Size(0, 5));
 			{
-				layout.Add(LogGrid, yscale: true);
+				layout.Add(logGrid, yscale: true);
 				layout.Add(null, yscale: false);
 				layout.BeginVertical();
 				{
 					layout.BeginHorizontal();
 					{
-						layout.Add(RemoveSelectedButton, xscale: true);
-						layout.Add(ConfirmDeleteButton, xscale: true);
-						layout.Add(CloseWindowButton, xscale: true);
+						layout.Add(removeSelectedButton, xscale: true);
+						layout.Add(confirmDeleteButton, xscale: true);
+						layout.Add(closeWindowButton, xscale: true);
 					}
 					layout.EndHorizontal();
 				}
@@ -105,14 +105,14 @@ namespace GW2Scratch.ArcdpsLogManager
 
 		private void RemoveSelectedButtonClicked(object sender, EventArgs e)
 		{
-			DataStore = new FilterCollection<LogData>(DataStore.Where(log => !LogGrid.SelectedItems.Contains(log)));
-			LogGrid.DataStore = DataStore;
+			dataStore = new FilterCollection<LogData>(dataStore.Where(log => !logGrid.SelectedItems.Contains(log)));
+			logGrid.DataStore = dataStore;
 		}
 
 		private void ConfirmDeleteButtonClicked(object sender, EventArgs e)
 		{
 			//Call the delete function on the 
-			DeleteFiles(DataStore.Select(log => log.FileName));
+			DeleteFiles(dataStore.Select(log => log.FileName));
 			Close();
 		}
 
