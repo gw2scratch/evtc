@@ -13,6 +13,9 @@ using GW2Scratch.ArcdpsLogManager.Logs;
 
 namespace GW2Scratch.ArcdpsLogManager
 {
+	/// <summary>
+	/// Lists files before deleting them, the User can remove Files from the List as well before confirming.
+	/// </summary>
 	public class DeleteFilesForm : Form
 	{
 		private FilterCollection<LogData> dataStore;
