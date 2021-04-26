@@ -81,7 +81,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 				form.Show();
 			};
 
-			BeginVertical(spacing: new Size(4, 4));
+			BeginVertical(new Padding(0, 0, 0, 4), spacing: new Size(4, 4));
 			{
 				BeginGroup("Result", new Padding(4, 0, 4, 2), spacing: new Size(6, 0));
 				{
