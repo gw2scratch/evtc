@@ -24,8 +24,6 @@ namespace GW2Scratch.ArcdpsLogManager
 	public class DeleteFilesForm : Form
 	{
 		private FilterCollection<LogData> dataStore;
-		private ILogNameProvider nameProvider;
-		private ImageProvider imageProvider;
 
 		private readonly Button confirmDeleteButton = new Button() { Text = "Delete files" };
 		private readonly Button closeWindowButton = new Button() { Text = "Close" };
@@ -37,8 +35,6 @@ namespace GW2Scratch.ArcdpsLogManager
 
 		public DeleteFilesForm(IEnumerable<LogData> files, ILogNameProvider nameProvider, ImageProvider imageProvider)
 		{
-			this.nameProvider = nameProvider;
-			this.imageProvider = imageProvider;
 			dataStore = new FilterCollection<LogData>(files);
 			var layout = new DynamicLayout();
 
