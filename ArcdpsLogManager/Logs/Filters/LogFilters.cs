@@ -12,8 +12,6 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 {
 	public sealed class LogFilters : ILogFilter, INotifyPropertyChanged
 	{
-		public static readonly DateTime GuildWars2ReleaseDate = new DateTime(2012, 8, 28);
-
 		private bool showParseUnparsedLogs = true;
 		private bool showParseParsingLogs = true;
 		private bool showParseParsedLogs = true;
@@ -27,8 +25,8 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 		private bool showChallengeModeLogs = true;
 		private bool showNonFavoriteLogs = true;
 		private bool showFavoriteLogs = true;
-		private DateTime? minDateTime = GuildWars2ReleaseDate;
-		private DateTime? maxDateTime = DateTime.Now.Date.AddDays(1);
+		private DateTime? minDateTime = null;
+		private DateTime? maxDateTime = null;
 		private CompositionFilters compositionFilters = new CompositionFilters();
 		private readonly IReadOnlyList<ILogFilter> additionalFilters;
 
@@ -262,8 +260,8 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 
 		private bool FilterByTime(LogData log)
 		{
-			return !(log.EncounterStartTime.LocalDateTime < MinDateTime) &&
-			       !(log.EncounterStartTime.LocalDateTime > MaxDateTime);
+			return (!MinDateTime.HasValue || log.EncounterStartTime.LocalDateTime >= MinDateTime) &&
+			       (!MaxDateTime.HasValue || log.EncounterStartTime.LocalDateTime <= MaxDateTime);
 		}
 
 		private bool FilterByEncounterMode(LogData log)
