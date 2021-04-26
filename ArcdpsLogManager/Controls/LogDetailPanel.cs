@@ -138,7 +138,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			var debugButton = new Button {Text = "Debug data"};
 			var reparseButton = new Button {Text = "Reprocess"};
 
-			deleteButton.Click += (sender, args) => new DeleteFilesForm(new LogData[] { LogData });
+			deleteButton.Click += (sender, args) => new DeleteFilesForm(new LogData[] { LogData }, nameProvider, imageProvider);
 
 			tagControl.TagAdded += (sender, args) =>
 			{

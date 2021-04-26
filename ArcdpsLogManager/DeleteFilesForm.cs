@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Eto.Drawing;
 using Eto.Forms;
 using GW2Scratch.ArcdpsLogManager.Logs;
+using GW2Scratch.ArcdpsLogManager.Logs.Naming;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
 
@@ -21,14 +22,18 @@ namespace GW2Scratch.ArcdpsLogManager
 	public class DeleteFilesForm : Form
 	{
 		private FilterCollection<LogData> dataStore;
+		private ILogNameProvider nameProvider;
+		private ImageProvider imageProvider;
 
 		private readonly Button confirmDeleteButton = new Button() { Text = "Delete files" };
 		private readonly Button closeWindowButton = new Button() { Text = "Close" };
 		private readonly Button removeSelectedButton = new Button() { Text = "Remove selected from list" };
 		private readonly GridView logGrid = new GridView();
 
-		public DeleteFilesForm(IEnumerable<LogData> files)
+		public DeleteFilesForm(IEnumerable<LogData> files, ILogNameProvider nameProvider, ImageProvider imageProvider)
 		{
+			this.nameProvider = nameProvider;
+			this.imageProvider = imageProvider;
 			dataStore = new FilterCollection<LogData>(files);
 			var layout = new DynamicLayout();
 
@@ -41,7 +46,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			var fileNameColumn = new GridColumn()
 			{
 				HeaderText = "Files",
-				DataCell = new TextBoxCell
+				DataCell = new TextBoxCell 
 				{
 					Binding = new DelegateBinding<LogData, string>(data => data.FileInfo.Name)
 				}
@@ -50,7 +55,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			var bossNameColumn = new GridColumn()
 			{
 				HeaderText = "Boss",
-				DataCell = new TextBoxCell
+				DataCell = new TextBoxCell 
 				{
 					Binding = new DelegateBinding<LogData, string>(data => data.Encounter.ToString())
 				}
@@ -61,7 +66,7 @@ namespace GW2Scratch.ArcdpsLogManager
 				HeaderText = "CM",
 				DataCell = new TextBoxCell
 				{
-					Binding = new DelegateBinding<LogData, string>(data =>
+					Binding = new DelegateBinding<LogData, string>(data => 
 					{
 						switch (data.EncounterMode)
 						{
@@ -81,7 +86,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			var encounterResultColumn = new GridColumn()
 			{
 				HeaderText = "Result",
-				DataCell = new TextBoxCell
+				DataCell = new TextBoxCell 
 				{
 					Binding = new DelegateBinding<LogData, string>(data => 
 					{

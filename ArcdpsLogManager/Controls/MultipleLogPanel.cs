@@ -7,6 +7,7 @@ using Eto.Forms;
 using GW2Scratch.ArcdpsLogManager.Configuration;
 using GW2Scratch.ArcdpsLogManager.Logs;
 using GW2Scratch.ArcdpsLogManager.Logs.Filters;
+using GW2Scratch.ArcdpsLogManager.Logs.Naming;
 using GW2Scratch.ArcdpsLogManager.Logs.Tagging;
 using GW2Scratch.ArcdpsLogManager.Processing;
 using static GW2Scratch.ArcdpsLogManager.Logs.LogData;
@@ -18,6 +19,8 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 	public sealed class MultipleLogPanel : DynamicLayout
 	{
 		private LogData[] logData;
+		private ILogNameProvider nameProvider;
+		private ImageProvider imageProvider;
 
 		private readonly Label countLabel = new Label {Font = Fonts.Sans(12)};
 		private readonly Label dpsReportNotUploadedLabel = new Label();
@@ -110,8 +113,11 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				logData.Where(x => x.DpsReportEIUpload.Url != null).Select(x => x.DpsReportEIUpload.Url));
 		}
 
-		public MultipleLogPanel(LogCache logCache, LogDataProcessor logProcessor, UploadProcessor uploadProcessor)
+		public MultipleLogPanel(LogCache logCache, LogDataProcessor logProcessor, UploadProcessor uploadProcessor, ILogNameProvider nameProvider, ImageProvider imageProvider)
 		{
+			this.nameProvider = nameProvider;
+			this.imageProvider = imageProvider;
+
 			Padding = new Padding(10);
 			Width = 350;
 			Visible = false;
@@ -137,7 +143,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				}
 			};
 
-			dpsReportOpenButton.Click += (sender, args) =>
+			dpsReportOpenButton.Click += (sender, args) => 
 			{
 				var uploadedLogs = logData.Where(x => x.DpsReportEIUpload.UploadState == UploadState.Uploaded).ToList();
 				if (uploadedLogs.Count > 5)
@@ -159,7 +165,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 					var state = log.DpsReportEIUpload.UploadState;
 					if (state == UploadState.Uploaded)
 					{
-						var processInfo = new ProcessStartInfo()
+						var processInfo = new ProcessStartInfo() 
 						{
 							FileName = log.DpsReportEIUpload.Url,
 							UseShellExecute = true
@@ -170,11 +176,12 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			};
 
 			dpsReportCancelButton.Click += (sender, args) => { uploadProcessor.CancelDpsReportEIUpload(logData); };
+			deleteButton.Click += (sender, args) => new DeleteFilesForm(LogData, nameProvider, imageProvider);
 
 			DynamicTable debugSection;
 
 			tagControl = new TagControl();
-			tagControl.TagAdded += (sender, args) =>
+			tagControl.TagAdded += (sender, args) => 
 			{
 				var added = false;
 				foreach (var log in logData)
@@ -187,7 +194,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				}
 			};
 
-			tagControl.TagRemoved += (sender, args) =>
+			tagControl.TagRemoved += (sender, args) => 
 			{
 				var removed = false;
 				foreach (var log in logData)
@@ -270,7 +277,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			EndVertical();
 
 			Settings.ShowDebugDataChanged += (sender, args) => { debugSection.Visible = Settings.ShowDebugData; };
-			Shown += (sender, args) =>
+			Shown += (sender, args) => 
 			{
 				// Assigning visibility in the constructor does not work
 				debugSection.Visible = Settings.ShowDebugData;
