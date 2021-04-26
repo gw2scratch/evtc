@@ -46,7 +46,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			var fileNameColumn = new GridColumn()
 			{
 				HeaderText = "Files",
-				DataCell = new TextBoxCell 
+				DataCell = new TextBoxCell
 				{
 					Binding = new DelegateBinding<LogData, string>(data => data.FileInfo.Name)
 				}
@@ -55,7 +55,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			var bossNameColumn = new GridColumn()
 			{
 				HeaderText = "Boss",
-				DataCell = new TextBoxCell 
+				DataCell = new TextBoxCell
 				{
 					Binding = new DelegateBinding<LogData, string>(data => data.Encounter.ToString())
 				}
@@ -66,7 +66,7 @@ namespace GW2Scratch.ArcdpsLogManager
 				HeaderText = "CM",
 				DataCell = new TextBoxCell
 				{
-					Binding = new DelegateBinding<LogData, string>(data => 
+					Binding = new DelegateBinding<LogData, string>(data =>
 					{
 						switch (data.EncounterMode)
 						{
@@ -86,7 +86,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			var encounterResultColumn = new GridColumn()
 			{
 				HeaderText = "Result",
-				DataCell = new TextBoxCell 
+				DataCell = new TextBoxCell
 				{
 					Binding = new DelegateBinding<LogData, string>(data => 
 					{

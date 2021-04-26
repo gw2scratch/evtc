@@ -143,7 +143,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				}
 			};
 
-			dpsReportOpenButton.Click += (sender, args) => 
+			dpsReportOpenButton.Click += (sender, args) =>
 			{
 				var uploadedLogs = logData.Where(x => x.DpsReportEIUpload.UploadState == UploadState.Uploaded).ToList();
 				if (uploadedLogs.Count > 5)
@@ -165,7 +165,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 					var state = log.DpsReportEIUpload.UploadState;
 					if (state == UploadState.Uploaded)
 					{
-						var processInfo = new ProcessStartInfo() 
+						var processInfo = new ProcessStartInfo()
 						{
 							FileName = log.DpsReportEIUpload.Url,
 							UseShellExecute = true
@@ -181,7 +181,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			DynamicTable debugSection;
 
 			tagControl = new TagControl();
-			tagControl.TagAdded += (sender, args) => 
+			tagControl.TagAdded += (sender, args) =>
 			{
 				var added = false;
 				foreach (var log in logData)
@@ -194,7 +194,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				}
 			};
 
-			tagControl.TagRemoved += (sender, args) => 
+			tagControl.TagRemoved += (sender, args) =>
 			{
 				var removed = false;
 				foreach (var log in logData)
@@ -277,7 +277,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			EndVertical();
 
 			Settings.ShowDebugDataChanged += (sender, args) => { debugSection.Visible = Settings.ShowDebugData; };
-			Shown += (sender, args) => 
+			Shown += (sender, args) =>
 			{
 				// Assigning visibility in the constructor does not work
 				debugSection.Visible = Settings.ShowDebugData;
