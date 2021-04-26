@@ -97,7 +97,11 @@ namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 
 		private Button ConstructResetButton(CompositionFilters filterSnapshot)
 		{
-			var resetButton = new Button {Text = "Reset composition"};
+			var resetButton = new Button {
+				Text = "Reset composition",
+				Enabled = !Equals(new CompositionFilters(), filterSnapshot)
+			};
+			
 			resetButton.Click += (_, _) => {
 				var filterGroups = new IReadOnlyList<PlayerCountFilter>[] {
 					filterSnapshot.CoreProfessionFilters,
