@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Eto.Drawing;
 using Eto.Forms;
 using GW2Scratch.ArcdpsLogManager.Logs;
+using GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes;
 
 namespace GW2Scratch.ArcdpsLogManager
 {
@@ -56,10 +57,23 @@ namespace GW2Scratch.ArcdpsLogManager
 
 			var encounterModeColumn = new GridColumn()
 			{
-				HeaderText = "Mode",
+				HeaderText = "CM",
 				DataCell = new TextBoxCell
 				{
-					Binding = new DelegateBinding<LogData, string>(data => data.EncounterMode.ToString())
+					Binding = new DelegateBinding<LogData, string>(data =>
+					{
+						switch (data.EncounterMode)
+						{
+							case EncounterMode.Challenge:
+								return "CM";
+							case EncounterMode.Normal:
+								return "";
+							case EncounterMode.Unknown:
+								return "?";
+							default:
+								throw new ArgumentOutOfRangeException();
+						}
+					})
 				}
 			};
 
