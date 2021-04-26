@@ -11,6 +11,7 @@ using Eto.Drawing;
 using Eto.Forms;
 using GW2Scratch.ArcdpsLogManager.Logs;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes;
+using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
 
 namespace GW2Scratch.ArcdpsLogManager
 {
@@ -82,7 +83,27 @@ namespace GW2Scratch.ArcdpsLogManager
 				HeaderText = "Result",
 				DataCell = new TextBoxCell
 				{
-					Binding = new DelegateBinding<LogData, string>(data => data.EncounterResult.ToString())
+					Binding = new DelegateBinding<LogData, string>(data => 
+					{
+						switch (data.EncounterResult)
+						{
+							case EncounterResult.Success:
+								return "Success";
+							case EncounterResult.Failure:
+								if (Settings.ShowFailurePercentagesInLogList && data.HealthPercentage.HasValue)
+								{
+									return $"Failure ({data.HealthPercentage * 100:0.00}%)";
+								}
+								else
+								{
+									return "Failure";
+								}
+							case EncounterResult.Unknown:
+								return "Unknown";
+							default:
+								throw new ArgumentOutOfRangeException();
+						}
+					})
 				}
 			};
 
