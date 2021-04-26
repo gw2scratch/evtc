@@ -32,7 +32,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 			failedCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowParseFailedLogs);
 			BeginVertical(new Padding(5));
 			{
-				BeginGroup("Processing status", new Padding(5));
+				BeginGroup("Processing status", new Padding(5), new Size(6, 0));
 				{
 					AddRow(unparsedCheckBox, parsingCheckBox, parsedCheckBox, failedCheckBox);
 				}
