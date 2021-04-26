@@ -40,7 +40,7 @@ namespace GW2Scratch.ArcdpsLogManager
 
 			Icon = Resources.GetProgramIcon();
 			Title = "Confirm Deletion - arcdps Log Manager";
-			ClientSize = new Size(500, 300);
+			ClientSize = new Size(685, 300);
 			Resizable = true;
 			Content = layout;
 
@@ -53,9 +53,9 @@ namespace GW2Scratch.ArcdpsLogManager
 				}
 			};
 
-			var bossNameColumn = new GridColumn()
+			var encounterNameColumn = new GridColumn()
 			{
-				HeaderText = "Boss",
+				HeaderText = "Encounter",
 				DataCell = new TextBoxCell
 				{
 					Binding = new DelegateBinding<LogData, string>(data => nameProvider.GetName(data))
@@ -137,10 +137,11 @@ namespace GW2Scratch.ArcdpsLogManager
 				Width = 11 * (PlayerIconSize + PlayerIconSpacing) // There are logs with 11 players here and there
 			};
 
+			logGrid.RowHeight = Math.Max(logGrid.RowHeight, PlayerIconSize + 2);
 			logGrid.DataStore = dataStore;
 			logGrid.AllowMultipleSelection = true;
 			logGrid.Columns.Add(fileNameColumn);
-			logGrid.Columns.Add(bossNameColumn);
+			logGrid.Columns.Add(encounterNameColumn);
 			logGrid.Columns.Add(encounterModeColumn);
 			logGrid.Columns.Add(encounterResultColumn);
 			logGrid.Columns.Add(playersColumn);
