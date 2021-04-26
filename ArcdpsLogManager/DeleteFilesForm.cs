@@ -6,6 +6,7 @@ using System.Collections.Specialized;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Eto.Drawing;
@@ -175,10 +176,17 @@ namespace GW2Scratch.ArcdpsLogManager
 
 		private void LogGrid_CellDoubleClick(object sender, GridCellMouseEventArgs e)
 		{
-			if(e.Item is LogData log)
+			if (e.Item is not LogData log) return;
+			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
 			{
-				Process.Start("explorer.exe", @log.FileInfo.DirectoryName);
+				Process.Start("explorer.exe", $"/select,\"{log.FileName}\"");
+				return;
 			}
+			var processInfo = new ProcessStartInfo() {
+				FileName = log.FileInfo.DirectoryName,
+				UseShellExecute = true
+			};
+			Process.Start(processInfo);
 		}
 
 		private void RemoveSelectedButtonClicked(object sender, EventArgs e)
