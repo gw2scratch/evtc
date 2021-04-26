@@ -57,7 +57,7 @@ namespace GW2Scratch.ArcdpsLogManager
 				HeaderText = "Boss",
 				DataCell = new TextBoxCell
 				{
-					Binding = new DelegateBinding<LogData, string>(data => data.Encounter.ToString())
+					Binding = new DelegateBinding<LogData, string>(data => nameProvider.GetName(data))
 				}
 			};
 
