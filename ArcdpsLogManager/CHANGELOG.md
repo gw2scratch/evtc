@@ -6,6 +6,7 @@ This is the full changelog of the arcdps Log Manager.
 
 #### New features
 - Added CM detection for Keep Construct
+- Added squad composition filters to *Advanced filters*.
 
 #### Fixes
 - Fixed an issue with the last processed log not updating the UI correctly on Windows (status stuck on "Processing 51/52...")

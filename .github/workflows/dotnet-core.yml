@@ -13,10 +13,14 @@ jobs:
     - uses: actions/checkout@v2
       with:
         submodules: true
-    - name: Setup .NET Core
+    - name: Setup .NET 5
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 3.1.301
+        dotnet-version: 5.0.x
+    - name: Setup .NET Core 3.1
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.x
     # This is a workaround for issue https://github.com/actions/virtual-environments/issues/1090,
     # which causes to nuget restores to fail
     - name: Clean NuGet cache
@@ -45,12 +49,16 @@ jobs:
     # Same thing for console projects that are aimed at different runtime platforms.
     - name: Bundle PDBs
       run: |
-          mkdir artifacts/pdb/
-          mv artifacts/manager/win64/*.pdb artifacts/pdb/
-          mv artifacts/manager/linux64/*.pdb artifacts/pdb/
-          mv artifacts/inspector/win64/*.pdb artifacts/pdb/
-          mv artifacts/inspector/linux64/*.pdb artifacts/pdb/
-          mv artifacts/rotcomp/win64/*.pdb artifacts/pdb/
+          mkdir -p artifacts/pdb/manager/win64/
+          mkdir -p artifacts/pdb/manager/linux64/
+          mkdir -p artifacts/pdb/inspector/win64/
+          mkdir -p artifacts/pdb/inspector/linux64/
+          mkdir -p artifacts/pdb/rotcomp/win64/
+          mv artifacts/manager/win64/*.pdb artifacts/pdb/manager/win64/
+          mv artifacts/manager/linux64/*.pdb artifacts/pdb/manager/linux64/
+          mv artifacts/inspector/win64/*.pdb artifacts/pdb/inspector/win64/
+          mv artifacts/inspector/linux64/*.pdb artifacts/pdb/inspector/linux64/
+          mv artifacts/rotcomp/win64/*.pdb artifacts/pdb/rotcomp/win64/
     - name: Prettify executable filenames
       run: |
           mv artifacts/manager/win64/GW2Scratch.ArcdpsLogManager.Wpf.exe artifacts/manager/win64/ArcdpsLogManager.exe

@@ -10,6 +10,7 @@ using GW2Scratch.ArcdpsLogManager.Analytics;
 using GW2Scratch.ArcdpsLogManager.Collections;
 using GW2Scratch.ArcdpsLogManager.Commands;
 using GW2Scratch.ArcdpsLogManager.Controls;
+using GW2Scratch.ArcdpsLogManager.Controls.Filters;
 using GW2Scratch.ArcdpsLogManager.Dialogs;
 using GW2Scratch.ArcdpsLogManager.Gw2Api;
 using GW2Scratch.ArcdpsLogManager.Logs;
