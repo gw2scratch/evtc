@@ -41,7 +41,7 @@ namespace GW2Scratch.ArcdpsLogManager
 				HeaderText = "Files",
 				DataCell = new TextBoxCell
 				{
-					Binding = new DelegateBinding<LogData, string>(data => data.FileName)
+					Binding = new DelegateBinding<LogData, string>(data => data.FileInfo.Name)
 				}
 			};
 
