@@ -32,8 +32,8 @@ namespace GW2Scratch.ArcdpsLogManager
 		private readonly Button removeSelectedButton = new Button() { Text = "Remove selected from list" };
 		private readonly GridView logGrid = new GridView();
 
-		public int PlayerIconSize { get; private set; }
-		public int PlayerIconSpacing { get; private set; }
+		private const int PlayerIconSize = 20;
+		private const int PlayerIconSpacing = 5;
 
 		public DeleteFilesForm(IEnumerable<LogData> files, ILogNameProvider nameProvider, ImageProvider imageProvider)
 		{
