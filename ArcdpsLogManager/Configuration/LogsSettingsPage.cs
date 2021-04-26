@@ -12,6 +12,7 @@ namespace GW2Scratch.ArcdpsLogManager.Configuration
 
 		private readonly TextBox locationTextBox;
 		private readonly CheckBox minDurationCheckBox;
+		private readonly CheckBox deleteMinDurationLogsCheckbox;
 		private readonly NumericMaskedTextBox<int> minDurationTextBox;
 
 		public LogsSettingsPage()
@@ -39,6 +40,13 @@ namespace GW2Scratch.ArcdpsLogManager.Configuration
 			{
 				Text = "Exclude short logs",
 				Checked = Settings.MinimumLogDurationSeconds.HasValue,
+				ThreeState = false
+			};
+
+			deleteMinDurationLogsCheckbox = new CheckBox 
+			{
+				Text = "Delete the excluded logs",
+				Checked = Settings.DeleteMinLogsDuration.HasValue,
 				ThreeState = false
 			};
 
