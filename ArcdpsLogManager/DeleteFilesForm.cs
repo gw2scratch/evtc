@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -118,6 +119,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			logGrid.Columns.Add(bossNameColumn);
 			logGrid.Columns.Add(encounterModeColumn);
 			logGrid.Columns.Add(encounterResultColumn);
+			logGrid.CellDoubleClick += LogGrid_CellDoubleClick;
 
 			closeWindowButton.Click += (sender, args) => Close();
 			confirmDeleteButton.Click += ConfirmDeleteButtonClicked;
@@ -141,6 +143,14 @@ namespace GW2Scratch.ArcdpsLogManager
 			}
 			layout.EndGroup();
 			Show();
+		}
+
+		private void LogGrid_CellDoubleClick(object sender, GridCellMouseEventArgs e)
+		{
+			if(e.Item is LogData log)
+			{
+				Process.Start("explorer.exe", @log.FileInfo.DirectoryName);
+			}
 		}
 
 		private void RemoveSelectedButtonClicked(object sender, EventArgs e)
