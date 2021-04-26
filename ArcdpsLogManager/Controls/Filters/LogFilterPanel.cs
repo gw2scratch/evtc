@@ -5,9 +5,8 @@ using Eto.Drawing;
 using Eto.Forms;
 using GW2Scratch.ArcdpsLogManager.Logs;
 using GW2Scratch.ArcdpsLogManager.Logs.Filters;
-using GW2Scratch.ArcdpsLogManager.Sections;
 
-namespace GW2Scratch.ArcdpsLogManager.Controls
+namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 {
 	public class LogFilterPanel : DynamicLayout
 	{
