@@ -31,6 +31,9 @@ namespace GW2Scratch.ArcdpsLogManager
 		private readonly Button removeSelectedButton = new Button() { Text = "Remove selected from list" };
 		private readonly GridView logGrid = new GridView();
 
+		public int PlayerIconSize { get; private set; }
+		public int PlayerIconSpacing { get; private set; }
+
 		public DeleteFilesForm(IEnumerable<LogData> files, ILogNameProvider nameProvider, ImageProvider imageProvider)
 		{
 			this.nameProvider = nameProvider;
@@ -113,12 +116,37 @@ namespace GW2Scratch.ArcdpsLogManager
 				}
 			};
 
+			var compositionCell = new DrawableCell();
+			compositionCell.Paint += (sender, args) => {
+				if (!(args.Item is LogData log)) return;
+				if (log.ParsingStatus != ParsingStatus.Parsed) return;
+
+
+				var players = log.Players.OrderBy(player => player.Profession)
+					.ThenBy(player => player.EliteSpecialization).ToArray();
+				var origin = args.ClipRectangle.Location;
+				for (int i = 0; i < players.Length; i++)
+				{
+					var icon = imageProvider.GetTinyProfessionIcon(players[i]);
+					var point = origin + new PointF(i * (PlayerIconSize + PlayerIconSpacing), 0);
+					args.Graphics.DrawImage(icon, point);
+				}
+			};
+
+			var playersColumn = new GridColumn() 
+			{
+				HeaderText = "Players",
+				DataCell = compositionCell,
+				Width = 11 * (PlayerIconSize + PlayerIconSpacing) // There are logs with 11 players here and there
+			};
+
 			logGrid.DataStore = dataStore;
 			logGrid.AllowMultipleSelection = true;
 			logGrid.Columns.Add(fileNameColumn);
 			logGrid.Columns.Add(bossNameColumn);
 			logGrid.Columns.Add(encounterModeColumn);
 			logGrid.Columns.Add(encounterResultColumn);
+			logGrid.Columns.Add(playersColumn);
 			logGrid.CellDoubleClick += LogGrid_CellDoubleClick;
 
 			closeWindowButton.Click += (sender, args) => Close();
