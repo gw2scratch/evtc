@@ -31,7 +31,8 @@ namespace GW2Scratch.ArcdpsLogManager
 {
 	public sealed class ManagerForm : Form
 	{
-		private readonly Cooldown gridRefreshCooldown = new Cooldown(TimeSpan.FromSeconds(2));
+		private readonly Cooldown gridRefreshCooldown = new Cooldown(TimeSpan.FromSeconds(5));
+		private readonly Cooldown filterRefreshCooldown = new Cooldown(TimeSpan.FromSeconds(5));
 
 		private ProgramUpdateChecker ProgramUpdateChecker { get; } = new ProgramUpdateChecker("http://gw2scratch.com/releases/manager.json");
 		private ImageProvider ImageProvider { get; } = new ImageProvider();
@@ -346,7 +347,15 @@ namespace GW2Scratch.ArcdpsLogManager
 		{
 			var filterPanel = new LogFilterPanel(ImageProvider, Filters);
 			LogCollectionsInitialized += (sender, args) => logs.CollectionChanged += (s, a) => { filterPanel.UpdateLogs(logs); };
-			LogDataProcessor.Processed += (sender, args) => { Application.Instance.AsyncInvoke(() => filterPanel.UpdateLogs(logs)); };
+			LogDataProcessor.Processed += (sender, args) =>
+			{
+				bool last = args.CurrentScheduledItems == 0;
+
+				if (last || filterRefreshCooldown.TryUse(DateTime.Now))
+				{
+					Application.Instance.AsyncInvoke(() => filterPanel.UpdateLogs(logs));
+				}
+			};
 
 			return filterPanel;
 		}

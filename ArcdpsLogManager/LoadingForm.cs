@@ -5,6 +5,7 @@ using Eto.Drawing;
 using Eto.Forms;
 using GW2Scratch.ArcdpsLogManager.Gw2Api;
 using GW2Scratch.ArcdpsLogManager.Logs;
+using GW2Scratch.ArcdpsLogManager.Logs.Caching;
 
 namespace GW2Scratch.ArcdpsLogManager
 {
@@ -74,6 +75,15 @@ namespace GW2Scratch.ArcdpsLogManager
 				try
 				{
 					cache = LogCache.LoadFromFile();
+				}
+				catch (CacheLockedException)
+				{
+					Application.Instance.Invoke(() =>
+					{
+						MessageBox.Show("Only one instance of the log manager can be running at a time.", MessageBoxType.Error);
+						Close();
+					});
+					return;
 				}
 				catch (Exception e)
 				{

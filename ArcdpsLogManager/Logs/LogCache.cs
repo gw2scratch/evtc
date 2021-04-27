@@ -2,22 +2,24 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using GW2Scratch.ArcdpsLogManager.Logs.Caching;
 using Newtonsoft.Json;
 
 namespace GW2Scratch.ArcdpsLogManager.Logs
 {
-	public class LogCache
+	public class LogCache : IDisposable
 	{
+		private const string MutexName = "ArcdpsLogManagerLogCache";
 		private readonly Dictionary<string, LogData> logsByFilename;
 		private readonly object dictionaryLock = new object();
+		private readonly Mutex globalMutex;
 
 		public bool ChangedSinceLastSave { get; private set; } = false;
 
 		public int LogCount
 		{
-			get
-			{
+			get {
 				lock (dictionaryLock)
 				{
 					return logsByFilename.Count;
@@ -25,13 +27,21 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 			}
 		}
 
-		private LogCache(Dictionary<string, LogData> logsByFilename)
+		private LogCache(Dictionary<string, LogData> logsByFilename, Mutex globalMutex)
 		{
 			this.logsByFilename = logsByFilename;
+			this.globalMutex = globalMutex;
 		}
 
 		public static LogCache LoadFromFile()
 		{
+			var globalMutex = new Mutex(true, $"Global\\{MutexName}", out bool createdNew);
+			if (!createdNew)
+			{
+				globalMutex.Dispose();
+				throw new CacheLockedException();
+			}
+
 			string filename = GetCacheFilename();
 			if (File.Exists(filename))
 			{
@@ -45,22 +55,23 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 				// Deserialize will not fail with old version, will just assign null instead
 				if (data.LogsByFilename == null)
 				{
+					globalMutex.Dispose();
 					throw new NotSupportedException("No log data found. This may be caused by trying " +
 					                                "to load data from an incompatible old version.");
-
 				}
 
 				if (data.Version == 2)
 				{
-					return new LogCache(data.LogsByFilename);
+					return new LogCache(data.LogsByFilename, globalMutex);
 				}
 
+				globalMutex.Dispose();
 				throw new NotSupportedException("Only version 2 of the log cache is supported. " +
 				                                "Are you sure you are not trying to load " +
 				                                "data from a newer version?");
 			}
 
-			return new LogCache(new Dictionary<string, LogData>());
+			return new LogCache(new Dictionary<string, LogData>(), globalMutex);
 		}
 
 		public void SaveToFile()
@@ -79,8 +90,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 				using (var writer = new StreamWriter(tmpFilename))
 				{
 					var serializer = new JsonSerializer();
-					var storage = new LogCacheStorage()
-					{
+					var storage = new LogCacheStorage() {
 						LogsByFilename = logsByFilename
 					};
 					serializer.Serialize(writer, storage);
@@ -183,6 +193,11 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 		private static string GetCacheFilename()
 		{
 			return Path.Combine(GetCacheDirectory(), Settings.CacheFilename);
+		}
+
+		public void Dispose()
+		{
+			globalMutex?.Dispose();
 		}
 	}
 }
