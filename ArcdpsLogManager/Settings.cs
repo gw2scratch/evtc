@@ -253,9 +253,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			}
 		}
 
-		
-
-		public static int? DeleteMinLogsDurationChanged
+		public static int? DeleteMinLogsDuration
 		{
 			get => Values.DeleteMinLogsDuration;
 			set {
@@ -279,8 +277,6 @@ namespace GW2Scratch.ArcdpsLogManager
 				}
 			}
 		}
-
-		public static object DeleteMinLogsDuration { get; internal set; }
 
 		public static event EventHandler<EventArgs> LogRootPathChanged;
 		public static event EventHandler<EventArgs> ShowDebugDataChanged;
