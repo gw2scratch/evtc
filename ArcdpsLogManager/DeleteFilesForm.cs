@@ -40,7 +40,7 @@ namespace GW2Scratch.ArcdpsLogManager
 
 			Icon = Resources.GetProgramIcon();
 			Title = "Confirm Deletion - arcdps Log Manager";
-			ClientSize = new Size(700, 300);
+			ClientSize = new Size(750, 500);
 			Resizable = true;
 			Content = layout;
 
@@ -113,6 +113,16 @@ namespace GW2Scratch.ArcdpsLogManager
 				}
 			};
 
+			var durationColumn = new GridColumn() {
+				HeaderText = "Duration",
+				DataCell = new TextBoxCell {
+					Binding = new DelegateBinding<LogData, string>(x => {
+						var seconds = x.EncounterDuration.TotalSeconds;
+						return $"{(int)seconds / 60:0}m {seconds % 60:00.0}s";
+					})
+				}
+			};
+
 			var compositionCell = new DrawableCell();
 			compositionCell.Paint += (sender, args) => {
 				if (!(args.Item is LogData log)) return;
@@ -144,6 +154,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			logGrid.Columns.Add(encounterNameColumn);
 			logGrid.Columns.Add(encounterModeColumn);
 			logGrid.Columns.Add(encounterResultColumn);
+			logGrid.Columns.Add(durationColumn);
 			logGrid.Columns.Add(playersColumn);
 			logGrid.CellDoubleClick += LogGrid_CellDoubleClick;
 
