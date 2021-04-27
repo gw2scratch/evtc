@@ -12,6 +12,7 @@ This is the full changelog of the arcdps Log Manager.
 #### Changes
 - Significantly improved performance of filtering
 - Filtering by time can have no bound, which fixes confusion with logs not appearing if the program has been open for too long
+- It is no longer possible to open multiple instances of the log manager. This prevents data loss issues in some cases.
 
 #### Fixes
 - Fixed an issue with the last processed log not updating the UI correctly on Windows (status stuck on "Processing 51/52...")
