@@ -205,8 +205,8 @@ namespace GW2Scratch.ArcdpsLogManager
 
 		private void ConfirmDeleteButtonClicked(object sender, EventArgs e)
 		{
-			//Call the delete function on the 
 			DeleteFiles(dataStore.Select(log => log.FileName));
+			if (Application.Instance.MainForm is ManagerForm mainform) mainform.ReloadLogs();
 			Close();
 		}
 
@@ -215,7 +215,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			foreach (var file in filesToDelete)
 			{
 				// File.Delete doesnt throw an Error if the file doesnt exist
-				//File.Delete(file);
+				File.Delete(file);
 			}
 		}
 	}
