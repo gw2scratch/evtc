@@ -54,14 +54,20 @@ namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 			lastDayButton.Click += (sender, args) =>
 			{
 				startDateTimePicker.Value = DateTime.Now - TimeSpan.FromDays(1);
-				endDateTimePicker.Value = DateTime.Now.Date.AddDays(1);
+				endDateTimePicker.Value = null;
+			};
+			
+			var lastWeekButton = new Button {Text = "Last week"};
+			lastWeekButton.Click += (sender, args) =>
+			{
+				startDateTimePicker.Value = DateTime.Now - TimeSpan.FromDays(7);
+				endDateTimePicker.Value = null;
 			};
 
 			var allTimeButton = new Button {Text = "All time"};
-			allTimeButton.Click += (sender, args) =>
-			{
-				startDateTimePicker.Value = LogFilters.GuildWars2ReleaseDate;
-				endDateTimePicker.Value = DateTime.Now.Date.AddDays(1);
+			allTimeButton.Click += (sender, args) => {
+				startDateTimePicker.Value = null;
+				endDateTimePicker.Value = null;
 			};
 
 			var advancedFiltersButton = new Button {Text = "Advanced filters"};
@@ -75,7 +81,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 				form.Show();
 			};
 
-			BeginVertical(spacing: new Size(4, 4));
+			BeginVertical(new Padding(0, 0, 0, 4), spacing: new Size(4, 4));
 			{
 				BeginGroup("Result", new Padding(4, 0, 4, 2), spacing: new Size(6, 0));
 				{
@@ -127,6 +133,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 						BeginHorizontal();
 						{
 							Add(allTimeButton, xscale: false);
+							Add(lastWeekButton, xscale: false);
 							Add(lastDayButton, xscale: false);
 							Add(null, xscale: true);
 						}
