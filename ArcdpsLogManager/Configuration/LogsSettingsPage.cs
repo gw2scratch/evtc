@@ -86,7 +86,6 @@ namespace GW2Scratch.ArcdpsLogManager.Configuration
 				{
 					layout.AddRow(minDurationCheckBox);
 					layout.AddRow(durationLabel, minDurationTextBox, null);
-					layout.AddRow(deleteMinDurationLogsCheckbox);
 				}
 				layout.EndGroup();
 			}
