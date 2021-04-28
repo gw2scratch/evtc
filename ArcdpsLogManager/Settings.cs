@@ -29,7 +29,6 @@ namespace GW2Scratch.ArcdpsLogManager
 			public string DpsReportUserToken { get; set; } = string.Empty;
 			public string DpsReportDomain { get; set; } = DpsReportUploader.DefaultDomain.Domain;
 			public int? MinimumLogDurationSeconds { get; set; } = null;
-			public int? DeleteMinLogsDuration { get; set; } = null;
 			public List<string> HiddenLogListColumns { get; set; } = new List<string>() {"Character", "Map ID", "Game Version", "arcdps Version"};
 			public List<string> IgnoredUpdateVersions { get; set; } = new List<string>();
 
@@ -68,7 +67,6 @@ namespace GW2Scratch.ArcdpsLogManager
 			DpsReportUserTokenChanged += (sender, args) => SaveToFile();
 			DpsReportDomainChanged += (sender, args) => SaveToFile();
 			MinimumLogDurationSecondsChanged += (sender, args) => SaveToFile();
-			DeleteMinLogsDurationChanged += (sender, args) => SaveToFile();
 			IgnoredUpdateVersionsChanged += (sender, args) => SaveToFile();
 
 			return StoredSettings.LoadFromFile();
@@ -253,18 +251,6 @@ namespace GW2Scratch.ArcdpsLogManager
 			}
 		}
 
-		public static int? DeleteMinLogsDuration
-		{
-			get => Values.DeleteMinLogsDuration;
-			set {
-				if (Values.DeleteMinLogsDuration != value)
-				{
-					Values.DeleteMinLogsDuration = value;
-					OnDeleteMinLogsDurationChanged();
-				}
-			}
-		}
-
 		public static string DpsReportDomain
 		{
 			get => Values.DpsReportDomain;
@@ -289,7 +275,6 @@ namespace GW2Scratch.ArcdpsLogManager
 		public static event EventHandler<EventArgs> DpsReportUserTokenChanged;
 		public static event EventHandler<EventArgs> DpsReportDomainChanged;
 		public static event EventHandler<EventArgs> MinimumLogDurationSecondsChanged;
-		public static event EventHandler<EventArgs> DeleteMinLogsDurationChanged;
 		public static event EventHandler<EventArgs> IgnoredUpdateVersionsChanged;
 
 		private static void OnLogRootPathsChanged()
@@ -335,10 +320,6 @@ namespace GW2Scratch.ArcdpsLogManager
 		private static void OnMinimumLogDurationSecondsChanged()
 		{
 			MinimumLogDurationSecondsChanged?.Invoke(null, EventArgs.Empty);
-		}
-		private static void OnDeleteMinLogsDurationChanged()
-		{
-			DeleteMinLogsDurationChanged?.Invoke(null, EventArgs.Empty);
 		}
 
 		private static void OnHiddenLogListColumnsChanged()
