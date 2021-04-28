@@ -2,9 +2,9 @@ name: Build and test (.NET Core)
 
 on:
   push:
-    branches: [ master, delete_logs_branch ]
+    branches: [ master ]
   pull_request:
-    branches: [ master, delete_logs_branch ]
+    branches: [ master ]
 
 jobs:
   build:
