@@ -25,8 +25,8 @@ namespace GW2Scratch.ArcdpsLogManager
 	{
 		private FilterCollection<LogData> dataStore;
 
-		private readonly Button confirmDeleteButton = new Button() { Text = "Delete files" };
-		private readonly Button closeWindowButton = new Button() { Text = "Close" };
+		private readonly Button confirmDeleteButton = new Button() { Text = "Delete permanently listed logs" };
+		private readonly Button closeWindowButton = new Button() { Text = "Close list" };
 		private readonly Button removeSelectedButton = new Button() { Text = "Remove selected from list" };
 		private readonly GridView logGrid = new GridView();
 
