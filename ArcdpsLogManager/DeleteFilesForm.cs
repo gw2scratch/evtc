@@ -28,7 +28,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		private readonly Button confirmDeleteButton = new Button() { Text = "Delete files" };
 		private readonly Button closeWindowButton = new Button() { Text = "Close" };
 		private readonly Button removeSelectedButton = new Button() { Text = "Remove selected from list" };
-		private readonly GridView gridView = new GridView();
+		private readonly GridView logGrid = new GridView();
 
 		private const int PlayerIconSize = 20;
 		private const int PlayerIconSpacing = 5;
@@ -147,16 +147,16 @@ namespace GW2Scratch.ArcdpsLogManager
 				Width = 11 * (PlayerIconSize + PlayerIconSpacing) // There are logs with 11 players here and there
 			};
 
-			gridView.RowHeight = Math.Max(gridView.RowHeight, PlayerIconSize + 2);
-			gridView.DataStore = dataStore;
-			gridView.AllowMultipleSelection = true;
-			gridView.Columns.Add(fileNameColumn);
-			gridView.Columns.Add(encounterNameColumn);
-			gridView.Columns.Add(encounterModeColumn);
-			gridView.Columns.Add(encounterResultColumn);
-			gridView.Columns.Add(durationColumn);
-			gridView.Columns.Add(playersColumn);
-			gridView.CellDoubleClick += gridView_CellDoubleClick;
+			logGrid.RowHeight = Math.Max(logGrid.RowHeight, PlayerIconSize + 2);
+			logGrid.DataStore = dataStore;
+			logGrid.AllowMultipleSelection = true;
+			logGrid.Columns.Add(fileNameColumn);
+			logGrid.Columns.Add(encounterNameColumn);
+			logGrid.Columns.Add(encounterModeColumn);
+			logGrid.Columns.Add(encounterResultColumn);
+			logGrid.Columns.Add(durationColumn);
+			logGrid.Columns.Add(playersColumn);
+			logGrid.CellDoubleClick += LogGrid_CellDoubleClick;
 
 			closeWindowButton.Click += (sender, args) => Close();
 			confirmDeleteButton.Click += ConfirmDeleteButtonClicked;
@@ -164,7 +164,7 @@ namespace GW2Scratch.ArcdpsLogManager
 
 			layout.BeginGroup("Files Locations", new Padding(5), new Size(0, 5));
 			{
-				layout.Add(gridView, yscale: true);
+				layout.Add(logGrid, yscale: true);
 				layout.Add(null, yscale: false);
 				layout.BeginVertical();
 				{
@@ -182,7 +182,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			Show();
 		}
 
-		private void gridView_CellDoubleClick(object sender, GridCellMouseEventArgs e)
+		private void LogGrid_CellDoubleClick(object sender, GridCellMouseEventArgs e)
 		{
 			if (e.Item is not LogData log) return;
 			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -199,8 +199,8 @@ namespace GW2Scratch.ArcdpsLogManager
 
 		private void RemoveSelectedButtonClicked(object sender, EventArgs e)
 		{
-			dataStore = new FilterCollection<LogData>(dataStore.Where(log => !gridView.SelectedItems.Contains(log)));
-			gridView.DataStore = dataStore;
+			dataStore = new FilterCollection<LogData>(dataStore.Where(log => !logGrid.SelectedItems.Contains(log)));
+			logGrid.DataStore = dataStore;
 		}
 
 		private void ConfirmDeleteButtonClicked(object sender, EventArgs e)

@@ -45,7 +45,7 @@ namespace GW2Scratch.ArcdpsLogManager.Configuration
 
 			deleteMinDurationLogsCheckbox = new CheckBox 
 			{
-				Text = "Delete filtered logs",
+				Text = "Delete the excluded logs",
 				Checked = Settings.DeleteMinLogsDuration.HasValue,
 				ThreeState = false
 			};
