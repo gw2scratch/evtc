@@ -40,7 +40,7 @@ namespace GW2Scratch.ArcdpsLogManager
 
 			Icon = Resources.GetProgramIcon();
 			Title = "Confirm Deletion - arcdps Log Manager";
-			ClientSize = new Size(800, 500);
+			ClientSize = new Size(750, 500);
 			Resizable = true;
 			Content = layout;
 
