@@ -204,5 +204,86 @@ namespace GW2Scratch.ArcdpsLogManager
 		{
 			return GetImage("ArenaNet/festivals_32px.png");
 		}
+
+		// Fractal Instabilities
+		public static Image GetTinyIconAfflicted()
+		{
+			return GetImage("ArenaNet/fractal_instabilities/afflicted_32px.png");
+		}
+
+		public static Image GetTinyIconBirds()
+		{
+			return GetImage("ArenaNet/fractal_instabilities/birds_32px.png");
+		}
+		public static Image GetTinyIconBoonOverload()
+		{
+			return GetImage("ArenaNet/fractal_instabilities/boon_overload_32px.png");
+		}
+		public static Image GetTinyIconFluxBomb()
+		{
+			return GetImage("ArenaNet/fractal_instabilities/flux_bomb_32px.png");
+		}
+		public static Image GetTinyIconFractalVindicators()
+		{
+			return GetImage("ArenaNet/fractal_instabilities/fractal_vindicators_32px.png");
+		}
+		public static Image GetTinyIconFrailty()
+		{
+			return GetImage("ArenaNet/fractal_instabilities/frailty_32px.png");
+		}
+		public static Image GetTinyIconHamstrung()
+		{
+			return GetImage("ArenaNet/fractal_instabilities/hamstrung_32px.png");
+		}
+		public static Image GetTinyIconLastLaugh()
+		{
+			return GetImage("ArenaNet/fractal_instabilities/last_laugh_32px.png");
+		}
+		public static Image GetTinyIconMistsConvergence()
+		{
+			return GetImage("ArenaNet/fractal_instabilities/mists_convergence_32px.png");
+		}
+		public static Image GetTinyIconNoPainNoGain()
+		{
+			return GetImage("ArenaNet/fractal_instabilities/no_pain_no_gain_32px.png");
+		}
+		public static Image GetTinyIconOutflanked()
+		{
+			return GetImage("ArenaNet/fractal_instabilities/outflanked_32px.png");
+		}
+		public static Image GetTinyIconSlipperySlope()
+		{
+			return GetImage("ArenaNet/fractal_instabilities/slippery_slope_32px.png");
+		}
+		public static Image GetTinyIconSocialAwkwardness()
+		{
+			return GetImage("ArenaNet/fractal_instabilities/social_awkwardness_32px.png");
+		}
+		public static Image GetTinyIconStickTogether()
+		{
+			return GetImage("ArenaNet/fractal_instabilities/stick_together_32px.png");
+		}
+		public static Image GetTinyIconSugarRush()
+		{
+			return GetImage("ArenaNet/fractal_instabilities/sugar_rush_32px.png");
+		}
+		public static Image GetTinyIconToxicSickness()
+		{
+			return GetImage("ArenaNet/fractal_instabilities/toxic_sickness_32px.png");
+		}
+		public static Image GetTinyIconToxicTrail()
+		{
+			return GetImage("ArenaNet/fractal_instabilities/toxic_trail_32px.png");
+		}
+		public static Image GetTinyIconVengeance()
+		{
+			return GetImage("ArenaNet/fractal_instabilities/vengeance_32px.png");
+		}
+		public static Image GetTinyIconWeBleedFire()
+		{
+			return GetImage("ArenaNet/fractal_instabilities/we_bleed_fire_32px.png");
+		}
+
+		// End Fractal Instabilities
 	}
 }
