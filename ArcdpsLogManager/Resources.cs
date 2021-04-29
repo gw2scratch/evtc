@@ -21,7 +21,9 @@ namespace GW2Scratch.ArcdpsLogManager
 
 		public static Icon GetProgramIcon()
 		{
-			return new Icon(1, GetImage("program_icon.png"));
+			//This fixes the program icon not showing up on windows, requires testing on Linux and Mac
+			return new Icon(GetImagePath("program_icon.png"));
+			//return new Icon(1, GetImage("program_icon.png"));
 		}
 
 		public static Image GetTinyIconWarrior()
