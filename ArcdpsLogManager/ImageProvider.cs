@@ -38,11 +38,21 @@ namespace GW2Scratch.ArcdpsLogManager
 		private Lazy<Image> TinyIconFractals { get; } = new Lazy<Image>(Resources.GetTinyIconFractals);
 		private Lazy<Image> TinyIconLog { get; } = new Lazy<Image>(Resources.GetTinyIconGuildRegistrar);
 		private Lazy<Image> TinyIconCommander { get; } = new Lazy<Image>(Resources.GetTinyIconCommander);
+		private Lazy<Image> TinyIconStrike { get; } = new Lazy<Image>(Resources.GetTinyIconStrike);
+		private Lazy<Image> TinyIconTrainingArea { get; } = new Lazy<Image>(Resources.GetTinyIconTrainingArea);
+		private Lazy<Image> TinyIconWorldVersusWorld { get; } = new Lazy<Image>(Resources.GetTinyIconWorldVersusWorld);
+		private Lazy<Image> TinyIconUncategorized { get; } = new Lazy<Image>(Resources.GetTinyIconUncategorized);
+		private Lazy<Image> TinyIconFestival { get; } = new Lazy<Image>(Resources.GetTinyIconFestival);
 
 		public Image GetTinyLogIcon() => TinyIconLog.Value;
 		public Image GetTinyFractalsIcon() => TinyIconFractals.Value;
 		public Image GetTinyRaidIcon() => TinyIconRaid.Value;
 		public Image GetTinyCommanderIcon() => TinyIconCommander.Value;
+		public Image GetTinyStrikeIcon() => TinyIconStrike.Value;
+		public Image GetTinyTrainingAreaIcon() => TinyIconTrainingArea.Value;
+		public Image GetTinyWorldVersusWorldIcon() => TinyIconWorldVersusWorld.Value;
+		public Image GetTinyUncategorizedIcon() => TinyIconUncategorized.Value;
+		public Image GetTinyFestivalIcon() => TinyIconFestival.Value;
 
 		public Image GetTinyProfessionIcon(Profession profession)
 		{

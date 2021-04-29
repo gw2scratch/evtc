@@ -165,7 +165,26 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			{
 				return imageProvider.GetTinyFractalsIcon();
 			}
-
+			if (category == EncounterCategory.StrikeMission)
+			{
+				return imageProvider.GetTinyStrikeIcon();
+			}
+			if (category == EncounterCategory.SpecialForcesTrainingArea)
+			{
+				return imageProvider.GetTinyTrainingAreaIcon();
+			}
+			if (category == EncounterCategory.WorldVersusWorld)
+			{
+				return imageProvider.GetTinyWorldVersusWorldIcon();
+			}
+			if (category == EncounterCategory.Other)
+			{
+				return imageProvider.GetTinyUncategorizedIcon();
+			}
+			if (category == EncounterCategory.Festival)
+			{
+				return imageProvider.GetTinyFestivalIcon();
+			}
 			return null;
 		}
 	}

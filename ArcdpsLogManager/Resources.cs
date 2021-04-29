@@ -180,5 +180,29 @@ namespace GW2Scratch.ArcdpsLogManager
 		{
 			return GetImage("ArenaNet/commander_tag_red_32px.png");
 		}
+
+		public static Image GetTinyIconStrike()
+		{
+			return GetImage("ArenaNet/strike_icon_32px.png");
+		}
+
+		public static Image GetTinyIconTrainingArea()
+		{
+			return GetImage("ArenaNet/training_area_32px.png");
+		}
+
+		public static Image GetTinyIconWorldVersusWorld()
+		{
+			return GetImage("ArenaNet/world_vs_world_32px.png");
+		}
+
+		public static Image GetTinyIconUncategorized()
+		{
+			return GetImage("ArenaNet/uncategorized_32px.png");
+		}
+		public static Image GetTinyIconFestival()
+		{
+			return GetImage("ArenaNet/festivals_32px.png");
+		}
 	}
 }
