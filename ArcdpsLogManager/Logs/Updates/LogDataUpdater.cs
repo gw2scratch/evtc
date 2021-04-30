@@ -49,6 +49,9 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Updates
 					&& log.EncounterResult == EncounterResult.Failure
 					&& log.HealthPercentage > 0.998,
 				"Twisted Castle logs may have been incorrectly identified as Xera."),
+			new LogUpdate(log => log.ParsingVersion < new Version(1, 0, 3, 3)
+					&& log.Encounter == Encounter.AiKeeperOfThePeak,
+				"Ai, Keeper of the Peak is now three different encounters (by phases) and successful if group resets after first phase."),
 			// When adding a new update, you need to increase the revision (last value) of the version in the .csproj file
 			// unless the version changes more significantly, in that case it can be reset to 0.
 		};

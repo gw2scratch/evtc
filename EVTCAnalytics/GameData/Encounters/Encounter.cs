@@ -1,3 +1,5 @@
+using System;
+
 namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 {
 	public enum Encounter
@@ -68,7 +70,12 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 		Arkk = 10013,
 
 		// Fractals - Sunqua Peak
+		[Obsolete("This was one shared encounter for all possible included phases. " +
+		          "Use the values for individual encounter contents instead.")]
 		AiKeeperOfThePeak = 10021,
+		AiKeeperOfThePeakDayOnly = 10022,
+		AiKeeperOfThePeakNightOnly = 10023,
+		AiKeeperOfThePeakDayAndNight = 10024,
 
 		// Festivals - Wintersday
 		Freezie = 20001,
