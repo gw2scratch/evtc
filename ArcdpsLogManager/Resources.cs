@@ -90,7 +90,7 @@ namespace GW2Scratch.ArcdpsLogManager
 
 		//raid boss and fractal boss icons
 
-		public static Image GetGenericRaidWingIcon() => GetImage("ArenaNet/raid_icon_32px.png");
+		public static Image GetGenericRaidWingIcon() => GetImage("ArenaNet/raid_wing_32px.png");
 
 	}
 }
