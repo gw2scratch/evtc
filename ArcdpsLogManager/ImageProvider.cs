@@ -1,6 +1,7 @@
 using System;
 using Eto.Drawing;
 using GW2Scratch.ArcdpsLogManager.Logs;
+using GW2Scratch.EVTCAnalytics.GameData.Encounters;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
 
 namespace GW2Scratch.ArcdpsLogManager
@@ -43,6 +44,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		private Lazy<Image> TinyIconWorldVersusWorld { get; } = new Lazy<Image>(Resources.GetTinyIconWorldVersusWorld);
 		private Lazy<Image> TinyIconUncategorized { get; } = new Lazy<Image>(Resources.GetTinyIconUncategorized);
 		private Lazy<Image> TinyIconFestival { get; } = new Lazy<Image>(Resources.GetTinyIconFestival);
+		private Lazy<Image> GenericRaidWing { get; } = new Lazy<Image>(Resources.GetGenericRaidWingIcon);
 
 		public Image GetTinyLogIcon() => TinyIconLog.Value;
 		public Image GetTinyFractalsIcon() => TinyIconFractals.Value;
@@ -56,74 +58,43 @@ namespace GW2Scratch.ArcdpsLogManager
 
 		public Image GetTinyProfessionIcon(Profession profession)
 		{
-			switch (profession)
-			{
-				case Profession.Warrior:
-					return TinyIconWarrior.Value;
-				case Profession.Guardian:
-					return TinyIconGuardian.Value;
-				case Profession.Revenant:
-					return TinyIconRevenant.Value;
-				case Profession.Ranger:
-					return TinyIconRanger.Value;
-				case Profession.Thief:
-					return TinyIconThief.Value;
-				case Profession.Engineer:
-					return TinyIconEngineer.Value;
-				case Profession.Necromancer:
-					return TinyIconNecromancer.Value;
-				case Profession.Elementalist:
-					return TinyIconElementalist.Value;
-				case Profession.Mesmer:
-					return TinyIconMesmer.Value;
-				default:
-					throw new ArgumentOutOfRangeException(nameof(profession));
-			}
+			return profession switch {
+				Profession.Warrior => TinyIconWarrior.Value,
+				Profession.Guardian => TinyIconGuardian.Value,
+				Profession.Revenant => TinyIconRevenant.Value,
+				Profession.Ranger => TinyIconRanger.Value,
+				Profession.Thief => TinyIconThief.Value,
+				Profession.Engineer => TinyIconEngineer.Value,
+				Profession.Necromancer => TinyIconNecromancer.Value,
+				Profession.Elementalist => TinyIconElementalist.Value,
+				Profession.Mesmer => TinyIconMesmer.Value,
+				_ => throw new ArgumentOutOfRangeException(nameof(profession)),
+			};
 		}
 
 		public Image GetTinyProfessionIcon(EliteSpecialization specialization)
 		{
-			switch (specialization)
-			{
-				case EliteSpecialization.Berserker:
-					return TinyIconBerserker.Value;
-				case EliteSpecialization.Spellbreaker:
-					return TinyIconSpellbreaker.Value;
-				case EliteSpecialization.Dragonhunter:
-					return TinyIconDragonhunter.Value;
-				case EliteSpecialization.Firebrand:
-					return TinyIconFirebrand.Value;
-				case EliteSpecialization.Herald:
-					return TinyIconHerald.Value;
-				case EliteSpecialization.Renegade:
-					return TinyIconRenegade.Value;
-				case EliteSpecialization.Druid:
-					return TinyIconDruid.Value;
-				case EliteSpecialization.Soulbeast:
-					return TinyIconSoulbeast.Value;
-				case EliteSpecialization.Daredevil:
-					return TinyIconDaredevil.Value;
-				case EliteSpecialization.Deadeye:
-					return TinyIconDeadeye.Value;
-				case EliteSpecialization.Scrapper:
-					return TinyIconScrapper.Value;
-				case EliteSpecialization.Holosmith:
-					return TinyIconHolosmith.Value;
-				case EliteSpecialization.Reaper:
-					return TinyIconReaper.Value;
-				case EliteSpecialization.Scourge:
-					return TinyIconScourge.Value;
-				case EliteSpecialization.Tempest:
-					return TinyIconTempest.Value;
-				case EliteSpecialization.Weaver:
-					return TinyIconWeaver.Value;
-				case EliteSpecialization.Chronomancer:
-					return TinyIconChronomancer.Value;
-				case EliteSpecialization.Mirage:
-					return TinyIconMirage.Value;
-				default:
-					throw new ArgumentOutOfRangeException(nameof(specialization));
-			}
+			return specialization switch {
+				EliteSpecialization.Berserker => TinyIconBerserker.Value,
+				EliteSpecialization.Spellbreaker => TinyIconSpellbreaker.Value,
+				EliteSpecialization.Dragonhunter => TinyIconDragonhunter.Value,
+				EliteSpecialization.Firebrand => TinyIconFirebrand.Value,
+				EliteSpecialization.Herald => TinyIconHerald.Value,
+				EliteSpecialization.Renegade => TinyIconRenegade.Value,
+				EliteSpecialization.Druid => TinyIconDruid.Value,
+				EliteSpecialization.Soulbeast => TinyIconSoulbeast.Value,
+				EliteSpecialization.Daredevil => TinyIconDaredevil.Value,
+				EliteSpecialization.Deadeye => TinyIconDeadeye.Value,
+				EliteSpecialization.Scrapper => TinyIconScrapper.Value,
+				EliteSpecialization.Holosmith => TinyIconHolosmith.Value,
+				EliteSpecialization.Reaper => TinyIconReaper.Value,
+				EliteSpecialization.Scourge => TinyIconScourge.Value,
+				EliteSpecialization.Tempest => TinyIconTempest.Value,
+				EliteSpecialization.Weaver => TinyIconWeaver.Value,
+				EliteSpecialization.Chronomancer => TinyIconChronomancer.Value,
+				EliteSpecialization.Mirage => TinyIconMirage.Value,
+				_ => throw new ArgumentOutOfRangeException(nameof(specialization)),
+			};
 		}
 
 		public Image GetTinyProfessionIcon(LogPlayer player)
@@ -134,6 +105,64 @@ namespace GW2Scratch.ArcdpsLogManager
 			}
 
 			return GetTinyProfessionIcon(player.EliteSpecialization);
+		}
+
+		public Image GetTinyRaidBossIcon(Encounter encounter)
+		{
+			return encounter switch {
+				Encounter.Other => throw new NotImplementedException(),
+				Encounter.ValeGuardian => throw new NotImplementedException(),
+				Encounter.Gorseval => throw new NotImplementedException(),
+				Encounter.Sabetha => throw new NotImplementedException(),
+				Encounter.Slothasor => throw new NotImplementedException(),
+				Encounter.BanditTrio => throw new NotImplementedException(),
+				Encounter.Matthias => throw new NotImplementedException(),
+				Encounter.Escort => throw new NotImplementedException(),
+				Encounter.KeepConstruct => throw new NotImplementedException(),
+				Encounter.TwistedCastle => throw new NotImplementedException(),
+				Encounter.Xera => throw new NotImplementedException(),
+				Encounter.Cairn => throw new NotImplementedException(),
+				Encounter.MursaatOverseer => throw new NotImplementedException(),
+				Encounter.Samarog => throw new NotImplementedException(),
+				Encounter.Deimos => throw new NotImplementedException(),
+				Encounter.SoullessHorror => throw new NotImplementedException(),
+				Encounter.RiverOfSouls => throw new NotImplementedException(),
+				Encounter.BrokenKing => throw new NotImplementedException(),
+				Encounter.EaterOfSouls => throw new NotImplementedException(),
+				Encounter.Eyes => throw new NotImplementedException(),
+				Encounter.Dhuum => throw new NotImplementedException(),
+				Encounter.ConjuredAmalgamate => throw new NotImplementedException(),
+				Encounter.TwinLargos => throw new NotImplementedException(),
+				Encounter.Qadim => throw new NotImplementedException(),
+				Encounter.Adina => throw new NotImplementedException(),
+				Encounter.Sabir => throw new NotImplementedException(),
+				Encounter.QadimThePeerless => throw new NotImplementedException(),
+				Encounter.MAMA => throw new NotImplementedException(),
+				Encounter.SiaxTheCorrupted => throw new NotImplementedException(),
+				Encounter.EnsolyssOfTheEndlessTorment => throw new NotImplementedException(),
+				Encounter.Skorvald => throw new NotImplementedException(),
+				Encounter.Artsariiv => throw new NotImplementedException(),
+				Encounter.Arkk => throw new NotImplementedException(),
+				Encounter.AiKeeperOfThePeak => throw new NotImplementedException(),
+				Encounter.Freezie => throw new NotImplementedException(),
+				Encounter.StandardKittyGolem => throw new NotImplementedException(),
+				Encounter.MediumKittyGolem => throw new NotImplementedException(),
+				Encounter.LargeKittyGolem => throw new NotImplementedException(),
+				Encounter.MassiveKittyGolem => throw new NotImplementedException(),
+				Encounter.ShiverpeaksPass => throw new NotImplementedException(),
+				Encounter.VoiceAndClawOfTheFallen => throw new NotImplementedException(),
+				Encounter.FraenirOfJormag => throw new NotImplementedException(),
+				Encounter.Boneskinner => throw new NotImplementedException(),
+				Encounter.WhisperOfJormag => throw new NotImplementedException(),
+				Encounter.VariniaStormsounder => throw new NotImplementedException(),
+				Encounter.WorldVersusWorld => throw new NotImplementedException(),
+				_ => throw new NotImplementedException(),
+			};
+		}
+
+		public Image GetRaidWingIcon()
+		{
+			return GenericRaidWing.Value;
 		}
 	}
 }
