@@ -11,8 +11,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Eto.Drawing;
 using Eto.Forms;
+using GW2Scratch.ArcdpsLogManager.Dialogs;
 using GW2Scratch.ArcdpsLogManager.Logs;
 using GW2Scratch.ArcdpsLogManager.Logs.Naming;
+using GW2Scratch.EVTCAnalytics.GameData.Encounters;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
 
@@ -69,17 +71,12 @@ namespace GW2Scratch.ArcdpsLogManager
 				{
 					Binding = new DelegateBinding<LogData, string>(data =>
 					{
-						switch (data.EncounterMode)
-						{
-							case EncounterMode.Challenge:
-								return "CM";
-							case EncounterMode.Normal:
-								return "";
-							case EncounterMode.Unknown:
-								return "?";
-							default:
-								throw new ArgumentOutOfRangeException();
-						}
+						return data.EncounterMode switch {
+							EncounterMode.Challenge => "CM",
+							EncounterMode.Normal => "",
+							EncounterMode.Unknown => "?",
+							_ => throw new ArgumentOutOfRangeException(),
+						};
 					})
 				}
 			};
@@ -160,8 +157,7 @@ namespace GW2Scratch.ArcdpsLogManager
 
 			closeWindowButton.Click += (sender, args) => Close();
 			confirmDeleteButton.Click += ConfirmDeleteButtonClicked;
-			removeSelectedButton.Click += RemoveSelectedButtonClicked;
-
+			removeSelectedButton.Click += (_, _) => RemoveItems(logGrid.SelectedItems);
 			layout.BeginGroup("Files Locations", new Padding(5), new Size(0, 5));
 			{
 				layout.Add(logGrid, yscale: true);
@@ -197,25 +193,53 @@ namespace GW2Scratch.ArcdpsLogManager
 			Process.Start(processInfo);
 		}
 
-		private void RemoveSelectedButtonClicked(object sender, EventArgs e)
-		{
-			dataStore = new FilterCollection<LogData>(dataStore.Where(log => !logGrid.SelectedItems.Contains(log)));
-			logGrid.DataStore = dataStore;
-		}
 
 		private void ConfirmDeleteButtonClicked(object sender, EventArgs e)
 		{
-			DeleteFiles(dataStore.Select(log => log.FileName));
+			var unreliablelogs = FindUnreliableLogs();
+			if(unreliablelogs.Count() > 0)
+			{
+				UnreliableLogsFoundDialog dialog = new UnreliableLogsFoundDialog(unreliablelogs);
+				dialog.ConfirmButton.Click += (_, _) => DeleteLogsAndClose(dataStore);
+				dialog.RemoveUnreliableLogsButton.Click += (_, _) => RemoveItems(unreliablelogs);
+				dialog.ShowModal();
+			}
+			else
+			{
+				DeleteLogsAndClose(dataStore);
+			}
+		}
+
+		private void RemoveItems(IEnumerable<object> logs)
+		{
+			dataStore = new FilterCollection<LogData>(dataStore.Where(log => !logs.Contains(log)));
+			logGrid.DataStore = dataStore;
+		}
+
+		private IEnumerable<LogData> FindUnreliableLogs()
+		{
+			return dataStore.Where(log =>
+							log.EncounterResult != EncounterResult.Success &&
+							(
+								log.Encounter == Encounter.Arkk ||
+								log.Encounter == Encounter.Artsariiv ||
+								log.Encounter == Encounter.BanditTrio
+							)
+						);
+		}
+
+		private void DeleteLogsAndClose(IEnumerable<LogData> logs)
+		{
+			DeleteLogs(logs);
 			if (Application.Instance.MainForm is ManagerForm mainform) mainform.ReloadLogs();
 			Close();
 		}
 
-		private void DeleteFiles(IEnumerable<string> filesToDelete)
+		private void DeleteLogs(IEnumerable<LogData> logs)
 		{
-			foreach (var file in filesToDelete)
+			foreach (var log in logs)
 			{
-				// File.Delete doesnt throw an Error if the file doesnt exist
-				File.Delete(file);
+				File.Delete(log.FileName);
 			}
 		}
 	}
