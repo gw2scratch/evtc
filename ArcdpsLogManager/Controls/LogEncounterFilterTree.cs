@@ -34,6 +34,34 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			}
 		}
 
+		/// <summary>
+		/// Encounters hidden by default unless there is at least one log with this encounter.
+		/// </summary>
+		private IReadOnlyList<Encounter> HiddenEncounters { get; } = new[]
+		{
+			// An obsolete Encounter type, replaced by specialized ones.
+			Encounter.AiKeeperOfThePeak,
+			// An encounter that is not logged by default.
+			Encounter.VariniaStormsounder,
+			// An encounter that is not logged by default and has no proper support.
+			Encounter.Escort,
+			// The only kitty golem we show by default is the standard one.
+			Encounter.MediumKittyGolem,
+			Encounter.LargeKittyGolem,
+			Encounter.MassiveKittyGolem,
+		};
+
+		/// <summary>
+		/// Encounter categories hidden by default unless there is at least one log in the category.
+		/// </summary>
+		private IReadOnlyList<EncounterCategory> HiddenCategories { get; } = new[]
+		{
+			// An obscure category which may be obsoleted in the future. May be confusing to users.
+			EncounterCategory.Festival,
+			// No reason showing this if there is nothing to select inside.
+			EncounterCategory.Other
+		};
+
 		private readonly ImageProvider imageProvider;
 		private LogFilters Filters { get; }
 
@@ -153,8 +181,49 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				}
 			}
 
+			void PruneEmptyHiddenItems(GroupFilterTreeItem item)
+			{
+				// Removes items that have no logs associated with them and are undesirable for some reason.
+
+				var toRemove = new List<GroupFilterTreeItem>();
+
+				foreach (var child in item.Children)
+				{
+					var groupTreeItem = (GroupFilterTreeItem) child;
+					bool removed = false;
+
+					if (groupTreeItem.LogGroup is EncounterLogGroup encounterLogGroup)
+					{
+						if (HiddenEncounters.Contains(encounterLogGroup.Encounter) && groupTreeItem.LogCount == 0)
+						{
+							toRemove.Add(groupTreeItem);
+							removed = true;
+						}
+					}
+					else if (groupTreeItem.LogGroup is CategoryLogGroup categoryLogGroup)
+					{
+						if (HiddenCategories.Contains(categoryLogGroup.Category) && groupTreeItem.LogCount == 0)
+						{
+							toRemove.Add(groupTreeItem);
+							removed = true;
+						}
+					}
+
+					if (!removed)
+					{
+						PruneEmptyHiddenItems(groupTreeItem);
+					}
+				}
+
+				foreach (var childToRemove in toRemove)
+				{
+					item.Children.Remove(childToRemove);
+				}
+			}
+
 			UpdateIcons(rootItem);
 			UpdateCounts(rootItem);
+			PruneEmptyHiddenItems(rootItem);
 
 			DataStore = new TreeGridItemCollection {rootItem};
 		}
