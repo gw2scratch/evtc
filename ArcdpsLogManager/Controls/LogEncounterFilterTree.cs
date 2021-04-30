@@ -161,31 +161,16 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 
 		private Image GetCategoryIcon(EncounterCategory category)
 		{
-			if (category == EncounterCategory.Fractal)
+			return category switch 
 			{
-				return imageProvider.GetTinyFractalsIcon();
-			}
-			if (category == EncounterCategory.StrikeMission)
-			{
-				return imageProvider.GetTinyStrikeIcon();
-			}
-			if (category == EncounterCategory.SpecialForcesTrainingArea)
-			{
-				return imageProvider.GetTinyTrainingAreaIcon();
-			}
-			if (category == EncounterCategory.WorldVersusWorld)
-			{
-				return imageProvider.GetTinyWorldVersusWorldIcon();
-			}
-			if (category == EncounterCategory.Other)
-			{
-				return imageProvider.GetTinyUncategorizedIcon();
-			}
-			if (category == EncounterCategory.Festival)
-			{
-				return imageProvider.GetTinyFestivalIcon();
-			}
-			return null;
+				EncounterCategory.Other => imageProvider.GetTinyUncategorizedIcon(),
+				EncounterCategory.WorldVersusWorld => imageProvider.GetTinyWorldVersusWorldIcon(),
+				EncounterCategory.Festival => imageProvider.GetTinyFestivalIcon(),
+				EncounterCategory.Fractal => imageProvider.GetTinyFractalsIcon(),
+				EncounterCategory.StrikeMission => imageProvider.GetTinyStrikeIcon(),
+				EncounterCategory.SpecialForcesTrainingArea => imageProvider.GetTinyTrainingAreaIcon(),
+				_ => null
+			};
 		}
 	}
 }
