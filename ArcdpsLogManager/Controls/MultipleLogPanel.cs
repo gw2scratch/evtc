@@ -32,7 +32,6 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 		private readonly DynamicTable dpsReportUploadFailedRow;
 		private readonly DynamicTable dpsReportProcessingFailedRow;
 		private readonly TagControl tagControl;
-		private readonly Button deleteButton = new Button() { Text = "Delete" };
 
 		public IEnumerable<LogData> LogData
 		{
@@ -169,7 +168,6 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			};
 
 			dpsReportCancelButton.Click += (sender, args) => { uploadProcessor.CancelDpsReportEIUpload(logData); };
-			deleteButton.Click += (sender, args) => new DeleteFilesForm(LogData);
 
 			DynamicTable debugSection;
 
@@ -264,11 +262,6 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 						EndHorizontal();
 					}
 					EndVertical();
-				}
-				EndGroup();
-				BeginGroup("File Management");
-				{
-					AddRow(deleteButton);
 				}
 				EndGroup();
 			}

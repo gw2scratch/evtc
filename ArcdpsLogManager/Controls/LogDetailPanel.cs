@@ -34,7 +34,6 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 		private readonly DynamicTable groupCompositionSection;
 		private readonly DynamicTable failedProcessingSection;
 		private readonly TextArea exceptionTextArea = new TextArea {ReadOnly = true};
-		private readonly Button deleteButton = new Button() { Text = "Delete" };
 
 		public LogData LogData
 		{
@@ -131,8 +130,6 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			DynamicGroup debugSection;
 			var debugButton = new Button {Text = "Debug data"};
 			var reparseButton = new Button {Text = "Reprocess"};
-
-			deleteButton.Click += (sender, args) => new DeleteFilesForm(new LogData[] { LogData });
 
 			tagControl.TagAdded += (sender, args) =>
 			{
@@ -232,7 +229,6 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			EndVertical();
 			BeginVertical(spacing: new Size(10, 0));
 			{
-				Add(deleteButton);
 				Add(null, true);
 				BeginHorizontal();
 				{
