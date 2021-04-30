@@ -16,6 +16,37 @@
     <Version>1.0.3.2</Version>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Images\ArenaNet\commander_tag_red.png" />
+    <None Remove="Images\ArenaNet\commander_tag_red_32px.png" />
+    <None Remove="Images\ArenaNet\festivals_32px.png" />
+    <None Remove="Images\ArenaNet\fractal_instabilities\afflicted_32px.png" />
+    <None Remove="Images\ArenaNet\fractal_instabilities\birds_32px.png" />
+    <None Remove="Images\ArenaNet\fractal_instabilities\boon_overload_32px.png" />
+    <None Remove="Images\ArenaNet\fractal_instabilities\flux_bomb_32px.png" />
+    <None Remove="Images\ArenaNet\fractal_instabilities\fractal_vindicators_32px.png" />
+    <None Remove="Images\ArenaNet\fractal_instabilities\frailty_32px.png" />
+    <None Remove="Images\ArenaNet\fractal_instabilities\hamstrung_32px.png" />
+    <None Remove="Images\ArenaNet\fractal_instabilities\last_laugh_32px.png" />
+    <None Remove="Images\ArenaNet\fractal_instabilities\mists_convergence_32px.png" />
+    <None Remove="Images\ArenaNet\fractal_instabilities\no_pain_no_gain_32px.png" />
+    <None Remove="Images\ArenaNet\fractal_instabilities\outflanked_32px.png" />
+    <None Remove="Images\ArenaNet\fractal_instabilities\slippery_slope_32px.png" />
+    <None Remove="Images\ArenaNet\fractal_instabilities\social_awkwardness_32px.png" />
+    <None Remove="Images\ArenaNet\fractal_instabilities\stick_together_32px.png" />
+    <None Remove="Images\ArenaNet\fractal_instabilities\sugar_rush_32px.png" />
+    <None Remove="Images\ArenaNet\fractal_instabilities\toxic_sickness_32px.png" />
+    <None Remove="Images\ArenaNet\fractal_instabilities\toxic_trail_32px.png" />
+    <None Remove="Images\ArenaNet\fractal_instabilities\vengeance_32px.png" />
+    <None Remove="Images\ArenaNet\fractal_instabilities\we_bleed_fire_32px.png" />
+    <None Remove="Images\ArenaNet\freezie_icon_32px.png" />
+    <None Remove="Images\ArenaNet\LICENSE.txt" />
+    <None Remove="Images\ArenaNet\strike_icon_32px.png" />
+    <None Remove="Images\ArenaNet\training_area_32px.png" />
+    <None Remove="Images\ArenaNet\uncategorized_32px.png" />
+    <None Remove="Images\ArenaNet\world_vs_world_321px.png" />
+    <None Remove="Images\ArenaNet\world_vs_world_32px.png" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Eto.Forms" Version="2.5.11-ci-20210422.772645364" />
     <PackageReference Include="Gw2Sharp" Version="0.6.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
@@ -27,13 +58,100 @@
     <ProjectReference Include="..\EVTCInspector\EVTCInspector.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Images\ArenaNet\commander_tag_red.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\commander_tag_red_32px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\festivals_32px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Images\ArenaNet\fractals_icon_32px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\fractal_instabilities\afflicted_32px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\fractal_instabilities\birds_32px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\fractal_instabilities\boon_overload_32px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\fractal_instabilities\flux_bomb_32px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\fractal_instabilities\fractal_vindicators_32px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\fractal_instabilities\frailty_32px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\fractal_instabilities\hamstrung_32px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\fractal_instabilities\last_laugh_32px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\fractal_instabilities\mists_convergence_32px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\fractal_instabilities\no_pain_no_gain_32px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\fractal_instabilities\outflanked_32px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\fractal_instabilities\slippery_slope_32px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\fractal_instabilities\social_awkwardness_32px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\fractal_instabilities\stick_together_32px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\fractal_instabilities\sugar_rush_32px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\fractal_instabilities\toxic_sickness_32px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\fractal_instabilities\toxic_trail_32px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\fractal_instabilities\vengeance_32px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\fractal_instabilities\we_bleed_fire_32px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\freezie_icon_32px.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\ArenaNet\guild_registrar_icon_26px.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Images\ArenaNet\LICENSE.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Images\ArenaNet\raid_icon_32px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\strike_icon_32px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\training_area_32px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\uncategorized_32px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\world_vs_world_321px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\world_vs_world_32px.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\program_icon.png">
@@ -120,10 +238,5 @@
     <Content Include="Images\Tango\Weaver_tango_icon_20px.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <None Update="Images\ArenaNet\commander_tag_red_32px.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 </Project>
