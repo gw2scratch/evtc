@@ -20,7 +20,7 @@ namespace GW2Scratch.ArcdpsLogManager.Dialogs
 			var layout = new DynamicLayout();
 			Content = layout;
 
-			ConfirmButton = new Button() { Text = "Confirm" };
+			ConfirmButton = new Button() { Text = "Confirm Deletion" };
 			ConfirmButton.Click += Button_Clicked;
 			CancelButton = new Button() { Text = "Cancel" };
 			CancelButton.Click += Button_Clicked;
@@ -35,7 +35,12 @@ namespace GW2Scratch.ArcdpsLogManager.Dialogs
 				}
 			});
 
-
+			layout.BeginGroup("WARNING", new Padding(5), new Size(0, 5));
+			{
+				layout.AddRow("Artsariiv, Arkk and Bandit Trio (Narella) have a rare unreliable success detection due to the way the encounter ends.");
+				layout.AddRow("These logs listed may display a failure but might be successful. Confirm Deletion?");
+			}
+			layout.EndGroup();
 			layout.BeginGroup("Files Locations", new Padding(5), new Size(0, 5));
 			{
 				layout.Add(unreliableLogGridView, yscale: true);
@@ -44,8 +49,8 @@ namespace GW2Scratch.ArcdpsLogManager.Dialogs
 				{
 					layout.BeginHorizontal();
 					{
-						layout.Add(ConfirmButton, xscale: true);
 						layout.Add(RemoveUnreliableLogsButton, xscale: true);
+						layout.Add(ConfirmButton, xscale: true);						
 						layout.Add(CancelButton, xscale: true);
 					}
 					layout.EndHorizontal();
