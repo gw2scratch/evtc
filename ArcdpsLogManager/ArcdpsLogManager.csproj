@@ -240,6 +240,18 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <None Update="Images\ArenaNet\Bosses\freezie_icon_32px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\ArenaNet\Bosses\large_kitty_golem_32px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\ArenaNet\Bosses\medium_kitty_golem_32px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\ArenaNet\Bosses\standard_kitty_golem_32px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Images\ArenaNet\raid_wing_32px.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Reflection;
 using Eto.Drawing;
@@ -92,5 +93,14 @@ namespace GW2Scratch.ArcdpsLogManager
 
 		public static Image GetGenericRaidWingIcon() => GetImage("ArenaNet/raid_wing_32px.png");
 
+		public static Image GetFreezieIcon() => GetBossImage("freezie_icon_32px");
+		public static Image GetStandardKittyGolemIcon() => GetBossImage("standard_kitty_golem_32px");
+		public static Image GetMediumKittyGolemIcon() => GetBossImage("medium_kitty_golem_32px");
+		public static Image GetLargeKittyGolemIcon() => GetBossImage("large_kitty_golem_32px");
+
+		private static Image GetBossImage(string iconName)
+		{
+			return GetImage($"ArenaNet/Bosses/{iconName}.png");
+		}
 	}
 }

@@ -45,6 +45,10 @@ namespace GW2Scratch.ArcdpsLogManager
 		private Lazy<Image> TinyIconUncategorized { get; } = new Lazy<Image>(Resources.GetTinyIconUncategorized);
 		private Lazy<Image> TinyIconFestival { get; } = new Lazy<Image>(Resources.GetTinyIconFestival);
 		private Lazy<Image> GenericRaidWing { get; } = new Lazy<Image>(Resources.GetGenericRaidWingIcon);
+		private Lazy<Image> FreezieIcon { get; } = new Lazy<Image>(Resources.GetFreezieIcon);
+		private Lazy<Image> StandardKittyGolemIcon { get; } = new Lazy<Image>(Resources.GetStandardKittyGolemIcon);
+		private Lazy<Image> MediumKittyGolemIcon { get; } = new Lazy<Image>(Resources.GetMediumKittyGolemIcon);
+		private Lazy<Image> LargeKittyGolemIcon { get; } = new Lazy<Image>(Resources.GetLargeKittyGolemIcon);
 
 		public Image GetTinyLogIcon() => TinyIconLog.Value;
 		public Image GetTinyFractalsIcon() => TinyIconFractals.Value;
@@ -110,53 +114,11 @@ namespace GW2Scratch.ArcdpsLogManager
 		public Image GetTinyRaidBossIcon(Encounter encounter)
 		{
 			return encounter switch {
-				Encounter.Other => throw new NotImplementedException(),
-				Encounter.ValeGuardian => throw new NotImplementedException(),
-				Encounter.Gorseval => throw new NotImplementedException(),
-				Encounter.Sabetha => throw new NotImplementedException(),
-				Encounter.Slothasor => throw new NotImplementedException(),
-				Encounter.BanditTrio => throw new NotImplementedException(),
-				Encounter.Matthias => throw new NotImplementedException(),
-				Encounter.Escort => throw new NotImplementedException(),
-				Encounter.KeepConstruct => throw new NotImplementedException(),
-				Encounter.TwistedCastle => throw new NotImplementedException(),
-				Encounter.Xera => throw new NotImplementedException(),
-				Encounter.Cairn => throw new NotImplementedException(),
-				Encounter.MursaatOverseer => throw new NotImplementedException(),
-				Encounter.Samarog => throw new NotImplementedException(),
-				Encounter.Deimos => throw new NotImplementedException(),
-				Encounter.SoullessHorror => throw new NotImplementedException(),
-				Encounter.RiverOfSouls => throw new NotImplementedException(),
-				Encounter.BrokenKing => throw new NotImplementedException(),
-				Encounter.EaterOfSouls => throw new NotImplementedException(),
-				Encounter.Eyes => throw new NotImplementedException(),
-				Encounter.Dhuum => throw new NotImplementedException(),
-				Encounter.ConjuredAmalgamate => throw new NotImplementedException(),
-				Encounter.TwinLargos => throw new NotImplementedException(),
-				Encounter.Qadim => throw new NotImplementedException(),
-				Encounter.Adina => throw new NotImplementedException(),
-				Encounter.Sabir => throw new NotImplementedException(),
-				Encounter.QadimThePeerless => throw new NotImplementedException(),
-				Encounter.MAMA => throw new NotImplementedException(),
-				Encounter.SiaxTheCorrupted => throw new NotImplementedException(),
-				Encounter.EnsolyssOfTheEndlessTorment => throw new NotImplementedException(),
-				Encounter.Skorvald => throw new NotImplementedException(),
-				Encounter.Artsariiv => throw new NotImplementedException(),
-				Encounter.Arkk => throw new NotImplementedException(),
-				Encounter.AiKeeperOfThePeak => throw new NotImplementedException(),
-				Encounter.Freezie => throw new NotImplementedException(),
-				Encounter.StandardKittyGolem => throw new NotImplementedException(),
-				Encounter.MediumKittyGolem => throw new NotImplementedException(),
-				Encounter.LargeKittyGolem => throw new NotImplementedException(),
-				Encounter.MassiveKittyGolem => throw new NotImplementedException(),
-				Encounter.ShiverpeaksPass => throw new NotImplementedException(),
-				Encounter.VoiceAndClawOfTheFallen => throw new NotImplementedException(),
-				Encounter.FraenirOfJormag => throw new NotImplementedException(),
-				Encounter.Boneskinner => throw new NotImplementedException(),
-				Encounter.WhisperOfJormag => throw new NotImplementedException(),
-				Encounter.VariniaStormsounder => throw new NotImplementedException(),
-				Encounter.WorldVersusWorld => throw new NotImplementedException(),
-				_ => throw new NotImplementedException(),
+				Encounter.Freezie => FreezieIcon.Value,
+				Encounter.StandardKittyGolem => StandardKittyGolemIcon.Value,
+				Encounter.MediumKittyGolem => MediumKittyGolemIcon.Value,
+				Encounter.LargeKittyGolem => LargeKittyGolemIcon.Value,
+				_ => null
 			};
 		}
 

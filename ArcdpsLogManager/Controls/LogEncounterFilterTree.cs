@@ -134,6 +134,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 					RootLogGroup _ => imageProvider.GetTinyLogIcon(),
 					RaidLogGroup _ => imageProvider.GetTinyRaidIcon(),
 					CategoryLogGroup categoryGroup => GetCategoryIcon(categoryGroup.Category),
+					EncounterLogGroup encounterGroup => GetBossIcon(encounterGroup.Encounter),
 					_ => item.Icon
 				};
 
@@ -177,6 +178,11 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				EncounterCategory.RaidWing7 => imageProvider.GetRaidWingIcon(),
 				_ => null
 			};
+		}
+
+		private Image GetBossIcon(Encounter encounter)
+		{
+			return imageProvider.GetTinyRaidBossIcon(encounter);
 		}
 	}
 }
