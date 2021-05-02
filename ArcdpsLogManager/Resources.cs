@@ -22,9 +22,7 @@ namespace GW2Scratch.ArcdpsLogManager
 
 		public static Icon GetProgramIcon()
 		{
-			//This fixes the program icon not showing up on windows, requires testing on Linux and Mac
-			return new Icon(GetImagePath("program_icon.png"));
-			//return new Icon(1, GetImage("program_icon.png"));
+			return new Icon(1, GetImage("program_icon.png"));
 		}
 
 		public static Image GetTinyIconWarrior() => GetImage("Tango/Warrior_tango_icon_20px.png");
@@ -89,15 +87,65 @@ namespace GW2Scratch.ArcdpsLogManager
 			return GetImage($"ArenaNet/fractal_instabilities/{iconName}.png");
 		}
 
-		//raid boss and fractal boss icons
-
+		// RAID BOSSES
 		public static Image GetGenericRaidWingIcon() => GetImage("ArenaNet/raid_wing_32px.png");
-
-		public static Image GetFreezieIcon() => GetBossImage("freezie_icon_32px");
-		public static Image GetStandardKittyGolemIcon() => GetBossImage("standard_kitty_golem_32px");
-		public static Image GetMediumKittyGolemIcon() => GetBossImage("medium_kitty_golem_32px");
-		public static Image GetLargeKittyGolemIcon() => GetBossImage("large_kitty_golem_32px");
-
+		// WING 1
+		public static Image GetValeGuardianIcon() => GetBossImage("Mini_Vale_Guardian");
+		public static Image GetGorsevalIcon() => GetBossImage("Mini_Gorseval_the_Multifarious");
+		public static Image GetSabethaIcon() => GetBossImage("Mini_Sabetha");
+		// WING 2
+		public static Image GetSlothasorIcon() => GetBossImage("Mini_Slothasor");
+		public static Image GetBanditTrioIcon() => GetBossImage("Mini_Narella");
+		public static Image GetMatthiasIcon() => GetBossImage("Mini_Matthias_Abomination");
+		// WING 3
+		public static Image GetEscortIcon() => GetBossImage("Mini_McLeod_the_Silent");
+		public static Image GetKeepConstructIcon() => GetBossImage("Mini_Keep_Construct");
+		public static Image GetTwistedCastleIcon() => GetBossImage("Legendary_Insight");
+		public static Image GetXeraIcon() => GetBossImage("Mini_Xera");
+		// WING 4
+		public static Image GetCairnIcon() => GetBossImage("Mini_Cairn_the_Indomitable");
+		public static Image GetMursaatOverseerIcon() => GetBossImage("Mini_Mursaat_Overseer");
+		public static Image GetSamarogIcon() => GetBossImage("Mini_Samarog");
+		public static Image GetDeimosIcon() => GetBossImage("Mini_Saul");
+		// WING 5
+		public static Image GetDesminaIcon() => GetBossImage("Mini_Desmina");
+		public static Image GetRiverOfSoulsIcon() => GetBossImage("Legendary_Divination");
+		public static Image GetBrokenKingIcon() => GetBossImage("Mini_Broken_King");
+		public static Image GetEaterOfSoulsIcon() => GetBossImage("Legendary_Divination");
+		public static Image GetEyesIcon() => GetBossImage("Legendary_Divination");
+		public static Image GetDhuumIcon() => GetBossImage("Mini_Dhuum");
+		// WING 6
+		public static Image GetConjuredAmalgamatedIcon() => GetBossImage("Legendary_Divination");
+		public static Image GetTwinLargosIcon() => GetBossImage("Mini_Nikare");
+		public static Image GetQadimIcon() => GetBossImage("Mini_Qadim");
+		// WING 7
+		public static Image GetCardinalAdinaIcon() => GetBossImage("Mini_Earth_Djinn");
+		public static Image GetCardinalSabirIcon() => GetBossImage("Mini_Air_Djinn");
+		public static Image GetQadimThePeerlessIcon() => GetBossImage("Mini_Qadim_the_Peerless");
+		// STRIKES
+		public static Image GetShiverpeaksPassIcon() => GetBossImage("Mini_Icebrood_Construct");
+		public static Image GetVoiceAndClawOfTheFallenIcon() => GetBossImage("Mini_Cloudseeker");
+		public static Image GetFraenirOfJormagIcon() => GetBossImage("Mini_Icebrood_Construct");
+		public static Image GetBoneskinnerIcon() => GetBossImage("Mini_Boneskinner");
+		public static Image GetWhisperOfJormagIcon() => GetBossImage("Mini_Whisper_of_Jormag");
+		public static Image GetVariniaStormsounderIcon() => GetBossImage("Mini_Varinia_Stormsounder");
+		// FRACTALS
+		public static Image GetMAMAIcon() => GetBossImage("Mini_MAMA");
+		public static Image GetSiaxTheCorruptedIcon() => GetBossImage("Mini_Toxic_Warlock");
+		public static Image GetEnsolyssOfTheEndlessTormentIcon() => GetBossImage("Mini_Ensolyss");
+		public static Image GetSkorvaldIcon() => GetBossImage("Endless_Fury_Combat_Tonic");
+		public static Image GetArtsariivIcon() => GetBossImage("Unstable_Fractal_Essence");
+		public static Image GetArkkIcon() => GetBossImage("Endless_Chaos_Combat_Tonic");
+		public static Image GetAiKeeperOfThePeakIcon() => GetBossImage("Endless_Inner_Demon_Combat_Tonic");
+		// FESTIVALS
+		public static Image GetFreezieIcon() => GetBossImage("Mini_Freezie");
+		// TRAINING AREA
+		public static Image GetStandardKittyGolemIcon() => GetBossImage("Mini_Professor_Mew");
+		public static Image GetMediumKittyGolemIcon() => GetBossImage("Mini_Snuggles");
+		public static Image GetLargeKittyGolemIcon() => GetBossImage("Mini_Baron_von_Scrufflebutt");
+		public static Image GetMassiveKittyGolemIcon() => GetBossImage("Mini_Mister_Mittens");
+		// WORLD VS WORLD
+		public static Image GetWorldVersusWorldIcon() => GetBossImage("Commander_tag_(blue)");
 		private static Image GetBossImage(string iconName)
 		{
 			return GetImage($"ArenaNet/Bosses/{iconName}.png");

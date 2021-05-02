@@ -44,11 +44,66 @@ namespace GW2Scratch.ArcdpsLogManager
 		private Lazy<Image> TinyIconWorldVersusWorld { get; } = new Lazy<Image>(Resources.GetTinyIconWorldVersusWorld);
 		private Lazy<Image> TinyIconUncategorized { get; } = new Lazy<Image>(Resources.GetTinyIconUncategorized);
 		private Lazy<Image> TinyIconFestival { get; } = new Lazy<Image>(Resources.GetTinyIconFestival);
+		// RAIDS
 		private Lazy<Image> GenericRaidWing { get; } = new Lazy<Image>(Resources.GetGenericRaidWingIcon);
+		// RAID BOSSES
+		// WING 1
+		private Lazy<Image> ValeGuardianIcon { get; } = new Lazy<Image>(Resources.GetValeGuardianIcon);
+		private Lazy<Image> GorsevalIcon { get; } = new Lazy<Image>(Resources.GetGorsevalIcon);
+		private Lazy<Image> SabethaIcon { get; } = new Lazy<Image>(Resources.GetSabethaIcon);
+		// WING 2
+		private Lazy<Image> SlothasorIcon { get; } = new Lazy<Image>(Resources.GetSlothasorIcon);
+		private Lazy<Image> BanditTrioIcon { get; } = new Lazy<Image>(Resources.GetBanditTrioIcon);
+		private Lazy<Image> MatthiasIcon { get; } = new Lazy<Image>(Resources.GetMatthiasIcon);
+		// WING 3
+		private Lazy<Image> EscortIcon { get; } = new Lazy<Image>(Resources.GetEscortIcon);
+		private Lazy<Image> KeepConstructIcon { get; } = new Lazy<Image>(Resources.GetKeepConstructIcon);
+		private Lazy<Image> TwistedCastleIcon { get; } = new Lazy<Image>(Resources.GetTwistedCastleIcon);
+		private Lazy<Image> XeraIcon { get; } = new Lazy<Image>(Resources.GetXeraIcon);
+		// WING 4
+		private Lazy<Image> CairnIcon { get; } = new Lazy<Image>(Resources.GetCairnIcon);
+		private Lazy<Image> MursaatOverseerIcon { get; } = new Lazy<Image>(Resources.GetMursaatOverseerIcon);
+		private Lazy<Image> SamarogIcon { get; } = new Lazy<Image>(Resources.GetSamarogIcon);
+		private Lazy<Image> DeimosIcon { get; } = new Lazy<Image>(Resources.GetDeimosIcon);
+		// WING 5
+		private Lazy<Image> SoullessHorrorIcon { get; } = new Lazy<Image>(Resources.GetDesminaIcon);
+		private Lazy<Image> RiverOfSoulsIcon { get; } = new Lazy<Image>(Resources.GetRiverOfSoulsIcon);
+		private Lazy<Image> BrokenKingIcon { get; } = new Lazy<Image>(Resources.GetBrokenKingIcon);
+		private Lazy<Image> EaterOfSoulsIcon { get; } = new Lazy<Image>(Resources.GetEaterOfSoulsIcon);
+		private Lazy<Image> EyesIcon { get; } = new Lazy<Image>(Resources.GetEyesIcon);
+		private Lazy<Image> DhuumIcon { get; } = new Lazy<Image>(Resources.GetDhuumIcon);
+		// WING 6
+		private Lazy<Image> ConjuredAmalgamatedIcon { get; } = new Lazy<Image>(Resources.GetConjuredAmalgamatedIcon);
+		private Lazy<Image> TwinLargosIcon { get; } = new Lazy<Image>(Resources.GetTwinLargosIcon);
+		private Lazy<Image> QadimIcon { get; } = new Lazy<Image>(Resources.GetQadimIcon);
+		// WING 7
+		private Lazy<Image> CardinalAdinaIcon { get; } = new Lazy<Image>(Resources.GetCardinalAdinaIcon);
+		private Lazy<Image> CardinalSabirIcon { get; } = new Lazy<Image>(Resources.GetCardinalSabirIcon);
+		private Lazy<Image> QadimThePeerlessIcon { get; } = new Lazy<Image>(Resources.GetQadimThePeerlessIcon);
+		// STRIKES
+		private Lazy<Image> ShiverpeaksPassIcon { get; } = new Lazy<Image>(Resources.GetShiverpeaksPassIcon);
+		private Lazy<Image> VoiceAndClawOfTheFallenIcon { get; } = new Lazy<Image>(Resources.GetVoiceAndClawOfTheFallenIcon);
+		private Lazy<Image> FraenirOfJormagIcon { get; } = new Lazy<Image>(Resources.GetFraenirOfJormagIcon); 
+		private Lazy<Image> BoneskinnerIcon { get; } = new Lazy<Image>(Resources.GetBoneskinnerIcon);
+		private Lazy<Image> WhisperOfJormagIcon { get; } = new Lazy<Image>(Resources.GetWhisperOfJormagIcon);
+		private Lazy<Image> VariniaStormsounderIcon { get; } = new Lazy<Image>(Resources.GetVariniaStormsounderIcon);
+		// FRACTALS
+		private Lazy<Image> MAMAIcon { get; } = new Lazy<Image>(Resources.GetMAMAIcon);
+		private Lazy<Image> SiaxTheCorruptedIcon { get; } = new Lazy<Image>(Resources.GetSiaxTheCorruptedIcon);
+		private Lazy<Image> EnsolyssOfTheEndlessTormentIcon { get; } = new Lazy<Image>(Resources.GetEnsolyssOfTheEndlessTormentIcon);
+		private Lazy<Image> SkorvaldIcon { get; } = new Lazy<Image>(Resources.GetSkorvaldIcon);
+		private Lazy<Image> ArtsariivIcon { get; } = new Lazy<Image>(Resources.GetArtsariivIcon);
+		private Lazy<Image> ArkkIcon { get; } = new Lazy<Image>(Resources.GetArkkIcon);
+		private Lazy<Image> AiKeeperOfThePeakIcon { get; } = new Lazy<Image>(Resources.GetAiKeeperOfThePeakIcon);
+		// FESTIVALS
 		private Lazy<Image> FreezieIcon { get; } = new Lazy<Image>(Resources.GetFreezieIcon);
+		// TRAINING AREAA
 		private Lazy<Image> StandardKittyGolemIcon { get; } = new Lazy<Image>(Resources.GetStandardKittyGolemIcon);
 		private Lazy<Image> MediumKittyGolemIcon { get; } = new Lazy<Image>(Resources.GetMediumKittyGolemIcon);
 		private Lazy<Image> LargeKittyGolemIcon { get; } = new Lazy<Image>(Resources.GetLargeKittyGolemIcon);
+		private Lazy<Image> MassiveKittyGolemIcon { get; } = new Lazy<Image>(Resources.GetMassiveKittyGolemIcon);
+		// WORLD VS WORLD
+		private Lazy<Image> WorldVersusWorldIcon { get; } = new Lazy<Image>(Resources.GetWorldVersusWorldIcon);
 
 		public Image GetTinyLogIcon() => TinyIconLog.Value;
 		public Image GetTinyFractalsIcon() => TinyIconFractals.Value;
@@ -114,10 +169,56 @@ namespace GW2Scratch.ArcdpsLogManager
 		public Image GetTinyRaidBossIcon(Encounter encounter)
 		{
 			return encounter switch {
+				Encounter.ValeGuardian => ValeGuardianIcon.Value,
+				Encounter.Gorseval => GorsevalIcon.Value,
+				Encounter.Sabetha => SabethaIcon.Value,
+				Encounter.Slothasor => SlothasorIcon.Value,
+				Encounter.BanditTrio => BanditTrioIcon.Value,
+				Encounter.Matthias => MatthiasIcon.Value,
+				Encounter.Escort => EscortIcon.Value,
+				Encounter.KeepConstruct => KeepConstructIcon.Value,
+				Encounter.TwistedCastle => TwistedCastleIcon.Value,
+				Encounter.Xera => XeraIcon.Value,
+				Encounter.Cairn => CairnIcon.Value,
+				Encounter.MursaatOverseer => MursaatOverseerIcon.Value,
+				Encounter.Samarog => SamarogIcon.Value,
+				Encounter.Deimos => DeimosIcon.Value,
+				Encounter.SoullessHorror => SoullessHorrorIcon.Value,
+				Encounter.RiverOfSouls => RiverOfSoulsIcon.Value,
+				Encounter.BrokenKing => BrokenKingIcon.Value,
+				Encounter.EaterOfSouls => EaterOfSoulsIcon.Value,
+				Encounter.Eyes => EyesIcon.Value,
+				Encounter.Dhuum => DhuumIcon.Value,
+				Encounter.ConjuredAmalgamate => ConjuredAmalgamatedIcon.Value,
+				Encounter.TwinLargos => TwinLargosIcon.Value,
+				Encounter.Qadim => QadimIcon.Value,
+				Encounter.Adina => CardinalAdinaIcon.Value,
+				Encounter.Sabir => CardinalSabirIcon.Value,
+				Encounter.QadimThePeerless => QadimThePeerlessIcon.Value,
+				// STRIKES
+				Encounter.ShiverpeaksPass => ShiverpeaksPassIcon.Value,
+				Encounter.VoiceAndClawOfTheFallen => VoiceAndClawOfTheFallenIcon.Value,
+				Encounter.FraenirOfJormag => FraenirOfJormagIcon.Value,
+				Encounter.Boneskinner => BoneskinnerIcon.Value,
+				Encounter.WhisperOfJormag => WhisperOfJormagIcon.Value,
+				Encounter.VariniaStormsounder => VariniaStormsounderIcon.Value,
+				// FRACTALS
+				Encounter.MAMA => MAMAIcon.Value,
+				Encounter.SiaxTheCorrupted => SiaxTheCorruptedIcon.Value,
+				Encounter.EnsolyssOfTheEndlessTorment => EnsolyssOfTheEndlessTormentIcon.Value,
+				Encounter.Skorvald => SkorvaldIcon.Value,
+				Encounter.Artsariiv => ArtsariivIcon.Value,
+				Encounter.Arkk => ArkkIcon.Value,
+				Encounter.AiKeeperOfThePeak => AiKeeperOfThePeakIcon.Value,
+				// FESTIVALS
 				Encounter.Freezie => FreezieIcon.Value,
+				// TRAINING AREA
 				Encounter.StandardKittyGolem => StandardKittyGolemIcon.Value,
 				Encounter.MediumKittyGolem => MediumKittyGolemIcon.Value,
 				Encounter.LargeKittyGolem => LargeKittyGolemIcon.Value,
+				Encounter.MassiveKittyGolem => MassiveKittyGolemIcon.Value,
+				// WORLD VS WORLD
+				Encounter.WorldVersusWorld => WorldVersusWorldIcon.Value,
 				_ => null
 			};
 		}
