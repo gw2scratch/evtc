@@ -21,7 +21,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 	/// </summary>
 	public class DefaultEncounterIdentifier : IEncounterIdentifier
 	{
-		public IEncounterData GetEncounterData(Agent mainTarget, IReadOnlyList<Event> events, IReadOnlyList<Agent> agents, IReadOnlyList<Skill> skills, int? gameBuild, LogType logType)
+		public IEncounterData GetEncounterData(Agent mainTarget, IReadOnlyList<Event> events,
+			IReadOnlyList<Agent> agents, IReadOnlyList<Skill> skills, int? gameBuild, LogType logType)
 		{
 			switch (logType)
 			{
@@ -41,7 +42,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			);
 		}
 
-		private IEncounterData GetPvEEncounterData(Agent mainTarget, IReadOnlyList<Event> events, IReadOnlyList<Agent> agents, IReadOnlyList<Skill> skills, int? gameBuild)
+		private IEncounterData GetPvEEncounterData(Agent mainTarget, IReadOnlyList<Event> events,
+			IReadOnlyList<Agent> agents, IReadOnlyList<Skill> skills, int? gameBuild)
 		{
 			var encounter = IdentifyEncounter(mainTarget, agents, events, skills);
 
@@ -161,7 +163,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						// have an attack target. They also have lower maximum health values.
 						Gadget mainGadget = agents.OfType<Gadget>()
 							.FirstOrDefault(x => x.VolatileId == GadgetIds.DeimosLastPhase && x.AttackTargets.Count == 1);
-						Gadget prisoner = agents.OfType<Gadget>().FirstOrDefault(x => x.VolatileId == GadgetIds.ShackledPrisoner);
+						Gadget prisoner = agents.OfType<Gadget>()
+							.FirstOrDefault(x => x.VolatileId == GadgetIds.ShackledPrisoner);
 
 						if (mainGadget != null)
 						{
@@ -345,7 +348,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				{
 					// This case remains for compatibility reasons, but shouldn't be used after obsoleting
 					// the encounter. The versions with phases are the expected code path these days.
-					
+
 					// This encounter has two phases with the same enemy. The enemy gains short invulnerability
 					// and regains full health between these two phases.
 					// However, if the fight has been progressed into the second (dark) phase and failed, the next attempt
@@ -369,7 +372,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				{
 					// See the Encounter.AiKeeperOfThePeak case above for a more detailed description
 					// of the encounter flow.
-					
+
 					return GetDefaultBuilder(encounter, mainTarget)
 						.WithResult(new AgentBuffGainedDeterminer(mainTarget, SkillIds.Determined895))
 						.WithModes(new ConstantModeDeterminer(EncounterMode.Challenge))
@@ -379,11 +382,11 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				{
 					// See the Encounter.AiKeeperOfThePeak case above for a more detailed description
 					// of the encounter flow.
-					
+
 					// Players commonly reset the fight between "day" and "night" phases.
 					// As such, reaching the invulnerability is considered a success because the fight progresses
 					// and the players only have to do the "night" phase afterwards.
-					
+
 					return GetDefaultBuilder(encounter, mainTarget)
 						.WithResult(new AgentBuffGainedDeterminer(mainTarget, SkillIds.Determined895))
 						.WithModes(new ConstantModeDeterminer(EncounterMode.Challenge))
@@ -393,9 +396,10 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				{
 					// See the Encounter.AiKeeperOfThePeak case above for a more detailed description
 					// of the encounter flow.
-					
+
 					return GetDefaultBuilder(encounter, mainTarget)
-						.WithResult(new BuffAppliedAfterSkillCastDeterminer(mainTarget, SkillIds.AiDarkEarlySkill, SkillIds.Determined895))
+						.WithResult(new BuffAppliedAfterSkillCastDeterminer(mainTarget, SkillIds.AiDarkEarlySkill,
+							SkillIds.Determined895))
 						.WithModes(new ConstantModeDeterminer(EncounterMode.Challenge))
 						.Build();
 				}
@@ -423,8 +427,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					// A better detection method would be very much appreciated here.
 					return GetDefaultBuilder(encounter, mainTarget)
 						.WithResult(new AnyCombinedResultDeterminer(
-							new AgentKillingBlowDeterminer(mainTarget),
-							new IgnoreTimeResultDeterminerWrapper(new AgentBelowHealthThresholdDeterminer(mainTarget, 0.02f))
+								new AgentKillingBlowDeterminer(mainTarget),
+								new IgnoreTimeResultDeterminerWrapper(new AgentBelowHealthThresholdDeterminer(mainTarget, 0.02f))
 							)
 						).Build();
 				}
@@ -455,6 +459,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					{
 						builder.WithResult(new ConstantResultDeterminer(EncounterResult.Unknown));
 					}
+
 					return builder.Build();
 				}
 				default:
@@ -556,7 +561,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						return Encounter.Artsariiv;
 					case SpeciesIds.Arkk:
 						return Encounter.Arkk;
-					case SpeciesIds.AiKeeperOfThePeak: 
+					case SpeciesIds.AiKeeperOfThePeak:
 					{
 						// This encounter has two phases with the same enemy. The enemy gains short invulnerability
 						// and regains full health between these two phases.
@@ -575,12 +580,14 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						if (skills.All(x => x.Id != SkillIds.Determined895))
 						{
 							// This is a quick path that doesn't require enumerating through events. 
-							
+
 							// As there is no Determined, the log is a failure, and this cannot occur in a log
 							// that has both phases (as the Determined buff is applied in between).
-							
+
 							bool hasDarkPhase = skills.Any(x => x.Id == SkillIds.AiDarkEarlySkill);
-							return hasDarkPhase ? Encounter.AiKeeperOfThePeakNightOnly : Encounter.AiKeeperOfThePeakDayOnly;
+							return hasDarkPhase
+								? Encounter.AiKeeperOfThePeakNightOnly
+								: Encounter.AiKeeperOfThePeakDayOnly;
 						}
 						else
 						{
