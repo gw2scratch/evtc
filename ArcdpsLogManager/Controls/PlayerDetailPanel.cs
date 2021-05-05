@@ -75,7 +75,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 
 				Visible = PlayerData.AccountName != NullAccountName;
 
-				var characters = new Dictionary<string, (Profession profession, int count)>();
+				var characters = new Dictionary<string, (Profession Profession, int Count)>();
 				foreach (var log in PlayerData.Logs)
 				{
 					var player = log.Players.First(x => x.AccountName == PlayerData.AccountName);
@@ -85,9 +85,8 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 						characters[player.Name] = (player.Profession, 0);
 					}
 
-					characters[player.Name] = (player.Profession, characters[player.Name].count + 1);
+					characters[player.Name] = (player.Profession, characters[player.Name].Count + 1);
 				}
-
 
 				knownCharacters.Clear();
 				knownCharacters.BeginHorizontal();
@@ -95,13 +94,15 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 					knownCharacters.BeginVertical(spacing: new Size(5, 2));
 					{
 						knownCharacters.AddRow("", "Character name", "Log count", null);
-						foreach (var character in characters.OrderByDescending(x => x.Value.count))
+						foreach (var character in characters.OrderByDescending(x => x.Value.Count))
 						{
 							var name = character.Key;
 							var showLogsButton = new LinkButton {Text = "Logs"};
 							showLogsButton.Click += (o, eventArgs) =>
 							{
-								var characterLogs = PlayerData.Logs.Where(log => log.Players.Any(x => x.Name == name));
+								// We need to make sure that both the character name and the account name match,
+								// as a player may delete a character and another player may claim that name.
+								var characterLogs = PlayerData.Logs.Where(log => log.Players.Any(x => x.Name == name && x.AccountName == PlayerData.AccountName));
 								var form = new Form
 								{
 									Content = new LogList(logCache, apiData, logProcessor, uploadProcessor, imageProvider, logNameProvider)
@@ -115,12 +116,11 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 
 							knownCharacters.BeginHorizontal();
 							{
-								knownCharacters.Add(imageProvider.GetTinyProfessionIcon(character.Value.profession));
-								knownCharacters.Add(new Label
-									{Text = name, VerticalAlignment = VerticalAlignment.Center});
+								knownCharacters.Add(imageProvider.GetTinyProfessionIcon(character.Value.Profession));
+								knownCharacters.Add(new Label {Text = name, VerticalAlignment = VerticalAlignment.Center});
 								knownCharacters.Add(new Label
 								{
-									Text = $"{character.Value.count}",
+									Text = $"{character.Value.Count}",
 									VerticalAlignment = VerticalAlignment.Center
 								});
 								knownCharacters.Add(showLogsButton);
@@ -128,7 +128,6 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 							}
 							knownCharacters.EndHorizontal();
 						}
-
 						knownCharacters.AddRow(null);
 					}
 					knownCharacters.EndVertical();
