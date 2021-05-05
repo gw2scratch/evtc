@@ -16,6 +16,47 @@
     <Version>1.0.3.2</Version>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Images\ArenaNet\Bosses\Commander_tag_%28blue%29.png" />
+    <None Remove="Images\ArenaNet\Bosses\Endless_Chaos_Combat_Tonic.png" />
+    <None Remove="Images\ArenaNet\Bosses\Endless_Fury_Combat_Tonic.png" />
+    <None Remove="Images\ArenaNet\Bosses\Endless_Inner_Demon_Combat_Tonic.png" />
+    <None Remove="Images\ArenaNet\Bosses\Legendary_Divination.png" />
+    <None Remove="Images\ArenaNet\Bosses\Legendary_Insight.png" />
+    <None Remove="Images\ArenaNet\Bosses\Mini_Air_Djinn.png" />
+    <None Remove="Images\ArenaNet\Bosses\Mini_Baron_von_Scrufflebutt.png" />
+    <None Remove="Images\ArenaNet\Bosses\Mini_Boneskinner.png" />
+    <None Remove="Images\ArenaNet\Bosses\Mini_Broken_King.png" />
+    <None Remove="Images\ArenaNet\Bosses\Mini_Cairn_the_Indomitable.png" />
+    <None Remove="Images\ArenaNet\Bosses\Mini_Cloudseeker.png" />
+    <None Remove="Images\ArenaNet\Bosses\Mini_Desmina.png" />
+    <None Remove="Images\ArenaNet\Bosses\Mini_Dhuum.png" />
+    <None Remove="Images\ArenaNet\Bosses\Mini_Earth_Djinn.png" />
+    <None Remove="Images\ArenaNet\Bosses\Mini_Ensolyss.png" />
+    <None Remove="Images\ArenaNet\Bosses\Mini_Freezie.png" />
+    <None Remove="Images\ArenaNet\Bosses\Mini_Gorseval_the_Multifarious.png" />
+    <None Remove="Images\ArenaNet\Bosses\Mini_Icebrood_Construct.png" />
+    <None Remove="Images\ArenaNet\Bosses\Mini_Keep_Construct.png" />
+    <None Remove="Images\ArenaNet\Bosses\Mini_MAMA.png" />
+    <None Remove="Images\ArenaNet\Bosses\Mini_Matthias_Abomination.png" />
+    <None Remove="Images\ArenaNet\Bosses\Mini_McLeod_the_Silent.png" />
+    <None Remove="Images\ArenaNet\Bosses\Mini_Mister_Mittens.png" />
+    <None Remove="Images\ArenaNet\Bosses\Mini_Mursaat_Overseer.png" />
+    <None Remove="Images\ArenaNet\Bosses\Mini_Narella.png" />
+    <None Remove="Images\ArenaNet\Bosses\Mini_Nikare.png" />
+    <None Remove="Images\ArenaNet\Bosses\Mini_Professor_Mew.png" />
+    <None Remove="Images\ArenaNet\Bosses\Mini_Qadim.png" />
+    <None Remove="Images\ArenaNet\Bosses\Mini_Qadim_the_Peerless.png" />
+    <None Remove="Images\ArenaNet\Bosses\Mini_Sabetha.png" />
+    <None Remove="Images\ArenaNet\Bosses\Mini_Samarog.png" />
+    <None Remove="Images\ArenaNet\Bosses\Mini_Saul.png" />
+    <None Remove="Images\ArenaNet\Bosses\Mini_Slothasor.png" />
+    <None Remove="Images\ArenaNet\Bosses\Mini_Snuggles.png" />
+    <None Remove="Images\ArenaNet\Bosses\Mini_Toxic_Warlock.png" />
+    <None Remove="Images\ArenaNet\Bosses\Mini_Vale_Guardian.png" />
+    <None Remove="Images\ArenaNet\Bosses\Mini_Varinia_Stormsounder.png" />
+    <None Remove="Images\ArenaNet\Bosses\Mini_Whisper_of_Jormag.png" />
+    <None Remove="Images\ArenaNet\Bosses\Mini_Xera.png" />
+    <None Remove="Images\ArenaNet\Bosses\Unstable_Fractal_Essence.png" />
     <None Remove="Images\ArenaNet\commander_tag_red.png" />
     <None Remove="Images\ArenaNet\commander_tag_red_32px.png" />
     <None Remove="Images\ArenaNet\festivals_32px.png" />
@@ -38,8 +79,8 @@
     <None Remove="Images\ArenaNet\fractal_instabilities\toxic_trail_32px.png" />
     <None Remove="Images\ArenaNet\fractal_instabilities\vengeance_32px.png" />
     <None Remove="Images\ArenaNet\fractal_instabilities\we_bleed_fire_32px.png" />
-    <None Remove="Images\ArenaNet\freezie_icon_32px.png" />
     <None Remove="Images\ArenaNet\LICENSE.txt" />
+    <None Remove="Images\ArenaNet\raid_wing_32px.png" />
     <None Remove="Images\ArenaNet\strike_icon_32px.png" />
     <None Remove="Images\ArenaNet\training_area_32px.png" />
     <None Remove="Images\ArenaNet\uncategorized_32px.png" />
@@ -57,6 +98,129 @@
     <ProjectReference Include="..\EVTCInspector\EVTCInspector.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Images\ArenaNet\Bosses\Commander_tag_(blue).png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\Bosses\Endless_Chaos_Combat_Tonic.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\Bosses\Endless_Fury_Combat_Tonic.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\Bosses\Endless_Inner_Demon_Combat_Tonic.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\Bosses\Legendary_Divination.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\Bosses\Legendary_Insight.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\Bosses\Mini_Air_Djinn.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\Bosses\Mini_Baron_von_Scrufflebutt.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\Bosses\Mini_Boneskinner.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\Bosses\Mini_Broken_King.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\Bosses\Mini_Cairn_the_Indomitable.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\Bosses\Mini_Cloudseeker.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\Bosses\Mini_Desmina.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\Bosses\Mini_Dhuum.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\Bosses\Mini_Earth_Djinn.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\Bosses\Mini_Ensolyss.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\Bosses\Mini_Freezie.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\Bosses\Mini_Gorseval_the_Multifarious.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\Bosses\Mini_Icebrood_Construct.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\Bosses\Mini_Keep_Construct.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\Bosses\Mini_MAMA.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\Bosses\Mini_Matthias_Abomination.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\Bosses\Mini_McLeod_the_Silent.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\Bosses\Mini_Mister_Mittens.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\Bosses\Mini_Mursaat_Overseer.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\Bosses\Mini_Narella.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\Bosses\Mini_Nikare.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\Bosses\Mini_Professor_Mew.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\Bosses\Mini_Qadim.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\Bosses\Mini_Qadim_the_Peerless.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\Bosses\Mini_Sabetha.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\Bosses\Mini_Samarog.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\Bosses\Mini_Saul.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\Bosses\Mini_Slothasor.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\Bosses\Mini_Snuggles.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\Bosses\Mini_Toxic_Warlock.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\Bosses\Mini_Vale_Guardian.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\Bosses\Mini_Varinia_Stormsounder.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\Bosses\Mini_Whisper_of_Jormag.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\Bosses\Mini_Xera.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ArenaNet\Bosses\Unstable_Fractal_Essence.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Images\ArenaNet\commander_tag_red.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -126,9 +290,6 @@
     <Content Include="Images\ArenaNet\fractal_instabilities\we_bleed_fire_32px.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\ArenaNet\freezie_icon_32px.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Images\ArenaNet\guild_registrar_icon_26px.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -138,6 +299,9 @@
     <Content Include="Images\ArenaNet\raid_icon_32px.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Images\ArenaNet\raid_wing_32px.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Images\ArenaNet\strike_icon_32px.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -145,9 +309,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\ArenaNet\uncategorized_32px.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\ArenaNet\world_vs_world_321px.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\ArenaNet\world_vs_world_32px.png">
@@ -237,22 +398,5 @@
     <Content Include="Images\Tango\Weaver_tango_icon_20px.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <None Update="Images\ArenaNet\Bosses\freezie_icon_32px.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Images\ArenaNet\Bosses\large_kitty_golem_32px.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Images\ArenaNet\Bosses\medium_kitty_golem_32px.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Images\ArenaNet\Bosses\standard_kitty_golem_32px.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Images\ArenaNet\raid_wing_32px.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 </Project>
