@@ -117,7 +117,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 
 		private IEncounterData GetEncounterData(Agent mainTarget, LogProcessorContext context)
 		{
-			return EncounterIdentifier.GetEncounterData(mainTarget, context.Events, context.Agents, context.GameBuild, context.LogType);
+			return EncounterIdentifier.GetEncounterData(mainTarget, context.Events, context.Agents, context.Skills, context.GameBuild, context.LogType);
 		}
 
 		private IEnumerable<Skill> GetSkills(ParsedLog log)

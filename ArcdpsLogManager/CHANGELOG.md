@@ -18,6 +18,7 @@ This is the full changelog of the arcdps Log Manager.
 - Fixed an issue with the last processed log not updating the UI correctly on Windows (status stuck on "Processing 51/52...")
 - Fixed a rare issue with Twisted Castle logs being identified as Xera logs if the player stood too close to Xera's platform (issue #110)
 - Fixed some controls looking very old on Windows
+- Fixed character log list including irrelevant logs if a character was deleted, the character name reused by a different account, and a log contained both accounts (issue #119).
 
 ## Log Manager v1.0.2
 

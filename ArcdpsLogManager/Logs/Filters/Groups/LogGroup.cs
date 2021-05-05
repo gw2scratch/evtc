@@ -2,12 +2,15 @@ using System.Collections.Generic;
 
 namespace GW2Scratch.ArcdpsLogManager.Logs.Filters.Groups
 {
+	/// <summary>
+	/// A hierarchical structure of logs, where each group may contain subgroups.
+	/// Used for filtering by categories and encounters.
+	/// </summary>
 	public abstract class LogGroup : ILogFilter
 	{
 		/// <summary>
 		/// The name of the group.
 		/// </summary>
-		///
 		public abstract string Name { get; }
 
 		/// <summary>

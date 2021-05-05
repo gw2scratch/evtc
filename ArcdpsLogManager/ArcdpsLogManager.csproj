@@ -13,19 +13,19 @@
       Each new log data update causes a revision increase.
       See LogDataUpdater for the updates.
     -->
-		<Version>1.0.3.2</Version>
-	</PropertyGroup>
-	<ItemGroup>
-		<PackageReference Include="Eto.Forms" Version="2.5.11-ci-20210422.772645364" />
-		<PackageReference Include="Gw2Sharp" Version="0.6.0" />
-		<PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-		<PackageReference Include="RestSharp" Version="106.6.10" />
-		<PackageReference Include="System.Net.Http" Version="4.3.4" />
-	</ItemGroup>
-	<ItemGroup>
-		<ProjectReference Include="..\EVTCAnalytics\EVTCAnalytics.csproj" />
-		<ProjectReference Include="..\EVTCInspector\EVTCInspector.csproj" />
-	</ItemGroup>
+    <Version>1.0.3.3</Version>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Eto.Forms" Version="2.5.11-ci-20210422.772645364" />
+    <PackageReference Include="Gw2Sharp" Version="0.6.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="RestSharp" Version="106.6.10" />
+    <PackageReference Include="System.Net.Http" Version="4.3.4" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EVTCAnalytics\EVTCAnalytics.csproj" />
+    <ProjectReference Include="..\EVTCInspector\EVTCInspector.csproj" />
+  </ItemGroup>
 	<ItemGroup>
 		<None Update="Images\**">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
