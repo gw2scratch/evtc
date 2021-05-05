@@ -43,7 +43,6 @@
     <None Remove="Images\ArenaNet\strike_icon_32px.png" />
     <None Remove="Images\ArenaNet\training_area_32px.png" />
     <None Remove="Images\ArenaNet\uncategorized_32px.png" />
-    <None Remove="Images\ArenaNet\world_vs_world_321px.png" />
     <None Remove="Images\ArenaNet\world_vs_world_32px.png" />
   </ItemGroup>
   <ItemGroup>
