@@ -39,7 +39,9 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 			{Encounter.Skorvald, "Skorvald the Shattered"},
 			{Encounter.Artsariiv, "Artsariiv"},
 			{Encounter.Arkk, "Arkk"},
+#pragma warning disable 618
 			{Encounter.AiKeeperOfThePeak, "Ai, Keeper of the Peak"},
+#pragma warning restore 618
 			{Encounter.AiKeeperOfThePeakDayOnly, "Ai, Keeper of the Peak – Elemental"},
 			{Encounter.AiKeeperOfThePeakNightOnly, "Ai, Keeper of the Peak – Dark"},
 			{Encounter.AiKeeperOfThePeakDayAndNight, "Ai, Keeper of the Peak – Both Phases"},

@@ -344,7 +344,9 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						.WithModes(new ConstantModeDeterminer(EncounterMode.Challenge))
 						.Build();
 				}
+#pragma warning disable 618
 				case Encounter.AiKeeperOfThePeak:
+#pragma warning restore 618
 				{
 					// This case remains for compatibility reasons, but shouldn't be used after obsoleting
 					// the encounter. The versions with phases are the expected code path these days.

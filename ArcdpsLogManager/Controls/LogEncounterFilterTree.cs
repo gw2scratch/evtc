@@ -40,7 +40,9 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 		private IReadOnlyList<Encounter> HiddenEncounters { get; } = new[]
 		{
 			// An obsolete Encounter type, replaced by specialized ones.
+#pragma warning disable 618
 			Encounter.AiKeeperOfThePeak,
+#pragma warning restore 618
 			// An encounter that is not logged by default.
 			Encounter.VariniaStormsounder,
 			// An encounter that is not logged by default and has no proper support.

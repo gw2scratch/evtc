@@ -41,7 +41,9 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 				{Encounter.Skorvald, EncounterCategory.Fractal},
 				{Encounter.Artsariiv, EncounterCategory.Fractal},
 				{Encounter.Arkk, EncounterCategory.Fractal},
+#pragma warning disable 618
 				{Encounter.AiKeeperOfThePeak, EncounterCategory.Fractal},
+#pragma warning restore 618
 				{Encounter.AiKeeperOfThePeakDayOnly, EncounterCategory.Fractal},
 				{Encounter.AiKeeperOfThePeakNightOnly, EncounterCategory.Fractal},
 				{Encounter.AiKeeperOfThePeakDayAndNight, EncounterCategory.Fractal},
