@@ -8,6 +8,7 @@ This is the full changelog of the arcdps Log Manager.
 - Added CM detection for Keep Construct
 - Added squad composition filters to *Advanced filters* (issue #5)
 - Added a last week filter button for convenience (issue #100)
+- Added icons to all encounters (thanks, @Linkaaaaa and @therealketchup!; issue #79)
 
 #### Changes
 - Significantly improved performance of filtering
