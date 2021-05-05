@@ -164,6 +164,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 					RootLogGroup _ => imageProvider.GetTinyLogIcon(),
 					RaidLogGroup _ => imageProvider.GetTinyRaidIcon(),
 					CategoryLogGroup categoryGroup => GetCategoryIcon(categoryGroup.Category),
+					EncounterLogGroup encounterGroup => GetEncounterIcon(encounterGroup.Encounter),
 					_ => item.Icon
 				};
 
@@ -232,12 +233,27 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 
 		private Image GetCategoryIcon(EncounterCategory category)
 		{
-			if (category == EncounterCategory.Fractal)
-			{
-				return imageProvider.GetTinyFractalsIcon();
-			}
+			return category switch {
+				EncounterCategory.Other => imageProvider.GetTinyUncategorizedIcon(),
+				EncounterCategory.WorldVersusWorld => imageProvider.GetTinyWorldVersusWorldIcon(),
+				EncounterCategory.Festival => imageProvider.GetTinyFestivalIcon(),
+				EncounterCategory.Fractal => imageProvider.GetTinyFractalsIcon(),
+				EncounterCategory.StrikeMission => imageProvider.GetTinyStrikeIcon(),
+				EncounterCategory.SpecialForcesTrainingArea => imageProvider.GetTinyTrainingAreaIcon(),
+				EncounterCategory.RaidWing1 => imageProvider.GetRaidWingIcon(),
+				EncounterCategory.RaidWing2 => imageProvider.GetRaidWingIcon(),
+				EncounterCategory.RaidWing3 => imageProvider.GetRaidWingIcon(),
+				EncounterCategory.RaidWing4 => imageProvider.GetRaidWingIcon(),
+				EncounterCategory.RaidWing5 => imageProvider.GetRaidWingIcon(),
+				EncounterCategory.RaidWing6 => imageProvider.GetRaidWingIcon(),
+				EncounterCategory.RaidWing7 => imageProvider.GetRaidWingIcon(),
+				_ => null
+			};
+		}
 
-			return null;
+		private Image GetEncounterIcon(Encounter encounter)
+		{
+			return imageProvider.GetTinyEncounterIcon(encounter);
 		}
 	}
 }
