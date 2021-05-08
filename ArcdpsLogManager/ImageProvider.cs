@@ -269,5 +269,14 @@ namespace GW2Scratch.ArcdpsLogManager
 		{
 			return GenericRaidWing.Value;
 		}
+
+		public Image GetWvWMapIcon(string mapName)
+		{
+			return mapName switch
+			{
+				"Eternal Battlegrounds" => null,
+				_ => null
+			};
+		}
 	}
 }
