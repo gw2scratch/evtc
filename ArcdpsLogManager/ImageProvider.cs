@@ -274,7 +274,13 @@ namespace GW2Scratch.ArcdpsLogManager
 		{
 			return mapName switch
 			{
-				"Eternal Battlegrounds" => null,
+				"Eternal Battlegrounds" => EternalBattlegroundsIcon.Value,
+				"Red Desert Borderlands" => RedBorderlandsIcon.Value,
+				"Blue Alpine Borderlands" => BlueBorderlandsIcon.Value,
+				"Green Alpine Borderlands" => GreenBorderlandsIcon.Value,
+				"Obsidian Sanctum" => ObsidianSanctumIcon.Value,
+				"Edge of the Mists" => EdgeOfTheMistsIcon.Value,
+				"Armistice Bastion" => ArmisticeBastionIcon.Value,
 				_ => null
 			};
 		}
