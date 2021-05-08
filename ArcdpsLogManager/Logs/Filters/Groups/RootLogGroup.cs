@@ -33,6 +33,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters.Groups
 			// -- Encounter 2 (by target name)
 			// -- Encounter 3 (by target name)
 			// - WvW
+			// -- individual maps
 
 			var manuallyAddedCategories = new[]
 			{
@@ -45,8 +46,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters.Groups
 			};
 
 			var leftoverCategories = ((EncounterCategory[]) Enum.GetValues(typeof(EncounterCategory)))
-				.Where(x => !x.IsRaid()
-				            && !manuallyAddedCategories.Contains(x));
+				.Where(x => !x.IsRaid() && !manuallyAddedCategories.Contains(x));
 
 			var groups = new List<LogGroup>();
 
@@ -60,7 +60,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters.Groups
 				groups.Add(new CategoryLogGroup(category));
 			}
 			groups.Add(CategoryLogGroup.Other(logs.Where(x => x.Encounter == Encounter.Other).Select(x => x.MainTargetName).Distinct()));
-			groups.Add(new CategoryLogGroup(EncounterCategory.WorldVersusWorld));
+			groups.Add(new WorldVersusWorldLogGroup());
 
 			this.subgroups = groups;
 		}

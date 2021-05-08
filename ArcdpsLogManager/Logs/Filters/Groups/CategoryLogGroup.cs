@@ -24,7 +24,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters.Groups
 			{EncounterCategory.SpecialForcesTrainingArea, "Special Forces Training Area"},
 			{EncounterCategory.Other, "Uncategorized (PvE)"},
 			{EncounterCategory.Festival, "Festivals"},
-			{EncounterCategory.WorldVersusWorld, "WvW"},
+			// All World vs. World names are defined within the WorldVersusWorldLogGroup.
 		};
 
 		public EncounterCategory Category { get; }
