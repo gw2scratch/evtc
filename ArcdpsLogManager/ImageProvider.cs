@@ -122,7 +122,14 @@ namespace GW2Scratch.ArcdpsLogManager
 		private Lazy<Image> MassiveKittyGolemIcon { get; } = new Lazy<Image>(Resources.GetMassiveKittyGolemIcon);
 
 		// WORLD VS WORLD
-		private Lazy<Image> WorldVersusWorldIcon { get; } = new Lazy<Image>(Resources.GetWorldVersusWorldIcon);
+		private Lazy<Image> EternalBattlegroundsIcon { get; } = new Lazy<Image>(Resources.GetEternalBattlegroundsIcon);
+		private Lazy<Image> RedBorderlandsIcon { get; } = new Lazy<Image>(Resources.GetRedBorderlandsIcon);
+		private Lazy<Image> BlueBorderlandsIcon { get; } = new Lazy<Image>(Resources.GetBlueBorderlandsIcon);
+		private Lazy<Image> GreenBorderlandsIcon { get; } = new Lazy<Image>(Resources.GetGreenBorderlandsIcon);
+		private Lazy<Image> ObsidianSanctumIcon { get; } = new Lazy<Image>(Resources.GetObsidianSanctumIcon);
+		private Lazy<Image> EdgeOfTheMistsIcon { get; } = new Lazy<Image>(Resources.GetEdgeOfTheMistsIcon);
+		private Lazy<Image> ArmisticeBastionIcon { get; } = new Lazy<Image>(Resources.GetArmisticeBastionIcon);
+
 
 		public Image GetTinyLogIcon() => TinyIconLog.Value;
 		public Image GetTinyFractalsIcon() => TinyIconFractals.Value;
@@ -253,7 +260,7 @@ namespace GW2Scratch.ArcdpsLogManager
 				Encounter.LargeKittyGolem => LargeKittyGolemIcon.Value,
 				Encounter.MassiveKittyGolem => MassiveKittyGolemIcon.Value,
 				// WORLD VS WORLD
-				Encounter.WorldVersusWorld => WorldVersusWorldIcon.Value,
+				//Encounter.WorldVersusWorld => WorldVersusWorldIcon.Value,
 				_ => null
 			};
 		}
