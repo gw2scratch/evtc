@@ -259,8 +259,6 @@ namespace GW2Scratch.ArcdpsLogManager
 				Encounter.MediumKittyGolem => MediumKittyGolemIcon.Value,
 				Encounter.LargeKittyGolem => LargeKittyGolemIcon.Value,
 				Encounter.MassiveKittyGolem => MassiveKittyGolemIcon.Value,
-				// WORLD VS WORLD
-				//Encounter.WorldVersusWorld => WorldVersusWorldIcon.Value,
 				_ => null
 			};
 		}
