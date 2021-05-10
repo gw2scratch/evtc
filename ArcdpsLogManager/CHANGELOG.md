@@ -8,7 +8,8 @@ This is the full changelog of the arcdps Log Manager.
 - Added CM detection for Keep Construct
 - Added squad composition filters to *Advanced filters* (issue #5)
 - Added a last week filter button for convenience (issue #100)
-- Added icons to all encounters (thanks, @Linkaaaaa and @therealketchup!; issue #79)
+- Added categories for filtering individual WvW maps (issue #68)
+- Added icons to all encounters (thanks, @Linkaaaaa and @therealketchup!) (issue #79)
 
 #### Changes
 - Significantly improved performance of filtering
@@ -20,6 +21,7 @@ This is the full changelog of the arcdps Log Manager.
 - Fixed a rare issue with Twisted Castle logs being identified as Xera logs if the player stood too close to Xera's platform (issue #110)
 - Fixed some controls looking very old on Windows
 - Fixed character log list including irrelevant logs if a character was deleted, the character name reused by a different account, and a log contained both accounts (issue #119).
+- Fixed the mysterious disappearance of the program icon on Windows (issue #102)
 
 ## Log Manager v1.0.2
 
