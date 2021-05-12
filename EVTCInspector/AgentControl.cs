@@ -15,7 +15,7 @@ namespace GW2Scratch.EVTCInspector
 			set
 			{
 				agent = value;
-				nameLabel.Text = $"Name: {agent.Name}";
+				nameLabel.Text = agent == null ? "No agent selected." : $"Name: {agent.Name}";
 				agentJsonControl.Object = agent;
 				UpdateEventList();
 			}
@@ -73,8 +73,15 @@ namespace GW2Scratch.EVTCInspector
 
 		private void UpdateEventList()
 		{
-			eventListControl.Events = events.Where(x => EventFilters.IsAgentInEvent(x, agent,
-				eventFilterAttackerCheckBox.Checked.Value, eventFilterDefenderCheckBox.Checked.Value)).ToArray();
+			if (agent == null)
+			{
+				eventListControl.Events = new List<Event>();
+			}
+			else
+			{
+				eventListControl.Events = events.Where(x => EventFilters.IsAgentInEvent(x, agent,
+					eventFilterAttackerCheckBox.Checked.Value, eventFilterDefenderCheckBox.Checked.Value)).ToArray();
+			}
 		}
 	}
 }

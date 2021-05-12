@@ -201,7 +201,7 @@ namespace GW2Scratch.EVTCInspector
 			TypeFilters = events.GroupBy(x => x.GetType()).Select(x => new TypeFilterItem(x.Key, x.Count()))
 				.OrderBy(x => x.Type.Name).ToArray();
 
-			var rootType = TypeFilters.First().Type;
+			var rootType = TypeFilters.FirstOrDefault()?.Type;
 			foreach (var type in TypeFilters)
 			{
 				rootType = GetClosestType(rootType, type.Type);
@@ -269,8 +269,16 @@ namespace GW2Scratch.EVTCInspector
 				}
 			} while (changed);
 
-			var rootItem = filterByType[typeof(object)];
-			rootItem.Checked = true;
+			TypeFilterItem rootItem;
+			if (rootType != null)
+			{
+				rootItem = filterByType[rootType];
+				rootItem.Checked = true;
+			}
+			else
+			{
+				rootItem = new TypeFilterItem(typeof(object)) {Checked = true};
+			}
 
 			typeFilterTree.DataStore = rootItem;
 		}
