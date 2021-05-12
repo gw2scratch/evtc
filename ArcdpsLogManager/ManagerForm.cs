@@ -14,6 +14,7 @@ using GW2Scratch.ArcdpsLogManager.Controls.Filters;
 using GW2Scratch.ArcdpsLogManager.Dialogs;
 using GW2Scratch.ArcdpsLogManager.Gw2Api;
 using GW2Scratch.ArcdpsLogManager.Logs;
+using GW2Scratch.ArcdpsLogManager.Logs.Caching;
 using GW2Scratch.ArcdpsLogManager.Logs.Filters;
 using GW2Scratch.ArcdpsLogManager.Logs.Naming;
 using GW2Scratch.ArcdpsLogManager.Logs.Updates;
@@ -29,8 +30,10 @@ using Gw2Sharp;
 
 namespace GW2Scratch.ArcdpsLogManager
 {
+
 	public sealed class ManagerForm : Form
 	{
+		private static readonly TimeSpan LogCacheAutoSavePeriod = TimeSpan.FromSeconds(60);
 		private readonly Cooldown gridRefreshCooldown = new Cooldown(TimeSpan.FromSeconds(5));
 		private readonly Cooldown filterRefreshCooldown = new Cooldown(TimeSpan.FromSeconds(5));
 
@@ -46,6 +49,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		private LogDataProcessor LogDataProcessor { get; }
 		private ILogNameProvider LogNameProvider { get; }
 		private LogDataUpdater LogDataUpdater { get; } = new LogDataUpdater();
+		private LogCacheAutoSaver LogCacheAutoSaver { get; }
 
 		private readonly BulkObservableCollection<LogData> logs = new BulkObservableCollection<LogData>();
 		private readonly FilterCollection<LogData> logsFiltered;
@@ -70,6 +74,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			ApiProcessor = new ApiProcessor(ApiData, new Gw2Client());
 			LogDataProcessor = new LogDataProcessor(LogCache, ApiProcessor, LogAnalytics);
 			LogNameProvider = new TranslatedLogNameProvider(GameLanguage.English);
+			LogCacheAutoSaver = LogCacheAutoSaver.Started(logCache, LogCacheAutoSavePeriod);
 
 			LogDataProcessor.StoppingWithError += (sender, args) =>
 			{
