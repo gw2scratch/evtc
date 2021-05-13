@@ -2,7 +2,7 @@
 
 This is the full changelog of the arcdps Log Manager.
 
-## Log Manager v1.0.3
+## Log Manager v1.1
 
 #### New features
 - Added CM detection for Keep Construct
@@ -22,6 +22,7 @@ This is the full changelog of the arcdps Log Manager.
 - Fixed some controls looking very old on Windows
 - Fixed character log list including irrelevant logs if a character was deleted, the character name reused by a different account, and a log contained both accounts (issue #119).
 - Fixed the mysterious disappearance of the program icon on Windows (issue #102)
+- Fixed some crashes in the EVTC Inspector
 
 ## Log Manager v1.0.2
 
