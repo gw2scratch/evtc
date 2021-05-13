@@ -145,7 +145,13 @@ namespace GW2Scratch.ArcdpsLogManager
 		public static Image GetLargeKittyGolemIcon() => GetEncounterImage("Mini_Baron_von_Scrufflebutt");
 		public static Image GetMassiveKittyGolemIcon() => GetEncounterImage("Mini_Mister_Mittens");
 		// WORLD VS WORLD
-		public static Image GetWorldVersusWorldIcon() => GetEncounterImage("Commander_tag_(blue)");
+		public static Image GetEternalBattlegroundsIcon() => GetEncounterImage("Commander_tag_yellow");
+		public static Image GetRedBorderlandsIcon() => GetEncounterImage("Commander_tag_red");
+		public static Image GetBlueBorderlandsIcon() => GetEncounterImage("Commander_tag_blue");
+		public static Image GetGreenBorderlandsIcon() => GetEncounterImage("Commander_tag_green");
+		public static Image GetObsidianSanctumIcon() => GetEncounterImage("Commander_tag_purple");
+		public static Image GetEdgeOfTheMistsIcon() => GetEncounterImage("Commander_tag_white");
+		public static Image GetArmisticeBastionIcon() => GetEncounterImage("Armistice_Bastion_Pass");
 		private static Image GetEncounterImage(string iconName)
 		{
 			return GetImage($"ArenaNet/Bosses/{iconName}.png");

@@ -122,7 +122,14 @@ namespace GW2Scratch.ArcdpsLogManager
 		private Lazy<Image> MassiveKittyGolemIcon { get; } = new Lazy<Image>(Resources.GetMassiveKittyGolemIcon);
 
 		// WORLD VS WORLD
-		private Lazy<Image> WorldVersusWorldIcon { get; } = new Lazy<Image>(Resources.GetWorldVersusWorldIcon);
+		private Lazy<Image> EternalBattlegroundsIcon { get; } = new Lazy<Image>(Resources.GetEternalBattlegroundsIcon);
+		private Lazy<Image> RedBorderlandsIcon { get; } = new Lazy<Image>(Resources.GetRedBorderlandsIcon);
+		private Lazy<Image> BlueBorderlandsIcon { get; } = new Lazy<Image>(Resources.GetBlueBorderlandsIcon);
+		private Lazy<Image> GreenBorderlandsIcon { get; } = new Lazy<Image>(Resources.GetGreenBorderlandsIcon);
+		private Lazy<Image> ObsidianSanctumIcon { get; } = new Lazy<Image>(Resources.GetObsidianSanctumIcon);
+		private Lazy<Image> EdgeOfTheMistsIcon { get; } = new Lazy<Image>(Resources.GetEdgeOfTheMistsIcon);
+		private Lazy<Image> ArmisticeBastionIcon { get; } = new Lazy<Image>(Resources.GetArmisticeBastionIcon);
+
 
 		public Image GetTinyLogIcon() => TinyIconLog.Value;
 		public Image GetTinyFractalsIcon() => TinyIconFractals.Value;
@@ -252,8 +259,6 @@ namespace GW2Scratch.ArcdpsLogManager
 				Encounter.MediumKittyGolem => MediumKittyGolemIcon.Value,
 				Encounter.LargeKittyGolem => LargeKittyGolemIcon.Value,
 				Encounter.MassiveKittyGolem => MassiveKittyGolemIcon.Value,
-				// WORLD VS WORLD
-				Encounter.WorldVersusWorld => WorldVersusWorldIcon.Value,
 				_ => null
 			};
 		}
@@ -261,6 +266,21 @@ namespace GW2Scratch.ArcdpsLogManager
 		public Image GetRaidWingIcon()
 		{
 			return GenericRaidWing.Value;
+		}
+
+		public Image GetWvWMapIcon(string mapName)
+		{
+			return mapName switch
+			{
+				"Eternal Battlegrounds" => EternalBattlegroundsIcon.Value,
+				"Red Desert Borderlands" => RedBorderlandsIcon.Value,
+				"Blue Alpine Borderlands" => BlueBorderlandsIcon.Value,
+				"Green Alpine Borderlands" => GreenBorderlandsIcon.Value,
+				"Obsidian Sanctum" => ObsidianSanctumIcon.Value,
+				"Edge of the Mists" => EdgeOfTheMistsIcon.Value,
+				"Armistice Bastion" => ArmisticeBastionIcon.Value,
+				_ => null
+			};
 		}
 	}
 }

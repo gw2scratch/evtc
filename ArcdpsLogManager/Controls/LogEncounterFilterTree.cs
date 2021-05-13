@@ -165,6 +165,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 					RaidLogGroup _ => imageProvider.GetTinyRaidIcon(),
 					CategoryLogGroup categoryGroup => GetCategoryIcon(categoryGroup.Category),
 					EncounterLogGroup encounterGroup => GetEncounterIcon(encounterGroup.Encounter),
+					MapLogGroup mapGroup => imageProvider.GetWvWMapIcon(mapGroup.Name),
 					_ => item.Icon
 				};
 
