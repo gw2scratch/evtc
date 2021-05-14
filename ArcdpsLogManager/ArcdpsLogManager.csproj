@@ -1,34 +1,38 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-	<PropertyGroup>
-		<TargetFramework>netstandard2.1</TargetFramework>
-		<RootNamespace>GW2Scratch.ArcdpsLogManager</RootNamespace>
-		<AssemblyName>GW2Scratch.ArcdpsLogManager</AssemblyName>
-		<LangVersion>latest</LangVersion>
-		<Title>arcdps Log Manager</Title>
-		<!--
-      The last value in the version is used to differentiate analytics versions.
-      This is useful when developing a new version of the manager and some analytics have changed,
-      requiring logs to be reprocessed. Without this, we wouldn't be able to detect
-      a log has already been reprocessed during development.
-      Each new log data update causes a revision increase.
-      See LogDataUpdater for the updates.
-    -->
-    <Version>1.1.0.0</Version>
-  </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="Eto.Forms" Version="2.5.11-ci-20210422.772645364" />
-    <PackageReference Include="Gw2Sharp" Version="0.6.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="RestSharp" Version="106.6.10" />
-    <PackageReference Include="System.Net.Http" Version="4.3.4" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\EVTCAnalytics\EVTCAnalytics.csproj" />
-    <ProjectReference Include="..\EVTCInspector\EVTCInspector.csproj" />
-  </ItemGroup>
-	<ItemGroup>
-		<None Update="Images\**">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</None>
-	</ItemGroup>
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+        <RootNamespace>GW2Scratch.ArcdpsLogManager</RootNamespace>
+        <!--
+        Warning: Do not change the following assembly name without checking .csproj files of all platform launchers,
+        they may rely on this project having this specific assembly name for version synchronization.
+        -->
+        <AssemblyName>GW2Scratch.ArcdpsLogManager</AssemblyName>
+        <LangVersion>latest</LangVersion>
+        <Title>arcdps Log Manager</Title>
+        <!--
+        The last value in the version is used to differentiate analytics versions.
+        This is useful when developing a new version of the manager and some analytics have changed,
+        requiring logs to be reprocessed. Without this, we wouldn't be able to detect
+        a log has already been reprocessed during development.
+        Each new log data update causes a revision increase.
+        See LogDataUpdater for the updates.
+        -->
+        <Version>1.1.0.0</Version>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Eto.Forms" Version="2.5.11-ci-20210422.772645364"/>
+        <PackageReference Include="Gw2Sharp" Version="0.6.0"/>
+        <PackageReference Include="Newtonsoft.Json" Version="12.0.3"/>
+        <PackageReference Include="RestSharp" Version="106.6.10"/>
+        <PackageReference Include="System.Net.Http" Version="4.3.4"/>
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\EVTCAnalytics\EVTCAnalytics.csproj"/>
+        <ProjectReference Include="..\EVTCInspector\EVTCInspector.csproj"/>
+    </ItemGroup>
+    <ItemGroup>
+        <None Update="Images\**">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
 </Project>

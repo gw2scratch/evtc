@@ -10,7 +10,7 @@ This is the full changelog of the arcdps Log Manager.
 
 #### Fixes
 - Added an exe icon for the Windows version
-
+- The Windows exe file now has the correct version numbers
 
 ## Log Manager v1.1
 
