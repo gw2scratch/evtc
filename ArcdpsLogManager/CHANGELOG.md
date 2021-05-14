@@ -2,6 +2,16 @@
 
 This is the full changelog of the arcdps Log Manager.
 
+## Unreleased
+
+#### New features
+
+#### Changes
+
+#### Fixes
+- Added an exe icon for the Windows version
+
+
 ## Log Manager v1.1
 
 #### New features
