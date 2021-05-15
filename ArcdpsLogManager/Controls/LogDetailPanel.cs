@@ -314,6 +314,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 
 			bool uploadEnabled = false;
 			bool openEnabled = false;
+			bool copyEnabled = false;
 			string text = "";
 			string uploadButtonText;
 			var upload = logData.DpsReportEIUpload;
@@ -341,13 +342,14 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 					uploadButtonText = reuploadButtonText;
 					uploadEnabled = true;
 					openEnabled = true;
+					copyEnabled = true;
 					text = upload.Url;
 					break;
 				default:
 					throw new ArgumentOutOfRangeException();
 			}
 
-			copyButton.Enabled = openEnabled;
+			copyButton.Enabled = copyEnabled;
 			dpsReportUploadButton.Text = uploadButtonText;
 			dpsReportUploadButton.Enabled = uploadEnabled;
 			dpsReportOpenButton.Enabled = openEnabled;

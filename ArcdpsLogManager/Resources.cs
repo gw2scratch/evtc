@@ -157,6 +157,6 @@ namespace GW2Scratch.ArcdpsLogManager
 			return GetImage($"ArenaNet/Bosses/{iconName}.png");
 		}
 		// MISC
-		public static Image GetGetCopyButtonIcon() => GetImage($"Misc/Copy_36x36.png");
+		public static Image GetGetCopyButtonIcon() => GetImage($"Misc/Copy_Black_36x36.png");
 	}
 }
