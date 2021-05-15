@@ -205,7 +205,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 					}
 					EndHorizontal();
 
-					Image copyImage = imageProvider.GetCopyButtonImage();
+					Image copyImage = imageProvider.GetCopyButtonEnabledImage();
 					copyButton = new Button { Image = copyImage , Height = 25 , Width = 25};
 					dpsReportUploadButton = new Button();
 					dpsReportTextBox = new TextBox {ReadOnly = true};
@@ -348,6 +348,9 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				default:
 					throw new ArgumentOutOfRangeException();
 			}
+
+			if (copyEnabled) copyButton.Image = ImageProvider.GetCopyButtonEnabledImage();
+			else copyButton.Image = ImageProvider.GetCopyButtonDisabledImage();
 
 			copyButton.Enabled = copyEnabled;
 			dpsReportUploadButton.Text = uploadButtonText;
