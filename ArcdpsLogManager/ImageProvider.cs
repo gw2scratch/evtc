@@ -130,6 +130,8 @@ namespace GW2Scratch.ArcdpsLogManager
 		private Lazy<Image> EdgeOfTheMistsIcon { get; } = new Lazy<Image>(Resources.GetEdgeOfTheMistsIcon);
 		private Lazy<Image> ArmisticeBastionIcon { get; } = new Lazy<Image>(Resources.GetArmisticeBastionIcon);
 
+		// MISC
+		private Lazy<Image> CopyButtonIcon { get; } = new Lazy<Image>(Resources.GetGetCopyButtonIcon);
 
 		public Image GetTinyLogIcon() => TinyIconLog.Value;
 		public Image GetTinyFractalsIcon() => TinyIconFractals.Value;
@@ -140,6 +142,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		public Image GetTinyWorldVersusWorldIcon() => TinyIconWorldVersusWorld.Value;
 		public Image GetTinyUncategorizedIcon() => TinyIconUncategorized.Value;
 		public Image GetTinyFestivalIcon() => TinyIconFestival.Value;
+		public Image GetCopyButtonImage() => CopyButtonIcon.Value;
 
 		public Image GetTinyProfessionIcon(Profession profession)
 		{
