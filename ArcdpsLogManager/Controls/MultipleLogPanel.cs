@@ -273,7 +273,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 						EndHorizontal();
 					}
 					EndVertical();
-					BeginVertical();
+					BeginVertical(yscale:true);
 					{
 						AddRow(dpsReportUploadProgressBar);
 						BeginHorizontal(yscale: true);
@@ -281,15 +281,17 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 							Add(dpsReportLinkTextArea);
 						}
 						EndHorizontal();
-						BeginHorizontal(yscale: false);
+					}
+					EndVertical();
+					BeginVertical(yscale:false);
+					{
+						BeginHorizontal();
 						{
-							AddRow();
-							{
-								Add(copyButton);
-								Add(dpsReportOpenButton);
-							}
+							Add(copyButton);
+							Add(dpsReportOpenButton);
 						}
 						EndHorizontal();
+						
 					}
 					EndVertical();
 				}
