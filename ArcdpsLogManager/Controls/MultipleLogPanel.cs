@@ -95,6 +95,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 
 			int finished = uploaded + uploadsFailed + processingFailed;
 			int totalRequested = queued + uploading + uploaded + uploadsFailed + processingFailed;
+			bool copyEnabled = false;
 			dpsReportUploadProgressBar.MaxValue = totalRequested > 0 ? totalRequested : 1;
 			dpsReportUploadProgressBar.Value = finished;
 			dpsReportUploadButton.Enabled = notUploaded + uploadsFailed > 0;
@@ -110,11 +111,16 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			dpsReportOpenButton.Enabled = uploaded > 0;
 			dpsReportLinkTextArea.Text = string.Join(Environment.NewLine,
 				logData.Where(x => x.DpsReportEIUpload.Url != null).Select(x => x.DpsReportEIUpload.Url));
+			copyButton.Enabled = uploaded > 0;
+			if (uploaded > 0) copyEnabled = true;			
+			if (copyEnabled) copyButton.Image = ImageProvider.GetCopyButtonEnabledImage();
+			else copyButton.Image = ImageProvider.GetCopyButtonDisabledImage();
 		}
 
 		public MultipleLogPanel(LogCache logCache, LogDataProcessor logProcessor, UploadProcessor uploadProcessor,
 			ImageProvider imageProvider, ILogNameProvider nameProvider)
 		{
+			ImageProvider = imageProvider;
 			Padding = new Padding(10);
 			Width = 350;
 			Visible = false;
