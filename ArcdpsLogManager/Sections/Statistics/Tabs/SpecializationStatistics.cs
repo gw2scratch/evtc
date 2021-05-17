@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Eto.Drawing;
 using Eto.Forms;
+using GW2Scratch.ArcdpsLogManager.GameData;
 using GW2Scratch.ArcdpsLogManager.Logs;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
 
@@ -26,7 +27,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections.Statistics.Tabs
 				{
 					BeginGroup("Profession counts", new Padding(5), new Size(5, 5), xscale: true);
 					{
-						foreach (var profession in GameData.Professions.Select(x => x.Profession))
+						foreach (var profession in ProfessionData.Professions.Select(x => x.Profession))
 						{
 							professionCountLabels[profession] = new Label {Text = "Unknown"};
 
@@ -49,7 +50,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections.Statistics.Tabs
 						{
 							BeginVertical(new Padding(5), new Size(5, 5));
 							{
-								foreach (var profession in GameData.Professions)
+								foreach (var profession in ProfessionData.Professions)
 								{
 									BeginHorizontal();
 									{

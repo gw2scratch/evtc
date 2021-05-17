@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using GW2Scratch.ArcdpsLogManager.GameData;
 using GW2Scratch.ArcdpsLogManager.Logs.Filters.Composition;
 
 namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
@@ -14,11 +15,11 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 		public IReadOnlyList<EliteSpecializationPlayerCountFilter> PathOfFireSpecializationFilters { get; }
 
 		public CompositionFilters() : this(
-			GameData.Professions.Select(x => x.Profession)
+			ProfessionData.Professions.Select(x => x.Profession)
 				.Select(profession => new CoreProfessionPlayerCountFilter(profession)),
-			GameData.Professions.Select(x => x.HoT)
+			ProfessionData.Professions.Select(x => x.HoT)
 				.Select(specialization => new EliteSpecializationPlayerCountFilter(specialization)),
-			GameData.Professions.Select(x => x.PoF)
+			ProfessionData.Professions.Select(x => x.PoF)
 				.Select(specialization => new EliteSpecializationPlayerCountFilter(specialization))
 		)
 		{

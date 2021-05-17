@@ -1,3 +1,4 @@
+using GW2Scratch.ArcdpsLogManager.GameData;
 using System.Collections.Generic;
 using GW2Scratch.EVTCAnalytics.GameData.Encounters;
 
@@ -13,13 +14,13 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters.Groups
 		public override string Name => GroupName;
 		public override IEnumerable<LogGroup> Subgroups { get; } = new LogGroup[]
 		{
-			new MapLogGroup(38, "Eternal Battlegrounds"),
-			new MapLogGroup(1099, "Red Desert Borderlands"),
-			new MapLogGroup(96, "Blue Alpine Borderlands"),
-			new MapLogGroup(95, "Green Alpine Borderlands"),
-			new MapLogGroup(899, "Obsidian Sanctum"),
-			new MapLogGroup(968, "Edge of the Mists"),
-			new MapLogGroup(1315, "Armistice Bastion"),
+			new MapLogGroup(GameMap.EternalBattlegrounds, "Eternal Battlegrounds"),
+			new MapLogGroup(GameMap.RedDesertBorderlands, "Red Desert Borderlands"),
+			new MapLogGroup(GameMap.BlueAlpineBorderlands, "Blue Alpine Borderlands"),
+			new MapLogGroup(GameMap.GreenAlpineBorderlands, "Green Alpine Borderlands"),
+			new MapLogGroup(GameMap.ObsidianSanctum, "Obsidian Sanctum"),
+			new MapLogGroup(GameMap.EdgeOfTheMists, "Edge of the Mists"),
+			new MapLogGroup(GameMap.ArmisticeBastion, "Armistice Bastion"),
 		};
 
 		public WorldVersusWorldLogGroup() : base(EncounterCategory.WorldVersusWorld)

@@ -161,11 +161,11 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			{
 				item.Icon = item.LogGroup switch
 				{
-					RootLogGroup _ => imageProvider.GetTinyLogIcon(),
-					RaidLogGroup _ => imageProvider.GetTinyRaidIcon(),
+					RootLogGroup => imageProvider.GetTinyLogIcon(),
+					RaidLogGroup => imageProvider.GetTinyRaidIcon(),
 					CategoryLogGroup categoryGroup => GetCategoryIcon(categoryGroup.Category),
 					EncounterLogGroup encounterGroup => GetEncounterIcon(encounterGroup.Encounter),
-					MapLogGroup mapGroup => imageProvider.GetWvWMapIcon(mapGroup.Name),
+					MapLogGroup mapGroup => imageProvider.GetWvWMapIcon(mapGroup.Map),
 					_ => item.Icon
 				};
 

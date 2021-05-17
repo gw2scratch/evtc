@@ -1,9 +1,9 @@
-using System.Collections.Generic;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
+using System.Collections.Generic;
 
-namespace GW2Scratch.ArcdpsLogManager
+namespace GW2Scratch.ArcdpsLogManager.GameData
 {
-	public static class GameData
+	public static class ProfessionData
 	{
 		public static IReadOnlyList<(Profession Profession, EliteSpecialization HoT, EliteSpecialization PoF)>
 			Professions { get; } = new[]
