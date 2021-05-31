@@ -146,6 +146,9 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 						{WeaponType.Axe, new[] {28029, 28409}},
 						{WeaponType.Shortbow, new[] {40497, 40175, 41829, 43993, 41820}}
 					}
+				},
+				{
+					Profession.None, new Dictionary<WeaponType, int[]>()
 				}
 			};
 

@@ -19,6 +19,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		private Lazy<Image> TinyIconNecromancer { get; } = new Lazy<Image>(Resources.GetTinyIconNecromancer);
 		private Lazy<Image> TinyIconElementalist { get; } = new Lazy<Image>(Resources.GetTinyIconElementalist);
 		private Lazy<Image> TinyIconMesmer { get; } = new Lazy<Image>(Resources.GetTinyIconMesmer);
+		private Lazy<Image> TinyIconUnknownProfession { get; } = new Lazy<Image>(Resources.GetTinyIconUnknown);
 
 		// SPECIALIZATIONS
 		private Lazy<Image> TinyIconBerserker { get; } = new Lazy<Image>(Resources.GetTinyIconBerserker);
@@ -155,6 +156,7 @@ namespace GW2Scratch.ArcdpsLogManager
 				Profession.Necromancer => TinyIconNecromancer.Value,
 				Profession.Elementalist => TinyIconElementalist.Value,
 				Profession.Mesmer => TinyIconMesmer.Value,
+				Profession.None => TinyIconUnknownProfession.Value,
 				_ => throw new ArgumentOutOfRangeException(nameof(profession)),
 			};
 		}

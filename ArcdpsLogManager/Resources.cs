@@ -24,6 +24,8 @@ namespace GW2Scratch.ArcdpsLogManager
 		{
 			return new Icon(GetImagePath("program_icon.ico"));
 		}
+		
+		public static Image GetTinyIconUnknown() => GetImage("unknown_20px.png");
 		// PROFESSIONS
 		public static Image GetTinyIconWarrior() => GetImage("Tango/Warrior_tango_icon_20px.png");
 		public static Image GetTinyIconGuardian() => GetImage("Tango/Guardian_tango_icon_20px.png");

@@ -148,7 +148,21 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				if (agent.IsElite != 0xFFFFFFFF)
 				{
 					// Player
-					var profession = Professions[agent.Prof - 1];
+					var professionIndex = agent.Prof - 1;
+					Profession profession;
+					
+					// We need to check if the profession is valid.
+					// The 2021-05-25 game update caused old versions of arcdps to report invalid profession values.
+					// Future game versions might also introduce new professions.
+					if (professionIndex > 0 && professionIndex < Professions.Length)
+					{
+						profession = Professions[professionIndex];
+					}
+					else
+					{
+						profession = Profession.None;
+					}
+
 					EliteSpecialization specialization;
 					if (agent.IsElite == 0)
 					{
