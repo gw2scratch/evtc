@@ -172,7 +172,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 
 				var parsedLog = logAnalytics.Parser.ParseLog(FileInfo.FullName);
 				var log = logAnalytics.Processor.ProcessLog(parsedLog);
-				var analyzer = logAnalytics.AnalyzerFactory(log);
+				var analyzer = logAnalytics.CreateAnalyzer(log);
 
 				GameLanguage = log.GameLanguage;
 				GameBuild = log.GameBuild;
