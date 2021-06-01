@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using GW2Scratch.ArcdpsLogManager.Logs.Caching;
 using Newtonsoft.Json;
+using System.Text;
 
 namespace GW2Scratch.ArcdpsLogManager.Logs
 {
@@ -87,7 +88,21 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 
 				if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
 
-				using (var writer = new StreamWriter(tmpFilename))
+				// We need to use a non-throwing replacement fallback for encoding because of an arcdps issue.
+				// arcdps 20210324 generated directories that often contain invalid Unicode (the names contain
+				// raw memory). This would only occur if guild or character name folders were enabled.
+				// This issue was fixed in arcdps 20210327. Since this only lasted 3 days and the configuration
+				// is not very common among arcdps users, we make do with a simple solution - replacing invalid
+				// characters and always processing those logs again as the filename will never match
+				// after the replacement.
+				// TODO: A better solution would be nice.
+				var encoding = Encoding.GetEncoding(
+					Encoding.UTF8.CodePage,
+					new EncoderReplacementFallback("�"),
+					new DecoderExceptionFallback()
+				);
+				
+				using (var writer = new StreamWriter(tmpFilename, false, encoding))
 				{
 					var serializer = new JsonSerializer();
 					var storage = new LogCacheStorage() {
