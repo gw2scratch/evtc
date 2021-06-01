@@ -7,10 +7,11 @@ This is the full changelog of the arcdps Log Manager.
 #### New features
 
 #### Changes
-
-#### Fixes
 - Added an exe icon for the Windows version
 - The Windows exe file now has the correct version numbers
+
+#### Fixes
+- Fixed a crash that occurs when saving logs in case arcdps 2021-03-24 generated directory names with invalid Unicode characters (logs in these directories will be processed again on every Log Manager launch, you should move them to directories with normal names)
 
 ## Log Manager v1.1
 
