@@ -109,29 +109,29 @@ namespace GW2Scratch.EVTCAnalytics.Model
 		/// Creates a new instance of a <see cref="Log"/>.
 		/// </summary>
 		/// <param name="mainTarget">The main target of the log.</param>
-		/// <param name="context">The context of a <see cref="LogProcessor"/>.</param>
-		public Log(Agent mainTarget, LogProcessorContext context)
+		/// <param name="state">The context of a <see cref="LogProcessor"/>.</param>
+		public Log(Agent mainTarget, LogProcessorState state)
 		{
 			MainTarget = mainTarget;
-			LogType = context.LogType;
-			EncounterData = context.EncounterData;
-			GameLanguage = context.GameLanguage;
-			EvtcVersion = context.EvtcVersion;
-			StartTime = context.LogStartTime;
-			EndTime = context.LogEndTime;
-			PointOfView = context.PointOfView;
-			LanguageId = context.GameLanguageId;
-			GameLanguage = context.GameLanguage;
-			GameBuild = context.GameBuild;
-			GameShardId = context.GameShardId;
-			MapId = context.MapId;
-			Events = context.Events;
-			Agents = context.Agents;
-			Skills = context.Skills;
+			LogType = state.LogType;
+			EncounterData = state.EncounterData;
+			GameLanguage = state.GameLanguage;
+			EvtcVersion = state.EvtcVersion;
+			StartTime = state.LogStartTime;
+			EndTime = state.LogEndTime;
+			PointOfView = state.PointOfView;
+			LanguageId = state.GameLanguageId;
+			GameLanguage = state.GameLanguage;
+			GameBuild = state.GameBuild;
+			GameShardId = state.GameShardId;
+			MapId = state.MapId;
+			Events = state.Events;
+			Agents = state.Agents;
+			Skills = state.Skills;
 		}
 
 		/// <summary>
-		/// Creates a new instance of a <see cref="Log"/> without requiring a <see cref="LogProcessorContext"/>.
+		/// Creates a new instance of a <see cref="Log"/> without requiring a <see cref="LogProcessorState"/>.
 		/// </summary>
 		public Log(Agent mainTarget, LogType logType, IEnumerable<Event> events, IEnumerable<Agent> agents,
 			IEnumerable<Skill> skills, IEncounterData encounterData,

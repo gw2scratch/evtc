@@ -8,7 +8,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Steps
 		/// <summary>
 		/// Applies changes to the log processor context.
 		/// </summary>
-		/// <param name="context">The log processor context.</param>
-		void Process(LogProcessorContext context);
+		/// <param name="state">The log processor context.</param>
+		void Process(LogProcessorState state);
 	}
 }

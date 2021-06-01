@@ -11,7 +11,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 	/// <summary>
 	/// Contains the state of the log processor.
 	/// </summary>
-	public class LogProcessorContext
+	public class LogProcessorState
 	{
 		public List<Agent> Agents { get; set; }
 		public Dictionary<ulong, Agent> AgentsByAddress { get; set; }

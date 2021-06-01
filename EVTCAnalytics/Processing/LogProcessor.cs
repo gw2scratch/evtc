@@ -52,7 +52,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 
 		public Log ProcessLog(ParsedLog log)
 		{
-			var context = new LogProcessorContext();
+			var context = new LogProcessorState();
 			context.EvtcVersion = log.LogVersion.BuildVersion;
 
 			context.Agents = GetAgents(log).ToList();
@@ -115,9 +115,9 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			return new Log(mainTarget, context);
 		}
 
-		private IEncounterData GetEncounterData(Agent mainTarget, LogProcessorContext context)
+		private IEncounterData GetEncounterData(Agent mainTarget, LogProcessorState state)
 		{
-			return EncounterIdentifier.GetEncounterData(mainTarget, context.Events, context.Agents, context.Skills, context.GameBuild, context.LogType);
+			return EncounterIdentifier.GetEncounterData(mainTarget, state.Events, state.Agents, state.Skills, state.GameBuild, state.LogType);
 		}
 
 		private IEnumerable<Skill> GetSkills(ParsedLog log)
@@ -252,9 +252,9 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			}
 		}
 
-		private void SetAgentAwareTimes(LogProcessorContext context)
+		private void SetAgentAwareTimes(LogProcessorState state)
 		{
-			foreach (var ev in context.Events)
+			foreach (var ev in state.Events)
 			{
 				if (ev is AgentEvent agentEvent)
 				{
@@ -302,16 +302,16 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				}
 			}
 
-			context.AwareTimesSet = true;
+			state.AwareTimesSet = true;
 		}
 
-		private void AssignAgentMasters(ParsedLog log, LogProcessorContext context)
+		private void AssignAgentMasters(ParsedLog log, LogProcessorState state)
 		{
 			// Requires aware times to be set first
-			Debug.Assert(context.AwareTimesSet);
-			Debug.Assert(!context.MastersAssigned);
-			Debug.Assert(context.AgentsByAddress != null);
-			Debug.Assert(context.AgentsById != null);
+			Debug.Assert(state.AwareTimesSet);
+			Debug.Assert(!state.MastersAssigned);
+			Debug.Assert(state.AgentsByAddress != null);
+			Debug.Assert(state.AgentsById != null);
 
 			foreach (var combatItem in log.ParsedCombatItems)
 			{
@@ -321,7 +321,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					{
 						Agent minion = null;
 
-						if (context.AgentsById.TryGetValue(combatItem.SrcAgentId, out var agentsWithId))
+						if (state.AgentsById.TryGetValue(combatItem.SrcAgentId, out var agentsWithId))
 						{
 							foreach (var agent in agentsWithId)
 							{
@@ -336,7 +336,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						if (minion != null && minion.Master == null)
 						{
 							Agent master = null;
-							if (context.AgentsById.TryGetValue(combatItem.SrcMasterId, out var potentialMasters))
+							if (state.AgentsById.TryGetValue(combatItem.SrcMasterId, out var potentialMasters))
 							{
 								foreach (var agent in potentialMasters)
 								{
@@ -383,7 +383,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 
 					AttackTarget target = null;
 					Gadget master = null;
-					foreach (var agent in context.Agents)
+					foreach (var agent in state.Agents)
 					{
 						switch (agent)
 						{
@@ -404,17 +404,17 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				}
 			}
 
-			context.MastersAssigned = true;
+			state.MastersAssigned = true;
 		}
 
-		private void GetDataFromCombatItems(ParsedLog log, LogProcessorContext context)
+		private void GetDataFromCombatItems(ParsedLog log, LogProcessorState state)
 		{
-			Debug.Assert(context.Agents != null);
-			Debug.Assert(context.Skills != null);
-			Debug.Assert(context.AgentsByAddress != null);
+			Debug.Assert(state.Agents != null);
+			Debug.Assert(state.Skills != null);
+			Debug.Assert(state.AgentsByAddress != null);
 
 			var skillsById = new Dictionary<uint, Skill>();
-			foreach (var skill in context.Skills)
+			foreach (var skill in state.Skills)
 			{
 				// Rarely, in old logs a skill may be duplicated (typically a skill with id 0),
 				// so we only use the first definition
@@ -424,13 +424,13 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				}
 			}
 
-			context.GameLanguage = GameLanguage.Other;
+			state.GameLanguage = GameLanguage.Other;
 			var events = new List<Event>();
 			foreach (var item in log.ParsedCombatItems)
 			{
 				if (item.IsStateChange == StateChange.LogStart)
 				{
-					if (context.LogStartTime != null)
+					if (state.LogStartTime != null)
 					{
 						throw new LogProcessingException("Multiple log start combat items found");
 					}
@@ -438,7 +438,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					var serverTime = DateTimeOffset.FromUnixTimeSeconds(item.Value);
 					var localTime = DateTimeOffset.FromUnixTimeSeconds(item.BuffDmg);
 
-					context.LogStartTime = new LogTime(localTime, serverTime, item.Time);
+					state.LogStartTime = new LogTime(localTime, serverTime, item.Time);
 					continue;
 				}
 
@@ -451,7 +451,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						continue;
 					}
 
-					if (context.LogEndTime != null)
+					if (state.LogEndTime != null)
 					{
 						throw new LogProcessingException("Multiple log end combat items found");
 					}
@@ -459,15 +459,15 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					var serverTime = DateTimeOffset.FromUnixTimeSeconds(item.Value);
 					var localTime = DateTimeOffset.FromUnixTimeSeconds(item.BuffDmg);
 
-					context.LogEndTime = new LogTime(localTime, serverTime, item.Time);
+					state.LogEndTime = new LogTime(localTime, serverTime, item.Time);
 					continue;
 				}
 
 				if (item.IsStateChange == StateChange.PointOfView)
 				{
-					if (context.AgentsByAddress.TryGetValue(item.SrcAgent, out var agent))
+					if (state.AgentsByAddress.TryGetValue(item.SrcAgent, out var agent))
 					{
-						context.PointOfView = agent as Player ??
+						state.PointOfView = agent as Player ??
 						                      throw new LogProcessingException("The point of view agent is not a player");
 					}
 
@@ -477,32 +477,32 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				if (item.IsStateChange == StateChange.Language)
 				{
 					int languageId = (int) item.SrcAgent;
-					context.GameLanguageId = languageId;
-					context.GameLanguage = GameLanguageIds.GetLanguageById(languageId);
+					state.GameLanguageId = languageId;
+					state.GameLanguage = GameLanguageIds.GetLanguageById(languageId);
 					continue;
 				}
 
 				if (item.IsStateChange == StateChange.GWBuild)
 				{
-					context.GameBuild = (int) item.SrcAgent;
+					state.GameBuild = (int) item.SrcAgent;
 					continue;
 				}
 
 				if (item.IsStateChange == StateChange.ShardId)
 				{
-					context.GameShardId = (int) item.SrcAgent;
+					state.GameShardId = (int) item.SrcAgent;
 					continue;
 				}
 
 				if (item.IsStateChange == StateChange.MapId)
 				{
-					context.MapId = (int) item.SrcAgent;
+					state.MapId = (int) item.SrcAgent;
 					continue;
 				}
 
 				if (item.IsStateChange == StateChange.Guild)
 				{
-					if (context.AgentsByAddress.TryGetValue(item.SrcAgent, out Agent agent))
+					if (state.AgentsByAddress.TryGetValue(item.SrcAgent, out Agent agent))
 					{
 						var player = (Player) agent;
 						var guid = new byte[16];
@@ -544,24 +544,24 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					continue;
 				}
 
-				var processedEvent = GetEvent(context, skillsById, item);
+				var processedEvent = GetEvent(state, skillsById, item);
 				if (!(processedEvent is UnknownEvent) || !IgnoreUnknownEvents)
 				{
 					events.Add(processedEvent);
 				}
 			}
 
-			context.Events = events;
+			state.Events = events;
 		}
 
-		private Event GetEvent(LogProcessorContext context,
+		private Event GetEvent(LogProcessorState state,
 			IReadOnlyDictionary<uint, Skill> skillsById, ParsedCombatItem item)
 		{
-			Debug.Assert(context.AgentsByAddress != null);
+			Debug.Assert(state.AgentsByAddress != null);
 
 			Agent GetAgentByAddress(ulong address)
 			{
-				if (context.AgentsByAddress.TryGetValue(address, out Agent agent))
+				if (state.AgentsByAddress.TryGetValue(address, out Agent agent))
 				{
 					return agent;
 				}

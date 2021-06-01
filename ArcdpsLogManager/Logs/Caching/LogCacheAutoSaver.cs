@@ -13,7 +13,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Caching
 			this.logCache = logCache;
 		}
 
-		public static LogCacheAutoSaver Started(LogCache cache, TimeSpan savePeriod)
+		public static LogCacheAutoSaver StartNew(LogCache cache, TimeSpan savePeriod)
 		{
 			var saver = new LogCacheAutoSaver(cache);
 			var timer = new Timer(saver.Callback);

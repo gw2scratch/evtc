@@ -23,13 +23,13 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Steps
 			SpeciesId = speciesId;
 		}
 
-		public void Process(LogProcessorContext context)
+		public void Process(LogProcessorState state)
 		{
-			Debug.Assert(context.Agents != null);
+			Debug.Assert(state.Agents != null);
 
 			var agentsToMerge = new HashSet<Agent>();
 			NPC resultingAgent = null;
-			foreach (var agent in context.Agents)
+			foreach (var agent in state.Agents)
 			{
 				if (agent is NPC npc && npc.SpeciesId == SpeciesId)
 				{
@@ -62,7 +62,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Steps
 			// TODO: Consider finding all Agent properties by reflection and perhaps
 			// compiling expressions to effectively update those. Newly introduced events
 			// with agent properties now have to be manually added here.
-			foreach (var ev in context.Events)
+			foreach (var ev in state.Events)
 			{
 				if (ev is AgentEvent agentEvent)
 				{
@@ -94,7 +94,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Steps
 				}
 			}
 
-			foreach (var agent in context.Agents)
+			foreach (var agent in state.Agents)
 			{
 				if (agentsToMerge.Contains(agent.Master))
 				{
@@ -123,11 +123,11 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Steps
 			}
 
 			// This should not be necessary once agent definitions are reworked
-			for (int i = 0; i < context.EncounterData.Targets.Count; i++)
+			for (int i = 0; i < state.EncounterData.Targets.Count; i++)
 			{
-				if (agentsToMerge.Contains(context.EncounterData.Targets[i]))
+				if (agentsToMerge.Contains(state.EncounterData.Targets[i]))
 				{
-					context.EncounterData.Targets[i] = resultingAgent;
+					state.EncounterData.Targets[i] = resultingAgent;
 				}
 			}
 

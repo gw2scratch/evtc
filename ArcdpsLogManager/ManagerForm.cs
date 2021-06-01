@@ -74,7 +74,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			ApiProcessor = new ApiProcessor(ApiData, new Gw2Client());
 			LogDataProcessor = new LogDataProcessor(LogCache, ApiProcessor, LogAnalytics);
 			LogNameProvider = new TranslatedLogNameProvider(GameLanguage.English);
-			LogCacheAutoSaver = LogCacheAutoSaver.Started(logCache, LogCacheAutoSavePeriod);
+			LogCacheAutoSaver = LogCacheAutoSaver.StartNew(logCache, LogCacheAutoSavePeriod);
 
 			LogDataProcessor.StoppingWithError += (sender, args) =>
 			{
