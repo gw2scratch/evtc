@@ -4,12 +4,25 @@ using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using System.Net.Http.Headers;
 
 namespace GW2Scratch.ArcdpsLogManager.Updates
 {
 	public class ProgramUpdateChecker
 	{
-		private readonly HttpClient httpClient = new HttpClient();
+		private readonly HttpClient httpClient = new HttpClient()
+		{
+			DefaultRequestHeaders =
+			{
+				UserAgent =
+				{
+					new ProductInfoHeaderValue("arcdpsLogManager",
+						typeof(ProgramUpdateChecker).Assembly.GetName().Version.ToString()
+					)
+				}
+			}
+		};
+
 		private readonly string versionEndpointUrl;
 
 		public ProgramUpdateChecker(string versionEndpointUrl)
