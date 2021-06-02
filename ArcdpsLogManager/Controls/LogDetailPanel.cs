@@ -91,7 +91,8 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				{
 					if (logData.ParsingException != null)
 					{
-						string exceptionText = $"{logData.ParsingException.ExceptionName}: {logData.ParsingException.Message}\n" +
+						string exceptionText = $"{logData.ParsingException.Message}\n\n\n" +
+						                       $"{logData.ParsingException.ExceptionName}: {logData.ParsingException.Message}\n" +
 						                       $"{logData.ParsingException.StackTrace}";
 						exceptionTextArea.Text = exceptionText;
 					}
