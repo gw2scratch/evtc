@@ -50,14 +50,14 @@ namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 			var endDateTimePicker = new DateTimePicker {Mode = DateTimePickerMode.DateTime};
 			endDateTimePicker.ValueBinding.Bind(this, x => x.Filters.MaxDateTime);
 
-			var lastDayButton = new Button {Text = "Last day"};
+			var lastDayButton = new Button {Text = "Last 24 hours"};
 			lastDayButton.Click += (sender, args) =>
 			{
 				startDateTimePicker.Value = DateTime.Now - TimeSpan.FromDays(1);
 				endDateTimePicker.Value = null;
 			};
 			
-			var lastWeekButton = new Button {Text = "Last week"};
+			var lastWeekButton = new Button {Text = "Last 7 days"};
 			lastWeekButton.Click += (sender, args) =>
 			{
 				startDateTimePicker.Value = DateTime.Now - TimeSpan.FromDays(7);
@@ -104,24 +104,20 @@ namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 					EndHorizontal();
 				}
 				EndGroup();
-				BeginGroup("Time", new Padding(4, 0, 4, 2), spacing: new Size(4, 4));
+				BeginGroup("Date", new Padding(4, 0, 4, 2), spacing: new Size(4, 4));
 				{
 					BeginVertical(spacing: new Size(4, 2));
 					{
 						BeginHorizontal();
 						{
-							Add(new Label
-							{
-								Text = "Between",
-								VerticalAlignment = VerticalAlignment.Center
-							});
+							Add(new Label {Text = "From", VerticalAlignment = VerticalAlignment.Center});
 							Add(startDateTimePicker);
 							Add(null, xscale: true);
 						}
 						EndHorizontal();
 						BeginHorizontal();
 						{
-							Add(new Label {Text = "and", VerticalAlignment = VerticalAlignment.Center});
+							Add(new Label {Text = "To", VerticalAlignment = VerticalAlignment.Center});
 							Add(endDateTimePicker);
 							Add(null, xscale: true);
 						}
