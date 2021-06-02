@@ -44,5 +44,20 @@ namespace GW2Scratch.ArcdpsLogManager.Sections.Statistics
 
 			return (double) successes / (successes + failures);
 		}
+
+		public TimeSpan GetAverageTimeByResult(EncounterResult result)
+		{
+			if (!LogCountsByResult.TryGetValue(result, out int resultCount))
+			{
+				resultCount = 1;
+			}
+
+			if (!TimeSpentByResult.TryGetValue(result, out TimeSpan time))
+			{
+				time = TimeSpan.Zero;
+			}
+
+			return new TimeSpan(time.Ticks / resultCount);
+		}
 	}
 }

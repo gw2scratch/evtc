@@ -104,6 +104,16 @@ namespace GW2Scratch.ArcdpsLogManager.Sections.Statistics.Tabs
 				};
 				gridView.Columns.Add(timeColumn);
 				customSorts[timeColumn] = (left, right) => GetTime(left).CompareTo(GetTime(right));
+
+				var averageTimeColumn = new GridColumn
+				{
+					HeaderText = $"Average {result.ToString()} time",
+					DataCell = new TextBoxCell
+					{
+						Binding = new DelegateBinding<EncounterStats, string>(x => FormatTimeSpan(x.GetAverageTimeByResult(result)))
+					}
+				};
+				gridView.Columns.Add(averageTimeColumn);
 			}
 
 			var successRateColumn = new GridColumn
