@@ -73,13 +73,13 @@ namespace GW2Scratch.ArcdpsLogManager.Sections.Statistics.Tabs
 			customSorts[totalTimeColumn] =
 				(left, right) => left.GetTotalTimeSpent().CompareTo(right.GetTotalTimeSpent());
 
-			var shownResults = new (EncounterResult Result, string CountHeaderText, string TimeHeaderText)[]
+			var shownResults = new (EncounterResult Result, string CountHeaderText, string TimeHeaderText, string AverageHeaderText)[]
 			{
-				(EncounterResult.Success, "Successes", "Time in successes"),
-				(EncounterResult.Failure, "Failures", "Time in failures")
+				(EncounterResult.Success, "Successes", "Time in successes", "Average success time"),
+				(EncounterResult.Failure, "Failures", "Time in failures", "Average failure time")
 			};
 
-			foreach ((var result, string countHeaderText, string timeHeaderText) in shownResults)
+			foreach ((var result, string countHeaderText, string timeHeaderText, string averageHeaderText) in shownResults)
 			{
 				gridView.Columns.Add(new GridColumn
 				{
@@ -107,7 +107,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections.Statistics.Tabs
 
 				var averageTimeColumn = new GridColumn
 				{
-					HeaderText = $"Average {result.ToString()} time",
+					HeaderText = averageHeaderText,
 					DataCell = new TextBoxCell
 					{
 						Binding = new DelegateBinding<EncounterStats, string>(x => FormatTimeSpan(x.GetAverageTimeByResult(result)))
