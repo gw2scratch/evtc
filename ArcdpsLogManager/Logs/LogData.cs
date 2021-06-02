@@ -16,27 +16,51 @@ using Newtonsoft.Json;
 
 namespace GW2Scratch.ArcdpsLogManager.Logs
 {
+	/// <summary>
+	/// Contains the data extracted from a log file through processing and the state of this extraction.
+	/// </summary>
 	public class LogData
 	{
 		private const string UnknownMainTargetName = "Unknown";
 
+		/// <summary>
+		/// The <see cref="FileInfo"/> of the corresponding log file.
+		/// </summary>
 		[JsonIgnore]
 		public FileInfo FileInfo { get; }
 
+		/// <summary>
+		/// The name of the corresponding log file.
+		/// </summary>
 		public string FileName => FileInfo.FullName;
 
+		/// <summary>
+		/// The players participating in the encounter recorded in this log.
+		/// </summary>
 		[JsonProperty]
 		public IEnumerable<LogPlayer> Players { get; set; }
 
+		/// <summary>
+		/// The result of the encounter recorded in this log.
+		/// </summary>
 		[JsonProperty]
 		public EncounterResult EncounterResult { get; set; } = EncounterResult.Unknown;
 
+		/// <summary>
+		/// The mode of the encounter recorded in this log.
+		/// </summary>
 		[JsonProperty]
 		public EncounterMode EncounterMode { get; set; } = EncounterMode.Unknown;
 
+		/// <summary>
+		/// The <see cref="Encounter"/> that is recorded in this log.
+		/// </summary>
 		[JsonProperty]
 		public Encounter Encounter { get; set; } = Encounter.Other;
 
+		/// <summary>
+		/// The ID of the game map this log was recorded on.
+		/// </summary>
 		[JsonProperty]
 		public int? MapId { get; set; }
 
@@ -84,12 +108,21 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 		[JsonProperty]
 		public DateTimeOffset EncounterStartTime { get; set; }
 
+		/// <summary>
+		/// The duration of the encounter.
+		/// </summary>
 		[JsonProperty]
 		public TimeSpan EncounterDuration { get; set; }
 
+		/// <summary>
+		/// The upload status for uploads to dps.report, using Elite Insights on dps.report.
+		/// </summary>
 		[JsonProperty]
 		public LogUpload DpsReportEIUpload { get; set; } = new LogUpload();
 
+		/// <summary>
+		/// The current status of the data processing.
+		/// </summary>
 		[JsonProperty]
 		public ParsingStatus ParsingStatus { get; set; } = ParsingStatus.Unparsed;
 
@@ -129,9 +162,15 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 		[JsonProperty]
 		public ISet<TagInfo> Tags { get; set; } = new HashSet<TagInfo>();
 
+		/// <summary>
+		/// Indicates whether a log is a favorite.
+		/// </summary>
 		[JsonProperty]
 		public bool IsFavorite { get; set; } = false;
 
+		/// <summary>
+		/// Indicates whether a log is missing the encounter start time
+		/// </summary>
 		[JsonProperty]
 		private bool MissingEncounterStart { get; set; } = false;
 
@@ -162,7 +201,14 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 			ParseMilliseconds = parseMilliseconds;
 		}
 
-		public void ParseData(LogAnalytics logAnalytics)
+		/// <summary>
+		/// Extracts data from the log file and stores it inside of this <see cref="LogData"/>.
+		/// </summary>
+		/// <param name="logAnalytics">The log analytics that will be used to process the log.</param>
+		/// <remarks>
+		/// Extracting the log data is fairly expensive in both file IO activity and CPU time.
+		/// </remarks>
+		public void ProcessLog(LogAnalytics logAnalytics)
 		{
 			try
 			{

@@ -23,7 +23,7 @@ namespace GW2Scratch.ArcdpsLogManager.Processing
 		{
 			return Task.Run(() =>
 			{
-				item.ParseData(analytics);
+				item.ProcessLog(analytics);
 				logCache.CacheLogData(item);
 				if (item.ParsingStatus == ParsingStatus.Parsed)
 				{
