@@ -6,13 +6,13 @@ namespace GW2Scratch.ArcdpsLogManager.Sections.Players
 {
 	public class PlayerData
 	{
-        public string AccountName { get; }
-        public IReadOnlyList<LogData> Logs { get; }
+		public string AccountName { get; }
+		public IReadOnlyList<LogData> Logs { get; }
 
-        public PlayerData(string accountName, IEnumerable<LogData> logs)
-        {
-	        AccountName = accountName;
-	        Logs = logs.ToArray();
-        }
+		public PlayerData(string accountName, IEnumerable<LogData> logs)
+		{
+			AccountName = accountName;
+			Logs = logs.ToArray();
+		}
 	}
 }

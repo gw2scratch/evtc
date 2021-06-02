@@ -9,9 +9,9 @@ namespace GW2Scratch.ArcdpsLogManager.Sections.Guilds
 	{
 		public GuildMember Account { get; }
 		public Profession Profession { get; }
-        public string Name { get; }
+		public string Name { get; }
 
-        public IReadOnlyList<LogData> Logs { get; }
+		public IReadOnlyList<LogData> Logs { get; }
 
 		public GuildCharacter(GuildMember account, Profession profession, string name, IEnumerable<LogData> logs)
 		{
