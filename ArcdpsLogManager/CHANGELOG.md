@@ -6,12 +6,13 @@ This is the full changelog of the arcdps Log Manager.
 
 #### New features
 - Added average times to encounter statistics (thanks, @robinwils!)
+- Added tooltips to profession and specialization icons
 
 #### Changes
 - Added an exe icon for the Windows version
 - The Windows exe file now has the correct version numbers
-- Added tooltips to profession and specialization icons
 - Improved labels and button text for date and time filters
+- Date and time filter buttons now round time to the nearest minute
 
 #### Fixes
 - Fixed a crash that occurs when saving logs in case arcdps 2021-03-24 generated directory names with invalid Unicode characters (logs in these directories will be processed again on every Log Manager launch, you should move them to directories with normal names)

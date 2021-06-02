@@ -53,14 +53,22 @@ namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 			var lastDayButton = new Button {Text = "Last 24 hours"};
 			lastDayButton.Click += (sender, args) =>
 			{
-				startDateTimePicker.Value = DateTime.Now - TimeSpan.FromDays(1);
+				// We round the time to the previous minute as the interface for picking seconds
+				// is hard to use on some platforms.
+				var newTime = DateTime.Now - TimeSpan.FromDays(1);
+				newTime -= TimeSpan.FromSeconds(newTime.Second);
+				startDateTimePicker.Value = newTime;
 				endDateTimePicker.Value = null;
 			};
 			
 			var lastWeekButton = new Button {Text = "Last 7 days"};
 			lastWeekButton.Click += (sender, args) =>
 			{
-				startDateTimePicker.Value = DateTime.Now - TimeSpan.FromDays(7);
+				// We round the time to the previous minute as the interface for picking seconds
+				// is hard to use on some platforms.
+				var newTime = DateTime.Now - TimeSpan.FromDays(7);
+				newTime -= TimeSpan.FromSeconds(newTime.Second);
+				startDateTimePicker.Value = newTime;
 				endDateTimePicker.Value = null;
 			};
 
