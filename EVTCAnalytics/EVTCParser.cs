@@ -1,3 +1,4 @@
+using GW2Scratch.EVTCAnalytics.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,14 +19,19 @@ namespace GW2Scratch.EVTCAnalytics
 			if (evtcFilename.EndsWith(".zip", StringComparison.OrdinalIgnoreCase) ||
 			    evtcFilename.EndsWith(".zevtc", StringComparison.OrdinalIgnoreCase))
 			{
-				using (var fileStream = new FileStream(evtcFilename, FileMode.Open, FileAccess.Read, FileShare.Read))
-				using (var arch = new ZipArchive(fileStream, ZipArchiveMode.Read))
-				using (var data = arch.Entries[0].Open())
+				using var fileStream = new FileStream(evtcFilename, FileMode.Open, FileAccess.Read, FileShare.Read);
+				using var arch = new ZipArchive(fileStream, ZipArchiveMode.Read);
+				
+				if (arch.Entries.Count == 0)
 				{
-					var bytes = new byte[arch.Entries[0].Length];
-					data.Read(bytes, 0, bytes.Length);
-					return ParseLog(bytes);
+					throw new LogParsingException("No EVTC file in ZIP archive.");
 				}
+				
+				using var data = arch.Entries[0].Open();
+					
+				var bytes = new byte[arch.Entries[0].Length];
+				data.Read(bytes, 0, bytes.Length);
+				return ParseLog(bytes);
 			}
 
 			var fileBytes = File.ReadAllBytes(evtcFilename);
