@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using Eto.Drawing;
 using Eto.Forms;
+using GW2Scratch.ArcdpsLogManager.GameData;
 using GW2Scratch.ArcdpsLogManager.Gw2Api;
 using GW2Scratch.ArcdpsLogManager.Logs;
 using GW2Scratch.ArcdpsLogManager.Logs.Naming;
@@ -116,7 +117,12 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 
 							knownCharacters.BeginHorizontal();
 							{
-								knownCharacters.Add(imageProvider.GetTinyProfessionIcon(character.Value.Profession));
+								var icon = new ImageView
+								{
+									Image = imageProvider.GetTinyProfessionIcon(character.Value.Profession),
+									ToolTip = GameNames.GetName(character.Value.Profession)
+								};
+								knownCharacters.Add(icon);
 								knownCharacters.Add(new Label {Text = name, VerticalAlignment = VerticalAlignment.Center});
 								knownCharacters.Add(new Label
 								{

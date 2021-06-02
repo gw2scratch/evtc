@@ -33,7 +33,11 @@ namespace GW2Scratch.ArcdpsLogManager.Sections.Statistics.Tabs
 
 							BeginHorizontal();
 							{
-								var imageView = new ImageView {Image = imageProvider.GetTinyProfessionIcon(profession)};
+								var imageView = new ImageView
+								{
+									Image = imageProvider.GetTinyProfessionIcon(profession),
+									ToolTip = GameNames.GetName(profession)
+								};
 								Add(imageView);
 								Add(professionCountLabels[profession]);
 							}
@@ -56,7 +60,10 @@ namespace GW2Scratch.ArcdpsLogManager.Sections.Statistics.Tabs
 									{
 										coreCountLabels[profession.Profession] = new Label {Text = "Unknown", Width = 60};
 										var coreImage = new ImageView
-											{Image = imageProvider.GetTinyProfessionIcon(profession.Profession)};
+										{
+											Image = imageProvider.GetTinyProfessionIcon(profession.Profession),
+											ToolTip = $"Core {GameNames.GetName(profession.Profession)}"
+										};
 										Add(coreImage);
 										Add(coreCountLabels[profession.Profession]);
 
@@ -64,7 +71,10 @@ namespace GW2Scratch.ArcdpsLogManager.Sections.Statistics.Tabs
 										{
 											eliteCountLabels[specialization] = new Label {Text = "Unknown", Width = 60};
 											var image = new ImageView
-												{Image = imageProvider.GetTinyProfessionIcon(specialization)};
+											{
+												Image = imageProvider.GetTinyProfessionIcon(specialization),
+												ToolTip = GameNames.GetName(specialization)
+											};
 											Add(image);
 											Add(eliteCountLabels[specialization]);
 										}

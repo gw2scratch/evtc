@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Eto.Drawing;
 using Eto.Forms;
+using GW2Scratch.ArcdpsLogManager.GameData;
 using GW2Scratch.ArcdpsLogManager.Logs.Filters;
 using GW2Scratch.ArcdpsLogManager.Logs.Filters.Composition;
 
@@ -25,7 +26,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 							{
 								var image = new ImageView {
 									Image = imageProvider.GetTinyProfessionIcon(filter.Profession),
-									ToolTip = $"Core {filter.Profession}"
+									ToolTip = $"Core {GameNames.GetName(filter.Profession)}"
 								};
 								Add(image);
 								Add(ConstructDropDown(filter));
@@ -52,7 +53,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 								{
 									var image = new ImageView {
 										Image = imageProvider.GetTinyProfessionIcon(filter.EliteSpecialization),
-										ToolTip = filter.EliteSpecialization.ToString()
+										ToolTip = GameNames.GetName(filter.EliteSpecialization)
 									};
 									Add(image);
 									Add(ConstructDropDown(filter));

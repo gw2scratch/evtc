@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Eto.Drawing;
 using Eto.Forms;
+using GW2Scratch.ArcdpsLogManager.GameData;
 using GW2Scratch.ArcdpsLogManager.Gw2Api;
 using GW2Scratch.ArcdpsLogManager.Logs;
 using Image = Eto.Drawing.Image;
@@ -55,7 +56,11 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 					foreach (var player in group)
 					{
 						var icon = imageProvider.GetTinyProfessionIcon(player);
-						var imageView = new ImageView {Image = icon};
+						var imageView = new ImageView
+						{
+							Image = icon,
+							ToolTip = GameNames.GetSpecializationName(player)
+						};
 
 						string guildTagSuffix = "";
 						if (player.GuildGuid != null && Settings.ShowGuildTagsInLogDetail)
