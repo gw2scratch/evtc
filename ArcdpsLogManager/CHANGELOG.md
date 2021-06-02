@@ -5,6 +5,7 @@ This is the full changelog of the arcdps Log Manager.
 ## Log Manager v1.1.1 (unreleased)
 
 #### New features
+- Added average times to encounter statistics (thanks, @robinwils!)
 
 #### Changes
 - Added an exe icon for the Windows version
