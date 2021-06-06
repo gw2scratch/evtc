@@ -17,6 +17,7 @@ This is the full changelog of the arcdps Log Manager.
 #### Fixes
 - Fixed a crash that occurs when saving logs in case arcdps 2021-03-24 generated directory names with invalid Unicode characters (logs in these directories will be processed again on every Log Manager launch, you should move them to directories with normal names)
 - Fixed handling of logs that contain no profession data for a player
+- Fixed encounter filters sometimes unselecting everything (it still resets sometimes, working on a proper fix)
 
 ## Log Manager v1.1
 

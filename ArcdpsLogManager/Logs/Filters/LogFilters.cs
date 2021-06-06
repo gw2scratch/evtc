@@ -250,6 +250,16 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 
 		private bool FilterByEncounterName(LogData log)
 		{
+			// We default to keeping everything in case no log groups are selected.
+			// It mainly serves as a workaround for users accidentally deselecting everything
+			// in the UI, and for issues with the selection in LogEncounterFilterTree being
+			// reset when logs are updated.
+			
+			if (LogGroups.Count == 0)
+			{
+				return true;
+			}
+			
 			return LogGroups.Any(x => x.FilterLog(log));
 		}
 
