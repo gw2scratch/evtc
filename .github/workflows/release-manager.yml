@@ -1,0 +1,61 @@
+name: Prepare Log Manager release
+
+on:
+  push:
+    tags:
+      - 'manager-v*'
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: true
+    - name: Setup .NET 5
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - name: Setup .NET Core 3.1
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.x
+    # This is a workaround for issue https://github.com/actions/virtual-environments/issues/1090,
+    # which causes to nuget restores to fail
+    - name: Clean NuGet cache
+      run: dotnet nuget locals all --clear
+    - name: Build
+      run: dotnet build --configuration Release
+    - name: Test
+      run: dotnet test --no-restore --verbosity normal
+    - name: Package Log Manager (Windows, WPF)
+      run: dotnet publish ArcdpsLogManager.Wpf --configuration Release -r win-x64 --self-contained=false -p:PublishSingleFile=true -o artifacts/manager/win64/
+    - name: Package Log Manager (Windows, WPF, self-contained)
+      run: dotnet publish ArcdpsLogManager.Wpf --configuration Release -r win-x64 --self-contained=true -p:PublishSingleFile=true -o artifacts/manager/win64-sc/
+    - name: Package Log Manager (Linux, GTK)
+      run: dotnet publish ArcdpsLogManager.Gtk --configuration Release -r linux-x64 --self-contained=false -p:PublishSingleFile=true -o artifacts/manager/linux64/
+    - name: Package Log Manager (Linux, GTK, self-contained)
+      run: dotnet publish ArcdpsLogManager.Gtk --configuration Release -r linux-x64 --self-contained=true -p:PublishSingleFile=true -o artifacts/manager/linux64-sc/
+    - name: Prettify executable filenames
+      run: |
+          mv artifacts/manager/win64/GW2Scratch.ArcdpsLogManager.Wpf.exe artifacts/manager/win64/ArcdpsLogManager.exe
+          mv artifacts/manager/win64-sc/GW2Scratch.ArcdpsLogManager.Wpf.exe artifacts/manager/win64-sc/ArcdpsLogManager.exe
+          mv artifacts/manager/linux64/GW2Scratch.ArcdpsLogManager.Gtk artifacts/manager/linux64/ArcdpsLogManager
+          mv artifacts/manager/linux64-sc/GW2Scratch.ArcdpsLogManager.Gtk artifacts/manager/linux64-sc/ArcdpsLogManager
+    - name: Build archives
+      run: |
+          Compress-Archive artifacts/manager/win64/ArcdpsLogManager.exe artifacts/manager/win64/Log.Manager.Windows.zip
+          Compress-Archive artifacts/manager/win64-sc/ArcdpsLogManager.exe artifacts/manager/win64-sc/Log.Manager.Windows.self-contained.zip
+          Compress-Archive artifacts/manager/linux64/ArcdpsLogManager artifacts/manager/linux64/Log.Manager.Linux.zip
+          Compress-Archive artifacts/manager/linux64-sc/ArcdpsLogManager artifacts/manager/linux64-sc/ArcdpsLogManager/Log.Manager.Linux.self-contained.zip
+    - name: Prepare release
+      uses: softprops/action-gh-release@v1
+      with:
+        draft: true
+        files: |
+          artifacts/manager/win64/Log.Manager.Windows.zip
+          artifacts/manager/win64-sc/Log.Manager.Windows.self-contained.zip
+          artifacts/manager/linux64/Log.Manager.Linux.zip
+          artifacts/manager/linux64-sc/ArcdpsLogManager/Log.Manager.Linux.self-contained.zip
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
