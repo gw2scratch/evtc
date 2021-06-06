@@ -56,6 +56,6 @@ jobs:
           artifacts/manager/win64/Log.Manager.Windows.zip
           artifacts/manager/win64-sc/Log.Manager.Windows.self-contained.zip
           artifacts/manager/linux64/Log.Manager.Linux.zip
-          artifacts/manager/linux64-sc/ArcdpsLogManager/Log.Manager.Linux.self-contained.zip
+          artifacts/manager/linux64-sc/Log.Manager.Linux.self-contained.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
