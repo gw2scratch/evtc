@@ -47,7 +47,7 @@ jobs:
           Compress-Archive artifacts/manager/win64/ArcdpsLogManager.exe artifacts/manager/win64/Log.Manager.Windows.zip
           Compress-Archive artifacts/manager/win64-sc/ArcdpsLogManager.exe artifacts/manager/win64-sc/Log.Manager.Windows.self-contained.zip
           Compress-Archive artifacts/manager/linux64/ArcdpsLogManager artifacts/manager/linux64/Log.Manager.Linux.zip
-          Compress-Archive artifacts/manager/linux64-sc/ArcdpsLogManager artifacts/manager/linux64-sc/ArcdpsLogManager/Log.Manager.Linux.self-contained.zip
+          Compress-Archive artifacts/manager/linux64-sc/ArcdpsLogManager artifacts/manager/linux64-sc/Log.Manager.Linux.self-contained.zip
     - name: Prepare release
       uses: softprops/action-gh-release@v1
       with:
