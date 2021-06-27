@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using GW2Scratch.EVTCAnalytics.GameData.Encounters;
+using GW2Scratch.EVTCAnalytics.Model.Agents;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
 
@@ -54,6 +55,9 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Updates
 			                     && log.Encounter == Encounter.AiKeeperOfThePeak,
 				"Ai, Keeper of the Peak is now three different encounters (by phases) and successful if group resets after first phase."),
 #pragma warning restore 618
+			new LogUpdate(log => log.ParsingVersion < new Version(1, 1, 2, 0)
+			                     && log.Players.Any(x => x.Profession == Profession.None),
+				"Fixes broken profession detection for Core Guardians."),
 			// When adding a new update, you need to increase the revision (last value) of the version in the .csproj file
 			// unless the version changes more significantly, in that case it can be reset to 0.
 		};
