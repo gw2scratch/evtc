@@ -131,7 +131,18 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			gridView.Columns.Add(new GridColumn()
 			{
 				HeaderText = "Encounter",
-				DataCell = new TextBoxCell {Binding = new DelegateBinding<LogData, string>(x => nameProvider.GetName(x))}
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<LogData, string>(x =>
+					{
+						if (x.ParsingStatus is ParsingStatus.Unparsed or ParsingStatus.Parsing)
+						{
+							return "Processing...";
+						}
+						
+						return nameProvider.GetName(x);
+					})
+				}
 			});
 
 			var resultColumn = new GridColumn()
@@ -214,6 +225,12 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 				{
 					Binding = new DelegateBinding<LogData, string>(x =>
 					{
+						if (x.ParsingStatus is ParsingStatus.Unparsed or ParsingStatus.Parsing)
+						{
+							// We don't want to make this wider than actual times.
+							return "?";
+						}
+						
 						var seconds = x.EncounterDuration.TotalSeconds;
 						return $"{(int) seconds / 60:0}m {seconds % 60:00.0}s";
 					})
