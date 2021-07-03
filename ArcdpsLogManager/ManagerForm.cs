@@ -215,7 +215,7 @@ namespace GW2Scratch.ArcdpsLogManager
 				Orientation = Orientation.Horizontal,
 				Panel1 = sidebar,
 				Panel2 = tabs,
-				Position = 300
+				Position = 320
 			};
 
 			// This is a workaround for an Eto 2.4 bug.
