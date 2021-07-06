@@ -76,17 +76,18 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 
 				Visible = PlayerData.AccountName != NullAccountName;
 
-				var characters = new Dictionary<string, (Profession Profession, int Count)>();
+				var characters = new Dictionary<(string Name, Profession profession), int>();
 				foreach (var log in PlayerData.Logs)
 				{
 					var player = log.Players.First(x => x.AccountName == PlayerData.AccountName);
 
-					if (!characters.ContainsKey(player.Name))
+					var key = (player.Name, player.Profession);
+					if (!characters.ContainsKey(key))
 					{
-						characters[player.Name] = (player.Profession, 0);
+						characters[key] = 0;
 					}
 
-					characters[player.Name] = (player.Profession, characters[player.Name].Count + 1);
+					characters[key]++;
 				}
 
 				knownCharacters.Clear();
@@ -95,9 +96,9 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 					knownCharacters.BeginVertical(spacing: new Size(5, 2));
 					{
 						knownCharacters.AddRow("", "Character name", "Log count", null);
-						foreach (var character in characters.OrderByDescending(x => x.Value.Count))
+						foreach (var pair in characters.OrderByDescending(x => x.Value))
 						{
-							var name = character.Key;
+							(string name, Profession profession) = pair.Key;
 							var showLogsButton = new LinkButton {Text = "Logs"};
 							showLogsButton.Click += (o, eventArgs) =>
 							{
@@ -119,14 +120,14 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 							{
 								var icon = new ImageView
 								{
-									Image = imageProvider.GetTinyProfessionIcon(character.Value.Profession),
-									ToolTip = GameNames.GetName(character.Value.Profession)
+									Image = imageProvider.GetTinyProfessionIcon(profession),
+									ToolTip = GameNames.GetName(profession)
 								};
 								knownCharacters.Add(icon);
 								knownCharacters.Add(new Label {Text = name, VerticalAlignment = VerticalAlignment.Center});
 								knownCharacters.Add(new Label
 								{
-									Text = $"{character.Value.Count}",
+									Text = $"{pair.Value}",
 									VerticalAlignment = VerticalAlignment.Center
 								});
 								knownCharacters.Add(showLogsButton);
