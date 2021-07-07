@@ -76,42 +76,24 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 
 				Visible = PlayerData.AccountName != NullAccountName;
 
-				var characters = new Dictionary<(string Name, Profession profession), int>();
-				foreach (var log in PlayerData.Logs)
-				{
-					var player = log.Players.First(x => x.AccountName == PlayerData.AccountName);
-
-					var key = (player.Name, player.Profession);
-					if (!characters.ContainsKey(key))
-					{
-						characters[key] = 0;
-					}
-
-					characters[key]++;
-				}
-
 				knownCharacters.Clear();
 				knownCharacters.BeginHorizontal();
 				{
 					knownCharacters.BeginVertical(spacing: new Size(5, 2));
 					{
 						knownCharacters.AddRow("", "Character name", "Log count", null);
-						foreach (var pair in characters.OrderByDescending(x => x.Value))
+						foreach (var character in PlayerData.FindCharacters().OrderByDescending(x => x.Logs.Count))
 						{
-							(string name, Profession profession) = pair.Key;
 							var showLogsButton = new LinkButton {Text = "Logs"};
 							showLogsButton.Click += (o, eventArgs) =>
 							{
-								// We need to make sure that both the character name and the account name match,
-								// as a player may delete a character and another player may claim that name.
-								var characterLogs = PlayerData.Logs.Where(log => log.Players.Any(x => x.Name == name && x.AccountName == PlayerData.AccountName));
 								var form = new Form
 								{
 									Content = new LogList(logCache, apiData, logProcessor, uploadProcessor, imageProvider, logNameProvider)
-										{DataStore = new FilterCollection<LogData>(characterLogs)},
+										{DataStore = new FilterCollection<LogData>(character.Logs)},
 									Width = 900,
 									Height = 700,
-									Title = $"arcdps Log Manager: logs with character {name}"
+									Title = $"arcdps Log Manager: logs with character {character.Name}"
 								};
 								form.Show();
 							};
@@ -120,14 +102,14 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 							{
 								var icon = new ImageView
 								{
-									Image = imageProvider.GetTinyProfessionIcon(profession),
-									ToolTip = GameNames.GetName(profession)
+									Image = imageProvider.GetTinyProfessionIcon(character.Profession),
+									ToolTip = GameNames.GetName(character.Profession)
 								};
 								knownCharacters.Add(icon);
-								knownCharacters.Add(new Label {Text = name, VerticalAlignment = VerticalAlignment.Center});
+								knownCharacters.Add(new Label {Text = character.Name, VerticalAlignment = VerticalAlignment.Center});
 								knownCharacters.Add(new Label
 								{
-									Text = $"{pair.Value}",
+									Text = $"{character.Logs.Count}",
 									VerticalAlignment = VerticalAlignment.Center
 								});
 								knownCharacters.Add(showLogsButton);
