@@ -206,7 +206,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 					Add(countLabel);
 				}
 				EndVertical();
-				debugSection = BeginVertical();
+				debugSection = BeginGroup("Debug data", new Padding(5));
 				{
 					Add(reparseButton);
 				}
