@@ -31,7 +31,6 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 					{
 						layout.Add(null);
 						layout.Add(null, true);
-						layout.Add(null);
 					}
 					layout.EndHorizontal();
 					layout.AddRow("File name", logData.FileInfo.Name);
