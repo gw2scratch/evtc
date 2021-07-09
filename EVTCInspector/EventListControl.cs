@@ -14,6 +14,7 @@ namespace GW2Scratch.EVTCInspector
 			public Type Type { get; }
 
 			private bool? shown;
+			private int settingRecursionLevel = 0;
 
 			public bool? Checked
 			{
@@ -29,7 +30,9 @@ namespace GW2Scratch.EVTCInspector
 						foreach (var item in Children)
 						{
 							var child = (TypeFilterItem) item;
+							child.settingRecursionLevel += 1;
 							child.Checked = shown.Value;
+							child.settingRecursionLevel -= 1;
 						}
 					}
 
@@ -37,11 +40,11 @@ namespace GW2Scratch.EVTCInspector
 					{
 						var parent = (TypeFilterItem) Parent;
 						bool? newValue;
-						if (parent.Children.All(x => ((TypeFilterItem) x.Parent).Checked == true))
+						if (parent.Children.All(x => ((TypeFilterItem) x).Checked == true))
 						{
 							newValue = true;
 						}
-						else if (parent.Children.All(x => ((TypeFilterItem) x.Parent).Checked == false))
+						else if (parent.Children.All(x => ((TypeFilterItem) x).Checked == false))
 						{
 							newValue = false;
 						}
@@ -50,10 +53,22 @@ namespace GW2Scratch.EVTCInspector
 							newValue = null;
 						}
 
-						parent.Checked = newValue;
+						if (newValue != null)
+						{
+							parent.settingRecursionLevel += 1;
+							parent.Checked = newValue;
+							parent.settingRecursionLevel -= 1;
+						}
+					}
+
+					if (settingRecursionLevel == 0)
+					{
+						UsedDirectly?.Invoke(this, EventArgs.Empty);
 					}
 				}
 			}
+
+			public event EventHandler<EventArgs> UsedDirectly;
 
 			private int count = -1;
 
@@ -115,22 +130,18 @@ namespace GW2Scratch.EVTCInspector
 		private readonly GridView<Event> eventGridView;
 		private readonly TreeGridView typeFilterTree;
 		private readonly JsonSerializationControl eventJsonControl = new JsonSerializationControl();
+		private readonly TabControl tabs = new TabControl();
+		private readonly TabPage filterPage;
+		private readonly TabPage eventDataPage;
 
 		public EventListControl()
 		{
 			eventGridView = new GridView<Event>();
-			eventGridView.Columns.Add(new GridColumn()
-			{
-				HeaderText = "Time",
-				DataCell = new TextBoxCell("Time")
-			});
+			eventGridView.Columns.Add(new GridColumn() {HeaderText = "Time", DataCell = new TextBoxCell("Time")});
 			eventGridView.Columns.Add(new GridColumn()
 			{
 				HeaderText = "Event Type",
-				DataCell = new TextBoxCell()
-				{
-					Binding = new DelegateBinding<object, string>(x => x.GetType().Name)
-				}
+				DataCell = new TextBoxCell() {Binding = new DelegateBinding<object, string>(x => x.GetType().Name)}
 			});
 			eventGridView.SelectionChanged += (sender, args) => eventJsonControl.Object = eventGridView.SelectedItem;
 			eventGridView.Width = 250;
@@ -152,7 +163,9 @@ namespace GW2Scratch.EVTCInspector
 			typeFilterTree.Columns.Add(new GridColumn()
 			{
 				DataCell = new TextBoxCell()
-					{Binding = Binding.Property<TypeFilterItem, string>(x => x.Count.ToString())},
+				{
+					Binding = Binding.Property<TypeFilterItem, string>(x => x.Count.ToString())
+				},
 				HeaderText = "Event Count",
 				Editable = false
 			});
@@ -174,23 +187,10 @@ namespace GW2Scratch.EVTCInspector
 			filterTabs.Pages.Add(new TabPage {Text = "By Event Type", Content = typeFilterTree});
 			filterTabs.Pages.Add(new TabPage {Text = "By Content", Content = filterLayout});
 
-			var tabs = new TabControl();
-			var filterPage = new TabPage {Text = "Filters", Content = filterTabs};
-			var eventDataPage = new TabPage {Text = "Event data", Content = eventJsonControl};
+			filterPage = new TabPage {Text = "Filters", Content = filterTabs};
+			eventDataPage = new TabPage {Text = "Event data", Content = eventJsonControl};
 			tabs.Pages.Add(filterPage);
 			tabs.Pages.Add(eventDataPage);
-
-			typeFilterTree.CellEdited += (sender, args) =>
-			{
-				typeFilterTree.Invalidate();
-
-				// HACK: Invalidate doesn't redraw the tree on the Gtk3 platform
-				// TODO: Disable on other platforms if not necessary, may look significantly worse there
-				tabs.SelectedPage = eventDataPage;
-				tabs.SelectedPage = filterPage;
-
-				ApplyFilters();
-			};
 
 			var eventsSplitter = new Splitter {Panel1 = eventGridView, Panel2 = tabs, Position = 300};
 			Content = eventsSplitter;
@@ -281,6 +281,34 @@ namespace GW2Scratch.EVTCInspector
 			}
 
 			typeFilterTree.DataStore = rootItem;
+			AddDirectUseHandlerRecursively(rootItem);
+
+			void AddDirectUseHandlerRecursively(TypeFilterItem item)
+			{
+				item.UsedDirectly += (sender, args) =>
+				{
+					InvalidateTree();
+					ApplyFilters();
+				};
+				foreach (var child in item.Children)
+				{
+					if (child is TypeFilterItem filterChild)
+					{
+						AddDirectUseHandlerRecursively(filterChild);
+					}
+				}
+			}
+		}
+
+		private void InvalidateTree()
+		{
+			typeFilterTree.Invalidate();
+			// HACK: Invalidate doesn't redraw the tree on the Gtk3 platform
+			// issue: https://github.com/picoe/Eto/issues/1982
+			// TODO: Disable on other platforms if not necessary, may look significantly worse there
+			
+			tabs.SelectedPage = eventDataPage;
+			tabs.SelectedPage = filterPage;
 		}
 
 		private void ApplyFilters()
