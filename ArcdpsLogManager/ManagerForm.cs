@@ -327,7 +327,7 @@ namespace GW2Scratch.ArcdpsLogManager
 				Application.Instance.AsyncInvoke(() =>
 				{
 					bool finished = args.CurrentScheduledItems == 0;
-					apiLabel.Text = finished ? "" : $"Guilds (GW2 API) {args.TotalProcessedItems}/{args.TotalScheduledItems}...";
+					apiLabel.Text = finished ? "" : $"Downloading guild data {args.TotalProcessedItems}/{args.TotalScheduledItems}...";
 				});
 			}
 
