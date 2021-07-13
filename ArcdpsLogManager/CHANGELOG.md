@@ -6,6 +6,7 @@ This is the full changelog of the arcdps Log Manager.
 
 #### Fixes
 - Fixed broken profession detection for Core Guardians.
+- Fixed broken event filters in the EVTC Inspector on Windows
 
 ## Log Manager v1.1.1
 
