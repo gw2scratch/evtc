@@ -1,0 +1,55 @@
+name: Update docs
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    name: Build
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Download docfx
+        shell: powershell
+        run: |
+          Invoke-WebRequest https://github.com/dotnet/docfx/releases/download/v2.58/docfx.zip -OutFile docfx.zip
+          mkdir docfx
+          cd docfx
+          7z e ../docfx.zip
+      - name: Generate docs
+        run: docfx/docfx.exe docs/docfx.json
+      - name: Upload docs
+        uses: actions/upload-artifact@v1
+        with:
+          name: docs
+          path: docs/_site/
+
+  push:
+    name: Push
+    runs-on: ubuntu-latest
+    needs: [ build ]
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: gh-pages
+      - name: Download docs
+        uses: actions/download-artifact@v1
+        with:
+          name: docs
+      - name: Replace docs
+        run: |
+          rm -rf ${GITHUB_REF##*/}
+          mv docs ${GITHUB_REF##*/}
+          git add -A
+          if [[ `git status --porcelain` ]]; then
+            git config --local user.email "actions@github.com"
+            git config --local user.name "github-actions"
+            git commit -m "Update documentation for ${GITHUB_REF##*/} (${GITHUB_SHA:0:7})"
+          fi
+      - name: Push docs
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: gh-pages
