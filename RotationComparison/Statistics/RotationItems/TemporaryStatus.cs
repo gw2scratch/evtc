@@ -1,4 +1,4 @@
-namespace GW2Scratch.EVTCAnalytics.Statistics.RotationItems
+namespace GW2Scratch.RotationComparison.Statistics.RotationItems
 {
 	public enum TemporaryStatus
 	{

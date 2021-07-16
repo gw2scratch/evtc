@@ -1,6 +1,6 @@
 using GW2Scratch.EVTCAnalytics.Model.Skills;
 
-namespace GW2Scratch.EVTCAnalytics.Statistics.RotationItems
+namespace GW2Scratch.RotationComparison.Statistics.RotationItems
 {
 	public class SkillCastItem : RotationItem
 	{

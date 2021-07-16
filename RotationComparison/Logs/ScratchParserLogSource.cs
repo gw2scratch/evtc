@@ -4,9 +4,9 @@ using GW2Scratch.EVTCAnalytics;
 using GW2Scratch.EVTCAnalytics.Model;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Names;
-using GW2Scratch.EVTCAnalytics.Statistics;
-using GW2Scratch.EVTCAnalytics.Statistics.RotationItems;
 using GW2Scratch.RotationComparison.Rotations;
+using GW2Scratch.RotationComparison.Statistics;
+using GW2Scratch.RotationComparison.Statistics.RotationItems;
 using RotationItem = GW2Scratch.RotationComparison.Rotations.RotationItem;
 using SkillCastType = GW2Scratch.RotationComparison.Rotations.SkillCastType;
 
@@ -61,13 +61,13 @@ namespace GW2Scratch.RotationComparison.Logs
 			SkillCastType type;
 			switch (skillCastItem.Type)
 			{
-				case GW2Scratch.EVTCAnalytics.Statistics.RotationItems.SkillCastType.Success:
+				case GW2Scratch.RotationComparison.Statistics.RotationItems.SkillCastType.Success:
 					type = SkillCastType.Success;
 					break;
-				case GW2Scratch.EVTCAnalytics.Statistics.RotationItems.SkillCastType.Cancel:
+				case GW2Scratch.RotationComparison.Statistics.RotationItems.SkillCastType.Cancel:
 					type = SkillCastType.Cancel;
 					break;
-				case GW2Scratch.EVTCAnalytics.Statistics.RotationItems.SkillCastType.Reset:
+				case GW2Scratch.RotationComparison.Statistics.RotationItems.SkillCastType.Reset:
 					type = SkillCastType.Reset;
 					break;
 				default:

@@ -1,13 +1,12 @@
-using System.Collections.Generic;
-using System.Linq;
 using GW2Scratch.EVTCAnalytics.Events;
 using GW2Scratch.EVTCAnalytics.GameData;
 using GW2Scratch.EVTCAnalytics.Model;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
-using GW2Scratch.EVTCAnalytics.Statistics.PlayerDataParts;
-using GW2Scratch.EVTCAnalytics.Statistics.RotationItems;
+using GW2Scratch.RotationComparison.Statistics.RotationItems;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace GW2Scratch.EVTCAnalytics.Statistics
+namespace GW2Scratch.RotationComparison.Statistics
 {
 	public class RotationCalculator : IRotationCalculator
 	{
@@ -75,7 +74,7 @@ namespace GW2Scratch.EVTCAnalytics.Statistics
 			new EventTemporaryEffect<AgentDownedEvent, AgentRevivedEvent>(TemporaryStatus.Downed),
 		};
 
-		public PlayerRotation GetRotation(Log log, Player player)
+		public ScratchPlayerRotation GetRotation(Log log, Player player)
 		{
 			var rotation = new List<RotationItem>();
 
@@ -137,7 +136,7 @@ namespace GW2Scratch.EVTCAnalytics.Statistics
 				// TODO: Add death
 			}
 
-			return new PlayerRotation(player, rotation);
+			return new ScratchPlayerRotation(player, rotation);
 		}
 	}
 }

@@ -24,15 +24,12 @@ namespace GW2Scratch.EVTCAnalytics.Statistics.PlayerDataParts
 		public IEnumerable<SkillData> LandSet1WeaponSkills { get; }
 		public IEnumerable<SkillData> LandSet2WeaponSkills { get; }
 
-		public PlayerRotation Rotation { get; }
-
 		/// <summary>
 		/// Creates a new instance of <see cref="PlayerData"/>.
 		/// </summary>
 		/// <param name="player">The player</param>
 		/// <param name="downCount">Amount of downs in encounter.</param>
 		/// <param name="deathCount">Amount of deaths in encounter.</param>
-		/// <param name="rotation">The rotation of the player.</param>
 		/// <param name="usedSkills">All used skills in the encounter. May be null.</param>
 		/// <param name="healingSkills">All used healing skills in the encounter. May be null.</param>
 		/// <param name="utilitySkills">All used utility skills in the encounter. May be null.</param>
@@ -43,7 +40,7 @@ namespace GW2Scratch.EVTCAnalytics.Statistics.PlayerDataParts
 		/// <param name="landSet2Weapon2">Off-hand weapon in second land weapon set.</param>
 		/// <param name="land1WeaponSkills">Weapon skills for first equipped land weapon set. null if unknown.</param>
 		/// <param name="land2WeaponSkills">Weapon skills for second equipped land weapon set. null if unknown.</param>
-		public PlayerData(Player player, int downCount, int deathCount, PlayerRotation rotation,
+		public PlayerData(Player player, int downCount, int deathCount,
 			IEnumerable<Skill> usedSkills, IEnumerable<SkillData> healingSkills, IEnumerable<SkillData> utilitySkills,
 			IEnumerable<SkillData> eliteSkills, WeaponType landSet1Weapon1, WeaponType landSet1Weapon2,
 			WeaponType landSet2Weapon1, WeaponType landSet2Weapon2, IEnumerable<SkillData> land1WeaponSkills,
@@ -52,7 +49,6 @@ namespace GW2Scratch.EVTCAnalytics.Statistics.PlayerDataParts
 			Player = player;
 			DownCount = downCount;
 			DeathCount = deathCount;
-			Rotation = rotation;
 			LandSet1Weapon1 = landSet1Weapon1;
 			LandSet1Weapon2 = landSet1Weapon2;
 			LandSet2Weapon1 = landSet2Weapon1;

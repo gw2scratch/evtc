@@ -40,12 +40,6 @@ namespace GW2Scratch.EVTCAnalytics
 		public SkillDetections SkillDetections { get; set; } = new SkillDetections();
 
 		/// <summary>
-		/// The rotation calculator that will be used for determining player skill rotations.
-		/// If replaced after rotations were cached, they will not be updated.
-		/// </summary>
-		public IRotationCalculator RotationCalculator { get; set; } = new RotationCalculator();
-
-		/// <summary>
 		/// Data from the GW2 API, may be null, some statistics won't be calculated.
 		/// </summary>
 		public GW2ApiData ApiData { get; set; } = null;
@@ -323,9 +317,7 @@ namespace GW2Scratch.EVTCAnalytics
 				utilitySkills?.RemoveWhere(x => ignoredSkills.Contains(x.Id));
 				eliteSkills?.RemoveWhere(x => ignoredSkills.Contains(x.Id));
 
-				var rotation = RotationCalculator.GetRotation(log, player);
-
-				var data = new PlayerData(player, downCounts[player], deathCounts[player], rotation, usedSkills[player],
+				var data = new PlayerData(player, downCounts[player], deathCounts[player], usedSkills[player],
 					healingSkills, utilitySkills, eliteSkills, land1Weapon1, land1Weapon2, land2Weapon1, land2Weapon2,
 					land1WeaponSkills, land2WeaponSkills);
 
