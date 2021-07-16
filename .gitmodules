@@ -1,3 +1,6 @@
 [submodule "EI"]
 	path = Tests/EI
 	url = https://github.com/baaron4/GW2-Elite-Insights-Parser.git
+[submodule "docs/templates/darkfx"]
+	path = docs/templates/darkfx
+	url = https://github.com/steffen-wilke/darkfx.git
