@@ -1,0 +1,4 @@
+- name: Contributing
+  topicUid: EVTCAnalytics.Contributing
+- name: Adding support for a new encounter
+  topicUid: EVTCAnalytics.Contributing.NewEncounter

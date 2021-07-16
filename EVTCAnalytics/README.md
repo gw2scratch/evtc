@@ -13,29 +13,46 @@ The library currently targets `netstandard2.1`.
 
 ## Example usage
 
+See the [sample project](../EVTCAnalytics.Sample) for a full example.
 ```cs
 string filename = "example.zevtc";
 
 var parser = new EVTCParser();      // Used to read a log file and get raw data out of it
 var processor = new LogProcessor(); // Used to process the raw data
-var analyser = new LogAnalyser();   // Used to get statistics about the encounter
 
 // The parsed log contains raw data from the EVTC file
 ParsedLog parsedLog = parser.ParseLog(filename);
 
-// The log after processing the raw data into structured events and agents
-Log log = processor.GetProcessedLog(parsedLog);
+// The log after processing the raw data into structured events and agents.
+Log log = processor.ProcessLog(parsedLog);
 
-// The analyser can be used to get data about the encounter
-IEncounter encounter = analyser.GetEncounter(log);
+// At this point, we can do anything with the processed data, and use the LogAnalyzer
+// for easy access to most common results with caching.
+var analyzer = new LogAnalyzer(log);
 
-Console.WriteLine($"Encounter name: {encounter.GetName()}");
-Console.WriteLine($"Result: {encounter.GetResult()}");
+Encounter encounter = analyzer.GetEncounter();
+
+// Encounter names are available for some languages, we use the target name if it's not.
+if (EncounterNames.TryGetEncounterNameForLanguage(GameLanguage.English, encounter, out string name))
+    Console.WriteLine($"Encounter: {name}");
+else
+    Console.WriteLine($"Encounter: {log.MainTarget?.Name ?? "unknown target"}");
+
+Console.WriteLine($"Result: {analyzer.GetResult()}");
+Console.WriteLine($"Mode: {analyzer.GetMode()}");
+Console.WriteLine($"Duration: {analyzer.GetEncounterDuration()}");
 
 // The processed log allows easy access to data about agents
 foreach (var player in log.Agents.OfType<Player>())
 {
     Console.WriteLine($"{player.Name} - {player.AccountName} - {player.Profession} - {player.EliteSpecialization}");
+}
+
+// Events may be accessed as well
+foreach (var deadEvent in log.Events.OfType<AgentDeadEvent>())
+{
+    if (deadEvent.Agent is Player player)
+        Console.WriteLine($"{player.Name} died at {deadEvent.Time}.");
 }
 ```
 

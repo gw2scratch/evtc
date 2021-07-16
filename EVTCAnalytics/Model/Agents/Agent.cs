@@ -5,6 +5,13 @@ namespace GW2Scratch.EVTCAnalytics.Model.Agents
 	/// <summary>
 	/// Represents an agent in the game - an entity with health, capable of using skills and movement in some cases.
 	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// A single <see cref="Agent"/> may correspond to multiple raw <see cref="Parsed.ParsedAgent"/>s.
+	/// The <see cref="AgentOrigin"/> may be used to see where it comes from.
+	/// This mechanism is required to handle merging NPCs that leave the reporting area.
+	/// </para>
+	/// </remarks>
 	public abstract class Agent
 	{
 		/// <summary>

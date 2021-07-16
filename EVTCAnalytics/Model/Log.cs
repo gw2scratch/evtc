@@ -17,7 +17,7 @@ namespace GW2Scratch.EVTCAnalytics.Model
 	public class Log
 	{
 		/// <summary>
-		/// Provides a list of all <see cref="Events"/> in the order they occured in the log.
+		/// Provides a list of all <see cref="Event"/>s in the order they occured in the log.
 		/// </summary>
 		public IReadOnlyList<Event> Events { get; }
 		
@@ -110,7 +110,7 @@ namespace GW2Scratch.EVTCAnalytics.Model
 		/// </summary>
 		/// <param name="mainTarget">The main target of the log.</param>
 		/// <param name="state">The context of a <see cref="LogProcessor"/>.</param>
-		public Log(Agent mainTarget, LogProcessorState state)
+		internal Log(Agent mainTarget, LogProcessorState state)
 		{
 			MainTarget = mainTarget;
 			LogType = state.LogType;
@@ -133,7 +133,7 @@ namespace GW2Scratch.EVTCAnalytics.Model
 		/// <summary>
 		/// Creates a new instance of a <see cref="Log"/> without requiring a <see cref="LogProcessorState"/>.
 		/// </summary>
-		public Log(Agent mainTarget, LogType logType, IEnumerable<Event> events, IEnumerable<Agent> agents,
+		internal Log(Agent mainTarget, LogType logType, IEnumerable<Event> events, IEnumerable<Agent> agents,
 			IEnumerable<Skill> skills, IEncounterData encounterData,
 			GameLanguage gameLanguage, string evtcVersion, LogTime startTime, LogTime endTime,
 			Player pointOfView, int? language, int? gameBuild, int? gameShardId, int? mapId)
