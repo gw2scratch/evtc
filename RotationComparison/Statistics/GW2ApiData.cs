@@ -1,15 +1,15 @@
+using GW2Scratch.EVTCAnalytics.Model;
+using GW2Scratch.EVTCAnalytics.Model.Agents;
+using GW2Scratch.EVTCAnalytics.Model.Skills;
+using GW2Scratch.RotationComparison.GW2Api.V2;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using GW2Scratch.EVTCAnalytics.GW2Api.V2;
-using GW2Scratch.EVTCAnalytics.Model;
-using GW2Scratch.EVTCAnalytics.Model.Agents;
-using GW2Scratch.EVTCAnalytics.Model.Skills;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
-namespace GW2Scratch.EVTCAnalytics.Statistics
+namespace GW2Scratch.RotationComparison.Statistics
 {
 	public class GW2ApiData
 	{

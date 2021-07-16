@@ -42,7 +42,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		private LogFinder LogFinder { get; } = new LogFinder();
 
 		private LogAnalytics LogAnalytics { get; } =
-			new LogAnalytics(new EVTCParser(), new LogProcessor(), log => new LogAnalyzer(log, null));
+			new LogAnalytics(new EVTCParser(), new LogProcessor(), log => new LogAnalyzer(log));
 
 		private ApiProcessor ApiProcessor { get; }
 		private UploadProcessor UploadProcessor { get; }

@@ -1,7 +1,6 @@
 using System.Threading.Tasks;
-using GW2Scratch.EVTCAnalytics;
-using GW2Scratch.EVTCAnalytics.GW2Api.V2;
-using GW2Scratch.EVTCAnalytics.Statistics;
+using GW2Scratch.RotationComparison.GW2Api.V2;
+using GW2Scratch.RotationComparison.Statistics;
 
 namespace GW2Scratch.RotationComparison.GW2Api
 {

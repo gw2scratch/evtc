@@ -2,12 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using GW2Scratch.EVTCAnalytics;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
-using GW2Scratch.EVTCAnalytics.Statistics;
 using GW2Scratch.RotationComparison.JsonModel;
 using GW2Scratch.RotationComparison.Logs;
 using GW2Scratch.RotationComparison.Rotations;
+using GW2Scratch.RotationComparison.Statistics;
 using Newtonsoft.Json;
 
 namespace GW2Scratch.RotationComparison

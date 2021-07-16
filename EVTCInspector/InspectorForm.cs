@@ -9,12 +9,10 @@ using Eto.Forms;
 using Eto.Generator;
 using GW2Scratch.EVTCAnalytics;
 using GW2Scratch.EVTCAnalytics.Events;
-using GW2Scratch.EVTCAnalytics.GW2Api.V2;
 using GW2Scratch.EVTCAnalytics.Model;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
 using GW2Scratch.EVTCAnalytics.Parsed;
 using GW2Scratch.EVTCAnalytics.Processing;
-using GW2Scratch.EVTCAnalytics.Statistics;
 
 namespace GW2Scratch.EVTCInspector
 {
@@ -47,20 +45,6 @@ namespace GW2Scratch.EVTCInspector
 		// Statistics
 		private readonly JsonSerializationControl statisticsJsonControl = new JsonSerializationControl();
 
-		// API data
-		private readonly ApiDataSection apiDataSection;
-		private GW2ApiData apiData = null;
-
-		private GW2ApiData ApiData
-		{
-			get => apiData;
-			set
-			{
-				apiData = value;
-				apiDataSection.ApiData = apiData;
-			}
-		}
-
 		public InspectorForm()
 		{
 			Title = "Scratch EVTC Inspector";
@@ -75,14 +59,7 @@ namespace GW2Scratch.EVTCInspector
 			var fileMenuItem = new ButtonMenuItem {Text = "&File"};
 			fileMenuItem.Items.Add(openFileMenuItem);
 
-			var loadApiDataButton = new ButtonMenuItem {Text = "&Load Data from GW2 API"};
-			loadApiDataButton.Click += LoadApiData;
-			loadApiDataButton.Shortcut = Application.Instance.CommonModifier | Keys.L;
-
-			var apiDataMenuItem = new ButtonMenuItem() {Text = "&GW2 API Data"};
-			apiDataMenuItem.Items.Add(loadApiDataButton);
-
-			Menu = new MenuBar(fileMenuItem, apiDataMenuItem);
+			Menu = new MenuBar(fileMenuItem);
 
 			openFileDialog = new OpenFileDialog();
 			openFileDialog.Filters.Add(new FileFilter("EVTC logs", ".evtc", ".evtc.zip", ".zevtc"));
@@ -134,24 +111,15 @@ namespace GW2Scratch.EVTCInspector
 			var statisticsLayout = new DynamicLayout();
 			statisticsLayout.Add(statisticsJsonControl);
 
-			apiDataSection = new ApiDataSection();
-
 			mainTabControl.Pages.Add(new TabPage(parsedTabControl) {Text = "Parsed data", Padding = MainTabPadding});
 			mainTabControl.Pages.Add(new TabPage(processedTabControl)
 				{Text = "Processed data", Padding = MainTabPadding});
 			mainTabControl.Pages.Add(new TabPage(parsedStateLabel) {Text = "Log", Padding = MainTabPadding});
 			mainTabControl.Pages.Add(new TabPage(statisticsLayout) {Text = "Statistics", Padding = MainTabPadding});
-			mainTabControl.Pages.Add(new TabPage(apiDataSection) {Text = "Api data", Padding = MainTabPadding});
 
 			formLayout.BeginVertical();
 			formLayout.AddRow(mainTabControl);
 			formLayout.EndVertical();
-		}
-
-		private async void LoadApiData(object sender, EventArgs e)
-		{
-			var apiData = await GW2ApiData.LoadFromApiAsync(new ApiSkillRepository());
-			Application.Instance.Invoke(() => { ApiData = apiData; });
 		}
 
 		private void AgentGridViewOnSelectedKeyChanged(object sender, EventArgs e)
@@ -241,7 +209,7 @@ namespace GW2Scratch.EVTCInspector
 			sw.Restart();
 			try
 			{
-				var analyzer = new LogAnalyzer(processedLog, ApiData);
+				var analyzer = new LogAnalyzer(processedLog);
 				stats = new Statistics(processedLog.StartTime.LocalTime,
 					processedLog.PointOfView,
 					analyzer.GetResult(),

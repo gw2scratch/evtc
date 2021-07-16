@@ -1,9 +1,9 @@
+using RestSharp;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using RestSharp;
 
-namespace GW2Scratch.EVTCAnalytics.GW2Api.V2
+namespace GW2Scratch.RotationComparison.GW2Api.V2
 {
 	public class ApiSkillRepository
 	{

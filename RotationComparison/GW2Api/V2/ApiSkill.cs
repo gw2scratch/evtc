@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace GW2Scratch.EVTCAnalytics.GW2Api.V2
+namespace GW2Scratch.RotationComparison.GW2Api.V2
 {
 	public class ApiSkill
 	{
