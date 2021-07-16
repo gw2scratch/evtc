@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using GW2Scratch.EVTCAnalytics.GameData;
 using GW2Scratch.EVTCAnalytics.GameData.Encounters;
 using GW2Scratch.EVTCAnalytics.Model;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
@@ -16,19 +15,6 @@ namespace GW2Scratch.EVTCAnalytics
 	/// </summary>
 	public class LogAnalyzer
 	{
-
-		/// <summary>
-		/// Weapon skill data used for determining which skills a player is using.
-		/// If replaced after used, the resulting statistics will not be updated.
-		/// </summary>
-		public WeaponSkillData WeaponSkillData { get; set; } = new WeaponSkillData();
-
-		/// <summary>
-		/// Definitions of skill detections used to determine which skills a player was using.
-		/// If replaced after skills were detected, they will not be updated.
-		/// </summary>
-		public SkillDetections SkillDetections { get; set; } = new SkillDetections();
-
 		private readonly Log log;
 		private IReadOnlyList<Player> logPlayers = null;
 		private ResultDeterminerResult logResult = null;
