@@ -1,0 +1,2195 @@
+{
+  "homepages": [],
+  "source_base_path": "D:/a/evtc/evtc/docs",
+  "xrefmap": "xrefmap.yml",
+  "files": [
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/index.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/index.html",
+          "hash": "0e2got/Ir26XacKBHXimsgBshIrt1HoGaMkU8U2TISI="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "log_codes": [
+        "InvalidFileLink"
+      ],
+      "type": "Conceptual",
+      "source_relative_path": "articles/getting-started.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/getting-started.html",
+          "hash": "rI7qSutpALOCCkaK47opR5jSrVaahim1OR/GeCjNWBs="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/supported-encounters.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/supported-encounters.html",
+          "hash": "Eh5c1eglwc1UAleC4+bv2HJFu1ff5fptU43fhRBrjD4="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "articles/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "articles/toc.html",
+          "hash": "uTsTUr27maxEC58TgX3Bqw9YB0Q4iJIxlbqShuYvUcA="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "contributing/contributing.md",
+      "output": {
+        ".html": {
+          "relative_path": "contributing/contributing.html",
+          "hash": "2MtD6owNFS1VFxrEQ/A5luDH/NaZmVT8DHrEy7UB4yA="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "contributing/new-encounters.md",
+      "output": {
+        ".html": {
+          "relative_path": "contributing/new-encounters.html",
+          "hash": "wqElfaFwF2ONq7QxhBwbWHk8G+H8AabiNVmummmyu3Y="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "contributing/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "contributing/toc.html",
+          "hash": "RHCjIBv3za91ww8HtM2D5nJg0QN1dm4c2jpUkei8nNM="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "index.md",
+      "output": {
+        ".html": {
+          "relative_path": "index.html",
+          "hash": "5nzEKXogsWKelxVkH4KbuP+aHGY1RMDJd0LiN1VrMNA="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.EVTCParser.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.EVTCParser.html",
+          "hash": "rExihav0b1SgVgWfnGllsFUTjSNSJNsBORpVy0WZ//I="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.EVTCWriter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.EVTCWriter.html",
+          "hash": "6KQXMtoO8aVCkMTmX6nqN/Gc4E3XwFVVo3Q1rDtfBU4="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Events.ActiveBuffStackEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.ActiveBuffStackEvent.html",
+          "hash": "MvRzBM4SyfpRNxo3VvsuroM/spMgj62JeDfsdNAMwlc="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Events.AgentDeadEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.AgentDeadEvent.html",
+          "hash": "Eem+9cEB5m4XocjRrRW0mphyhTO087R4B3d4dFEAjyA="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Events.AgentDespawnEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.AgentDespawnEvent.html",
+          "hash": "pVuJLk+fitvImp0u15LWJWDdXAwLmEEDS9KeUFt0wkU="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Events.AgentDownedEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.AgentDownedEvent.html",
+          "hash": "S55evPPXLLVIfDIqQQwc6IPB265sF/rrfVfczfJx1/s="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Events.AgentEnterCombatEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.AgentEnterCombatEvent.html",
+          "hash": "8lIPcvLqZVOgEJebgy5BbNmPhW/fh+PQ0N9SRXyFKdQ="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Events.AgentEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.AgentEvent.html",
+          "hash": "wwBP9CJZagEytQF2kaeJMpk1IcbkayNDhKdbAcJBDfU="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Events.AgentExitCombatEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.AgentExitCombatEvent.html",
+          "hash": "qnJLJ2ygnaK+F2StcaKoPCSAw3KIr7iUZEaaoo8dtmQ="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Events.AgentHealthUpdateEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.AgentHealthUpdateEvent.html",
+          "hash": "3sXUwQ9JvEaKMuEvpO7F/LccBR0Z47s2um26YkJ9LVo="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Events.AgentMaxHealthUpdateEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.AgentMaxHealthUpdateEvent.html",
+          "hash": "Qazd7F5wGqoTvUGcRwkJPDBubHdcEh8MnDnBlQNxiWk="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Events.AgentRevivedEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.AgentRevivedEvent.html",
+          "hash": "Vs5PZPTAJvhDGyW19I9ecWyAEVhNFbSSb2NyCEpW1yc="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Events.AgentSpawnEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.AgentSpawnEvent.html",
+          "hash": "60uQU/o7eEu8KsKFLfRQLPJ8Cw+kHikhioNhY+F3T9Q="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Events.AgentTagEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.AgentTagEvent.html",
+          "hash": "hCriEtTqBrc2fTV539tDJ6o2lx7O0VZLcsECiNCFnak="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Events.AgentWeaponSwapEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.AgentWeaponSwapEvent.html",
+          "hash": "PEoBr1cnS7wC/RQxkngD1e2ty8lHoYJHk15Y2vm6iJM="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Events.AllStacksRemovedBuffEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.AllStacksRemovedBuffEvent.html",
+          "hash": "W7DGonsIbjs7OFfBdobOHg+6Cmcxtdr56QlSlNCJNs4="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Events.BuffApplyEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.BuffApplyEvent.html",
+          "hash": "jZtXOYjnNDnZ2SVU9EfdiZc+nRunWah45xSrbBY9UpY="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Events.BuffDamageEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.BuffDamageEvent.html",
+          "hash": "21BW1bTQmV9eRHFB4ygJhrd0Ss5+uH9FehANuclZTxc="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Events.BuffEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.BuffEvent.html",
+          "hash": "c6hAxTBJ8IMu64doCdaUz1j4WBsESU/6nts0uQmrCUI="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Events.BuffRemoveEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.BuffRemoveEvent.html",
+          "hash": "p0xe4GP3BnBhXXYPeMjyCxDKWOvDDh5p3vdcIplCmGI="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Events.DamageEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.DamageEvent.html",
+          "hash": "8UKSfM9sk3gUjoFf6klv65TupRuZEnE7HeioFN5CsEQ="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Events.DefianceBarHealthUpdateEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.DefianceBarHealthUpdateEvent.html",
+          "hash": "TPisNtVkWB+ehnjK2xig4r7Q1Fms/DAnD36A4i1K+Vk="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Events.DefianceBarStateUpdateEvent.DefianceBarState.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.DefianceBarStateUpdateEvent.DefianceBarState.html",
+          "hash": "kA1Ml/28kTvk1KfSCljgo8n+GfuJBOgobSOZFb5Ayf0="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Events.DefianceBarStateUpdateEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.DefianceBarStateUpdateEvent.html",
+          "hash": "MV8Z2XqMa6eprYpPh548d+VLKWoVeVGaS0hAQk5mx/4="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Events.EndSkillCastEvent.SkillEndType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.EndSkillCastEvent.SkillEndType.html",
+          "hash": "kHxzK5QK1rwQDm+RVDReEY+QHr9utnuSHtm4JzWZ+gk="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Events.EndSkillCastEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.EndSkillCastEvent.html",
+          "hash": "5Hlo1ZrRZEvUz6Rc61zcKrhUT0nXDDp8wgUaQfCg13c="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Events.Event.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.Event.html",
+          "hash": "uzBChKm+u8CiXjzmkNgXDKCPWc3sxFvATv/jODmysTU="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Events.FacingChangeEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.FacingChangeEvent.html",
+          "hash": "/Byq7fMi3z6NE1UUUua5uGQXjzAohgY272E6pba55Hk="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Events.IgnoredBuffDamageEvent.Reason.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.IgnoredBuffDamageEvent.Reason.html",
+          "hash": "F5jg7Cm2D4KhE50yLrfdDn9++QBkVjYe+X890lhrWKY="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Events.IgnoredBuffDamageEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.IgnoredBuffDamageEvent.html",
+          "hash": "LfHaLim7eJJ7o9jQrw/MeUbk2CkwNOA2WeaJ4Ry3Oq8="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Events.IgnoredPhysicalDamageEvent.Reason.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.IgnoredPhysicalDamageEvent.Reason.html",
+          "hash": "K94SbW6v5t0RyRtXxLJU5xmdeNOaWXpOlhxICb5nEtY="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Events.IgnoredPhysicalDamageEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.IgnoredPhysicalDamageEvent.html",
+          "hash": "BuPRPoQ+sdHnnH5Ahu6trHX6FMCdEfzI8ZctP1RXD2E="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Events.InitialBuffEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.InitialBuffEvent.html",
+          "hash": "A+QTW37jkYzXgrdLO7XzuUXrc71xEWdFZPHCKMDGUD8="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Events.ManualStackRemovedBuffEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.ManualStackRemovedBuffEvent.html",
+          "hash": "bTCxIeBatYy4zNkRoeFbN3GE5t7R8QghYcItZPU7XBU="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Events.OffCycleBuffDamageEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.OffCycleBuffDamageEvent.html",
+          "hash": "kyHdNMr7glINjgl9YaGc15NPiD3577Kf9YsTMQEyLxo="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Events.PhysicalDamageEvent.Result.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.PhysicalDamageEvent.Result.html",
+          "hash": "YE6rPoNmTij+KSMab3kREzIGXdJ+n6iLxqsXsi0kLgE="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Events.PhysicalDamageEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.PhysicalDamageEvent.html",
+          "hash": "XHgAAYeUBBTah/mxAVp3qMxzuxDl6D1aJbpyefJfoow="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Events.PositionChangeEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.PositionChangeEvent.html",
+          "hash": "bGBAl6mAEOobsMiuzObfBHcnbiTAOVq8z4ZSmE5lWZM="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Events.ResetBuffStackEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.ResetBuffStackEvent.html",
+          "hash": "tUdH1hK2JixEPn7lanrJgE4iaS24j4suGOTjFWUMnCo="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Events.ResetSkillCastEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.ResetSkillCastEvent.html",
+          "hash": "I1cIufjs1vjhylDErPcMUgXv0ErmrYCrB2HdEkK9V64="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Events.RewardEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.RewardEvent.html",
+          "hash": "QkQPMN++Bpd4lfrnWsGsU+hrsArBXdnZ55JTLZW5Xrg="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Events.SingleStackRemovedBuffEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.SingleStackRemovedBuffEvent.html",
+          "hash": "20KMCKxEkWygvPvEy8Pn2inYORXtCpdeUjeyZjOn+Jk="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Events.SkillCastEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.SkillCastEvent.html",
+          "hash": "13mPfIuh8L10vkAh9tkoV+Q45jAtuBOgQ00AMO78WRY="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Events.StartSkillCastEvent.SkillCastType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.StartSkillCastEvent.SkillCastType.html",
+          "hash": "+R/q9Q/WlysMqZc4hAmEqU2IhaiaiAONF8BONgNvPNQ="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Events.StartSkillCastEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.StartSkillCastEvent.html",
+          "hash": "Rcdn2mCRnNbk2KbF1THcilBNJBWPrg2axtFIYu44hvI="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Events.TargetableChangeEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.TargetableChangeEvent.html",
+          "hash": "iyL7kmpWMzgEdwEbrkMLaX58v85jEnMKEJRBOg/9HOE="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Events.TeamChangeEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.TeamChangeEvent.html",
+          "hash": "bbfu/rlUMh8OnZZTfuURZCDjdIaBSHkr26+WyWLJpE0="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Events.UnknownEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.UnknownEvent.html",
+          "hash": "mJ+nb2tNd/eZQIBKBwRfkQ06L2uvgFrJQQbtAKyM6GE="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Events.VelocityChangeEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.VelocityChangeEvent.html",
+          "hash": "/Lx0JRS6lgemdsQhpNyryFltc66lyvhe3emu+lxvcF4="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Events.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.html",
+          "hash": "OID3zhGmjKXvB6hlsmda/JEef2OQw/PRlZ9JlHNBMqA="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Exceptions.LogParsingException.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Exceptions.LogParsingException.html",
+          "hash": "XJKNU8qO9uWZoq4HGVXhC/kbGDrqSvtyui2MsNgF8xU="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Exceptions.LogProcessingException.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Exceptions.LogProcessingException.html",
+          "hash": "OdXF6td7KhYmFBhXhk1KqplFRw30fFW1otYeVy9NTTw="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Exceptions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Exceptions.html",
+          "hash": "Q6+PdWGWUpjaR3nbRe7aEvJvOT4rN2x7z+a4ZLNMTjQ="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.GameData.Characters.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.GameData.Characters.html",
+          "hash": "dJZmM/nbzcthWZDpTLxQk8xiKEwkGwy/TDhi4FqFgEY="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.GameData.Encounters.Encounter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.GameData.Encounters.Encounter.html",
+          "hash": "/1F7RxKqHOlGolWbOZaJUHeZUJQXDoC8VigQDktdG8s="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.GameData.Encounters.EncounterCategories.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.GameData.Encounters.EncounterCategories.html",
+          "hash": "1zfqEr8+M5m27iBES3gDl23QQCDfXX0/8pdYDaq0rMo="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.GameData.Encounters.EncounterCategory.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.GameData.Encounters.EncounterCategory.html",
+          "hash": "2BT97jUrGxVLLR45nnuoPHIW0bedR/rYymPV4hUVTxA="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.GameData.Encounters.EncounterNames.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.GameData.Encounters.EncounterNames.html",
+          "hash": "XhhXPDkdyxXWkuox9aeH6BmDKDTli1q0GPdNem5yQ+U="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.GameData.Encounters.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.GameData.Encounters.html",
+          "hash": "S0ziCqCMcKz9v9apGUk6UtsbWx5EzC79Pnl0/8Bhl8Y="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.GameData.GadgetIds.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.GameData.GadgetIds.html",
+          "hash": "cU1ccRmIl50vxEiXA9bGtSEdgIjwjePXgREMRb8kb/c="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.GameData.GameBuilds.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.GameData.GameBuilds.html",
+          "hash": "dqLBfSmFXSTnMFW5cVtjHMhphpa9KB30BXDeRiwe9/M="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.GameData.GameLanguage.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.GameData.GameLanguage.html",
+          "hash": "UZzyIJAc4U+jaDe0x9bdIhTnbN+gZvzmRXdJ8l+HfRw="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.GameData.GameLanguageIds.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.GameData.GameLanguageIds.html",
+          "hash": "4+nYD5QZ49hzeFJRHplIwlSAY1kJEpz0vCQEHYy0Y44="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.GameData.SkillIds.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.GameData.SkillIds.html",
+          "hash": "r20cQorTsfUVqA1DiBWlFhtnUjUEF+hxyQlmYaPGXSs="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.html",
+          "hash": "eAa2qdMswKoG4GRRoeMMBqZUb2GC/thSXBr54uAcCxY="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.GameData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.GameData.html",
+          "hash": "OAgYS/IIp7H7gudHcFOV0/mGvXshUBJZq4sju+awMT8="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.IO.ByteArrayBinaryReader.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.IO.ByteArrayBinaryReader.html",
+          "hash": "AcOLXrLB8OnaE3PldTVXwORiYoXicl9mPMoiJl7gvyU="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.IO.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.IO.html",
+          "hash": "nUJMCUz15XpYt9iLanQX+0wL57d/ilwkDZ77+ycNlO0="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.LogAnalyzer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.LogAnalyzer.html",
+          "hash": "Py8ABafSniLqGYVwQoww/B0iYjX5SmgmOgiCuya96ts="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Model.Agents.Agent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Model.Agents.Agent.html",
+          "hash": "HH89f7eB1xqnNFOg9QpH5d1qQJwDC70fE8YQm5wnoP4="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Model.Agents.AgentOrigin.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Model.Agents.AgentOrigin.html",
+          "hash": "RzcJQ72wq6l4hwPzGzT/sFFZUu9vWvKptM/eMtS4zjM="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Model.Agents.AttackTarget.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Model.Agents.AttackTarget.html",
+          "hash": "5vSNHkfQe7Qi1iixI7a6oQd1XQdTg24jVI9/5WEk9OQ="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.html",
+          "hash": "LbfBuKAAc9LpIUrNMJUqBFElmDBnN7qahsj7hGzBaSI="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Model.Agents.Gadget.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Model.Agents.Gadget.html",
+          "hash": "7mTgjYv8gQnaoLQzdEdIOTFWeapI0EmGlbTdLxy6XmA="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Model.Agents.NPC.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Model.Agents.NPC.html",
+          "hash": "DcoPG3ipn120LKhMedVkF2Y2fBrvRqfKguQjDDNgI9g="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Model.Agents.OriginalAgentData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Model.Agents.OriginalAgentData.html",
+          "hash": "Sa/84/+pP+Tni/JLeNuJlFbGSeV8mXPyQdjH108kGrY="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Model.Agents.Player.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Model.Agents.Player.html",
+          "hash": "+kqKzTBQgGjD9/lug8YsYKsmZhUo0oAUZOqJl/8waD4="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Model.Agents.Profession.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Model.Agents.Profession.html",
+          "hash": "DfpO1dvsC0s+KvzML/QwN9DKx101G01dUvkGKSzX1Qw="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Model.Agents.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Model.Agents.html",
+          "hash": "MIhBNXWmv2Ct7C4SAXfOay5uVdNn7z77VHRL8fnjIjM="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Model.CoreSpecialization.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Model.CoreSpecialization.html",
+          "hash": "yXJDnsTb1lFXQNPewCvFwi/xIn4PKbUQK4MBvm7Rido="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Model.Log.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Model.Log.html",
+          "hash": "mRTkBzaFtKMPhN0K7CVDfKJg0HRzzAQpyfCsTnaW/KQ="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Model.LogTime.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Model.LogTime.html",
+          "hash": "MEgbvYt1/5Zec7ZAmp8a8auhUyaxOzje24SbDFnQK+k="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Model.LogType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Model.LogType.html",
+          "hash": "8ajF6+BSnfhUl0NPCGOwRO1/PO7X8ETJ4CUt8SEp9Q4="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Model.Skills.BuffFormulaAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Model.Skills.BuffFormulaAttribute.html",
+          "hash": "8wTIFnf+VAQRZrdoleXaC0TBDVM23qytftgIFk9F9zA="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Model.Skills.Skill.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Model.Skills.Skill.html",
+          "hash": "KC+/ueeT2WmKfDdPTLYad0FptDJg0AvEp+4aNnDnMq0="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Model.Skills.SkillAttunement.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Model.Skills.SkillAttunement.html",
+          "hash": "nCxcXA138XuWd+8N2FI15ISTjio71h0tQYN2Kj2jiEk="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Model.Skills.SkillData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Model.Skills.SkillData.html",
+          "hash": "48zb2SR0rv7ORCDeDBPccvhHnvgAIosjVtL62cSCN2E="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Model.Skills.SkillSlot.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Model.Skills.SkillSlot.html",
+          "hash": "npUL6Ck+9lre4SiYU1uQeOVysOt64Ip1sDDJRNIWK8A="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Model.Skills.SkillType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Model.Skills.SkillType.html",
+          "hash": "KimOYzxMo2p49sKuTKMV0gRuWxOT0Vwwg7dTpkZPLlk="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Model.Skills.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Model.Skills.html",
+          "hash": "L4mN3j1YLPsR8yBTHOWPwMfE4RpavM6mZ4QUNr0Vf1I="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Model.WeaponSet.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Model.WeaponSet.html",
+          "hash": "sSmSUIx7ZLfZJW5gUMZo0A0kARVKVRv7MxL15p6yL4U="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Model.WeaponType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Model.WeaponType.html",
+          "hash": "fC+rfRcM/Xw0JRvZQhWd3jZqkTUnJMHWV6+oEFa7AQ4="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Model.WeaponTypeExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Model.WeaponTypeExtensions.html",
+          "hash": "uerk+2Ov5fx59AocomAZ00+z4njVV3NAa43OYTrZGks="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Model.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Model.html",
+          "hash": "Pqva3lIhvjyO4ga66fL2Ywd7p/WkzX2DcT/0h4LWyis="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Parsed.Editing.ParsedLogEditor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Parsed.Editing.ParsedLogEditor.html",
+          "hash": "UreRVGOe1qGGhkNLv9YBDkRB5kwj20HeKVa/+70cRbE="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Parsed.Editing.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Parsed.Editing.html",
+          "hash": "SolHitDyJa7sPKXd9cNSds6Y/AGJAMDumKzwQpITcRQ="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Parsed.Enums.Activation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Parsed.Enums.Activation.html",
+          "hash": "wiezZaZBPh9Zy7DPzA3UW7vZWJPIKFE4STljoCq2W+k="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Parsed.Enums.BuffRemove.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Parsed.Enums.BuffRemove.html",
+          "hash": "2wa448AfoN4LtaeVlcs2ZaFqey3XVf1gVq2bBEa7mpc="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Parsed.Enums.FriendOrFoe.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Parsed.Enums.FriendOrFoe.html",
+          "hash": "QXzzjcqJtRtV2IlfvmWdzQYMGU+2pYPUmvGI7am1B9U="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Parsed.Enums.Result.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Parsed.Enums.Result.html",
+          "hash": "fGEB6Db8abK9WoqotEH2peM9g9wk5XdbUZT6ArZgA7s="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Parsed.Enums.StateChange.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Parsed.Enums.StateChange.html",
+          "hash": "TEnv6nc9TsCdO9fbWHEu8PBOsGzcsZr1aFHv8hClVFY="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Parsed.Enums.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Parsed.Enums.html",
+          "hash": "7A7seI0kXOL8sP+zcgMyVGJTh8L83GYkWtVk4aAFzqk="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Parsed.LogVersion.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Parsed.LogVersion.html",
+          "hash": "I1t57pC8DSWd4BVmVgWPC7dXzo0rcUP+c+mP+K02YDQ="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Parsed.ParsedAgent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Parsed.ParsedAgent.html",
+          "hash": "5dD0aISBAkg3x+ajPqQ1f86XokKRoDpPsklC0d+G81A="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Parsed.ParsedBossData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Parsed.ParsedBossData.html",
+          "hash": "2WX6aE/Z8BOzvs5SYiICljJckx3+ojDWFr2y9B04jTY="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Parsed.ParsedCombatItem.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Parsed.ParsedCombatItem.html",
+          "hash": "pI+imA3uR++/BqnbCKfh3p47pjuX+b5z9Y+08kXS/g4="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Parsed.ParsedLog.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Parsed.ParsedLog.html",
+          "hash": "cW9DLCAz5YhLZ5Jx6UuBdc5SVQiWxlCXMq3bA/KOd5k="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Parsed.ParsedSkill.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Parsed.ParsedSkill.html",
+          "hash": "mnrfP7vdpLxHJzGuRExYRTujvISUqLudJgihfOeXN+c="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Parsed.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Parsed.html",
+          "hash": "eupnk//gSvNrnrcf/l2KfmJxMEO43Vmrd4xtxmBmvB4="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.DefaultEncounterIdentifier.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.DefaultEncounterIdentifier.html",
+          "hash": "O9TI7ArCBFuaTaQ3X0GnPdpL+D/EkqlpfU/kGD7lN0M="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.EncounterIdentifierBuilder.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.EncounterIdentifierBuilder.html",
+          "hash": "usMyOk0k4sOmK6XTE/qG9b6GsKFCxCI0wSYotdWjyyw="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Encounters.BaseEncounterData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.BaseEncounterData.html",
+          "hash": "Lk94uxz3BeSXurdqNN1nEGreplzuRY3/8Q7gQgW6OHY="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Encounters.IEncounterData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.IEncounterData.html",
+          "hash": "VyBedjJplw3SYoSvrDW5tcN0j6kh2ha5gDWkrzTU9O4="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.AgentHealthModeDeterminer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.AgentHealthModeDeterminer.html",
+          "hash": "xf66pbCKHX02317NKKh6iUToEUkY7ZBmm+TLjjbpWJ8="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.ConstantModeDeterminer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.ConstantModeDeterminer.html",
+          "hash": "dD6JTkAI4vutAgmOTf83u7zIzap0Dmf+QCk3NpE7+Sg="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode.html",
+          "hash": "5d1rYJnrnQ+X0Gl+k4NZWYw9m20Lqxe6M9S3kYwF60I="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.GroupedSpawnModeDeterminer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.GroupedSpawnModeDeterminer.html",
+          "hash": "Ye4cqpz3QIbyWNkJb3igwdyfg4U7g8exBqpgbNQbDYs="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.IModeDeterminer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.IModeDeterminer.html",
+          "hash": "+QZ0Lcgi52Dt6LXP3Mj/oo3ATwSp1FpQk3fJ4kSorMI="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.RemovedBuffStackRemainingTimeModeDeterminer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.RemovedBuffStackRemainingTimeModeDeterminer.html",
+          "hash": "VhYCV9NUCFG2uFioxoZoDb4yMP94iaOqBQcXOdFb6NI="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.SkillPresentModeDeterminer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.SkillPresentModeDeterminer.html",
+          "hash": "U0AAuwZ1qcneZcIXUejzAV1/YrKFMYl2KPUGk0gNkZI="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.html",
+          "hash": "x96mZ/3qPmfjKdnvacf2/QDCuXqz4hGxuNt7V17oxxQ="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Names.BossEncounterNameProvider.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Names.BossEncounterNameProvider.html",
+          "hash": "NP7Y5v/sXGwkpHls4xsgwzv3O0wojkmAicsSGjwTwjg="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Names.ConstantEncounterNameProvider.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Names.ConstantEncounterNameProvider.html",
+          "hash": "ewSBiBV8gdzpfqg4AWOLKpPs0vK7hJPe7XFal0H45fE="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Names.IEncounterNameProvider.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Names.IEncounterNameProvider.html",
+          "hash": "5Yao74Mteu7N8UjbAK+ZyLsUG3uYDyov+0v/+4QlYnE="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Names.LocalizedEncounterNameProvider.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Names.LocalizedEncounterNameProvider.html",
+          "hash": "KFgNiKvzPysv0DG4POT2d9KpAXZ9S/eCFPfgKWV8VaY="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Names.TranslatedEncounterNameProvider.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Names.TranslatedEncounterNameProvider.html",
+          "hash": "EtEw32RgJu4ro1bR2+it9/zIu6oLtN33hdL0MQhqMdI="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Names.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Names.html",
+          "hash": "sN0RNYgldrM1y5XiKYgFIaKTyxOjkQlQev7FwZZRzHc="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.AgentAliveDeterminer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.AgentAliveDeterminer.html",
+          "hash": "p/1z3QSyBArN4mR1cFrn2wo54nXPPr/L8Fk4/t/hqLA="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.AgentBelowHealthThresholdDeterminer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.AgentBelowHealthThresholdDeterminer.html",
+          "hash": "6u2MZQFeMYpzPL5GOST1Gqc3AscBFAuKRv/6wj7OJKQ="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.AgentBuffGainedDeterminer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.AgentBuffGainedDeterminer.html",
+          "hash": "FMsNqa44wwHGOnNhk1XWrFhMuPK6rImFkS+6mAlE0CI="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.AgentCombatExitDeterminer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.AgentCombatExitDeterminer.html",
+          "hash": "MF2mzG9s2zSwa6YdYvs/rYNKC9X+wkI/+Rq3aB48cSI="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.AgentDeadDeterminer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.AgentDeadDeterminer.html",
+          "hash": "74sRvkWmruNXu5so1AJfLKNMgFllWa472jVm3CGpXZY="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.AgentHealthResetDeterminer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.AgentHealthResetDeterminer.html",
+          "hash": "qpY45wk8/RLC1B84rw9jx94wlidxj5x/h7OxvmetMG4="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.AgentKilledDeterminer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.AgentKilledDeterminer.html",
+          "hash": "Z0YUq/r7QM5/aUgnX2yKNQHUwsenFKuZzUKoOb/mIpo="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.AgentKillingBlowDeterminer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.AgentKillingBlowDeterminer.html",
+          "hash": "HL2TBaoaFou5Cu11P8+vqw4yR5iBzUKOVzPdZE6NOKc="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.AgentOutsideOfCombatDeterminer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.AgentOutsideOfCombatDeterminer.html",
+          "hash": "11xv3lSHaQABfFGIuVG0M2aucQ5QSFLrVjJ2QqaHLDk="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.BuffAppliedAfterSkillCastDeterminer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.BuffAppliedAfterSkillCastDeterminer.html",
+          "hash": "jZwh1R24EaBAvvr3cvCxbCLipuckl6KGO1ujs8HiZL0="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.ConstantResultDeterminer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.ConstantResultDeterminer.html",
+          "hash": "nkn7QjcP+l5Su9aHxKEW5QZjbWx/JgbuX6gQet+dumI="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.EncounterResult.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.EncounterResult.html",
+          "hash": "+Ch1RRB/9asjjcPMw4vJyfbyC011ipPSKhQG37KZUhU="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.EventFoundResultDeterminer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.EventFoundResultDeterminer.html",
+          "hash": "99v5krOp3UyFNBBeXKMC6A1awOeTEoZSvZSCNJmhAo0="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.GroupedEventDeterminer-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.GroupedEventDeterminer-1.html",
+          "hash": "3OcUuWAsNn4GlF19YFs+bSgCRQaNQ5Eted+UPCc3+8o="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.ConstantHealthDeterminer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.ConstantHealthDeterminer.html",
+          "hash": "baEDAQ7oxvEXAHcC8gwheNQLx4RMCo7KHACw/SRGiNo="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.ExtraHealthIfSkillPresentHealthDeterminer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.ExtraHealthIfSkillPresentHealthDeterminer.html",
+          "hash": "5S57Dw+GUVrB5Mo9iWkHGJVxZY5x6/hY+ATL2T4VzOw="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.IHealthDeterminer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.IHealthDeterminer.html",
+          "hash": "kzCevcCx7IDrM9kOqfKzumBKGTTJhnV2BQ59c1XB2ug="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.MaxMinHealthDeterminer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.MaxMinHealthDeterminer.html",
+          "hash": "EKQ4F5T4NG3qroRw34TY6w+GciSGdSNylIkrkJ0oStY="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.SequentialHealthDeterminer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.SequentialHealthDeterminer.html",
+          "hash": "4miELnWOq6dbNt9DlMrMTaC5ZEI1FK6D2YRyKQgcLE0="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.html",
+          "hash": "5ys9EfEFoAyHzLkLpqpl3ZcKBWlKBYAmcGC1JFxVxyE="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.IResultDeterminer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.IResultDeterminer.html",
+          "hash": "C+NQHwCw9z64/RJRUPKY7/C1HagW2ofVfBJtsZcGvAk="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.NPCSpawnDeterminer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.NPCSpawnDeterminer.html",
+          "hash": "4Czq3oX47eTdd7BYd8Ztem0MzlHiHueXFKhi6qIP3Gc="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.ResultDeterminerResult.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.ResultDeterminerResult.html",
+          "hash": "aSOiSzWUeuNBMD+s6J1hVI2TeM0sBCaYKos/8SL2xXg="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.RewardDeterminer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.RewardDeterminer.html",
+          "hash": "gRE3M2A15j6uMVm8/P94edDxoHwrF4X7xfLv/8DhsIA="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.TargetableDeterminer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.TargetableDeterminer.html",
+          "hash": "lSzeGdUAnewzWive9IzHja7aMjAlQbm4TlER6ur/BkU="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Transformers.AllCombinedResultDeterminer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Transformers.AllCombinedResultDeterminer.html",
+          "hash": "tsNI78UOR7Sftnzl+O38xG90isa1/PB4vbFTaGNbMxk="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Transformers.AnyCombinedResultDeterminer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Transformers.AnyCombinedResultDeterminer.html",
+          "hash": "CzAOdyjV1QYhfD/AHg4vqrir3y5pGWxBr3Ll7SqsYkg="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Transformers.IgnoreTimeResultDeterminerWrapper.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Transformers.IgnoreTimeResultDeterminerWrapper.html",
+          "hash": "CPpBUFmEzoeW0fUZ7bw5rc1EQW/cyVP3Qv/RPj44TI4="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Transformers.TransformResultDeterminer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Transformers.TransformResultDeterminer.html",
+          "hash": "W678U+sF0e/KSixXUgvr3WKLRGmfcbJ05NazDMMLDo0="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Transformers.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Transformers.html",
+          "hash": "M2PJxnvzlOdEstpSTG62kBi4sySbM6cfxcxMLLNbMLU="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.html",
+          "hash": "saKgA1vhpRI7VPf+aSz0i171QrxVWCyDZHTEV1u/jao="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Encounters.WorldVersusWorldEncounterData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.WorldVersusWorldEncounterData.html",
+          "hash": "DafX3rmYpJLRqa7grVRvkwaNMeUTiCknzD06BOxzfXk="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Encounters.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.html",
+          "hash": "HrL2KZQHtw4y+eFZKQT/NsCA2Mn65hM77RYqzVrC8/w="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.IEncounterIdentifier.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.IEncounterIdentifier.html",
+          "hash": "9R5Z8dgAhkCbJkr6g90zBvFRpbwC+KybZ0/gtEoyNDk="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.LogProcessor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.LogProcessor.html",
+          "hash": "v+eqmmGgi4YBaZU2Ksi/mCP0kz2xxRYmlEOHE2QXMDU="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.html",
+          "hash": "EacWnyg3gcQtLcNQz3kKap5CRHgmXEkM8fcVNoKNo3Q="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Steps.IPostProcessingStep.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Steps.IPostProcessingStep.html",
+          "hash": "Y4omIivpw5yRQibRrHmlVodTBCjdfGHVD6oS5TWTRH0="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Steps.MergeSingletonNPC.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Steps.MergeSingletonNPC.html",
+          "hash": "pana4AB9ETFz+DpaH0r/BMHbKSkNRLBsz9J2Pqe2Tdo="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Steps.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Steps.html",
+          "hash": "wRqgvN+380LpPiOvk5ZiELVjdZD0xVamCq0waSxiXjU="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.html",
+          "hash": "5Ipehuf5feR0DfIuAQCjIGG4L6VH0Sy8vSyk4QWU8E4="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.html",
+          "hash": "bjLGpsIohpJA71u+jybxB0V18+y9e8l1V3dqQp9AcNA="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "obj/api/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/toc.html",
+          "hash": "ciVC8y1m3LQYgA24UaGr4sG/ZiavWxxuOxY9yr5FdtI="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "toc.html",
+          "hash": "8laRS1YZ+hmTxGDML4j91AUHmrsC3RZDE1NdECBewL0="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    }
+  ],
+  "incremental_info": [
+    {
+      "status": {
+        "can_incremental": false,
+        "details": "Cannot build incrementally because last build info is missing.",
+        "incrementalPhase": "build",
+        "total_file_count": 0,
+        "skipped_file_count": 0,
+        "full_build_reason_code": "NoAvailableBuildCache"
+      },
+      "processors": {
+        "ConceptualDocumentProcessor": {
+          "can_incremental": false,
+          "incrementalPhase": "build",
+          "total_file_count": 6,
+          "skipped_file_count": 0
+        },
+        "ManagedReferenceDocumentProcessor": {
+          "can_incremental": false,
+          "incrementalPhase": "build",
+          "total_file_count": 168,
+          "skipped_file_count": 0
+        },
+        "TocDocumentProcessor": {
+          "can_incremental": false,
+          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "incrementalPhase": "build",
+          "total_file_count": 0,
+          "skipped_file_count": 0
+        }
+      }
+    },
+    {
+      "status": {
+        "can_incremental": false,
+        "details": "Cannot support incremental post processing, the reason is: last post processor info is null.",
+        "incrementalPhase": "postProcessing",
+        "total_file_count": 0,
+        "skipped_file_count": 0
+      },
+      "processors": {}
+    }
+  ],
+  "version_info": {},
+  "groups": [
+    {
+      "xrefmap": "xrefmap.yml"
+    }
+  ]
+}
