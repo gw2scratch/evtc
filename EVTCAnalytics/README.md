@@ -10,7 +10,6 @@ The library currently targets `netstandard2.1`.
 - Get raw agent, skill and combat item data from logs
 - Get agents and processed events with structured data
 - Get encounter results
-- Calculate statistics such as DPS, buff uptimes and similar (very work-in-progress)
 
 ## Example usage
 

@@ -4,6 +4,9 @@ using GW2Scratch.EVTCAnalytics.Model.Agents;
 
 namespace GW2Scratch.EVTCAnalytics.GameData
 {
+	/// <summary>
+	/// Provides game data related to player characters.
+	/// </summary>
 	public static class Characters
 	{
 		public static readonly Profession[] Professions =

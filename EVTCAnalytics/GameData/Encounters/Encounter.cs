@@ -2,6 +2,17 @@ using System;
 
 namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 {
+	/// <summary>
+	/// Represents an encounter.
+	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// Has values for commonly logged encounters, even some that are not logged by default.
+	/// </para>
+	/// <para>
+	/// Note that the values do not correspond to species ids of encounter bosses, there is no 1 to 1 mapping.
+	/// </para>
+	/// </remarks>
 	public enum Encounter
 	{
 		/*

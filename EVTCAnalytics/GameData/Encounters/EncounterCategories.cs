@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 {
+	/// <summary>
+	/// Provides categories for <see cref="Encounter"/>s.
+	/// </summary>
 	public static class EncounterCategories
 	{
 		private static readonly IReadOnlyDictionary<Encounter, EncounterCategory> Categories =
@@ -73,6 +76,12 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 				EncounterCategory.RaidWing7,
 			};
 
+		/// <summary>
+		/// Provides the category for an encounter.
+		/// </summary>
+		/// <param name="encounter">The encounter.</param>
+		/// <returns>The category for an encounter.</returns>
+		/// <exception cref="ArgumentException">Thrown for encounters with no specified category. This should never happen for values defined in <see cref="Encounter"/>.</exception>
 		public static EncounterCategory GetEncounterCategory(this Encounter encounter)
 		{
 			if (Categories.TryGetValue(encounter, out var category))
@@ -83,11 +92,19 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 			throw new ArgumentException("Category not defined for the specified encounter", nameof(encounter));
 		}
 
+		/// <summary>
+		/// Checks if this is a raid category.
+		/// </summary>
+		/// <returns>A value indicating whether the provided category is a raid category.</returns>
 		public static bool IsRaid(this EncounterCategory category)
 		{
 			return RaidCategories.Contains(category);
 		}
 
+		/// <summary>
+		/// Checks if this is a raid encounter.
+		/// </summary>
+		/// <returns>A value indicating whether the provided encounter is a raid encounter.</returns>
 		public static bool IsRaid(this Encounter encounter)
 		{
 			var category = encounter.GetEncounterCategory();

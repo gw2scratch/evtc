@@ -16,7 +16,7 @@ using GW2Scratch.EVTCAnalytics.Statistics.PlayerDataParts;
 namespace GW2Scratch.EVTCAnalytics
 {
 	/// <summary>
-	/// The Log Analyzer calculates potentially performance-heavy statistics.
+	/// The Log Analyzer calculates potentially performance-heavy statistics in a <see cref="Log"/>.
 	/// All calculations are cached within the object and not repeated.
 	/// </summary>
 	public class LogAnalyzer

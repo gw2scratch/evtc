@@ -1,5 +1,8 @@
 namespace GW2Scratch.EVTCAnalytics.GameData
 {
+	/// <summary>
+	/// Provides ids of common skills.
+	/// </summary>
 	public static class SkillIds
 	{
 		/* Boons and Conditions */
@@ -58,7 +61,11 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 
 		/* Skills */
 		public const int Revive = 1066;
-		public const int ArcDpsDodge = 65001;
+		/// <summary>
+		/// This is not a real skill.
+		/// arcdps, however, encodes dodging as a skill.
+		/// </summary>
+		public const int ArcdpsDodge = 65001;
 
 		/* Skills - Mesmer */
 		public const int LesserChaosStorm = 13733;

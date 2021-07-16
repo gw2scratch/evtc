@@ -1,5 +1,8 @@
 namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 {
+	/// <summary>
+	/// Represents an encounter category. These categories are defined
+	/// </summary>
 	public enum EncounterCategory
 	{
 		Other = 0,

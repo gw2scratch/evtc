@@ -11,9 +11,22 @@ using GW2Scratch.EVTCAnalytics.Parsed.Enums;
 
 namespace GW2Scratch.EVTCAnalytics
 {
-	// Based on the Elite Insights parser
+	/// <summary>
+	/// Reads raw data from an EVTC log and builds a <see cref="ParsedLog"/> with the raw data.
+	/// </summary>
 	public class EVTCParser
 	{
+		/// <summary>
+		/// Reads raw data from an EVTC log file.
+		/// </summary>
+		/// <param name="evtcFilename">The filename of the log.</param>
+		/// <exception cref="NotSupportedException">Thrown for unsupported log revisions.</exception>
+		/// <exception cref="LogParsingException">Thrown when parsing fails due to a malformed log or if an empty ZIP archive is supplied.</exception>
+		/// <remarks>
+		/// Note that the extension is used to identify whether this is a zipped EVTC log.
+		/// If the filename ends with .zip or .zevtc, it is opened as a zip file.
+		/// </remarks>
+		/// <returns>The raw data from the log.</returns>
 		public ParsedLog ParseLog(string evtcFilename)
 		{
 			if (evtcFilename.EndsWith(".zip", StringComparison.OrdinalIgnoreCase) ||
@@ -21,14 +34,14 @@ namespace GW2Scratch.EVTCAnalytics
 			{
 				using var fileStream = new FileStream(evtcFilename, FileMode.Open, FileAccess.Read, FileShare.Read);
 				using var arch = new ZipArchive(fileStream, ZipArchiveMode.Read);
-				
+
 				if (arch.Entries.Count == 0)
 				{
 					throw new LogParsingException("No EVTC file in ZIP archive.");
 				}
-				
+
 				using var data = arch.Entries[0].Open();
-					
+
 				var bytes = new byte[arch.Entries[0].Length];
 				data.Read(bytes, 0, bytes.Length);
 				return ParseLog(bytes);
@@ -38,19 +51,72 @@ namespace GW2Scratch.EVTCAnalytics
 			return ParseLog(fileBytes);
 		}
 
+		/// <summary>
+		/// Reads raw data from the bytes of an EVTC log.
+		/// </summary>
+		/// <param name="bytes">The contents of an uncompressed EVTC log, as bytes.</param>
+		/// <exception cref="LogParsingException">Thrown when parsing fails due to a malformed log.</exception>
+		/// <returns>The raw data from the log.</returns>
 		public ParsedLog ParseLog(byte[] bytes)
 		{
 			var reader = new ByteArrayBinaryReader(bytes, Encoding.UTF8);
 
-			var logVersion = ParseLogData(reader);
-			var bossData = ParseBossData(reader);
-			var agents = ParseAgents(reader).ToList();
-			var skills = ParseSkills(reader).ToList();
-			var combatItems = ParseCombatItems(logVersion.Revision, reader).ToList();
+			LogVersion logVersion;
+			ParsedBossData bossData;
+			List<ParsedAgent> agents;
+			List<ParsedSkill> skills;
+			List<ParsedCombatItem> combatItems;
+			try
+			{
+				logVersion = ParseLogData(reader);
+			}
+			catch (Exception e)
+			{
+				throw new LogParsingException("Failed to parse log metadata.", e);
+			}
+
+			try
+			{
+				bossData = ParseBossData(reader);
+			}
+			catch (Exception e)
+			{
+				throw new LogParsingException("Failed to parse boss data.", e);
+			}
+
+			try
+			{
+				agents = ParseAgents(reader).ToList();
+			}
+			catch (Exception e)
+			{
+				throw new LogParsingException("Failed to parse agents.", e);
+			}
+
+			try
+			{
+				skills = ParseSkills(reader).ToList();
+			}
+			catch (Exception e)
+			{
+				throw new LogParsingException("Failed to parse skills.", e);
+			}
+
+			try
+			{
+				combatItems = ParseCombatItems(logVersion.Revision, reader).ToList();
+			} 
+			catch (Exception e)
+			{
+				throw new LogParsingException("Failed to parse combat items.", e);
+			}
 
 			return new ParsedLog(logVersion, bossData, agents, skills, combatItems);
 		}
 
+		/// <summary>
+		/// Parses log metadata.
+		/// </summary>
 		private LogVersion ParseLogData(ByteArrayBinaryReader reader)
 		{
 			// 12 bytes: arc build version
@@ -63,7 +129,7 @@ namespace GW2Scratch.EVTCAnalytics
 		}
 
 		/// <summary>
-		/// Parses boss related data
+		/// Parses boss related data.
 		/// </summary>
 		private ParsedBossData ParseBossData(ByteArrayBinaryReader reader)
 		{
@@ -72,12 +138,11 @@ namespace GW2Scratch.EVTCAnalytics
 			// 1 byte: unused
 			reader.Skip(1);
 
-			//Save
 			return new ParsedBossData(id);
 		}
 
 		/// <summary>
-		/// Parses agent related data
+		/// Parses agent related data.
 		/// </summary>
 		private IEnumerable<ParsedAgent> ParseAgents(ByteArrayBinaryReader reader)
 		{
@@ -119,7 +184,7 @@ namespace GW2Scratch.EVTCAnalytics
 		}
 
 		/// <summary>
-		/// Parses skill related data
+		/// Parses skill related data.
 		/// </summary>
 		private IEnumerable<ParsedSkill> ParseSkills(ByteArrayBinaryReader reader)
 		{
@@ -141,7 +206,7 @@ namespace GW2Scratch.EVTCAnalytics
 		}
 
 		/// <summary>
-		/// Parses combat related data
+		/// Parses combat related data.
 		/// </summary>
 		private IEnumerable<ParsedCombatItem> ParseCombatItems(int revision, ByteArrayBinaryReader reader)
 		{
@@ -244,8 +309,6 @@ namespace GW2Scratch.EVTCAnalytics
 			// 1 byte: garbage
 			reader.Skip(1);
 
-			//save
-			// Add combat
 			return new ParsedCombatItem(time, srcAgent, dstAgent, value, buffDmg, overstackValue, skillId,
 				srcInstid, dstInstid, srcMasterInstid, 0, iff, buff, result, isActivation, isBuffRemove,
 				isNinety, isFifty, isMoving, isStateChange, isFlanking, isShields, isOffcycle, 0);
@@ -337,7 +400,8 @@ namespace GW2Scratch.EVTCAnalytics
 
 		private static Result GetResultFromByte(byte b)
 		{
-			// Does not perform checking as that would change the result value which is used in buff remove events to indicate remaining stacks
+			// Does not perform checking as that would change the result value
+			// which is used in buff remove events to indicate remaining stacks
 			return (Result) b;
 		}
 

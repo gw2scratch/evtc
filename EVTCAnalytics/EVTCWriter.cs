@@ -6,6 +6,10 @@ using GW2Scratch.EVTCAnalytics.Parsed;
 
 namespace GW2Scratch.EVTCAnalytics
 {
+	/// <summary>
+	/// Creates EVTC log files from raw values stored in a <see cref="ParsedLog"/>.
+	/// </summary>
+	/// <seealso cref="GW2Scratch.EVTCAnalytics.Parsed.Editing.ParsedLogEditor"/>
 	public class EVTCWriter
 	{
 		private static readonly Encoding Encoding = Encoding.UTF8;
@@ -97,7 +101,6 @@ namespace GW2Scratch.EVTCAnalytics
 				writer.Write(combatItem.Padding);
 			}
 		}
-
 
 		private byte[] Encode(string str, int bufferSize)
 		{

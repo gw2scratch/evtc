@@ -8,6 +8,10 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 	/// </summary>
 	public interface IResultDeterminer
 	{
+		/// <summary>
+		/// Determines the result of the encounter from its events. 
+		/// </summary>
+		/// <param name="events">The events in an encounter.</param>
 		ResultDeterminerResult GetResult(IEnumerable<Event> events);
 	}
 }

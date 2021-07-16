@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 {
+	/// <summary>
+	/// Provides names for encounters.
+	/// </summary>
 	public static class EncounterNames
 	{
 		public static IReadOnlyDictionary<Encounter, string> EnglishNames { get; } = new Dictionary<Encounter, string>
@@ -59,6 +62,12 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 			{Encounter.VariniaStormsounder, "Varinia Stormsounder"},
 		};
 
+		/// <summary>
+		/// Provides a dictionary of names for encounters in the specified language if it is available.
+		/// </summary>
+		/// <param name="language">The language of the encounter name.</param>
+		/// <param name="namesByEncounter">When this value returns, contains the name dictionary; otherwise, <see langword="null"/>.</param>
+		/// <returns><see langword="true" /> if there are names available; otherwise, <see langword="false" />.</returns>
 		public static bool TryGetNamesForLanguage(GameLanguage language, out IReadOnlyDictionary<Encounter, string> namesByEncounter)
 		{
 			// TODO: Add translated names for other languages as well
@@ -79,6 +88,13 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 			}
 		}
 
+		/// <summary>
+		/// Provides a name for an encounter in the specified language if it is available.
+		/// </summary>
+		/// <param name="language">The language of the encounter name.</param>
+		/// <param name="encounter">The encounter.</param>
+		/// <param name="encounterName">When this value returns, contains the name; otherwise, <see langword="null"/>.</param>
+		/// <returns><see langword="true" /> if there is a name available; otherwise, <see langword="false" />.</returns>
 		public static bool TryGetEncounterNameForLanguage(GameLanguage language, Encounter encounter, out string encounterName)
 		{
 			if (TryGetNamesForLanguage(language, out var names) && names.TryGetValue(encounter, out string name))

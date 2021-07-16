@@ -1,5 +1,8 @@
 namespace GW2Scratch.EVTCAnalytics.GameData
 {
+	/// <summary>
+	/// Provides common species ids for NPCs.
+	/// </summary>
 	public static class SpeciesIds
 	{
 		// Wing 1
