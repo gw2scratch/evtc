@@ -16,7 +16,7 @@ namespace GW2Scratch.RotationComparison.GW2Api.V2
 			firstRequest.AddQueryParameter("page_size", "200");
 
 			//var firstResponse = client.Execute<List<ApiSkill>>(firstRequest);
-			var firstResponse = await client.ExecuteTaskAsync<List<ApiSkill>>(firstRequest);
+			var firstResponse = await client.ExecuteAsync<List<ApiSkill>>(firstRequest);
 
 			int pageCount = int.Parse((string) firstResponse.Headers.First(x => x.Name == "X-Page-Total").Value);
 
@@ -28,7 +28,7 @@ namespace GW2Scratch.RotationComparison.GW2Api.V2
 				request.AddQueryParameter("page", $"{i}");
 				request.AddQueryParameter("page_size", "200");
 
-				tasks.Add(client.ExecuteTaskAsync<List<ApiSkill>>(request));
+				tasks.Add(client.ExecuteAsync<List<ApiSkill>>(request));
 			}
 
 			await Task.WhenAll(tasks);
