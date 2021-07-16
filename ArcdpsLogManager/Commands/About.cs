@@ -70,7 +70,7 @@ The software
 			var about = new AboutDialog
 			{
 				Logo = Resources.GetProgramIcon(),
-				Website = new Uri("https://discord.gg/TnHpN34"),
+				Website = new Uri("https://discord.gg/rNXRS6ZkYe"),
 				WebsiteLabel = "Discord Server",
 				License = license,
 				Developers = new []{"Sejsel"},

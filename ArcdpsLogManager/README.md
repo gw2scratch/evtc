@@ -20,7 +20,7 @@ Runs on Windows and Linux, requires .NET Core 3.1 or newer
 
 Reporting bugs is the most important way of contributing, it's hard to fix things you are
 not aware about. Either create an issue on GitHub or let us know in the `#bug-reports`
-channel in our [Discord server](https://discord.gg/TnHpN34). Also feel free to request new features.
+channel in our [Discord server](https://discord.gg/rNXRS6ZkYe). Also feel free to request new features.
 
 If you want to implement something new, it might be a good idea to ask first because some parts
 of the codebase are not quite stable yet.

@@ -45,17 +45,19 @@ a whole squad on a boss at once and similar.
 
 ## [EVTC Analytics](EVTCAnalytics)
 The core library for parsing and analyzing EVTC logs. Built with integration
-in other projects in mind. Currently has a very unstable API, changes are to be expected.
+in other projects in mind. Currently has a somewhat API, changes are to be expected.
 
 - get raw agent, skill and combat item data from logs
 - get agents and processed events with structured data
 - get encounter results
 - calculate statistics such as DPS, buff uptimes and similar (very work-in-progress)
 
+There is [documentation](https://gw2scratch.github.io/evtc/master/) available.
+
 ## Contributing
 Reporting bugs is the most important way of contributing, it's hard to fix things you are
 not aware about. Either create an issue on GitHub or let us know in the `#bug-reports`
-channel in our [Discord server](https://discord.gg/TnHpN34).
+channel in our [Discord server](https://discord.gg/rNXRS6ZkYe).
 
 Tiny fixes are always welcome, however do please discuss bigger changes first. Currently,
 most of the projects are very much in early development and significant changes are planned.
