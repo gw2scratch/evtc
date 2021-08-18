@@ -13,6 +13,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 		public IReadOnlyList<CoreProfessionPlayerCountFilter> CoreProfessionFilters { get; }
 		public IReadOnlyList<EliteSpecializationPlayerCountFilter> HeartOfThornsSpecializationFilters { get; }
 		public IReadOnlyList<EliteSpecializationPlayerCountFilter> PathOfFireSpecializationFilters { get; }
+		public IReadOnlyList<EliteSpecializationPlayerCountFilter> EndOfDragonsSpecializationFilters { get; }
 
 		public CompositionFilters() : this(
 			ProfessionData.Professions.Select(x => x.Profession)
@@ -20,6 +21,8 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 			ProfessionData.Professions.Select(x => x.HoT)
 				.Select(specialization => new EliteSpecializationPlayerCountFilter(specialization)),
 			ProfessionData.Professions.Select(x => x.PoF)
+				.Select(specialization => new EliteSpecializationPlayerCountFilter(specialization)),
+			ProfessionData.Professions.Select(x => x.EoD)
 				.Select(specialization => new EliteSpecializationPlayerCountFilter(specialization))
 		)
 		{
@@ -27,11 +30,14 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 
 		private CompositionFilters(IEnumerable<CoreProfessionPlayerCountFilter> coreFilters,
 			IEnumerable<EliteSpecializationPlayerCountFilter> hotFilters,
-			IEnumerable<EliteSpecializationPlayerCountFilter> pofFilters)
+			IEnumerable<EliteSpecializationPlayerCountFilter> pofFilters,
+			IEnumerable<EliteSpecializationPlayerCountFilter> eodFilters
+			)
 		{
 			CoreProfessionFilters = coreFilters.ToList();
 			HeartOfThornsSpecializationFilters = hotFilters.ToList();
 			PathOfFireSpecializationFilters = pofFilters.ToList();
+			EndOfDragonsSpecializationFilters = eodFilters.ToList();
 
 			foreach (var filter in CoreProfessionFilters)
 			{
@@ -47,13 +53,19 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 			{
 				filter.PropertyChanged += (_, _) => OnPropertyChanged(nameof(PathOfFireSpecializationFilters));
 			}
+			
+			foreach (var filter in EndOfDragonsSpecializationFilters)
+			{
+				filter.PropertyChanged += (_, _) => OnPropertyChanged(nameof(EndOfDragonsSpecializationFilters));
+			}
 		}
 
 		public bool FilterLog(LogData log)
 		{
 			return CoreProfessionFilters.All(filter => filter.FilterLog(log)) &&
 			       HeartOfThornsSpecializationFilters.All(filter => filter.FilterLog(log)) &&
-			       PathOfFireSpecializationFilters.All(filter => filter.FilterLog(log));
+			       PathOfFireSpecializationFilters.All(filter => filter.FilterLog(log)) &&
+			       EndOfDragonsSpecializationFilters.All(filter => filter.FilterLog(log));
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -68,7 +80,8 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 			return new CompositionFilters(
 				CoreProfessionFilters.Select(x => x.DeepClone()),
 				HeartOfThornsSpecializationFilters.Select(x => x.DeepClone()),
-				PathOfFireSpecializationFilters.Select(x => x.DeepClone())
+				PathOfFireSpecializationFilters.Select(x => x.DeepClone()),
+				EndOfDragonsSpecializationFilters.Select(x => x.DeepClone())
 			);
 		}
 
@@ -76,7 +89,8 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 		{
 			return CoreProfessionFilters.SequenceEqual(other.CoreProfessionFilters)
 			       && HeartOfThornsSpecializationFilters.SequenceEqual(other.HeartOfThornsSpecializationFilters)
-			       && PathOfFireSpecializationFilters.SequenceEqual(other.PathOfFireSpecializationFilters);
+			       && PathOfFireSpecializationFilters.SequenceEqual(other.PathOfFireSpecializationFilters)
+			       && EndOfDragonsSpecializationFilters.SequenceEqual(other.EndOfDragonsSpecializationFilters);
 		}
 
 		public override bool Equals(object obj)
@@ -101,6 +115,11 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 			}
 			
 			foreach (var filter in PathOfFireSpecializationFilters)
+			{
+				code.Add(filter.GetHashCode());
+			}
+			
+			foreach (var filter in EndOfDragonsSpecializationFilters)
 			{
 				code.Add(filter.GetHashCode());
 			}

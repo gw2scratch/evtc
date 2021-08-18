@@ -25,6 +25,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		private Lazy<Image> TinyIconBerserker { get; } = new Lazy<Image>(Resources.GetTinyIconBerserker);
 		private Lazy<Image> TinyIconSpellbreaker { get; } = new Lazy<Image>(Resources.GetTinyIconSpellbreaker);
 		private Lazy<Image> TinyIconDragonhunter { get; } = new Lazy<Image>(Resources.GetTinyIconDragonhunter);
+		private Lazy<Image> TinyIconWillbender { get; } = new Lazy<Image>(Resources.GetTinyIconWillbender);
 		private Lazy<Image> TinyIconFirebrand { get; } = new Lazy<Image>(Resources.GetTinyIconFirebrand);
 		private Lazy<Image> TinyIconHerald { get; } = new Lazy<Image>(Resources.GetTinyIconHerald);
 		private Lazy<Image> TinyIconRenegade { get; } = new Lazy<Image>(Resources.GetTinyIconRenegade);
@@ -36,10 +37,12 @@ namespace GW2Scratch.ArcdpsLogManager
 		private Lazy<Image> TinyIconHolosmith { get; } = new Lazy<Image>(Resources.GetTinyIconHolosmith);
 		private Lazy<Image> TinyIconReaper { get; } = new Lazy<Image>(Resources.GetTinyIconReaper);
 		private Lazy<Image> TinyIconScourge { get; } = new Lazy<Image>(Resources.GetTinyIconScourge);
+		private Lazy<Image> TinyIconHarbinger { get; } = new Lazy<Image>(Resources.GetTinyIconHarbinger);
 		private Lazy<Image> TinyIconTempest { get; } = new Lazy<Image>(Resources.GetTinyIconTempest);
 		private Lazy<Image> TinyIconWeaver { get; } = new Lazy<Image>(Resources.GetTinyIconWeaver);
 		private Lazy<Image> TinyIconChronomancer { get; } = new Lazy<Image>(Resources.GetTinyIconChronomancer);
 		private Lazy<Image> TinyIconMirage { get; } = new Lazy<Image>(Resources.GetTinyIconMirage);
+		private Lazy<Image> TinyIconVirtuoso { get; } = new Lazy<Image>(Resources.GetTinyIconVirtuoso);
 
 		// CATEGORIES
 		private Lazy<Image> TinyIconRaid { get; } = new Lazy<Image>(Resources.GetTinyIconRaid);
@@ -169,6 +172,7 @@ namespace GW2Scratch.ArcdpsLogManager
 				EliteSpecialization.Spellbreaker => TinyIconSpellbreaker.Value,
 				EliteSpecialization.Dragonhunter => TinyIconDragonhunter.Value,
 				EliteSpecialization.Firebrand => TinyIconFirebrand.Value,
+				EliteSpecialization.Willbender => TinyIconWillbender.Value,
 				EliteSpecialization.Herald => TinyIconHerald.Value,
 				EliteSpecialization.Renegade => TinyIconRenegade.Value,
 				EliteSpecialization.Druid => TinyIconDruid.Value,
@@ -179,10 +183,18 @@ namespace GW2Scratch.ArcdpsLogManager
 				EliteSpecialization.Holosmith => TinyIconHolosmith.Value,
 				EliteSpecialization.Reaper => TinyIconReaper.Value,
 				EliteSpecialization.Scourge => TinyIconScourge.Value,
+				EliteSpecialization.Harbinger => TinyIconHarbinger.Value,
 				EliteSpecialization.Tempest => TinyIconTempest.Value,
 				EliteSpecialization.Weaver => TinyIconWeaver.Value,
 				EliteSpecialization.Chronomancer => TinyIconChronomancer.Value,
 				EliteSpecialization.Mirage => TinyIconMirage.Value,
+				EliteSpecialization.Virtuoso => TinyIconVirtuoso.Value,
+				EliteSpecialization.EoDWarrior => TinyIconUnknownProfession.Value, // TODO: Add when announced
+				EliteSpecialization.EoDEngineer => TinyIconUnknownProfession.Value, // TODO: Add when announced
+				EliteSpecialization.EoDRanger => TinyIconUnknownProfession.Value, // TODO: Add when announced
+				EliteSpecialization.EoDThief => TinyIconUnknownProfession.Value, // TODO: Add when announced
+				EliteSpecialization.EoDElementalist => TinyIconUnknownProfession.Value, // TODO: Add when announced
+				EliteSpecialization.EoDRevenant => TinyIconUnknownProfession.Value, // TODO: Add when announced
 				_ => throw new ArgumentOutOfRangeException(nameof(specialization)),
 			};
 		}

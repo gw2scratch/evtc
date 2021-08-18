@@ -58,6 +58,10 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Updates
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 1, 2, 0)
 			                     && log.Players.Any(x => x.Profession == Profession.None),
 				"Fixes broken profession detection for Core Guardians."),
+			new LogUpdate(log => log.ParsingVersion < new Version(1, 2, 0, 0)
+			                     && log.GameBuild >= 118697
+			                     && log.Players.Any(x => x.EliteSpecialization == EliteSpecialization.None),
+				"Add support for Virtuoso, Harbinger and Willbender."),
 			// When adding a new update, you need to increase the revision (last value) of the version in the .csproj file
 			// unless the version changes more significantly, in that case it can be reset to 0.
 		};

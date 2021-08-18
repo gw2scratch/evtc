@@ -25,6 +25,15 @@ namespace GW2Scratch.EVTCAnalytics.Model.Agents
 		Scourge,
 		Spellbreaker,
 		Firebrand,
-		Renegade
+		Renegade,
+		Willbender,
+		EoDWarrior,
+		EoDEngineer,
+		EoDRanger,
+		EoDThief,
+		EoDElementalist,
+		Virtuoso,
+		Harbinger,
+		EoDRevenant,
 	}
 }

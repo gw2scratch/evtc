@@ -28,6 +28,17 @@ namespace GW2Scratch.EVTCAnalytics.Tests.GameData
 				Assert.AreNotEqual(EliteSpecialization.None, specialization);
 			}
 		}
+		
+		[Test]
+		public void AllProfessionsHaveAnEndOfDragonsEliteSpecialization()
+		{
+			foreach (var profession in Characters.Professions)
+			{
+				EliteSpecialization specialization = EliteSpecialization.None;
+				Assert.DoesNotThrow(() => specialization = Characters.GetEndOfDragonsEliteSpecialization(profession));
+				Assert.AreNotEqual(EliteSpecialization.None, specialization);
+			}
+		}
 
 		[Test]
 		public void AllEliteSpecializationsHaveABaseProfession()

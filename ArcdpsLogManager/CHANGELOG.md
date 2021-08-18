@@ -2,7 +2,11 @@
 
 This is the full changelog of the arcdps Log Manager.
 
-## Log Manager v1.1.2 (unreleased)
+## Log Manager v1.2.0
+
+#### New features
+- Added support for Virtuoso, Harbinger and Willbender
+- Added support for EoD specializations in squad composition filters
 
 #### Fixes
 - Fixed broken profession detection for Core Guardians.

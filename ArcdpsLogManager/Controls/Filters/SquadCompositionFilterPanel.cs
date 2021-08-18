@@ -41,7 +41,8 @@ namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 					// Elite specializations
 					var specializationFilterGroups = new[] {
 						filterSnapshot.HeartOfThornsSpecializationFilters,
-						filterSnapshot.PathOfFireSpecializationFilters
+						filterSnapshot.PathOfFireSpecializationFilters,
+						filterSnapshot.EndOfDragonsSpecializationFilters
 					};
 					foreach (var specializationFilters in specializationFilterGroups)
 					{
@@ -108,6 +109,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 					filterSnapshot.CoreProfessionFilters,
 					filterSnapshot.HeartOfThornsSpecializationFilters,
 					filterSnapshot.PathOfFireSpecializationFilters,
+					filterSnapshot.EndOfDragonsSpecializationFilters,
 				};
 				foreach (var group in filterGroups)
 				{

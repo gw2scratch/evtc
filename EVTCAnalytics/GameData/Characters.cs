@@ -49,6 +49,20 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 				{Profession.Necromancer, EliteSpecialization.Scourge},
 				{Profession.Revenant, EliteSpecialization.Renegade}
 			};
+		
+		private static readonly IReadOnlyDictionary<Profession, EliteSpecialization> EndOfDragonsSpecializationsByProfession =
+			new Dictionary<Profession, EliteSpecialization>
+			{
+				{Profession.Guardian, EliteSpecialization.Willbender},
+				{Profession.Warrior, EliteSpecialization.EoDWarrior},
+				{Profession.Engineer, EliteSpecialization.EoDEngineer},
+				{Profession.Ranger, EliteSpecialization.EoDRanger},
+				{Profession.Thief, EliteSpecialization.EoDThief},
+				{Profession.Elementalist, EliteSpecialization.EoDElementalist},
+				{Profession.Mesmer, EliteSpecialization.Virtuoso},
+				{Profession.Necromancer, EliteSpecialization.Harbinger},
+				{Profession.Revenant, EliteSpecialization.EoDRevenant}
+			};
 
 		/// <summary>
 		/// Ids of elite specializations as used internally in-game and publicly in the official API.
@@ -73,7 +87,10 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 				{60, EliteSpecialization.Scourge},
 				{61, EliteSpecialization.Spellbreaker},
 				{62, EliteSpecialization.Firebrand},
-				{63, EliteSpecialization.Renegade}
+				{63, EliteSpecialization.Renegade},
+				{64, EliteSpecialization.Harbinger},
+				{65, EliteSpecialization.Willbender},
+				{66, EliteSpecialization.Virtuoso},
 			};
 
 		/// <summary>
@@ -104,6 +121,11 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		{
 			return PathOfFireSpecializationsByProfession[profession];
 		}
+		
+		public static EliteSpecialization GetEndOfDragonsEliteSpecialization(Profession profession)
+		{
+			return EndOfDragonsSpecializationsByProfession[profession];
+		}
 
 		/// <summary>
 		/// Provides the base profession for an elite specialization.
@@ -127,6 +149,14 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 			}
 
 			foreach (var (profession, spec) in PathOfFireSpecializationsByProfession)
+			{
+				if (specialization == spec)
+				{
+					return profession;
+				}
+			}
+			
+			foreach (var (profession, spec) in EndOfDragonsSpecializationsByProfession)
 			{
 				if (specialization == spec)
 				{
