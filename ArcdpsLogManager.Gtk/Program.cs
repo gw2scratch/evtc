@@ -9,7 +9,18 @@ namespace GW2Scratch.ArcdpsLogManager.Gtk
 		[STAThread]
 		static void Main()
 		{
-			new Application().Run(new LoadingForm());
+			var application = new Application();
+			application.UnhandledException += (sender, args) =>
+			{
+				MessageBox.Show(
+					"The application has encountered an unexpected error. Please report this so we can fix it." +
+					$"\n\n{args.ExceptionObject}",
+					"Critical Error",
+					MessageBoxButtons.OK,
+					MessageBoxType.Error);
+				application.Quit();
+			};
+			application.Run(new LoadingForm());
 		}
 	}
 }
