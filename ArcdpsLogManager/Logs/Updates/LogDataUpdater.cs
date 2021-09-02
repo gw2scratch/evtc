@@ -56,11 +56,11 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Updates
 				"Ai, Keeper of the Peak is now three different encounters (by phases) and successful if group resets after first phase."),
 #pragma warning restore 618
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 1, 2, 0)
-			                     && log.Players.Any(x => x.Profession == Profession.None),
+			                     && (log.Players?.Any(x => x.Profession == Profession.None) ?? false),
 				"Fixes broken profession detection for Core Guardians."),
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 2, 0, 0)
 			                     && log.GameBuild >= 118697
-			                     && log.Players.Any(x => x.EliteSpecialization == EliteSpecialization.None),
+			                     && (log.Players?.Any(x => x.EliteSpecialization == EliteSpecialization.None) ?? false),
 				"Add support for Virtuoso, Harbinger and Willbender."),
 			// When adding a new update, you need to increase the revision (last value) of the version in the .csproj file
 			// unless the version changes more significantly, in that case it can be reset to 0.
