@@ -5,6 +5,7 @@ using System.Linq;
 using GW2Scratch.EVTCAnalytics.GameData.Encounters;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
+using System.Text;
 
 namespace GW2Scratch.ArcdpsLogManager.Logs
 {
@@ -51,9 +52,9 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 
 			try
 			{
-				using var reader = new StreamReader(filename);
-				var buffer = new char[4];
-				reader.Read(buffer, 0, buffer.Length);
+				Span<byte> buffer = stackalloc byte[4];
+				var stream = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read, 4);
+				stream.Read(buffer);
 
 				// TODO: Check contents of zips as well. Not as important because arcdps has never created those without a specified extension.
 
