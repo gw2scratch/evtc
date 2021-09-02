@@ -49,21 +49,26 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 			{
 				return true;
 			}
-
-			try
+			
+			if (Path.GetExtension(filename) == "")
 			{
-				Span<byte> buffer = stackalloc byte[4];
-				var stream = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read, 4);
-				stream.Read(buffer);
+				// If arcdps compression fails, the file is created with no extension. If we find any files without
+				// extension, we check the magic string at the start of the file to determine whether they are an EVTC log.
+				try
+				{
+					Span<byte> buffer = stackalloc byte[4];
+					var stream = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read, 4);
+					stream.Read(buffer);
 
-				// TODO: Check contents of zips as well. Not as important because arcdps has never created those without a specified extension.
+					return buffer[0] == 'E' && buffer[1] == 'V' && buffer[2] == 'T' && buffer[3] == 'C';
+				}
+				catch
+				{
+					return false;
+				}
+			}
 
-				return buffer[0] == 'E' && buffer[1] == 'V' && buffer[2] == 'T' && buffer[3] == 'C';
-			}
-			catch
-			{
-				return false;
-			}
+			return false;
 		}
 
 		public IEnumerable<LogData> GetTesting()
