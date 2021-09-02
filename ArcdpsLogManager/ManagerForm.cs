@@ -159,7 +159,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			};
 			LogSearchFinished += (sender, args) =>
 			{
-				var updates = LogDataUpdater.GetUpdates(logs).ToList();
+				var updates = LogDataUpdater.GetUpdates(logs.ToList()).ToList();
 				if (updates.Count > 0)
 				{
 					new ProcessingUpdateDialog(LogDataProcessor, updates).ShowModal(this);
@@ -370,14 +370,14 @@ namespace GW2Scratch.ArcdpsLogManager
 			var updateMenuItem = new ButtonMenuItem {Text = "&Update logs with outdated data…"};
 			updateMenuItem.Click += (sender, args) =>
 			{
-				new ProcessingUpdateDialog(LogDataProcessor, LogDataUpdater.GetUpdates(logs).ToList()).ShowModal(this);
+				new ProcessingUpdateDialog(LogDataProcessor, LogDataUpdater.GetUpdates(logs.ToList()).ToList()).ShowModal(this);
 			};
-			LogSearchFinished += (sender, args) => { updateMenuItem.Enabled = LogDataUpdater.GetUpdates(logs).Any(); };
+			LogSearchFinished += (sender, args) => { updateMenuItem.Enabled = LogDataUpdater.GetUpdates(logs.ToList()).Any(); };
 			LogDataProcessor.Processed += (sender, args) =>
 			{
 				if (args.CurrentScheduledItems == 0)
 				{
-					bool updatesFound = LogDataUpdater.GetUpdates(logs).Any();
+					bool updatesFound = LogDataUpdater.GetUpdates(logs.ToList()).Any();
 					Application.Instance.AsyncInvoke(() => updateMenuItem.Enabled = updatesFound);
 				}
 			};
