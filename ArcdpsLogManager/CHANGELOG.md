@@ -2,6 +2,16 @@
 
 This is the full changelog of the arcdps Log Manager.
 
+## Log Manager v1.2.1
+
+#### Changes
+- Significantly improved performance of searching for log files
+- Removed white pixels in Scourge icon (relevant for dark themes on Linux)
+
+#### Fixes
+- Fixed a crash caused by having a log without player data processed with an older version of the program (issue #134)
+- Fixed blurry Harbinger, Virtuoso and Willbender icons in log list when DPI Scaling was enabled on Windows (issue #132)
+
 ## Log Manager v1.2.0
 
 #### New features
