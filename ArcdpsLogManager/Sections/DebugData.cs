@@ -64,7 +64,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 				browserButton.Click += (sender, args) =>
 				{
 					var browserForm = new InspectorForm();
-					browserForm.SelectLog(logData.FileInfo.FullName);
+					browserForm.SelectLog(logData.FileName);
 					browserForm.Show();
 				};
 

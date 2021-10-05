@@ -555,7 +555,7 @@ namespace GW2Scratch.ArcdpsLogManager
 						Task.Run(async () =>
 						{
 							await Task.Delay(delay);
-							if (LogFinder.IsLikelyEvtcLog(args.FullPath))
+							if (File.Exists(args.FullPath) && LogFinder.IsLikelyEvtcLog(args.FullPath))
 							{
 								Application.Instance.AsyncInvoke(() => AddNewLog(args.FullPath));
 							}
@@ -566,7 +566,7 @@ namespace GW2Scratch.ArcdpsLogManager
 						Task.Run(async () =>
 						{
 							await Task.Delay(delay);
-							if (LogFinder.IsLikelyEvtcLog(args.FullPath))
+							if (File.Exists(args.FullPath) && LogFinder.IsLikelyEvtcLog(args.FullPath))
 							{
 								Application.Instance.AsyncInvoke(() => AddNewLog(args.FullPath));
 							}
@@ -586,14 +586,14 @@ namespace GW2Scratch.ArcdpsLogManager
 
 		private void AddNewLog(string fullName)
 		{
-			if (logs.Any(x => x.FileInfo.FullName == fullName))
+			if (logs.Any(x => x.FileName == fullName))
 			{
 				return;
 			}
 
 			if (!LogCache.TryGetLogData(fullName, out var log))
 			{
-				log = new LogData(new FileInfo(fullName));
+				log = new LogData(fullName);
 			}
 
 			if (log.ParsingStatus != ParsingStatus.Parsed)

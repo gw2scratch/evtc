@@ -74,7 +74,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				double seconds = logData.EncounterDuration.TotalSeconds;
 				string duration = $"{(int) seconds / 60:0}m {seconds % 60:0.0}s";
 
-				fileNameButton.Text = logData.FileInfo.Name;
+				fileNameButton.Text = System.IO.Path.GetFileName(logData.FileName);
 
 				resultLabel.Text = $"{result} in {duration}";
 
@@ -269,7 +269,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				{
 					var processInfo = new ProcessStartInfo()
 					{
-						FileName = logData.FileInfo.DirectoryName,
+						FileName = System.IO.Path.GetDirectoryName(logData.FileName),
 						UseShellExecute = true
 					};
 					Process.Start(processInfo);
