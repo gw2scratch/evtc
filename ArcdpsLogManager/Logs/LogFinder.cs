@@ -24,27 +24,26 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 
 			return files.Select(file =>
 			{
-				var fileInfo = new FileInfo(file);
-
 				if (logCache != null)
 				{
-					if (logCache.TryGetLogData(fileInfo, out var cachedLog))
+					if (logCache.TryGetLogData(file, out var cachedLog))
 					{
 						return cachedLog;
 					}
 				}
 
-				return new LogData(fileInfo);
+				return new LogData(file);
 			});
 		}
 
+		/// <summary>
+		/// Checks if the file is put into consideration as a evtc log. 
+		/// It will intentionally not check if the file actually exists to reduce filesystem calls.
+		/// </summary>
+		/// <param name="filename">The fullpath to the file to check.</param>
+		/// <returns>Returns <see langword="true"/> if the file can be considered as a evtc log.</returns>
 		public bool IsLikelyEvtcLog(string filename)
 		{
-			if (!File.Exists(filename))
-			{
-				return false;
-			}
-
 			if (filename.EndsWith(".evtc") || filename.EndsWith(".evtc.zip") || filename.EndsWith(".zevtc"))
 			{
 				return true;

@@ -146,7 +146,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 				logsByFilename.Clear();
 				foreach (var log in logs)
 				{
-					logsByFilename[log.FileInfo.FullName] = log;
+					logsByFilename[log.FileName] = log;
 				}
 
 				return previousCount - LogCount;
@@ -194,7 +194,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 		{
 			lock (dictionaryLock)
 			{
-				logsByFilename[logData.FileInfo.FullName] = logData;
+				logsByFilename[logData.FileName] = logData;
 				ChangedSinceLastSave = true;
 			}
 		}

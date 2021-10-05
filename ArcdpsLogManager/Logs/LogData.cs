@@ -22,17 +22,31 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 	public class LogData
 	{
 		private const string UnknownMainTargetName = "Unknown";
+		private DateTimeOffset encounterStartTime;
+		private FileInfo fileInfo;
 
 		/// <summary>
 		/// The <see cref="FileInfo"/> of the corresponding log file.
+		/// This will create a new <see cref="System.IO.FileInfo"/> if it doesn't exist and can throw every exception that <see cref="System.IO.FileInfo"/> can throw.
 		/// </summary>
 		[JsonIgnore]
-		public FileInfo FileInfo { get; }
+		public FileInfo FileInfo
+		{
+			get
+			{
+				if (fileInfo == null)
+				{
+					fileInfo = new FileInfo(FileName);
+				}
+
+				return fileInfo;
+			}
+		}
 
 		/// <summary>
 		/// The name of the corresponding log file.
 		/// </summary>
-		public string FileName => FileInfo.FullName;
+		public string FileName { get; }
 
 		/// <summary>
 		/// The players participating in the encounter recorded in this log.
@@ -104,9 +118,31 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 		/// <summary>
 		/// Time when the encounter started.
 		/// Is only an estimate if <see cref="IsEncounterStartTimePrecise"/> is false.
+		/// If it's an estimate it will create a <see cref="System.IO.FileInfo"/>.
+		/// If the creation of <see cref="System.IO.FileInfo"/> fails it will return the default of <see cref="DateTimeOffset"/>.
 		/// </summary>
 		[JsonProperty]
-		public DateTimeOffset EncounterStartTime { get; set; }
+		public DateTimeOffset EncounterStartTime
+		{
+			get
+			{
+				if (encounterStartTime == default && !IsEncounterStartTimePrecise)
+				{
+					try
+					{
+						encounterStartTime = FileInfo.CreationTime;
+					}
+					catch
+					{
+						encounterStartTime = default;
+					}
+				}
+
+				return encounterStartTime;
+			}
+
+			set => encounterStartTime = value;
+		}
 
 		/// <summary>
 		/// The duration of the encounter.
@@ -152,7 +188,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 		public Version ParsingVersion { get; set; }
 
 		/// <summary>
-		/// Indicates whether the start time of the log is precise, or if it's an approximation based on the file modification date.
+		/// Indicates whether the start time of the log is precise, or if it's an approximation based on the file creation date.
 		/// </summary>
 		public bool IsEncounterStartTimePrecise => ParsingStatus == ParsingStatus.Parsed && !MissingEncounterStart;
 
@@ -175,21 +211,16 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 		private bool MissingEncounterStart { get; set; } = false;
 
 		[JsonConstructor]
-		public LogData(string fileName) : this(new FileInfo(fileName))
+		public LogData(string fileName)
 		{
-		}
-
-		public LogData(FileInfo fileInfo)
-		{
-			FileInfo = fileInfo;
-			EncounterStartTime = fileInfo.CreationTime;
+			FileName = fileName;
 		}
 
 		internal LogData(FileInfo fileInfo, IEnumerable<LogPlayer> players, Encounter encounter,
 			string mainTargetName, EncounterResult encounterResult,
 			DateTimeOffset encounterStartTime, TimeSpan encounterDuration, long parseMilliseconds = -1)
 		{
-			FileInfo = fileInfo;
+			this.fileInfo = fileInfo;
 			Players = players.ToArray();
 			EncounterResult = encounterResult;
 			Encounter = encounter;
@@ -216,7 +247,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 
 				ParsingStatus = ParsingStatus.Parsing;
 
-				var parsedLog = logAnalytics.Parser.ParseLog(FileInfo.FullName);
+				var parsedLog = logAnalytics.Parser.ParseLog(FileName);
 				var log = logAnalytics.Processor.ProcessLog(parsedLog);
 				var analyzer = logAnalytics.CreateAnalyzer(log);
 
