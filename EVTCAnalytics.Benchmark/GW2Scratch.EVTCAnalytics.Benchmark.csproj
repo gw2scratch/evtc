@@ -7,9 +7,14 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" Version="0.13.1" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EVTCAnalytics\EVTCAnalytics.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="logs\*.zevtc" />
+    <EmbeddedResource Include="logs\*.zevtc" />
   </ItemGroup>
 </Project>

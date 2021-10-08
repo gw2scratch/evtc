@@ -1,80 +1,101 @@
-﻿using System;
+﻿using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Running;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using GW2Scratch.EVTCAnalytics.Processing;
+using System.Collections.Generic;
+using System.IO.Compression;
+using System.Reflection;
 
 namespace GW2Scratch.EVTCAnalytics.Benchmark
 {
-	internal class Program
+	public class EvtcAnalyticsBenchmark
 	{
-		public static EVTCParser Parser { get; set; } = new EVTCParser();
-		public static LogProcessor Processor { get; set; } = new LogProcessor();
-
-		public static void Main(string[] args)
+		private readonly List<byte[]> logs = new List<byte[]>();
+		
+		[GlobalSetup]
+		public void LoadLogs()
 		{
-			if (args.Length < 1)
+			foreach (var resourceName in Assembly.GetExecutingAssembly().GetManifestResourceNames())
 			{
-				Console.Error.WriteLine($"Usage: {AppDomain.CurrentDomain.FriendlyName} [directory with html files]");
-				return;
-			}
-
-			var directory = args[0];
-			if (!Directory.Exists(directory))
-			{
-				Console.Error.WriteLine("Directory doesn't exist.");
-				return;
-			}
-
-			var firstFilename = Directory.EnumerateFiles(directory)
-				.FirstOrDefault(x => x.EndsWith(".evtc") || x.EndsWith(".evtc.zip") || x.EndsWith(".zevtc"));
-			if (firstFilename == null)
-			{
-				Console.Error.WriteLine("No logs found.");
-				return;
-			}
-
-			Console.WriteLine("Filename,Parsing,Processing,Statistics,Total");
-			foreach (string filename in Directory.EnumerateFiles(directory))
-			{
-				if (!filename.EndsWith(".evtc", StringComparison.InvariantCultureIgnoreCase) &&
-				    !filename.EndsWith(".evtc.zip", StringComparison.InvariantCultureIgnoreCase) &&
-				    !filename.EndsWith(".zevtc", StringComparison.InvariantCultureIgnoreCase))
+				if (resourceName.EndsWith(".zevtc"))
 				{
-					Console.Error.WriteLine($"Ignoring file: {filename}");
-					continue;
+					var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName);
+					using var arch = new ZipArchive(stream, ZipArchiveMode.Read);
+
+					if (arch.Entries.Count == 0)
+					{
+						throw new Exception("No EVTC file in ZIP archive.");
+					}
+
+					using var data = arch.Entries[0].Open();
+
+					var bytes = new byte[arch.Entries[0].Length];
+					data.Read(bytes, 0, bytes.Length);
+					logs.Add(bytes);
 				}
+			}
 
-				GC.Collect();
-
-				MeasureTimes(filename, Parser, Processor, Console.Out);
+			if (logs.Count == 0)
+			{
+				throw new Exception("No logs found. Make sure that you have a logs directory next to the .csproj file when compiling, and only use .zevtc logs.");
 			}
 		}
 
-		private static void MeasureTimes(string filename, EVTCParser parser, LogProcessor processor, TextWriter outputWriter)
+		[GlobalCleanup]
+		public void RemoveLogs()
 		{
-			var stopwatch = Stopwatch.StartNew();
-			var log = parser.ParseLog(filename);
+			logs.Clear();
+		}
 
-			var parsedTime = stopwatch.Elapsed;
+		[Benchmark]
+		public void ParseAll()
+		{
+			var parser = new EVTCParser();
+			foreach (var log in logs)
+			{
+				var parsed = parser.ParseLog(log);
+			}
+		}
+		
+		[Benchmark]
+		public void ParseAndProcessAll()
+		{
+			var parser = new EVTCParser();
+			var processor = new LogProcessor();
+			foreach (var log in logs)
+			{
+				var parsed = parser.ParseLog(log);
+				var processed = processor.ProcessLog(parsed);
+			}
+		}
 
-			stopwatch.Restart();
-			var processedLog = processor.ProcessLog(log);
+		[Benchmark]
+		public void ParseAndProcessAndAnalyze()
+		{
+			var parser = new EVTCParser();
+			var processor = new LogProcessor();
+			foreach (var log in logs)
+			{
+				var parsed = parser.ParseLog(log);
+				var processed = processor.ProcessLog(parsed);
+				var analyzer = new LogAnalyzer(processed);
+				analyzer.GetEncounter();
+				analyzer.GetMode();
+				analyzer.GetResult();
+				analyzer.GetEncounterDuration();
+				analyzer.GetMainEnemyHealthFraction();
+			}
+		}
+	}
 
-			var processedTime = stopwatch.Elapsed;
-
-			stopwatch.Restart();
-			var analyzer = new LogAnalyzer(processedLog);
-			var result = analyzer.GetResult();
-			var duration = analyzer.GetEncounterDuration();
-			var mode = analyzer.GetMode();
-
-			var statisticsTime = stopwatch.Elapsed;
-
-			var totalTime = parsedTime + processedTime + statisticsTime;
-			outputWriter.WriteLine(
-				$"{filename},{parsedTime.TotalMilliseconds},{processedTime.TotalMilliseconds},{statisticsTime.TotalMilliseconds},{totalTime.TotalMilliseconds}");
-			outputWriter.Flush();
+	internal class Program
+	{
+		public static void Main(string[] args)
+		{
+			BenchmarkRunner.Run<EvtcAnalyticsBenchmark>();
 		}
 	}
 }
