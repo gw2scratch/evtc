@@ -8,7 +8,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVTCAnalytics.Tests", "Test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArcdpsLogManager", "ArcdpsLogManager\ArcdpsLogManager.csproj", "{909DE828-0610-473B-BE74-CE683C621CDC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVTCAnalytics.Benchmark", "EVTCAnalytics.Benchmark\EVTCAnalytics.Benchmark.csproj", "{13CFD4FA-3CF3-4169-A692-9874AC2DEE08}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GW2Scratch.EVTCAnalytics.Benchmark", "EVTCAnalytics.Benchmark\GW2Scratch.EVTCAnalytics.Benchmark.csproj", "{13CFD4FA-3CF3-4169-A692-9874AC2DEE08}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RotationComparison", "RotationComparison\RotationComparison.csproj", "{E20EFF93-9A56-4B0C-9272-E7B0B2331372}"
 EndProject
