@@ -3,7 +3,7 @@ namespace GW2Scratch.EVTCAnalytics.Parsed
 	/// <summary>
 	/// The raw skill data from a <c>evtc_skill</c> struct as defined by arcdps.
 	/// </summary>
-	public class ParsedSkill
+	public readonly struct ParsedSkill
 	{
 		/// <summary>
 		/// Gets the ID of the skill.

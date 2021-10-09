@@ -9,7 +9,7 @@ namespace GW2Scratch.EVTCAnalytics.Parsed
 	/// The values of this struct encode values for different types of events
 	/// in various ways, see the arcdps EVTC readme for the main documentation.
 	/// </remarks>
-	public class ParsedCombatItem
+	public readonly struct ParsedCombatItem
 	{
 		public long Time { get; }
 		public ulong SrcAgent { get; }

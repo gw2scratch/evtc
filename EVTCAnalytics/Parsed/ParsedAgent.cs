@@ -7,7 +7,7 @@ namespace GW2Scratch.EVTCAnalytics.Parsed
 	/// The values of this struct encode values for different types of agents
 	/// in various ways, see the arcdps EVTC readme for the main documentation.
 	/// </remarks>
-	public class ParsedAgent
+	public readonly struct ParsedAgent
 	{
 		/// <summary>
 		/// Gets the address of the agent.
