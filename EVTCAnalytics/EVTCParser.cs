@@ -43,7 +43,13 @@ namespace GW2Scratch.EVTCAnalytics
 				using var data = arch.Entries[0].Open();
 
 				var bytes = new byte[arch.Entries[0].Length];
-				data.Read(bytes, 0, bytes.Length);
+				int read;
+				int offset = 0;
+				while ((read = data.Read(bytes, offset, bytes.Length - offset)) > 0)
+				{
+					offset += read;
+				}
+				
 				return ParseLog(bytes);
 			}
 
