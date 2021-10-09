@@ -3,7 +3,7 @@ namespace GW2Scratch.EVTCAnalytics.Parsed
 	/// <summary>
 	/// Log version data.
 	/// </summary>
-	public class LogVersion
+	public readonly struct LogVersion
 	{
 		/// <summary>
 		/// Gets the version of arcdps. The typical format is EVTCYYYYMMDD, where YYYY-MM-DD

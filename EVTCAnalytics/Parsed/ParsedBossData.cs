@@ -3,7 +3,7 @@ namespace GW2Scratch.EVTCAnalytics.Parsed
 	/// <summary>
 	/// Contains data about the main target of the fight.
 	/// </summary>
-	public class ParsedBossData
+	public readonly struct ParsedBossData
 	{
 		/// <summary>
 		/// Gets the ID used to trigger the encounter logging.
