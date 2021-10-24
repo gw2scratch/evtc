@@ -21,6 +21,7 @@ namespace GW2Scratch.EVTCAnalytics.LogTests.EliteInsights
 		public bool CheckMode { get; set; } = true;
 		public bool CheckResult { get; set; } = true;
 		public bool CheckDuration { get; set; } = true;
+		public bool MergeParsingAndProcessing { get; set; } = true;
 
 		public TimeSpan DurationEpsilon { get; set; } = TimeSpan.FromMilliseconds(10);
 		private readonly GW2APIController eiApiController;
@@ -43,8 +44,17 @@ namespace GW2Scratch.EVTCAnalytics.LogTests.EliteInsights
 
 				var bytes = ReadLogFileBytes(filename);
 
-				var parsedLog = parser.ParseLog(bytes);
-				var log = processor.ProcessLog(parsedLog);
+				Log log;
+				if (MergeParsingAndProcessing)
+				{
+					log = processor.ProcessLog(bytes, parser);
+				}
+				else
+				{
+					var parsedLog = parser.ParseLog(bytes);
+					log = processor.ProcessLog(parsedLog);
+				}
+
 				var analyzer = new LogAnalyzer(log);
 
 				var encounter = log.EncounterData.Encounter;
