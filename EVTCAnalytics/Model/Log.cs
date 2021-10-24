@@ -108,11 +108,10 @@ namespace GW2Scratch.EVTCAnalytics.Model
 		/// <summary>
 		/// Creates a new instance of a <see cref="Log"/>.
 		/// </summary>
-		/// <param name="mainTarget">The main target of the log.</param>
 		/// <param name="state">The context of a <see cref="LogProcessor"/>.</param>
-		internal Log(Agent mainTarget, LogProcessorState state)
+		internal Log(LogProcessorState state)
 		{
-			MainTarget = mainTarget;
+			MainTarget = state.MainTarget;
 			LogType = state.LogType;
 			EncounterData = state.EncounterData;
 			GameLanguage = state.GameLanguage;

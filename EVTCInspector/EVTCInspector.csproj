@@ -5,11 +5,6 @@
     <AssemblyName>GW2Scratch.EVTCInspector</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Eto.Generator, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>dependencies\Eto.Generator.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="Eto.Forms" Version="2.5.11-ci-20210422.772645364" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
