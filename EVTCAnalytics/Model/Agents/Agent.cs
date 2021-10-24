@@ -17,7 +17,7 @@ namespace GW2Scratch.EVTCAnalytics.Model.Agents
 		/// <summary>
 		/// Provides metadata about the origin of the <see cref="Agent"/> from raw <see cref="Parsed.ParsedAgent"/>s.
 		/// </summary>
-		public AgentOrigin AgentOrigin { get; }
+		public AgentOrigin AgentOrigin { get; internal set; }
 		
 		/// <summary>
 		/// Provides the name of this Agent.

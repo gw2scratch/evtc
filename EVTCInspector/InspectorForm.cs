@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Text;
 using Eto.Drawing;
 using Eto.Forms;
-using Eto.Generator;
 using GW2Scratch.EVTCAnalytics;
 using GW2Scratch.EVTCAnalytics.Events;
 using GW2Scratch.EVTCAnalytics.Model;
@@ -16,24 +14,21 @@ using GW2Scratch.EVTCAnalytics.Processing;
 
 namespace GW2Scratch.EVTCInspector
 {
-	public class InspectorForm : Form
+	public sealed class InspectorForm : Form
 	{
 		private static readonly Padding MainTabPadding = new Padding(2);
 
+		private bool SkipParsing { get; set; } = false;
+
 		private readonly OpenFileDialog openFileDialog;
-		private readonly GridView<ParsedAgent> agentItemGridView;
-		private readonly GridView<ParsedSkill> skillsGridView;
-		private readonly GridView<ParsedCombatItem> combatItemsGridView;
 		private readonly Label parsedStateLabel;
 
 		// Processed events
 		private readonly EventListControl eventListControl;
 
-		private readonly FilterCollection<ParsedCombatItem>
-			parsedCombatItems = new FilterCollection<ParsedCombatItem>();
-
-		private readonly FilterCollection<ParsedAgent> parsedAgents = new FilterCollection<ParsedAgent>();
-		private readonly FilterCollection<ParsedSkill> parsedSkills = new FilterCollection<ParsedSkill>();
+		private readonly FilterCollection<Indexed<ParsedCombatItem>> parsedCombatItems = new FilterCollection<Indexed<ParsedCombatItem>>();
+		private readonly FilterCollection<Indexed<ParsedAgent>> parsedAgents = new FilterCollection<Indexed<ParsedAgent>>();
+		private readonly FilterCollection<Indexed<ParsedSkill>> parsedSkills = new FilterCollection<Indexed<ParsedSkill>>();
 
 		// Processed event filtering
 		private readonly List<Event> eventList = new List<Event>();
@@ -58,28 +53,20 @@ namespace GW2Scratch.EVTCInspector
 
 			var fileMenuItem = new ButtonMenuItem {Text = "&File"};
 			fileMenuItem.Items.Add(openFileMenuItem);
+			
+			var skipParsingMenuItem = new CheckMenuItem {Text = "Merge parsing and processing into one step"};
+			skipParsingMenuItem.Checked = SkipParsing;
+			skipParsingMenuItem.CheckedChanged += (sender, args) => SkipParsing = skipParsingMenuItem.Checked;
+			
+			var optionsMenuItem = new ButtonMenuItem {Text = "&Options"};
+			optionsMenuItem.Items.Add(skipParsingMenuItem);
 
-			Menu = new MenuBar(fileMenuItem);
+			Menu = new MenuBar(fileMenuItem, optionsMenuItem);
 
 			openFileDialog = new OpenFileDialog();
 			openFileDialog.Filters.Add(new FileFilter("EVTC logs", ".evtc", ".evtc.zip", ".zevtc"));
 
 			parsedStateLabel = new Label {Text = "No log parsed yet."};
-
-			agentItemGridView = new GridViewGenerator().GetGridView<ParsedAgent>();
-			skillsGridView = new GridViewGenerator().GetGridView<ParsedSkill>();
-			combatItemsGridView = new GridViewGenerator().GetGridView<ParsedCombatItem>();
-			agentItemGridView.DataStore = parsedAgents;
-			skillsGridView.DataStore = parsedSkills;
-			combatItemsGridView.DataStore = parsedCombatItems;
-			new GridViewSorter<ParsedAgent>(agentItemGridView, parsedAgents).EnableSorting();
-			new GridViewSorter<ParsedSkill>(skillsGridView, parsedSkills).EnableSorting();
-			new GridViewSorter<ParsedCombatItem>(combatItemsGridView, parsedCombatItems).EnableSorting();
-
-			agentItemGridView.Columns.Single(x => x.HeaderText == "Name").DataCell = new TextBoxCell
-			{
-				Binding = new DelegateBinding<ParsedAgent, string>(x => $"{x.Name.TrimEnd('\0').Replace("\0", "\\0")}")
-			};
 
 			eventListControl = new EventListControl();
 
@@ -88,9 +75,9 @@ namespace GW2Scratch.EVTCInspector
 			var mainTabControl = new TabControl();
 
 			var parsedTabControl = new TabControl();
-			parsedTabControl.Pages.Add(new TabPage(agentItemGridView) {Text = "Agents"});
-			parsedTabControl.Pages.Add(new TabPage(skillsGridView) {Text = "Skills"});
-			parsedTabControl.Pages.Add(new TabPage(combatItemsGridView) {Text = "Combat Items"});
+			parsedTabControl.Pages.Add(new TabPage(ConstructParsedAgentGridView()) {Text = "Agents"});
+			parsedTabControl.Pages.Add(new TabPage(ConstructParsedSkillGridView()) {Text = "Skills"});
+			parsedTabControl.Pages.Add(new TabPage(ConstructParsedCombatItemGridView()) {Text = "Combat Items"});
 
 			var eventsDetailLayout = new DynamicLayout();
 			eventsDetailLayout.BeginVertical();
@@ -152,29 +139,46 @@ namespace GW2Scratch.EVTCInspector
 			// Parsing
 			var sw = Stopwatch.StartNew();
 			ParsedLog parsedLog = null;
-			try
+			if (!SkipParsing)
 			{
-				parsedLog = parser.ParseLog(logFilename);
-				var parseTime = sw.Elapsed;
+				try
+				{
+					parsedLog = parser.ParseLog(logFilename);
+					var parseTime = sw.Elapsed;
 
-				statusStringBuilder.AppendLine($"Parsed in {parseTime}");
+					statusStringBuilder.AppendLine($"Parsed in {parseTime}");
 
+					Application.Instance.Invoke(() =>
+					{
+						parsedAgents.Clear();
+						parsedAgents.AddRange(parsedLog.ParsedAgents.Select((x, i) => new Indexed<ParsedAgent>(x, i)));
+						parsedAgents.Refresh();
+						parsedSkills.Clear();
+						parsedSkills.AddRange(parsedLog.ParsedSkills.Select((x, i) => new Indexed<ParsedSkill>(x, i)));
+						parsedSkills.Refresh();
+						parsedCombatItems.Clear();
+						parsedCombatItems.AddRange(
+							parsedLog.ParsedCombatItems.Select((x, i) => new Indexed<ParsedCombatItem>(x, i)));
+						parsedCombatItems.Refresh();
+					});
+				}
+				catch (Exception ex)
+				{
+					statusStringBuilder.AppendLine($"Parsing failed: {ex.Message}\n{ex.StackTrace}");
+				}
+			}
+			else
+			{
 				Application.Instance.Invoke(() =>
 				{
 					parsedAgents.Clear();
-					parsedAgents.AddRange(parsedLog.ParsedAgents);
 					parsedAgents.Refresh();
 					parsedSkills.Clear();
-					parsedSkills.AddRange(parsedLog.ParsedSkills);
 					parsedSkills.Refresh();
 					parsedCombatItems.Clear();
-					parsedCombatItems.AddRange(parsedLog.ParsedCombatItems);
 					parsedCombatItems.Refresh();
 				});
-			}
-			catch (Exception ex)
-			{
-				statusStringBuilder.AppendLine($"Parsing failed: {ex.Message}\n{ex.StackTrace}");
+				statusStringBuilder.AppendLine($"Parsing as a separate step skipped.");
 			}
 
 			// Processing
@@ -182,10 +186,25 @@ namespace GW2Scratch.EVTCInspector
 			try
 			{
 				sw.Restart();
-				processedLog = processor.ProcessLog(parsedLog);
+				if (!SkipParsing)
+				{
+					processedLog = processor.ProcessLog(parsedLog);
+				}
+				else
+				{
+					processedLog = processor.ProcessLog(logFilename, parser);
+				}
+
 				var processTime = sw.Elapsed;
 
-				statusStringBuilder.AppendLine($"Processed in {processTime}");
+				if (SkipParsing)
+				{
+					statusStringBuilder.AppendLine($"Parsed and processed in {processTime}.");
+				}
+				else
+				{
+					statusStringBuilder.AppendLine($"Processed in {processTime}");
+				}
 
 				Application.Instance.Invoke(() =>
 				{
@@ -325,6 +344,368 @@ namespace GW2Scratch.EVTCInspector
 			new GridViewSorter<Agent>(agentsGridView, agents).EnableSorting();
 
 			return agentsGridView;
+		}
+
+		private GridView<Indexed<ParsedAgent>> ConstructParsedAgentGridView()
+		{
+			var gridView = new GridView<Indexed<ParsedAgent>>();
+			gridView.Columns.Add(new GridColumn
+			{
+				HeaderText = "Index",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Indexed<ParsedAgent>, string>(x => x.Index.ToString())
+				}
+			});
+			gridView.Columns.Add(new GridColumn
+			{
+				HeaderText = "Address",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Indexed<ParsedAgent>, string>(x => x.Item.Address.ToString())
+				}
+			});
+			gridView.Columns.Add(new GridColumn
+			{
+				HeaderText = "Name",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Indexed<ParsedAgent>, string>(x => $"{x.Item.Name.TrimEnd('\0').Replace("\0", "\\0")}")
+				}
+			});
+			gridView.Columns.Add(new GridColumn
+			{
+				HeaderText = "Prof",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Indexed<ParsedAgent>, string>(x => x.Item.Prof.ToString())
+				}
+			});
+			gridView.Columns.Add(new GridColumn
+			{
+				HeaderText = "IsElite",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Indexed<ParsedAgent>, string>(x => x.Item.IsElite.ToString())
+				}
+			});
+			gridView.Columns.Add(new GridColumn
+			{
+				HeaderText = "Toughness",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Indexed<ParsedAgent>, string>(x => x.Item.Toughness.ToString())
+				}
+			});
+			gridView.Columns.Add(new GridColumn
+			{
+				HeaderText = "Concentration",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Indexed<ParsedAgent>, string>(x => x.Item.Concentration.ToString())
+				}
+			});
+			gridView.Columns.Add(new GridColumn
+			{
+				HeaderText = "Healing",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Indexed<ParsedAgent>, string>(x => x.Item.Healing.ToString())
+				}
+			});
+			gridView.Columns.Add(new GridColumn
+			{
+				HeaderText = "Condition",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Indexed<ParsedAgent>, string>(x => x.Item.Condition.ToString())
+				}
+			});
+			gridView.Columns.Add(new GridColumn
+			{
+				HeaderText = "Hitbox Width",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Indexed<ParsedAgent>, string>(x => x.Item.HitboxWidth.ToString())
+				}
+			});
+			gridView.Columns.Add(new GridColumn
+			{
+				HeaderText = "Hitbox Height",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Indexed<ParsedAgent>, string>(x => x.Item.HitboxHeight.ToString())
+				}
+			});
+			
+			gridView.DataStore = parsedAgents;
+			new GridViewSorter<Indexed<ParsedAgent>>(gridView, parsedAgents).EnableSorting();
+
+			return gridView;
+		}
+		
+		private GridView<Indexed<ParsedSkill>> ConstructParsedSkillGridView()
+		{
+			var gridView = new GridView<Indexed<ParsedSkill>>();
+			gridView.Columns.Add(new GridColumn
+			{
+				HeaderText = "Index",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Indexed<ParsedSkill>, string>(x => x.Index.ToString())
+				}
+			});
+			gridView.Columns.Add(new GridColumn
+			{
+				HeaderText = "ID",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Indexed<ParsedSkill>, string>(x => x.Item.SkillId.ToString())
+				}
+			});
+			gridView.Columns.Add(new GridColumn
+			{
+				HeaderText = "Name",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Indexed<ParsedSkill>, string>(x => $"{x.Item.Name.TrimEnd('\0').Replace("\0", "\\0")}")
+				}
+			});
+			
+			gridView.DataStore = parsedSkills;
+			new GridViewSorter<Indexed<ParsedSkill>>(gridView, parsedSkills).EnableSorting();
+			
+			return gridView;
+		}
+		
+		private GridView<Indexed<ParsedCombatItem>> ConstructParsedCombatItemGridView()
+		{
+			var gridView = new GridView<Indexed<ParsedCombatItem>>();
+			gridView.Columns.Add(new GridColumn
+			{
+				HeaderText = "Index",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Indexed<ParsedCombatItem>, string>(x => x.Index.ToString())
+				}
+			});
+			gridView.Columns.Add(new GridColumn
+			{
+				HeaderText = "Time",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Indexed<ParsedCombatItem>, string>(x => x.Item.Time.ToString())
+				}
+			});
+			gridView.Columns.Add(new GridColumn
+			{
+				HeaderText = "SrcAgent",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Indexed<ParsedCombatItem>, string>(x =>
+						x.Item.SrcAgent.ToString())
+				}
+			});
+			gridView.Columns.Add(new GridColumn
+			{
+				HeaderText = "DstAgent",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Indexed<ParsedCombatItem>, string>(x =>
+						x.Item.DstAgent.ToString())
+				}
+			});
+			gridView.Columns.Add(new GridColumn
+			{
+				HeaderText = "Value",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Indexed<ParsedCombatItem>, string>(x =>
+						x.Item.Value.ToString())
+				}
+			});
+			gridView.Columns.Add(new GridColumn
+			{
+				HeaderText = "BuffDmg",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Indexed<ParsedCombatItem>, string>(x =>
+						x.Item.BuffDmg.ToString())
+				}
+			});
+			gridView.Columns.Add(new GridColumn
+			{
+				HeaderText = "OverstackValue",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Indexed<ParsedCombatItem>, string>(x =>
+						x.Item.OverstackValue.ToString())
+				}
+			});
+			gridView.Columns.Add(new GridColumn
+			{
+				HeaderText = "SkillId",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Indexed<ParsedCombatItem>, string>(x =>
+						x.Item.SkillId.ToString())
+				}
+			});
+			gridView.Columns.Add(new GridColumn
+			{
+				HeaderText = "SrcAgentId",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Indexed<ParsedCombatItem>, string>(x =>
+						x.Item.SrcAgentId.ToString())
+				}
+			});
+			gridView.Columns.Add(new GridColumn
+			{
+				HeaderText = "DstAgentId",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Indexed<ParsedCombatItem>, string>(x =>
+						x.Item.DstAgentId.ToString())
+				}
+			});
+			gridView.Columns.Add(new GridColumn
+			{
+				HeaderText = "SrcMasterId",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Indexed<ParsedCombatItem>, string>(x =>
+						x.Item.SrcMasterId.ToString())
+				}
+			});
+			gridView.Columns.Add(new GridColumn
+			{
+				HeaderText = "DstMasterId",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Indexed<ParsedCombatItem>, string>(x =>
+						x.Item.DstMasterId.ToString())
+				}
+			});
+			gridView.Columns.Add(new GridColumn
+			{
+				HeaderText = "Iff",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Indexed<ParsedCombatItem>, string>(x => x.Item.Iff.ToString())
+				}
+			});
+			gridView.Columns.Add(new GridColumn
+			{
+				HeaderText = "BuffDmg",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Indexed<ParsedCombatItem>, string>(x => x.Item.BuffDmg.ToString())
+				}
+			});
+			gridView.Columns.Add(new GridColumn
+			{
+				HeaderText = "Result",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Indexed<ParsedCombatItem>, string>(x => x.Item.Result.ToString())
+				}
+			});
+			gridView.Columns.Add(new GridColumn
+			{
+				HeaderText = "IsActivation",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Indexed<ParsedCombatItem>, string>(x =>
+						x.Item.IsActivation.ToString())
+				}
+			});
+			gridView.Columns.Add(new GridColumn
+			{
+				HeaderText = "IsBuffRemove",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Indexed<ParsedCombatItem>, string>(x =>
+						x.Item.IsBuffRemove.ToString())
+				}
+			});
+			gridView.Columns.Add(new GridColumn
+			{
+				HeaderText = "IsNinety",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Indexed<ParsedCombatItem>, string>(x =>
+						x.Item.IsNinety.ToString())
+				}
+			});
+			gridView.Columns.Add(new GridColumn
+			{
+				HeaderText = "IsFifty",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Indexed<ParsedCombatItem>, string>(x =>
+						x.Item.IsFifty.ToString())
+				}
+			});
+			gridView.Columns.Add(new GridColumn
+			{
+				HeaderText = "IsMoving",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Indexed<ParsedCombatItem>, string>(x =>
+						x.Item.IsMoving.ToString())
+				}
+			});
+			gridView.Columns.Add(new GridColumn
+			{
+				HeaderText = "IsStateChange",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Indexed<ParsedCombatItem>, string>(x =>
+						x.Item.IsStateChange.ToString())
+				}
+			});
+			gridView.Columns.Add(new GridColumn
+			{
+				HeaderText = "IsFlanking",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Indexed<ParsedCombatItem>, string>(x =>
+						x.Item.IsFlanking.ToString())
+				}
+			});
+			gridView.Columns.Add(new GridColumn
+			{
+				HeaderText = "IsShields",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Indexed<ParsedCombatItem>, string>(x =>
+						x.Item.IsShields.ToString())
+				}
+			});
+			gridView.Columns.Add(new GridColumn
+			{
+				HeaderText = "IsOffCycle",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Indexed<ParsedCombatItem>, string>(x =>
+						x.Item.IsOffCycle.ToString())
+				}
+			});
+			gridView.Columns.Add(new GridColumn
+			{
+				HeaderText = "Padding",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Indexed<ParsedCombatItem>, string>(x =>
+						x.Item.Padding.ToString())
+				}
+			});
+			
+			gridView.DataStore = parsedCombatItems;
+			new GridViewSorter<Indexed<ParsedCombatItem>>(gridView, parsedCombatItems).EnableSorting();
+			
+			return gridView;
 		}
 	}
 }

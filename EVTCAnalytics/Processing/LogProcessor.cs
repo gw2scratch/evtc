@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Net.Http.Headers;
 using GW2Scratch.EVTCAnalytics.Events;
 using GW2Scratch.EVTCAnalytics.Exceptions;
 using GW2Scratch.EVTCAnalytics.GameData;
@@ -50,84 +49,320 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 		/// </summary>
 		public bool IgnoreUnknownEvents { get; set; } = true;
 
+		/// <summary>
+		/// Turn raw log data into easy-to-use objects.
+		/// </summary>
+		/// <remarks>
+		/// This method is less efficient than using <see cref="ProcessLog(string, EVTCParser)"/>
+		/// and <see cref="ProcessLog(byte[], EVTCParser)"/> if you do not use the <see cref="ParsedLog"/>
+		/// in any other way.
+		/// </remarks>
+		/// <seealso cref="ProcessLog(string, EVTCParser)"/>
+		/// <seealso cref="ProcessLog(byte[], EVTCParser)"/>
 		public Log ProcessLog(ParsedLog log)
 		{
-			var context = new LogProcessorState();
-			context.EvtcVersion = log.LogVersion.BuildVersion;
+			var state = new LogProcessorState();
+			state.EvtcVersion = log.LogVersion.BuildVersion;
 
-			context.Agents = GetAgents(log).ToList();
-			context.AgentsByAddress = new Dictionary<ulong, Agent>();
-			context.AgentsById = new Dictionary<int, List<Agent>>();
-			foreach (var agent in context.Agents)
+			state.Agents = GetAgents(log).ToList();
+			state.AgentsByAddress = new Dictionary<ulong, Agent>();
+			state.AgentsById = new Dictionary<int, List<Agent>>();
+			foreach (var agent in state.Agents)
 			{
 				foreach (var origin in agent.AgentOrigin.OriginalAgentData)
 				{
-					context.AgentsByAddress[origin.Address] = agent;
+					state.AgentsByAddress[origin.Address] = agent;
 
 					int id = origin.Id;
-					if (!context.AgentsById.TryGetValue(id, out var agentsWithId))
+					if (!state.AgentsById.TryGetValue(id, out var agentsWithId))
 					{
 						agentsWithId = new List<Agent>();
-						context.AgentsById[id] = agentsWithId;
+						state.AgentsById[id] = agentsWithId;
 					}
 
 					agentsWithId.Add(agent);
 				}
 			}
 
-			context.Skills = GetSkills(log).ToList();
-			GetDataFromCombatItems(log, context);
+			state.Skills = GetSkills(log).ToList();
+			GetDataFromCombatItems(log, state);
 
-			Agent mainTarget = null;
-			context.LogType = LogType.PvE;
-			if (log.ParsedBossData.ID == 1)
+			SetLogTypeAndTarget(state, log.ParsedBossData);
+
+			SetAgentAwareTimes(state);
+			AssignAgentMasters(log, state); // Has to be done after setting aware times
+
+			SetEncounterData(state);
+
+			foreach (var step in state.EncounterData.ProcessingSteps)
 			{
-				context.LogType = LogType.WorldVersusWorld;
+				step.Process(state);
 			}
-			else
+
+			return new Log(state);
+		}
+
+		/// <summary>
+		/// Turn raw log data into easy-to-use objects. This overload is more efficient if you do not need a <see cref="ParsedLog"/>
+		/// </summary>
+		public Log ProcessLog(string evtcFilename, EVTCParser parser)
+		{
+			return ProcessLog(parser.GetSinglePassReader(evtcFilename));
+		}
+
+		public Log ProcessLog(byte[] bytes, EVTCParser parser)
+		{
+			return ProcessLog(parser.GetSinglePassReader(bytes));
+		}
+
+		private Log ProcessLog(EVTCParser.SinglePassEVTCReader reader)
+		{
+			// For now, we mostly duplicate ProcessLog(ParsedLog log) above.
+			// It might be worth it to unify the interface somehow.
+			
+			// Note that we are trying to reduce allocations of Parsed structs here
+			
+			var state = new LogProcessorState();
+
+			var logVersion = reader.ReadLogVersion();
+			state.EvtcVersion = logVersion.BuildVersion;
+			var bossData = reader.ReadBossData();
+
+			// Get data from agents.
+			var agentsByAddress = new Dictionary<ulong, Agent>();
+			var agentReader = reader.GetAgentReader();
+			var playerAddresses = new HashSet<ulong>();
+			ParsedAgent parsedAgent;
+			state.Agents = new List<Agent>();
+			while (agentReader.GetNext(out parsedAgent))
 			{
-				// The boss id be either an NPC species id or a Gadget id.
-				// Conflicts may happen, in that case the first found agent is chosen,
-				// as they are more likely to be the trigger. It is also possible to have
-				// multiple agents with the same id if they are not unique, in that case
-				// we once again choose the first one.
-				foreach (var agent in context.Agents)
+				var agent = ProcessAgent(parsedAgent, playerAddresses);
+				if (agent != null)
 				{
-					if (agent is NPC npc && npc.SpeciesId == log.ParsedBossData.ID ||
-					    agent is Gadget gadget && gadget.VolatileId == log.ParsedBossData.ID)
+					state.Agents.Add(agent);
+					agentsByAddress[parsedAgent.Address] = agent;
+				}
+			}
+			state.AgentsByAddress = agentsByAddress;
+			
+			// Get data from skills.
+			var skillsById = new Dictionary<uint, Skill>();
+			var skillReader = reader.GetSkillReader();
+			ParsedSkill parsedSkill;
+			state.Skills = new List<Skill>();
+			while (skillReader.GetNext(out parsedSkill))
+			{
+				var skill = ProcessSkill(parsedSkill);
+				// Rarely, in old logs a skill may be duplicated (typically a skill with id 0),
+				// so we only use the first definition
+				if (!skillsById.ContainsKey(skill.Id))
+				{
+					skillsById.Add(skill.Id, skill);
+				}
+				state.Skills.Add(skill);
+			}
+
+			state.SkillsById = skillsById;
+
+			// Get data from combat items.
+			var masterRelations = new Dictionary<(ulong, ushort), long>();
+			var idsByAddress = new Dictionary<ulong, int>();
+			
+			state.GameLanguage = GameLanguage.Other;
+			state.Events = new List<Event>();
+			
+			var combatItemReader = reader.GetCombatItemReader();
+			ParsedCombatItem combatItem;
+			state.Events = new List<Event>();
+			while (combatItemReader.GetNext(out combatItem))
+			{
+				if (combatItem.IsStateChange == StateChange.Normal)
+				{
+					idsByAddress[combatItem.SrcAgent] = combatItem.SrcAgentId;
+					
+					if (combatItem.SrcMasterId != 0)
 					{
-						mainTarget = agent;
+						masterRelations[(combatItem.SrcAgent, combatItem.SrcMasterId)] = combatItem.Time;
+					}
+
+					if (combatItem.DstMasterId != 0)
+					{
+						masterRelations[(combatItem.DstAgent, combatItem.DstMasterId)] = combatItem.Time;
+					}
+				}
+
+				if (combatItem.IsStateChange == StateChange.AttackTarget)
+				{
+					ulong attackTargetAddress = combatItem.SrcAgent;
+					ulong masterGadgetAddress = combatItem.DstAgent;
+
+					AttackTarget target = null;
+					Gadget master = null;
+					foreach (var agent in state.Agents)
+					{
+						switch (agent)
+						{
+							case Gadget gadget when gadget.AgentOrigin.OriginalAgentData.Any(x=> x.Address == masterGadgetAddress):
+								master = gadget;
+								break;
+							case AttackTarget attackTarget when attackTarget.AgentOrigin.OriginalAgentData.Any(x => x.Address == attackTargetAddress):
+								target = attackTarget;
+								break;
+						}
+					}
+
+					if (master != null && target != null)
+					{
+						master.AddAttackTarget(target);
+						target.Gadget = master;
+					}
+				}
+				
+				ProcessCombatItem(state, combatItem);
+			}
+
+			// Set agent origins now that we have read combat items and have ids.
+			foreach ((ulong address, Agent agent) in agentsByAddress)
+			{
+				if (!idsByAddress.TryGetValue(address, out int id))
+				{
+					id = -1;
+				}
+				agent.AgentOrigin = new AgentOrigin(new OriginalAgentData(address, id));
+			}
+			
+			// Build map of id->agents.
+			state.AgentsById = new Dictionary<int, List<Agent>>();
+			foreach (var agent in state.Agents)
+			{
+				foreach (var origin in agent.AgentOrigin.OriginalAgentData)
+				{
+					int id = origin.Id;
+					if (!state.AgentsById.TryGetValue(id, out var agentsWithId))
+					{
+						agentsWithId = new List<Agent>();
+						state.AgentsById[id] = agentsWithId;
+					}
+
+					agentsWithId.Add(agent);
+				}
+			}
+			
+			SetLogTypeAndTarget(state, bossData);
+			SetAgentAwareTimes(state);
+			
+			// Resolve masters, requires aware times.
+			foreach (((ulong address, ushort masterId), long time) in masterRelations)
+			{
+				if (!state.AgentsByAddress.TryGetValue(address, out Agent minion))
+				{
+					continue;
+				}
+
+				if (minion.Master == null)
+				{
+					AssignMaster(state, minion, masterId, time);
+				}
+			}
+			state.MastersAssigned = true;
+
+			SetEncounterData(state);
+
+			foreach (var step in state.EncounterData.ProcessingSteps)
+			{
+				step.Process(state);
+			}
+
+			return new Log(state);
+		}
+
+		private static void AssignMaster(LogProcessorState state, Agent minion, ushort masterId, long time)
+		{
+			Agent master = null;
+			if (state.AgentsById.TryGetValue(masterId, out var potentialMasters))
+			{
+				foreach (var agent in potentialMasters)
+				{
+					if (!(agent is Gadget) && agent.IsWithinAwareTime(time))
+					{
+						master = agent;
 						break;
 					}
 				}
 			}
 
-			SetAgentAwareTimes(context);
-			AssignAgentMasters(log, context); // Has to be done after setting aware times
-
-			context.EncounterData = GetEncounterData(mainTarget, context);
-
-			foreach (var step in context.EncounterData.ProcessingSteps)
+			if (master != null)
 			{
-				step.Process(context);
-			}
+				bool inCycle = false;
+				var masterParent = master;
+				while (masterParent != null)
+				{
+					if (masterParent == minion)
+					{
+						// A cycle is present in the minion hierarchy, this minion would end up as
+						// a transitive minion of itself, which could cause infinite looping.
+						// This is common in very old logs where minion data is somewhat weird.
+						inCycle = true;
+						break;
+					}
 
-			return new Log(mainTarget, context);
+					masterParent = masterParent.Master;
+				}
+
+				if (!inCycle)
+				{
+					minion.Master = master;
+					master.MinionList.Add(minion);
+				}
+			}
 		}
 
-		private IEncounterData GetEncounterData(Agent mainTarget, LogProcessorState state)
+		private static void SetLogTypeAndTarget(LogProcessorState state, ParsedBossData bossData)
 		{
-			return EncounterIdentifier.GetEncounterData(mainTarget, state.Events, state.Agents, state.Skills, state.GameBuild, state.LogType);
+			Debug.Assert(state.Agents != null);
+			
+			state.LogType = LogType.PvE;
+			if (bossData.ID == 1)
+			{
+				state.LogType = LogType.WorldVersusWorld;
+			}
+			else
+			{
+				// The boss id may be either an NPC species id or a Gadget id.
+				// Conflicts may happen, in that case the first found agent is chosen,
+				// as they are more likely to be the trigger. It is also possible to have
+				// multiple agents with the same id if they are not unique, in that case
+				// we once again choose the first one.
+				foreach (var agent in state.Agents)
+				{
+					if (agent is NPC npc && npc.SpeciesId == bossData.ID ||
+					    agent is Gadget gadget && gadget.VolatileId == bossData.ID)
+					{
+						state.MainTarget = agent;
+						break;
+					}
+				}
+			}
+		}
+
+		private void SetEncounterData(LogProcessorState state)
+		{
+			state.EncounterData = EncounterIdentifier.GetEncounterData(state.MainTarget, state.Events, state.Agents, state.Skills, state.GameBuild, state.LogType);
 		}
 
 		private IEnumerable<Skill> GetSkills(ParsedLog log)
 		{
 			foreach (var skill in log.ParsedSkills)
 			{
-				var name = skill.Name.Trim('\0');
-				uint skillId = checked((uint) skill.SkillId);
-				yield return new Skill(skillId, name);
+				yield return ProcessSkill(skill);
 			}
+		}
+
+		private Skill ProcessSkill(ParsedSkill skill)
+		{
+			var name = skill.Name.Trim('\0');
+			uint skillId = checked((uint) skill.SkillId);
+			return new Skill(skillId, name);
 		}
 
 		private IEnumerable<Agent> GetAgents(ParsedLog log)
@@ -145,109 +380,114 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 
 			foreach (var agent in log.ParsedAgents)
 			{
-				if (agent.IsElite != 0xFFFFFFFF)
+				var processedAgent = ProcessAgent(agent, playerAddresses);
+				if (processedAgent != null)
 				{
-					// Player
-					uint professionIndex = agent.Prof - 1;
-					Profession profession;
-					
-					// We need to check if the profession is valid.
-					// The 2021-05-25 game update caused old versions of arcdps to report invalid profession values.
-					// Future game versions might also introduce new professions.
-					if (professionIndex < Professions.Length)
-					{
-						profession = Professions[professionIndex];
-					}
-					else
-					{
-						profession = Profession.None;
-					}
-
-					EliteSpecialization specialization;
-					if (agent.IsElite == 0)
-					{
-						specialization = EliteSpecialization.None;
-					}
-					else if (agent.IsElite == 1)
-					{
-						specialization = Characters.GetHeartOfThornsEliteSpecialization(profession);
-					}
-					else
-					{
-						specialization = Characters.GetEliteSpecializationFromId(agent.IsElite);
-					}
-
 					if (!idsByAddress.TryGetValue(agent.Address, out int id))
 					{
 						id = -1;
 					}
+					processedAgent.AgentOrigin = new AgentOrigin(new OriginalAgentData(agent.Address, id));
+					yield return processedAgent;
+				}
+			}
+		}
+		
+		private Agent ProcessAgent(in ParsedAgent agent, HashSet<ulong> playerAddresses)
+		{
+			// We do not set agent origins, instead we rely on the caller to set those. This allows us to process
+			// agents without having to enumerate all combat items first.
+			
+			if (agent.IsElite != 0xFFFFFFFF)
+			{
+				// Player
+				uint professionIndex = agent.Prof - 1;
+				Profession profession;
 
-					// All parts of the name of the player might not be available, most commonly in WvW logs.
-					var nameParts = agent.Name.Split(new[] {'\0'}, StringSplitOptions.RemoveEmptyEntries);
-					string characterName = nameParts[0];
-					string accountName = nameParts.Length > 1 ? nameParts[1] : ":Unknown";
-					string subgroupLiteral = nameParts.Length > 2 ? nameParts[2] : "";
-					bool identified = nameParts.Length >= 3;
-
-					if (!int.TryParse(subgroupLiteral, out int subgroup))
-					{
-						subgroup = -1;
-					}
-
-					if (playerAddresses.Contains(agent.Address))
-					{
-						// If there is already an agent with this address, this is the same player after changing
-						// characters. For now we simply merge everything into the first instance, even though that
-						// may result in a player using skills of a different profession, a better solution will be
-						// needed for the future.
-						continue;
-					}
-
-					playerAddresses.Add(agent.Address);
-
-					var origin = new AgentOrigin(new OriginalAgentData(agent.Address, id));
-					yield return new Player(origin, characterName, agent.Toughness, agent.Concentration,
-						agent.Healing, agent.Condition, agent.HitboxWidth, agent.HitboxHeight, accountName, profession,
-						specialization, subgroup, identified);
+				// We need to check if the profession is valid.
+				// The 2021-05-25 game update caused old versions of arcdps to report invalid profession values.
+				// Future game versions might also introduce new professions.
+				if (professionIndex < Professions.Length)
+				{
+					profession = Professions[professionIndex];
 				}
 				else
 				{
-					if (agent.Prof >> 16 == 0xFFFF)
-					{
-						// Gadget or Attack Target
-						int volatileId = (int) (agent.Prof & 0xFFFF);
-						string name = agent.Name.Trim('\0');
+					profession = Profession.None;
+				}
 
-						var origin = new AgentOrigin(new OriginalAgentData(agent.Address, volatileId));
-						if (name.StartsWith("at"))
-						{
-							// The attack target name is structured as "at[MasterAddress]-[GadgetId]-[MasterId]"
-							// Preferably, the AttackTarget statechange would be used to detect if this is an
-							// attack target to not rely on the name which could change in the future
-							yield return new AttackTarget(origin, volatileId, name, agent.HitboxWidth,
-								agent.HitboxHeight);
-						}
-						else
-						{
-							yield return new Gadget(origin, volatileId, name, agent.HitboxWidth,
-								agent.HitboxHeight);
-						}
+				EliteSpecialization specialization;
+				if (agent.IsElite == 0)
+				{
+					specialization = EliteSpecialization.None;
+				}
+				else if (agent.IsElite == 1)
+				{
+					specialization = Characters.GetHeartOfThornsEliteSpecialization(profession);
+				}
+				else
+				{
+					specialization = Characters.GetEliteSpecializationFromId(agent.IsElite);
+				}
+
+				// All parts of the name of the player might not be available, most commonly in WvW logs.
+				var nameParts = agent.Name.Split(new[] { '\0' }, StringSplitOptions.RemoveEmptyEntries);
+				string characterName = nameParts[0];
+				string accountName = nameParts.Length > 1 ? nameParts[1] : ":Unknown";
+				string subgroupLiteral = nameParts.Length > 2 ? nameParts[2] : "";
+				bool identified = nameParts.Length >= 3;
+
+				if (!int.TryParse(subgroupLiteral, out int subgroup))
+				{
+					subgroup = -1;
+				}
+
+				if (playerAddresses.Contains(agent.Address))
+				{
+					// If there is already an agent with this address, this is the same player after changing
+					// characters. For now we simply merge everything into the first instance, even though that
+					// may result in a player using skills of a different profession, a better solution will be
+					// needed for the future.
+					return null;
+				}
+
+				playerAddresses.Add(agent.Address);
+
+				return new Player(null, characterName, agent.Toughness, agent.Concentration,
+					agent.Healing, agent.Condition, agent.HitboxWidth, agent.HitboxHeight, accountName, profession,
+					specialization, subgroup, identified);
+			}
+			else
+			{
+				if (agent.Prof >> 16 == 0xFFFF)
+				{
+					// Gadget or Attack Target
+					int volatileId = (int)(agent.Prof & 0xFFFF);
+					string name = agent.Name.Trim('\0');
+
+					var origin = new AgentOrigin(new OriginalAgentData(agent.Address, volatileId));
+					if (name.StartsWith("at"))
+					{
+						// The attack target name is structured as "at[MasterAddress]-[GadgetId]-[MasterId]"
+						// Preferably, the AttackTarget statechange would be used to detect if this is an
+						// attack target to not rely on the name which could change in the future
+						return new AttackTarget(origin, volatileId, name, agent.HitboxWidth,
+							agent.HitboxHeight);
 					}
 					else
 					{
-						// NPC
-						if (!idsByAddress.TryGetValue(agent.Address, out int id))
-						{
-							id = -1;
-						}
-
-						string name = agent.Name.Trim('\0');
-						int speciesId = (int) (agent.Prof & 0xFFFF);
-
-						var origin = new AgentOrigin(new OriginalAgentData(agent.Address, id));
-						yield return new NPC(origin, name, speciesId, agent.Toughness, agent.Concentration,
-							agent.Healing, agent.Condition, agent.HitboxWidth, agent.HitboxHeight);
+						return new Gadget(origin, volatileId, name, agent.HitboxWidth,
+							agent.HitboxHeight);
 					}
+				}
+				else
+				{
+					// NPC
+					string name = agent.Name.Trim('\0');
+					int speciesId = (int)(agent.Prof & 0xFFFF);
+
+					return new NPC(null, name, speciesId, agent.Toughness, agent.Concentration,
+						agent.Healing, agent.Condition, agent.HitboxWidth, agent.HitboxHeight);
 				}
 			}
 		}
@@ -319,59 +559,27 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				{
 					if (combatItem.SrcMasterId != 0)
 					{
-						Agent minion = null;
-
-						if (state.AgentsById.TryGetValue(combatItem.SrcAgentId, out var agentsWithId))
+						if (!state.AgentsByAddress.TryGetValue(combatItem.SrcAgent, out Agent minion))
 						{
-							foreach (var agent in agentsWithId)
-							{
-								if (agent.IsWithinAwareTime(combatItem.Time))
-								{
-									minion = agent;
-									break;
-								}
-							}
+							continue;
 						}
-
+						
 						if (minion != null && minion.Master == null)
 						{
-							Agent master = null;
-							if (state.AgentsById.TryGetValue(combatItem.SrcMasterId, out var potentialMasters))
-							{
-								foreach (var agent in potentialMasters)
-								{
-									if (!(agent is Gadget) && agent.IsWithinAwareTime(combatItem.Time))
-									{
-										master = agent;
-										break;
-									}
-								}
-							}
-
-							if (master != null)
-							{
-								bool inCycle = false;
-								var masterParent = master;
-								while (masterParent != null)
-								{
-									if (masterParent == minion)
-									{
-										// A cycle is present in the minion hierarchy, this minion would end up as
-										// a transitive minion of itself, which could cause infinite looping.
-										// This is common in very old logs where minion data is somewhat weird.
-										inCycle = true;
-										break;
-									}
-
-									masterParent = masterParent.Master;
-								}
-
-								if (!inCycle)
-								{
-									minion.Master = master;
-									master.MinionList.Add(minion);
-								}
-							}
+							AssignMaster(state, minion, combatItem.SrcMasterId, combatItem.Time);
+						}
+					}
+					
+					if (combatItem.DstMasterId != 0)
+					{
+						if (!state.AgentsByAddress.TryGetValue(combatItem.DstAgent, out Agent minion))
+						{
+							continue;
+						}
+						
+						if (minion != null && minion.Master == null)
+						{
+							AssignMaster(state, minion, combatItem.DstMasterId, combatItem.Time);
 						}
 					}
 				}
@@ -406,7 +614,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 
 			state.MastersAssigned = true;
 		}
-
+		
 		private void GetDataFromCombatItems(ParsedLog log, LogProcessorState state)
 		{
 			Debug.Assert(state.Agents != null);
@@ -425,86 +633,73 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			}
 
 			state.GameLanguage = GameLanguage.Other;
-			var events = new List<Event>();
+			state.Events = new List<Event>();
+			state.SkillsById = skillsById;
 			foreach (var item in log.ParsedCombatItems)
 			{
-				if (item.IsStateChange == StateChange.LogStart)
-				{
-					if (state.LogStartTime != null)
-					{
-						throw new LogProcessingException("Multiple log start combat items found");
-					}
+				ProcessCombatItem(state, item);
+			}
+		}
 
+		private void ProcessCombatItem(LogProcessorState state, in ParsedCombatItem item)
+		{
+			switch (item.IsStateChange)
+			{
+				case StateChange.LogStart when state.LogStartTime != null:
+					throw new LogProcessingException("Multiple log start combat items found");
+				case StateChange.LogStart:
+				{
 					var serverTime = DateTimeOffset.FromUnixTimeSeconds(item.Value);
 					var localTime = DateTimeOffset.FromUnixTimeSeconds(item.BuffDmg);
 
 					state.LogStartTime = new LogTime(localTime, serverTime, item.Time);
-					continue;
+					return;
 				}
-
-				if (item.IsStateChange == StateChange.LogEnd)
+				case StateChange.LogEnd when item.Value == 0 && item.BuffDmg == 0:
+					// This is an erroneous extra log end without any data,
+					// we ignore it. Happened in every log with EVTC20200506.
+					return;
+				case StateChange.LogEnd when state.LogEndTime != null:
+					throw new LogProcessingException("Multiple log end combat items found");
+				case StateChange.LogEnd:
 				{
-					if (item.Value == 0 && item.BuffDmg == 0)
-					{
-						// This is an erroneous extra log end without any data,
-						// we ignore it. Happened in every log with EVTC20200506.
-						continue;
-					}
-
-					if (state.LogEndTime != null)
-					{
-						throw new LogProcessingException("Multiple log end combat items found");
-					}
-
 					var serverTime = DateTimeOffset.FromUnixTimeSeconds(item.Value);
 					var localTime = DateTimeOffset.FromUnixTimeSeconds(item.BuffDmg);
 
 					state.LogEndTime = new LogTime(localTime, serverTime, item.Time);
-					continue;
+					return;
 				}
-
-				if (item.IsStateChange == StateChange.PointOfView)
+				case StateChange.PointOfView:
 				{
 					if (state.AgentsByAddress.TryGetValue(item.SrcAgent, out var agent))
 					{
 						state.PointOfView = agent as Player ??
-						                      throw new LogProcessingException("The point of view agent is not a player");
+						                    throw new LogProcessingException("The point of view agent is not a player");
 					}
 
-					continue;
+					return;
 				}
-
-				if (item.IsStateChange == StateChange.Language)
+				case StateChange.Language:
 				{
-					int languageId = (int) item.SrcAgent;
+					int languageId = (int)item.SrcAgent;
 					state.GameLanguageId = languageId;
 					state.GameLanguage = GameLanguageIds.GetLanguageById(languageId);
-					continue;
+					return;
 				}
-
-				if (item.IsStateChange == StateChange.GWBuild)
-				{
-					state.GameBuild = (int) item.SrcAgent;
-					continue;
-				}
-
-				if (item.IsStateChange == StateChange.ShardId)
-				{
-					state.GameShardId = (int) item.SrcAgent;
-					continue;
-				}
-
-				if (item.IsStateChange == StateChange.MapId)
-				{
-					state.MapId = (int) item.SrcAgent;
-					continue;
-				}
-
-				if (item.IsStateChange == StateChange.Guild)
+				case StateChange.GWBuild:
+					state.GameBuild = (int)item.SrcAgent;
+					return;
+				case StateChange.ShardId:
+					state.GameShardId = (int)item.SrcAgent;
+					return;
+				case StateChange.MapId:
+					state.MapId = (int)item.SrcAgent;
+					return;
+				case StateChange.Guild:
 				{
 					if (state.AgentsByAddress.TryGetValue(item.SrcAgent, out Agent agent))
 					{
-						var player = (Player) agent;
+						var player = (Player)agent;
 						var guid = new byte[16];
 
 						// It is unclear how the arcdps values would be stored on a big-endian platform
@@ -534,30 +729,29 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						player.GuildGuid = guid;
 					}
 
-					continue;
+					return;
 				}
-
-				if (item.IsStateChange == StateChange.AttackTarget)
-				{
+				case StateChange.AttackTarget:
 					// Only used for master assignment
 					// Contains if the attack target is targetable as the value.
-					continue;
-				}
-
-				var processedEvent = GetEvent(state, skillsById, item);
-				if (!(processedEvent is UnknownEvent) || !IgnoreUnknownEvents)
+					return;
+				default:
 				{
-					events.Add(processedEvent);
+					var processedEvent = GetEvent(state, item);
+					if (processedEvent is not UnknownEvent || !IgnoreUnknownEvents)
+					{
+						state.Events.Add(processedEvent);
+					}
+
+					return;
 				}
 			}
-
-			state.Events = events;
 		}
 
-		private Event GetEvent(LogProcessorState state,
-			IReadOnlyDictionary<uint, Skill> skillsById, ParsedCombatItem item)
+		private Event GetEvent(LogProcessorState state, in ParsedCombatItem item)
 		{
 			Debug.Assert(state.AgentsByAddress != null);
+			Debug.Assert(state.SkillsById != null);
 
 			Agent GetAgentByAddress(ulong address)
 			{
@@ -571,7 +765,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 
 			Skill GetSkillById(uint id)
 			{
-				if (skillsById.TryGetValue(id, out Skill skill))
+				if (state.SkillsById.TryGetValue(id, out Skill skill))
 				{
 					return skill;
 				}

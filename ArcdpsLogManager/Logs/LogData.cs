@@ -247,8 +247,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 
 				ParsingStatus = ParsingStatus.Parsing;
 
-				var parsedLog = logAnalytics.Parser.ParseLog(FileName);
-				var log = logAnalytics.Processor.ProcessLog(parsedLog);
+				var log = logAnalytics.Processor.ProcessLog(FileName, logAnalytics.Parser);
 				var analyzer = logAnalytics.CreateAnalyzer(log);
 
 				GameLanguage = log.GameLanguage;

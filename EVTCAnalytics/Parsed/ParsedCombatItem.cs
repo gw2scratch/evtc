@@ -9,32 +9,32 @@ namespace GW2Scratch.EVTCAnalytics.Parsed
 	/// The values of this struct encode values for different types of events
 	/// in various ways, see the arcdps EVTC readme for the main documentation.
 	/// </remarks>
-	public readonly struct ParsedCombatItem
+	public struct ParsedCombatItem
 	{
-		public long Time { get; }
-		public ulong SrcAgent { get; }
-		public ulong DstAgent { get; }
-		public int Value { get; }
-		public int BuffDmg { get; }
-		public uint OverstackValue { get; }
-		public uint SkillId { get; }
-		public ushort SrcAgentId { get; }
-		public ushort DstAgentId { get; }
-		public ushort SrcMasterId { get; }
-		public ushort DstMasterId { get; }
-		public FriendOrFoe Iff { get; }
-		public byte Buff { get; }
-		public Result Result { get; }
-		public Activation IsActivation { get; }
-		public BuffRemove IsBuffRemove { get; }
-		public byte IsNinety { get; }
-		public byte IsFifty { get; }
-		public byte IsMoving { get; }
-		public StateChange IsStateChange { get; }
-		public byte IsFlanking { get; }
-		public byte IsShields { get; }
-		public byte IsOffCycle { get; }
-		public uint Padding { get; }
+		public long Time { get; internal set; }
+		public ulong SrcAgent { get; internal set; }
+		public ulong DstAgent { get; internal set; }
+		public int Value { get; internal set; }
+		public int BuffDmg { get; internal set; }
+		public uint OverstackValue { get; internal set; }
+		public uint SkillId { get; internal set; }
+		public ushort SrcAgentId { get; internal set; }
+		public ushort DstAgentId { get; internal set; }
+		public ushort SrcMasterId { get; internal set; }
+		public ushort DstMasterId { get; internal set; }
+		public FriendOrFoe Iff { get; internal set; }
+		public byte Buff { get; internal set; }
+		public Result Result { get; internal set; }
+		public Activation IsActivation { get; internal set; }
+		public BuffRemove IsBuffRemove { get; internal set; }
+		public byte IsNinety { get; internal set; }
+		public byte IsFifty { get; internal set; }
+		public byte IsMoving { get; internal set; }
+		public StateChange IsStateChange { get; internal set; }
+		public byte IsFlanking { get; internal set; }
+		public byte IsShields { get; internal set; }
+		public byte IsOffCycle { get; internal set; }
+		public uint Padding { get; internal set; }
 
 		public ParsedCombatItem(long time, ulong srcAgent, ulong dstAgent, int value, int buffDmg, uint overstackValue,
 			uint skillId, ushort srcAgentId, ushort dstAgentId, ushort srcMasterId, ushort dstMasterId, FriendOrFoe iff, byte buff,
