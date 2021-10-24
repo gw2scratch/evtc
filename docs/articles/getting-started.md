@@ -5,10 +5,14 @@ title: Getting Started
 # Getting started
 
 ## Processing steps
-The library uses three distinct steps to read EVTC logs and access data.
+The library uses three distinct steps to read EVTC logs and access data (with one exception, see below).
 1. Parsing (file → raw values in [`ParsedLog`](../api/GW2Scratch.EVTCAnalytics.Parsed.ParsedLog.html)) – [`EVTCParser`](../api/GW2Scratch.EVTCAnalytics.EVTCParser.html)
 2. Processing (raw values in [`ParsedLog`](../api/GW2Scratch.EVTCAnalytics.Parsed.ParsedLog.html) → processed objects in [`Log`](../api/GW2Scratch.EVTCAnalytics.Model.Log.html)) – [`LogProcessor`](../api/GW2Scratch.EVTCAnalytics.Processing.LogProcessor.html)
 3. Analysis (processed objects in [`Log`](../api/GW2Scratch.EVTCAnalytics.Model.Log.html) → results) – [`LogAnalyzer`](../api/GW2Scratch.EVTCAnalytics.LogAnalyzer.html) and custom analysis
+
+### Merging Parsing and Processing
+The first two steps may also be done at once, which avoids unnecessary allocations if the [`ParsedLog`](../api/GW2Scratch.EVTCAnalytics.Parsed.ParsedLog.html) is not needed.
+The [`LogProcessor`](../api/GW2Scratch.EVTCAnalytics.Processing.LogProcessor.html) provides overloads for directly going from files → [`Log`](../api/GW2Scratch.EVTCAnalytics.Model.Log.html).
 
 ## Step 1: Parsing
 This first step reads raw data from EVTC logs into *Parsed* objects, which contain raw values
