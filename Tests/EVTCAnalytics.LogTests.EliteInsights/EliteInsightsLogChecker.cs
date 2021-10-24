@@ -7,6 +7,7 @@ using GW2EIEvtcParser;
 using GW2EIEvtcParser.Exceptions;
 using GW2EIGW2API;
 using GW2Scratch.EVTCAnalytics.GameData.Encounters;
+using GW2Scratch.EVTCAnalytics.Model;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
 using GW2Scratch.EVTCAnalytics.Processing;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes;
@@ -87,23 +88,23 @@ namespace GW2Scratch.EVTCAnalytics.LogTests.EliteInsights
 					eiFailureReason.Throw();
 				}
 
-				var eiDuration = TimeSpan.FromMilliseconds(eiLog.FightData.FightEnd - eiLog.FightData.FightStart);
+				var eiDuration = TimeSpan.FromMilliseconds(eiLog.FightData.FightDuration);
 				var eiResult = eiLog.FightData.Success ? EncounterResult.Success : EncounterResult.Failure;
 				var eiPlayers = eiLog.PlayerList
 					.Where(p => !p.IsFakeActor)
 					.Select(p =>
 					{
 						Profession profession;
-						if (Enum.TryParse(p.Prof, out EliteSpecialization specialization))
+						if (Enum.TryParse(p.Spec.ToString(), out EliteSpecialization specialization))
 						{
 							profession = GameData.Characters.GetProfession(specialization);
 						}
 						else
 						{
 							specialization = EliteSpecialization.None;
-							if (!Enum.TryParse(p.Prof, out profession))
+							if (!Enum.TryParse(p.BaseSpec.ToString(), out profession))
 							{
-								throw new Exception($"Unknown profession {p.Prof} found in Elite Insights data.");
+								throw new Exception($"Unknown profession {p.Spec} found in Elite Insights data.");
 							}
 						}
 
