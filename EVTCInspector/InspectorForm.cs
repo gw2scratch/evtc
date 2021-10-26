@@ -291,6 +291,21 @@ namespace GW2Scratch.EVTCInspector
 			});
 			agentsGridView.Columns.Add(new GridColumn
 			{
+				HeaderText = "Species ID",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Agent, string>(x =>
+					{
+						if (x is NPC npc)
+						{
+							return npc.SpeciesId.ToString();
+						}
+						return "N/A";
+					})
+				}
+			});
+			agentsGridView.Columns.Add(new GridColumn
+			{
 				HeaderText = "Hitbox Width",
 				DataCell = new TextBoxCell
 				{
