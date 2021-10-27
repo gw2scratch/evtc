@@ -1,9 +1,6 @@
-using System;
-using System.Collections.Generic;
 using Eto.Drawing;
 using Eto.Forms;
 using GW2Scratch.ArcdpsLogManager.Logs;
-using GW2Scratch.ArcdpsLogManager.Logs.Compressing;
 
 namespace GW2Scratch.ArcdpsLogManager.Dialogs
 {
@@ -15,40 +12,43 @@ namespace GW2Scratch.ArcdpsLogManager.Dialogs
 			DynamicLayout formLayout = new DynamicLayout();
 			Content = formLayout;
 
-			Button closeButton = new Button {Text = "Close"};
-			closeButton.Click += (sender, args) => Close();
+			Button closeButton = new Button { Text = "Close" };
+			closeButton.Click += (_, _) => Close();
 			PositiveButtons.Add(closeButton);
 
-			// Form components
-			Label explanationLabel = new Label {
-				Text = "Compress uncompressed logs to save space."
-			};
+			Label explanationLabel = new Label { Text = "Compress uncompressed logs to save space." };
 
-			string buttonText = "Compress logs";
-			Button compressLogsButton = new Button {
-				Text = buttonText
-			};
-			compressLogsButton.Click += (sender, args) => {
+			const string buttonText = "Compress logs";
+			Button compressLogsButton = new Button { Text = buttonText };
+
+			compressLogsButton.Click += (_, _) =>
+			{
 				LogCompressor compressor = new LogCompressor();
 
-				compressor.Progress += (object sender, LogCompressorProgressEventArgs args) => {
+				compressor.Progress += (_, args) =>
+				{
 					managerForm.LogCache?.ClearLogDataEntry(args.LogData.FileName);
 
-					Application.Instance.AsyncInvoke(() => {
-						if (args.Current == args.Total) {
+					Application.Instance.AsyncInvoke(() =>
+					{
+						if (args.Current == args.Total)
+						{
 							compressLogsButton.Text = buttonText;
-						} else {
+						}
+						else
+						{
 							compressLogsButton.Text = $"{args.Current} / {args.Total}";
 						}
 					});
 				};
 
-				compressor.Finished += (object sender, EventArgs args) => {
+				compressor.Finished += (_, _) =>
+				{
 					managerForm.LogCache?.SaveToFile();
 					managerForm.ReloadLogs();
 				};
 
-				compressor.Compress(managerForm.LoadedLogs);	
+				compressor.Compress(managerForm.LoadedLogs);
 			};
 
 			// Form layout
