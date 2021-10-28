@@ -38,7 +38,7 @@ namespace GW2Scratch.ArcdpsLogManager.Processing
 			}
 
 			taskCancellation = new CancellationTokenSource();
-			backgroundTask = ProcessQueue(taskCancellation.Token);
+			backgroundTask = Task.Factory.StartNew(() => ProcessQueue(taskCancellation.Token), TaskCreationOptions.LongRunning);
 			Starting?.Invoke(this, EventArgs.Empty);
 			backgroundTask.ContinueWith(HandleStoppingBackgroundTask);
 		}
