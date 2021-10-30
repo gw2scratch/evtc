@@ -110,7 +110,10 @@ namespace GW2Scratch.ArcdpsLogManager
 		private Lazy<Image> SkorvaldIcon { get; } = new Lazy<Image>(Resources.GetSkorvaldIcon);
 		private Lazy<Image> ArtsariivIcon { get; } = new Lazy<Image>(Resources.GetArtsariivIcon);
 		private Lazy<Image> ArkkIcon { get; } = new Lazy<Image>(Resources.GetArkkIcon);
-		private Lazy<Image> AiKeeperOfThePeakIcon { get; } = new Lazy<Image>(Resources.GetAiKeeperOfThePeakIcon);
+		private Lazy<Image> AiKeeperOfThePeakIcon { get; } = new Lazy<Image>(Resources.GetAiKeeperOfThePeakIcon); // this one might be unused
+		private Lazy<Image> ElementalAiKeeperOfThePeakIcon { get; } = new Lazy<Image>(Resources.GetElementalAiKeeperOfThePeakIcon);
+		private Lazy<Image> DarkAiKeeperOfThePeakIcon { get; } = new Lazy<Image>(Resources.GetDarkAiKeeperOfThePeakIcon);
+		private Lazy<Image> BothPhasesAiKeeperOfThePeakIcon { get; } = new Lazy<Image>(Resources.GetBothPhasesAiKeeperOfThePeakIcon);
 
 		// FESTIVALS
 		private Lazy<Image> FreezieIcon { get; } = new Lazy<Image>(Resources.GetFreezieIcon);
@@ -247,11 +250,11 @@ namespace GW2Scratch.ArcdpsLogManager
 				Encounter.Artsariiv => ArtsariivIcon.Value,
 				Encounter.Arkk => ArkkIcon.Value,
 #pragma warning disable 618
-				Encounter.AiKeeperOfThePeak => AiKeeperOfThePeakIcon.Value,
+				Encounter.AiKeeperOfThePeak => AiKeeperOfThePeakIcon.Value, // unused?
 #pragma warning restore 618
-				Encounter.AiKeeperOfThePeakDayOnly => AiKeeperOfThePeakIcon.Value,
-				Encounter.AiKeeperOfThePeakNightOnly => AiKeeperOfThePeakIcon.Value,
-				Encounter.AiKeeperOfThePeakDayAndNight => AiKeeperOfThePeakIcon.Value,
+				Encounter.AiKeeperOfThePeakDayOnly => ElementalAiKeeperOfThePeakIcon.Value,
+				Encounter.AiKeeperOfThePeakNightOnly => DarkAiKeeperOfThePeakIcon.Value,
+				Encounter.AiKeeperOfThePeakDayAndNight => BothPhasesAiKeeperOfThePeakIcon.Value,
 				// FESTIVALS
 				Encounter.Freezie => FreezieIcon.Value,
 				// TRAINING AREA
