@@ -15,6 +15,7 @@ namespace GW2Scratch.ArcdpsLogManager.Processing
 		private CancellationTokenSource taskCancellation;
 
 		private readonly object queueLock = new object();
+		private readonly object taskLock = new object();
 
 		public TimeSpan PauseWhenQueueEmpty { get; set; } = TimeSpan.FromSeconds(1);
 		public bool BackgroundTaskRunning => !backgroundTask.IsCompleted;
@@ -32,15 +33,20 @@ namespace GW2Scratch.ArcdpsLogManager.Processing
 		/// <exception cref="InvalidOperationException">Thrown if the task is running already.</exception>
 		public void StartBackgroundTask()
 		{
-			if (!backgroundTask.IsCompleted)
+			lock (taskLock)
 			{
-				throw new InvalidOperationException("The upload task is running already");
-			}
+				if (!backgroundTask.IsCompleted)
+				{
+					throw new InvalidOperationException("The background task is running already");
+				}
 
-			taskCancellation = new CancellationTokenSource();
-			backgroundTask = Task.Factory.StartNew(() => ProcessQueue(taskCancellation.Token), TaskCreationOptions.LongRunning);
-			Starting?.Invoke(this, EventArgs.Empty);
-			backgroundTask.ContinueWith(HandleStoppingBackgroundTask);
+				taskCancellation = new CancellationTokenSource();
+				backgroundTask = Task.Factory
+					.StartNew(() => ProcessQueue(taskCancellation.Token), TaskCreationOptions.LongRunning)
+					.Unwrap();
+				Starting?.Invoke(this, EventArgs.Empty);
+				backgroundTask.ContinueWith(HandleStoppingBackgroundTask);
+			}
 		}
 
 		private void HandleStoppingBackgroundTask(Task task)
@@ -272,7 +278,6 @@ namespace GW2Scratch.ArcdpsLogManager.Processing
 		/// </summary>
 		/// <param name="item">An item to process.</param>
 		/// <param name="cancellationToken">A cancellation token.</param>
-		/// <returns></returns>
 		protected abstract Task Process(T item, CancellationToken cancellationToken);
 
 		/// <summary>
