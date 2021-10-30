@@ -46,7 +46,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 		/// <summary>
 		/// The name of the corresponding log file.
 		/// </summary>
-		public string FileName { get; }
+		public string FileName { get; private set; }
 
 		/// <summary>
 		/// The players participating in the encounter recorded in this log.
@@ -305,6 +305,22 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 			{
 				ParsingVersion = typeof(LogAnalytics).Assembly.GetName().Version;
 			}
+		}
+
+		/// <summary>
+		/// Assigns this log data to a different file without doing any checks.
+		/// </summary>
+		/// <remarks>
+		/// This is useful in case the file is moved, renamed, etc. and we want to avoid processing it again.
+		/// 
+		/// Note that we do not check whether the file exists and whether the data actually belongs to it.
+		/// You may need to manually update caches that include this <see cref="LogData"/> as well.
+		/// </remarks>
+		/// <param name="newFileName">The new filename this log data belongs to.</param>
+		public void AssignToFile(string newFileName)
+		{
+			fileInfo = null;
+			FileName = newFileName;
 		}
 
 		private string GetGuildGuid(byte[] guidBytes)
