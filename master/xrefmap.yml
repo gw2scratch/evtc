@@ -3849,6 +3849,18 @@ references:
   commentId: F:GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.Berserker
   fullName: GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.Berserker
   nameWithType: EliteSpecialization.Berserker
+- uid: GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.Bladesworn
+  name: Bladesworn
+  href: api/GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.html#GW2Scratch_EVTCAnalytics_Model_Agents_EliteSpecialization_Bladesworn
+  commentId: F:GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.Bladesworn
+  fullName: GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.Bladesworn
+  nameWithType: EliteSpecialization.Bladesworn
+- uid: GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.Catalyst
+  name: Catalyst
+  href: api/GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.html#GW2Scratch_EVTCAnalytics_Model_Agents_EliteSpecialization_Catalyst
+  commentId: F:GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.Catalyst
+  fullName: GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.Catalyst
+  nameWithType: EliteSpecialization.Catalyst
 - uid: GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.Chronomancer
   name: Chronomancer
   href: api/GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.html#GW2Scratch_EVTCAnalytics_Model_Agents_EliteSpecialization_Chronomancer
@@ -3879,42 +3891,6 @@ references:
   commentId: F:GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.Druid
   fullName: GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.Druid
   nameWithType: EliteSpecialization.Druid
-- uid: GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.EoDElementalist
-  name: EoDElementalist
-  href: api/GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.html#GW2Scratch_EVTCAnalytics_Model_Agents_EliteSpecialization_EoDElementalist
-  commentId: F:GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.EoDElementalist
-  fullName: GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.EoDElementalist
-  nameWithType: EliteSpecialization.EoDElementalist
-- uid: GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.EoDEngineer
-  name: EoDEngineer
-  href: api/GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.html#GW2Scratch_EVTCAnalytics_Model_Agents_EliteSpecialization_EoDEngineer
-  commentId: F:GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.EoDEngineer
-  fullName: GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.EoDEngineer
-  nameWithType: EliteSpecialization.EoDEngineer
-- uid: GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.EoDRanger
-  name: EoDRanger
-  href: api/GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.html#GW2Scratch_EVTCAnalytics_Model_Agents_EliteSpecialization_EoDRanger
-  commentId: F:GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.EoDRanger
-  fullName: GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.EoDRanger
-  nameWithType: EliteSpecialization.EoDRanger
-- uid: GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.EoDRevenant
-  name: EoDRevenant
-  href: api/GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.html#GW2Scratch_EVTCAnalytics_Model_Agents_EliteSpecialization_EoDRevenant
-  commentId: F:GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.EoDRevenant
-  fullName: GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.EoDRevenant
-  nameWithType: EliteSpecialization.EoDRevenant
-- uid: GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.EoDThief
-  name: EoDThief
-  href: api/GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.html#GW2Scratch_EVTCAnalytics_Model_Agents_EliteSpecialization_EoDThief
-  commentId: F:GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.EoDThief
-  fullName: GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.EoDThief
-  nameWithType: EliteSpecialization.EoDThief
-- uid: GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.EoDWarrior
-  name: EoDWarrior
-  href: api/GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.html#GW2Scratch_EVTCAnalytics_Model_Agents_EliteSpecialization_EoDWarrior
-  commentId: F:GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.EoDWarrior
-  fullName: GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.EoDWarrior
-  nameWithType: EliteSpecialization.EoDWarrior
 - uid: GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.Firebrand
   name: Firebrand
   href: api/GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.html#GW2Scratch_EVTCAnalytics_Model_Agents_EliteSpecialization_Firebrand
@@ -3939,6 +3915,12 @@ references:
   commentId: F:GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.Holosmith
   fullName: GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.Holosmith
   nameWithType: EliteSpecialization.Holosmith
+- uid: GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.Mechanist
+  name: Mechanist
+  href: api/GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.html#GW2Scratch_EVTCAnalytics_Model_Agents_EliteSpecialization_Mechanist
+  commentId: F:GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.Mechanist
+  fullName: GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.Mechanist
+  nameWithType: EliteSpecialization.Mechanist
 - uid: GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.Mirage
   name: Mirage
   href: api/GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.html#GW2Scratch_EVTCAnalytics_Model_Agents_EliteSpecialization_Mirage
@@ -3981,6 +3963,12 @@ references:
   commentId: F:GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.Soulbeast
   fullName: GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.Soulbeast
   nameWithType: EliteSpecialization.Soulbeast
+- uid: GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.Specter
+  name: Specter
+  href: api/GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.html#GW2Scratch_EVTCAnalytics_Model_Agents_EliteSpecialization_Specter
+  commentId: F:GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.Specter
+  fullName: GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.Specter
+  nameWithType: EliteSpecialization.Specter
 - uid: GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.Spellbreaker
   name: Spellbreaker
   href: api/GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.html#GW2Scratch_EVTCAnalytics_Model_Agents_EliteSpecialization_Spellbreaker
@@ -3993,6 +3981,18 @@ references:
   commentId: F:GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.Tempest
   fullName: GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.Tempest
   nameWithType: EliteSpecialization.Tempest
+- uid: GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.Untamed
+  name: Untamed
+  href: api/GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.html#GW2Scratch_EVTCAnalytics_Model_Agents_EliteSpecialization_Untamed
+  commentId: F:GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.Untamed
+  fullName: GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.Untamed
+  nameWithType: EliteSpecialization.Untamed
+- uid: GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.Vindicator
+  name: Vindicator
+  href: api/GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.html#GW2Scratch_EVTCAnalytics_Model_Agents_EliteSpecialization_Vindicator
+  commentId: F:GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.Vindicator
+  fullName: GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.Vindicator
+  nameWithType: EliteSpecialization.Vindicator
 - uid: GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.Virtuoso
   name: Virtuoso
   href: api/GW2Scratch.EVTCAnalytics.Model.Agents.EliteSpecialization.html#GW2Scratch_EVTCAnalytics_Model_Agents_EliteSpecialization_Virtuoso
