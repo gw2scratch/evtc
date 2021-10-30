@@ -6,6 +6,7 @@ This is the full changelog of the arcdps Log Manager.
 
 ## Changes
 - Significantly reduced time spent loading the cache and searching for logs (big thanks to @Denrage!, issue #135)
+- Significantly improved log processing performance
 
 ## Log Manager v1.2.1
 
