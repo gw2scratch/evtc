@@ -166,11 +166,13 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 			}
 		}
 
-		public void ClearLogDataEntry(string filename)
+		public void MoveLogDataEntry(LogData data, string newFileName)
 		{
 			lock (dictionaryLock)
 			{
-				logsByFilename.Remove(filename);
+				logsByFilename.Remove(data.FileName);
+				data.AssignToFile(newFileName);
+				logsByFilename[newFileName] = data;
 			}
 		}
 

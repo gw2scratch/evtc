@@ -34,8 +34,8 @@ namespace GW2Scratch.ArcdpsLogManager
 	public sealed class ManagerForm : Form
 	{
 		private static readonly TimeSpan LogCacheAutoSavePeriod = TimeSpan.FromSeconds(60);
-		private readonly Cooldown gridRefreshCooldown = new Cooldown(TimeSpan.FromSeconds(5));
-		private readonly Cooldown filterRefreshCooldown = new Cooldown(TimeSpan.FromSeconds(5));
+		private readonly Cooldown gridRefreshCooldown = new Cooldown(TimeSpan.FromSeconds(10));
+		private readonly Cooldown filterRefreshCooldown = new Cooldown(TimeSpan.FromSeconds(10));
 
 		private ProgramUpdateChecker ProgramUpdateChecker { get; } = new ProgramUpdateChecker("http://gw2scratch.com/releases/manager.json");
 		private ImageProvider ImageProvider { get; } = new ImageProvider();
@@ -47,6 +47,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		private ApiProcessor ApiProcessor { get; }
 		private UploadProcessor UploadProcessor { get; }
 		private LogDataProcessor LogDataProcessor { get; }
+		private LogCompressionProcessor LogCompressionProcessor { get; }
 		private ILogNameProvider LogNameProvider { get; }
 		private LogDataUpdater LogDataUpdater { get; } = new LogDataUpdater();
 		private LogCacheAutoSaver LogCacheAutoSaver { get; }
@@ -73,6 +74,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			UploadProcessor = new UploadProcessor(dpsReportUploader, LogCache);
 			ApiProcessor = new ApiProcessor(ApiData, new Gw2Client());
 			LogDataProcessor = new LogDataProcessor(LogCache, ApiProcessor, LogAnalytics);
+			LogCompressionProcessor = new LogCompressionProcessor(LogCache);
 			LogNameProvider = new TranslatedLogNameProvider(GameLanguage.English);
 			LogCacheAutoSaver = LogCacheAutoSaver.StartNew(logCache, LogCacheAutoSavePeriod);
 
@@ -367,7 +369,7 @@ namespace GW2Scratch.ArcdpsLogManager
 
 		private MenuBar ConstructMenuBar()
 		{
-			var updateMenuItem = new ButtonMenuItem {Text = "&Update logs with outdated data…"};
+			var updateMenuItem = new ButtonMenuItem {Text = "&Update logs with outdated data"};
 			updateMenuItem.Click += (sender, args) =>
 			{
 				new ProcessingUpdateDialog(LogDataProcessor, LogDataUpdater.GetUpdates(logs).ToList()).ShowModal(this);
@@ -383,7 +385,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			};
 
 			var compressLogsItem = new ButtonMenuItem {Text = "&Compress logs"};
-			compressLogsItem.Click += (sender, args) => { new CompressDialog(this).ShowModal(); };
+			compressLogsItem.Click += (sender, args) => { new CompressDialog(logs.ToList(), LogCompressionProcessor).ShowModal(); };
 
 			var logCacheMenuItem = new ButtonMenuItem {Text = "&Log cache"};
 			logCacheMenuItem.Click += (sender, args) => { new CacheDialog(this).ShowModal(this); };
@@ -494,12 +496,22 @@ namespace GW2Scratch.ArcdpsLogManager
 					Text = "Guild Wars 2 API",
 					Content = new BackgroundProcessorDetail {BackgroundProcessor = ApiProcessor}
 				}, xscale: true);
+			}
+			serviceStatus.EndHorizontal();
+			serviceStatus.BeginHorizontal();
+			{
 				serviceStatus.Add(new GroupBox
 				{
-					Text = "Log parsing",
+					Text = "Log processing",
 					Content = new BackgroundProcessorDetail {BackgroundProcessor = LogDataProcessor}
 				}, xscale: true);
+				serviceStatus.Add(new GroupBox
+				{
+					Text = "Log compression",
+					Content = new BackgroundProcessorDetail {BackgroundProcessor = LogCompressionProcessor}
+				}, xscale: true);
 			}
+			serviceStatus.EndHorizontal();
 			serviceStatus.AddRow(null);
 			var servicePage = new TabPage
 			{
