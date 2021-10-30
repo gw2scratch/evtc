@@ -5,10 +5,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Class ParsedAgent
+    <title>Struct ParsedAgent
    </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Class ParsedAgent
+    <meta name="title" content="Struct ParsedAgent
    ">
     <meta name="generator" content="docfx 2.58.0.0">
     
@@ -71,45 +71,37 @@
             <article class="content wrap" id="_content" data-uid="GW2Scratch.EVTCAnalytics.Parsed.ParsedAgent">
   
   
-  <h1 id="GW2Scratch_EVTCAnalytics_Parsed_ParsedAgent" data-uid="GW2Scratch.EVTCAnalytics.Parsed.ParsedAgent" class="text-break">Class ParsedAgent
+  <h1 id="GW2Scratch_EVTCAnalytics_Parsed_ParsedAgent" data-uid="GW2Scratch.EVTCAnalytics.Parsed.ParsedAgent" class="text-break">Struct ParsedAgent
   </h1>
   <div class="markdown level0 summary"><p>The raw agent data from a <code>evtc_agent</code> struct as defined by arcdps.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
-  <div class="inheritance">
-    <h5>Inheritance</h5>
-    <div class="level0"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
-    <div class="level1"><span class="xref">ParsedAgent</span></div>
-  </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_">Object.Equals(Object)</a>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.valuetype.equals#System_ValueType_Equals_System_Object_">ValueType.Equals(Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.valuetype.gethashcode#System_ValueType_GetHashCode">ValueType.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.valuetype.tostring#System_ValueType_ToString">ValueType.ToString()</a>
     </div>
     <div>
       <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_System_Object_">Object.Equals(Object, Object)</a>
     </div>
     <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gethashcode#System_Object_GetHashCode">Object.GetHashCode()</a>
-    </div>
-    <div>
       <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gettype#System_Object_GetType">Object.GetType()</a>
     </div>
     <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.memberwiseclone#System_Object_MemberwiseClone">Object.MemberwiseClone()</a>
-    </div>
-    <div>
       <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.referenceequals#System_Object_ReferenceEquals_System_Object_System_Object_">Object.ReferenceEquals(Object, Object)</a>
-    </div>
-    <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.tostring#System_Object_ToString">Object.ToString()</a>
     </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="GW2Scratch.EVTCAnalytics.Parsed.html">GW2Scratch.EVTCAnalytics.Parsed</a></h6>
   <h6><strong>Assembly</strong>: GW2Scratch.EVTCAnalytics.dll</h6>
   <h5 id="GW2Scratch_EVTCAnalytics_Parsed_ParsedAgent_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class ParsedAgent</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly struct ParsedAgent</code></pre>
   </div>
   <h5 id="GW2Scratch_EVTCAnalytics_Parsed_ParsedAgent_remarks"><strong>Remarks</strong></h5>
   <div class="markdown level0 remarks"><p>The values of this struct encode values for different types of agents
@@ -210,7 +202,7 @@ in various ways, see the arcdps EVTC readme for the main documentation.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ulong Address { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly ulong Address { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -241,7 +233,7 @@ in various ways, see the arcdps EVTC readme for the main documentation.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public short Concentration { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly short Concentration { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -272,7 +264,7 @@ in various ways, see the arcdps EVTC readme for the main documentation.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public short Condition { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly short Condition { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -303,7 +295,7 @@ in various ways, see the arcdps EVTC readme for the main documentation.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public short Healing { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly short Healing { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -334,7 +326,7 @@ in various ways, see the arcdps EVTC readme for the main documentation.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public short HitboxHeight { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly short HitboxHeight { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -365,7 +357,7 @@ in various ways, see the arcdps EVTC readme for the main documentation.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public short HitboxWidth { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly short HitboxWidth { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -396,7 +388,7 @@ in various ways, see the arcdps EVTC readme for the main documentation.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public uint IsElite { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly uint IsElite { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -427,7 +419,7 @@ in various ways, see the arcdps EVTC readme for the main documentation.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string Name { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly string Name { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -458,7 +450,7 @@ in various ways, see the arcdps EVTC readme for the main documentation.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public uint Prof { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly uint Prof { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -489,7 +481,7 @@ in various ways, see the arcdps EVTC readme for the main documentation.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public short Toughness { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly short Toughness { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">

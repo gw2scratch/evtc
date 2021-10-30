@@ -70,12 +70,15 @@
 <h1 id="getting-started">Getting started</h1>
 
 <h2 id="processing-steps">Processing steps</h2>
-<p>The library uses three distinct steps to read EVTC logs and access data.</p>
+<p>The library uses three distinct steps to read EVTC logs and access data (with one exception, see below).</p>
 <ol>
 <li>Parsing (file → raw values in <a href="../api/GW2Scratch.EVTCAnalytics.Parsed.ParsedLog.html"><code>ParsedLog</code></a>) – <a href="../api/GW2Scratch.EVTCAnalytics.EVTCParser.html"><code>EVTCParser</code></a></li>
 <li>Processing (raw values in <a href="../api/GW2Scratch.EVTCAnalytics.Parsed.ParsedLog.html"><code>ParsedLog</code></a> → processed objects in <a href="../api/GW2Scratch.EVTCAnalytics.Model.Log.html"><code>Log</code></a>) – <a href="../api/GW2Scratch.EVTCAnalytics.Processing.LogProcessor.html"><code>LogProcessor</code></a></li>
 <li>Analysis (processed objects in <a href="../api/GW2Scratch.EVTCAnalytics.Model.Log.html"><code>Log</code></a> → results) – <a href="../api/GW2Scratch.EVTCAnalytics.LogAnalyzer.html"><code>LogAnalyzer</code></a> and custom analysis</li>
 </ol>
+<h3 id="merging-parsing-and-processing">Merging Parsing and Processing</h3>
+<p>The first two steps may also be done at once, which avoids unnecessary allocations if the <a href="../api/GW2Scratch.EVTCAnalytics.Parsed.ParsedLog.html"><code>ParsedLog</code></a> is not needed.
+The <a href="../api/GW2Scratch.EVTCAnalytics.Processing.LogProcessor.html"><code>LogProcessor</code></a> provides overloads for directly going from files → <a href="../api/GW2Scratch.EVTCAnalytics.Model.Log.html"><code>Log</code></a>.</p>
 <h2 id="step-1-parsing">Step 1: Parsing</h2>
 <p>This first step reads raw data from EVTC logs into <em>Parsed</em> objects, which contain raw values
 in a format very similar to the original structs used.

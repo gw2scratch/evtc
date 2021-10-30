@@ -8693,6 +8693,21 @@ references:
   commentId: M:GW2Scratch.EVTCAnalytics.Processing.LogProcessor.ProcessLog(GW2Scratch.EVTCAnalytics.Parsed.ParsedLog)
   fullName: GW2Scratch.EVTCAnalytics.Processing.LogProcessor.ProcessLog(GW2Scratch.EVTCAnalytics.Parsed.ParsedLog)
   nameWithType: LogProcessor.ProcessLog(ParsedLog)
+- uid: GW2Scratch.EVTCAnalytics.Processing.LogProcessor.ProcessLog(System.Byte[],GW2Scratch.EVTCAnalytics.EVTCParser)
+  name: ProcessLog(Byte[], EVTCParser)
+  href: api/GW2Scratch.EVTCAnalytics.Processing.LogProcessor.html#GW2Scratch_EVTCAnalytics_Processing_LogProcessor_ProcessLog_System_Byte___GW2Scratch_EVTCAnalytics_EVTCParser_
+  commentId: M:GW2Scratch.EVTCAnalytics.Processing.LogProcessor.ProcessLog(System.Byte[],GW2Scratch.EVTCAnalytics.EVTCParser)
+  name.vb: ProcessLog(Byte(), EVTCParser)
+  fullName: GW2Scratch.EVTCAnalytics.Processing.LogProcessor.ProcessLog(System.Byte[], GW2Scratch.EVTCAnalytics.EVTCParser)
+  fullName.vb: GW2Scratch.EVTCAnalytics.Processing.LogProcessor.ProcessLog(System.Byte(), GW2Scratch.EVTCAnalytics.EVTCParser)
+  nameWithType: LogProcessor.ProcessLog(Byte[], EVTCParser)
+  nameWithType.vb: LogProcessor.ProcessLog(Byte(), EVTCParser)
+- uid: GW2Scratch.EVTCAnalytics.Processing.LogProcessor.ProcessLog(System.String,GW2Scratch.EVTCAnalytics.EVTCParser)
+  name: ProcessLog(String, EVTCParser)
+  href: api/GW2Scratch.EVTCAnalytics.Processing.LogProcessor.html#GW2Scratch_EVTCAnalytics_Processing_LogProcessor_ProcessLog_System_String_GW2Scratch_EVTCAnalytics_EVTCParser_
+  commentId: M:GW2Scratch.EVTCAnalytics.Processing.LogProcessor.ProcessLog(System.String,GW2Scratch.EVTCAnalytics.EVTCParser)
+  fullName: GW2Scratch.EVTCAnalytics.Processing.LogProcessor.ProcessLog(System.String, GW2Scratch.EVTCAnalytics.EVTCParser)
+  nameWithType: LogProcessor.ProcessLog(String, EVTCParser)
 - uid: GW2Scratch.EVTCAnalytics.Processing.LogProcessor.ProcessLog*
   name: ProcessLog
   href: api/GW2Scratch.EVTCAnalytics.Processing.LogProcessor.html#GW2Scratch_EVTCAnalytics_Processing_LogProcessor_ProcessLog_
@@ -8888,6 +8903,19 @@ references:
   isSpec: "True"
   fullName: GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.LogType
   nameWithType: LogProcessorState.LogType
+- uid: GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.MainTarget
+  name: MainTarget
+  href: api/GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.html#GW2Scratch_EVTCAnalytics_Processing_LogProcessorState_MainTarget
+  commentId: P:GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.MainTarget
+  fullName: GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.MainTarget
+  nameWithType: LogProcessorState.MainTarget
+- uid: GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.MainTarget*
+  name: MainTarget
+  href: api/GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.html#GW2Scratch_EVTCAnalytics_Processing_LogProcessorState_MainTarget_
+  commentId: Overload:GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.MainTarget
+  isSpec: "True"
+  fullName: GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.MainTarget
+  nameWithType: LogProcessorState.MainTarget
 - uid: GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.MapId
   name: MapId
   href: api/GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.html#GW2Scratch_EVTCAnalytics_Processing_LogProcessorState_MapId
@@ -8940,6 +8968,19 @@ references:
   isSpec: "True"
   fullName: GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.Skills
   nameWithType: LogProcessorState.Skills
+- uid: GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.SkillsById
+  name: SkillsById
+  href: api/GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.html#GW2Scratch_EVTCAnalytics_Processing_LogProcessorState_SkillsById
+  commentId: P:GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.SkillsById
+  fullName: GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.SkillsById
+  nameWithType: LogProcessorState.SkillsById
+- uid: GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.SkillsById*
+  name: SkillsById
+  href: api/GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.html#GW2Scratch_EVTCAnalytics_Processing_LogProcessorState_SkillsById_
+  commentId: Overload:GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.SkillsById
+  isSpec: "True"
+  fullName: GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.SkillsById
+  nameWithType: LogProcessorState.SkillsById
 - uid: GW2Scratch.EVTCAnalytics.Processing.Steps
   name: GW2Scratch.EVTCAnalytics.Processing.Steps
   href: api/GW2Scratch.EVTCAnalytics.Processing.Steps.html

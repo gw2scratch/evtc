@@ -119,7 +119,7 @@ easy-to-use objects and providing encounter-specific data.</p>
     <a href="https://github.com/gw2scratch/evtc/new/master/apiSpec/new?filename=GW2Scratch_EVTCAnalytics_Processing_LogProcessor_EncounterIdentifier.md&amp;value=---%0Auid%3A%20GW2Scratch.EVTCAnalytics.Processing.LogProcessor.EncounterIdentifier%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gw2scratch/evtc/blob/master/EVTCAnalytics/Processing/LogProcessor.cs/#L46">View Source</a>
+    <a href="https://github.com/gw2scratch/evtc/blob/master/EVTCAnalytics/Processing/LogProcessor.cs/#L45">View Source</a>
   </span>
   <a id="GW2Scratch_EVTCAnalytics_Processing_LogProcessor_EncounterIdentifier_" data-uid="GW2Scratch.EVTCAnalytics.Processing.LogProcessor.EncounterIdentifier*"></a>
   <h4 id="GW2Scratch_EVTCAnalytics_Processing_LogProcessor_EncounterIdentifier" data-uid="GW2Scratch.EVTCAnalytics.Processing.LogProcessor.EncounterIdentifier">EncounterIdentifier</h4>
@@ -154,7 +154,7 @@ or it could be used to override the default logic.</p>
     <a href="https://github.com/gw2scratch/evtc/new/master/apiSpec/new?filename=GW2Scratch_EVTCAnalytics_Processing_LogProcessor_IgnoreUnknownEvents.md&amp;value=---%0Auid%3A%20GW2Scratch.EVTCAnalytics.Processing.LogProcessor.IgnoreUnknownEvents%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gw2scratch/evtc/blob/master/EVTCAnalytics/Processing/LogProcessor.cs/#L51">View Source</a>
+    <a href="https://github.com/gw2scratch/evtc/blob/master/EVTCAnalytics/Processing/LogProcessor.cs/#L50">View Source</a>
   </span>
   <a id="GW2Scratch_EVTCAnalytics_Processing_LogProcessor_IgnoreUnknownEvents_" data-uid="GW2Scratch.EVTCAnalytics.Processing.LogProcessor.IgnoreUnknownEvents*"></a>
   <h4 id="GW2Scratch_EVTCAnalytics_Processing_LogProcessor_IgnoreUnknownEvents" data-uid="GW2Scratch.EVTCAnalytics.Processing.LogProcessor.IgnoreUnknownEvents">IgnoreUnknownEvents</h4>
@@ -187,11 +187,12 @@ or it could be used to override the default logic.</p>
     <a href="https://github.com/gw2scratch/evtc/new/master/apiSpec/new?filename=GW2Scratch_EVTCAnalytics_Processing_LogProcessor_ProcessLog_GW2Scratch_EVTCAnalytics_Parsed_ParsedLog_.md&amp;value=---%0Auid%3A%20GW2Scratch.EVTCAnalytics.Processing.LogProcessor.ProcessLog(GW2Scratch.EVTCAnalytics.Parsed.ParsedLog)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gw2scratch/evtc/blob/master/EVTCAnalytics/Processing/LogProcessor.cs/#L53">View Source</a>
+    <a href="https://github.com/gw2scratch/evtc/blob/master/EVTCAnalytics/Processing/LogProcessor.cs/#L62">View Source</a>
   </span>
   <a id="GW2Scratch_EVTCAnalytics_Processing_LogProcessor_ProcessLog_" data-uid="GW2Scratch.EVTCAnalytics.Processing.LogProcessor.ProcessLog*"></a>
   <h4 id="GW2Scratch_EVTCAnalytics_Processing_LogProcessor_ProcessLog_GW2Scratch_EVTCAnalytics_Parsed_ParsedLog_" data-uid="GW2Scratch.EVTCAnalytics.Processing.LogProcessor.ProcessLog(GW2Scratch.EVTCAnalytics.Parsed.ParsedLog)">ProcessLog(ParsedLog)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Turn raw log data into easy-to-use objects.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -229,6 +230,121 @@ or it could be used to override the default logic.</p>
       </tr>
     </tbody>
   </table>
+  <h5 id="GW2Scratch_EVTCAnalytics_Processing_LogProcessor_ProcessLog_GW2Scratch_EVTCAnalytics_Parsed_ParsedLog__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>This method is less efficient than using <a class="xref" href="GW2Scratch.EVTCAnalytics.Processing.LogProcessor.html#GW2Scratch_EVTCAnalytics_Processing_LogProcessor_ProcessLog_System_String_GW2Scratch_EVTCAnalytics_EVTCParser_">ProcessLog(String, EVTCParser)</a>
+and <a class="xref" href="GW2Scratch.EVTCAnalytics.Processing.LogProcessor.html#GW2Scratch_EVTCAnalytics_Processing_LogProcessor_ProcessLog_System_Byte___GW2Scratch_EVTCAnalytics_EVTCParser_">ProcessLog(Byte[], EVTCParser)</a> if you do not use the <a class="xref" href="GW2Scratch.EVTCAnalytics.Parsed.ParsedLog.html">ParsedLog</a>
+in any other way.</p>
+</div>
+  <h5 id="GW2Scratch_EVTCAnalytics_Processing_LogProcessor_ProcessLog_GW2Scratch_EVTCAnalytics_Parsed_ParsedLog__seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="GW2Scratch.EVTCAnalytics.Processing.LogProcessor.html#GW2Scratch_EVTCAnalytics_Processing_LogProcessor_ProcessLog_System_String_GW2Scratch_EVTCAnalytics_EVTCParser_">ProcessLog(String, EVTCParser)</a></div>
+      <div><a class="xref" href="GW2Scratch.EVTCAnalytics.Processing.LogProcessor.html#GW2Scratch_EVTCAnalytics_Processing_LogProcessor_ProcessLog_System_Byte___GW2Scratch_EVTCAnalytics_EVTCParser_">ProcessLog(Byte[], EVTCParser)</a></div>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/gw2scratch/evtc/new/master/apiSpec/new?filename=GW2Scratch_EVTCAnalytics_Processing_LogProcessor_ProcessLog_System_Byte___GW2Scratch_EVTCAnalytics_EVTCParser_.md&amp;value=---%0Auid%3A%20GW2Scratch.EVTCAnalytics.Processing.LogProcessor.ProcessLog(System.Byte%5B%5D%2CGW2Scratch.EVTCAnalytics.EVTCParser)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/gw2scratch/evtc/blob/master/EVTCAnalytics/Processing/LogProcessor.cs/#L113">View Source</a>
+  </span>
+  <a id="GW2Scratch_EVTCAnalytics_Processing_LogProcessor_ProcessLog_" data-uid="GW2Scratch.EVTCAnalytics.Processing.LogProcessor.ProcessLog*"></a>
+  <h4 id="GW2Scratch_EVTCAnalytics_Processing_LogProcessor_ProcessLog_System_Byte___GW2Scratch_EVTCAnalytics_EVTCParser_" data-uid="GW2Scratch.EVTCAnalytics.Processing.LogProcessor.ProcessLog(System.Byte[],GW2Scratch.EVTCAnalytics.EVTCParser)">ProcessLog(Byte[], EVTCParser)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Log ProcessLog(byte[] bytes, EVTCParser parser)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.byte">Byte</a>[]</td>
+        <td><span class="parametername">bytes</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="GW2Scratch.EVTCAnalytics.EVTCParser.html">EVTCParser</a></td>
+        <td><span class="parametername">parser</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="GW2Scratch.EVTCAnalytics.Model.Log.html">Log</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/gw2scratch/evtc/new/master/apiSpec/new?filename=GW2Scratch_EVTCAnalytics_Processing_LogProcessor_ProcessLog_System_String_GW2Scratch_EVTCAnalytics_EVTCParser_.md&amp;value=---%0Auid%3A%20GW2Scratch.EVTCAnalytics.Processing.LogProcessor.ProcessLog(System.String%2CGW2Scratch.EVTCAnalytics.EVTCParser)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/gw2scratch/evtc/blob/master/EVTCAnalytics/Processing/LogProcessor.cs/#L108">View Source</a>
+  </span>
+  <a id="GW2Scratch_EVTCAnalytics_Processing_LogProcessor_ProcessLog_" data-uid="GW2Scratch.EVTCAnalytics.Processing.LogProcessor.ProcessLog*"></a>
+  <h4 id="GW2Scratch_EVTCAnalytics_Processing_LogProcessor_ProcessLog_System_String_GW2Scratch_EVTCAnalytics_EVTCParser_" data-uid="GW2Scratch.EVTCAnalytics.Processing.LogProcessor.ProcessLog(System.String,GW2Scratch.EVTCAnalytics.EVTCParser)">ProcessLog(String, EVTCParser)</h4>
+  <div class="markdown level1 summary"><p>Turn raw log data into easy-to-use objects. This overload is more efficient if you do not need a <a class="xref" href="GW2Scratch.EVTCAnalytics.Parsed.ParsedLog.html">ParsedLog</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Log ProcessLog(string evtcFilename, EVTCParser parser)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">evtcFilename</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="GW2Scratch.EVTCAnalytics.EVTCParser.html">EVTCParser</a></td>
+        <td><span class="parametername">parser</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="GW2Scratch.EVTCAnalytics.Model.Log.html">Log</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
 </article>
           </div>
           
@@ -240,7 +356,7 @@ or it could be used to override the default logic.</p>
                     <a href="https://github.com/gw2scratch/evtc/new/master/apiSpec/new?filename=GW2Scratch_EVTCAnalytics_Processing_LogProcessor.md&amp;value=---%0Auid%3A%20GW2Scratch.EVTCAnalytics.Processing.LogProcessor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/gw2scratch/evtc/blob/master/EVTCAnalytics/Processing/LogProcessor.cs/#L23" class="contribution-link">View Source</a>
+                    <a href="https://github.com/gw2scratch/evtc/blob/master/EVTCAnalytics/Processing/LogProcessor.cs/#L22" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>
