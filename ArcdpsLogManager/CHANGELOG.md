@@ -4,6 +4,9 @@ This is the full changelog of the arcdps Log Manager.
 
 ## Log Manager v1.3.0
 
+#### New features
+- Added a dialog to compress all uncompressed logs (Data → Compress logs) (thanks, @DBPhoenix!)
+
 ## Changes
 - Significantly reduced time spent loading the cache and searching for logs (big thanks to @Denrage!, issue #135)
 
