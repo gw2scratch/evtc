@@ -54,14 +54,14 @@ namespace GW2Scratch.ArcdpsLogManager.GameData
 				EliteSpecialization.Firebrand => "Firebrand",
 				EliteSpecialization.Renegade => "Renegade",
 				EliteSpecialization.Willbender => "Willbender",
-				EliteSpecialization.EoDWarrior => "Warrior (EoD)", // TODO: Update when announced
-				EliteSpecialization.EoDEngineer => "Engineer (EoD)", // TODO: Update when announced
-				EliteSpecialization.EoDRanger => "Ranger (EoD)", // TODO: Update when announced
-				EliteSpecialization.EoDThief => "Thief (EoD)", // TODO: Update when announced
-				EliteSpecialization.EoDElementalist => "Elementalist (EoD)", // TODO: Update when announced
+				EliteSpecialization.Bladesworn => "Bladesworn",
+				EliteSpecialization.Mechanist => "Mechanist",
+				EliteSpecialization.Untamed => "Untamed",
+				EliteSpecialization.Specter => "Specter",
+				EliteSpecialization.Catalyst => "Catalyst",
 				EliteSpecialization.Virtuoso => "Virtuoso",
 				EliteSpecialization.Harbinger => "Harbinger",
-				EliteSpecialization.EoDRevenant => "Revenant (EoD)", // TODO: Update when announced
+				EliteSpecialization.Vindicator => "Vindicator",
 				_ => throw new ArgumentOutOfRangeException(nameof(specialization), specialization, null)
 			};
 		}

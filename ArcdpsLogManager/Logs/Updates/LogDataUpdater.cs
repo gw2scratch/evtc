@@ -62,6 +62,18 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Updates
 			                     && log.GameBuild >= 118697
 			                     && (log.Players?.Any(x => x.EliteSpecialization == EliteSpecialization.None) ?? false),
 				"Add support for Virtuoso, Harbinger and Willbender."),
+			new LogUpdate(log => log.ParsingVersion < new Version(1, 3, 0, 1)
+			                     && log.GameBuild >= 119939
+			                     && (log.Players?.Any(x =>
+				                     x.Profession is Profession.Warrior or Profession.Revenant or Profession.Elementalist
+				                     && x.EliteSpecialization == EliteSpecialization.None) ?? false),
+				"Add support for Bladesworn, Vindicator, and Catalyst."),
+			new LogUpdate(log => log.ParsingVersion < new Version(1, 3, 0, 1)
+			                     && log.GameBuild >= 121168
+			                     && (log.Players?.Any(x =>
+				                     x.Profession is Profession.Thief or Profession.Engineer or Profession.Ranger
+				                     && x.EliteSpecialization == EliteSpecialization.None) ?? false),
+				"Add support for Specter, Mechanist, and Untamed."),
 			// When adding a new update, you need to increase the revision (last value) of the version in the .csproj file
 			// unless the version changes more significantly, in that case it can be reset to 0.
 		};

@@ -189,12 +189,12 @@ namespace GW2Scratch.ArcdpsLogManager
 				EliteSpecialization.Chronomancer => TinyIconChronomancer.Value,
 				EliteSpecialization.Mirage => TinyIconMirage.Value,
 				EliteSpecialization.Virtuoso => TinyIconVirtuoso.Value,
-				EliteSpecialization.EoDWarrior => TinyIconUnknownProfession.Value, // TODO: Add when announced
-				EliteSpecialization.EoDEngineer => TinyIconUnknownProfession.Value, // TODO: Add when announced
-				EliteSpecialization.EoDRanger => TinyIconUnknownProfession.Value, // TODO: Add when announced
-				EliteSpecialization.EoDThief => TinyIconUnknownProfession.Value, // TODO: Add when announced
-				EliteSpecialization.EoDElementalist => TinyIconUnknownProfession.Value, // TODO: Add when announced
-				EliteSpecialization.EoDRevenant => TinyIconUnknownProfession.Value, // TODO: Add when announced
+				EliteSpecialization.Bladesworn => TinyIconUnknownProfession.Value, // TODO: Add when available
+				EliteSpecialization.Mechanist => TinyIconUnknownProfession.Value, // TODO: Add when available
+				EliteSpecialization.Untamed => TinyIconUnknownProfession.Value, // TODO: Add when available
+				EliteSpecialization.Specter => TinyIconUnknownProfession.Value, // TODO: Add when available
+				EliteSpecialization.Catalyst => TinyIconUnknownProfession.Value, // TODO: Add when available
+				EliteSpecialization.Vindicator => TinyIconUnknownProfession.Value, // TODO: Add when available
 				_ => throw new ArgumentOutOfRangeException(nameof(specialization)),
 			};
 		}

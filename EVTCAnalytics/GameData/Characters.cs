@@ -54,14 +54,14 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 			new Dictionary<Profession, EliteSpecialization>
 			{
 				{Profession.Guardian, EliteSpecialization.Willbender},
-				{Profession.Warrior, EliteSpecialization.EoDWarrior},
-				{Profession.Engineer, EliteSpecialization.EoDEngineer},
-				{Profession.Ranger, EliteSpecialization.EoDRanger},
-				{Profession.Thief, EliteSpecialization.EoDThief},
-				{Profession.Elementalist, EliteSpecialization.EoDElementalist},
+				{Profession.Warrior, EliteSpecialization.Bladesworn},
+				{Profession.Engineer, EliteSpecialization.Mechanist},
+				{Profession.Ranger, EliteSpecialization.Untamed},
+				{Profession.Thief, EliteSpecialization.Specter},
+				{Profession.Elementalist, EliteSpecialization.Catalyst},
 				{Profession.Mesmer, EliteSpecialization.Virtuoso},
 				{Profession.Necromancer, EliteSpecialization.Harbinger},
-				{Profession.Revenant, EliteSpecialization.EoDRevenant}
+				{Profession.Revenant, EliteSpecialization.Vindicator}
 			};
 
 		/// <summary>
@@ -91,6 +91,12 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 				{64, EliteSpecialization.Harbinger},
 				{65, EliteSpecialization.Willbender},
 				{66, EliteSpecialization.Virtuoso},
+				{67, EliteSpecialization.Catalyst},
+				{68, EliteSpecialization.Bladesworn},
+				{69, EliteSpecialization.Vindicator},
+				{70, EliteSpecialization.Mechanist},
+				{71, EliteSpecialization.Specter},
+				{72, EliteSpecialization.Untamed},
 			};
 
 		/// <summary>
