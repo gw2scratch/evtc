@@ -142,10 +142,13 @@ namespace GW2Scratch.ArcdpsLogManager
 		public static Image GetMAMAIcon() => GetEncounterImage("Mini_MAMA");
 		public static Image GetSiaxTheCorruptedIcon() => GetEncounterImage("Mini_Toxic_Warlock");
 		public static Image GetEnsolyssOfTheEndlessTormentIcon() => GetEncounterImage("Mini_Ensolyss");
-		public static Image GetSkorvaldIcon() => GetEncounterImage("Endless_Fury_Combat_Tonic");
-		public static Image GetArtsariivIcon() => GetEncounterImage("Unstable_Fractal_Essence");
-		public static Image GetArkkIcon() => GetEncounterImage("Endless_Chaos_Combat_Tonic");
-		public static Image GetAiKeeperOfThePeakIcon() => GetEncounterImage("Endless_Inner_Demon_Combat_Tonic");
+		public static Image GetSkorvaldIcon() => GetEncounterImage("Skorvald");
+		public static Image GetArtsariivIcon() => GetEncounterImage("Artsariiv");
+		public static Image GetArkkIcon() => GetEncounterImage("Arkk");
+		public static Image GetAiKeeperOfThePeakIcon() => GetEncounterImage("Both_Phases_Ai"); // might be unused
+		public static Image GetElementalAiKeeperOfThePeakIcon() => GetEncounterImage("Elemental_Ai");
+		public static Image GetDarkAiKeeperOfThePeakIcon() => GetEncounterImage("Dark_Ai");
+		public static Image GetBothPhasesAiKeeperOfThePeakIcon() => GetEncounterImage("Both_Phases_Ai");
 		// FESTIVALS
 		public static Image GetFreezieIcon() => GetEncounterImage("Mini_Freezie");
 		// TRAINING AREA
