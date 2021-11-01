@@ -30,7 +30,6 @@ using Gw2Sharp;
 
 namespace GW2Scratch.ArcdpsLogManager
 {
-
 	public sealed class ManagerForm : Form
 	{
 		private static readonly TimeSpan LogCacheAutoSavePeriod = TimeSpan.FromSeconds(60);
@@ -452,7 +451,8 @@ namespace GW2Scratch.ArcdpsLogManager
 			// Main log list
 			var logList = new LogList(LogCache, ApiData, LogDataProcessor, UploadProcessor, ImageProvider, LogNameProvider);
 			LogCollectionsInitialized += (sender, args) => logList.DataStore = logsFiltered;
-
+			FilteredLogsUpdated += (sender, args) => logList.RefreshSelectionForDetailPanels();
+	
 			LogDataProcessor.Processed += (sender, args) =>
 			{
 				bool last = args.CurrentScheduledItems == 0;
@@ -462,6 +462,7 @@ namespace GW2Scratch.ArcdpsLogManager
 					Application.Instance.AsyncInvoke(() => { logList.ReloadData(); });
 				}
 			};
+	
 			// Player list
 			var playerList = new PlayerList(LogCache, ApiData, LogDataProcessor, UploadProcessor, ImageProvider, LogNameProvider);
 			FilteredLogsUpdated += (sender, args) => playerList.UpdateDataFromLogs(logsFiltered);

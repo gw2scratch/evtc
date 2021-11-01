@@ -8,9 +8,12 @@ This is the full changelog of the arcdps Log Manager.
 - Added a dialog to compress all uncompressed logs (Data → Compress logs) (thanks, @DBPhoenix!)
 - Added support for Bladesworn, Vindicator, Catalyst, Specter, Mechanist, and Untamed.
 
-## Changes
+#### Changes
 - Significantly reduced time spent loading the cache and searching for logs (big thanks to @Denrage!, issue #135)
 - Significantly improved log processing performance
+
+#### Fixes
+- Fixed log detail panel showing previously selected log after changing filters
 
 ## Log Manager v1.2.1
 

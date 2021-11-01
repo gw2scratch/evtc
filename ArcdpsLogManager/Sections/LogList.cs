@@ -22,7 +22,10 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 		private readonly UploadProcessor uploadProcessor;
 		private readonly ImageProvider imageProvider;
 		private readonly ILogNameProvider nameProvider;
+
 		private readonly GridView<LogData> logGridView;
+		private readonly LogDetailPanel logDetailPanel;
+		private readonly MultipleLogPanel multipleLogPanel;
 
 		private const int PlayerIconSize = 20;
 		private const int PlayerIconSpacing = 5;
@@ -32,8 +35,8 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 
 		private static readonly Dictionary<string, string> Abbreviations = new Dictionary<string, string>
 		{
-			{"★", "Favorite"},
-			{"CM", "Challenge Mode"}
+			{ "★", "Favorite" },
+			{ "CM", "Challenge Mode" }
 		};
 
 		public FilterCollection<LogData> DataStore
@@ -47,8 +50,8 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			}
 		}
 
-		public LogList(LogCache logCache, ApiData apiData, LogDataProcessor logProcessor, UploadProcessor uploadProcessor,
-			ImageProvider imageProvider, ILogNameProvider nameProvider)
+		public LogList(LogCache logCache, ApiData apiData, LogDataProcessor logProcessor,
+			UploadProcessor uploadProcessor, ImageProvider imageProvider, ILogNameProvider nameProvider)
 		{
 			this.logCache = logCache;
 			this.apiData = apiData;
@@ -57,8 +60,8 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			this.imageProvider = imageProvider;
 			this.nameProvider = nameProvider;
 
-			var logDetailPanel = ConstructLogDetailPanel();
-			var multipleLogPanel = ConstructMultipleLogPanel();
+			logDetailPanel = ConstructLogDetailPanel();
+			multipleLogPanel = ConstructMultipleLogPanel();
 			logGridView = ConstructLogGridView(logDetailPanel, multipleLogPanel);
 
 			var logLayout = new DynamicLayout();
@@ -99,10 +102,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 
 		private GridView<LogData> ConstructLogGridView(LogDetailPanel detailPanel, MultipleLogPanel multipleLogPanel)
 		{
-			var gridView = new GridView<LogData>
-			{
-				AllowMultipleSelection = true
-			};
+			var gridView = new GridView<LogData> { AllowMultipleSelection = true };
 
 			var favoritesColumn = new GridColumn()
 			{
@@ -139,7 +139,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 						{
 							return "Processing...";
 						}
-						
+
 						return nameProvider.GetName(x);
 					})
 				}
@@ -230,7 +230,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 							// We don't want to make this wider than actual times.
 							return "?";
 						}
-						
+
 						var seconds = x.EncounterDuration.TotalSeconds;
 						return $"{(int) seconds / 60:0}m {seconds % 60:00.0}s";
 					})
@@ -254,9 +254,11 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 				if (!(args.Item is LogData log)) return;
 				if (log.ParsingStatus != ParsingStatus.Parsed) return;
 
-
-				var players = log.Players.OrderBy(player => player.Profession)
-					.ThenBy(player => player.EliteSpecialization).ToArray();
+				var players = log.Players
+					.OrderBy(player => player.Profession)
+					.ThenBy(player => player.EliteSpecialization)
+					.ToArray();
+				
 				var origin = args.ClipRectangle.Location;
 				for (int i = 0; i < players.Length; i++)
 				{
@@ -320,17 +322,14 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 
 			gridView.SelectionChanged += (sender, args) =>
 			{
-				detailPanel.LogData = gridView.SelectedItem;
-				multipleLogPanel.LogData = gridView.SelectedItems;
+				RefreshSelectionForDetailPanels();
 			};
 
 			gridView.ContextMenu = ConstructLogGridViewContextMenu(gridView);
 
 			sorter = new GridViewSorter<LogData>(gridView, new Dictionary<GridColumn, Comparison<LogData>>
 			{
-				{
-					favoritesColumn, (x, y) => x.IsFavorite.CompareTo(y.IsFavorite)
-				},
+				{ favoritesColumn, (x, y) => x.IsFavorite.CompareTo(y.IsFavorite) },
 				{
 					compositionColumn, (x, y) =>
 					{
@@ -339,16 +338,13 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 						return xPlayerCount.CompareTo(yPlayerCount);
 					}
 				},
-				{
-					durationColumn, (x, y) => x.EncounterDuration.CompareTo(y.EncounterDuration)
-				},
-				{
-					dateColumn, (x, y) => x.EncounterStartTime.CompareTo(y.EncounterStartTime)
-				},
+				{ durationColumn, (x, y) => x.EncounterDuration.CompareTo(y.EncounterDuration) },
+				{ dateColumn, (x, y) => x.EncounterStartTime.CompareTo(y.EncounterStartTime) },
 				{
 					resultColumn, (x, y) =>
 					{
-						if (x.EncounterResult == EncounterResult.Failure && y.EncounterResult == EncounterResult.Failure)
+						if (x.EncounterResult == EncounterResult.Failure &&
+						    y.EncounterResult == EncounterResult.Failure)
 						{
 							float xHealth = x.HealthPercentage ?? -1.0f;
 							float yHealth = y.HealthPercentage ?? -1.0f;
@@ -364,6 +360,12 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			sorter.SortByDescending(dateColumn);
 
 			return gridView;
+		}
+
+		public void RefreshSelectionForDetailPanels()
+		{
+			logDetailPanel.LogData = logGridView.SelectedItem;
+			multipleLogPanel.LogData = logGridView.SelectedItems;
 		}
 
 		private ContextMenu ConstructLogGridViewContextMenu(GridView<LogData> gridView)
@@ -387,11 +389,13 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 					bool shown = menuItem.Checked;
 					if (!shown)
 					{
-						Settings.HiddenLogListColumns = Settings.HiddenLogListColumns.Append(column.HeaderText).Distinct().ToList();
+						Settings.HiddenLogListColumns =
+							Settings.HiddenLogListColumns.Append(column.HeaderText).Distinct().ToList();
 					}
 					else
 					{
-						Settings.HiddenLogListColumns = Settings.HiddenLogListColumns.Where(x => x != column.HeaderText).ToList();
+						Settings.HiddenLogListColumns =
+							Settings.HiddenLogListColumns.Where(x => x != column.HeaderText).ToList();
 					}
 				};
 				Settings.HiddenLogListColumnsChanged += (sender, args) =>
