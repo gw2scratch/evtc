@@ -364,8 +364,20 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 
 		public void RefreshSelectionForDetailPanels()
 		{
-			logDetailPanel.LogData = logGridView.SelectedItem;
-			multipleLogPanel.LogData = logGridView.SelectedItems;
+			try
+			{
+				logDetailPanel.LogData = logGridView.SelectedItem;
+				multipleLogPanel.LogData = logGridView.SelectedItems;
+			}
+			catch
+			{
+				// The gridview implementations on some platforms result in exceptions being thrown
+				// in case rows that were selected no longer exist. Instead of trying to divine
+				// all possible causes of these exceptions, we just catch them all.
+				
+				logDetailPanel.LogData = null;
+				multipleLogPanel.LogData = null;
+			}
 		}
 
 		private ContextMenu ConstructLogGridViewContextMenu(GridView<LogData> gridView)
