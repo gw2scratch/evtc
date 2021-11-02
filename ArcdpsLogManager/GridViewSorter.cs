@@ -59,24 +59,31 @@ namespace GW2Scratch.ArcdpsLogManager
 
 		private void SortBy(GridColumn column, bool ascending)
 		{
+			if (sortColumn != null)
+			{
+				sortColumn.Style = "sort-hidden";
+			}
+
 			sortColumn = column;
 			sortedAscending = ascending;
+			
+			sortColumn.Style = sortedAscending ? "sort-ascending" : "sort-descending";
 			ApplySort();
 		}
 
 		private void ClickColumn(GridColumn column)
 		{
+			bool ascending;
 			if (sortColumn == column)
 			{
-				sortedAscending = !sortedAscending;
+				ascending = !sortedAscending;
 			}
 			else
 			{
-				sortedAscending = true;
-				sortColumn = column;
+				ascending = true;
 			}
-
-			ApplySort();
+			
+			SortBy(column, ascending);
 		}
 
 		private void ApplySort()
