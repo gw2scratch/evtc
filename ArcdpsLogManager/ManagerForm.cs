@@ -279,28 +279,39 @@ namespace GW2Scratch.ArcdpsLogManager
 
 		private DynamicLayout ConstructStatusPanel()
 		{
+			// Log count label
+			var logCountLabel = new Label();
+			LogSearchStarted += (sender, args) => logCountLabel.Text = "Finding logs...";
+			LogSearchFinished += (sender, args) => logCountLabel.Text = $"{logs.Count} logs found.";
+			FilteredLogsUpdated += (sender, args) =>
+			{
+				int fullCount = logs.Count;
+				int filteredCount = logsFiltered.Count;
+				if (filteredCount != fullCount)
+				{
+					logCountLabel.Text = $"{fullCount} logs found, {filteredCount} displayed.";
+				} else {
+					logCountLabel.Text = $"{fullCount} logs found.";
+				}
+			};
+			
 			// Processing label
 			var processingLabel = new Label();
 
-			void UpdatingProcessingLabel(object sender, BackgroundProcessorEventArgs args)
+			void UpdateProcessingLabel(object sender, BackgroundProcessorEventArgs args)
 			{
 				Application.Instance.AsyncInvoke(() =>
 				{
 					bool finished = args.CurrentScheduledItems == 0;
-					int logCount = logs.Count;
-					// The log count check is to prevent a log count of 0 being shown when logs are being loaded and
-					// log processing catches up with searching for logs.
-					processingLabel.Text = finished && logCount > 0
-						? $"{logCount} logs found."
-						: $"Processing logs {args.TotalProcessedItems}/{args.TotalScheduledItems}...";
+					processingLabel.Text = finished
+						? ""
+						: $"Processing logs: {args.TotalProcessedItems}/{args.TotalScheduledItems}";
 				});
 			}
 
-			LogDataProcessor.Processed += UpdatingProcessingLabel;
-			LogDataProcessor.Scheduled += UpdatingProcessingLabel;
-			LogDataProcessor.Unscheduled += UpdatingProcessingLabel;
-			LogSearchStarted += (sender, args) => processingLabel.Text = "Finding logs...";
-			LogSearchFinished += (sender, args) => processingLabel.Text = $"{logs.Count} logs found.";
+			LogDataProcessor.Processed += UpdateProcessingLabel;
+			LogDataProcessor.Scheduled += UpdateProcessingLabel;
+			LogDataProcessor.Unscheduled += UpdateProcessingLabel;
 
 			// Upload state label
 			var uploadLabel = new Label();
@@ -312,7 +323,7 @@ namespace GW2Scratch.ArcdpsLogManager
 					bool finished = args.CurrentScheduledItems == 0;
 					uploadLabel.Text = finished
 						? ""
-						: $"Uploading {args.TotalProcessedItems}/{args.TotalScheduledItems}...";
+						: $"Uploading: {args.TotalProcessedItems}/{args.TotalScheduledItems}";
 				});
 			}
 
@@ -328,7 +339,7 @@ namespace GW2Scratch.ArcdpsLogManager
 				Application.Instance.AsyncInvoke(() =>
 				{
 					bool finished = args.CurrentScheduledItems == 0;
-					apiLabel.Text = finished ? "" : $"Downloading guild data {args.TotalProcessedItems}/{args.TotalScheduledItems}...";
+					apiLabel.Text = finished ? "" : $"Downloading guild data: {args.TotalProcessedItems}/{args.TotalScheduledItems}";
 				});
 			}
 
@@ -340,6 +351,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			var layout = new DynamicLayout();
 			layout.BeginHorizontal();
 			{
+				layout.Add(logCountLabel, xscale: true);
 				layout.Add(processingLabel, xscale: true);
 				layout.Add(uploadLabel, xscale: true);
 				layout.Add(apiLabel, xscale: true);

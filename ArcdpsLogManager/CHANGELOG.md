@@ -11,6 +11,7 @@ This is the full changelog of the arcdps Log Manager.
 #### Changes
 - Significantly reduced time spent loading the cache and searching for logs (big thanks to @Denrage!, issue #135)
 - Significantly improved log processing performance
+- The status panel at the bottom now shows filtered log counts and log processing is shown separately.
 - Columns of the log list now show sort directions (only on Windows)
 
 #### Fixes
