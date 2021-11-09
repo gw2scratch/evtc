@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <RootNamespace>GW2Scratch.EVTCAnalytics.Tests</RootNamespace>
     <AssemblyName>GW2Scratch.EVTCAnalytics.Tests</AssemblyName>
     <LangVersion>latest</LangVersion>
