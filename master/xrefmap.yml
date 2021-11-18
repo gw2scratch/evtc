@@ -2062,6 +2062,12 @@ references:
   commentId: F:GW2Scratch.EVTCAnalytics.GameData.Encounters.Encounter.MediumKittyGolem
   fullName: GW2Scratch.EVTCAnalytics.GameData.Encounters.Encounter.MediumKittyGolem
   nameWithType: Encounter.MediumKittyGolem
+- uid: GW2Scratch.EVTCAnalytics.GameData.Encounters.Encounter.Mordremoth
+  name: Mordremoth
+  href: api/GW2Scratch.EVTCAnalytics.GameData.Encounters.Encounter.html#GW2Scratch_EVTCAnalytics_GameData_Encounters_Encounter_Mordremoth
+  commentId: F:GW2Scratch.EVTCAnalytics.GameData.Encounters.Encounter.Mordremoth
+  fullName: GW2Scratch.EVTCAnalytics.GameData.Encounters.Encounter.Mordremoth
+  nameWithType: Encounter.Mordremoth
 - uid: GW2Scratch.EVTCAnalytics.GameData.Encounters.Encounter.MursaatOverseer
   name: MursaatOverseer
   href: api/GW2Scratch.EVTCAnalytics.GameData.Encounters.Encounter.html#GW2Scratch_EVTCAnalytics_GameData_Encounters_Encounter_MursaatOverseer
@@ -3028,6 +3034,12 @@ references:
   commentId: F:GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.HauntingStatue
   fullName: GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.HauntingStatue
   nameWithType: SpeciesIds.HauntingStatue
+- uid: GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.HeartsAndMindsMordremoth
+  name: HeartsAndMindsMordremoth
+  href: api/GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.html#GW2Scratch_EVTCAnalytics_GameData_SpeciesIds_HeartsAndMindsMordremoth
+  commentId: F:GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.HeartsAndMindsMordremoth
+  fullName: GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.HeartsAndMindsMordremoth
+  nameWithType: SpeciesIds.HeartsAndMindsMordremoth
 - uid: GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.IcebroodConstruct
   name: IcebroodConstruct
   href: api/GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.html#GW2Scratch_EVTCAnalytics_GameData_SpeciesIds_IcebroodConstruct
