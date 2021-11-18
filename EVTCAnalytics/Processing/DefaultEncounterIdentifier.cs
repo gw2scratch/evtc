@@ -464,6 +464,13 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 
 					return builder.Build();
 				}
+				case Encounter.Mordremoth:
+				{
+					return GetDefaultBuilder(encounter, mainTarget)
+						.WithResult(new AgentBuffGainedDeterminer(mainTarget, SkillIds.Determined895))
+						.WithModes(new AgentHealthModeDeterminer(mainTarget, 9569560))
+						.Build();
+				}
 				default:
 					return GetDefaultBuilder(encounter, mainTarget, mergeMainTarget: false).Build();
 			}
@@ -638,6 +645,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						return Encounter.WhisperOfJormag;
 					case SpeciesIds.VariniaStormsounder:
 						return Encounter.VariniaStormsounder;
+					case SpeciesIds.HeartsAndMindsMordremoth:
+						return Encounter.Mordremoth;
 				}
 			}
 			else if (mainTarget is Gadget gadgetBoss)

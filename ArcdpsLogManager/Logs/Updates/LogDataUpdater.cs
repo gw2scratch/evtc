@@ -74,6 +74,9 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Updates
 				                     x.Profession is Profession.Thief or Profession.Engineer or Profession.Ranger
 				                     && x.EliteSpecialization == EliteSpecialization.None) ?? false),
 				"Add support for Specter, Mechanist, and Untamed."),
+			new LogUpdate(log => log.ParsingVersion < new Version(1, 3, 0, 2)
+			                     && log.Encounter == Encounter.Other,
+				"Add support for the Mordremoth fight."),
 			// When adding a new update, you need to increase the revision (last value) of the version in the .csproj file
 			// unless the version changes more significantly, in that case it can be reset to 0.
 		};

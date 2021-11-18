@@ -7,6 +7,7 @@ This is the full changelog of the arcdps Log Manager.
 #### New features
 - Added a dialog to compress all uncompressed logs (Data → Compress logs) (thanks, @DBPhoenix!)
 - Added support for Bladesworn, Vindicator, Catalyst, Specter, Mechanist, and Untamed.
+- Added support for logs of the Mordremoth fight (Hearts and Minds, may require adding id 15884 to custom logging).
 
 #### Changes
 - Significantly reduced time spent loading the cache and searching for logs (big thanks to @Denrage!, issue #135)

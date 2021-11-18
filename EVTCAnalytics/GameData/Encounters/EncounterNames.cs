@@ -60,6 +60,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 			{Encounter.Boneskinner, "Boneskinner"},
 			{Encounter.WhisperOfJormag, "Whisper of Jormag"},
 			{Encounter.VariniaStormsounder, "Varinia Stormsounder"},
+			{Encounter.Mordremoth, "Mordremoth"},
 		};
 
 		/// <summary>
