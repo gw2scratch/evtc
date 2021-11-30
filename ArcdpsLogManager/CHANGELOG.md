@@ -3,6 +3,7 @@
 This is the full changelog of the arcdps Log Manager.
 
 ## Log Manager v1.3.0
+This version of Log Manager requires [.NET 6](https://dotnet.microsoft.com/download/dotnet/6.0/runtime) to run.
 
 #### New features
 - Added a dialog to compress all uncompressed logs (Data → Compress logs) (thanks, @DBPhoenix!)
@@ -10,7 +11,8 @@ This is the full changelog of the arcdps Log Manager.
 - Added support for logs of the Mordremoth fight (Hearts and Minds, may require adding id 15884 to custom logging).
 
 #### Changes
-- Significantly reduced time spent loading the cache and searching for logs (big thanks to @Denrage!, issue #135)
+- The program now uses [.NET 6](https://dotnet.microsoft.com/download/dotnet/6.0/runtime); .NET Core 3.1 is no longer needed.
+- Significantly reduced time spent loading the cache and searching for logs (big thanks to @Denrage!)
 - Significantly improved log processing performance
 - The status panel at the bottom now shows filtered log counts and log processing is shown separately.
 - Columns of the log list now show sort directions (only on Windows)
