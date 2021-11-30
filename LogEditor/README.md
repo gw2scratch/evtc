@@ -1,7 +1,7 @@
 # Log Editor
 This is a simple command-line program for editing arcdps EVTC logs.
 
-Requires .NET Core 3.1 or newer.
+Requires .NET 6.
 
 ## Supported features
  - Anonymizing account and character names
