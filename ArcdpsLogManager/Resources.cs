@@ -145,7 +145,6 @@ namespace GW2Scratch.ArcdpsLogManager
 		public static Image GetSkorvaldIcon() => GetEncounterImage("Skorvald");
 		public static Image GetArtsariivIcon() => GetEncounterImage("Artsariiv");
 		public static Image GetArkkIcon() => GetEncounterImage("Arkk");
-		public static Image GetAiKeeperOfThePeakIcon() => GetEncounterImage("Both_Phases_Ai"); // might be unused
 		public static Image GetElementalAiKeeperOfThePeakIcon() => GetEncounterImage("Elemental_Ai");
 		public static Image GetDarkAiKeeperOfThePeakIcon() => GetEncounterImage("Dark_Ai");
 		public static Image GetBothPhasesAiKeeperOfThePeakIcon() => GetEncounterImage("Both_Phases_Ai");

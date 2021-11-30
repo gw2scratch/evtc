@@ -119,7 +119,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		private Lazy<Image> SkorvaldIcon { get; } = new Lazy<Image>(Resources.GetSkorvaldIcon);
 		private Lazy<Image> ArtsariivIcon { get; } = new Lazy<Image>(Resources.GetArtsariivIcon);
 		private Lazy<Image> ArkkIcon { get; } = new Lazy<Image>(Resources.GetArkkIcon);
-		private Lazy<Image> AiKeeperOfThePeakIcon { get; } = new Lazy<Image>(Resources.GetAiKeeperOfThePeakIcon); // this one might be unused
+		private Lazy<Image> AiKeeperOfThePeakIcon { get; } = new Lazy<Image>(Resources.GetBothPhasesAiKeeperOfThePeakIcon);
 		private Lazy<Image> ElementalAiKeeperOfThePeakIcon { get; } = new Lazy<Image>(Resources.GetElementalAiKeeperOfThePeakIcon);
 		private Lazy<Image> DarkAiKeeperOfThePeakIcon { get; } = new Lazy<Image>(Resources.GetDarkAiKeeperOfThePeakIcon);
 		private Lazy<Image> BothPhasesAiKeeperOfThePeakIcon { get; } = new Lazy<Image>(Resources.GetBothPhasesAiKeeperOfThePeakIcon);
