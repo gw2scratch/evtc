@@ -12,14 +12,10 @@ jobs:
     - uses: actions/checkout@v2
       with:
         submodules: true
-    - name: Setup .NET 5
+    - name: Setup .NET 6
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 5.0.x
-    - name: Setup .NET Core 3.1
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 3.1.x
+        dotnet-version: 6.0.x
     # This is a workaround for issue https://github.com/actions/virtual-environments/issues/1090,
     # which causes to nuget restores to fail
     - name: Clean NuGet cache
