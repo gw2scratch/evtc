@@ -14,6 +14,7 @@ This version of Log Manager requires [.NET 6](https://dotnet.microsoft.com/downl
 - The program now uses [.NET 6](https://dotnet.microsoft.com/download/dotnet/6.0/runtime); .NET Core 3.1 is no longer needed.
 - Significantly reduced time spent loading the cache and searching for logs (big thanks to @Denrage!)
 - Significantly improved log processing performance
+- The challenge mode column is now next to the encounter name column in the log list
 - The status panel at the bottom now shows filtered log counts and log processing is shown separately.
 - Columns of the log list now show sort directions (only on Windows)
 

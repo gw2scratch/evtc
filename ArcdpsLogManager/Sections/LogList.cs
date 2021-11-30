@@ -144,6 +144,28 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 					})
 				}
 			});
+			
+			gridView.Columns.Add(new GridColumn()
+			{
+				HeaderText = "CM",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<LogData, string>(x =>
+					{
+						switch (x.EncounterMode)
+						{
+							case EncounterMode.Challenge:
+								return "CM";
+							case EncounterMode.Normal:
+								return "";
+							case EncounterMode.Unknown:
+								return "?";
+							default:
+								throw new ArgumentOutOfRangeException();
+						}
+					})
+				}
+			});
 
 			var resultColumn = new GridColumn()
 			{
@@ -174,28 +196,6 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 				}
 			};
 			gridView.Columns.Add(resultColumn);
-
-			gridView.Columns.Add(new GridColumn()
-			{
-				HeaderText = "CM",
-				DataCell = new TextBoxCell
-				{
-					Binding = new DelegateBinding<LogData, string>(x =>
-					{
-						switch (x.EncounterMode)
-						{
-							case EncounterMode.Challenge:
-								return "CM";
-							case EncounterMode.Normal:
-								return "";
-							case EncounterMode.Unknown:
-								return "?";
-							default:
-								throw new ArgumentOutOfRangeException();
-						}
-					})
-				}
-			});
 
 			var dateColumn = new GridColumn()
 			{
