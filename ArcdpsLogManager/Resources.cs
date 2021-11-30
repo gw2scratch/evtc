@@ -39,17 +39,21 @@ namespace GW2Scratch.ArcdpsLogManager
 		// SPECIALIZATIONS
 		public static Image GetTinyIconBerserker() => GetImage("Tango/Berserker_tango_icon_20px.png");
 		public static Image GetTinyIconSpellbreaker() => GetImage("Tango/Spellbreaker_tango_icon_20px.png");
+		public static Image GetTinyIconBladesworn() => GetImage("Tango/Bladesworn_tango_icon_20px.png");
 		public static Image GetTinyIconDragonhunter() => GetImage("Tango/Dragonhunter_tango_icon_20px.png");
 		public static Image GetTinyIconFirebrand() => GetImage("Tango/Firebrand_tango_icon_20px.png");
 		public static Image GetTinyIconWillbender() => GetImage("Tango/Willbender_tango_icon_20px.png");
 		public static Image GetTinyIconHerald() => GetImage("Tango/Herald_tango_icon_20px.png");
 		public static Image GetTinyIconRenegade() => GetImage("Tango/Renegade_tango_icon_20px.png");
+		public static Image GetTinyIconVindicator() => GetImage("Tango/Vindicator_tango_icon_20px.png");
 		public static Image GetTinyIconDruid() => GetImage("Tango/Druid_tango_icon_20px.png");
 		public static Image GetTinyIconSoulbeast() => GetImage("Tango/Soulbeast_tango_icon_20px.png");
+		public static Image GetTinyIconUntamed() => GetImage("Tango/Untamed_tango_icon_20px.png");
 		public static Image GetTinyIconDaredevil() => GetImage("Tango/Daredevil_tango_icon_20px.png");
 		public static Image GetTinyIconDeadeye() => GetImage("Tango/Deadeye_tango_icon_20px.png");
 		public static Image GetTinyIconScrapper() => GetImage("Tango/Scrapper_tango_icon_20px.png");
 		public static Image GetTinyIconHolosmith() => GetImage("Tango/Holosmith_tango_icon_20px.png");
+		public static Image GetTinyIconMechanist() => GetImage("Tango/Mechanist_tango_icon_20px.png");
 		public static Image GetTinyIconReaper() => GetImage("Tango/Reaper_tango_icon_20px.png");
 		public static Image GetTinyIconScourge() => GetImage("Tango/Scourge_tango_icon_20px.png");
 		public static Image GetTinyIconHarbinger() => GetImage("Tango/Harbinger_tango_icon_20px.png");

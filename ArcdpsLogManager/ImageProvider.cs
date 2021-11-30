@@ -24,17 +24,21 @@ namespace GW2Scratch.ArcdpsLogManager
 		// SPECIALIZATIONS
 		private Lazy<Image> TinyIconBerserker { get; } = new Lazy<Image>(Resources.GetTinyIconBerserker);
 		private Lazy<Image> TinyIconSpellbreaker { get; } = new Lazy<Image>(Resources.GetTinyIconSpellbreaker);
+		private Lazy<Image> TinyIconBladesworn { get; } = new Lazy<Image>(Resources.GetTinyIconBladesworn);
 		private Lazy<Image> TinyIconDragonhunter { get; } = new Lazy<Image>(Resources.GetTinyIconDragonhunter);
 		private Lazy<Image> TinyIconWillbender { get; } = new Lazy<Image>(Resources.GetTinyIconWillbender);
 		private Lazy<Image> TinyIconFirebrand { get; } = new Lazy<Image>(Resources.GetTinyIconFirebrand);
 		private Lazy<Image> TinyIconHerald { get; } = new Lazy<Image>(Resources.GetTinyIconHerald);
 		private Lazy<Image> TinyIconRenegade { get; } = new Lazy<Image>(Resources.GetTinyIconRenegade);
+		private Lazy<Image> TinyIconVindicator { get; } = new Lazy<Image>(Resources.GetTinyIconVindicator);
 		private Lazy<Image> TinyIconDruid { get; } = new Lazy<Image>(Resources.GetTinyIconDruid);
 		private Lazy<Image> TinyIconSoulbeast { get; } = new Lazy<Image>(Resources.GetTinyIconSoulbeast);
+		private Lazy<Image> TinyIconUntamed { get; } = new Lazy<Image>(Resources.GetTinyIconUntamed);
 		private Lazy<Image> TinyIconDaredevil { get; } = new Lazy<Image>(Resources.GetTinyIconDaredevil);
 		private Lazy<Image> TinyIconDeadeye { get; } = new Lazy<Image>(Resources.GetTinyIconDeadeye);
 		private Lazy<Image> TinyIconScrapper { get; } = new Lazy<Image>(Resources.GetTinyIconScrapper);
 		private Lazy<Image> TinyIconHolosmith { get; } = new Lazy<Image>(Resources.GetTinyIconHolosmith);
+		private Lazy<Image> TinyIconMechanist { get; } = new Lazy<Image>(Resources.GetTinyIconMechanist);
 		private Lazy<Image> TinyIconReaper { get; } = new Lazy<Image>(Resources.GetTinyIconReaper);
 		private Lazy<Image> TinyIconScourge { get; } = new Lazy<Image>(Resources.GetTinyIconScourge);
 		private Lazy<Image> TinyIconHarbinger { get; } = new Lazy<Image>(Resources.GetTinyIconHarbinger);
@@ -170,17 +174,21 @@ namespace GW2Scratch.ArcdpsLogManager
 			{
 				EliteSpecialization.Berserker => TinyIconBerserker.Value,
 				EliteSpecialization.Spellbreaker => TinyIconSpellbreaker.Value,
+				EliteSpecialization.Bladesworn => TinyIconBladesworn.Value,
 				EliteSpecialization.Dragonhunter => TinyIconDragonhunter.Value,
 				EliteSpecialization.Firebrand => TinyIconFirebrand.Value,
 				EliteSpecialization.Willbender => TinyIconWillbender.Value,
 				EliteSpecialization.Herald => TinyIconHerald.Value,
 				EliteSpecialization.Renegade => TinyIconRenegade.Value,
+				EliteSpecialization.Vindicator => TinyIconVindicator.Value,
 				EliteSpecialization.Druid => TinyIconDruid.Value,
 				EliteSpecialization.Soulbeast => TinyIconSoulbeast.Value,
+				EliteSpecialization.Untamed => TinyIconUntamed.Value,
 				EliteSpecialization.Daredevil => TinyIconDaredevil.Value,
 				EliteSpecialization.Deadeye => TinyIconDeadeye.Value,
 				EliteSpecialization.Scrapper => TinyIconScrapper.Value,
 				EliteSpecialization.Holosmith => TinyIconHolosmith.Value,
+				EliteSpecialization.Mechanist => TinyIconMechanist.Value,
 				EliteSpecialization.Reaper => TinyIconReaper.Value,
 				EliteSpecialization.Scourge => TinyIconScourge.Value,
 				EliteSpecialization.Harbinger => TinyIconHarbinger.Value,
@@ -189,12 +197,8 @@ namespace GW2Scratch.ArcdpsLogManager
 				EliteSpecialization.Chronomancer => TinyIconChronomancer.Value,
 				EliteSpecialization.Mirage => TinyIconMirage.Value,
 				EliteSpecialization.Virtuoso => TinyIconVirtuoso.Value,
-				EliteSpecialization.Bladesworn => TinyIconUnknownProfession.Value, // TODO: Add when available
-				EliteSpecialization.Mechanist => TinyIconUnknownProfession.Value, // TODO: Add when available
-				EliteSpecialization.Untamed => TinyIconUnknownProfession.Value, // TODO: Add when available
 				EliteSpecialization.Specter => TinyIconUnknownProfession.Value, // TODO: Add when available
 				EliteSpecialization.Catalyst => TinyIconUnknownProfession.Value, // TODO: Add when available
-				EliteSpecialization.Vindicator => TinyIconUnknownProfession.Value, // TODO: Add when available
 				_ => throw new ArgumentOutOfRangeException(nameof(specialization)),
 			};
 		}
