@@ -51,6 +51,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			Encounter.MediumKittyGolem,
 			Encounter.LargeKittyGolem,
 			Encounter.MassiveKittyGolem,
+			Encounter.Mordremoth,
 		};
 
 		/// <summary>
