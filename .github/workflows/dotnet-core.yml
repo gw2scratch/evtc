@@ -26,21 +26,21 @@ jobs:
     - name: Test
       run: dotnet test --no-restore --verbosity normal
     - name: Package Log Manager (Windows, WPF)
-      run: dotnet publish ArcdpsLogManager.Wpf --configuration Release -r win-x64 --self-contained=false -p:PublishSingleFile=true -o artifacts/manager/win64/
+      run: dotnet publish ArcdpsLogManager.Wpf --configuration Release -r win-x64 --self-contained=false -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:IncludeAllContentForSelfExtract=true -o artifacts/manager/win64/
     - name: Package Log Manager (Windows, WPF, self-contained)
-      run: dotnet publish ArcdpsLogManager.Wpf --configuration Release -r win-x64 --self-contained=true -p:PublishSingleFile=true -o artifacts/manager/win64-sc/
+      run: dotnet publish ArcdpsLogManager.Wpf --configuration Release -r win-x64 --self-contained=true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:IncludeAllContentForSelfExtract=true -o artifacts/manager/win64-sc/
     - name: Package Log Manager (Linux, GTK)
-      run: dotnet publish ArcdpsLogManager.Gtk --configuration Release -r linux-x64 --self-contained=false -p:PublishSingleFile=true -o artifacts/manager/linux64/
+      run: dotnet publish ArcdpsLogManager.Gtk --configuration Release -r linux-x64 --self-contained=false -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:IncludeAllContentForSelfExtract=true -o artifacts/manager/linux64/
     - name: Package Log Manager (Linux, GTK, self-contained)
-      run: dotnet publish ArcdpsLogManager.Gtk --configuration Release -r linux-x64 --self-contained=true -p:PublishSingleFile=true -o artifacts/manager/linux64-sc/
+      run: dotnet publish ArcdpsLogManager.Gtk --configuration Release -r linux-x64 --self-contained=true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:IncludeAllContentForSelfExtract=true -o artifacts/manager/linux64-sc/
     - name: Package EVTC Inspector (Windows, WPF)
-      run: dotnet publish EVTCInspector.Wpf --configuration Release -r win-x64 --self-contained=false -p:PublishSingleFile=true -o artifacts/inspector/win64/
+      run: dotnet publish EVTCInspector.Wpf --configuration Release -r win-x64 --self-contained=false -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:IncludeAllContentForSelfExtract=true -o artifacts/inspector/win64/
     - name: Package EVTC Inspector (Linux, GTK)
-      run: dotnet publish EVTCInspector.Gtk --configuration Release -r linux-x64 --self-contained=false -p:PublishSingleFile=true -o artifacts/inspector/linux64/
+      run: dotnet publish EVTCInspector.Gtk --configuration Release -r linux-x64 --self-contained=false -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:IncludeAllContentForSelfExtract=true -o artifacts/inspector/linux64/
     - name: Package Rotation Comparison (Windows)
-      run: dotnet publish RotationComparison --configuration Release -r win-x64 --self-contained=false -p:PublishSingleFile=true -o artifacts/rotcomp/win64/
+      run: dotnet publish RotationComparison --configuration Release -r win-x64 --self-contained=false -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:IncludeAllContentForSelfExtract=true -o artifacts/rotcomp/win64/
     - name: Package Rotation Comparison (Linux)
-      run: dotnet publish RotationComparison --configuration Release -r linux-x64 --self-contained=false -p:PublishSingleFile=true -o artifacts/rotcomp/linux64/
+      run: dotnet publish RotationComparison --configuration Release -r linux-x64 --self-contained=false -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:IncludeAllContentForSelfExtract=true -o artifacts/rotcomp/linux64/
     # The PDB files for the self-contained versions should be the same as the non-self-contained version, so we only keep one.
     # Same thing for console projects that are aimed at different runtime platforms.
     - name: Bundle PDBs
