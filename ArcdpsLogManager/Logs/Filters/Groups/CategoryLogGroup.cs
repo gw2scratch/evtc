@@ -63,7 +63,14 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters.Groups
 		public static CategoryLogGroup Other(IEnumerable<string> mainTargetNames)
 		{
 			var subgroups = mainTargetNames.Select(x => new OtherNamedTargetLogGroup(x));
-			return new CategoryLogGroup(EncounterCategory.Other, subgroups);
+			
+			// Add encounters that are in the Other category, but are not Encounter.Other
+			var encounters = ((Encounter[]) Enum.GetValues(typeof(Encounter)))
+				.Where(x => x.GetEncounterCategory() == EncounterCategory.Other)
+				.Where(x => x != Encounter.Other)
+				.Select(x => new EncounterLogGroup(x));
+			
+			return new CategoryLogGroup(EncounterCategory.Other, encounters.Concat<LogGroup>(subgroups));
 		}
 
 		public override bool IsInGroup(LogData log)
