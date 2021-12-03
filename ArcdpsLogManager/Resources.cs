@@ -7,71 +7,70 @@ namespace GW2Scratch.ArcdpsLogManager
 {
 	public static class Resources
 	{
-		private const string ImageDirectoryName = "Images";
-
-		private static string GetImagePath(string imageName)
+		private static string GetResourceName(string imageName)
 		{
-			return Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), ImageDirectoryName,
-				imageName);
+			return $"GW2Scratch.ArcdpsLogManager.Images.{imageName}";
 		}
-
+		
 		private static Bitmap GetImage(string imageName)
 		{
-			return new Bitmap(GetImagePath(imageName));
+			var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(GetResourceName(imageName));
+			return new Bitmap(stream);
 		}
 
 		public static Icon GetProgramIcon()
 		{
-			return new Icon(GetImagePath("program_icon.ico"));
+			var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(GetResourceName("program_icon.ico"));
+			return new Icon(stream);
 		}
 		
 		public static Image GetTinyIconUnknown() => GetImage("unknown_20px.png");
 		// PROFESSIONS
-		public static Image GetTinyIconWarrior() => GetImage("Tango/Warrior_tango_icon_20px.png");
-		public static Image GetTinyIconGuardian() => GetImage("Tango/Guardian_tango_icon_20px.png");
-		public static Image GetTinyIconRevenant() => GetImage("Tango/Revenant_tango_icon_20px.png");
-		public static Image GetTinyIconRanger() => GetImage("Tango/Ranger_tango_icon_20px.png");
-		public static Image GetTinyIconThief() => GetImage("Tango/Thief_tango_icon_20px.png");
-		public static Image GetTinyIconEngineer() => GetImage("Tango/Engineer_tango_icon_20px.png");
-		public static Image GetTinyIconNecromancer() => GetImage("Tango/Necromancer_tango_icon_20px.png");
-		public static Image GetTinyIconElementalist() => GetImage("Tango/Elementalist_tango_icon_20px.png");
-		public static Image GetTinyIconMesmer() => GetImage("Tango/Mesmer_tango_icon_20px.png");
+		public static Image GetTinyIconWarrior() => GetImage("Tango.Warrior_tango_icon_20px.png");
+		public static Image GetTinyIconGuardian() => GetImage("Tango.Guardian_tango_icon_20px.png");
+		public static Image GetTinyIconRevenant() => GetImage("Tango.Revenant_tango_icon_20px.png");
+		public static Image GetTinyIconRanger() => GetImage("Tango.Ranger_tango_icon_20px.png");
+		public static Image GetTinyIconThief() => GetImage("Tango.Thief_tango_icon_20px.png");
+		public static Image GetTinyIconEngineer() => GetImage("Tango.Engineer_tango_icon_20px.png");
+		public static Image GetTinyIconNecromancer() => GetImage("Tango.Necromancer_tango_icon_20px.png");
+		public static Image GetTinyIconElementalist() => GetImage("Tango.Elementalist_tango_icon_20px.png");
+		public static Image GetTinyIconMesmer() => GetImage("Tango.Mesmer_tango_icon_20px.png");
 		// SPECIALIZATIONS
-		public static Image GetTinyIconBerserker() => GetImage("Tango/Berserker_tango_icon_20px.png");
-		public static Image GetTinyIconSpellbreaker() => GetImage("Tango/Spellbreaker_tango_icon_20px.png");
-		public static Image GetTinyIconBladesworn() => GetImage("Tango/Bladesworn_tango_icon_20px.png");
-		public static Image GetTinyIconDragonhunter() => GetImage("Tango/Dragonhunter_tango_icon_20px.png");
-		public static Image GetTinyIconFirebrand() => GetImage("Tango/Firebrand_tango_icon_20px.png");
-		public static Image GetTinyIconWillbender() => GetImage("Tango/Willbender_tango_icon_20px.png");
-		public static Image GetTinyIconHerald() => GetImage("Tango/Herald_tango_icon_20px.png");
-		public static Image GetTinyIconRenegade() => GetImage("Tango/Renegade_tango_icon_20px.png");
-		public static Image GetTinyIconVindicator() => GetImage("Tango/Vindicator_tango_icon_20px.png");
-		public static Image GetTinyIconDruid() => GetImage("Tango/Druid_tango_icon_20px.png");
-		public static Image GetTinyIconSoulbeast() => GetImage("Tango/Soulbeast_tango_icon_20px.png");
-		public static Image GetTinyIconUntamed() => GetImage("Tango/Untamed_tango_icon_20px.png");
-		public static Image GetTinyIconDaredevil() => GetImage("Tango/Daredevil_tango_icon_20px.png");
-		public static Image GetTinyIconDeadeye() => GetImage("Tango/Deadeye_tango_icon_20px.png");
-		public static Image GetTinyIconScrapper() => GetImage("Tango/Scrapper_tango_icon_20px.png");
-		public static Image GetTinyIconHolosmith() => GetImage("Tango/Holosmith_tango_icon_20px.png");
-		public static Image GetTinyIconMechanist() => GetImage("Tango/Mechanist_tango_icon_20px.png");
-		public static Image GetTinyIconReaper() => GetImage("Tango/Reaper_tango_icon_20px.png");
-		public static Image GetTinyIconScourge() => GetImage("Tango/Scourge_tango_icon_20px.png");
-		public static Image GetTinyIconHarbinger() => GetImage("Tango/Harbinger_tango_icon_20px.png");
-		public static Image GetTinyIconTempest() => GetImage("Tango/Tempest_tango_icon_20px.png");
-		public static Image GetTinyIconWeaver() => GetImage("Tango/Weaver_tango_icon_20px.png");
-		public static Image GetTinyIconChronomancer() => GetImage("Tango/Chronomancer_tango_icon_20px.png");
-		public static Image GetTinyIconMirage() => GetImage("Tango/Mirage_tango_icon_20px.png");
-		public static Image GetTinyIconVirtuoso() => GetImage("Tango/Virtuoso_tango_icon_20px.png");
+		public static Image GetTinyIconBerserker() => GetImage("Tango.Berserker_tango_icon_20px.png");
+		public static Image GetTinyIconSpellbreaker() => GetImage("Tango.Spellbreaker_tango_icon_20px.png");
+		public static Image GetTinyIconBladesworn() => GetImage("Tango.Bladesworn_tango_icon_20px.png");
+		public static Image GetTinyIconDragonhunter() => GetImage("Tango.Dragonhunter_tango_icon_20px.png");
+		public static Image GetTinyIconFirebrand() => GetImage("Tango.Firebrand_tango_icon_20px.png");
+		public static Image GetTinyIconWillbender() => GetImage("Tango.Willbender_tango_icon_20px.png");
+		public static Image GetTinyIconHerald() => GetImage("Tango.Herald_tango_icon_20px.png");
+		public static Image GetTinyIconRenegade() => GetImage("Tango.Renegade_tango_icon_20px.png");
+		public static Image GetTinyIconVindicator() => GetImage("Tango.Vindicator_tango_icon_20px.png");
+		public static Image GetTinyIconDruid() => GetImage("Tango.Druid_tango_icon_20px.png");
+		public static Image GetTinyIconSoulbeast() => GetImage("Tango.Soulbeast_tango_icon_20px.png");
+		public static Image GetTinyIconUntamed() => GetImage("Tango.Untamed_tango_icon_20px.png");
+		public static Image GetTinyIconDaredevil() => GetImage("Tango.Daredevil_tango_icon_20px.png");
+		public static Image GetTinyIconDeadeye() => GetImage("Tango.Deadeye_tango_icon_20px.png");
+		public static Image GetTinyIconScrapper() => GetImage("Tango.Scrapper_tango_icon_20px.png");
+		public static Image GetTinyIconHolosmith() => GetImage("Tango.Holosmith_tango_icon_20px.png");
+		public static Image GetTinyIconMechanist() => GetImage("Tango.Mechanist_tango_icon_20px.png");
+		public static Image GetTinyIconReaper() => GetImage("Tango.Reaper_tango_icon_20px.png");
+		public static Image GetTinyIconScourge() => GetImage("Tango.Scourge_tango_icon_20px.png");
+		public static Image GetTinyIconHarbinger() => GetImage("Tango.Harbinger_tango_icon_20px.png");
+		public static Image GetTinyIconTempest() => GetImage("Tango.Tempest_tango_icon_20px.png");
+		public static Image GetTinyIconWeaver() => GetImage("Tango.Weaver_tango_icon_20px.png");
+		public static Image GetTinyIconChronomancer() => GetImage("Tango.Chronomancer_tango_icon_20px.png");
+		public static Image GetTinyIconMirage() => GetImage("Tango.Mirage_tango_icon_20px.png");
+		public static Image GetTinyIconVirtuoso() => GetImage("Tango.Virtuoso_tango_icon_20px.png");
 		// CATEGORIES
-		public static Image GetTinyIconRaid() => GetImage("ArenaNet/raid_icon_32px.png");
-		public static Image GetTinyIconFractals() => GetImage("ArenaNet/fractals_icon_32px.png");
-		public static Image GetTinyIconGuildRegistrar() => GetImage("ArenaNet/guild_registrar_icon_26px.png");
-		public static Image GetTinyIconCommander() => GetImage("ArenaNet/commander_tag_red_32px.png");
-		public static Image GetTinyIconStrike() => GetImage("ArenaNet/strike_icon_32px.png");
-		public static Image GetTinyIconTrainingArea() => GetImage("ArenaNet/training_area_32px.png");
-		public static Image GetTinyIconWorldVersusWorld() => GetImage("ArenaNet/world_vs_world_32px.png");
-		public static Image GetTinyIconUncategorized() => GetImage("ArenaNet/uncategorized_32px.png");
-		public static Image GetTinyIconFestival() => GetImage("ArenaNet/festivals_32px.png");
+		public static Image GetTinyIconRaid() => GetImage("ArenaNet.raid_icon_32px.png");
+		public static Image GetTinyIconFractals() => GetImage("ArenaNet.fractals_icon_32px.png");
+		public static Image GetTinyIconGuildRegistrar() => GetImage("ArenaNet.guild_registrar_icon_26px.png");
+		public static Image GetTinyIconCommander() => GetImage("ArenaNet.commander_tag_red_32px.png");
+		public static Image GetTinyIconStrike() => GetImage("ArenaNet.strike_icon_32px.png");
+		public static Image GetTinyIconTrainingArea() => GetImage("ArenaNet.training_area_32px.png");
+		public static Image GetTinyIconWorldVersusWorld() => GetImage("ArenaNet.world_vs_world_32px.png");
+		public static Image GetTinyIconUncategorized() => GetImage("ArenaNet.uncategorized_32px.png");
+		public static Image GetTinyIconFestival() => GetImage("ArenaNet.festivals_32px.png");
 		// FRACTAL INSTABILITIES
 		public static Image GetTinyIconAfflicted() => GetInstabilityImage("afflicted_32px");
 		public static Image GetTinyIconBirds() => GetInstabilityImage("birds_32px");
@@ -94,10 +93,10 @@ namespace GW2Scratch.ArcdpsLogManager
 		public static Image GetTinyIconWeBleedFire() => GetInstabilityImage("we_bleed_fire_32px");
 		public static Image GetInstabilityImage(string iconName)
 		{
-			return GetImage($"ArenaNet/fractal_instabilities/{iconName}.png");
+			return GetImage($"ArenaNet.fractal_instabilities.{iconName}.png");
 		}
 		// RAID BOSSES
-		public static Image GetGenericRaidWingIcon() => GetImage("ArenaNet/raid_wing_32px.png");
+		public static Image GetGenericRaidWingIcon() => GetImage("ArenaNet.raid_wing_32px.png");
 		// WING 1
 		public static Image GetValeGuardianIcon() => GetEncounterImage("Mini_Vale_Guardian");
 		public static Image GetGorsevalIcon() => GetEncounterImage("Mini_Gorseval_the_Multifarious");
@@ -163,9 +162,10 @@ namespace GW2Scratch.ArcdpsLogManager
 		public static Image GetObsidianSanctumIcon() => GetEncounterImage("Commander_tag_purple");
 		public static Image GetEdgeOfTheMistsIcon() => GetEncounterImage("Commander_tag_white");
 		public static Image GetArmisticeBastionIcon() => GetEncounterImage("Armistice_Bastion_Pass");
+		
 		private static Image GetEncounterImage(string iconName)
 		{
-			return GetImage($"ArenaNet/Bosses/{iconName}.png");
+			return GetImage($"ArenaNet.Bosses.{iconName}.png");
 		}
 	}
 }

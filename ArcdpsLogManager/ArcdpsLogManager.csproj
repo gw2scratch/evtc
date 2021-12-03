@@ -31,8 +31,6 @@
         <ProjectReference Include="..\EVTCInspector\EVTCInspector.csproj" />
     </ItemGroup>
     <ItemGroup>
-        <None Update="Images\**">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
+        <EmbeddedResource Include="Images\**" />
     </ItemGroup>
 </Project>
