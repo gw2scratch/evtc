@@ -2,6 +2,12 @@
 
 This is the full changelog of the arcdps Log Manager.
 
+## Log Manager v1.3.1
+
+#### Fixes
+- Fixes single-file published versions by embedding resources within the executable
+- Mordremoth now properly appears in the encounter list
+
 ## Log Manager v1.3.0
 This version of Log Manager requires [.NET 6](https://dotnet.microsoft.com/download/dotnet/6.0/runtime) to run.
 
