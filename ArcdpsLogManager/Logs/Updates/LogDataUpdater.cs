@@ -77,6 +77,9 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Updates
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 3, 0, 2)
 			                     && log.Encounter == Encounter.Other,
 				"Add support for the Mordremoth fight."),
+			new LogUpdate(log => log.ParsingVersion < new Version(1, 4, 0, 0)
+			                     && log.Encounter.GetEncounterCategory() == EncounterCategory.Fractal,
+				"Adds Mistlock Instabilities for fractal log details, filters, and log list column."),
 			// When adding a new update, you need to increase the revision (last value) of the version in the .csproj file
 			// unless the version changes more significantly, in that case it can be reset to 0.
 		};

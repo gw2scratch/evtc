@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using GW2Scratch.ArcdpsLogManager.Analytics;
+using GW2Scratch.ArcdpsLogManager.Logs.Extras;
 using GW2Scratch.ArcdpsLogManager.Logs.Tagging;
 using GW2Scratch.EVTCAnalytics.Events;
 using GW2Scratch.EVTCAnalytics.GameData;
@@ -205,6 +206,12 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 		public bool IsFavorite { get; set; } = false;
 
 		/// <summary>
+		/// Extra data that is only relevant for some logs.
+		/// </summary>
+		[JsonProperty]
+		public LogExtras LogExtras { get; set; } = null;
+
+		/// <summary>
 		/// Indicates whether a log is missing the encounter start time
 		/// </summary>
 		[JsonProperty]
@@ -285,6 +292,15 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 				else
 				{
 					MissingEncounterStart = true;
+				}
+
+				LogExtras = new LogExtras();
+				if (Encounter.GetEncounterCategory() == EncounterCategory.Fractal)
+				{
+					LogExtras.FractalExtras = new FractalExtras
+					{
+						MistlockInstabilities = logAnalytics.FractalInstabilityDetector.GetInstabilities(log).ToList()
+					};
 				}
 
 				EncounterDuration = analyzer.GetEncounterDuration();

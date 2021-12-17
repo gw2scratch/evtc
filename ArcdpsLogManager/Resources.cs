@@ -83,6 +83,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			return GetImage($"ArenaNet.fractal_instabilities.{iconName}.png");
 		}
 
+		public static Image GetTinyIconAdrenalineRush() => GetInstabilityImage("adrenaline_rush_32px");
 		public static Image GetTinyIconAfflicted() => GetInstabilityImage("afflicted_32px");
 		public static Image GetTinyIconBirds() => GetInstabilityImage("birds_32px");
 		public static Image GetTinyIconBoonOverload() => GetInstabilityImage("boon_overload_32px");

@@ -40,8 +40,12 @@ namespace GW2Scratch.ArcdpsLogManager
 		private ImageProvider ImageProvider { get; } = new ImageProvider();
 		private LogFinder LogFinder { get; } = new LogFinder();
 
-		private LogAnalytics LogAnalytics { get; } =
-			new LogAnalytics(new EVTCParser(), new LogProcessor(), log => new LogAnalyzer(log));
+		private LogAnalytics LogAnalytics { get; } = new LogAnalytics(
+			new EVTCParser(),
+			new LogProcessor(),
+			new FractalInstabilityDetector(),
+			log => new LogAnalyzer(log)
+		);
 
 		private ApiProcessor ApiProcessor { get; }
 		private UploadProcessor UploadProcessor { get; }
