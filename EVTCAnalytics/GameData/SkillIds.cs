@@ -95,6 +95,28 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		public const int Necrosis = 47414;
 
 		/* Fractals */
+		// Mistlock Instabilities
+		public const int Afflicted = 22228;
+		public const int NoPainNoGain = 22277;
+		public const int LastLaugh = 22293;
+		public const int SocialAwkwardness = 32942;
+		public const int ToxicTrail = 36204;
+		public const int AdrenalineRush = 36341;
+		public const int FluxBomb = 36386;
+		public const int Vengeance = 46865;
+		public const int ToxicSickness = 47288;
+		public const int Hamstrung = 47323;
+		public const int FractalVindicators = 48296;
+		public const int BoonOverload = 53673;
+		public const int StickTogether = 53932;
+		public const int Outflanked = 54084;
+		public const int SugarRush = 54237;
+		public const int Frailty = 54477;
+		public const int WeBleedFire = 54719;
+		public const int SlipperySlope = 54817;
+		public const int Birds = 54131;
+		public const int MistsConvergence = 36224;
+		
 		// Ai, the Keeper of the Peak, a skill without a name that she casts early into the dark phase.
 		public const int AiDarkEarlySkill = 61356;
 	}
