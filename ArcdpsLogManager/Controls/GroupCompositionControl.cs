@@ -89,12 +89,25 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 								Size = new Size(16, 17)
 							};
 
-							AddRow(tagImageView, imageView, nameLabel, player.AccountName.Substring(1));
+							BeginHorizontal();
+							{
+								Add(tagImageView);
+								Add(imageView);
+								Add(nameLabel, true);
+								Add(player.AccountName.Substring(1), true);
+							}
+							EndHorizontal();
 						}
 						else
 						{
 							// If no player has a tag, we don't waste space on it and omit the empty image views.
-							AddRow(imageView, nameLabel, player.AccountName.Substring(1));
+							BeginHorizontal();
+							{
+								Add(imageView);
+								Add(nameLabel, true);
+								Add(player.AccountName.Substring(1), true);
+							}
+							EndHorizontal();
 						}
 					}
 
