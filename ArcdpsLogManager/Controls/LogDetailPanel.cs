@@ -34,6 +34,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 		private readonly DynamicTable groupCompositionSection;
 		private readonly DynamicTable failedProcessingSection;
 		private readonly TextArea exceptionTextArea = new TextArea {ReadOnly = true};
+		private readonly MistlockInstabilityList instabilityList;
 
 		public LogData LogData
 		{
@@ -81,6 +82,8 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				parseTimeLabel.Text = $"{logData.ParseMilliseconds} ms";
 				parseStatusLabel.Text = logData.ParsingStatus.ToString();
 
+				instabilityList.MistlockInstabilities = logData.LogExtras?.FractalExtras?.MistlockInstabilities;
+
 				groupComposition.Players = logData.Players;
 
 				UpdateUploadStatus();
@@ -125,6 +128,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			Width = 350;
 			Visible = false;
 
+			instabilityList = new MistlockInstabilityList(imageProvider);
 			groupComposition = new GroupCompositionControl(apiData, imageProvider);
 			tagControl = new TagControl();
 
@@ -148,12 +152,21 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				}
 			};
 
-			BeginVertical(spacing: new Size(0, 30), yscale: true);
+			BeginVertical(spacing: new Size(0, 15), yscale: true);
 			{
-				BeginVertical();
+				BeginVertical(spacing: new Size(0, 8));
 				{
-					Add(nameLabel);
-					Add(resultLabel);
+					BeginVertical();
+					{
+						Add(nameLabel);
+						Add(resultLabel);
+					}
+					EndVertical();
+					BeginVertical();
+					{
+						Add(instabilityList);
+					}
+					EndVertical();
 				}
 				EndVertical();
 				BeginVertical(spacing: new Size(0, 5));

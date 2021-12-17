@@ -1,4 +1,5 @@
 using GW2Scratch.ArcdpsLogManager.Logs;
+using GW2Scratch.EVTCAnalytics.Model;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
 using System;
 
@@ -81,6 +82,37 @@ namespace GW2Scratch.ArcdpsLogManager.GameData
 			}
 
 			return GetName(player.EliteSpecialization);
+		}
+
+		/// <summary>
+		/// Provides the English name of a Mistlock Instability.
+		/// </summary>
+		public static string GetInstabilityName(MistlockInstability instability)
+		{
+			return instability switch
+			{
+				MistlockInstability.AdrenalineRush => "Adrenaline Rush",
+				MistlockInstability.Afflicted => "Afflicted",
+				MistlockInstability.BoonOverload => "Boon Overload",
+				MistlockInstability.FluxBomb => "Flux Bomb",
+				MistlockInstability.FractalVindicators => "Fractal Vindicators",
+				MistlockInstability.Frailty => "Frailty",
+				MistlockInstability.Hamstrung => "Hamstrung",
+				MistlockInstability.LastLaugh => "Last Laugh",
+				MistlockInstability.MistsConvergence => "Mists Convergence",
+				MistlockInstability.NoPainNoGain => "No Pain, No Gain",
+				MistlockInstability.Outflanked => "Outflanked",
+				MistlockInstability.SocialAwkwardness => "Social Awkwardness",
+				MistlockInstability.StickTogether => "Stick Together",
+				MistlockInstability.SugarRush => "Sugar Rush",
+				MistlockInstability.ToxicSickness => "Toxic Sickness",
+				MistlockInstability.ToxicTrail => "Toxic Trail",
+				MistlockInstability.Vengeance => "Vengeance",
+				MistlockInstability.WeBleedFire => "We Bleed Fire",
+				MistlockInstability.Birds => "Birds",
+				MistlockInstability.SlipperySlope => "Slippery Slope",
+				_ => throw new ArgumentOutOfRangeException(nameof(instability), instability, null)
+			};
 		}
 	}
 }

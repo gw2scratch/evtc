@@ -3,6 +3,7 @@ using Eto.Drawing;
 using GW2Scratch.ArcdpsLogManager.GameData;
 using GW2Scratch.ArcdpsLogManager.Logs;
 using GW2Scratch.EVTCAnalytics.GameData.Encounters;
+using GW2Scratch.EVTCAnalytics.Model;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
 
 namespace GW2Scratch.ArcdpsLogManager
@@ -141,6 +142,28 @@ namespace GW2Scratch.ArcdpsLogManager
 		private Lazy<Image> ObsidianSanctumIcon { get; } = new Lazy<Image>(Resources.GetObsidianSanctumIcon);
 		private Lazy<Image> EdgeOfTheMistsIcon { get; } = new Lazy<Image>(Resources.GetEdgeOfTheMistsIcon);
 		private Lazy<Image> ArmisticeBastionIcon { get; } = new Lazy<Image>(Resources.GetArmisticeBastionIcon);
+		
+		// INSTABILITIES
+		private Lazy<Image> AdrenalineRushIcon { get; } = new Lazy<Image>(Resources.GetTinyIconAdrenalineRush);
+		private Lazy<Image> AfflictedIcon { get; } = new Lazy<Image>(Resources.GetTinyIconAfflicted);
+		private Lazy<Image> BirdsIcon { get; } = new Lazy<Image>(Resources.GetTinyIconBirds);
+		private Lazy<Image> BoonOverloadIcon { get; } = new Lazy<Image>(Resources.GetTinyIconBoonOverload);
+		private Lazy<Image> FluxBombIcon { get; } = new Lazy<Image>(Resources.GetTinyIconFluxBomb);
+		private Lazy<Image> FractalVindicatorsIcon { get; } = new Lazy<Image>(Resources.GetTinyIconFractalVindicators);
+		private Lazy<Image> FrailtyIcon { get; } = new Lazy<Image>(Resources.GetTinyIconFrailty);
+		private Lazy<Image> HamstrungIcon { get; } = new Lazy<Image>(Resources.GetTinyIconHamstrung);
+		private Lazy<Image> LastLaughIcon { get; } = new Lazy<Image>(Resources.GetTinyIconLastLaugh);
+		private Lazy<Image> MistsConvergenceIcon { get; } = new Lazy<Image>(Resources.GetTinyIconMistsConvergence);
+		private Lazy<Image> NoPainNoGainIcon { get; } = new Lazy<Image>(Resources.GetTinyIconNoPainNoGain);
+		private Lazy<Image> OutflankedIcon { get; } = new Lazy<Image>(Resources.GetTinyIconOutflanked);
+		private Lazy<Image> SlipperySlopeIcon { get; } = new Lazy<Image>(Resources.GetTinyIconSlipperySlope);
+		private Lazy<Image> SocialAwkwardnessIcon { get; } = new Lazy<Image>(Resources.GetTinyIconSocialAwkwardness);
+		private Lazy<Image> StickTogetherIcon { get; } = new Lazy<Image>(Resources.GetTinyIconStickTogether);
+		private Lazy<Image> SugarRushIcon { get; } = new Lazy<Image>(Resources.GetTinyIconSugarRush);
+		private Lazy<Image> ToxicSicknessIcon { get; } = new Lazy<Image>(Resources.GetTinyIconToxicSickness);
+		private Lazy<Image> ToxicTrailIcon { get; } = new Lazy<Image>(Resources.GetTinyIconToxicTrail);
+		private Lazy<Image> VengeanceIcon { get; } = new Lazy<Image>(Resources.GetTinyIconVengeance);
+		private Lazy<Image> WeBleedFireIcon { get; } = new Lazy<Image>(Resources.GetTinyIconWeBleedFire);
 
 
 		public Image GetTinyLogIcon() => TinyIconLog.Value;
@@ -302,6 +325,34 @@ namespace GW2Scratch.ArcdpsLogManager
 				GameMap.EdgeOfTheMists => EdgeOfTheMistsIcon.Value,
 				GameMap.ArmisticeBastion => ArmisticeBastionIcon.Value,
 				_ => null
+			};
+		}
+
+		public Image GetMistlockInstabilityIcon(MistlockInstability instability)
+		{
+			return instability switch
+			{
+				MistlockInstability.AdrenalineRush => AdrenalineRushIcon.Value,
+				MistlockInstability.Afflicted => AfflictedIcon.Value,
+				MistlockInstability.BoonOverload => BoonOverloadIcon.Value,
+				MistlockInstability.FluxBomb => FluxBombIcon.Value,
+				MistlockInstability.FractalVindicators => FractalVindicatorsIcon.Value,
+				MistlockInstability.Frailty => FrailtyIcon.Value,
+				MistlockInstability.Hamstrung => HamstrungIcon.Value,
+				MistlockInstability.LastLaugh => LastLaughIcon.Value,
+				MistlockInstability.MistsConvergence => MistsConvergenceIcon.Value,
+				MistlockInstability.NoPainNoGain => NoPainNoGainIcon.Value,
+				MistlockInstability.Outflanked => OutflankedIcon.Value,
+				MistlockInstability.SocialAwkwardness => SocialAwkwardnessIcon.Value,
+				MistlockInstability.StickTogether => StickTogetherIcon.Value,
+				MistlockInstability.SugarRush => SugarRushIcon.Value,
+				MistlockInstability.ToxicSickness => ToxicSicknessIcon.Value,
+				MistlockInstability.ToxicTrail => ToxicTrailIcon.Value,
+				MistlockInstability.Vengeance => VengeanceIcon.Value,
+				MistlockInstability.WeBleedFire => WeBleedFireIcon.Value,
+				MistlockInstability.Birds => BirdsIcon.Value,
+				MistlockInstability.SlipperySlope => SlipperySlopeIcon.Value,
+				_ => throw new ArgumentOutOfRangeException(nameof(instability), instability, null)
 			};
 		}
 	}
