@@ -29,7 +29,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			public string DpsReportUserToken { get; set; } = string.Empty;
 			public string DpsReportDomain { get; set; } = DpsReportUploader.DefaultDomain.Domain;
 			public int? MinimumLogDurationSeconds { get; set; } = null;
-			public List<string> HiddenLogListColumns { get; set; } = new List<string>() {"Character", "Map ID", "Game Version", "arcdps Version"};
+			public List<string> HiddenLogListColumns { get; set; } = new List<string>() {"Character", "Map ID", "Game Version", "arcdps Version", "Instabilities"};
 			public List<string> IgnoredUpdateVersions { get; set; } = new List<string>();
 
 			public static StoredSettings LoadFromFile()

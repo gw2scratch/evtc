@@ -5,10 +5,12 @@ using System.Linq;
 using Eto.Drawing;
 using Eto.Forms;
 using GW2Scratch.ArcdpsLogManager.Controls;
+using GW2Scratch.ArcdpsLogManager.GameData;
 using GW2Scratch.ArcdpsLogManager.Gw2Api;
 using GW2Scratch.ArcdpsLogManager.Logs;
 using GW2Scratch.ArcdpsLogManager.Logs.Naming;
 using GW2Scratch.ArcdpsLogManager.Processing;
+using GW2Scratch.EVTCAnalytics.Model;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
 
@@ -36,7 +38,8 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 		private static readonly Dictionary<string, string> Abbreviations = new Dictionary<string, string>
 		{
 			{ "★", "Favorite" },
-			{ "CM", "Challenge Mode" }
+			{ "CM", "Challenge Mode" },
+			{ "Instabilities", "Mistlock Instabilities (Fractals of the Mists)" },
 		};
 
 		public FilterCollection<LogData> DataStore
@@ -246,7 +249,34 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 					Binding = new DelegateBinding<LogData, string>(x => x.PointOfView?.CharacterName ?? "Unknown")
 				}
 			});
+			
+			var mistlockInstabilityCell = new DrawableCell();
+			mistlockInstabilityCell.Paint += (sender, args) =>
+			{
+				if (!(args.Item is LogData log)) return;
+				if (log.ParsingStatus != ParsingStatus.Parsed) return;
 
+				var instabilities = log.LogExtras?.FractalExtras?.MistlockInstabilities
+					                    ?.OrderBy(GameNames.GetInstabilityName)
+					                    ?.ToArray()
+				                    ?? Array.Empty<MistlockInstability>();
+				
+				var origin = args.ClipRectangle.Location;
+				for (int i = 0; i < instabilities.Length; i++)
+				{
+					var icon = imageProvider.GetMistlockInstabilityIcon(instabilities[i]);
+					var point = origin + new PointF(i * (PlayerIconSize + PlayerIconSpacing), 0);
+					var rectangle = new RectangleF(point, new SizeF(PlayerIconSize, PlayerIconSize));
+					args.Graphics.DrawImage(icon, rectangle);
+				}
+			};
+			
+			gridView.Columns.Add(new GridColumn
+			{
+				HeaderText = "Mistlock Instabilities",
+				DataCell = mistlockInstabilityCell,
+				Width = 3 * (PlayerIconSize + PlayerIconSpacing)
+			});
 
 			var compositionCell = new DrawableCell();
 			compositionCell.Paint += (sender, args) =>
