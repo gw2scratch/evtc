@@ -273,7 +273,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			
 			gridView.Columns.Add(new GridColumn
 			{
-				HeaderText = "Mistlock Instabilities",
+				HeaderText = "Instabilities",
 				DataCell = mistlockInstabilityCell,
 				Width = 3 * (PlayerIconSize + PlayerIconSpacing)
 			});
