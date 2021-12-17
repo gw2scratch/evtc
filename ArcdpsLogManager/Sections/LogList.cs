@@ -384,6 +384,26 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 
 						return x.EncounterResult.CompareTo(y.EncounterResult);
 					}
+				},
+				{
+					instabilityColumn, (x, y) =>
+					{
+						int xCount = x.LogExtras?.FractalExtras?.MistlockInstabilities?.Count ?? 0;
+						int yCount = y.LogExtras?.FractalExtras?.MistlockInstabilities?.Count ?? 0;
+
+						int countComparison = xCount.CompareTo(yCount);
+						if (countComparison != 0)
+						{
+							// If the counts are not the same, we sort by counts first
+							return countComparison;
+						}
+						
+						// If counts are the same, we sort by the name of the first instability (ordered by names)
+						string xName = x.LogExtras?.FractalExtras?.MistlockInstabilities?.Select(GameNames.GetInstabilityName)?.OrderBy(name => name)?.FirstOrDefault() ?? "";
+						string yName = y.LogExtras?.FractalExtras?.MistlockInstabilities?.Select(GameNames.GetInstabilityName)?.OrderBy(name => name)?.FirstOrDefault() ?? "";
+						
+						return String.Compare(xName, yName, StringComparison.InvariantCulture);
+					}
 				}
 			});
 
