@@ -199,6 +199,35 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 				}
 			};
 			gridView.Columns.Add(resultColumn);
+			
+			var instabilityCell = new DrawableCell();
+			instabilityCell.Paint += (sender, args) =>
+			{
+				if (!(args.Item is LogData log)) return;
+				if (log.ParsingStatus != ParsingStatus.Parsed) return;
+
+				var instabilities = log.LogExtras?.FractalExtras?.MistlockInstabilities
+					                    ?.OrderBy(GameNames.GetInstabilityName)
+					                    ?.ToArray()
+				                    ?? Array.Empty<MistlockInstability>();
+				
+				var origin = args.ClipRectangle.Location;
+				for (int i = 0; i < instabilities.Length; i++)
+				{
+					var icon = imageProvider.GetMistlockInstabilityIcon(instabilities[i]);
+					var point = origin + new PointF(i * (PlayerIconSize + PlayerIconSpacing), 0);
+					var rectangle = new RectangleF(point, new SizeF(PlayerIconSize, PlayerIconSize));
+					args.Graphics.DrawImage(icon, rectangle);
+				}
+			};
+			
+			var instabilityColumn = new GridColumn
+			{
+				HeaderText = "Instabilities",
+				DataCell = instabilityCell,
+				Width = 3 * (PlayerIconSize + PlayerIconSpacing)
+			};
+			gridView.Columns.Add(instabilityColumn);
 
 			var dateColumn = new GridColumn()
 			{
@@ -248,34 +277,6 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 				{
 					Binding = new DelegateBinding<LogData, string>(x => x.PointOfView?.CharacterName ?? "Unknown")
 				}
-			});
-			
-			var mistlockInstabilityCell = new DrawableCell();
-			mistlockInstabilityCell.Paint += (sender, args) =>
-			{
-				if (!(args.Item is LogData log)) return;
-				if (log.ParsingStatus != ParsingStatus.Parsed) return;
-
-				var instabilities = log.LogExtras?.FractalExtras?.MistlockInstabilities
-					                    ?.OrderBy(GameNames.GetInstabilityName)
-					                    ?.ToArray()
-				                    ?? Array.Empty<MistlockInstability>();
-				
-				var origin = args.ClipRectangle.Location;
-				for (int i = 0; i < instabilities.Length; i++)
-				{
-					var icon = imageProvider.GetMistlockInstabilityIcon(instabilities[i]);
-					var point = origin + new PointF(i * (PlayerIconSize + PlayerIconSpacing), 0);
-					var rectangle = new RectangleF(point, new SizeF(PlayerIconSize, PlayerIconSize));
-					args.Graphics.DrawImage(icon, rectangle);
-				}
-			};
-			
-			gridView.Columns.Add(new GridColumn
-			{
-				HeaderText = "Instabilities",
-				DataCell = mistlockInstabilityCell,
-				Width = 3 * (PlayerIconSize + PlayerIconSpacing)
 			});
 
 			var compositionCell = new DrawableCell();
