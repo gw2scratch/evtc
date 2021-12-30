@@ -21,14 +21,23 @@ namespace GW2Scratch.ArcdpsLogManager
 			Resizable = false;
 			Content = layout;
 
-			layout.BeginCentered(spacing: new Size(5, 5));
+			layout.BeginVertical(spacing: new Size(0, 30));
 			{
-				layout.Add(null, yscale: true);
-				layout.AddCentered("Loading the cache");
-				layout.AddCentered(new ProgressBar {Indeterminate = true});
-				layout.Add(null, yscale: true);
+				layout.BeginCentered();
+				{
+					layout.Add(Resources.GetLogo());
+				}
+				layout.EndCentered();
+				layout.BeginCentered(spacing: new Size(5, 5));
+				{
+					layout.Add(null, yscale: true);
+					layout.AddCentered("Loading the cache");
+					layout.AddCentered(new ProgressBar { Indeterminate = true });
+					layout.Add(null, yscale: true);
+				}
+				layout.EndCentered();
 			}
-			layout.EndCentered();
+			layout.EndVertical();
 
 			if (!Settings.LogRootPaths.Any())
 			{

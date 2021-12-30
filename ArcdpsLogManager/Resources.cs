@@ -23,6 +23,8 @@ namespace GW2Scratch.ArcdpsLogManager
 			var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(GetResourceName("program_icon.ico"));
 			return new Icon(stream);
 		}
+		
+		public static Image GetLogo() => GetImage("logo.png");
 
 		public static Image GetTinyIconUnknown() => GetImage("unknown_20px.png");
 
