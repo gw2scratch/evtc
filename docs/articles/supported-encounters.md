@@ -58,3 +58,4 @@ Strike Missions | Boneskinner | ✔
 Strike Missions | Whisper of Jormag | ✔
 Strike Missions | Varinia Stormsounder | ✔
 World vs World | World vs World | ⚠️ | No success detection, always Unknown (impossible?)
+Other | Mordremoth | ✔
