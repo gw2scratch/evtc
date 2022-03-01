@@ -39,7 +39,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 		{
 			{ "★", "Favorite" },
 			{ "CM", "Challenge Mode" },
-			{ "Instabilities", "Mistlock Instabilities (Fractals of the Mists)" },
+			{ "Instabilities", "Mistlock Instabilities - Fractals of the Mists" },
 		};
 
 		public FilterCollection<LogData> DataStore
