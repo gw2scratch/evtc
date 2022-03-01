@@ -2,6 +2,13 @@
 
 This is the full changelog of the arcdps Log Manager.
 
+## Log Manager v1.4 (unreleased)
+
+#### New features
+- Mistlock Instabilities are now detected for Fractal logs and shown in the details pane.
+- Added a new column for Mistlock Instabilities to the log list (right-click the column header to enable).
+- Added filters for Mistlock Instabilities to *Advanced Filters*.
+
 ## Log Manager v1.3.1
 
 #### Fixes
