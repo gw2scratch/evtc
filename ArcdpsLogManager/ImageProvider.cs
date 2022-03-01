@@ -36,6 +36,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		private Lazy<Image> TinyIconUntamed { get; } = new Lazy<Image>(Resources.GetTinyIconUntamed);
 		private Lazy<Image> TinyIconDaredevil { get; } = new Lazy<Image>(Resources.GetTinyIconDaredevil);
 		private Lazy<Image> TinyIconDeadeye { get; } = new Lazy<Image>(Resources.GetTinyIconDeadeye);
+		private Lazy<Image> TinyIconSpecter { get; } = new Lazy<Image>(Resources.GetTinyIconSpecter);
 		private Lazy<Image> TinyIconScrapper { get; } = new Lazy<Image>(Resources.GetTinyIconScrapper);
 		private Lazy<Image> TinyIconHolosmith { get; } = new Lazy<Image>(Resources.GetTinyIconHolosmith);
 		private Lazy<Image> TinyIconMechanist { get; } = new Lazy<Image>(Resources.GetTinyIconMechanist);
@@ -44,6 +45,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		private Lazy<Image> TinyIconHarbinger { get; } = new Lazy<Image>(Resources.GetTinyIconHarbinger);
 		private Lazy<Image> TinyIconTempest { get; } = new Lazy<Image>(Resources.GetTinyIconTempest);
 		private Lazy<Image> TinyIconWeaver { get; } = new Lazy<Image>(Resources.GetTinyIconWeaver);
+		private Lazy<Image> TinyIconCatalyst { get; } = new Lazy<Image>(Resources.GetTinyIconCatalyst);
 		private Lazy<Image> TinyIconChronomancer { get; } = new Lazy<Image>(Resources.GetTinyIconChronomancer);
 		private Lazy<Image> TinyIconMirage { get; } = new Lazy<Image>(Resources.GetTinyIconMirage);
 		private Lazy<Image> TinyIconVirtuoso { get; } = new Lazy<Image>(Resources.GetTinyIconVirtuoso);
@@ -200,8 +202,8 @@ namespace GW2Scratch.ArcdpsLogManager
 				EliteSpecialization.Chronomancer => TinyIconChronomancer.Value,
 				EliteSpecialization.Mirage => TinyIconMirage.Value,
 				EliteSpecialization.Virtuoso => TinyIconVirtuoso.Value,
-				EliteSpecialization.Specter => TinyIconUnknownProfession.Value, // TODO: Add when available
-				EliteSpecialization.Catalyst => TinyIconUnknownProfession.Value, // TODO: Add when available
+				EliteSpecialization.Specter => TinyIconSpecter.Value,
+				EliteSpecialization.Catalyst => TinyIconCatalyst.Value,
 				_ => throw new ArgumentOutOfRangeException(nameof(specialization)),
 			};
 		}
