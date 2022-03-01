@@ -1,3 +1,5 @@
+using GW2Scratch.ArcdpsLogManager.Configuration;
+
 namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 {
 	public class SettingsFilters : ILogFilter

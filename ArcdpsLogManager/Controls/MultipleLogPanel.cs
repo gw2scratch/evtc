@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using Eto.Drawing;
 using Eto.Forms;
+using GW2Scratch.ArcdpsLogManager.Configuration;
 using GW2Scratch.ArcdpsLogManager.Logs;
 using GW2Scratch.ArcdpsLogManager.Logs.Filters;
 using GW2Scratch.ArcdpsLogManager.Logs.Tagging;
