@@ -1,11 +1,8 @@
-using System;
-using System.IO;
-using System.Linq;
 using Eto.Drawing;
 using Eto.Forms;
-using GW2Scratch.ArcdpsLogManager.Configuration;
+using System;
 
-namespace GW2Scratch.ArcdpsLogManager
+namespace GW2Scratch.ArcdpsLogManager.Configuration
 {
 	public class SettingsForm : Form
 	{

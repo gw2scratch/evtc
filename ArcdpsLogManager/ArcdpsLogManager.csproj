@@ -33,4 +33,7 @@
     <ItemGroup>
         <EmbeddedResource Include="Images\**" />
     </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Settings" />
+    </ItemGroup>
 </Project>

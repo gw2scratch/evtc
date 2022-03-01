@@ -1,3 +1,4 @@
+using GW2Scratch.ArcdpsLogManager.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;

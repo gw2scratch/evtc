@@ -1,11 +1,11 @@
+using GW2Scratch.ArcdpsLogManager.Uploads;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using GW2Scratch.ArcdpsLogManager.Uploads;
-using Newtonsoft.Json;
 
-namespace GW2Scratch.ArcdpsLogManager
+namespace GW2Scratch.ArcdpsLogManager.Configuration
 {
 	public static class Settings
 	{
