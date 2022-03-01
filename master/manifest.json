@@ -864,7 +864,7 @@
       "output": {
         ".html": {
           "relative_path": "api/GW2Scratch.EVTCAnalytics.GameData.SkillIds.html",
-          "hash": "lvExfcP+7cZgiKcOdf0CQJBFzSFkVY0VFbFy6sHlg8U="
+          "hash": "H6AgVmrsXOvN/oqZ5HDU2W8qQMMCB+fOAfhP7UyGAV8="
         }
       },
       "is_incremental": false,
@@ -1100,6 +1100,18 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Model.MistlockInstability.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Model.MistlockInstability.html",
+          "hash": "IBUpzUQqBurAC3zRpNp1j5EPd7lwBfnS02seuIKa/aA="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Model.Skills.BuffFormulaAttribute.yml",
       "output": {
         ".html": {
@@ -1224,7 +1236,7 @@
       "output": {
         ".html": {
           "relative_path": "api/GW2Scratch.EVTCAnalytics.Model.html",
-          "hash": "Pqva3lIhvjyO4ga66fL2Ywd7p/WkzX2DcT/0h4LWyis="
+          "hash": "UkqLF0AHc0eNmJHqbxJ6wsgFhCDKHw0gYX0lV+2W1k8="
         }
       },
       "is_incremental": false,
@@ -2024,6 +2036,18 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.FractalInstabilityDetector.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.FractalInstabilityDetector.html",
+          "hash": "tXyRHN7hBw57GUvHRKDCrKmIMuhRcnxVFfJZM05RXEY="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.IEncounterIdentifier.yml",
       "output": {
         ".html": {
@@ -2100,7 +2124,7 @@
       "output": {
         ".html": {
           "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.html",
-          "hash": "5Ipehuf5feR0DfIuAQCjIGG4L6VH0Sy8vSyk4QWU8E4="
+          "hash": "rMeGN9HiQND/HmGh4BS8lqCan3Z4zOuUwIGlW7x2gKE="
         }
       },
       "is_incremental": false,
@@ -2124,7 +2148,7 @@
       "output": {
         ".html": {
           "relative_path": "api/toc.html",
-          "hash": "ciVC8y1m3LQYgA24UaGr4sG/ZiavWxxuOxY9yr5FdtI="
+          "hash": "lCE9mHkYsmf7fsn+Y2WaGg3Q2RHhP1gW4q3ovP6JWZg="
         }
       },
       "is_incremental": false,
@@ -2163,7 +2187,7 @@
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 168,
+          "total_file_count": 170,
           "skipped_file_count": 0
         },
         "TocDocumentProcessor": {

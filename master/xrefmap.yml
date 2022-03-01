@@ -2476,12 +2476,24 @@ references:
   commentId: T:GW2Scratch.EVTCAnalytics.GameData.SkillIds
   fullName: GW2Scratch.EVTCAnalytics.GameData.SkillIds
   nameWithType: SkillIds
+- uid: GW2Scratch.EVTCAnalytics.GameData.SkillIds.AdrenalineRush
+  name: AdrenalineRush
+  href: api/GW2Scratch.EVTCAnalytics.GameData.SkillIds.html#GW2Scratch_EVTCAnalytics_GameData_SkillIds_AdrenalineRush
+  commentId: F:GW2Scratch.EVTCAnalytics.GameData.SkillIds.AdrenalineRush
+  fullName: GW2Scratch.EVTCAnalytics.GameData.SkillIds.AdrenalineRush
+  nameWithType: SkillIds.AdrenalineRush
 - uid: GW2Scratch.EVTCAnalytics.GameData.SkillIds.Aegis
   name: Aegis
   href: api/GW2Scratch.EVTCAnalytics.GameData.SkillIds.html#GW2Scratch_EVTCAnalytics_GameData_SkillIds_Aegis
   commentId: F:GW2Scratch.EVTCAnalytics.GameData.SkillIds.Aegis
   fullName: GW2Scratch.EVTCAnalytics.GameData.SkillIds.Aegis
   nameWithType: SkillIds.Aegis
+- uid: GW2Scratch.EVTCAnalytics.GameData.SkillIds.Afflicted
+  name: Afflicted
+  href: api/GW2Scratch.EVTCAnalytics.GameData.SkillIds.html#GW2Scratch_EVTCAnalytics_GameData_SkillIds_Afflicted
+  commentId: F:GW2Scratch.EVTCAnalytics.GameData.SkillIds.Afflicted
+  fullName: GW2Scratch.EVTCAnalytics.GameData.SkillIds.Afflicted
+  nameWithType: SkillIds.Afflicted
 - uid: GW2Scratch.EVTCAnalytics.GameData.SkillIds.AiDarkEarlySkill
   name: AiDarkEarlySkill
   href: api/GW2Scratch.EVTCAnalytics.GameData.SkillIds.html#GW2Scratch_EVTCAnalytics_GameData_SkillIds_AiDarkEarlySkill
@@ -2512,6 +2524,12 @@ references:
   commentId: F:GW2Scratch.EVTCAnalytics.GameData.SkillIds.AssassinsSignetPassive
   fullName: GW2Scratch.EVTCAnalytics.GameData.SkillIds.AssassinsSignetPassive
   nameWithType: SkillIds.AssassinsSignetPassive
+- uid: GW2Scratch.EVTCAnalytics.GameData.SkillIds.Birds
+  name: Birds
+  href: api/GW2Scratch.EVTCAnalytics.GameData.SkillIds.html#GW2Scratch_EVTCAnalytics_GameData_SkillIds_Birds
+  commentId: F:GW2Scratch.EVTCAnalytics.GameData.SkillIds.Birds
+  fullName: GW2Scratch.EVTCAnalytics.GameData.SkillIds.Birds
+  nameWithType: SkillIds.Birds
 - uid: GW2Scratch.EVTCAnalytics.GameData.SkillIds.Bleeding
   name: Bleeding
   href: api/GW2Scratch.EVTCAnalytics.GameData.SkillIds.html#GW2Scratch_EVTCAnalytics_GameData_SkillIds_Bleeding
@@ -2524,6 +2542,12 @@ references:
   commentId: F:GW2Scratch.EVTCAnalytics.GameData.SkillIds.Blinded
   fullName: GW2Scratch.EVTCAnalytics.GameData.SkillIds.Blinded
   nameWithType: SkillIds.Blinded
+- uid: GW2Scratch.EVTCAnalytics.GameData.SkillIds.BoonOverload
+  name: BoonOverload
+  href: api/GW2Scratch.EVTCAnalytics.GameData.SkillIds.html#GW2Scratch_EVTCAnalytics_GameData_SkillIds_BoonOverload
+  commentId: F:GW2Scratch.EVTCAnalytics.GameData.SkillIds.BoonOverload
+  fullName: GW2Scratch.EVTCAnalytics.GameData.SkillIds.BoonOverload
+  nameWithType: SkillIds.BoonOverload
 - uid: GW2Scratch.EVTCAnalytics.GameData.SkillIds.Burning
   name: Burning
   href: api/GW2Scratch.EVTCAnalytics.GameData.SkillIds.html#GW2Scratch_EVTCAnalytics_GameData_SkillIds_Burning
@@ -2578,6 +2602,24 @@ references:
   commentId: F:GW2Scratch.EVTCAnalytics.GameData.SkillIds.FencersFinesse
   fullName: GW2Scratch.EVTCAnalytics.GameData.SkillIds.FencersFinesse
   nameWithType: SkillIds.FencersFinesse
+- uid: GW2Scratch.EVTCAnalytics.GameData.SkillIds.FluxBomb
+  name: FluxBomb
+  href: api/GW2Scratch.EVTCAnalytics.GameData.SkillIds.html#GW2Scratch_EVTCAnalytics_GameData_SkillIds_FluxBomb
+  commentId: F:GW2Scratch.EVTCAnalytics.GameData.SkillIds.FluxBomb
+  fullName: GW2Scratch.EVTCAnalytics.GameData.SkillIds.FluxBomb
+  nameWithType: SkillIds.FluxBomb
+- uid: GW2Scratch.EVTCAnalytics.GameData.SkillIds.FractalVindicators
+  name: FractalVindicators
+  href: api/GW2Scratch.EVTCAnalytics.GameData.SkillIds.html#GW2Scratch_EVTCAnalytics_GameData_SkillIds_FractalVindicators
+  commentId: F:GW2Scratch.EVTCAnalytics.GameData.SkillIds.FractalVindicators
+  fullName: GW2Scratch.EVTCAnalytics.GameData.SkillIds.FractalVindicators
+  nameWithType: SkillIds.FractalVindicators
+- uid: GW2Scratch.EVTCAnalytics.GameData.SkillIds.Frailty
+  name: Frailty
+  href: api/GW2Scratch.EVTCAnalytics.GameData.SkillIds.html#GW2Scratch_EVTCAnalytics_GameData_SkillIds_Frailty
+  commentId: F:GW2Scratch.EVTCAnalytics.GameData.SkillIds.Frailty
+  fullName: GW2Scratch.EVTCAnalytics.GameData.SkillIds.Frailty
+  nameWithType: SkillIds.Frailty
 - uid: GW2Scratch.EVTCAnalytics.GameData.SkillIds.Fury
   name: Fury
   href: api/GW2Scratch.EVTCAnalytics.GameData.SkillIds.html#GW2Scratch_EVTCAnalytics_GameData_SkillIds_Fury
@@ -2590,6 +2632,12 @@ references:
   commentId: F:GW2Scratch.EVTCAnalytics.GameData.SkillIds.GorsevalInvulnerability
   fullName: GW2Scratch.EVTCAnalytics.GameData.SkillIds.GorsevalInvulnerability
   nameWithType: SkillIds.GorsevalInvulnerability
+- uid: GW2Scratch.EVTCAnalytics.GameData.SkillIds.Hamstrung
+  name: Hamstrung
+  href: api/GW2Scratch.EVTCAnalytics.GameData.SkillIds.html#GW2Scratch_EVTCAnalytics_GameData_SkillIds_Hamstrung
+  commentId: F:GW2Scratch.EVTCAnalytics.GameData.SkillIds.Hamstrung
+  fullName: GW2Scratch.EVTCAnalytics.GameData.SkillIds.Hamstrung
+  nameWithType: SkillIds.Hamstrung
 - uid: GW2Scratch.EVTCAnalytics.GameData.SkillIds.HealingPrism
   name: HealingPrism
   href: api/GW2Scratch.EVTCAnalytics.GameData.SkillIds.html#GW2Scratch_EVTCAnalytics_GameData_SkillIds_HealingPrism
@@ -2626,6 +2674,12 @@ references:
   commentId: F:GW2Scratch.EVTCAnalytics.GameData.SkillIds.Invulnerability
   fullName: GW2Scratch.EVTCAnalytics.GameData.SkillIds.Invulnerability
   nameWithType: SkillIds.Invulnerability
+- uid: GW2Scratch.EVTCAnalytics.GameData.SkillIds.LastLaugh
+  name: LastLaugh
+  href: api/GW2Scratch.EVTCAnalytics.GameData.SkillIds.html#GW2Scratch_EVTCAnalytics_GameData_SkillIds_LastLaugh
+  commentId: F:GW2Scratch.EVTCAnalytics.GameData.SkillIds.LastLaugh
+  fullName: GW2Scratch.EVTCAnalytics.GameData.SkillIds.LastLaugh
+  nameWithType: SkillIds.LastLaugh
 - uid: GW2Scratch.EVTCAnalytics.GameData.SkillIds.LesserChaosStorm
   name: LesserChaosStorm
   href: api/GW2Scratch.EVTCAnalytics.GameData.SkillIds.html#GW2Scratch_EVTCAnalytics_GameData_SkillIds_LesserChaosStorm
@@ -2650,12 +2704,30 @@ references:
   commentId: F:GW2Scratch.EVTCAnalytics.GameData.SkillIds.MirageMirror
   fullName: GW2Scratch.EVTCAnalytics.GameData.SkillIds.MirageMirror
   nameWithType: SkillIds.MirageMirror
+- uid: GW2Scratch.EVTCAnalytics.GameData.SkillIds.MistsConvergence
+  name: MistsConvergence
+  href: api/GW2Scratch.EVTCAnalytics.GameData.SkillIds.html#GW2Scratch_EVTCAnalytics_GameData_SkillIds_MistsConvergence
+  commentId: F:GW2Scratch.EVTCAnalytics.GameData.SkillIds.MistsConvergence
+  fullName: GW2Scratch.EVTCAnalytics.GameData.SkillIds.MistsConvergence
+  nameWithType: SkillIds.MistsConvergence
 - uid: GW2Scratch.EVTCAnalytics.GameData.SkillIds.Necrosis
   name: Necrosis
   href: api/GW2Scratch.EVTCAnalytics.GameData.SkillIds.html#GW2Scratch_EVTCAnalytics_GameData_SkillIds_Necrosis
   commentId: F:GW2Scratch.EVTCAnalytics.GameData.SkillIds.Necrosis
   fullName: GW2Scratch.EVTCAnalytics.GameData.SkillIds.Necrosis
   nameWithType: SkillIds.Necrosis
+- uid: GW2Scratch.EVTCAnalytics.GameData.SkillIds.NoPainNoGain
+  name: NoPainNoGain
+  href: api/GW2Scratch.EVTCAnalytics.GameData.SkillIds.html#GW2Scratch_EVTCAnalytics_GameData_SkillIds_NoPainNoGain
+  commentId: F:GW2Scratch.EVTCAnalytics.GameData.SkillIds.NoPainNoGain
+  fullName: GW2Scratch.EVTCAnalytics.GameData.SkillIds.NoPainNoGain
+  nameWithType: SkillIds.NoPainNoGain
+- uid: GW2Scratch.EVTCAnalytics.GameData.SkillIds.Outflanked
+  name: Outflanked
+  href: api/GW2Scratch.EVTCAnalytics.GameData.SkillIds.html#GW2Scratch_EVTCAnalytics_GameData_SkillIds_Outflanked
+  commentId: F:GW2Scratch.EVTCAnalytics.GameData.SkillIds.Outflanked
+  fullName: GW2Scratch.EVTCAnalytics.GameData.SkillIds.Outflanked
+  nameWithType: SkillIds.Outflanked
 - uid: GW2Scratch.EVTCAnalytics.GameData.SkillIds.PalmStrike
   name: PalmStrike
   href: api/GW2Scratch.EVTCAnalytics.GameData.SkillIds.html#GW2Scratch_EVTCAnalytics_GameData_SkillIds_PalmStrike
@@ -2812,6 +2884,18 @@ references:
   commentId: F:GW2Scratch.EVTCAnalytics.GameData.SkillIds.SignetOfTheEtherPassive
   fullName: GW2Scratch.EVTCAnalytics.GameData.SkillIds.SignetOfTheEtherPassive
   nameWithType: SkillIds.SignetOfTheEtherPassive
+- uid: GW2Scratch.EVTCAnalytics.GameData.SkillIds.SlipperySlope
+  name: SlipperySlope
+  href: api/GW2Scratch.EVTCAnalytics.GameData.SkillIds.html#GW2Scratch_EVTCAnalytics_GameData_SkillIds_SlipperySlope
+  commentId: F:GW2Scratch.EVTCAnalytics.GameData.SkillIds.SlipperySlope
+  fullName: GW2Scratch.EVTCAnalytics.GameData.SkillIds.SlipperySlope
+  nameWithType: SkillIds.SlipperySlope
+- uid: GW2Scratch.EVTCAnalytics.GameData.SkillIds.SocialAwkwardness
+  name: SocialAwkwardness
+  href: api/GW2Scratch.EVTCAnalytics.GameData.SkillIds.html#GW2Scratch_EVTCAnalytics_GameData_SkillIds_SocialAwkwardness
+  commentId: F:GW2Scratch.EVTCAnalytics.GameData.SkillIds.SocialAwkwardness
+  fullName: GW2Scratch.EVTCAnalytics.GameData.SkillIds.SocialAwkwardness
+  nameWithType: SkillIds.SocialAwkwardness
 - uid: GW2Scratch.EVTCAnalytics.GameData.SkillIds.SoullessHorrorDetermined
   name: SoullessHorrorDetermined
   href: api/GW2Scratch.EVTCAnalytics.GameData.SkillIds.html#GW2Scratch_EVTCAnalytics_GameData_SkillIds_SoullessHorrorDetermined
@@ -2824,6 +2908,18 @@ references:
   commentId: F:GW2Scratch.EVTCAnalytics.GameData.SkillIds.Stability
   fullName: GW2Scratch.EVTCAnalytics.GameData.SkillIds.Stability
   nameWithType: SkillIds.Stability
+- uid: GW2Scratch.EVTCAnalytics.GameData.SkillIds.StickTogether
+  name: StickTogether
+  href: api/GW2Scratch.EVTCAnalytics.GameData.SkillIds.html#GW2Scratch_EVTCAnalytics_GameData_SkillIds_StickTogether
+  commentId: F:GW2Scratch.EVTCAnalytics.GameData.SkillIds.StickTogether
+  fullName: GW2Scratch.EVTCAnalytics.GameData.SkillIds.StickTogether
+  nameWithType: SkillIds.StickTogether
+- uid: GW2Scratch.EVTCAnalytics.GameData.SkillIds.SugarRush
+  name: SugarRush
+  href: api/GW2Scratch.EVTCAnalytics.GameData.SkillIds.html#GW2Scratch_EVTCAnalytics_GameData_SkillIds_SugarRush
+  commentId: F:GW2Scratch.EVTCAnalytics.GameData.SkillIds.SugarRush
+  fullName: GW2Scratch.EVTCAnalytics.GameData.SkillIds.SugarRush
+  nameWithType: SkillIds.SugarRush
 - uid: GW2Scratch.EVTCAnalytics.GameData.SkillIds.Superspeed
   name: Superspeed
   href: api/GW2Scratch.EVTCAnalytics.GameData.SkillIds.html#GW2Scratch_EVTCAnalytics_GameData_SkillIds_Superspeed
@@ -2848,6 +2944,24 @@ references:
   commentId: F:GW2Scratch.EVTCAnalytics.GameData.SkillIds.Torment
   fullName: GW2Scratch.EVTCAnalytics.GameData.SkillIds.Torment
   nameWithType: SkillIds.Torment
+- uid: GW2Scratch.EVTCAnalytics.GameData.SkillIds.ToxicSickness
+  name: ToxicSickness
+  href: api/GW2Scratch.EVTCAnalytics.GameData.SkillIds.html#GW2Scratch_EVTCAnalytics_GameData_SkillIds_ToxicSickness
+  commentId: F:GW2Scratch.EVTCAnalytics.GameData.SkillIds.ToxicSickness
+  fullName: GW2Scratch.EVTCAnalytics.GameData.SkillIds.ToxicSickness
+  nameWithType: SkillIds.ToxicSickness
+- uid: GW2Scratch.EVTCAnalytics.GameData.SkillIds.ToxicTrail
+  name: ToxicTrail
+  href: api/GW2Scratch.EVTCAnalytics.GameData.SkillIds.html#GW2Scratch_EVTCAnalytics_GameData_SkillIds_ToxicTrail
+  commentId: F:GW2Scratch.EVTCAnalytics.GameData.SkillIds.ToxicTrail
+  fullName: GW2Scratch.EVTCAnalytics.GameData.SkillIds.ToxicTrail
+  nameWithType: SkillIds.ToxicTrail
+- uid: GW2Scratch.EVTCAnalytics.GameData.SkillIds.Vengeance
+  name: Vengeance
+  href: api/GW2Scratch.EVTCAnalytics.GameData.SkillIds.html#GW2Scratch_EVTCAnalytics_GameData_SkillIds_Vengeance
+  commentId: F:GW2Scratch.EVTCAnalytics.GameData.SkillIds.Vengeance
+  fullName: GW2Scratch.EVTCAnalytics.GameData.SkillIds.Vengeance
+  nameWithType: SkillIds.Vengeance
 - uid: GW2Scratch.EVTCAnalytics.GameData.SkillIds.Vigor
   name: Vigor
   href: api/GW2Scratch.EVTCAnalytics.GameData.SkillIds.html#GW2Scratch_EVTCAnalytics_GameData_SkillIds_Vigor
@@ -2866,6 +2980,12 @@ references:
   commentId: F:GW2Scratch.EVTCAnalytics.GameData.SkillIds.Weakness
   fullName: GW2Scratch.EVTCAnalytics.GameData.SkillIds.Weakness
   nameWithType: SkillIds.Weakness
+- uid: GW2Scratch.EVTCAnalytics.GameData.SkillIds.WeBleedFire
+  name: WeBleedFire
+  href: api/GW2Scratch.EVTCAnalytics.GameData.SkillIds.html#GW2Scratch_EVTCAnalytics_GameData_SkillIds_WeBleedFire
+  commentId: F:GW2Scratch.EVTCAnalytics.GameData.SkillIds.WeBleedFire
+  fullName: GW2Scratch.EVTCAnalytics.GameData.SkillIds.WeBleedFire
+  nameWithType: SkillIds.WeBleedFire
 - uid: GW2Scratch.EVTCAnalytics.GameData.SpeciesIds
   name: SpeciesIds
   href: api/GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.html
@@ -4965,6 +5085,132 @@ references:
   commentId: F:GW2Scratch.EVTCAnalytics.Model.LogType.WorldVersusWorld
   fullName: GW2Scratch.EVTCAnalytics.Model.LogType.WorldVersusWorld
   nameWithType: LogType.WorldVersusWorld
+- uid: GW2Scratch.EVTCAnalytics.Model.MistlockInstability
+  name: MistlockInstability
+  href: api/GW2Scratch.EVTCAnalytics.Model.MistlockInstability.html
+  commentId: T:GW2Scratch.EVTCAnalytics.Model.MistlockInstability
+  fullName: GW2Scratch.EVTCAnalytics.Model.MistlockInstability
+  nameWithType: MistlockInstability
+- uid: GW2Scratch.EVTCAnalytics.Model.MistlockInstability.AdrenalineRush
+  name: AdrenalineRush
+  href: api/GW2Scratch.EVTCAnalytics.Model.MistlockInstability.html#GW2Scratch_EVTCAnalytics_Model_MistlockInstability_AdrenalineRush
+  commentId: F:GW2Scratch.EVTCAnalytics.Model.MistlockInstability.AdrenalineRush
+  fullName: GW2Scratch.EVTCAnalytics.Model.MistlockInstability.AdrenalineRush
+  nameWithType: MistlockInstability.AdrenalineRush
+- uid: GW2Scratch.EVTCAnalytics.Model.MistlockInstability.Afflicted
+  name: Afflicted
+  href: api/GW2Scratch.EVTCAnalytics.Model.MistlockInstability.html#GW2Scratch_EVTCAnalytics_Model_MistlockInstability_Afflicted
+  commentId: F:GW2Scratch.EVTCAnalytics.Model.MistlockInstability.Afflicted
+  fullName: GW2Scratch.EVTCAnalytics.Model.MistlockInstability.Afflicted
+  nameWithType: MistlockInstability.Afflicted
+- uid: GW2Scratch.EVTCAnalytics.Model.MistlockInstability.Birds
+  name: Birds
+  href: api/GW2Scratch.EVTCAnalytics.Model.MistlockInstability.html#GW2Scratch_EVTCAnalytics_Model_MistlockInstability_Birds
+  commentId: F:GW2Scratch.EVTCAnalytics.Model.MistlockInstability.Birds
+  fullName: GW2Scratch.EVTCAnalytics.Model.MistlockInstability.Birds
+  nameWithType: MistlockInstability.Birds
+- uid: GW2Scratch.EVTCAnalytics.Model.MistlockInstability.BoonOverload
+  name: BoonOverload
+  href: api/GW2Scratch.EVTCAnalytics.Model.MistlockInstability.html#GW2Scratch_EVTCAnalytics_Model_MistlockInstability_BoonOverload
+  commentId: F:GW2Scratch.EVTCAnalytics.Model.MistlockInstability.BoonOverload
+  fullName: GW2Scratch.EVTCAnalytics.Model.MistlockInstability.BoonOverload
+  nameWithType: MistlockInstability.BoonOverload
+- uid: GW2Scratch.EVTCAnalytics.Model.MistlockInstability.FluxBomb
+  name: FluxBomb
+  href: api/GW2Scratch.EVTCAnalytics.Model.MistlockInstability.html#GW2Scratch_EVTCAnalytics_Model_MistlockInstability_FluxBomb
+  commentId: F:GW2Scratch.EVTCAnalytics.Model.MistlockInstability.FluxBomb
+  fullName: GW2Scratch.EVTCAnalytics.Model.MistlockInstability.FluxBomb
+  nameWithType: MistlockInstability.FluxBomb
+- uid: GW2Scratch.EVTCAnalytics.Model.MistlockInstability.FractalVindicators
+  name: FractalVindicators
+  href: api/GW2Scratch.EVTCAnalytics.Model.MistlockInstability.html#GW2Scratch_EVTCAnalytics_Model_MistlockInstability_FractalVindicators
+  commentId: F:GW2Scratch.EVTCAnalytics.Model.MistlockInstability.FractalVindicators
+  fullName: GW2Scratch.EVTCAnalytics.Model.MistlockInstability.FractalVindicators
+  nameWithType: MistlockInstability.FractalVindicators
+- uid: GW2Scratch.EVTCAnalytics.Model.MistlockInstability.Frailty
+  name: Frailty
+  href: api/GW2Scratch.EVTCAnalytics.Model.MistlockInstability.html#GW2Scratch_EVTCAnalytics_Model_MistlockInstability_Frailty
+  commentId: F:GW2Scratch.EVTCAnalytics.Model.MistlockInstability.Frailty
+  fullName: GW2Scratch.EVTCAnalytics.Model.MistlockInstability.Frailty
+  nameWithType: MistlockInstability.Frailty
+- uid: GW2Scratch.EVTCAnalytics.Model.MistlockInstability.Hamstrung
+  name: Hamstrung
+  href: api/GW2Scratch.EVTCAnalytics.Model.MistlockInstability.html#GW2Scratch_EVTCAnalytics_Model_MistlockInstability_Hamstrung
+  commentId: F:GW2Scratch.EVTCAnalytics.Model.MistlockInstability.Hamstrung
+  fullName: GW2Scratch.EVTCAnalytics.Model.MistlockInstability.Hamstrung
+  nameWithType: MistlockInstability.Hamstrung
+- uid: GW2Scratch.EVTCAnalytics.Model.MistlockInstability.LastLaugh
+  name: LastLaugh
+  href: api/GW2Scratch.EVTCAnalytics.Model.MistlockInstability.html#GW2Scratch_EVTCAnalytics_Model_MistlockInstability_LastLaugh
+  commentId: F:GW2Scratch.EVTCAnalytics.Model.MistlockInstability.LastLaugh
+  fullName: GW2Scratch.EVTCAnalytics.Model.MistlockInstability.LastLaugh
+  nameWithType: MistlockInstability.LastLaugh
+- uid: GW2Scratch.EVTCAnalytics.Model.MistlockInstability.MistsConvergence
+  name: MistsConvergence
+  href: api/GW2Scratch.EVTCAnalytics.Model.MistlockInstability.html#GW2Scratch_EVTCAnalytics_Model_MistlockInstability_MistsConvergence
+  commentId: F:GW2Scratch.EVTCAnalytics.Model.MistlockInstability.MistsConvergence
+  fullName: GW2Scratch.EVTCAnalytics.Model.MistlockInstability.MistsConvergence
+  nameWithType: MistlockInstability.MistsConvergence
+- uid: GW2Scratch.EVTCAnalytics.Model.MistlockInstability.NoPainNoGain
+  name: NoPainNoGain
+  href: api/GW2Scratch.EVTCAnalytics.Model.MistlockInstability.html#GW2Scratch_EVTCAnalytics_Model_MistlockInstability_NoPainNoGain
+  commentId: F:GW2Scratch.EVTCAnalytics.Model.MistlockInstability.NoPainNoGain
+  fullName: GW2Scratch.EVTCAnalytics.Model.MistlockInstability.NoPainNoGain
+  nameWithType: MistlockInstability.NoPainNoGain
+- uid: GW2Scratch.EVTCAnalytics.Model.MistlockInstability.Outflanked
+  name: Outflanked
+  href: api/GW2Scratch.EVTCAnalytics.Model.MistlockInstability.html#GW2Scratch_EVTCAnalytics_Model_MistlockInstability_Outflanked
+  commentId: F:GW2Scratch.EVTCAnalytics.Model.MistlockInstability.Outflanked
+  fullName: GW2Scratch.EVTCAnalytics.Model.MistlockInstability.Outflanked
+  nameWithType: MistlockInstability.Outflanked
+- uid: GW2Scratch.EVTCAnalytics.Model.MistlockInstability.SlipperySlope
+  name: SlipperySlope
+  href: api/GW2Scratch.EVTCAnalytics.Model.MistlockInstability.html#GW2Scratch_EVTCAnalytics_Model_MistlockInstability_SlipperySlope
+  commentId: F:GW2Scratch.EVTCAnalytics.Model.MistlockInstability.SlipperySlope
+  fullName: GW2Scratch.EVTCAnalytics.Model.MistlockInstability.SlipperySlope
+  nameWithType: MistlockInstability.SlipperySlope
+- uid: GW2Scratch.EVTCAnalytics.Model.MistlockInstability.SocialAwkwardness
+  name: SocialAwkwardness
+  href: api/GW2Scratch.EVTCAnalytics.Model.MistlockInstability.html#GW2Scratch_EVTCAnalytics_Model_MistlockInstability_SocialAwkwardness
+  commentId: F:GW2Scratch.EVTCAnalytics.Model.MistlockInstability.SocialAwkwardness
+  fullName: GW2Scratch.EVTCAnalytics.Model.MistlockInstability.SocialAwkwardness
+  nameWithType: MistlockInstability.SocialAwkwardness
+- uid: GW2Scratch.EVTCAnalytics.Model.MistlockInstability.StickTogether
+  name: StickTogether
+  href: api/GW2Scratch.EVTCAnalytics.Model.MistlockInstability.html#GW2Scratch_EVTCAnalytics_Model_MistlockInstability_StickTogether
+  commentId: F:GW2Scratch.EVTCAnalytics.Model.MistlockInstability.StickTogether
+  fullName: GW2Scratch.EVTCAnalytics.Model.MistlockInstability.StickTogether
+  nameWithType: MistlockInstability.StickTogether
+- uid: GW2Scratch.EVTCAnalytics.Model.MistlockInstability.SugarRush
+  name: SugarRush
+  href: api/GW2Scratch.EVTCAnalytics.Model.MistlockInstability.html#GW2Scratch_EVTCAnalytics_Model_MistlockInstability_SugarRush
+  commentId: F:GW2Scratch.EVTCAnalytics.Model.MistlockInstability.SugarRush
+  fullName: GW2Scratch.EVTCAnalytics.Model.MistlockInstability.SugarRush
+  nameWithType: MistlockInstability.SugarRush
+- uid: GW2Scratch.EVTCAnalytics.Model.MistlockInstability.ToxicSickness
+  name: ToxicSickness
+  href: api/GW2Scratch.EVTCAnalytics.Model.MistlockInstability.html#GW2Scratch_EVTCAnalytics_Model_MistlockInstability_ToxicSickness
+  commentId: F:GW2Scratch.EVTCAnalytics.Model.MistlockInstability.ToxicSickness
+  fullName: GW2Scratch.EVTCAnalytics.Model.MistlockInstability.ToxicSickness
+  nameWithType: MistlockInstability.ToxicSickness
+- uid: GW2Scratch.EVTCAnalytics.Model.MistlockInstability.ToxicTrail
+  name: ToxicTrail
+  href: api/GW2Scratch.EVTCAnalytics.Model.MistlockInstability.html#GW2Scratch_EVTCAnalytics_Model_MistlockInstability_ToxicTrail
+  commentId: F:GW2Scratch.EVTCAnalytics.Model.MistlockInstability.ToxicTrail
+  fullName: GW2Scratch.EVTCAnalytics.Model.MistlockInstability.ToxicTrail
+  nameWithType: MistlockInstability.ToxicTrail
+- uid: GW2Scratch.EVTCAnalytics.Model.MistlockInstability.Vengeance
+  name: Vengeance
+  href: api/GW2Scratch.EVTCAnalytics.Model.MistlockInstability.html#GW2Scratch_EVTCAnalytics_Model_MistlockInstability_Vengeance
+  commentId: F:GW2Scratch.EVTCAnalytics.Model.MistlockInstability.Vengeance
+  fullName: GW2Scratch.EVTCAnalytics.Model.MistlockInstability.Vengeance
+  nameWithType: MistlockInstability.Vengeance
+- uid: GW2Scratch.EVTCAnalytics.Model.MistlockInstability.WeBleedFire
+  name: WeBleedFire
+  href: api/GW2Scratch.EVTCAnalytics.Model.MistlockInstability.html#GW2Scratch_EVTCAnalytics_Model_MistlockInstability_WeBleedFire
+  commentId: F:GW2Scratch.EVTCAnalytics.Model.MistlockInstability.WeBleedFire
+  fullName: GW2Scratch.EVTCAnalytics.Model.MistlockInstability.WeBleedFire
+  nameWithType: MistlockInstability.WeBleedFire
 - uid: GW2Scratch.EVTCAnalytics.Model.Skills
   name: GW2Scratch.EVTCAnalytics.Model.Skills
   href: api/GW2Scratch.EVTCAnalytics.Model.Skills.html
@@ -8645,6 +8891,25 @@ references:
   isSpec: "True"
   fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.WorldVersusWorldEncounterData.Enemies
   nameWithType: WorldVersusWorldEncounterData.Enemies
+- uid: GW2Scratch.EVTCAnalytics.Processing.FractalInstabilityDetector
+  name: FractalInstabilityDetector
+  href: api/GW2Scratch.EVTCAnalytics.Processing.FractalInstabilityDetector.html
+  commentId: T:GW2Scratch.EVTCAnalytics.Processing.FractalInstabilityDetector
+  fullName: GW2Scratch.EVTCAnalytics.Processing.FractalInstabilityDetector
+  nameWithType: FractalInstabilityDetector
+- uid: GW2Scratch.EVTCAnalytics.Processing.FractalInstabilityDetector.GetInstabilities(GW2Scratch.EVTCAnalytics.Model.Log)
+  name: GetInstabilities(Log)
+  href: api/GW2Scratch.EVTCAnalytics.Processing.FractalInstabilityDetector.html#GW2Scratch_EVTCAnalytics_Processing_FractalInstabilityDetector_GetInstabilities_GW2Scratch_EVTCAnalytics_Model_Log_
+  commentId: M:GW2Scratch.EVTCAnalytics.Processing.FractalInstabilityDetector.GetInstabilities(GW2Scratch.EVTCAnalytics.Model.Log)
+  fullName: GW2Scratch.EVTCAnalytics.Processing.FractalInstabilityDetector.GetInstabilities(GW2Scratch.EVTCAnalytics.Model.Log)
+  nameWithType: FractalInstabilityDetector.GetInstabilities(Log)
+- uid: GW2Scratch.EVTCAnalytics.Processing.FractalInstabilityDetector.GetInstabilities*
+  name: GetInstabilities
+  href: api/GW2Scratch.EVTCAnalytics.Processing.FractalInstabilityDetector.html#GW2Scratch_EVTCAnalytics_Processing_FractalInstabilityDetector_GetInstabilities_
+  commentId: Overload:GW2Scratch.EVTCAnalytics.Processing.FractalInstabilityDetector.GetInstabilities
+  isSpec: "True"
+  fullName: GW2Scratch.EVTCAnalytics.Processing.FractalInstabilityDetector.GetInstabilities
+  nameWithType: FractalInstabilityDetector.GetInstabilities
 - uid: GW2Scratch.EVTCAnalytics.Processing.IEncounterIdentifier
   name: IEncounterIdentifier
   href: api/GW2Scratch.EVTCAnalytics.Processing.IEncounterIdentifier.html
