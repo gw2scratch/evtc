@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using Eto.Drawing;
 using Eto.Forms;
-using GW2Scratch.ArcdpsLogManager.Extensions;
 using GW2Scratch.ArcdpsLogManager.GameData;
 using GW2Scratch.ArcdpsLogManager.Logs.Filters;
 using GW2Scratch.EVTCAnalytics.Model;
