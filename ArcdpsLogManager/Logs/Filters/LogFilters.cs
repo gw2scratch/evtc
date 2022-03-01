@@ -28,6 +28,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 		private DateTime? minDateTime = null;
 		private DateTime? maxDateTime = null;
 		private CompositionFilters compositionFilters = new CompositionFilters();
+		private InstabilityFilters instabilityFilters = new InstabilityFilters();
 		private readonly IReadOnlyList<ILogFilter> additionalFilters;
 
 		public bool ShowParseUnparsedLogs
@@ -205,12 +206,25 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 				OnPropertyChanged();
 			}
 		}
+		
+		public InstabilityFilters InstabilityFilters
+		{
+			get => instabilityFilters;
+			set
+			{
+				if (instabilityFilters.Equals(value)) return;
+				instabilityFilters = value;
+				OnPropertyChanged();
+			}
+		}
 
 		public LogFilters(params ILogFilter[] additionalFilters)
 		{
 			this.additionalFilters = additionalFilters;
 			CompositionFilters = new CompositionFilters();
 			CompositionFilters.PropertyChanged += (_, _) => OnPropertyChanged(nameof(CompositionFilters));
+			InstabilityFilters = new InstabilityFilters();
+			InstabilityFilters.PropertyChanged += (_, _) => OnPropertyChanged(nameof(InstabilityFilters));
 		}
 
 		public bool FilterLog(LogData log)
@@ -230,7 +244,8 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 			       && FilterByEncounterMode(log)
 			       && FilterByFavoriteStatus(log)
 			       && FilterByTags(log)
-			       && FilterByComposition(log);
+			       && FilterByComposition(log)
+			       && FilterByInstabilities(log);
 		}
 
 		private bool FilterByParsingStatus(LogData log)
@@ -289,6 +304,11 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 		private bool FilterByComposition(LogData log)
 		{
 			return CompositionFilters.FilterLog(log);
+		}
+		
+		private bool FilterByInstabilities(LogData log)
+		{
+			return InstabilityFilters.FilterLog(log);
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;
