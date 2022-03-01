@@ -1,9 +1,10 @@
-using GW2Scratch.ArcdpsLogManager.Uploads;
+using GW2Scratch.ArcdpsLogManager.Configuration.Migrations;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 
 namespace GW2Scratch.ArcdpsLogManager.Configuration
 {
@@ -14,43 +15,13 @@ namespace GW2Scratch.ArcdpsLogManager.Configuration
 		public const string ApiCacheFilename = "ApiDataCache.json";
 		public const string SettingsFilename = "Settings.json";
 
-		/// <summary>
-		/// A class that is serialized to store the settings. Also used to define default values.
-		/// </summary>
-		private class StoredSettings
-		{
-			public List<string> LogRootPaths { get; set; } = new List<string>();
-			public bool ShowDebugData { get; set; } = false;
-			public bool ShowGuildTagsInLogDetail { get; set; } = false;
-			public bool ShowFailurePercentagesInLogList { get; set; } = true;
-			public bool ShowFilterSidebar { get; set; } = true;
-			public bool UseGW2Api { get; set; } = true;
-			public bool CheckForUpdates { get; set; } = true;
-			public string DpsReportUserToken { get; set; } = string.Empty;
-			public string DpsReportDomain { get; set; } = DpsReportUploader.DefaultDomain.Domain;
-			public int? MinimumLogDurationSeconds { get; set; } = null;
-			public List<string> HiddenLogListColumns { get; set; } = new List<string>() {"Character", "Map ID", "Game Version", "arcdps Version", "Instabilities"};
-			public List<string> IgnoredUpdateVersions { get; set; } = new List<string>();
-
-			public static StoredSettings LoadFromFile()
-			{
-				string filename = GetFilename();
-
-				if (!File.Exists(filename))
-				{
-					return new StoredSettings();
-				}
-
-				using (var reader = File.OpenText(filename))
-				{
-					var serializer = new JsonSerializer();
-					serializer.ObjectCreationHandling = ObjectCreationHandling.Replace;
-					return (StoredSettings) serializer.Deserialize(reader, typeof(StoredSettings));
-				}
-			}
-		}
-
 		private static readonly object WriteLock = new object();
+
+		private static readonly List<ISettingsMigration> Migrations = new List<ISettingsMigration>()
+		{
+			// Null version is pre-1.4.0.0
+			new NullVersionSettingsMigration(settings => settings.HiddenLogListColumns.Add("Instabilities"))
+		};
 
 		private static StoredSettings Values => Stored.Value;
 
@@ -69,8 +40,36 @@ namespace GW2Scratch.ArcdpsLogManager.Configuration
 			MinimumLogDurationSecondsChanged += (sender, args) => SaveToFile();
 			IgnoredUpdateVersionsChanged += (sender, args) => SaveToFile();
 
-			return StoredSettings.LoadFromFile();
+			return LoadFromFile();
 		});
+
+		public static StoredSettings LoadFromFile()
+		{
+			string filename = GetFilename();
+
+			if (!File.Exists(filename))
+			{
+				return new StoredSettings();
+			}
+
+			using var reader = File.OpenText(filename);
+			using var jsonReader = new JsonTextReader(reader);
+			
+			var serializer = new JsonSerializer { ObjectCreationHandling = ObjectCreationHandling.Replace };
+			var settings = serializer.Deserialize<StoredSettings>(jsonReader);
+			
+			foreach (var migration in Migrations)
+			{
+				if (migration.Applies(settings.ManagerVersion))
+				{
+					migration.Apply(settings);
+				}
+			}
+			
+			settings.ManagerVersion = Assembly.GetExecutingAssembly().GetName().Version;
+			
+			return settings;
+		}
 
 		private static void SaveToFile()
 		{
