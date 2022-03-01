@@ -219,7 +219,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				{
 					Add(reparseButton);
 				}
-				EndVertical();
+				EndGroup();
 
 				BeginHorizontal();
 				{
