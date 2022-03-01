@@ -19,6 +19,11 @@ namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 					Add(new SquadCompositionFilterPanel(imageProvider, filters));
 				}
 				EndGroup();
+				BeginGroup("Mistlock Instabilities", new Padding(5));
+				{
+					Add(new InstabilityFilterPanel(imageProvider, filters));
+				}
+				EndGroup();
 			}
 			EndVertical();
 
