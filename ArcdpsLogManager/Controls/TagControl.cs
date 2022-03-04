@@ -22,9 +22,20 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 		}
 
 		private HashSet<TagInfo> tags;
+		private bool readOnly;
 
 		public event EventHandler<TagAddedEventArgs> TagAdded;
 		public event EventHandler<TagRemovedEventArgs> TagRemoved;
+
+		public bool ReadOnly
+		{
+			get => readOnly;
+			set
+			{
+				readOnly = value;
+				RecreateLayout();
+			}
+		}
 
 		public class TagAddedEventArgs : EventArgs
 		{
@@ -105,22 +116,25 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 						Add(null);
 					}
 
-					BeginHorizontal();
+					if (!ReadOnly)
 					{
-						// This double-embedding is required to have both the label and the TextBox only occupy one horizontal slot in the table
-						BeginVertical(xscale: true);
+						BeginHorizontal();
 						{
-							BeginHorizontal();
+							// This double-embedding is required to have both the label and the TextBox only occupy one horizontal slot in the table
+							BeginVertical(xscale: true);
 							{
-								Add(new Label {Text = "New tag: ", VerticalAlignment = VerticalAlignment.Center});
-								Add(tagTextBox, xscale: true);
+								BeginHorizontal();
+								{
+									Add(new Label { Text = "New tag: ", VerticalAlignment = VerticalAlignment.Center });
+									Add(tagTextBox, xscale: true);
+								}
+								EndHorizontal();
 							}
-							EndHorizontal();
+							EndVertical();
+							Add(addTagButton, false);
 						}
-						EndVertical();
-						Add(addTagButton, false);
+						EndHorizontal();
 					}
-					EndHorizontal();
 				}
 				EndGroup();
 			}
