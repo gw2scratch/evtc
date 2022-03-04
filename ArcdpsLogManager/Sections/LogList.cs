@@ -42,6 +42,8 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			{ "CM", "Challenge Mode" },
 			{ "Instabilities", "Mistlock Instabilities - Fractals of the Mists" },
 		};
+		
+		public bool ReadOnly { get; init; }
 
 		public FilterCollection<LogData> DataStore
 		{
@@ -54,9 +56,12 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			}
 		}
 
+		public IEnumerable<LogData> SelectedItems { get => logGridView.SelectedItems; }
+
 		public LogList(LogCache logCache, ApiData apiData, LogDataProcessor logProcessor,
-			UploadProcessor uploadProcessor, ImageProvider imageProvider, ILogNameProvider nameProvider)
+			UploadProcessor uploadProcessor, ImageProvider imageProvider, ILogNameProvider nameProvider, bool readOnly = false)
 		{
+			ReadOnly = readOnly;
 			this.logCache = logCache;
 			this.apiData = apiData;
 			this.logProcessor = logProcessor;
@@ -96,12 +101,12 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 
 		private LogDetailPanel ConstructLogDetailPanel()
 		{
-			return new LogDetailPanel(logCache, apiData, logProcessor, uploadProcessor, imageProvider, nameProvider);
+			return new LogDetailPanel(logCache, apiData, logProcessor, uploadProcessor, imageProvider, nameProvider, ReadOnly);
 		}
 
 		private MultipleLogPanel ConstructMultipleLogPanel()
 		{
-			return new MultipleLogPanel(logCache, logProcessor, uploadProcessor, nameProvider, imageProvider);
+			return new MultipleLogPanel(logCache, apiData, logProcessor, uploadProcessor, nameProvider, imageProvider, ReadOnly);
 		}
 
 		private GridView<LogData> ConstructLogGridView(LogDetailPanel detailPanel, MultipleLogPanel multipleLogPanel)

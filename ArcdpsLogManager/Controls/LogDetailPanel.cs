@@ -120,7 +120,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 		}
 
 		public LogDetailPanel(LogCache logCache, ApiData apiData, LogDataProcessor logProcessor, UploadProcessor uploadProcessor,
-			ImageProvider imageProvider, ILogNameProvider nameProvider)
+			ImageProvider imageProvider, ILogNameProvider nameProvider, bool readOnly = false)
 		{
 			UploadProcessor = uploadProcessor;
 			ImageProvider = imageProvider;
@@ -132,13 +132,14 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 
 			instabilityList = new MistlockInstabilityList(imageProvider);
 			groupComposition = new GroupCompositionControl(apiData, imageProvider);
-			tagControl = new TagControl();
+			tagControl = new TagControl {ReadOnly = readOnly};
 
 			DynamicGroup debugSection;
 			var debugButton = new Button {Text = "Debug data"};
 			var reparseButton = new Button {Text = "Reprocess"};
 
-			deleteButton.Click += (sender, args) => new DeleteFilesForm(new LogData[] { LogData }, nameProvider, imageProvider);
+			deleteButton.Click += (sender, args) => new DeleteFilesForm(new[] { LogData }, logCache, apiData,
+				logProcessor, uploadProcessor, imageProvider, nameProvider).Show();
 
 			tagControl.TagAdded += (sender, args) =>
 			{
@@ -234,7 +235,10 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 							{
 								Add(dpsReportTextBox, true);
 								Add(dpsReportOpenButton);
-								Add(dpsReportUploadButton);
+								if (!readOnly)
+								{
+									Add(dpsReportUploadButton);
+								}
 							}
 							EndHorizontal();
 						}
@@ -252,7 +256,10 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 					Add(null, true);
 					BeginHorizontal();
 					{
-						Add(deleteButton);
+						if (!readOnly)
+						{
+							Add(deleteButton);
+						}
 						Add(fileNameButton);
 					}
 					EndHorizontal();

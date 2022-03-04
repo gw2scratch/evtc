@@ -5,12 +5,11 @@ using System.Linq;
 using Eto.Drawing;
 using Eto.Forms;
 using GW2Scratch.ArcdpsLogManager.Configuration;
+using GW2Scratch.ArcdpsLogManager.Gw2Api;
 using GW2Scratch.ArcdpsLogManager.Logs;
-using GW2Scratch.ArcdpsLogManager.Logs.Filters;
 using GW2Scratch.ArcdpsLogManager.Logs.Naming;
 using GW2Scratch.ArcdpsLogManager.Logs.Tagging;
 using GW2Scratch.ArcdpsLogManager.Processing;
-using static GW2Scratch.ArcdpsLogManager.Logs.LogData;
 using Button = Eto.Forms.Button;
 using Label = Eto.Forms.Label;
 
@@ -113,7 +112,9 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				logData.Where(x => x.DpsReportEIUpload.Url != null).Select(x => x.DpsReportEIUpload.Url));
 		}
 
-		public MultipleLogPanel(LogCache logCache, LogDataProcessor logProcessor, UploadProcessor uploadProcessor, ILogNameProvider nameProvider, ImageProvider imageProvider)
+		public MultipleLogPanel(LogCache logCache, ApiData apiData, LogDataProcessor logProcessor,
+			UploadProcessor uploadProcessor, ILogNameProvider nameProvider, ImageProvider imageProvider,
+			bool readOnly = false)
 		{
 			this.nameProvider = nameProvider;
 			this.imageProvider = imageProvider;
@@ -176,11 +177,12 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			};
 
 			dpsReportCancelButton.Click += (sender, args) => { uploadProcessor.CancelDpsReportEIUpload(logData); };
-			deleteButton.Click += (sender, args) => new DeleteFilesForm(LogData, nameProvider, imageProvider);
+			deleteButton.Click += (sender, args) => new DeleteFilesForm(LogData, logCache, apiData,
+				logProcessor, uploadProcessor, imageProvider, nameProvider).Show();
 
 			DynamicTable debugSection;
 
-			tagControl = new TagControl();
+			tagControl = new TagControl {ReadOnly = readOnly};
 			tagControl.TagAdded += (sender, args) =>
 			{
 				var added = false;
@@ -246,16 +248,21 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 						EndVertical();
 					}
 					EndVertical();
-					BeginVertical();
+					
+					if (!readOnly)
 					{
-						BeginHorizontal();
+						BeginVertical();
 						{
-							Add(dpsReportUploadButton, true);
-							Add(dpsReportCancelButton);
+							BeginHorizontal();
+							{
+								Add(dpsReportUploadButton, true);
+								Add(dpsReportCancelButton);
+							}
+							EndHorizontal();
 						}
-						EndHorizontal();
+						EndVertical();
 					}
-					EndVertical();
+
 					BeginVertical();
 					{
 						AddRow(dpsReportUploadProgressBar);
@@ -271,6 +278,12 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 						EndHorizontal();
 					}
 					EndVertical();
+					if (!readOnly)
+					{
+						BeginGroup("File management");
+						AddRow(deleteButton);
+						EndGroup();
+					}
 				}
 				EndGroup();
 			}
