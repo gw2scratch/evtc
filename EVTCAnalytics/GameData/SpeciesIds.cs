@@ -105,7 +105,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		// Festivals
 		public const int Freezie = 21333;
 
-		// Strike Missions
+		// Strike Missions - Icebrood Saga
 		public const int IcebroodConstruct = 22154;
 		public const int VoiceOfTheFallen = 22343;
 		public const int ClawOfTheFallen = 22481;
@@ -113,6 +113,9 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		public const int Boneskinner = 22521;
 		public const int WhisperOfJormag = 22711;
 		public const int VariniaStormsounder = 22836;
+		
+		// Strike Missions - End of Dragons
+		public const int MaiTrin = 24033;
 		
 		// Story
 		public const int HeartsAndMindsMordremoth = 15884;

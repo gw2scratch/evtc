@@ -98,13 +98,16 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 		MassiveKittyGolem = 30004,
 		// TODO: Check if there are more golem types
 
-		// Strike Missions
+		// Strike Missions - Icebrood Saga
 		ShiverpeaksPass = 40001,
 		VoiceAndClawOfTheFallen = 40002,
 		FraenirOfJormag = 40003,
 		Boneskinner = 40004,
 		WhisperOfJormag = 40005,
 		VariniaStormsounder = 40006, // Last enemy in Strike Mission: Cold War
+		
+		// Strike Missions - End of Dragons
+		AetherbladeHideout = 41001,
 		
 		// Story
 		Mordremoth = 50001,
