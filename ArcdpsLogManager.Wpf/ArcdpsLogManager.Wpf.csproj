@@ -23,10 +23,10 @@
         </None>
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Eto.Platform.Wpf" Version="2.5.11-ci-20210422.772645364"/>
+        <PackageReference Include="Eto.Platform.Wpf" Version="2.6.1" />
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\ArcdpsLogManager\ArcdpsLogManager.csproj"/>
+        <ProjectReference Include="..\ArcdpsLogManager\ArcdpsLogManager.csproj" />
     </ItemGroup>
     <PropertyGroup>
         <!-- Warning: This has to match the assembly name defined in ArcdpsLogManager.csproj -->
@@ -46,13 +46,13 @@
             To find the filename of the core assembly, we go through all project references
             (this includes transitive references) and only keep the one with a matching name
             -->
-            <CoreDllPath Include="@(_ResolvedProjectReferencePaths)" Condition="$([System.String]::Copy(%(Filename)).Contains('$(CoreDllFilename)'))"/>
+            <CoreDllPath Include="@(_ResolvedProjectReferencePaths)" Condition="$([System.String]::Copy(%(Filename)).Contains('$(CoreDllFilename)'))" />
         </ItemGroup>
-        <Error Text="Core assembly dll ($(CoreDllFilename)) not found." Condition="@(CoreDllPath) == ''"/>
+        <Error Text="Core assembly dll ($(CoreDllFilename)) not found." Condition="@(CoreDllPath) == ''" />
         <GetAssemblyIdentity AssemblyFiles="@(CoreDllPath)">
-            <Output TaskParameter="Assemblies" ItemName="AssemblyInfo"/>
+            <Output TaskParameter="Assemblies" ItemName="AssemblyInfo" />
         </GetAssemblyIdentity>
-        <Message Text="Updating version to %(AssemblyInfo.Version)"/>
+        <Message Text="Updating version to %(AssemblyInfo.Version)" />
         <PropertyGroup>
             <FileVersion>%(AssemblyInfo.Version)</FileVersion>
             <InformationalVersion>%(AssemblyInfo.Version)</InformationalVersion>
