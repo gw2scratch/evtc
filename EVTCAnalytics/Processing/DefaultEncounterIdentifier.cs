@@ -471,6 +471,12 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						.WithModes(new AgentHealthModeDeterminer(mainTarget, 9569560))
 						.Build();
 				}
+				case Encounter.AetherbladeHideout:
+				{
+					return GetDefaultBuilder(encounter, mainTarget)
+						.WithResult(new AgentBuffGainedDeterminer(mainTarget, SkillIds.Determined895))
+						.Build();
+				}
 				default:
 					return GetDefaultBuilder(encounter, mainTarget, mergeMainTarget: false).Build();
 			}
@@ -647,6 +653,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						return Encounter.VariniaStormsounder;
 					case SpeciesIds.HeartsAndMindsMordremoth:
 						return Encounter.Mordremoth;
+					case SpeciesIds.MaiTrin:
+						return Encounter.AetherbladeHideout;
 				}
 			}
 			else if (mainTarget is Gadget gadgetBoss)
