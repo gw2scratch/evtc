@@ -12,7 +12,7 @@ namespace GW2Scratch.EVTCAnalytics.Model
 		/// Time on the client. May differ from <see cref="ServerTime"/>, depending on latency.
 		/// </summary>
 		/// <remarks>
-		/// This time may be significantly unsynchronized as it depends on the configuration of the computer used to play the game.
+		/// This time may be significantly desynchronized as it depends on the configuration of the computer used to play the game.
 		/// </remarks>
         public DateTimeOffset LocalTime { get; }
 

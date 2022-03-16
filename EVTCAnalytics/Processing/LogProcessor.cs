@@ -735,6 +735,9 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					// Only used for master assignment
 					// Contains if the attack target is targetable as the value.
 					return;
+				case StateChange.InstanceStart:
+					state.InstanceStart = new InstanceStart(item.SrcAgent);
+					return;
 				default:
 				{
 					var processedEvent = GetEvent(state, item);
@@ -890,18 +893,30 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						return new DefianceBarHealthUpdateEvent(item.Time, GetAgentByAddress(item.SrcAgent),
 							breakbarHealthFraction);
 					case StateChange.BuffInfo:
-					// TODO: Figure out what the contents are
+						// TODO: Figure out what the contents are
 					case StateChange.BuffFormula:
-					// TODO: Figure out what the contents are
+						// TODO: Figure out what the contents are
 					case StateChange.SkillInfo:
-					// TODO: Figure out what the contents are
+						// TODO: Figure out what the contents are
 					case StateChange.SkillTiming:
-					// TODO: Figure out what the contents are
+						// TODO: Figure out what the contents are
 					case StateChange.Error:
-					// TODO: Implement
+						// TODO: Implement
 						return new UnknownEvent(item.Time, item);
 					case StateChange.Tag:
 						return new AgentTagEvent(item.Time, GetAgentByAddress(item.SrcAgent), item.Value);
+					case StateChange.BarrierUpdate:
+						// TODO: Implement
+						return new UnknownEvent(item.Time, item);
+					case StateChange.StatReset:
+						// Should not appear in logs
+						return new UnknownEvent(item.Time, item);
+					case StateChange.Extension:
+						// TODO: Implement
+						return new UnknownEvent(item.Time, item);
+					case StateChange.ApiDelayed:
+						// Should not appear in logs
+						return new UnknownEvent(item.Time, item);
 					case StateChange.Unknown:
 						return new UnknownEvent(item.Time, item);
 					default:

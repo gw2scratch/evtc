@@ -43,6 +43,11 @@
 		BreakbarPercent = 35,
 		Error           = 36,
 		Tag             = 37,
+		BarrierUpdate   = 38,
+		StatReset       = 39, // Only in realtime API; should not appear in logs
+		Extension       = 40,
+		ApiDelayed      = 41, // Only in realtime API; should not appear in logs
+		InstanceStart   = 42,
 		Unknown
 	};
 }

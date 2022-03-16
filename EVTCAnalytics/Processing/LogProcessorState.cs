@@ -23,6 +23,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 		public LogTime LogEndTime { get; set; }
 		public Player PointOfView { get; set; }
 		public string EvtcVersion { get; set; }
+		public InstanceStart InstanceStart { get; set; }
 		public int? GameBuild { get; set; }
 		public int? GameShardId { get; set; }
 		public int? GameLanguageId { get; set; }
