@@ -488,6 +488,13 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						.WithResult(new TeamChangedBelowHealthThresholdDeterminer(mainTarget, 0.5f))
 						.Build();
 				}
+				case Encounter.KainengOverlook:
+				{
+					return GetDefaultBuilder(encounter, mainTarget)
+						// This has the same rationale behind it as the check for Xunlai Jade Junkyard.
+						.WithResult(new TeamChangedBelowHealthThresholdDeterminer(mainTarget, 0.5f))
+						.Build();
+				}
 				default:
 					return GetDefaultBuilder(encounter, mainTarget, mergeMainTarget: false).Build();
 			}
@@ -668,6 +675,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						return Encounter.AetherbladeHideout;
 					case SpeciesIds.Ankka:
 						return Encounter.XunlaiJadeJunkyard;
+					case SpeciesIds.MinisterLi:
+						return Encounter.KainengOverlook;
 				}
 			}
 			else if (mainTarget is Gadget gadgetBoss)

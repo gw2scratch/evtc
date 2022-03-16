@@ -65,6 +65,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 				{Encounter.Mordremoth, EncounterCategory.Other},
 				{Encounter.AetherbladeHideout, EncounterCategory.StrikeMission},
 				{Encounter.XunlaiJadeJunkyard, EncounterCategory.StrikeMission},
+				{Encounter.KainengOverlook, EncounterCategory.StrikeMission},
 			};
 
 		private static readonly HashSet<EncounterCategory> RaidCategories =
