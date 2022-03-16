@@ -108,6 +108,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 		
 		// Strike Missions - End of Dragons
 		AetherbladeHideout = 41001,
+		XunlaiJadeJunkyard = 41002,
 		
 		// Story
 		Mordremoth = 50001,

@@ -99,6 +99,9 @@ namespace GW2Scratch.EVTCAnalytics.Events
 	/// </remarks>
 	public class AgentHealthUpdateEvent : AgentEvent
 	{
+		/// <summary>
+		/// The current health fraction, where 1 is 100% and 0 is 0% of maximum health of the agent.
+		/// </summary>
 		public float HealthFraction { get; }
 
 		public AgentHealthUpdateEvent(long time, Agent agent, float healthFraction) : base(time, agent)

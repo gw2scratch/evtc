@@ -477,6 +477,17 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						.WithResult(new AgentBuffGainedDeterminer(mainTarget, SkillIds.Determined895))
 						.Build();
 				}
+				case Encounter.XunlaiJadeJunkyard:
+				{
+					return GetDefaultBuilder(encounter, mainTarget)
+						// We cannot check for Determination as Ankka can get Determined any amount of times per phase.
+						// We do not really want to track phases as that would likely cause issues if the PoV player
+						// joins the instance late.
+						// Ankka changes teams twice at the start and then once when she is beaten.
+						// We just pick an arbitrary conservative threshold that her health needs to reach first: 50%.
+						.WithResult(new TeamChangedBelowHealthThresholdDeterminer(mainTarget, 0.5f))
+						.Build();
+				}
 				default:
 					return GetDefaultBuilder(encounter, mainTarget, mergeMainTarget: false).Build();
 			}
@@ -655,6 +666,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						return Encounter.Mordremoth;
 					case SpeciesIds.MaiTrin:
 						return Encounter.AetherbladeHideout;
+					case SpeciesIds.Ankka:
+						return Encounter.XunlaiJadeJunkyard;
 				}
 			}
 			else if (mainTarget is Gadget gadgetBoss)
