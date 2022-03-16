@@ -117,6 +117,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		// Strike Missions - End of Dragons
 		public const int MaiTrin = 24033;
 		public const int Ankka = 23957;
+		public const int MinisterLi = 24485;
 		
 		// Story
 		public const int HeartsAndMindsMordremoth = 15884;
