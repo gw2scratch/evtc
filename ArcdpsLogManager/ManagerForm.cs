@@ -51,7 +51,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		private ApiProcessor ApiProcessor { get; }
 		private UploadProcessor UploadProcessor { get; }
 		private LogDataProcessor LogDataProcessor { get; }
-		private LogCompressionProcessor LogCompressionProcessor { get; }
+		public LogCompressionProcessor LogCompressionProcessor { get; }
 		private ILogNameProvider LogNameProvider { get; }
 		private LogDataUpdater LogDataUpdater { get; } = new LogDataUpdater();
 		private LogCacheAutoSaver LogCacheAutoSaver { get; }

@@ -6,6 +6,7 @@ using Eto.Drawing;
 using Eto.Forms;
 using GW2Scratch.ArcdpsLogManager.Configuration;
 using GW2Scratch.ArcdpsLogManager.Controls;
+using GW2Scratch.ArcdpsLogManager.Dialogs;
 using GW2Scratch.ArcdpsLogManager.GameData;
 using GW2Scratch.ArcdpsLogManager.Gw2Api;
 using GW2Scratch.ArcdpsLogManager.Logs;
@@ -363,6 +364,19 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			};
 
 			gridView.ContextMenu = ConstructLogGridViewContextMenu(gridView);
+
+			gridView.KeyUp += (_, args) =>
+			{
+				if (args.Key == Keys.Delete && !ReadOnly)
+				{
+					if (gridView.SelectedItems?.Any() ?? false)
+					{
+						var deleteDialog = new LogDeleteDialog(gridView.SelectedItems, logCache, apiData,
+							logProcessor, uploadProcessor, imageProvider, nameProvider);
+						deleteDialog.ShowModal(this);
+					}
+				}
+			};
 
 			sorter = new GridViewSorter<LogData>(gridView, new Dictionary<GridColumn, Comparison<LogData>>
 			{

@@ -1,69 +1,98 @@
 ﻿using Eto.Drawing;
 using Eto.Forms;
 using GW2Scratch.ArcdpsLogManager.Logs;
-using System;
+using GW2Scratch.ArcdpsLogManager.Logs.Naming;
+using GW2Scratch.EVTCAnalytics.GameData.Encounters;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 
 namespace GW2Scratch.ArcdpsLogManager.Dialogs
 {
 	class UnreliableLogsFoundDialog : Dialog
 	{
-		public Button ConfirmButton;
-		public Button CancelButton;
-		public Button RemoveUnreliableLogsButton;
-		public UnreliableLogsFoundDialog(IEnumerable<LogData> unreliableLogs)
+		// This is a bit of a hack, ideally we would have reliability information within
+		// EVTCAnalytics (or, even better, no unreliable detections).
+		private static Encounter[] UnreliableEncounters { get; } =
 		{
-			Title = "Unreliable Logs found";
-			ClientSize = new Size(500, 300);
+			Encounter.BanditTrio, Encounter.Artsariiv, Encounter.Arkk, Encounter.Other
+		};
+
+		private bool Confirmed { get; set; }
+
+		public UnreliableLogsFoundDialog(IEnumerable<LogData> logs, ILogNameProvider nameProvider)
+		{
+			Title = "Warning: Unreliable log results";
 			ShowInTaskbar = true;
 			var layout = new DynamicLayout();
 			Content = layout;
 
-			ConfirmButton = new Button() { Text = "Confirm Deletion" };
-			ConfirmButton.Click += Button_Clicked;
-			CancelButton = new Button() { Text = "Cancel" };
-			CancelButton.Click += Button_Clicked;
-			RemoveUnreliableLogsButton = new Button() { Text = "Remove unreliable Logs" };
-			RemoveUnreliableLogsButton.Click += Button_Clicked;
+			var confirmButton = new Button { Text = "Delete anyway" };
+			PositiveButtons.Add(confirmButton);
 
-			var unreliableLogGridView = new GridView<LogData>();
-			unreliableLogGridView.DataStore = unreliableLogs;
-			unreliableLogGridView.Columns.Add(new GridColumn() {
-				DataCell = new TextBoxCell() {
-					Binding = new DelegateBinding<LogData, string>(log => log.FileName)
-				}
+			confirmButton.Click += (_, _) =>
+			{
+				Confirmed = true;
+				Close();
+			};
+
+			AbortButton = new Button { Text = "Cancel" };
+			NegativeButtons.Add(AbortButton);
+			AbortButton.Click += (_, _) =>
+			{
+				Close();
+			};
+
+			Padding = new Padding(10);
+			layout.Spacing = new Size(5, 5);
+			layout.AddRow(new Label
+			{
+				Text = "Some of the selected logs currently have unreliable success detection in rare scenarios. " +
+				       "The logs may rarely display a failure even when they are successful. ",
+				Wrap = WrapMode.Word,
+				Width = 500,
 			});
-
-			layout.BeginGroup("WARNING", new Padding(5), new Size(0, 5));
+			layout.BeginGroup("Affected encounters", padding: new Padding(5));
 			{
-				layout.AddRow("Artsariiv, Arkk and Bandit Trio (Narella) have a rare unreliable success detection due to the way the encounter ends.");
-				layout.AddRow("These logs listed may display a failure but might be successful. Confirm Deletion?");
-			}
-			layout.EndGroup();
-			layout.BeginGroup("Files Locations", new Padding(5), new Size(0, 5));
-			{
-				layout.Add(unreliableLogGridView, yscale: true);
-				layout.Add(null, yscale: false);
-				layout.BeginVertical();
+				foreach (var encounter in GetUnreliableEncounterNames(logs, nameProvider))
 				{
-					layout.BeginHorizontal();
-					{
-						layout.Add(RemoveUnreliableLogsButton, xscale: true);
-						layout.Add(ConfirmButton, xscale: true);						
-						layout.Add(CancelButton, xscale: true);
-					}
-					layout.EndHorizontal();
+					layout.AddRow($" • {encounter}");
 				}
-				layout.EndVertical();
 			}
 			layout.EndGroup();
 
+			// This is required on the WPF platform due to a bug in Eto.
+
+			// If not done, the group with affected encounters doesn't get enough space
+			// and at least one row will be missing.
+			Shown += (_, _) =>
+			{
+				AutoSize = false;
+				AutoSize = true;
+			};
 		}
 
-		private void Button_Clicked(object sender, EventArgs e)
+		public bool ShowDialog(Control owner)
 		{
-			Close();
+			this.ShowModal(owner);
+
+			return Confirmed;
+		}
+
+		public static bool IsApplicable(IEnumerable<LogData> logs)
+		{
+			return GetPresentUnreliableLogs(logs).Any();
+		}
+
+		private static IEnumerable<LogData> GetPresentUnreliableLogs(IEnumerable<LogData> logs)
+		{
+			return logs.Where(x => UnreliableEncounters.Contains(x.Encounter));
+		}
+
+		private static IEnumerable<string> GetUnreliableEncounterNames(IEnumerable<LogData> logs,
+			ILogNameProvider nameProvider)
+		{
+			var unreliableLogs = GetPresentUnreliableLogs(logs);
+			return unreliableLogs.Select(nameProvider.GetName).Distinct().OrderBy(x => x);
 		}
 	}
 }

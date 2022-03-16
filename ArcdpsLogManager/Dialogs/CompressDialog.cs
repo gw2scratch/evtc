@@ -1,6 +1,7 @@
 using Eto.Drawing;
 using Eto.Forms;
 using GW2Scratch.ArcdpsLogManager.Logs;
+using GW2Scratch.ArcdpsLogManager.Logs.Compressing;
 using GW2Scratch.ArcdpsLogManager.Processing;
 using System;
 using System.Collections.Generic;
@@ -10,12 +11,10 @@ namespace GW2Scratch.ArcdpsLogManager.Dialogs
 {
 	public class CompressDialog : Dialog
 	{
-		private static readonly string[] ZippedExtensions = { ".zevtc", ".zip" };
-				
 		public CompressDialog(IReadOnlyList<LogData> logs, LogCompressionProcessor logCompressionProcessor)
 		{
 			var compressibleLogs = logs
-				.Where(x => !ZippedExtensions.Any(extension => x.FileName.EndsWith(extension)))
+				.Where(x => !CompressionUtils.HasZipExtension(x.FileName))
 				.Where(x => !logCompressionProcessor.IsScheduledOrBeingProcessed(x))
 				.ToList();
 			
