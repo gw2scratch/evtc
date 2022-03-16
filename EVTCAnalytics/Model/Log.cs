@@ -104,6 +104,14 @@ namespace GW2Scratch.EVTCAnalytics.Model
 		/// Provides access to encounter-specific data and definitions.
 		/// </summary>
 		public IEncounterData EncounterData { get; }
+		
+		/// <summary>
+		/// Provides the start time of the recorded instance if available.
+		/// </summary>
+		/// <remarks>
+		/// Added in arcdps 20211214.
+		/// </remarks>
+		public InstanceStart InstanceStart { get; }
 
 		/// <summary>
 		/// Creates a new instance of a <see cref="Log"/>.
@@ -127,6 +135,7 @@ namespace GW2Scratch.EVTCAnalytics.Model
 			Events = state.Events;
 			Agents = state.Agents;
 			Skills = state.Skills;
+			InstanceStart = state.InstanceStart;
 		}
 
 		/// <summary>
@@ -135,7 +144,8 @@ namespace GW2Scratch.EVTCAnalytics.Model
 		internal Log(Agent mainTarget, LogType logType, IEnumerable<Event> events, IEnumerable<Agent> agents,
 			IEnumerable<Skill> skills, IEncounterData encounterData,
 			GameLanguage gameLanguage, string evtcVersion, LogTime startTime, LogTime endTime,
-			Player pointOfView, int? language, int? gameBuild, int? gameShardId, int? mapId)
+			Player pointOfView, int? language, int? gameBuild, int? gameShardId, int? mapId,
+			InstanceStart instanceStart)
 		{
 			MainTarget = mainTarget;
 			LogType = logType;
@@ -149,6 +159,7 @@ namespace GW2Scratch.EVTCAnalytics.Model
 			GameBuild = gameBuild;
 			GameShardId = gameShardId;
 			MapId = mapId;
+			InstanceStart = instanceStart;
 			Events = events as Event[] ?? events.ToArray();
 			Agents = agents as Agent[] ?? agents.ToArray();
 			Skills = skills as Skill[] ?? skills.ToArray();
