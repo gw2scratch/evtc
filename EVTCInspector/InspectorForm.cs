@@ -38,7 +38,7 @@ namespace GW2Scratch.EVTCInspector
 		private readonly AgentControl agentControl;
 
 		// Statistics
-		private readonly JsonSerializationControl statisticsJsonControl = new JsonSerializationControl();
+		private readonly PropertyGrid statisticsPropertyGrid = new PropertyGrid();
 
 		public InspectorForm()
 		{
@@ -96,7 +96,7 @@ namespace GW2Scratch.EVTCInspector
 			processedTabControl.Pages.Add(new TabPage(agentSplitter) {Text = "Agents"});
 
 			var statisticsLayout = new DynamicLayout();
-			statisticsLayout.Add(statisticsJsonControl);
+			statisticsLayout.Add(statisticsPropertyGrid);
 
 			mainTabControl.Pages.Add(new TabPage(parsedTabControl) {Text = "Parsed data", Padding = MainTabPadding});
 			mainTabControl.Pages.Add(new TabPage(processedTabControl)
@@ -241,7 +241,7 @@ namespace GW2Scratch.EVTCInspector
 
 				statusStringBuilder.AppendLine($"Statistics generated in {statsTime}");
 
-				Application.Instance.Invoke(() => { statisticsJsonControl.Object = stats; });
+				Application.Instance.Invoke(() => { statisticsPropertyGrid.SelectedObject = stats; });
 			}
 			catch (Exception ex)
 			{
