@@ -24,5 +24,10 @@ namespace GW2Scratch.EVTCAnalytics.Model.Agents
 			Address = address;
 			Id = id;
 		}
+
+		public override string ToString()
+		{
+			return $"{Address} | {Id}";
+		}
 	}
 }

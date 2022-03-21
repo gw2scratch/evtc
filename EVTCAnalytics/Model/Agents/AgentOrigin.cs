@@ -13,7 +13,7 @@ namespace GW2Scratch.EVTCAnalytics.Model.Agents
 		/// A value indicating whether this agent is a result of merging multiple raw <see cref="Parsed.ParsedAgent"/> into one.
 		/// </summary>
 		public bool Merged => OriginalAgentData.Count > 1;
-		
+
 		/// <summary>
 		/// Provides <see cref="OriginalAgentData"/> for all raw <see cref="Parsed.ParsedAgent"/> this agent was created from.
 		/// </summary>
@@ -24,7 +24,7 @@ namespace GW2Scratch.EVTCAnalytics.Model.Agents
 		/// </summary>
 		public AgentOrigin(OriginalAgentData originalAgentData)
 		{
-			OriginalAgentData = new List<OriginalAgentData> {originalAgentData};
+			OriginalAgentData = new List<OriginalAgentData> { originalAgentData };
 		}
 
 		/// <summary>
@@ -33,6 +33,13 @@ namespace GW2Scratch.EVTCAnalytics.Model.Agents
 		public AgentOrigin(IEnumerable<OriginalAgentData> originalAgentData)
 		{
 			OriginalAgentData = originalAgentData.ToList();
+		}
+
+		public override string ToString()
+		{
+			return Merged
+				? "Merged"
+				: OriginalAgentData[0].ToString();
 		}
 	}
 }

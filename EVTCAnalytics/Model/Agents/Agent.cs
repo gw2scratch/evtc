@@ -87,5 +87,10 @@ namespace GW2Scratch.EVTCAnalytics.Model.Agents
 		{
 			return FirstAwareTime <= time && time <= LastAwareTime;
 		}
+
+		public override string ToString()
+		{
+			return Name;
+		}
 	}
 }
