@@ -129,7 +129,10 @@ namespace GW2Scratch.EVTCInspector
 		private readonly EventContentFilterControl contentFilters = new EventContentFilterControl();
 		private readonly GridView<Event> eventGridView;
 		private readonly TreeGridView typeFilterTree;
-		private readonly JsonSerializationControl eventJsonControl = new JsonSerializationControl();
+		private readonly PropertyGrid eventPropertyGrid = new PropertyGrid
+		{
+			ShowCategories = false, ShowDescription = true,
+		};
 		private readonly TabControl tabs = new TabControl();
 		private readonly TabPage filterPage;
 		private readonly TabPage eventDataPage;
@@ -143,7 +146,7 @@ namespace GW2Scratch.EVTCInspector
 				HeaderText = "Event Type",
 				DataCell = new TextBoxCell() {Binding = new DelegateBinding<object, string>(x => x.GetType().Name)}
 			});
-			eventGridView.SelectionChanged += (sender, args) => eventJsonControl.Object = eventGridView.SelectedItem;
+			eventGridView.SelectionChanged += (sender, args) => eventPropertyGrid.SelectedObject = eventGridView.SelectedItem;
 			eventGridView.Width = 250;
 
 			var filterLayout = new DynamicLayout();
@@ -188,7 +191,7 @@ namespace GW2Scratch.EVTCInspector
 			filterTabs.Pages.Add(new TabPage {Text = "By Content", Content = filterLayout});
 
 			filterPage = new TabPage {Text = "Filters", Content = filterTabs};
-			eventDataPage = new TabPage {Text = "Event data", Content = eventJsonControl};
+			eventDataPage = new TabPage {Text = "Event data", Content = eventPropertyGrid};
 			tabs.Pages.Add(filterPage);
 			tabs.Pages.Add(eventDataPage);
 
