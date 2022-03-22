@@ -22,7 +22,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			{
 				LogGroup = group;
 
-				if (LogGroup is RootLogGroup || LogGroup is RaidLogGroup)
+				if (LogGroup is RootLogGroup or RaidLogGroup or StrikeMissionLogGroup)
 				{
 					Expanded = true;
 				}
@@ -59,8 +59,10 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 		/// </summary>
 		private IReadOnlyList<EncounterCategory> HiddenCategories { get; } = new[]
 		{
-			// An obscure category which may be obsoleted in the future. May be confusing to users.
+			// An obsolete category.
 			EncounterCategory.Festival,
+			// An obscure category. May be confusing to users if they have not done any of the fights within.
+			EncounterCategory.StrikeMissionFestival,
 			// No reason showing this if there is nothing to select inside.
 			EncounterCategory.Other
 		};
@@ -163,6 +165,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				item.Icon = item.LogGroup switch
 				{
 					RootLogGroup => imageProvider.GetTinyLogIcon(),
+					StrikeMissionLogGroup => imageProvider.GetTinyStrikeIcon(),
 					RaidLogGroup => imageProvider.GetTinyRaidIcon(),
 					CategoryLogGroup categoryGroup => GetCategoryIcon(categoryGroup.Category),
 					EncounterLogGroup encounterGroup => GetEncounterIcon(encounterGroup.Encounter),
@@ -240,7 +243,9 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				EncounterCategory.WorldVersusWorld => imageProvider.GetTinyWorldVersusWorldIcon(),
 				EncounterCategory.Festival => imageProvider.GetTinyFestivalIcon(),
 				EncounterCategory.Fractal => imageProvider.GetTinyFractalsIcon(),
-				EncounterCategory.StrikeMission => imageProvider.GetTinyStrikeIcon(),
+				EncounterCategory.StrikeMissionIcebroodSaga => imageProvider.GetTinyStrikeIcon(),
+				EncounterCategory.StrikeMissionEndOfDragons => imageProvider.GetTinyStrikeIcon(),
+				EncounterCategory.StrikeMissionFestival => imageProvider.GetTinyFestivalIcon(),
 				EncounterCategory.SpecialForcesTrainingArea => imageProvider.GetTinyTrainingAreaIcon(),
 				EncounterCategory.RaidWing1 => imageProvider.GetRaidWingIcon(),
 				EncounterCategory.RaidWing2 => imageProvider.GetRaidWingIcon(),
