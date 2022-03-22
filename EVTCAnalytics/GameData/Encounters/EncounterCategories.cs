@@ -50,7 +50,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 				{Encounter.AiKeeperOfThePeakDayOnly, EncounterCategory.Fractal},
 				{Encounter.AiKeeperOfThePeakNightOnly, EncounterCategory.Fractal},
 				{Encounter.AiKeeperOfThePeakDayAndNight, EncounterCategory.Fractal},
-				{Encounter.Freezie, EncounterCategory.Festival},
+				{Encounter.Freezie, EncounterCategory.StrikeMissionFestival},
 				{Encounter.StandardKittyGolem, EncounterCategory.SpecialForcesTrainingArea},
 				{Encounter.MediumKittyGolem, EncounterCategory.SpecialForcesTrainingArea},
 				{Encounter.LargeKittyGolem, EncounterCategory.SpecialForcesTrainingArea},
@@ -86,7 +86,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 			{
 				EncounterCategory.StrikeMissionIcebroodSaga,
 				EncounterCategory.StrikeMissionEndOfDragons,
-				EncounterCategory.Festival,
+				EncounterCategory.StrikeMissionFestival,
 			};
 
 		/// <summary>

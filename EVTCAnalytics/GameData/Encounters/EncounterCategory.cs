@@ -7,10 +7,12 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 	{
 		Other = 0,
 		WorldVersusWorld = 1,
+		// Currently unused
 		Festival = 2,
 		Fractal = 3,
 		StrikeMissionIcebroodSaga = 4,
 		StrikeMissionEndOfDragons = 5,
+		StrikeMissionFestival = 9,
 		SpecialForcesTrainingArea = 100,
 		RaidWing1 = 101,
 		RaidWing2 = 102,
