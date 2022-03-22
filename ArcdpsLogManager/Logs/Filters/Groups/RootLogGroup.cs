@@ -24,8 +24,10 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters.Groups
 			// -- ...
 			// -- Wing 7
 			// - Strike Missions
+			// -- Icebrood Saga
+			// -- End of Dragons
+			// -- Festivals
 			// - Fractals
-			// - Festivals
 			// - Special Forces Training Area (Golems)
 			// - Any other non-raid EncounterCategory
 			// - Others
@@ -37,7 +39,6 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters.Groups
 
 			var manuallyAddedCategories = new[]
 			{
-				EncounterCategory.StrikeMission,
 				EncounterCategory.Fractal,
 				EncounterCategory.Festival,
 				EncounterCategory.SpecialForcesTrainingArea,
@@ -46,14 +47,13 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters.Groups
 			};
 
 			var leftoverCategories = ((EncounterCategory[]) Enum.GetValues(typeof(EncounterCategory)))
-				.Where(x => !x.IsRaid() && !manuallyAddedCategories.Contains(x));
+				.Where(x => !x.IsRaid() && !x.IsStrikeMission() && !manuallyAddedCategories.Contains(x));
 
 			var groups = new List<LogGroup>();
 
 			groups.Add(new RaidLogGroup());
-			groups.Add(new CategoryLogGroup(EncounterCategory.StrikeMission));
+			groups.Add(new StrikeMissionLogGroup());
 			groups.Add(new CategoryLogGroup(EncounterCategory.Fractal));
-			groups.Add(new CategoryLogGroup(EncounterCategory.Festival));
 			groups.Add(new CategoryLogGroup(EncounterCategory.SpecialForcesTrainingArea));
 			foreach (var category in leftoverCategories)
 			{
