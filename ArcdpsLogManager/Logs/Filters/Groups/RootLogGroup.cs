@@ -37,17 +37,24 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters.Groups
 			// - WvW
 			// -- individual maps
 
+			var ignoredCategories = new[]
+			{
+				EncounterCategory.Festival,
+			};
+			
 			var manuallyAddedCategories = new[]
 			{
 				EncounterCategory.Fractal,
-				EncounterCategory.Festival,
 				EncounterCategory.SpecialForcesTrainingArea,
 				EncounterCategory.Other,
 				EncounterCategory.WorldVersusWorld
 			};
 
 			var leftoverCategories = ((EncounterCategory[]) Enum.GetValues(typeof(EncounterCategory)))
-				.Where(x => !x.IsRaid() && !x.IsStrikeMission() && !manuallyAddedCategories.Contains(x));
+				.Where(x => !x.IsRaid() &&
+				            !x.IsStrikeMission() &&
+				            !manuallyAddedCategories.Contains(x) &&
+				            !ignoredCategories.Contains(x));
 
 			var groups = new List<LogGroup>();
 
