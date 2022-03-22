@@ -80,6 +80,9 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Updates
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 4, 0, 0)
 			                     && log.Encounter.GetEncounterCategory() == EncounterCategory.Fractal,
 				"Adds Mistlock Instabilities for fractal log details, filters, and log list column."),
+			new LogUpdate(log => log.ParsingVersion < new Version(1, 4, 0, 1)
+					&& log.Encounter == Encounter.Other,
+				"Add support for End of Dragons strike missions."),
 			// When adding a new update, you need to increase the revision (last value) of the version in the .csproj file
 			// unless the version changes more significantly, in that case it can be reset to 0.
 		};
