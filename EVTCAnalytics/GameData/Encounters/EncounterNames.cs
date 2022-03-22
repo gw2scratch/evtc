@@ -64,6 +64,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 			{Encounter.AetherbladeHideout, "Aetherblade Hideout"},
 			{Encounter.XunlaiJadeJunkyard, "Xunlai Jade Junkyard"},
 			{Encounter.KainengOverlook, "Kaineng Overlook"},
+			{Encounter.HarvestTemple, "Harvest Temple"},
 		};
 
 		/// <summary>

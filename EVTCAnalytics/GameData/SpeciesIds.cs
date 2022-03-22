@@ -118,6 +118,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		public const int MaiTrin = 24033;
 		public const int Ankka = 23957;
 		public const int MinisterLi = 24485;
+		public const int VoidAmalgamate = 24375;
 		
 		// Story
 		public const int HeartsAndMindsMordremoth = 15884;
