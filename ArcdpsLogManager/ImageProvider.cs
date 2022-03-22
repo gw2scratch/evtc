@@ -61,6 +61,8 @@ namespace GW2Scratch.ArcdpsLogManager
 		private Lazy<Image> TinyIconWorldVersusWorld { get; } = new Lazy<Image>(Resources.GetTinyIconWorldVersusWorld);
 		private Lazy<Image> TinyIconUncategorized { get; } = new Lazy<Image>(Resources.GetTinyIconUncategorized);
 		private Lazy<Image> TinyIconFestival { get; } = new Lazy<Image>(Resources.GetTinyIconFestival);
+		private Lazy<Image> TinyIconIcebroodSaga { get; } = new Lazy<Image>(Resources.GetTinyIconIcebroodSaga);
+		private Lazy<Image> TinyIconEndOfDragons { get; } = new Lazy<Image>(Resources.GetTinyIconEndOfDragons);
 
 		// RAIDS
 		private Lazy<Image> GenericRaidWing { get; } = new Lazy<Image>(Resources.GetGenericRaidWingIcon);
@@ -177,6 +179,8 @@ namespace GW2Scratch.ArcdpsLogManager
 		public Image GetTinyWorldVersusWorldIcon() => TinyIconWorldVersusWorld.Value;
 		public Image GetTinyUncategorizedIcon() => TinyIconUncategorized.Value;
 		public Image GetTinyFestivalIcon() => TinyIconFestival.Value;
+		public Image GetTinyIcebroodSagaIcon() => TinyIconIcebroodSaga.Value;
+		public Image GetTinyEndOfDragonsIcon() => TinyIconEndOfDragons.Value;
 
 		public Image GetTinyProfessionIcon(Profession profession)
 		{
