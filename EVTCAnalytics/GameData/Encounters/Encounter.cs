@@ -110,6 +110,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 		AetherbladeHideout = 41001,
 		XunlaiJadeJunkyard = 41002,
 		KainengOverlook = 41003,
+		HarvestTemple = 41004,
 		
 		// Story
 		Mordremoth = 50001,

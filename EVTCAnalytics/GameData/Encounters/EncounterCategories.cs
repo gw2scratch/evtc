@@ -66,6 +66,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 				{Encounter.AetherbladeHideout, EncounterCategory.StrikeMission},
 				{Encounter.XunlaiJadeJunkyard, EncounterCategory.StrikeMission},
 				{Encounter.KainengOverlook, EncounterCategory.StrikeMission},
+				{Encounter.HarvestTemple, EncounterCategory.StrikeMission},
 			};
 
 		private static readonly HashSet<EncounterCategory> RaidCategories =

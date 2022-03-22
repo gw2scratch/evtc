@@ -495,6 +495,33 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						.WithResult(new TeamChangedBelowHealthThresholdDeterminer(mainTarget, 0.5f))
 						.Build();
 				}
+				case Encounter.HarvestTemple:
+				{
+					var builder = GetDefaultBuilder(encounter, mainTarget);
+						
+					// This is the gadget that represents Soo-Won. The previous phases share the same
+					// gadget (GadgetIds.TheDragonvoid), but this one has a unique one with different max health.
+					Gadget finalGadget = agents.OfType<Gadget>().FirstOrDefault(x =>
+						x.VolatileId == GadgetIds.TheDragonvoidFinal && x.AttackTargets.Count == 3);
+					
+					if (finalGadget == null)
+					{
+						builder.WithResult(new ConstantResultDeterminer(EncounterResult.Unknown));
+					}
+					else
+					{
+						// We use a health threshold instead of checking for the gadget going
+						// through enable->disable->enable->disable to make it possible to correctly detect success
+						// if the PoV player joins the instance late. This should work unless they join after
+						// the last health update.
+						
+						// Note that the gadget keeps its initial health from the previous attempt if the fight
+						// is reset within the same instance.
+						builder.WithResult(new TargetableChangedBelowHealthThresholdDeterminer(finalGadget, false, 0.3f));
+					}
+
+					return builder.Build();
+				}
 				default:
 					return GetDefaultBuilder(encounter, mainTarget, mergeMainTarget: false).Build();
 			}
@@ -677,6 +704,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						return Encounter.XunlaiJadeJunkyard;
 					case SpeciesIds.MinisterLi:
 						return Encounter.KainengOverlook;
+					case SpeciesIds.VoidAmalgamate:
+						return Encounter.HarvestTemple;
 				}
 			}
 			else if (mainTarget is Gadget gadgetBoss)
@@ -685,6 +714,10 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				{
 					case GadgetIds.ConjuredAmalgamate:
 						return Encounter.ConjuredAmalgamate;
+					case GadgetIds.TheDragonvoidFinal:
+						return Encounter.HarvestTemple;
+					case GadgetIds.TheDragonvoid:
+						return Encounter.HarvestTemple;
 				}
 			}
 
