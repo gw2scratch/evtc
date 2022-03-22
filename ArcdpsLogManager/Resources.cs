@@ -149,13 +149,19 @@ namespace GW2Scratch.ArcdpsLogManager
 		public static Image GetCardinalSabirIcon() => GetEncounterImage("Mini_Air_Djinn");
 		public static Image GetQadimThePeerlessIcon() => GetEncounterImage("Mini_Qadim_the_Peerless");
 
-		// STRIKES
+		// STRIKES - ICEBROOD SAGA
 		public static Image GetShiverpeaksPassIcon() => GetEncounterImage("Mini_Icebrood_Construct");
 		public static Image GetVoiceAndClawOfTheFallenIcon() => GetEncounterImage("Mini_Cloudseeker");
 		public static Image GetFraenirOfJormagIcon() => GetEncounterImage("Mini_Icebrood_Construct");
 		public static Image GetBoneskinnerIcon() => GetEncounterImage("Mini_Boneskinner");
 		public static Image GetWhisperOfJormagIcon() => GetEncounterImage("Mini_Whisper_of_Jormag");
 		public static Image GetVariniaStormsounderIcon() => GetEncounterImage("Mini_Varinia_Stormsounder");
+		
+		// STRIKES - END OF DRAGONS
+		public static Image GetAetherbladeHideoutIcon() => GetEncounterImage("Aetherblade_Hideout");
+		public static Image GetXunlaiJadeJunkyardIcon() => GetEncounterImage("Xunlai_Jade_Junkyard");
+		public static Image GetKainengOverlookIcon() => GetEncounterImage("Kaineng_Overlook");
+		public static Image GetHarvestTempleIcon() => GetEncounterImage("Harvest_Temple");
 
 		// FRACTALS
 		public static Image GetMAMAIcon() => GetEncounterImage("Mini_MAMA");

@@ -108,14 +108,19 @@ namespace GW2Scratch.ArcdpsLogManager
 		private Lazy<Image> CardinalSabirIcon { get; } = new Lazy<Image>(Resources.GetCardinalSabirIcon);
 		private Lazy<Image> QadimThePeerlessIcon { get; } = new Lazy<Image>(Resources.GetQadimThePeerlessIcon);
 
-		// STRIKES
+		// STRIKES - ICEBROOD SAGA
 		private Lazy<Image> ShiverpeaksPassIcon { get; } = new Lazy<Image>(Resources.GetShiverpeaksPassIcon);
 		private Lazy<Image> VoiceAndClawOfTheFallenIcon { get; } = new Lazy<Image>(Resources.GetVoiceAndClawOfTheFallenIcon);
-
 		private Lazy<Image> FraenirOfJormagIcon { get; } = new Lazy<Image>(Resources.GetFraenirOfJormagIcon);
 		private Lazy<Image> BoneskinnerIcon { get; } = new Lazy<Image>(Resources.GetBoneskinnerIcon);
 		private Lazy<Image> WhisperOfJormagIcon { get; } = new Lazy<Image>(Resources.GetWhisperOfJormagIcon);
 		private Lazy<Image> VariniaStormsounderIcon { get; } = new Lazy<Image>(Resources.GetVariniaStormsounderIcon);
+		
+		// STRIKES - END OF DRAGONS
+		private Lazy<Image> AetherbladeHideoutIcon { get; } = new Lazy<Image>(Resources.GetAetherbladeHideoutIcon);
+		private Lazy<Image> XunlaiJadeJunkyardIcon { get; } = new Lazy<Image>(Resources.GetXunlaiJadeJunkyardIcon);
+		private Lazy<Image> KainengOverlookIcon { get; } = new Lazy<Image>(Resources.GetKainengOverlookIcon);
+		private Lazy<Image> HarvestTempleIcon { get; } = new Lazy<Image>(Resources.GetHarvestTempleIcon);
 
 		// FRACTALS
 		private Lazy<Image> MAMAIcon { get; } = new Lazy<Image>(Resources.GetMAMAIcon);
@@ -283,13 +288,18 @@ namespace GW2Scratch.ArcdpsLogManager
 				Encounter.Adina => CardinalAdinaIcon.Value,
 				Encounter.Sabir => CardinalSabirIcon.Value,
 				Encounter.QadimThePeerless => QadimThePeerlessIcon.Value,
-				// STRIKES
+				// STRIKES - ICEBROOD SAGA
 				Encounter.ShiverpeaksPass => ShiverpeaksPassIcon.Value,
 				Encounter.VoiceAndClawOfTheFallen => VoiceAndClawOfTheFallenIcon.Value,
 				Encounter.FraenirOfJormag => FraenirOfJormagIcon.Value,
 				Encounter.Boneskinner => BoneskinnerIcon.Value,
 				Encounter.WhisperOfJormag => WhisperOfJormagIcon.Value,
 				Encounter.VariniaStormsounder => VariniaStormsounderIcon.Value,
+				// STRIKES - END OF DRAGONSa
+				Encounter.AetherbladeHideout => AetherbladeHideoutIcon.Value,
+				Encounter.XunlaiJadeJunkyard => XunlaiJadeJunkyardIcon.Value,
+				Encounter.KainengOverlook => KainengOverlookIcon.Value,
+				Encounter.HarvestTemple => HarvestTempleIcon.Value,
 				// FRACTALS
 				Encounter.MAMA => MAMAIcon.Value,
 				Encounter.SiaxTheCorrupted => SiaxTheCorruptedIcon.Value,
