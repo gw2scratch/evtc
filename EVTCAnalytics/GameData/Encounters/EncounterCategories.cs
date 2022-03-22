@@ -56,17 +56,17 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 				{Encounter.LargeKittyGolem, EncounterCategory.SpecialForcesTrainingArea},
 				{Encounter.MassiveKittyGolem, EncounterCategory.SpecialForcesTrainingArea},
 				{Encounter.WorldVersusWorld, EncounterCategory.WorldVersusWorld},
-				{Encounter.ShiverpeaksPass, EncounterCategory.StrikeMission},
-				{Encounter.VoiceAndClawOfTheFallen, EncounterCategory.StrikeMission},
-				{Encounter.FraenirOfJormag, EncounterCategory.StrikeMission},
-				{Encounter.Boneskinner, EncounterCategory.StrikeMission},
-				{Encounter.WhisperOfJormag, EncounterCategory.StrikeMission},
-				{Encounter.VariniaStormsounder, EncounterCategory.StrikeMission},
+				{Encounter.ShiverpeaksPass, EncounterCategory.StrikeMissionIcebroodSaga},
+				{Encounter.VoiceAndClawOfTheFallen, EncounterCategory.StrikeMissionIcebroodSaga},
+				{Encounter.FraenirOfJormag, EncounterCategory.StrikeMissionIcebroodSaga},
+				{Encounter.Boneskinner, EncounterCategory.StrikeMissionIcebroodSaga},
+				{Encounter.WhisperOfJormag, EncounterCategory.StrikeMissionIcebroodSaga},
+				{Encounter.VariniaStormsounder, EncounterCategory.StrikeMissionIcebroodSaga},
 				{Encounter.Mordremoth, EncounterCategory.Other},
-				{Encounter.AetherbladeHideout, EncounterCategory.StrikeMission},
-				{Encounter.XunlaiJadeJunkyard, EncounterCategory.StrikeMission},
-				{Encounter.KainengOverlook, EncounterCategory.StrikeMission},
-				{Encounter.HarvestTemple, EncounterCategory.StrikeMission},
+				{Encounter.AetherbladeHideout, EncounterCategory.StrikeMissionEndOfDragons},
+				{Encounter.XunlaiJadeJunkyard, EncounterCategory.StrikeMissionEndOfDragons},
+				{Encounter.KainengOverlook, EncounterCategory.StrikeMissionEndOfDragons},
+				{Encounter.HarvestTemple, EncounterCategory.StrikeMissionEndOfDragons},
 			};
 
 		private static readonly HashSet<EncounterCategory> RaidCategories =
@@ -79,6 +79,14 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 				EncounterCategory.RaidWing5,
 				EncounterCategory.RaidWing6,
 				EncounterCategory.RaidWing7,
+			};
+		
+		private static readonly HashSet<EncounterCategory> StrikeMissionCategories =
+			new HashSet<EncounterCategory>()
+			{
+				EncounterCategory.StrikeMissionIcebroodSaga,
+				EncounterCategory.StrikeMissionEndOfDragons,
+				EncounterCategory.Festival,
 			};
 
 		/// <summary>
@@ -105,7 +113,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 		{
 			return RaidCategories.Contains(category);
 		}
-
+		
 		/// <summary>
 		/// Checks if this is a raid encounter.
 		/// </summary>
@@ -113,7 +121,26 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 		public static bool IsRaid(this Encounter encounter)
 		{
 			var category = encounter.GetEncounterCategory();
-			return RaidCategories.Contains(category);
+			return IsRaid(category);
+		}
+		
+		/// <summary>
+		/// Checks if this is a strike mission category.
+		/// </summary>
+		/// <returns>A value indicating whether the provided category is a strike mission category.</returns>
+		public static bool IsStrikeMission(this EncounterCategory category)
+		{
+			return StrikeMissionCategories.Contains(category);
+		}
+		
+		/// <summary>
+		/// Checks if this is a strike mission category.
+		/// </summary>
+		/// <returns>A value indicating whether the provided category is a strike mission category.</returns>
+		public static bool IsStrikeMission(this Encounter encounter)
+		{
+			var category = encounter.GetEncounterCategory();
+			return IsStrikeMission(category);
 		}
 	}
 }
