@@ -295,7 +295,7 @@ namespace GW2Scratch.ArcdpsLogManager
 				Encounter.Boneskinner => BoneskinnerIcon.Value,
 				Encounter.WhisperOfJormag => WhisperOfJormagIcon.Value,
 				Encounter.VariniaStormsounder => VariniaStormsounderIcon.Value,
-				// STRIKES - END OF DRAGONSa
+				// STRIKES - END OF DRAGONS
 				Encounter.AetherbladeHideout => AetherbladeHideoutIcon.Value,
 				Encounter.XunlaiJadeJunkyard => XunlaiJadeJunkyardIcon.Value,
 				Encounter.KainengOverlook => KainengOverlookIcon.Value,
