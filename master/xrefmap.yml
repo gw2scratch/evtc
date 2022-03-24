@@ -1906,6 +1906,12 @@ references:
   commentId: F:GW2Scratch.EVTCAnalytics.GameData.Encounters.Encounter.Adina
   fullName: GW2Scratch.EVTCAnalytics.GameData.Encounters.Encounter.Adina
   nameWithType: Encounter.Adina
+- uid: GW2Scratch.EVTCAnalytics.GameData.Encounters.Encounter.AetherbladeHideout
+  name: AetherbladeHideout
+  href: api/GW2Scratch.EVTCAnalytics.GameData.Encounters.Encounter.html#GW2Scratch_EVTCAnalytics_GameData_Encounters_Encounter_AetherbladeHideout
+  commentId: F:GW2Scratch.EVTCAnalytics.GameData.Encounters.Encounter.AetherbladeHideout
+  fullName: GW2Scratch.EVTCAnalytics.GameData.Encounters.Encounter.AetherbladeHideout
+  nameWithType: Encounter.AetherbladeHideout
 - uid: GW2Scratch.EVTCAnalytics.GameData.Encounters.Encounter.AiKeeperOfThePeak
   name: AiKeeperOfThePeak
   href: api/GW2Scratch.EVTCAnalytics.GameData.Encounters.Encounter.html#GW2Scratch_EVTCAnalytics_GameData_Encounters_Encounter_AiKeeperOfThePeak
@@ -2026,6 +2032,18 @@ references:
   commentId: F:GW2Scratch.EVTCAnalytics.GameData.Encounters.Encounter.Gorseval
   fullName: GW2Scratch.EVTCAnalytics.GameData.Encounters.Encounter.Gorseval
   nameWithType: Encounter.Gorseval
+- uid: GW2Scratch.EVTCAnalytics.GameData.Encounters.Encounter.HarvestTemple
+  name: HarvestTemple
+  href: api/GW2Scratch.EVTCAnalytics.GameData.Encounters.Encounter.html#GW2Scratch_EVTCAnalytics_GameData_Encounters_Encounter_HarvestTemple
+  commentId: F:GW2Scratch.EVTCAnalytics.GameData.Encounters.Encounter.HarvestTemple
+  fullName: GW2Scratch.EVTCAnalytics.GameData.Encounters.Encounter.HarvestTemple
+  nameWithType: Encounter.HarvestTemple
+- uid: GW2Scratch.EVTCAnalytics.GameData.Encounters.Encounter.KainengOverlook
+  name: KainengOverlook
+  href: api/GW2Scratch.EVTCAnalytics.GameData.Encounters.Encounter.html#GW2Scratch_EVTCAnalytics_GameData_Encounters_Encounter_KainengOverlook
+  commentId: F:GW2Scratch.EVTCAnalytics.GameData.Encounters.Encounter.KainengOverlook
+  fullName: GW2Scratch.EVTCAnalytics.GameData.Encounters.Encounter.KainengOverlook
+  nameWithType: Encounter.KainengOverlook
 - uid: GW2Scratch.EVTCAnalytics.GameData.Encounters.Encounter.KeepConstruct
   name: KeepConstruct
   href: api/GW2Scratch.EVTCAnalytics.GameData.Encounters.Encounter.html#GW2Scratch_EVTCAnalytics_GameData_Encounters_Encounter_KeepConstruct
@@ -2200,6 +2218,12 @@ references:
   commentId: F:GW2Scratch.EVTCAnalytics.GameData.Encounters.Encounter.Xera
   fullName: GW2Scratch.EVTCAnalytics.GameData.Encounters.Encounter.Xera
   nameWithType: Encounter.Xera
+- uid: GW2Scratch.EVTCAnalytics.GameData.Encounters.Encounter.XunlaiJadeJunkyard
+  name: XunlaiJadeJunkyard
+  href: api/GW2Scratch.EVTCAnalytics.GameData.Encounters.Encounter.html#GW2Scratch_EVTCAnalytics_GameData_Encounters_Encounter_XunlaiJadeJunkyard
+  commentId: F:GW2Scratch.EVTCAnalytics.GameData.Encounters.Encounter.XunlaiJadeJunkyard
+  fullName: GW2Scratch.EVTCAnalytics.GameData.Encounters.Encounter.XunlaiJadeJunkyard
+  nameWithType: Encounter.XunlaiJadeJunkyard
 - uid: GW2Scratch.EVTCAnalytics.GameData.Encounters.EncounterCategories
   name: EncounterCategories
   href: api/GW2Scratch.EVTCAnalytics.GameData.Encounters.EncounterCategories.html
@@ -2238,6 +2262,25 @@ references:
   isSpec: "True"
   fullName: GW2Scratch.EVTCAnalytics.GameData.Encounters.EncounterCategories.IsRaid
   nameWithType: EncounterCategories.IsRaid
+- uid: GW2Scratch.EVTCAnalytics.GameData.Encounters.EncounterCategories.IsStrikeMission(GW2Scratch.EVTCAnalytics.GameData.Encounters.Encounter)
+  name: IsStrikeMission(Encounter)
+  href: api/GW2Scratch.EVTCAnalytics.GameData.Encounters.EncounterCategories.html#GW2Scratch_EVTCAnalytics_GameData_Encounters_EncounterCategories_IsStrikeMission_GW2Scratch_EVTCAnalytics_GameData_Encounters_Encounter_
+  commentId: M:GW2Scratch.EVTCAnalytics.GameData.Encounters.EncounterCategories.IsStrikeMission(GW2Scratch.EVTCAnalytics.GameData.Encounters.Encounter)
+  fullName: GW2Scratch.EVTCAnalytics.GameData.Encounters.EncounterCategories.IsStrikeMission(GW2Scratch.EVTCAnalytics.GameData.Encounters.Encounter)
+  nameWithType: EncounterCategories.IsStrikeMission(Encounter)
+- uid: GW2Scratch.EVTCAnalytics.GameData.Encounters.EncounterCategories.IsStrikeMission(GW2Scratch.EVTCAnalytics.GameData.Encounters.EncounterCategory)
+  name: IsStrikeMission(EncounterCategory)
+  href: api/GW2Scratch.EVTCAnalytics.GameData.Encounters.EncounterCategories.html#GW2Scratch_EVTCAnalytics_GameData_Encounters_EncounterCategories_IsStrikeMission_GW2Scratch_EVTCAnalytics_GameData_Encounters_EncounterCategory_
+  commentId: M:GW2Scratch.EVTCAnalytics.GameData.Encounters.EncounterCategories.IsStrikeMission(GW2Scratch.EVTCAnalytics.GameData.Encounters.EncounterCategory)
+  fullName: GW2Scratch.EVTCAnalytics.GameData.Encounters.EncounterCategories.IsStrikeMission(GW2Scratch.EVTCAnalytics.GameData.Encounters.EncounterCategory)
+  nameWithType: EncounterCategories.IsStrikeMission(EncounterCategory)
+- uid: GW2Scratch.EVTCAnalytics.GameData.Encounters.EncounterCategories.IsStrikeMission*
+  name: IsStrikeMission
+  href: api/GW2Scratch.EVTCAnalytics.GameData.Encounters.EncounterCategories.html#GW2Scratch_EVTCAnalytics_GameData_Encounters_EncounterCategories_IsStrikeMission_
+  commentId: Overload:GW2Scratch.EVTCAnalytics.GameData.Encounters.EncounterCategories.IsStrikeMission
+  isSpec: "True"
+  fullName: GW2Scratch.EVTCAnalytics.GameData.Encounters.EncounterCategories.IsStrikeMission
+  nameWithType: EncounterCategories.IsStrikeMission
 - uid: GW2Scratch.EVTCAnalytics.GameData.Encounters.EncounterCategory
   name: EncounterCategory
   href: api/GW2Scratch.EVTCAnalytics.GameData.Encounters.EncounterCategory.html
@@ -2310,12 +2353,24 @@ references:
   commentId: F:GW2Scratch.EVTCAnalytics.GameData.Encounters.EncounterCategory.SpecialForcesTrainingArea
   fullName: GW2Scratch.EVTCAnalytics.GameData.Encounters.EncounterCategory.SpecialForcesTrainingArea
   nameWithType: EncounterCategory.SpecialForcesTrainingArea
-- uid: GW2Scratch.EVTCAnalytics.GameData.Encounters.EncounterCategory.StrikeMission
-  name: StrikeMission
-  href: api/GW2Scratch.EVTCAnalytics.GameData.Encounters.EncounterCategory.html#GW2Scratch_EVTCAnalytics_GameData_Encounters_EncounterCategory_StrikeMission
-  commentId: F:GW2Scratch.EVTCAnalytics.GameData.Encounters.EncounterCategory.StrikeMission
-  fullName: GW2Scratch.EVTCAnalytics.GameData.Encounters.EncounterCategory.StrikeMission
-  nameWithType: EncounterCategory.StrikeMission
+- uid: GW2Scratch.EVTCAnalytics.GameData.Encounters.EncounterCategory.StrikeMissionEndOfDragons
+  name: StrikeMissionEndOfDragons
+  href: api/GW2Scratch.EVTCAnalytics.GameData.Encounters.EncounterCategory.html#GW2Scratch_EVTCAnalytics_GameData_Encounters_EncounterCategory_StrikeMissionEndOfDragons
+  commentId: F:GW2Scratch.EVTCAnalytics.GameData.Encounters.EncounterCategory.StrikeMissionEndOfDragons
+  fullName: GW2Scratch.EVTCAnalytics.GameData.Encounters.EncounterCategory.StrikeMissionEndOfDragons
+  nameWithType: EncounterCategory.StrikeMissionEndOfDragons
+- uid: GW2Scratch.EVTCAnalytics.GameData.Encounters.EncounterCategory.StrikeMissionFestival
+  name: StrikeMissionFestival
+  href: api/GW2Scratch.EVTCAnalytics.GameData.Encounters.EncounterCategory.html#GW2Scratch_EVTCAnalytics_GameData_Encounters_EncounterCategory_StrikeMissionFestival
+  commentId: F:GW2Scratch.EVTCAnalytics.GameData.Encounters.EncounterCategory.StrikeMissionFestival
+  fullName: GW2Scratch.EVTCAnalytics.GameData.Encounters.EncounterCategory.StrikeMissionFestival
+  nameWithType: EncounterCategory.StrikeMissionFestival
+- uid: GW2Scratch.EVTCAnalytics.GameData.Encounters.EncounterCategory.StrikeMissionIcebroodSaga
+  name: StrikeMissionIcebroodSaga
+  href: api/GW2Scratch.EVTCAnalytics.GameData.Encounters.EncounterCategory.html#GW2Scratch_EVTCAnalytics_GameData_Encounters_EncounterCategory_StrikeMissionIcebroodSaga
+  commentId: F:GW2Scratch.EVTCAnalytics.GameData.Encounters.EncounterCategory.StrikeMissionIcebroodSaga
+  fullName: GW2Scratch.EVTCAnalytics.GameData.Encounters.EncounterCategory.StrikeMissionIcebroodSaga
+  nameWithType: EncounterCategory.StrikeMissionIcebroodSaga
 - uid: GW2Scratch.EVTCAnalytics.GameData.Encounters.EncounterCategory.WorldVersusWorld
   name: WorldVersusWorld
   href: api/GW2Scratch.EVTCAnalytics.GameData.Encounters.EncounterCategory.html#GW2Scratch_EVTCAnalytics_GameData_Encounters_EncounterCategory_WorldVersusWorld
@@ -2397,6 +2452,18 @@ references:
   commentId: F:GW2Scratch.EVTCAnalytics.GameData.GadgetIds.ShackledPrisoner
   fullName: GW2Scratch.EVTCAnalytics.GameData.GadgetIds.ShackledPrisoner
   nameWithType: GadgetIds.ShackledPrisoner
+- uid: GW2Scratch.EVTCAnalytics.GameData.GadgetIds.TheDragonvoid
+  name: TheDragonvoid
+  href: api/GW2Scratch.EVTCAnalytics.GameData.GadgetIds.html#GW2Scratch_EVTCAnalytics_GameData_GadgetIds_TheDragonvoid
+  commentId: F:GW2Scratch.EVTCAnalytics.GameData.GadgetIds.TheDragonvoid
+  fullName: GW2Scratch.EVTCAnalytics.GameData.GadgetIds.TheDragonvoid
+  nameWithType: GadgetIds.TheDragonvoid
+- uid: GW2Scratch.EVTCAnalytics.GameData.GadgetIds.TheDragonvoidFinal
+  name: TheDragonvoidFinal
+  href: api/GW2Scratch.EVTCAnalytics.GameData.GadgetIds.html#GW2Scratch_EVTCAnalytics_GameData_GadgetIds_TheDragonvoidFinal
+  commentId: F:GW2Scratch.EVTCAnalytics.GameData.GadgetIds.TheDragonvoidFinal
+  fullName: GW2Scratch.EVTCAnalytics.GameData.GadgetIds.TheDragonvoidFinal
+  nameWithType: GadgetIds.TheDragonvoidFinal
 - uid: GW2Scratch.EVTCAnalytics.GameData.GameBuilds
   name: GameBuilds
   href: api/GW2Scratch.EVTCAnalytics.GameData.GameBuilds.html
@@ -3004,6 +3071,12 @@ references:
   commentId: F:GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.AncientInvokedHydra
   fullName: GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.AncientInvokedHydra
   nameWithType: SpeciesIds.AncientInvokedHydra
+- uid: GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.Ankka
+  name: Ankka
+  href: api/GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.html#GW2Scratch_EVTCAnalytics_GameData_SpeciesIds_Ankka
+  commentId: F:GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.Ankka
+  fullName: GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.Ankka
+  nameWithType: SpeciesIds.Ankka
 - uid: GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.ApocalypseBringer
   name: ApocalypseBringer
   href: api/GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.html#GW2Scratch_EVTCAnalytics_GameData_SpeciesIds_ApocalypseBringer
@@ -3202,6 +3275,12 @@ references:
   commentId: F:GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.LargeKittyGolem
   fullName: GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.LargeKittyGolem
   nameWithType: SpeciesIds.LargeKittyGolem
+- uid: GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.MaiTrin
+  name: MaiTrin
+  href: api/GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.html#GW2Scratch_EVTCAnalytics_GameData_SpeciesIds_MaiTrin
+  commentId: F:GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.MaiTrin
+  fullName: GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.MaiTrin
+  nameWithType: SpeciesIds.MaiTrin
 - uid: GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.MAMA
   name: MAMA
   href: api/GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.html#GW2Scratch_EVTCAnalytics_GameData_SpeciesIds_MAMA
@@ -3226,6 +3305,12 @@ references:
   commentId: F:GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.MediumKittyGolem
   fullName: GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.MediumKittyGolem
   nameWithType: SpeciesIds.MediumKittyGolem
+- uid: GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.MinisterLi
+  name: MinisterLi
+  href: api/GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.html#GW2Scratch_EVTCAnalytics_GameData_SpeciesIds_MinisterLi
+  commentId: F:GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.MinisterLi
+  fullName: GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.MinisterLi
+  nameWithType: SpeciesIds.MinisterLi
 - uid: GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.MursaatOverseer
   name: MursaatOverseer
   href: api/GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.html#GW2Scratch_EVTCAnalytics_GameData_SpeciesIds_MursaatOverseer
@@ -3340,6 +3425,12 @@ references:
   commentId: F:GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.VoiceOfTheFallen
   fullName: GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.VoiceOfTheFallen
   nameWithType: SpeciesIds.VoiceOfTheFallen
+- uid: GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.VoidAmalgamate
+  name: VoidAmalgamate
+  href: api/GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.html#GW2Scratch_EVTCAnalytics_GameData_SpeciesIds_VoidAmalgamate
+  commentId: F:GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.VoidAmalgamate
+  fullName: GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.VoidAmalgamate
+  nameWithType: SpeciesIds.VoidAmalgamate
 - uid: GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.WhisperOfJormag
   name: WhisperOfJormag
   href: api/GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.html#GW2Scratch_EVTCAnalytics_GameData_SpeciesIds_WhisperOfJormag
@@ -3870,6 +3961,19 @@ references:
   isSpec: "True"
   fullName: GW2Scratch.EVTCAnalytics.Model.Agents.Agent.Name
   nameWithType: Agent.Name
+- uid: GW2Scratch.EVTCAnalytics.Model.Agents.Agent.ToString
+  name: ToString()
+  href: api/GW2Scratch.EVTCAnalytics.Model.Agents.Agent.html#GW2Scratch_EVTCAnalytics_Model_Agents_Agent_ToString
+  commentId: M:GW2Scratch.EVTCAnalytics.Model.Agents.Agent.ToString
+  fullName: GW2Scratch.EVTCAnalytics.Model.Agents.Agent.ToString()
+  nameWithType: Agent.ToString()
+- uid: GW2Scratch.EVTCAnalytics.Model.Agents.Agent.ToString*
+  name: ToString
+  href: api/GW2Scratch.EVTCAnalytics.Model.Agents.Agent.html#GW2Scratch_EVTCAnalytics_Model_Agents_Agent_ToString_
+  commentId: Overload:GW2Scratch.EVTCAnalytics.Model.Agents.Agent.ToString
+  isSpec: "True"
+  fullName: GW2Scratch.EVTCAnalytics.Model.Agents.Agent.ToString
+  nameWithType: Agent.ToString
 - uid: GW2Scratch.EVTCAnalytics.Model.Agents.AgentOrigin
   name: AgentOrigin
   href: api/GW2Scratch.EVTCAnalytics.Model.Agents.AgentOrigin.html
@@ -3924,6 +4028,19 @@ references:
   isSpec: "True"
   fullName: GW2Scratch.EVTCAnalytics.Model.Agents.AgentOrigin.OriginalAgentData
   nameWithType: AgentOrigin.OriginalAgentData
+- uid: GW2Scratch.EVTCAnalytics.Model.Agents.AgentOrigin.ToString
+  name: ToString()
+  href: api/GW2Scratch.EVTCAnalytics.Model.Agents.AgentOrigin.html#GW2Scratch_EVTCAnalytics_Model_Agents_AgentOrigin_ToString
+  commentId: M:GW2Scratch.EVTCAnalytics.Model.Agents.AgentOrigin.ToString
+  fullName: GW2Scratch.EVTCAnalytics.Model.Agents.AgentOrigin.ToString()
+  nameWithType: AgentOrigin.ToString()
+- uid: GW2Scratch.EVTCAnalytics.Model.Agents.AgentOrigin.ToString*
+  name: ToString
+  href: api/GW2Scratch.EVTCAnalytics.Model.Agents.AgentOrigin.html#GW2Scratch_EVTCAnalytics_Model_Agents_AgentOrigin_ToString_
+  commentId: Overload:GW2Scratch.EVTCAnalytics.Model.Agents.AgentOrigin.ToString
+  isSpec: "True"
+  fullName: GW2Scratch.EVTCAnalytics.Model.Agents.AgentOrigin.ToString
+  nameWithType: AgentOrigin.ToString
 - uid: GW2Scratch.EVTCAnalytics.Model.Agents.AttackTarget
   name: AttackTarget
   href: api/GW2Scratch.EVTCAnalytics.Model.Agents.AttackTarget.html
@@ -4317,6 +4434,19 @@ references:
   isSpec: "True"
   fullName: GW2Scratch.EVTCAnalytics.Model.Agents.OriginalAgentData.Id
   nameWithType: OriginalAgentData.Id
+- uid: GW2Scratch.EVTCAnalytics.Model.Agents.OriginalAgentData.ToString
+  name: ToString()
+  href: api/GW2Scratch.EVTCAnalytics.Model.Agents.OriginalAgentData.html#GW2Scratch_EVTCAnalytics_Model_Agents_OriginalAgentData_ToString
+  commentId: M:GW2Scratch.EVTCAnalytics.Model.Agents.OriginalAgentData.ToString
+  fullName: GW2Scratch.EVTCAnalytics.Model.Agents.OriginalAgentData.ToString()
+  nameWithType: OriginalAgentData.ToString()
+- uid: GW2Scratch.EVTCAnalytics.Model.Agents.OriginalAgentData.ToString*
+  name: ToString
+  href: api/GW2Scratch.EVTCAnalytics.Model.Agents.OriginalAgentData.html#GW2Scratch_EVTCAnalytics_Model_Agents_OriginalAgentData_ToString_
+  commentId: Overload:GW2Scratch.EVTCAnalytics.Model.Agents.OriginalAgentData.ToString
+  isSpec: "True"
+  fullName: GW2Scratch.EVTCAnalytics.Model.Agents.OriginalAgentData.ToString
+  nameWithType: OriginalAgentData.ToString
 - uid: GW2Scratch.EVTCAnalytics.Model.Agents.Player
   name: Player
   href: api/GW2Scratch.EVTCAnalytics.Model.Agents.Player.html
@@ -4808,6 +4938,38 @@ references:
   commentId: F:GW2Scratch.EVTCAnalytics.Model.CoreSpecialization.Zeal
   fullName: GW2Scratch.EVTCAnalytics.Model.CoreSpecialization.Zeal
   nameWithType: CoreSpecialization.Zeal
+- uid: GW2Scratch.EVTCAnalytics.Model.InstanceStart
+  name: InstanceStart
+  href: api/GW2Scratch.EVTCAnalytics.Model.InstanceStart.html
+  commentId: T:GW2Scratch.EVTCAnalytics.Model.InstanceStart
+  fullName: GW2Scratch.EVTCAnalytics.Model.InstanceStart
+  nameWithType: InstanceStart
+- uid: GW2Scratch.EVTCAnalytics.Model.InstanceStart.#ctor(System.UInt64)
+  name: InstanceStart(UInt64)
+  href: api/GW2Scratch.EVTCAnalytics.Model.InstanceStart.html#GW2Scratch_EVTCAnalytics_Model_InstanceStart__ctor_System_UInt64_
+  commentId: M:GW2Scratch.EVTCAnalytics.Model.InstanceStart.#ctor(System.UInt64)
+  fullName: GW2Scratch.EVTCAnalytics.Model.InstanceStart.InstanceStart(System.UInt64)
+  nameWithType: InstanceStart.InstanceStart(UInt64)
+- uid: GW2Scratch.EVTCAnalytics.Model.InstanceStart.#ctor*
+  name: InstanceStart
+  href: api/GW2Scratch.EVTCAnalytics.Model.InstanceStart.html#GW2Scratch_EVTCAnalytics_Model_InstanceStart__ctor_
+  commentId: Overload:GW2Scratch.EVTCAnalytics.Model.InstanceStart.#ctor
+  isSpec: "True"
+  fullName: GW2Scratch.EVTCAnalytics.Model.InstanceStart.InstanceStart
+  nameWithType: InstanceStart.InstanceStart
+- uid: GW2Scratch.EVTCAnalytics.Model.InstanceStart.TimeMilliseconds
+  name: TimeMilliseconds
+  href: api/GW2Scratch.EVTCAnalytics.Model.InstanceStart.html#GW2Scratch_EVTCAnalytics_Model_InstanceStart_TimeMilliseconds
+  commentId: P:GW2Scratch.EVTCAnalytics.Model.InstanceStart.TimeMilliseconds
+  fullName: GW2Scratch.EVTCAnalytics.Model.InstanceStart.TimeMilliseconds
+  nameWithType: InstanceStart.TimeMilliseconds
+- uid: GW2Scratch.EVTCAnalytics.Model.InstanceStart.TimeMilliseconds*
+  name: TimeMilliseconds
+  href: api/GW2Scratch.EVTCAnalytics.Model.InstanceStart.html#GW2Scratch_EVTCAnalytics_Model_InstanceStart_TimeMilliseconds_
+  commentId: Overload:GW2Scratch.EVTCAnalytics.Model.InstanceStart.TimeMilliseconds
+  isSpec: "True"
+  fullName: GW2Scratch.EVTCAnalytics.Model.InstanceStart.TimeMilliseconds
+  nameWithType: InstanceStart.TimeMilliseconds
 - uid: GW2Scratch.EVTCAnalytics.Model.Log
   name: Log
   href: api/GW2Scratch.EVTCAnalytics.Model.Log.html
@@ -4918,6 +5080,19 @@ references:
   isSpec: "True"
   fullName: GW2Scratch.EVTCAnalytics.Model.Log.GameShardId
   nameWithType: Log.GameShardId
+- uid: GW2Scratch.EVTCAnalytics.Model.Log.InstanceStart
+  name: InstanceStart
+  href: api/GW2Scratch.EVTCAnalytics.Model.Log.html#GW2Scratch_EVTCAnalytics_Model_Log_InstanceStart
+  commentId: P:GW2Scratch.EVTCAnalytics.Model.Log.InstanceStart
+  fullName: GW2Scratch.EVTCAnalytics.Model.Log.InstanceStart
+  nameWithType: Log.InstanceStart
+- uid: GW2Scratch.EVTCAnalytics.Model.Log.InstanceStart*
+  name: InstanceStart
+  href: api/GW2Scratch.EVTCAnalytics.Model.Log.html#GW2Scratch_EVTCAnalytics_Model_Log_InstanceStart_
+  commentId: Overload:GW2Scratch.EVTCAnalytics.Model.Log.InstanceStart
+  isSpec: "True"
+  fullName: GW2Scratch.EVTCAnalytics.Model.Log.InstanceStart
+  nameWithType: Log.InstanceStart
 - uid: GW2Scratch.EVTCAnalytics.Model.Log.LanguageId
   name: LanguageId
   href: api/GW2Scratch.EVTCAnalytics.Model.Log.html#GW2Scratch_EVTCAnalytics_Model_Log_LanguageId
@@ -5382,6 +5557,19 @@ references:
   isSpec: "True"
   fullName: GW2Scratch.EVTCAnalytics.Model.Skills.Skill.Name
   nameWithType: Skill.Name
+- uid: GW2Scratch.EVTCAnalytics.Model.Skills.Skill.ToString
+  name: ToString()
+  href: api/GW2Scratch.EVTCAnalytics.Model.Skills.Skill.html#GW2Scratch_EVTCAnalytics_Model_Skills_Skill_ToString
+  commentId: M:GW2Scratch.EVTCAnalytics.Model.Skills.Skill.ToString
+  fullName: GW2Scratch.EVTCAnalytics.Model.Skills.Skill.ToString()
+  nameWithType: Skill.ToString()
+- uid: GW2Scratch.EVTCAnalytics.Model.Skills.Skill.ToString*
+  name: ToString
+  href: api/GW2Scratch.EVTCAnalytics.Model.Skills.Skill.html#GW2Scratch_EVTCAnalytics_Model_Skills_Skill_ToString_
+  commentId: Overload:GW2Scratch.EVTCAnalytics.Model.Skills.Skill.ToString
+  isSpec: "True"
+  fullName: GW2Scratch.EVTCAnalytics.Model.Skills.Skill.ToString
+  nameWithType: Skill.ToString
 - uid: GW2Scratch.EVTCAnalytics.Model.Skills.SkillAttunement
   name: SkillAttunement
   href: api/GW2Scratch.EVTCAnalytics.Model.Skills.SkillAttunement.html
@@ -6159,12 +6347,24 @@ references:
   commentId: T:GW2Scratch.EVTCAnalytics.Parsed.Enums.StateChange
   fullName: GW2Scratch.EVTCAnalytics.Parsed.Enums.StateChange
   nameWithType: StateChange
+- uid: GW2Scratch.EVTCAnalytics.Parsed.Enums.StateChange.ApiDelayed
+  name: ApiDelayed
+  href: api/GW2Scratch.EVTCAnalytics.Parsed.Enums.StateChange.html#GW2Scratch_EVTCAnalytics_Parsed_Enums_StateChange_ApiDelayed
+  commentId: F:GW2Scratch.EVTCAnalytics.Parsed.Enums.StateChange.ApiDelayed
+  fullName: GW2Scratch.EVTCAnalytics.Parsed.Enums.StateChange.ApiDelayed
+  nameWithType: StateChange.ApiDelayed
 - uid: GW2Scratch.EVTCAnalytics.Parsed.Enums.StateChange.AttackTarget
   name: AttackTarget
   href: api/GW2Scratch.EVTCAnalytics.Parsed.Enums.StateChange.html#GW2Scratch_EVTCAnalytics_Parsed_Enums_StateChange_AttackTarget
   commentId: F:GW2Scratch.EVTCAnalytics.Parsed.Enums.StateChange.AttackTarget
   fullName: GW2Scratch.EVTCAnalytics.Parsed.Enums.StateChange.AttackTarget
   nameWithType: StateChange.AttackTarget
+- uid: GW2Scratch.EVTCAnalytics.Parsed.Enums.StateChange.BarrierUpdate
+  name: BarrierUpdate
+  href: api/GW2Scratch.EVTCAnalytics.Parsed.Enums.StateChange.html#GW2Scratch_EVTCAnalytics_Parsed_Enums_StateChange_BarrierUpdate
+  commentId: F:GW2Scratch.EVTCAnalytics.Parsed.Enums.StateChange.BarrierUpdate
+  fullName: GW2Scratch.EVTCAnalytics.Parsed.Enums.StateChange.BarrierUpdate
+  nameWithType: StateChange.BarrierUpdate
 - uid: GW2Scratch.EVTCAnalytics.Parsed.Enums.StateChange.BreakbarPercent
   name: BreakbarPercent
   href: api/GW2Scratch.EVTCAnalytics.Parsed.Enums.StateChange.html#GW2Scratch_EVTCAnalytics_Parsed_Enums_StateChange_BreakbarPercent
@@ -6237,6 +6437,12 @@ references:
   commentId: F:GW2Scratch.EVTCAnalytics.Parsed.Enums.StateChange.ExitCombat
   fullName: GW2Scratch.EVTCAnalytics.Parsed.Enums.StateChange.ExitCombat
   nameWithType: StateChange.ExitCombat
+- uid: GW2Scratch.EVTCAnalytics.Parsed.Enums.StateChange.Extension
+  name: Extension
+  href: api/GW2Scratch.EVTCAnalytics.Parsed.Enums.StateChange.html#GW2Scratch_EVTCAnalytics_Parsed_Enums_StateChange_Extension
+  commentId: F:GW2Scratch.EVTCAnalytics.Parsed.Enums.StateChange.Extension
+  fullName: GW2Scratch.EVTCAnalytics.Parsed.Enums.StateChange.Extension
+  nameWithType: StateChange.Extension
 - uid: GW2Scratch.EVTCAnalytics.Parsed.Enums.StateChange.Guild
   name: Guild
   href: api/GW2Scratch.EVTCAnalytics.Parsed.Enums.StateChange.html#GW2Scratch_EVTCAnalytics_Parsed_Enums_StateChange_Guild
@@ -6255,6 +6461,12 @@ references:
   commentId: F:GW2Scratch.EVTCAnalytics.Parsed.Enums.StateChange.HealthUpdate
   fullName: GW2Scratch.EVTCAnalytics.Parsed.Enums.StateChange.HealthUpdate
   nameWithType: StateChange.HealthUpdate
+- uid: GW2Scratch.EVTCAnalytics.Parsed.Enums.StateChange.InstanceStart
+  name: InstanceStart
+  href: api/GW2Scratch.EVTCAnalytics.Parsed.Enums.StateChange.html#GW2Scratch_EVTCAnalytics_Parsed_Enums_StateChange_InstanceStart
+  commentId: F:GW2Scratch.EVTCAnalytics.Parsed.Enums.StateChange.InstanceStart
+  fullName: GW2Scratch.EVTCAnalytics.Parsed.Enums.StateChange.InstanceStart
+  nameWithType: StateChange.InstanceStart
 - uid: GW2Scratch.EVTCAnalytics.Parsed.Enums.StateChange.Language
   name: Language
   href: api/GW2Scratch.EVTCAnalytics.Parsed.Enums.StateChange.html#GW2Scratch_EVTCAnalytics_Parsed_Enums_StateChange_Language
@@ -6357,6 +6569,12 @@ references:
   commentId: F:GW2Scratch.EVTCAnalytics.Parsed.Enums.StateChange.StackReset
   fullName: GW2Scratch.EVTCAnalytics.Parsed.Enums.StateChange.StackReset
   nameWithType: StateChange.StackReset
+- uid: GW2Scratch.EVTCAnalytics.Parsed.Enums.StateChange.StatReset
+  name: StatReset
+  href: api/GW2Scratch.EVTCAnalytics.Parsed.Enums.StateChange.html#GW2Scratch_EVTCAnalytics_Parsed_Enums_StateChange_StatReset
+  commentId: F:GW2Scratch.EVTCAnalytics.Parsed.Enums.StateChange.StatReset
+  fullName: GW2Scratch.EVTCAnalytics.Parsed.Enums.StateChange.StatReset
+  nameWithType: StateChange.StatReset
 - uid: GW2Scratch.EVTCAnalytics.Parsed.Enums.StateChange.Tag
   name: Tag
   href: api/GW2Scratch.EVTCAnalytics.Parsed.Enums.StateChange.html#GW2Scratch_EVTCAnalytics_Parsed_Enums_StateChange_Tag
@@ -8212,6 +8430,41 @@ references:
   isSpec: "True"
   fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.BuffAppliedAfterSkillCastDeterminer.GetEvent
   nameWithType: BuffAppliedAfterSkillCastDeterminer.GetEvent
+- uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.BuffAppliedBelowHealthThresholdDeterminer
+  name: BuffAppliedBelowHealthThresholdDeterminer
+  href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.BuffAppliedBelowHealthThresholdDeterminer.html
+  commentId: T:GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.BuffAppliedBelowHealthThresholdDeterminer
+  fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.BuffAppliedBelowHealthThresholdDeterminer
+  nameWithType: BuffAppliedBelowHealthThresholdDeterminer
+- uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.BuffAppliedBelowHealthThresholdDeterminer.#ctor(GW2Scratch.EVTCAnalytics.Model.Agents.Agent,System.Single,System.Int32)
+  name: BuffAppliedBelowHealthThresholdDeterminer(Agent, Single, Int32)
+  href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.BuffAppliedBelowHealthThresholdDeterminer.html#GW2Scratch_EVTCAnalytics_Processing_Encounters_Results_BuffAppliedBelowHealthThresholdDeterminer__ctor_GW2Scratch_EVTCAnalytics_Model_Agents_Agent_System_Single_System_Int32_
+  commentId: M:GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.BuffAppliedBelowHealthThresholdDeterminer.#ctor(GW2Scratch.EVTCAnalytics.Model.Agents.Agent,System.Single,System.Int32)
+  fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.BuffAppliedBelowHealthThresholdDeterminer.BuffAppliedBelowHealthThresholdDeterminer(GW2Scratch.EVTCAnalytics.Model.Agents.Agent, System.Single, System.Int32)
+  nameWithType: BuffAppliedBelowHealthThresholdDeterminer.BuffAppliedBelowHealthThresholdDeterminer(Agent, Single, Int32)
+- uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.BuffAppliedBelowHealthThresholdDeterminer.#ctor*
+  name: BuffAppliedBelowHealthThresholdDeterminer
+  href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.BuffAppliedBelowHealthThresholdDeterminer.html#GW2Scratch_EVTCAnalytics_Processing_Encounters_Results_BuffAppliedBelowHealthThresholdDeterminer__ctor_
+  commentId: Overload:GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.BuffAppliedBelowHealthThresholdDeterminer.#ctor
+  isSpec: "True"
+  fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.BuffAppliedBelowHealthThresholdDeterminer.BuffAppliedBelowHealthThresholdDeterminer
+  nameWithType: BuffAppliedBelowHealthThresholdDeterminer.BuffAppliedBelowHealthThresholdDeterminer
+- uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.BuffAppliedBelowHealthThresholdDeterminer.GetEvent(System.Collections.Generic.IEnumerable{GW2Scratch.EVTCAnalytics.Events.Event})
+  name: GetEvent(IEnumerable<Event>)
+  href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.BuffAppliedBelowHealthThresholdDeterminer.html#GW2Scratch_EVTCAnalytics_Processing_Encounters_Results_BuffAppliedBelowHealthThresholdDeterminer_GetEvent_System_Collections_Generic_IEnumerable_GW2Scratch_EVTCAnalytics_Events_Event__
+  commentId: M:GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.BuffAppliedBelowHealthThresholdDeterminer.GetEvent(System.Collections.Generic.IEnumerable{GW2Scratch.EVTCAnalytics.Events.Event})
+  name.vb: GetEvent(IEnumerable(Of Event))
+  fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.BuffAppliedBelowHealthThresholdDeterminer.GetEvent(System.Collections.Generic.IEnumerable<GW2Scratch.EVTCAnalytics.Events.Event>)
+  fullName.vb: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.BuffAppliedBelowHealthThresholdDeterminer.GetEvent(System.Collections.Generic.IEnumerable(Of GW2Scratch.EVTCAnalytics.Events.Event))
+  nameWithType: BuffAppliedBelowHealthThresholdDeterminer.GetEvent(IEnumerable<Event>)
+  nameWithType.vb: BuffAppliedBelowHealthThresholdDeterminer.GetEvent(IEnumerable(Of Event))
+- uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.BuffAppliedBelowHealthThresholdDeterminer.GetEvent*
+  name: GetEvent
+  href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.BuffAppliedBelowHealthThresholdDeterminer.html#GW2Scratch_EVTCAnalytics_Processing_Encounters_Results_BuffAppliedBelowHealthThresholdDeterminer_GetEvent_
+  commentId: Overload:GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.BuffAppliedBelowHealthThresholdDeterminer.GetEvent
+  isSpec: "True"
+  fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.BuffAppliedBelowHealthThresholdDeterminer.GetEvent
+  nameWithType: BuffAppliedBelowHealthThresholdDeterminer.GetEvent
 - uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.ConstantResultDeterminer
   name: ConstantResultDeterminer
   href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.ConstantResultDeterminer.html
@@ -8663,6 +8916,41 @@ references:
   isSpec: "True"
   fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.RewardDeterminer.GetEvent
   nameWithType: RewardDeterminer.GetEvent
+- uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.TargetableChangedBelowHealthThresholdDeterminer
+  name: TargetableChangedBelowHealthThresholdDeterminer
+  href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.TargetableChangedBelowHealthThresholdDeterminer.html
+  commentId: T:GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.TargetableChangedBelowHealthThresholdDeterminer
+  fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.TargetableChangedBelowHealthThresholdDeterminer
+  nameWithType: TargetableChangedBelowHealthThresholdDeterminer
+- uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.TargetableChangedBelowHealthThresholdDeterminer.#ctor(GW2Scratch.EVTCAnalytics.Model.Agents.Gadget,System.Boolean,System.Single)
+  name: TargetableChangedBelowHealthThresholdDeterminer(Gadget, Boolean, Single)
+  href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.TargetableChangedBelowHealthThresholdDeterminer.html#GW2Scratch_EVTCAnalytics_Processing_Encounters_Results_TargetableChangedBelowHealthThresholdDeterminer__ctor_GW2Scratch_EVTCAnalytics_Model_Agents_Gadget_System_Boolean_System_Single_
+  commentId: M:GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.TargetableChangedBelowHealthThresholdDeterminer.#ctor(GW2Scratch.EVTCAnalytics.Model.Agents.Gadget,System.Boolean,System.Single)
+  fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.TargetableChangedBelowHealthThresholdDeterminer.TargetableChangedBelowHealthThresholdDeterminer(GW2Scratch.EVTCAnalytics.Model.Agents.Gadget, System.Boolean, System.Single)
+  nameWithType: TargetableChangedBelowHealthThresholdDeterminer.TargetableChangedBelowHealthThresholdDeterminer(Gadget, Boolean, Single)
+- uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.TargetableChangedBelowHealthThresholdDeterminer.#ctor*
+  name: TargetableChangedBelowHealthThresholdDeterminer
+  href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.TargetableChangedBelowHealthThresholdDeterminer.html#GW2Scratch_EVTCAnalytics_Processing_Encounters_Results_TargetableChangedBelowHealthThresholdDeterminer__ctor_
+  commentId: Overload:GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.TargetableChangedBelowHealthThresholdDeterminer.#ctor
+  isSpec: "True"
+  fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.TargetableChangedBelowHealthThresholdDeterminer.TargetableChangedBelowHealthThresholdDeterminer
+  nameWithType: TargetableChangedBelowHealthThresholdDeterminer.TargetableChangedBelowHealthThresholdDeterminer
+- uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.TargetableChangedBelowHealthThresholdDeterminer.GetEvent(System.Collections.Generic.IEnumerable{GW2Scratch.EVTCAnalytics.Events.Event})
+  name: GetEvent(IEnumerable<Event>)
+  href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.TargetableChangedBelowHealthThresholdDeterminer.html#GW2Scratch_EVTCAnalytics_Processing_Encounters_Results_TargetableChangedBelowHealthThresholdDeterminer_GetEvent_System_Collections_Generic_IEnumerable_GW2Scratch_EVTCAnalytics_Events_Event__
+  commentId: M:GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.TargetableChangedBelowHealthThresholdDeterminer.GetEvent(System.Collections.Generic.IEnumerable{GW2Scratch.EVTCAnalytics.Events.Event})
+  name.vb: GetEvent(IEnumerable(Of Event))
+  fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.TargetableChangedBelowHealthThresholdDeterminer.GetEvent(System.Collections.Generic.IEnumerable<GW2Scratch.EVTCAnalytics.Events.Event>)
+  fullName.vb: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.TargetableChangedBelowHealthThresholdDeterminer.GetEvent(System.Collections.Generic.IEnumerable(Of GW2Scratch.EVTCAnalytics.Events.Event))
+  nameWithType: TargetableChangedBelowHealthThresholdDeterminer.GetEvent(IEnumerable<Event>)
+  nameWithType.vb: TargetableChangedBelowHealthThresholdDeterminer.GetEvent(IEnumerable(Of Event))
+- uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.TargetableChangedBelowHealthThresholdDeterminer.GetEvent*
+  name: GetEvent
+  href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.TargetableChangedBelowHealthThresholdDeterminer.html#GW2Scratch_EVTCAnalytics_Processing_Encounters_Results_TargetableChangedBelowHealthThresholdDeterminer_GetEvent_
+  commentId: Overload:GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.TargetableChangedBelowHealthThresholdDeterminer.GetEvent
+  isSpec: "True"
+  fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.TargetableChangedBelowHealthThresholdDeterminer.GetEvent
+  nameWithType: TargetableChangedBelowHealthThresholdDeterminer.GetEvent
 - uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.TargetableDeterminer
   name: TargetableDeterminer
   href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.TargetableDeterminer.html
@@ -8701,6 +8989,41 @@ references:
   isSpec: "True"
   fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.TargetableDeterminer.GetResult
   nameWithType: TargetableDeterminer.GetResult
+- uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.TeamChangedBelowHealthThresholdDeterminer
+  name: TeamChangedBelowHealthThresholdDeterminer
+  href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.TeamChangedBelowHealthThresholdDeterminer.html
+  commentId: T:GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.TeamChangedBelowHealthThresholdDeterminer
+  fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.TeamChangedBelowHealthThresholdDeterminer
+  nameWithType: TeamChangedBelowHealthThresholdDeterminer
+- uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.TeamChangedBelowHealthThresholdDeterminer.#ctor(GW2Scratch.EVTCAnalytics.Model.Agents.Agent,System.Single)
+  name: TeamChangedBelowHealthThresholdDeterminer(Agent, Single)
+  href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.TeamChangedBelowHealthThresholdDeterminer.html#GW2Scratch_EVTCAnalytics_Processing_Encounters_Results_TeamChangedBelowHealthThresholdDeterminer__ctor_GW2Scratch_EVTCAnalytics_Model_Agents_Agent_System_Single_
+  commentId: M:GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.TeamChangedBelowHealthThresholdDeterminer.#ctor(GW2Scratch.EVTCAnalytics.Model.Agents.Agent,System.Single)
+  fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.TeamChangedBelowHealthThresholdDeterminer.TeamChangedBelowHealthThresholdDeterminer(GW2Scratch.EVTCAnalytics.Model.Agents.Agent, System.Single)
+  nameWithType: TeamChangedBelowHealthThresholdDeterminer.TeamChangedBelowHealthThresholdDeterminer(Agent, Single)
+- uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.TeamChangedBelowHealthThresholdDeterminer.#ctor*
+  name: TeamChangedBelowHealthThresholdDeterminer
+  href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.TeamChangedBelowHealthThresholdDeterminer.html#GW2Scratch_EVTCAnalytics_Processing_Encounters_Results_TeamChangedBelowHealthThresholdDeterminer__ctor_
+  commentId: Overload:GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.TeamChangedBelowHealthThresholdDeterminer.#ctor
+  isSpec: "True"
+  fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.TeamChangedBelowHealthThresholdDeterminer.TeamChangedBelowHealthThresholdDeterminer
+  nameWithType: TeamChangedBelowHealthThresholdDeterminer.TeamChangedBelowHealthThresholdDeterminer
+- uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.TeamChangedBelowHealthThresholdDeterminer.GetEvent(System.Collections.Generic.IEnumerable{GW2Scratch.EVTCAnalytics.Events.Event})
+  name: GetEvent(IEnumerable<Event>)
+  href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.TeamChangedBelowHealthThresholdDeterminer.html#GW2Scratch_EVTCAnalytics_Processing_Encounters_Results_TeamChangedBelowHealthThresholdDeterminer_GetEvent_System_Collections_Generic_IEnumerable_GW2Scratch_EVTCAnalytics_Events_Event__
+  commentId: M:GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.TeamChangedBelowHealthThresholdDeterminer.GetEvent(System.Collections.Generic.IEnumerable{GW2Scratch.EVTCAnalytics.Events.Event})
+  name.vb: GetEvent(IEnumerable(Of Event))
+  fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.TeamChangedBelowHealthThresholdDeterminer.GetEvent(System.Collections.Generic.IEnumerable<GW2Scratch.EVTCAnalytics.Events.Event>)
+  fullName.vb: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.TeamChangedBelowHealthThresholdDeterminer.GetEvent(System.Collections.Generic.IEnumerable(Of GW2Scratch.EVTCAnalytics.Events.Event))
+  nameWithType: TeamChangedBelowHealthThresholdDeterminer.GetEvent(IEnumerable<Event>)
+  nameWithType.vb: TeamChangedBelowHealthThresholdDeterminer.GetEvent(IEnumerable(Of Event))
+- uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.TeamChangedBelowHealthThresholdDeterminer.GetEvent*
+  name: GetEvent
+  href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.TeamChangedBelowHealthThresholdDeterminer.html#GW2Scratch_EVTCAnalytics_Processing_Encounters_Results_TeamChangedBelowHealthThresholdDeterminer_GetEvent_
+  commentId: Overload:GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.TeamChangedBelowHealthThresholdDeterminer.GetEvent
+  isSpec: "True"
+  fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.TeamChangedBelowHealthThresholdDeterminer.GetEvent
+  nameWithType: TeamChangedBelowHealthThresholdDeterminer.GetEvent
 - uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Transformers
   name: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Transformers
   href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Transformers.html
@@ -9141,6 +9464,19 @@ references:
   isSpec: "True"
   fullName: GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.GameShardId
   nameWithType: LogProcessorState.GameShardId
+- uid: GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.InstanceStart
+  name: InstanceStart
+  href: api/GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.html#GW2Scratch_EVTCAnalytics_Processing_LogProcessorState_InstanceStart
+  commentId: P:GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.InstanceStart
+  fullName: GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.InstanceStart
+  nameWithType: LogProcessorState.InstanceStart
+- uid: GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.InstanceStart*
+  name: InstanceStart
+  href: api/GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.html#GW2Scratch_EVTCAnalytics_Processing_LogProcessorState_InstanceStart_
+  commentId: Overload:GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.InstanceStart
+  isSpec: "True"
+  fullName: GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.InstanceStart
+  nameWithType: LogProcessorState.InstanceStart
 - uid: GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.LogEndTime
   name: LogEndTime
   href: api/GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.html#GW2Scratch_EVTCAnalytics_Processing_LogProcessorState_LogEndTime

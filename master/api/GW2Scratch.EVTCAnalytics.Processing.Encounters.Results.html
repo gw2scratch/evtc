@@ -109,6 +109,10 @@ under a threshold at some point during the encounter.</p>
       <section><p>A result determiner that returns success if a specified buff is applied to an agent
 if the agent has cast a specified skill earlier in the fight.</p>
 </section>
+      <h4><a class="xref" href="GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.BuffAppliedBelowHealthThresholdDeterminer.html">BuffAppliedBelowHealthThresholdDeterminer</a></h4>
+      <section><p>A result determiner that returns success if a specified buff is applied to an agent
+when the agent's health is below a specified threshold.</p>
+</section>
       <h4><a class="xref" href="GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.ConstantResultDeterminer.html">ConstantResultDeterminer</a></h4>
       <section><p>A result determiner that always returns the same provided result.</p>
 </section>
@@ -129,8 +133,16 @@ Contains the result of the encounter and the time it was identified.</p>
       <h4><a class="xref" href="GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.RewardDeterminer.html">RewardDeterminer</a></h4>
       <section><p>A result determiner that returns success if there was a reward event with a specified reward id</p>
 </section>
+      <h4><a class="xref" href="GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.TargetableChangedBelowHealthThresholdDeterminer.html">TargetableChangedBelowHealthThresholdDeterminer</a></h4>
+      <section><p>A result determiner that returns success if any attack target changes targetability to a specified
+specified when the gadget's health is below a specified threshold.</p>
+</section>
       <h4><a class="xref" href="GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.TargetableDeterminer.html">TargetableDeterminer</a></h4>
       <section><p>A result determiner that returns success if an attack target goes through a sequence of targetability changes.</p>
+</section>
+      <h4><a class="xref" href="GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.TeamChangedBelowHealthThresholdDeterminer.html">TeamChangedBelowHealthThresholdDeterminer</a></h4>
+      <section><p>A result determiner that returns success if an agent changes team
+when the agent's health is below a specified threshold.</p>
 </section>
     <h3 id="interfaces">Interfaces
   </h3>
