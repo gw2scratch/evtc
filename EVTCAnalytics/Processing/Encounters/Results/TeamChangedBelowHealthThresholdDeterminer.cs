@@ -12,7 +12,6 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 	{
 		private readonly Agent agent;
 		private readonly float healthThreshold;
-		private readonly int buffId;
 
 		/// <summary>
 		/// Creates a new <see cref="TeamChangedBelowHealthThresholdDeterminer"/>.
