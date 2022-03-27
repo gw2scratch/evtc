@@ -10,6 +10,7 @@ This is the full changelog of the arcdps Log Manager.
 - Mistlock Instabilities are now detected for Fractal logs and shown in the details pane.
 - Added a new column for Mistlock Instabilities to the log list (right-click the column header to enable).
 - Added filters for Mistlock Instabilities to *Advanced Filters*.
+- Added an option to permanently delete logs by pressing delete when logs are selected – yes, there is a confirmation window (thanks, @Linkaaaaa and @therealketchup!)
 
 #### Changes
 - Strike Missions are now split into *Icebrood Saga* and *End of Dragons* subcategories.
