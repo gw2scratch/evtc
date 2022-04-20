@@ -468,13 +468,14 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				{
 					return GetDefaultBuilder(encounter, mainTarget)
 						.WithResult(new AgentBuffGainedDeterminer(mainTarget, SkillIds.Determined895))
-						.WithModes(new AgentHealthModeDeterminer(mainTarget, 9569560))
+						.WithModes(new AgentHealthModeDeterminer(mainTarget, 9_569_560))
 						.Build();
 				}
 				case Encounter.AetherbladeHideout:
 				{
 					return GetDefaultBuilder(encounter, mainTarget)
 						.WithResult(new AgentBuffGainedDeterminer(mainTarget, SkillIds.Determined895))
+						.WithModes(new AgentHealthModeDeterminer(mainTarget, 8_800_000))
 						.Build();
 				}
 				case Encounter.XunlaiJadeJunkyard:

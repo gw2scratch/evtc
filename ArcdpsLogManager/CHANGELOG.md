@@ -2,7 +2,15 @@
 
 This is the full changelog of the arcdps Log Manager.
 
-## Log Manager v1.4 (unreleased)
+## Log Manager v1.5
+
+#### New features
+- Added CM detection for Aetherblade Hideout
+
+#### Fixes
+- Added End of Dragons Elite Specializations to the Statistics tab.
+
+## Log Manager v1.4
 
 #### New features
 - Added support for all 4 End of Dragons strike missions.
