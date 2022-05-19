@@ -21,7 +21,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections.Statistics.Tabs
 
 		public SpecializationStatistics(ImageProvider imageProvider)
 		{
-			BeginVertical();
+			BeginVertical(spacing: new Size(10, 10));
 			{
 				BeginHorizontal();
 				{
@@ -89,7 +89,6 @@ namespace GW2Scratch.ArcdpsLogManager.Sections.Statistics.Tabs
 						EndHorizontal();
 					}
 					EndGroup();
-					Add(null);
 				}
 				EndHorizontal();
 
