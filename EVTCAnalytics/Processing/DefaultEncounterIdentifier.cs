@@ -495,6 +495,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					return GetDefaultBuilder(encounter, mainTarget)
 						// This has the same rationale behind it as the check for Xunlai Jade Junkyard.
 						.WithResult(new TeamChangedBelowHealthThresholdDeterminer(mainTarget, 0.5f))
+						.WithModes(new AgentHealthModeDeterminer(mainTarget, 30_000_000))
 						.Build();
 				}
 				case Encounter.HarvestTemple:
