@@ -88,6 +88,10 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Updates
 					&& log.Encounter == Encounter.AetherbladeHideout
 					&& log.GameBuild >= 127931,
 				"Add CM detection for Aetherblade Hideout."),
+			new LogUpdate(log => log.ParsingVersion < new Version(1, 5, 0, 1)
+					&& log.Encounter == Encounter.XunlaiJadeJunkyard
+					&& log.GameBuild >= 128773,
+				"Add CM detection for Xunlai Jade Junkyard."),
 			// When adding a new update, you need to increase the revision (last value) of the version in the .csproj file
 			// unless the version changes more significantly, in that case it can be reset to 0.
 		};

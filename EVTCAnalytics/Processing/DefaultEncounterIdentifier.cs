@@ -487,6 +487,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						// Ankka changes teams twice at the start and then once when she is beaten.
 						// We just pick an arbitrary conservative threshold that her health needs to reach first: 50%.
 						.WithResult(new TeamChangedBelowHealthThresholdDeterminer(mainTarget, 0.5f))
+						.WithModes(new AgentHealthModeDeterminer(mainTarget, 50_000_000))
 						.Build();
 				}
 				case Encounter.KainengOverlook:
