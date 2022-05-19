@@ -6,6 +6,8 @@ This is the full changelog of the arcdps Log Manager.
 
 #### New features
 - Added CM detection for Aetherblade Hideout
+- Added CM detection for Xunlai Jade Junkyard
+- Added CM detection for Kaineng Overlook (we are assuming the main foe will have more health in CM)
 
 #### Fixes
 - Added End of Dragons Elite Specializations to the Statistics tab.
