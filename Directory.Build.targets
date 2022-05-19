@@ -1,7 +1,7 @@
 <Project>
     <!-- This is a workaround for .NET desktop targetting pack 6.0.2 shipping an invalid version;
     see https://github.com/dotnet/core/pull/7346/ -->
-    <ItemGroup Condition="'$(TargetFramework)' == 'net6.0-windows'">
+    <ItemGroup Condition="'$(TargetFrameworkVersion)' == 'net6.0'">
         <FrameworkReference
                 Update="Microsoft.WindowsDesktop.App;Microsoft.WindowsDesktop.App.WPF;Microsoft.WindowsDesktop.App.WindowsForms"
                 TargetingPackVersion="6.0.0" />
