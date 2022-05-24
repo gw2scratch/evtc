@@ -27,13 +27,13 @@ namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 			}
 			EndVertical();
 
-			var unparsedCheckBox = new CheckBox {Text = "Unprocessed"};
+			var unparsedCheckBox = new CheckBox { Text = "Unprocessed" };
 			unparsedCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowParseUnparsedLogs);
-			var parsingCheckBox = new CheckBox {Text = "Processing"};
+			var parsingCheckBox = new CheckBox { Text = "Processing" };
 			parsingCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowParseParsingLogs);
-			var parsedCheckBox = new CheckBox {Text = "Processed"};
+			var parsedCheckBox = new CheckBox { Text = "Processed" };
 			parsedCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowParseParsedLogs);
-			var failedCheckBox = new CheckBox {Text = "Failed"};
+			var failedCheckBox = new CheckBox { Text = "Failed" };
 			failedCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowParseFailedLogs);
 			BeginVertical(new Padding(5));
 			{
@@ -46,5 +46,18 @@ namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 			EndVertical();
 		}
 
+		public static int CountNonDefaultAdvancedFilters(LogFilters filters)
+		{
+			int count = 0;
+			if (!filters.CompositionFilters.IsDefault) { count += 1; }
+			if (!filters.InstabilityFilters.IsDefault) { count += 1; }
+			if (!filters.ShowParseUnparsedLogs || !filters.ShowParseParsingLogs || !filters.ShowParseParsedLogs || !filters.ShowParseFailedLogs)
+			{
+				// We count the whole processing status section as one.
+				count += 1;
+			}
+
+			return count;
+		}
 	}
 }

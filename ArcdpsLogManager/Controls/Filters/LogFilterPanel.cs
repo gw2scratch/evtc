@@ -88,6 +88,18 @@ namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 				};
 				form.Show();
 			};
+			filters.PropertyChanged += (sender, args) =>
+			{
+				var nonDefaultCount = AdvancedFilterPanel.CountNonDefaultAdvancedFilters(filters);
+				if (nonDefaultCount > 0)
+				{
+					advancedFiltersButton.Text = $"Advanced filters ({nonDefaultCount} set)";
+				}
+				else
+				{
+					advancedFiltersButton.Text = "Advanced filters";
+				}
+			};
 
 			BeginVertical(new Padding(0, 0, 0, 4), spacing: new Size(4, 4));
 			{

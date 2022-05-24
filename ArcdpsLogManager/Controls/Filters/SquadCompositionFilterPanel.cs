@@ -105,20 +105,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 			};
 			
 			resetButton.Click += (_, _) => {
-				var filterGroups = new IReadOnlyList<PlayerCountFilter>[] {
-					filterSnapshot.CoreProfessionFilters,
-					filterSnapshot.HeartOfThornsSpecializationFilters,
-					filterSnapshot.PathOfFireSpecializationFilters,
-					filterSnapshot.EndOfDragonsSpecializationFilters,
-				};
-				foreach (var group in filterGroups)
-				{
-					foreach (var filter in group)
-					{
-						filter.PlayerCount = 0;
-						filter.FilterType = PlayerCountFilterType.GreaterOrEqual;
-					}
-				}
+				filterSnapshot.ResetToDefault();
 			};
 
 			filterSnapshot.PropertyChanged += (_, _) => {

@@ -4,6 +4,9 @@ This is the full changelog of the arcdps Log Manager.
 
 ## Log Manager v1.5.1 (unreleased)
 
+#### New features
+- The *Advanced filters* button text now changes to show when advanced filters are active.
+
 #### Fixes
 - Fixed Elite Specializations statistics not fitting into their box with default window size on Windows
 - Fixed blurry specialization icons on Windows with DPI scaling enabled

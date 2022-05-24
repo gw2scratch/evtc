@@ -8,16 +8,18 @@ using System.Runtime.CompilerServices;
 
 namespace GW2Scratch.ArcdpsLogManager.Logs.Filters;
 
-public class InstabilityFilters : ILogFilter, INotifyPropertyChanged
+public class InstabilityFilters : ILogFilter, INotifyPropertyChanged, IDefaultable
 {
 	public enum FilterType
 	{
 		All,
 		Any,
 	}
-	
+
 	private readonly Dictionary<MistlockInstability, bool> instabilities = new Dictionary<MistlockInstability, bool>();
-	private FilterType type = FilterType.All;
+	private const bool DefaultInstabilitySelection = false;
+	private const FilterType DefaultFilterType = FilterType.All;
+	private FilterType type = DefaultFilterType;
 
 	public FilterType Type
 	{
@@ -35,7 +37,7 @@ public class InstabilityFilters : ILogFilter, INotifyPropertyChanged
 	{
 		foreach (MistlockInstability instability in Enum.GetValues(typeof(MistlockInstability)))
 		{
-			instabilities[instability] = false;
+			instabilities[instability] = DefaultInstabilitySelection;
 		}
 	}
 
@@ -53,7 +55,7 @@ public class InstabilityFilters : ILogFilter, INotifyPropertyChanged
 	public bool FilterLog(LogData log)
 	{
 		var currentInstabilities = this.instabilities.Where(x => x.Value).Select(x => x.Key);
-		
+
 		ILogFilter filter = Type switch
 		{
 			FilterType.All => new AllInstabilitiesFilter(currentInstabilities),
@@ -68,5 +70,16 @@ public class InstabilityFilters : ILogFilter, INotifyPropertyChanged
 	private void OnPropertyChanged([CallerMemberName] string propertyName = null)
 	{
 		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+	}
+
+	public bool IsDefault => Type == DefaultFilterType && instabilities.All(x => x.Value == DefaultInstabilitySelection);
+
+	public void ResetToDefault()
+	{
+		Type = DefaultFilterType;
+		foreach (var instability in instabilities)
+		{
+			instabilities[instability.Key] = DefaultInstabilitySelection;
+		}
 	}
 }
