@@ -706,6 +706,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					case SpeciesIds.Ankka:
 						return Encounter.XunlaiJadeJunkyard;
 					case SpeciesIds.MinisterLi:
+					case SpeciesIds.MinisterLiChallengeMode:
 						return Encounter.KainengOverlook;
 					case SpeciesIds.VoidAmalgamate:
 						return Encounter.HarvestTemple;

@@ -6,6 +6,10 @@ This is the full changelog of the arcdps Log Manager.
 
 #### New features
 - The *Advanced filters* button text now changes to show when advanced filters are active.
+- Added CM detection for Kaineng Overlook for real this time (he's a different NPC species in CM).
+
+#### Changes
+- *Advanced filters* are now split into tabs to provide space for more filters.
 
 #### Fixes
 - Fixed Elite Specializations statistics not fitting into their box with default window size on Windows
