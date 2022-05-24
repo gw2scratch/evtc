@@ -3311,6 +3311,12 @@ references:
   commentId: F:GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.MinisterLi
   fullName: GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.MinisterLi
   nameWithType: SpeciesIds.MinisterLi
+- uid: GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.MinisterLiChallengeMode
+  name: MinisterLiChallengeMode
+  href: api/GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.html#GW2Scratch_EVTCAnalytics_GameData_SpeciesIds_MinisterLiChallengeMode
+  commentId: F:GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.MinisterLiChallengeMode
+  fullName: GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.MinisterLiChallengeMode
+  nameWithType: SpeciesIds.MinisterLiChallengeMode
 - uid: GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.MursaatOverseer
   name: MursaatOverseer
   href: api/GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.html#GW2Scratch_EVTCAnalytics_GameData_SpeciesIds_MursaatOverseer
