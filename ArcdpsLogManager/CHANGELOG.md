@@ -6,6 +6,7 @@ This is the full changelog of the arcdps Log Manager.
 
 #### Fixes
 - Fixed Elite Specializations statistics not fitting into their box with default window size on Windows
+- Fixed blurry specialization icons on Windows with DPI scaling enabled
 
 ## Log Manager v1.5
 
