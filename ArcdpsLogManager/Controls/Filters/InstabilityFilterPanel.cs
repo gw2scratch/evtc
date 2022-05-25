@@ -12,54 +12,71 @@ namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 	{
 		public InstabilityFilterPanel(ImageProvider imageProvider, LogFilters filters)
 		{
-			BeginVertical(spacing: new Size(5, 5));
+			BeginVertical(spacing: new Size(5, 25));
 			{
-				var typeRadios = new EnumRadioButtonList<InstabilityFilters.FilterType>()
+				BeginVertical(spacing: new Size(5, 5));
 				{
-					GetText = type => type switch
+					var typeRadios = new EnumRadioButtonList<InstabilityFilters.FilterType>()
 					{
-						InstabilityFilters.FilterType.All => "All of these",
-						InstabilityFilters.FilterType.Any => "Any of these",
-						_ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
-					},
-				};
-				typeRadios.SelectedValueBinding.Bind(filters.InstabilityFilters,
-					nameof(filters.InstabilityFilters.Type));
-				
-				AddRow(typeRadios);
-
-				BeginHorizontal();
-				{
-					foreach (var column in Enum.GetValues(typeof(MistlockInstability)).Cast<MistlockInstability>()
-						         .Chunk(5))
-					{
-						BeginVertical(spacing: new Size(2, 2));
+						GetText = type => type switch
 						{
-							foreach (var instability in column)
+							InstabilityFilters.FilterType.All => "All of these",
+							InstabilityFilters.FilterType.Any => "Any of these",
+							_ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
+						},
+					};
+					typeRadios.SelectedValueBinding.Bind(filters.InstabilityFilters,
+						nameof(filters.InstabilityFilters.Type));
+
+					AddRow(typeRadios);
+
+					BeginHorizontal();
+					{
+						foreach (var column in Enum.GetValues(typeof(MistlockInstability)).Cast<MistlockInstability>()
+							         .Chunk(5))
+						{
+							BeginVertical(spacing: new Size(2, 2));
 							{
-								BeginHorizontal();
+								foreach (var instability in column)
 								{
-									var image = new ImageView
+									BeginHorizontal();
 									{
-										Image = imageProvider.GetMistlockInstabilityIcon(instability),
-										ToolTip = GameNames.GetInstabilityName(instability),
-										Size = new Size(20, 20),
-									};
-									Add(image);
-									var checkbox = new CheckBox { Text = GameNames.GetInstabilityName(instability) };
-									checkbox.CheckedBinding.Bind(
-										() => filters.InstabilityFilters[instability],
-										value => filters.InstabilityFilters[instability] = value ?? false
+										var image = new ImageView
+										{
+											Image = imageProvider.GetMistlockInstabilityIcon(instability),
+											ToolTip = GameNames.GetInstabilityName(instability),
+											Size = new Size(20, 20),
+										};
+										Add(image);
+										var checkbox = new CheckBox
+										{
+											Text = GameNames.GetInstabilityName(instability)
+										};
+										checkbox.CheckedBinding.Bind(
+											() => filters.InstabilityFilters[instability],
+											value => filters.InstabilityFilters[instability] = value ?? false
 										);
-									Add(checkbox);
+										Add(checkbox);
+									}
+									EndHorizontal();
 								}
-								EndHorizontal();
 							}
+							EndVertical();
 						}
-						EndVertical();
 					}
+					EndHorizontal();
 				}
-				EndHorizontal();
+				EndVertical();
+				BeginGroup("Tip", new Padding(10, 5));
+				{
+					Add(new Label
+					{
+						Text = "You can enable the Mistlock Instabilities column in the log list by right-clicking " +
+						       "the log list header and checking the related checkbox.",
+						Wrap = WrapMode.Word,
+					});
+				}
+				EndGroup();
 				Add(null);
 			}
 			EndVertical();
