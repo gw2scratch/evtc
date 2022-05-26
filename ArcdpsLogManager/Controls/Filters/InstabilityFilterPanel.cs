@@ -74,6 +74,8 @@ namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 						Text = "You can enable the Mistlock Instabilities column in the log list by right-clicking " +
 						       "the log list header and checking the related checkbox.",
 						Wrap = WrapMode.Word,
+						// This prevents the label to expanding the entire window just to fit everything on one line.
+						Width = 300
 					});
 				}
 				EndGroup();
