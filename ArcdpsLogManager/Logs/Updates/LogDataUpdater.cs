@@ -92,10 +92,11 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Updates
 					&& log.Encounter == Encounter.XunlaiJadeJunkyard
 					&& log.GameBuild >= 128773,
 				"Add CM detection for Xunlai Jade Junkyard."),
-			new LogUpdate(log => log.ParsingVersion < new Version(1, 5, 0, 2)
-					&& log.Encounter == Encounter.KainengOverlook
-					&& log.GameBuild > 128878,
-				"Add experimental CM detection for Kaineng Overlook."),
+			new LogUpdate(log => log.ParsingVersion < new Version(1, 5, 1, 1)
+					&& log.Encounter == Encounter.Other
+					&& log.MapId == 1451
+					&& log.GameBuild >= 129355,
+				"Add CM detection for Kaineng Overlook."),
 			// When adding a new update, you need to increase the revision (last value) of the version in the .csproj file
 			// unless the version changes more significantly, in that case it can be reset to 0.
 		};
