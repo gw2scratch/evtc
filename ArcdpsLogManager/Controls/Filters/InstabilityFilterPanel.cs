@@ -16,8 +16,9 @@ namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 			{
 				BeginVertical(spacing: new Size(5, 5));
 				{
-					var typeRadios = new EnumRadioButtonList<InstabilityFilters.FilterType>()
+					var typeRadios = new EnumRadioButtonList<InstabilityFilters.FilterType>
 					{
+						Spacing = new Size(5, 5),
 						GetText = type => type switch
 						{
 							InstabilityFilters.FilterType.All => "All of these",
