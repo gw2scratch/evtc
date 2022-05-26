@@ -75,6 +75,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 						       "the log list header and checking the related checkbox.",
 						Wrap = WrapMode.Word,
 						// This prevents the label to expanding the entire window just to fit everything on one line.
+						// It will still fully expand to the fill the group.
 						Width = 300
 					});
 				}
