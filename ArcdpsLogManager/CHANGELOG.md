@@ -8,6 +8,7 @@ This is the full changelog of the arcdps Log Manager.
 - The *Advanced filters* button text now changes to show when advanced filters are active.
 - Added filtering by players to *Advanced filters*.
 - Added CM detection for Kaineng Overlook for real this time (he's a different NPC species in CM).
+- Added *None of these* as an option to instability filters.
 
 #### Changes
 - *Advanced filters* are now split into tabs to provide space for more filters.

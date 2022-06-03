@@ -12,29 +12,31 @@ namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 	{
 		public InstabilityFilterPanel(ImageProvider imageProvider, LogFilters filters)
 		{
+			BeginVertical(spacing: new Size(5, 5), padding: new Padding(0, 0, 0, 5));
+			{
+				var typeRadios = new EnumRadioButtonList<InstabilityFilters.FilterType>
+				{
+					Spacing = new Size(5, 5),
+					GetText = type => type switch
+					{
+						InstabilityFilters.FilterType.All => "All of these",
+						InstabilityFilters.FilterType.Any => "Any of these",
+						InstabilityFilters.FilterType.None => "None of these",
+						_ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
+					},
+				};
+				typeRadios.SelectedValueBinding.Bind(filters.InstabilityFilters,
+					nameof(filters.InstabilityFilters.Type));
+				AddRow(typeRadios);
+			}
+			EndVertical();
 			BeginVertical(spacing: new Size(5, 25));
 			{
 				BeginVertical(spacing: new Size(5, 5));
 				{
-					var typeRadios = new EnumRadioButtonList<InstabilityFilters.FilterType>
-					{
-						Spacing = new Size(5, 5),
-						GetText = type => type switch
-						{
-							InstabilityFilters.FilterType.All => "All of these",
-							InstabilityFilters.FilterType.Any => "Any of these",
-							_ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
-						},
-					};
-					typeRadios.SelectedValueBinding.Bind(filters.InstabilityFilters,
-						nameof(filters.InstabilityFilters.Type));
-
-					AddRow(typeRadios);
-
 					BeginHorizontal();
 					{
-						foreach (var column in Enum.GetValues(typeof(MistlockInstability)).Cast<MistlockInstability>()
-							         .Chunk(5))
+						foreach (var column in Enum.GetValues(typeof(MistlockInstability)).Cast<MistlockInstability>().Chunk(5))
 						{
 							BeginVertical(spacing: new Size(2, 2));
 							{

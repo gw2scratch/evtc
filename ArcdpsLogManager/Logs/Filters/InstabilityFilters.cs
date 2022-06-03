@@ -14,6 +14,7 @@ public class InstabilityFilters : ILogFilter, INotifyPropertyChanged, IDefaultab
 	{
 		All,
 		Any,
+		None,
 	}
 
 	private readonly Dictionary<MistlockInstability, bool> instabilities = new Dictionary<MistlockInstability, bool>();
@@ -54,15 +55,15 @@ public class InstabilityFilters : ILogFilter, INotifyPropertyChanged, IDefaultab
 
 	public bool FilterLog(LogData log)
 	{
-		var currentInstabilities = this.instabilities.Where(x => x.Value).Select(x => x.Key);
+		var currentInstabilities = this.instabilities.Where(x => x.Value).Select(x => new InstabilityFilter(x.Key));
 
-		ILogFilter filter = Type switch
+		return Type switch
 		{
-			FilterType.All => new AllInstabilitiesFilter(currentInstabilities),
-			FilterType.Any => new AnyInstabilityFilter(currentInstabilities),
+			FilterType.All => currentInstabilities.All(x => x.FilterLog(log)),
+			FilterType.Any => currentInstabilities.Any(x => x.FilterLog(log)),
+			FilterType.None => currentInstabilities.All(x => !x.FilterLog(log)),
 			_ => throw new ArgumentOutOfRangeException()
 		};
-		return filter.FilterLog(log);
 	}
 
 	public event PropertyChangedEventHandler PropertyChanged;
