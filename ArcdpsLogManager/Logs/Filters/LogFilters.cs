@@ -28,7 +28,8 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 		private DateTime? minDateTime = null;
 		private DateTime? maxDateTime = null;
 		private CompositionFilters compositionFilters = new CompositionFilters();
-		private InstabilityFilters instabilityFilters = new InstabilityFilters();
+		private readonly InstabilityFilters instabilityFilters = new InstabilityFilters();
+		private readonly PlayerFilters playerFilters = new PlayerFilters();
 		private readonly IReadOnlyList<ILogFilter> additionalFilters;
 
 		public bool ShowParseUnparsedLogs
@@ -210,10 +211,21 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 		public InstabilityFilters InstabilityFilters
 		{
 			get => instabilityFilters;
-			set
+			init
 			{
 				if (instabilityFilters.Equals(value)) return;
 				instabilityFilters = value;
+				OnPropertyChanged();
+			}
+		}
+		
+		public PlayerFilters PlayerFilters 
+		{
+			get => playerFilters;
+			init
+			{
+				if (playerFilters.Equals(value)) return;
+				playerFilters = value;
 				OnPropertyChanged();
 			}
 		}
@@ -225,6 +237,8 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 			CompositionFilters.PropertyChanged += (_, _) => OnPropertyChanged(nameof(CompositionFilters));
 			InstabilityFilters = new InstabilityFilters();
 			InstabilityFilters.PropertyChanged += (_, _) => OnPropertyChanged(nameof(InstabilityFilters));
+			PlayerFilters = new PlayerFilters();
+			PlayerFilters.PropertyChanged += (_, _) => OnPropertyChanged(nameof(PlayerFilters));
 		}
 
 		public bool FilterLog(LogData log)
@@ -245,7 +259,8 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 			       && FilterByFavoriteStatus(log)
 			       && FilterByTags(log)
 			       && FilterByComposition(log)
-			       && FilterByInstabilities(log);
+			       && FilterByInstabilities(log)
+			       && FilterByPlayers(log);
 		}
 
 		private bool FilterByParsingStatus(LogData log)
@@ -309,6 +324,11 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 		private bool FilterByInstabilities(LogData log)
 		{
 			return InstabilityFilters.FilterLog(log);
+		}
+		
+		private bool FilterByPlayers(LogData log)
+		{
+			return PlayerFilters.FilterLog(log);
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;

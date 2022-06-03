@@ -52,11 +52,17 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 				StartBackgroundCountLabelUpdate();
 			}
 		}
-
+		
+		private bool ShowLogListButtons { get; }
 		private string PlayerFilter { get; set; } = "";
+		
+		public PlayerData SelectedPlayer => playerGridView.SelectedItem;
+
+		public event EventHandler<GridCellMouseEventArgs> PlayerDoubleClicked;
 
 		public PlayerList(LogCache logCache, ApiData apiData, LogDataProcessor logProcessor,
-			UploadProcessor uploadProcessor, ImageProvider imageProvider, ILogNameProvider logNameProvider)
+			UploadProcessor uploadProcessor, ImageProvider imageProvider, ILogNameProvider logNameProvider,
+			bool showLogListButtons = true)
 		{
 			LogCache = logCache;
 			ApiData = apiData;
@@ -64,6 +70,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			ImageProvider = imageProvider;
 			LogNameProvider = logNameProvider;
 			UploadProcessor = uploadProcessor;
+			ShowLogListButtons = showLogListButtons;
 
 			var playerDetailPanel = ConstructPlayerDetailPanel();
 			playerGridView = ConstructPlayerGridView(playerDetailPanel);
@@ -181,7 +188,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 		private PlayerDetailPanel ConstructPlayerDetailPanel()
 		{
 			return new PlayerDetailPanel(LogCache, ApiData, LogProcessor, UploadProcessor, ImageProvider,
-				LogNameProvider);
+				LogNameProvider, ShowLogListButtons);
 		}
 
 		private GridView<PlayerData> ConstructPlayerGridView(PlayerDetailPanel playerDetailPanel)
@@ -203,6 +210,11 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 				{
 					playerDetailPanel.PlayerData = gridView.SelectedItem;
 				}
+			};
+			
+			gridView.CellDoubleClick += (sender, args) =>
+			{
+				PlayerDoubleClicked?.Invoke(sender, args);
 			};
 
 			return gridView;

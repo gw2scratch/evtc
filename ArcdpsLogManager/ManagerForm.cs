@@ -368,7 +368,7 @@ namespace GW2Scratch.ArcdpsLogManager
 
 		private LogFilterPanel ConstructLogFilters()
 		{
-			var filterPanel = new LogFilterPanel(ImageProvider, Filters);
+			var filterPanel = new LogFilterPanel(LogCache, ApiData, LogDataProcessor, UploadProcessor, ImageProvider, LogNameProvider, Filters);
 			LogCollectionsInitialized += (sender, args) => logs.CollectionChanged += (s, a) => { filterPanel.UpdateLogs(logs); };
 			LogDataProcessor.Processed += (sender, args) =>
 			{
