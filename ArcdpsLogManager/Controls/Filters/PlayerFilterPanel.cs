@@ -22,7 +22,7 @@ public class PlayerFilterPanel : DynamicLayout
 
 	public PlayerFilterPanel(LogCache logCache, ApiData apiData, LogDataProcessor logProcessor,
 		UploadProcessor uploadProcessor, ImageProvider imageProvider, ILogNameProvider logNameProvider,
-		LogFilters filters)
+		PlayerFilters filters)
 	{
 		var typeRadios = ConstructTypeRadios(filters);
 		var addPlayerButton = ConstructAddPlayerButton(logCache, apiData, logProcessor, uploadProcessor,
@@ -48,11 +48,11 @@ public class PlayerFilterPanel : DynamicLayout
 		EndVertical();
 	}
 
-	private GridView<RequiredPlayerFilter> ConstructFilterGrid(LogFilters filters, ImageProvider imageProvider)
+	private GridView<RequiredPlayerFilter> ConstructFilterGrid(PlayerFilters filters, ImageProvider imageProvider)
 	{
 		var grid = new GridView<RequiredPlayerFilter>();
 		grid.AllowMultipleSelection = true;
-		grid.DataStore = filters.PlayerFilters.RequiredPlayers;
+		grid.DataStore = filters.RequiredPlayers;
 		grid.Columns.Add(new GridColumn
 		{
 			HeaderText = "Account name",
@@ -81,7 +81,7 @@ public class PlayerFilterPanel : DynamicLayout
 
 	private Button ConstructAddPlayerButton(LogCache logCache, ApiData apiData, LogDataProcessor logProcessor,
 		UploadProcessor uploadProcessor, ImageProvider imageProvider, ILogNameProvider logNameProvider,
-		LogFilters filters)
+		PlayerFilters filters)
 	{
 		var addPlayerButton = new Button { Text = "Add player" };
 		addPlayerButton.Click += (sender, args) =>
@@ -92,13 +92,13 @@ public class PlayerFilterPanel : DynamicLayout
 			if (selectedPlayer != null)
 			{
 				var filter = new RequiredPlayerFilter(selectedPlayer.AccountName);
-				filters.PlayerFilters.RequiredPlayers.Add(filter);
+				filters.RequiredPlayers.Add(filter);
 			}
 		};
 		return addPlayerButton;
 	}
 
-	private Button ConstructRemoveButton(GridView<RequiredPlayerFilter> grid, LogFilters filters)
+	private Button ConstructRemoveButton(GridView<RequiredPlayerFilter> grid, PlayerFilters filters)
 	{
 		var removeButton = new Button { Text = "Remove selected players", Enabled = grid.SelectedItems.Any() };
 		removeButton.Click += (_, _) =>
@@ -106,7 +106,7 @@ public class PlayerFilterPanel : DynamicLayout
 			// We need to save the items in ToList() first as we are modifying the collection the grid is bound to.
 			foreach (var player in grid.SelectedItems.ToList())
 			{
-				filters.PlayerFilters.RequiredPlayers.Remove(player);
+				filters.RequiredPlayers.Remove(player);
 			}
 		};
 		grid.SelectionChanged += (_, _) =>
@@ -116,7 +116,7 @@ public class PlayerFilterPanel : DynamicLayout
 		return removeButton;
 	}
 
-	private Control ConstructTypeRadios(LogFilters filters)
+	private Control ConstructTypeRadios(PlayerFilters filters)
 	{
 		var typeRadios = new EnumRadioButtonList<PlayerFilters.FilterType>
 		{
@@ -129,7 +129,7 @@ public class PlayerFilterPanel : DynamicLayout
 				_ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
 			},
 		};
-		typeRadios.SelectedValueBinding.Bind(filters.PlayerFilters, nameof(filters.PlayerFilters.Type));
+		typeRadios.SelectedValueBinding.Bind(filters, nameof(filters.Type));
 		return typeRadios;
 	}
 

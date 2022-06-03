@@ -78,7 +78,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 			UploadProcessor uploadProcessor, ImageProvider imageProvider, ILogNameProvider logNameProvider,
 			LogFilters filters)
 		{
-			return new PlayerFilterPanel(logCache, apiData, logProcessor, uploadProcessor, imageProvider, logNameProvider, filters);
+			return new PlayerFilterPanel(logCache, apiData, logProcessor, uploadProcessor, imageProvider, logNameProvider, filters.PlayerFilters);
 		}
 
 		private Control ConstructProcessingStatus()
