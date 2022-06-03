@@ -17,11 +17,11 @@ public class PlayerFilters : ILogFilter, INotifyPropertyChanged, IDefaultable
 	}
 
 	private const int DefaultMinPlayerCount = 0;
-	private const int DefaultMaxPlayerCount = 0;
+	private const int DefaultMaxPlayerCount = 100;
 	private const FilterType DefaultFilterType = FilterType.All;
 	private FilterType type = DefaultFilterType;
-	private int minPlayerCount = 0;
-	private int maxPlayerCount = 100;
+	private int minPlayerCount = DefaultMinPlayerCount;
+	private int maxPlayerCount = DefaultMaxPlayerCount;
 	public ObservableCollection<RequiredPlayerFilter> RequiredPlayers { get; }
 
 	public int MinPlayerCount
