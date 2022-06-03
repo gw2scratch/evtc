@@ -2,10 +2,11 @@
 
 This is the full changelog of the arcdps Log Manager.
 
-## Log Manager v1.5.1 (unreleased)
+## Log Manager v1.6 (unreleased)
 
 #### New features
 - The *Advanced filters* button text now changes to show when advanced filters are active.
+- Added filtering by players to *Advanced filters*.
 - Added CM detection for Kaineng Overlook for real this time (he's a different NPC species in CM).
 
 #### Changes
