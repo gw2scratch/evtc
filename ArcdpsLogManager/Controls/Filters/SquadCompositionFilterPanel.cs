@@ -74,6 +74,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 			BeginVertical(new Padding(5, 5), new Size(5, 5));
 			{
 				AddRow(null, ConstructResetButton(filterSnapshot), ConstructApplyButton(filters, filterSnapshot));
+				Add(null);
 			}
 			EndVertical();
 		}
