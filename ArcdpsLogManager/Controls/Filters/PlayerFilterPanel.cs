@@ -32,20 +32,56 @@ public class PlayerFilterPanel : DynamicLayout
 
 		BeginVertical(spacing: new Size(5, 5));
 		{
-			AddRow(typeRadios);
-			BeginVertical();
+			BeginGroup("Required players", new Padding(5), new Size(5, 5));
 			{
-				Add(grid);
+				AddRow(typeRadios);
+				BeginVertical();
+				{
+					Add(grid);
+				}
+				EndVertical();
+				BeginVertical(spacing: new Size(5, 5));
+				{
+					AddRow(addPlayerButton, removePlayerButton, null);
+				}
+				EndVertical();
 			}
-			EndVertical();
-			BeginVertical(spacing: new Size(5, 5));
+			EndGroup();
+			BeginGroup("Player counts", new Padding(5), new Size(5, 5));
 			{
-				AddRow(addPlayerButton, removePlayerButton, null);
+				AddRow("Minimum players", ConstructMinCountStepper(filters));
+				AddRow("Maximum players", ConstructMaxCountStepper(filters));
 			}
-			EndVertical();
-			Add(null);
+			EndGroup();
 		}
 		EndVertical();
+		Add(null);
+	}
+	
+	private NumericStepper ConstructMinCountStepper(PlayerFilters filter)
+	{
+		var numericStepper = new NumericStepper {Value = 0, MinValue = 0};
+		numericStepper.ValueBinding
+			.BindDataContext(
+				Binding.Property((PlayerFilters x) => x.MinPlayerCount)
+					.Convert(r => (double) r, v => (int) v)
+			);
+		numericStepper.DataContext = filter;
+
+		return numericStepper;
+	}
+	
+	private NumericStepper ConstructMaxCountStepper(PlayerFilters filter)
+	{
+		var numericStepper = new NumericStepper {Value = 0, MinValue = 0};
+		numericStepper.ValueBinding
+			.BindDataContext(
+				Binding.Property((PlayerFilters x) => x.MaxPlayerCount)
+					.Convert(r => (double) r, v => (int) v)
+			);
+		numericStepper.DataContext = filter;
+
+		return numericStepper;
 	}
 
 	private GridView<RequiredPlayerFilter> ConstructFilterGrid(PlayerFilters filters, ImageProvider imageProvider)

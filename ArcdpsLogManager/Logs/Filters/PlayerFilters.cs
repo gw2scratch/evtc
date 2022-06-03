@@ -15,10 +15,36 @@ public class PlayerFilters : ILogFilter, INotifyPropertyChanged, IDefaultable
 		Any,
 		None,
 	}
-	
+
+	private const int DefaultMinPlayerCount = 0;
+	private const int DefaultMaxPlayerCount = 0;
 	private const FilterType DefaultFilterType = FilterType.All;
 	private FilterType type = DefaultFilterType;
+	private int minPlayerCount = 0;
+	private int maxPlayerCount = 100;
 	public ObservableCollection<RequiredPlayerFilter> RequiredPlayers { get; }
+
+	public int MinPlayerCount
+	{
+		get => minPlayerCount;
+		set
+		{
+			if (value == minPlayerCount) return;
+			minPlayerCount = value;
+			OnPropertyChanged();
+		}
+	}
+
+	public int MaxPlayerCount
+	{
+		get => maxPlayerCount;
+		set
+		{
+			if (value == maxPlayerCount) return;
+			maxPlayerCount = value;
+			OnPropertyChanged();
+		}
+	}
 
 	public PlayerFilters()
 	{
@@ -46,20 +72,28 @@ public class PlayerFilters : ILogFilter, INotifyPropertyChanged, IDefaultable
 
 	public bool FilterLog(LogData log)
 	{
-		return Type switch
+		bool requiredPlayers = Type switch
 		{
 			FilterType.All => RequiredPlayers.All(req => req.FilterLog(log)),
 			FilterType.Any => RequiredPlayers.Any(req => req.FilterLog(log)),
 			FilterType.None => RequiredPlayers.All(req => !req.FilterLog(log)),
 			_ => throw new ArgumentOutOfRangeException()
 		};
+
+		int playerCount = log?.Players?.Count() ?? 0;
+		bool playerCountFilter = MinPlayerCount <= playerCount && playerCount <= MaxPlayerCount;
+
+		return requiredPlayers && playerCountFilter;
 	}
 
-	public bool IsDefault => Type == DefaultFilterType && RequiredPlayers.Count == 0;
+	public bool IsDefault => Type == DefaultFilterType && RequiredPlayers.Count == 0 &&
+	                         MinPlayerCount == DefaultMinPlayerCount && MaxPlayerCount == DefaultMaxPlayerCount;
 	
 	public void ResetToDefault()
 	{
 		Type = DefaultFilterType;
+		MinPlayerCount = DefaultMinPlayerCount;
+		MaxPlayerCount = DefaultMaxPlayerCount;
 		RequiredPlayers.Clear();
 	}
 }
