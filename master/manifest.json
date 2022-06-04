@@ -192,7 +192,7 @@
       "output": {
         ".html": {
           "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.AgentEvent.html",
-          "hash": "E/ORhZfGJhvTKsQostmNB5QUbCvDmdRIQXfKUCimd1k="
+          "hash": "sMsOT42K5HEVSNE05GPd5WYd+ISIxljsb6p1IhXTufk="
         }
       },
       "is_incremental": false,
@@ -296,6 +296,18 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Events.BarrierUpdateEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.BarrierUpdateEvent.html",
+          "hash": "img/uxnO1qnJJ6fxzPymdO2ATazGo93WHpcy5W7c83k="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Events.BuffApplyEvent.yml",
       "output": {
         ".html": {
@@ -372,7 +384,7 @@
       "output": {
         ".html": {
           "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.DefianceBarStateUpdateEvent.DefianceBarState.html",
-          "hash": "tVWINaMLf5otpWfMbWNDMKTUstfZjWYWXv5lQtBCM/Q="
+          "hash": "FxDhqQzUHik9Sw9ysN9PtPGKBjeY4C+T1dVQL+Pgf38="
         }
       },
       "is_incremental": false,
@@ -384,7 +396,7 @@
       "output": {
         ".html": {
           "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.DefianceBarStateUpdateEvent.html",
-          "hash": "2lxwyIUd3pegGZV7ITfwRdPIKKRtQ9vwwmCF8RNvkMI="
+          "hash": "i9jgi7hDvehHEhWHfF7Q9bh+z2J/uoHV0IN9lxFB3HU="
         }
       },
       "is_incremental": false,
@@ -396,7 +408,7 @@
       "output": {
         ".html": {
           "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.EffectEvent.html",
-          "hash": "Rkadz+3VoA+XU2qea6TTQvqQFeHcpo6fzQhMtL46CG4="
+          "hash": "nRFzg9bIjC0hgyRE2yBhDDWEISHjGO/zjltwg5rAwjs="
         }
       },
       "is_incremental": false,
@@ -708,7 +720,7 @@
       "output": {
         ".html": {
           "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.html",
-          "hash": "qua0obJTUVNrxCVcPUZ2Oz4Cnm0CTRtVKC4HeFheiVU="
+          "hash": "C2wzjtXKhIz1xkOtE6XrnShf7pqRKSbRIoQ1CffrADc="
         }
       },
       "is_incremental": false,
@@ -2244,7 +2256,7 @@
       "output": {
         ".html": {
           "relative_path": "api/toc.html",
-          "hash": "pMCoKTzBpSFCNHKD+Qk/yKtcdlqljPDmTQrN6WS9FuQ="
+          "hash": "IaSqZx/UYHFCS9Ef/Z4btAc8XH122N6jCGO0+RFBmA8="
         }
       },
       "is_incremental": false,
@@ -2283,7 +2295,7 @@
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 178,
+          "total_file_count": 179,
           "skipped_file_count": 0
         },
         "TocDocumentProcessor": {

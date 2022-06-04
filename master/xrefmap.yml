@@ -398,6 +398,38 @@ references:
   isSpec: "True"
   fullName: GW2Scratch.EVTCAnalytics.Events.AllStacksRemovedBuffEvent.StacksRemoved
   nameWithType: AllStacksRemovedBuffEvent.StacksRemoved
+- uid: GW2Scratch.EVTCAnalytics.Events.BarrierUpdateEvent
+  name: BarrierUpdateEvent
+  href: api/GW2Scratch.EVTCAnalytics.Events.BarrierUpdateEvent.html
+  commentId: T:GW2Scratch.EVTCAnalytics.Events.BarrierUpdateEvent
+  fullName: GW2Scratch.EVTCAnalytics.Events.BarrierUpdateEvent
+  nameWithType: BarrierUpdateEvent
+- uid: GW2Scratch.EVTCAnalytics.Events.BarrierUpdateEvent.#ctor(System.Int64,GW2Scratch.EVTCAnalytics.Model.Agents.Agent,System.Single)
+  name: BarrierUpdateEvent(Int64, Agent, Single)
+  href: api/GW2Scratch.EVTCAnalytics.Events.BarrierUpdateEvent.html#GW2Scratch_EVTCAnalytics_Events_BarrierUpdateEvent__ctor_System_Int64_GW2Scratch_EVTCAnalytics_Model_Agents_Agent_System_Single_
+  commentId: M:GW2Scratch.EVTCAnalytics.Events.BarrierUpdateEvent.#ctor(System.Int64,GW2Scratch.EVTCAnalytics.Model.Agents.Agent,System.Single)
+  fullName: GW2Scratch.EVTCAnalytics.Events.BarrierUpdateEvent.BarrierUpdateEvent(System.Int64, GW2Scratch.EVTCAnalytics.Model.Agents.Agent, System.Single)
+  nameWithType: BarrierUpdateEvent.BarrierUpdateEvent(Int64, Agent, Single)
+- uid: GW2Scratch.EVTCAnalytics.Events.BarrierUpdateEvent.#ctor*
+  name: BarrierUpdateEvent
+  href: api/GW2Scratch.EVTCAnalytics.Events.BarrierUpdateEvent.html#GW2Scratch_EVTCAnalytics_Events_BarrierUpdateEvent__ctor_
+  commentId: Overload:GW2Scratch.EVTCAnalytics.Events.BarrierUpdateEvent.#ctor
+  isSpec: "True"
+  fullName: GW2Scratch.EVTCAnalytics.Events.BarrierUpdateEvent.BarrierUpdateEvent
+  nameWithType: BarrierUpdateEvent.BarrierUpdateEvent
+- uid: GW2Scratch.EVTCAnalytics.Events.BarrierUpdateEvent.BarrierFraction
+  name: BarrierFraction
+  href: api/GW2Scratch.EVTCAnalytics.Events.BarrierUpdateEvent.html#GW2Scratch_EVTCAnalytics_Events_BarrierUpdateEvent_BarrierFraction
+  commentId: P:GW2Scratch.EVTCAnalytics.Events.BarrierUpdateEvent.BarrierFraction
+  fullName: GW2Scratch.EVTCAnalytics.Events.BarrierUpdateEvent.BarrierFraction
+  nameWithType: BarrierUpdateEvent.BarrierFraction
+- uid: GW2Scratch.EVTCAnalytics.Events.BarrierUpdateEvent.BarrierFraction*
+  name: BarrierFraction
+  href: api/GW2Scratch.EVTCAnalytics.Events.BarrierUpdateEvent.html#GW2Scratch_EVTCAnalytics_Events_BarrierUpdateEvent_BarrierFraction_
+  commentId: Overload:GW2Scratch.EVTCAnalytics.Events.BarrierUpdateEvent.BarrierFraction
+  isSpec: "True"
+  fullName: GW2Scratch.EVTCAnalytics.Events.BarrierUpdateEvent.BarrierFraction
+  nameWithType: BarrierUpdateEvent.BarrierFraction
 - uid: GW2Scratch.EVTCAnalytics.Events.BuffApplyEvent
   name: BuffApplyEvent
   href: api/GW2Scratch.EVTCAnalytics.Events.BuffApplyEvent.html
