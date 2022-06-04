@@ -278,6 +278,24 @@ namespace GW2Scratch.EVTCAnalytics.Events
 			HealthFraction = healthFraction;
 		}
 	}
+	
+	/// <summary>
+	/// An event specifying that the barrier percentage of a health bar belonging an <see cref="Agent"/> has been changed.
+	/// </summary>
+	/// <remarks>
+	/// This event is typically only provided once per a period, even if barrier state changes more often.
+	/// <br/>
+	/// Introduced in EVTC20201201.
+	/// </remarks>
+	public class BarrierUpdateEvent : AgentEvent
+	{
+		public float BarrierFraction { get; }
+
+		public BarrierUpdateEvent(long time, Agent agent, float barrierFraction) : base(time, agent)
+		{
+			BarrierFraction = barrierFraction;
+		}
+	}
 
 	/// <summary>
 	/// An event specifying that the state of the defiance bar of an <see cref="Agent"/> has been changed.

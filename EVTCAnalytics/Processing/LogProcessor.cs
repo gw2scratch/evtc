@@ -932,8 +932,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					case StateChange.Tag:
 						return new AgentTagEvent(item.Time, GetAgentByAddress(item.SrcAgent), item.Value);
 					case StateChange.BarrierUpdate:
-						// TODO: Implement
-						return new UnknownEvent(item.Time, item);
+						var barrierFraction = item.DstAgent / 10000f;
+						return new BarrierUpdateEvent(item.Time, GetAgentByAddress(item.SrcAgent), barrierFraction);
 					case StateChange.StatReset:
 						// Should not appear in logs
 						return new UnknownEvent(item.Time, item);
