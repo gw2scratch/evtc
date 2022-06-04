@@ -1,6 +1,7 @@
 using System;
 using GW2Scratch.EVTCAnalytics.Model;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
+using GW2Scratch.EVTCAnalytics.Model.Effects;
 using GW2Scratch.EVTCAnalytics.Model.Skills;
 
 namespace GW2Scratch.EVTCAnalytics.Events
@@ -317,9 +318,9 @@ namespace GW2Scratch.EVTCAnalytics.Events
 		public Agent EffectOwner => Agent;
 
 		/// <summary>
-		/// The id of this effect.
+		/// The Effect created.
 		/// </summary>
-		public uint EffectId { get; }
+		public Effect Effect { get; }
 
 		/// <summary>
 		/// The <see cref="Agent"/> this effect is anchored to if anchored. May be <see langword="null" />.
@@ -349,10 +350,10 @@ namespace GW2Scratch.EVTCAnalytics.Events
 		/// </summary>
 		public ushort Duration { get; }
 
-		public EffectEvent(long time, Agent agent, uint effectId, Agent agentTarget, float[] position,
+		public EffectEvent(long time, Agent agent, Effect effect, Agent agentTarget, float[] position,
 			float[] orientation, bool zAxisOrientationOnly, ushort duration) : base(time, agent)
 		{
-			EffectId = effectId;
+			Effect = effect;
 			AgentTarget = agentTarget;
 			Position = position;
 			Orientation = orientation;

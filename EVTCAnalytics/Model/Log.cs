@@ -5,6 +5,7 @@ using System.Threading;
 using GW2Scratch.EVTCAnalytics.Events;
 using GW2Scratch.EVTCAnalytics.GameData;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
+using GW2Scratch.EVTCAnalytics.Model.Effects;
 using GW2Scratch.EVTCAnalytics.Model.Skills;
 using GW2Scratch.EVTCAnalytics.Processing;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters;
@@ -30,6 +31,11 @@ namespace GW2Scratch.EVTCAnalytics.Model
 		/// Provides a list of all <see cref="Skill"/>s that appear in the log.
 		/// </summary>
 		public IReadOnlyList<Skill> Skills { get; }
+		
+		/// <summary>
+		/// Provides a list of all <see cref="Effect"/>s that appear in the log.
+		/// </summary>
+		public IReadOnlyList<Effect> Effects { get; }
 
 		/// <summary>
 		/// Provides a string with the version of arcdps used to record this log, prefixed with "EVTC".
@@ -135,6 +141,7 @@ namespace GW2Scratch.EVTCAnalytics.Model
 			Events = state.Events;
 			Agents = state.Agents;
 			Skills = state.Skills;
+			Effects = state.EffectsById.Values.OrderBy(x => x.Id).ToList();
 			InstanceStart = state.InstanceStart;
 		}
 
@@ -142,7 +149,7 @@ namespace GW2Scratch.EVTCAnalytics.Model
 		/// Creates a new instance of a <see cref="Log"/> without requiring a <see cref="LogProcessorState"/>.
 		/// </summary>
 		internal Log(Agent mainTarget, LogType logType, IEnumerable<Event> events, IEnumerable<Agent> agents,
-			IEnumerable<Skill> skills, IEncounterData encounterData,
+			IEnumerable<Skill> skills, IEnumerable<Effect> effects, IEncounterData encounterData,
 			GameLanguage gameLanguage, string evtcVersion, LogTime startTime, LogTime endTime,
 			Player pointOfView, int? language, int? gameBuild, int? gameShardId, int? mapId,
 			InstanceStart instanceStart)
@@ -163,6 +170,7 @@ namespace GW2Scratch.EVTCAnalytics.Model
 			Events = events as Event[] ?? events.ToArray();
 			Agents = agents as Agent[] ?? agents.ToArray();
 			Skills = skills as Skill[] ?? skills.ToArray();
+			Effects = effects as Effect[] ?? effects.ToArray();
 		}
 	}
 }

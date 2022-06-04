@@ -3,6 +3,7 @@ using GW2Scratch.EVTCAnalytics.Events;
 using GW2Scratch.EVTCAnalytics.GameData;
 using GW2Scratch.EVTCAnalytics.Model;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
+using GW2Scratch.EVTCAnalytics.Model.Effects;
 using GW2Scratch.EVTCAnalytics.Model.Skills;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters;
 
@@ -17,6 +18,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 		public Dictionary<ulong, Agent> AgentsByAddress { get; set; }
 		public Dictionary<int, List<Agent>> AgentsById { get; set; }
 		public Dictionary<uint, Skill> SkillsById { get; set; }
+		public Dictionary<uint, Effect> EffectsById { get; set; }
 		public List<Skill> Skills { get; set; }
 		public List<Event> Events { get; set; }
 		public LogTime LogStartTime { get; set; }
