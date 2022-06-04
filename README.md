@@ -11,7 +11,6 @@ This repository hosts multiple programs for analysis and management of EVTC logs
 #### Programs
   - [arcdps Log Manager](#arcdps-log-manager)
   - [EVTC Inspector](#evtc-inspector)
-  - [Rotation Comparison](#rotation-comparison)
 
 #### Libraries
   - [GW2Scratch.EVTCAnalytics](#evtc-analytics)
@@ -33,15 +32,6 @@ A program for exploring EVTC logs. Handy when developing anything that analyzes 
 - browse through raw agent data
 - browse through processed events, with filtering
 - browse through agents and events they are involved in
-
-## [Rotation Comparison](RotationComparison)
-Rotation Comparison is a generator of HTML comparisons of rotations. 
-Can be used to see where you differ from a benchmark, see the rotation of
-a whole squad on a boss at once and similar.
-
-- compare logs in EVTC files
-- compare generated EI reports (such as hosted on dps.report)
-- generates a HTML report
 
 ## [EVTC Analytics](EVTCAnalytics)
 The core library for parsing and analyzing EVTC logs. Built with integration
