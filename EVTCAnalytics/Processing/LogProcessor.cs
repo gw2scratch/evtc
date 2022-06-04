@@ -8,10 +8,10 @@ using GW2Scratch.EVTCAnalytics.GameData;
 using GW2Scratch.EVTCAnalytics.IO;
 using GW2Scratch.EVTCAnalytics.Model;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
+using GW2Scratch.EVTCAnalytics.Model.Effects;
 using GW2Scratch.EVTCAnalytics.Model.Skills;
 using GW2Scratch.EVTCAnalytics.Parsed;
 using GW2Scratch.EVTCAnalytics.Parsed.Enums;
-using GW2Scratch.EVTCAnalytics.Processing.Encounters;
 
 namespace GW2Scratch.EVTCAnalytics.Processing
 {
@@ -67,6 +67,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			state.Agents = GetAgents(log).ToList();
 			state.AgentsByAddress = new Dictionary<ulong, Agent>();
 			state.AgentsById = new Dictionary<int, List<Agent>>();
+			state.EffectsById = new Dictionary<uint, Effect>();
 			foreach (var agent in state.Agents)
 			{
 				foreach (var origin in agent.AgentOrigin.OriginalAgentData)
@@ -165,6 +166,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			state.SkillsById = skillsById;
 
 			// Get data from combat items.
+			var effectsById = new Dictionary<uint, Effect>();
 			var masterRelations = new Dictionary<(ulong, ushort), long>();
 			var idsByAddress = new Dictionary<ulong, int>();
 			
@@ -190,8 +192,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						masterRelations[(combatItem.DstAgent, combatItem.DstMasterId)] = combatItem.Time;
 					}
 				}
-
-				if (combatItem.IsStateChange == StateChange.AttackTarget)
+				else if (combatItem.IsStateChange == StateChange.AttackTarget)
 				{
 					ulong attackTargetAddress = combatItem.SrcAgent;
 					ulong masterGadgetAddress = combatItem.DstAgent;
@@ -620,6 +621,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			Debug.Assert(state.Agents != null);
 			Debug.Assert(state.Skills != null);
 			Debug.Assert(state.AgentsByAddress != null);
+			Debug.Assert(state.SkillsById != null);
 
 			var skillsById = new Dictionary<uint, Skill>();
 			foreach (var skill in state.Skills)
@@ -737,6 +739,19 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					return;
 				case StateChange.InstanceStart:
 					state.InstanceStart = new InstanceStart(item.SrcAgent);
+					return;
+				case StateChange.IdToGuid:
+					if (item.OverstackValue == 0)
+					{
+						// Effect
+						if (state.EffectsById.TryGetValue(item.SkillId, out var effect))
+						{
+							var guid = new byte[16];
+							effect.ContentGuid = guid;
+							BitConverter.GetBytes(item.SrcAgent).CopyTo(guid, 0);
+							BitConverter.GetBytes(item.DstAgent).CopyTo(guid, 8);
+						}
+					}
 					return;
 				default:
 				{
@@ -927,6 +942,12 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						
 						// skillid = effectid,
 						uint effectId = item.SkillId;
+						Effect effect;
+						if (!state.EffectsById.TryGetValue(effectId, out effect))
+						{
+							effect = new Effect(effectId);
+							state.EffectsById[effectId] = effect;
+						}
 						
 						// dst_agent if around dst,
 						// else value/buffdmg/overstack = float[3] xyz,
@@ -971,12 +992,9 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 
 						// is_flanking = only z orient
 						bool zOrientationOnly = item.IsFlanking > 0;
-						
-						// TODO: Create Effect type and resolve.
-						return new EffectEvent(item.Time, master, effectId, aroundAgent, position, orientation,
+
+						return new EffectEvent(item.Time, master, effect, aroundAgent, position, orientation,
 							zOrientationOnly, duration);
-					case StateChange.IdToGuid:
-						return new UnknownEvent(item.Time, item);
 					default:
 						return new UnknownEvent(item.Time, item);
 				}
