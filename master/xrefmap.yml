@@ -5211,6 +5211,19 @@ references:
   isSpec: "True"
   fullName: GW2Scratch.EVTCAnalytics.Model.Log.EndTime
   nameWithType: Log.EndTime
+- uid: GW2Scratch.EVTCAnalytics.Model.Log.Errors
+  name: Errors
+  href: api/GW2Scratch.EVTCAnalytics.Model.Log.html#GW2Scratch_EVTCAnalytics_Model_Log_Errors
+  commentId: P:GW2Scratch.EVTCAnalytics.Model.Log.Errors
+  fullName: GW2Scratch.EVTCAnalytics.Model.Log.Errors
+  nameWithType: Log.Errors
+- uid: GW2Scratch.EVTCAnalytics.Model.Log.Errors*
+  name: Errors
+  href: api/GW2Scratch.EVTCAnalytics.Model.Log.html#GW2Scratch_EVTCAnalytics_Model_Log_Errors_
+  commentId: Overload:GW2Scratch.EVTCAnalytics.Model.Log.Errors
+  isSpec: "True"
+  fullName: GW2Scratch.EVTCAnalytics.Model.Log.Errors
+  nameWithType: Log.Errors
 - uid: GW2Scratch.EVTCAnalytics.Model.Log.Events
   name: Events
   href: api/GW2Scratch.EVTCAnalytics.Model.Log.html#GW2Scratch_EVTCAnalytics_Model_Log_Events
@@ -5380,6 +5393,51 @@ references:
   isSpec: "True"
   fullName: GW2Scratch.EVTCAnalytics.Model.Log.StartTime
   nameWithType: Log.StartTime
+- uid: GW2Scratch.EVTCAnalytics.Model.LogError
+  name: LogError
+  href: api/GW2Scratch.EVTCAnalytics.Model.LogError.html
+  commentId: T:GW2Scratch.EVTCAnalytics.Model.LogError
+  fullName: GW2Scratch.EVTCAnalytics.Model.LogError
+  nameWithType: LogError
+- uid: GW2Scratch.EVTCAnalytics.Model.LogError.#ctor(System.String)
+  name: LogError(String)
+  href: api/GW2Scratch.EVTCAnalytics.Model.LogError.html#GW2Scratch_EVTCAnalytics_Model_LogError__ctor_System_String_
+  commentId: M:GW2Scratch.EVTCAnalytics.Model.LogError.#ctor(System.String)
+  fullName: GW2Scratch.EVTCAnalytics.Model.LogError.LogError(System.String)
+  nameWithType: LogError.LogError(String)
+- uid: GW2Scratch.EVTCAnalytics.Model.LogError.#ctor*
+  name: LogError
+  href: api/GW2Scratch.EVTCAnalytics.Model.LogError.html#GW2Scratch_EVTCAnalytics_Model_LogError__ctor_
+  commentId: Overload:GW2Scratch.EVTCAnalytics.Model.LogError.#ctor
+  isSpec: "True"
+  fullName: GW2Scratch.EVTCAnalytics.Model.LogError.LogError
+  nameWithType: LogError.LogError
+- uid: GW2Scratch.EVTCAnalytics.Model.LogError.Error
+  name: Error
+  href: api/GW2Scratch.EVTCAnalytics.Model.LogError.html#GW2Scratch_EVTCAnalytics_Model_LogError_Error
+  commentId: P:GW2Scratch.EVTCAnalytics.Model.LogError.Error
+  fullName: GW2Scratch.EVTCAnalytics.Model.LogError.Error
+  nameWithType: LogError.Error
+- uid: GW2Scratch.EVTCAnalytics.Model.LogError.Error*
+  name: Error
+  href: api/GW2Scratch.EVTCAnalytics.Model.LogError.html#GW2Scratch_EVTCAnalytics_Model_LogError_Error_
+  commentId: Overload:GW2Scratch.EVTCAnalytics.Model.LogError.Error
+  isSpec: "True"
+  fullName: GW2Scratch.EVTCAnalytics.Model.LogError.Error
+  nameWithType: LogError.Error
+- uid: GW2Scratch.EVTCAnalytics.Model.LogError.ToString
+  name: ToString()
+  href: api/GW2Scratch.EVTCAnalytics.Model.LogError.html#GW2Scratch_EVTCAnalytics_Model_LogError_ToString
+  commentId: M:GW2Scratch.EVTCAnalytics.Model.LogError.ToString
+  fullName: GW2Scratch.EVTCAnalytics.Model.LogError.ToString()
+  nameWithType: LogError.ToString()
+- uid: GW2Scratch.EVTCAnalytics.Model.LogError.ToString*
+  name: ToString
+  href: api/GW2Scratch.EVTCAnalytics.Model.LogError.html#GW2Scratch_EVTCAnalytics_Model_LogError_ToString_
+  commentId: Overload:GW2Scratch.EVTCAnalytics.Model.LogError.ToString
+  isSpec: "True"
+  fullName: GW2Scratch.EVTCAnalytics.Model.LogError.ToString
+  nameWithType: LogError.ToString
 - uid: GW2Scratch.EVTCAnalytics.Model.LogTime
   name: LogTime
   href: api/GW2Scratch.EVTCAnalytics.Model.LogTime.html
@@ -9595,6 +9653,19 @@ references:
   isSpec: "True"
   fullName: GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.EncounterData
   nameWithType: LogProcessorState.EncounterData
+- uid: GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.Errors
+  name: Errors
+  href: api/GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.html#GW2Scratch_EVTCAnalytics_Processing_LogProcessorState_Errors
+  commentId: P:GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.Errors
+  fullName: GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.Errors
+  nameWithType: LogProcessorState.Errors
+- uid: GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.Errors*
+  name: Errors
+  href: api/GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.html#GW2Scratch_EVTCAnalytics_Processing_LogProcessorState_Errors_
+  commentId: Overload:GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.Errors
+  isSpec: "True"
+  fullName: GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.Errors
+  nameWithType: LogProcessorState.Errors
 - uid: GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.Events
   name: Events
   href: api/GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.html#GW2Scratch_EVTCAnalytics_Processing_LogProcessorState_Events

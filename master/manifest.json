@@ -1116,7 +1116,19 @@
       "output": {
         ".html": {
           "relative_path": "api/GW2Scratch.EVTCAnalytics.Model.Log.html",
-          "hash": "HrKaMaE6vATXTMqn57vZIDkH5K0Fjomxj2FA1WMq7TM="
+          "hash": "AgpbcDkFqOLYLKEswYealeE+erTyIKK9V62PSl6bqpQ="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Model.LogError.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Model.LogError.html",
+          "hash": "Ik4hQoB1rGWgIqxhKg/m4NJDq50JclmOBrCaOTMhAzA="
         }
       },
       "is_incremental": false,
@@ -1284,7 +1296,7 @@
       "output": {
         ".html": {
           "relative_path": "api/GW2Scratch.EVTCAnalytics.Model.html",
-          "hash": "oHH72bHkoH1ZiZBtt+23Eq9+1bgtimehVCCQNMaYqlI="
+          "hash": "FPICVmU9k3++652QPHu0o9bY21UcW4n2CrS9xCUXJz0="
         }
       },
       "is_incremental": false,
@@ -2148,7 +2160,7 @@
       "output": {
         ".html": {
           "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.LogProcessor.html",
-          "hash": "GoNm3u7hYQT6kyNrbwdyDpY4vxrO5/49ORn1R9PTxFY="
+          "hash": "CM14a1C1LKzFGlR3bq7rnbDRg9oxtFBhDCIrtpxdsoE="
         }
       },
       "is_incremental": false,
@@ -2160,7 +2172,7 @@
       "output": {
         ".html": {
           "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.html",
-          "hash": "R20Bv2ILdJVIgBumv9TPOrrUvmeM6An4ugHNBOGh2BE="
+          "hash": "8BwzojTWvLZw8d6pSc1x+9GIG2spCRJXag+/05PjRNc="
         }
       },
       "is_incremental": false,
@@ -2232,7 +2244,7 @@
       "output": {
         ".html": {
           "relative_path": "api/toc.html",
-          "hash": "RUvWvTQpQExajRI2eRfNwYwLc5i6+Pp5PSA5+cgsoxE="
+          "hash": "pMCoKTzBpSFCNHKD+Qk/yKtcdlqljPDmTQrN6WS9FuQ="
         }
       },
       "is_incremental": false,
@@ -2271,7 +2283,7 @@
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 177,
+          "total_file_count": 178,
           "skipped_file_count": 0
         },
         "TocDocumentProcessor": {
