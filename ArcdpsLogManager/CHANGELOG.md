@@ -5,9 +5,10 @@ This is the full changelog of the arcdps Log Manager.
 ## Log Manager v1.6 (unreleased)
 
 #### New features
+- Added CM detection for Kaineng Overlook for real this time
+- Added an option to generate detailed WvW reports when uploading (thanks, Somec!)
 - The *Advanced filters* button text now changes to show when advanced filters are active.
 - Added filtering by players to *Advanced filters*.
-- Added CM detection for Kaineng Overlook for real this time (he's a different NPC species in CM).
 - Added *None of these* as an option to instability filters.
 - Added new event types to the Inspector
 - Added processed skill and effect tabs to the Inspector
