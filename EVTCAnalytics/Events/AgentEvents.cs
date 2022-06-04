@@ -259,7 +259,7 @@ namespace GW2Scratch.EVTCAnalytics.Events
 			IsTargetable = targetable;
 		}
 	}
-	
+
 	/// <summary>
 	/// An event specifying that the health percentage of the defiance bar of an <see cref="Agent"/> has been changed.
 	/// </summary>
@@ -277,7 +277,7 @@ namespace GW2Scratch.EVTCAnalytics.Events
 			HealthFraction = healthFraction;
 		}
 	}
-	
+
 	/// <summary>
 	/// An event specifying that the state of the defiance bar of an <see cref="Agent"/> has been changed.
 	/// </summary>
@@ -294,12 +294,70 @@ namespace GW2Scratch.EVTCAnalytics.Events
 			None,
 			Unknown
 		}
-		
+
 		public DefianceBarState State { get; }
 
 		public DefianceBarStateUpdateEvent(long time, Agent agent, DefianceBarState state) : base(time, agent)
 		{
 			State = state;
+		}
+	}
+
+	/// <summary>
+	/// An event specifying that an effect was created.
+	/// </summary>
+	/// <remarks>
+	/// Introduced in EVTC20220602.
+	/// </remarks>
+	public class EffectEvent : AgentEvent
+	{
+		/// <summary>
+		/// The owner of this effect.
+		/// </summary>
+		public Agent EffectOwner => Agent;
+
+		/// <summary>
+		/// The id of this effect.
+		/// </summary>
+		public uint EffectId { get; }
+
+		/// <summary>
+		/// The <see cref="Agent"/> this effect is anchored to if anchored. May be <see langword="null" />.
+		/// </summary>
+		/// <seealso cref="Position"/>
+		public Agent AgentTarget { get; }
+
+		/// <summary>
+		/// Position (x, y, z) of the effect when not anchored to a target. May be <see langword="null" />.
+		/// </summary>
+		/// <seealso cref="AgentTarget"/>
+		public float[] Position { get; }
+
+		/// <summary>
+		/// The orientation (x, y, z) of the effect. If <see cref="ZAxisOrientationOnly"/> is <see langword="true"/>,
+		/// first two values are not valid.
+		/// </summary>
+		public float[] Orientation { get; }
+
+		/// <summary>
+		/// Indicates whether the first two values of <see cref="Orientation"/> are valid.
+		/// </summary>
+		public bool ZAxisOrientationOnly { get; }
+
+		/// <summary>
+		/// The duration of the effect in milliseconds.
+		/// </summary>
+		public ushort Duration { get; }
+
+		public EffectEvent(long time, Agent agent, uint effectId, Agent agentTarget, float[] position,
+			float[] orientation, bool zAxisOrientationOnly, ushort duration) : base(time, agent)
+		{
+			EffectId = effectId;
+			AgentTarget = agentTarget;
+			Position = position;
+			Orientation = orientation;
+			ZAxisOrientationOnly = zAxisOrientationOnly;
+			Duration = duration;
 		}
 	}
 }

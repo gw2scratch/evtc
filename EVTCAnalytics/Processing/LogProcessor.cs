@@ -917,7 +917,65 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					case StateChange.ApiDelayed:
 						// Should not appear in logs
 						return new UnknownEvent(item.Time, item);
-					case StateChange.Unknown:
+					case StateChange.TickRate:
+						return new UnknownEvent(item.Time, item);
+					case StateChange.Last90BeforeDown:
+						return new UnknownEvent(item.Time, item);
+					case StateChange.Effect:
+						// src_agent effect master.
+						Agent master = GetAgentByAddress(item.SrcAgent);
+						
+						// skillid = effectid,
+						uint effectId = item.SkillId;
+						
+						// dst_agent if around dst,
+						// else value/buffdmg/overstack = float[3] xyz,
+						//      &iff = float[2] xy orient,
+						//      &pad61 = float[1] z orient,
+						Agent aroundAgent = GetAgentByAddress(item.DstAgent);
+
+						float[] position = null;
+						float[] orientation = new float[3];
+						
+						if (item.DstAgent == 0)
+						{
+							position = new float[3];
+							position[0] = BitConversions.ToSingle(item.Value);          // x
+							position[1] = BitConversions.ToSingle(item.BuffDmg);        // y
+							position[2] = BitConversions.ToSingle(item.OverstackValue); // z
+						}
+						
+						// iff + buff + result + is_activation = x orientation
+						Span<byte> xOrientationBytes = stackalloc byte[4];
+						xOrientationBytes[0] = (byte) item.Iff;
+						xOrientationBytes[1] = item.Buff;
+						xOrientationBytes[2] = (byte) item.Result;
+						xOrientationBytes[3] = (byte) item.IsActivation;
+						
+						// is_buffremove + is_ninety + is_fifty + is_moving = y orientation
+						Span<byte> yOrientationBytes = stackalloc byte[4];
+						yOrientationBytes[0] = (byte) item.IsBuffRemove;
+						yOrientationBytes[1] = item.IsNinety;
+						yOrientationBytes[2] = item.IsFifty;
+						yOrientationBytes[3] = item.IsMoving;
+						
+						// &is_shields = uint16 duration,
+						Span<byte> durationBytes = stackalloc byte[2];
+						durationBytes[0] = item.IsShields;
+						durationBytes[1] = item.IsOffCycle;
+						
+						orientation[0] = BitConverter.ToSingle(xOrientationBytes);
+						orientation[1] = BitConverter.ToSingle(yOrientationBytes);
+						orientation[2] = BitConversions.ToSingle(item.Padding);
+						ushort duration = BitConverter.ToUInt16(durationBytes);
+
+						// is_flanking = only z orient
+						bool zOrientationOnly = item.IsFlanking > 0;
+						
+						// TODO: Create Effect type and resolve.
+						return new EffectEvent(item.Time, master, effectId, aroundAgent, position, orientation,
+							zOrientationOnly, duration);
+					case StateChange.IdToGuid:
 						return new UnknownEvent(item.Time, item);
 					default:
 						return new UnknownEvent(item.Time, item);
