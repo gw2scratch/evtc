@@ -920,7 +920,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					case StateChange.Unknown:
 						return new UnknownEvent(item.Time, item);
 					default:
-						throw new ArgumentOutOfRangeException();
+						return new UnknownEvent(item.Time, item);
 				}
 			}
 			else if (item.IsActivation != Activation.None)
@@ -943,7 +943,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					case Activation.Reset:
 						return new ResetSkillCastEvent(item.Time, GetAgentByAddress(item.SrcAgent),
 							GetSkillById(item.SkillId), item.Value);
-					case Activation.Unknown:
+					default:
 						return new UnknownEvent(item.Time, item);
 				}
 			}
@@ -1067,8 +1067,6 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					case Result.Downed:
 						hitResult = PhysicalDamageEvent.Result.DowningBlow;
 						break;
-					case Result.Unknown:
-						return new UnknownEvent(item.Time, item);
 					default:
 						return new UnknownEvent(item.Time, item);
 				}
