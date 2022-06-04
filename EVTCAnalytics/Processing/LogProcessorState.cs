@@ -21,6 +21,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 		public Dictionary<uint, Effect> EffectsById { get; set; }
 		public List<Skill> Skills { get; set; }
 		public List<Event> Events { get; set; }
+		public List<LogError> Errors { get; set; }
 		public LogTime LogStartTime { get; set; }
 		public LogTime LogEndTime { get; set; }
 		public Player PointOfView { get; set; }

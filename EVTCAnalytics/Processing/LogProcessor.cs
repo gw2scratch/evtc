@@ -12,6 +12,7 @@ using GW2Scratch.EVTCAnalytics.Model.Effects;
 using GW2Scratch.EVTCAnalytics.Model.Skills;
 using GW2Scratch.EVTCAnalytics.Parsed;
 using GW2Scratch.EVTCAnalytics.Parsed.Enums;
+using System.Text;
 
 namespace GW2Scratch.EVTCAnalytics.Processing
 {
@@ -68,6 +69,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			state.AgentsByAddress = new Dictionary<ulong, Agent>();
 			state.AgentsById = new Dictionary<int, List<Agent>>();
 			state.EffectsById = new Dictionary<uint, Effect>();
+			state.Errors = new List<LogError>();
 			foreach (var agent in state.Agents)
 			{
 				foreach (var origin in agent.AgentOrigin.OriginalAgentData)
@@ -171,6 +173,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			
 			state.GameLanguage = GameLanguage.Other;
 			state.Events = new List<Event>();
+			state.Errors = new List<LogError>();
 			state.EffectsById = new Dictionary<uint, Effect>();
 			
 			var combatItemReader = reader.GetCombatItemReader();
@@ -621,7 +624,6 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			Debug.Assert(state.Agents != null);
 			Debug.Assert(state.Skills != null);
 			Debug.Assert(state.AgentsByAddress != null);
-			Debug.Assert(state.SkillsById != null);
 
 			var skillsById = new Dictionary<uint, Skill>();
 			foreach (var skill in state.Skills)
@@ -752,6 +754,17 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 							BitConverter.GetBytes(item.DstAgent).CopyTo(guid, 8);
 						}
 					}
+					return;
+				case StateChange.Error:
+					Span<byte> error = stackalloc byte[32];
+					BitConverter.GetBytes(item.Time).CopyTo(error[..8]);
+					BitConverter.GetBytes(item.SrcAgent).CopyTo(error[8..16]);
+					BitConverter.GetBytes(item.DstAgent).CopyTo(error[16..24]);
+					BitConverter.GetBytes(item.Value).CopyTo(error[24..28]);
+					BitConverter.GetBytes(item.BuffDmg).CopyTo(error[28..32]);
+					var errorString = Encoding.UTF8.GetString(error);
+					
+					state.Errors.Add(new LogError(errorString));
 					return;
 				default:
 				{

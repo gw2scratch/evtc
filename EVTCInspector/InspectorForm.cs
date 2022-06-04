@@ -243,13 +243,16 @@ namespace GW2Scratch.EVTCInspector
 			try
 			{
 				var analyzer = new LogAnalyzer(processedLog);
-				stats = new Statistics(processedLog.StartTime.LocalTime,
+				stats = new Statistics(
+					processedLog.StartTime.LocalTime,
 					processedLog.PointOfView,
 					analyzer.GetResult(),
 					analyzer.GetMode(),
 					analyzer.GetEncounter(),
 					processedLog.EvtcVersion,
-					analyzer.GetEncounterDuration());
+					analyzer.GetEncounterDuration(),
+					processedLog.Errors
+				);
 
 				var statsTime = sw.Elapsed;
 
