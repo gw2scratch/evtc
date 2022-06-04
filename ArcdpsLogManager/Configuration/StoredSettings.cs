@@ -21,6 +21,7 @@ public class StoredSettings
 	public bool CheckForUpdates { get; set; } = true;
 	public string DpsReportUserToken { get; set; } = string.Empty;
 	public string DpsReportDomain { get; set; } = DpsReportUploader.DefaultDomain.Domain;
+	public bool DpsReportUploadDetailedWvw { get; set; } = false;
 	public int? MinimumLogDurationSeconds { get; set; } = null;
 	public List<string> HiddenLogListColumns { get; set; } = new List<string>() {"Character", "Map ID", "Game Version", "arcdps Version", "Instabilities"};
 	public List<string> IgnoredUpdateVersions { get; set; } = new List<string>();
