@@ -166,12 +166,12 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			state.SkillsById = skillsById;
 
 			// Get data from combat items.
-			var effectsById = new Dictionary<uint, Effect>();
 			var masterRelations = new Dictionary<(ulong, ushort), long>();
 			var idsByAddress = new Dictionary<ulong, int>();
 			
 			state.GameLanguage = GameLanguage.Other;
 			state.Events = new List<Event>();
+			state.EffectsById = new Dictionary<uint, Effect>();
 			
 			var combatItemReader = reader.GetCombatItemReader();
 			ParsedCombatItem combatItem;
@@ -915,6 +915,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						// TODO: Figure out what the contents are
 					case StateChange.SkillTiming:
 						// TODO: Figure out what the contents are
+						return new UnknownEvent(item.Time, item);
 					case StateChange.Error:
 						// TODO: Implement
 						return new UnknownEvent(item.Time, item);
