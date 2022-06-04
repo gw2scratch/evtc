@@ -9,6 +9,8 @@ using GW2Scratch.EVTCAnalytics;
 using GW2Scratch.EVTCAnalytics.Events;
 using GW2Scratch.EVTCAnalytics.Model;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
+using GW2Scratch.EVTCAnalytics.Model.Effects;
+using GW2Scratch.EVTCAnalytics.Model.Skills;
 using GW2Scratch.EVTCAnalytics.Parsed;
 using GW2Scratch.EVTCAnalytics.Processing;
 
@@ -36,6 +38,12 @@ namespace GW2Scratch.EVTCInspector
 		// Processed agents
 		private readonly FilterCollection<Agent> agents = new FilterCollection<Agent>();
 		private readonly AgentControl agentControl;
+		
+		// Processed skills
+		private readonly FilterCollection<Skill> skills = new FilterCollection<Skill>();
+		
+		// Processed effects
+		private readonly FilterCollection<Effect> effects = new FilterCollection<Effect>();
 
 		// Statistics
 		private readonly PropertyGrid statisticsPropertyGrid = new PropertyGrid();
@@ -94,6 +102,8 @@ namespace GW2Scratch.EVTCInspector
 			var processedTabControl = new TabControl();
 			processedTabControl.Pages.Add(new TabPage(eventsDetailLayout) {Text = "Events"});
 			processedTabControl.Pages.Add(new TabPage(agentSplitter) {Text = "Agents"});
+			processedTabControl.Pages.Add(new TabPage(ConstructSkillGridView()) {Text = "Skills"});
+			processedTabControl.Pages.Add(new TabPage(ConstructEffectGridView()) {Text = "Effects"});
 
 			var statisticsLayout = new DynamicLayout();
 			statisticsLayout.Add(statisticsPropertyGrid);
@@ -216,6 +226,10 @@ namespace GW2Scratch.EVTCInspector
 					agents.AddRange(new FilterCollection<Agent>(processedLog.Agents));
 					agents.Refresh();
 					agentControl.Events = processedLog.Events.ToArray();
+					skills.Clear();
+					skills.AddRange(processedLog.Skills);
+					effects.Clear();
+					effects.AddRange(processedLog.Effects);
 				});
 			}
 			catch (Exception ex)
@@ -260,6 +274,58 @@ namespace GW2Scratch.EVTCInspector
 			});
 		}
 
+		private GridView<Skill> ConstructSkillGridView()
+		{
+			var grid = new GridView<Skill>();
+			grid.Columns.Add(new GridColumn
+			{
+				HeaderText = "ID",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Skill, string>(x => x.Id.ToString())
+				}
+			});
+			grid.Columns.Add(new GridColumn
+			{
+				HeaderText = "Name",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Skill, string>(x => x.Name)
+				}
+			});
+			
+			grid.DataStore = skills;
+			new GridViewSorter<Skill>(grid, skills).EnableSorting();
+
+			return grid;
+		}
+		
+		private GridView<Effect> ConstructEffectGridView()
+		{
+			var grid = new GridView<Effect>();
+			grid.Columns.Add(new GridColumn
+			{
+				HeaderText = "ID",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Effect, string>(x => x.Id.ToString())
+				}
+			});
+			grid.Columns.Add(new GridColumn
+			{
+				HeaderText = "Content GUID",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Effect, string>(x => GuidToString(x.ContentGuid))
+				}
+			});
+			
+			grid.DataStore = effects;
+			new GridViewSorter<Effect>(grid, effects).EnableSorting();
+
+			return grid;
+		}
+		
 		private GridView<Agent> ConstructAgentGridView()
 		{
 			var agentsGridView = new GridView<Agent>();
@@ -721,6 +787,29 @@ namespace GW2Scratch.EVTCInspector
 			new GridViewSorter<Indexed<ParsedCombatItem>>(gridView, parsedCombatItems).EnableSorting();
 			
 			return gridView;
+		}
+
+		private static string GuidToString(byte[] guidBytes)
+		{
+			string GetPart(byte[] bytes, int from, int to)
+			{
+				var builder = new StringBuilder();
+				for (int i = from; i < to; i++)
+				{
+					builder.Append($"{bytes[i]:x2}");
+				}
+
+				return builder.ToString();
+			}
+
+			if (guidBytes == null) return null;
+			if (guidBytes.Length != 16)
+			{
+				throw new ArgumentException("The GUID has to consist of 16 bytes", nameof(guidBytes));
+			}
+
+			return $"{GetPart(guidBytes, 0, 4)}-{GetPart(guidBytes, 4, 6)}-{GetPart(guidBytes, 6, 8)}" +
+			       $"-{GetPart(guidBytes, 8, 10)}-{GetPart(guidBytes, 10, 16)}";
 		}
 	}
 }

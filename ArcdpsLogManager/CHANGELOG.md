@@ -9,6 +9,8 @@ This is the full changelog of the arcdps Log Manager.
 - Added filtering by players to *Advanced filters*.
 - Added CM detection for Kaineng Overlook for real this time (he's a different NPC species in CM).
 - Added *None of these* as an option to instability filters.
+- Added new event types to the Inspector
+- Added processed skill and effect tabs to the Inspector
 
 #### Changes
 - *Advanced filters* are now split into tabs to provide space for more filters.
