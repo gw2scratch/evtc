@@ -9,6 +9,7 @@ namespace GW2Scratch.ArcdpsLogManager.Configuration
 	public class DpsReportUploadSettingsPage : SettingsPage
 	{
 		private readonly RadioButtonList domainList;
+		private readonly CheckBox uploadDetailedWvwCheckbox;
 
 		public DpsReportUploadSettingsPage()
 		{
@@ -52,6 +53,12 @@ namespace GW2Scratch.ArcdpsLogManager.Configuration
 				domainDescriptionLabel.Text = ((DpsReportDomain) domainList.SelectedValue).Description;
 			};
 
+			uploadDetailedWvwCheckbox = new CheckBox
+			{
+				Text = "Detailed WVW Reports (Beta)",
+				Checked = Settings.DpsReportUploadDetailedWvw
+			};
+
 			var userTokenTextBox = new TextBox
 			{
 				ReadOnly = true,
@@ -75,6 +82,12 @@ namespace GW2Scratch.ArcdpsLogManager.Configuration
 					layout.AddRow(domainDescriptionLabel);
 				}
 				layout.EndGroup();
+				layout.BeginGroup("Upload Options", new Padding(5), new Size(5, 5));
+				{
+					layout.AddRow(uploadDetailedWvwCheckbox);
+				}
+				layout.EndGroup();
+				
 				layout.BeginGroup("User token", new Padding(5), new Size(5, 5));
 				{
 					layout.BeginVertical();
@@ -109,6 +122,10 @@ namespace GW2Scratch.ArcdpsLogManager.Configuration
 		public override void SaveSettings()
 		{
 			Settings.DpsReportDomain = ((DpsReportDomain) domainList.SelectedValue).Domain;
+			if (uploadDetailedWvwCheckbox.Checked.HasValue)
+			{
+				Settings.DpsReportUploadDetailedWvw = uploadDetailedWvwCheckbox.Checked.Value;
+			}
 		}
 	}
 }

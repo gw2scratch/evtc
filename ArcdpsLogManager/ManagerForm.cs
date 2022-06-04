@@ -74,7 +74,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			ApiData = apiData ?? throw new ArgumentNullException(nameof(apiData));
 
 			// Background processors
-			var dpsReportUploader = new DpsReportUploader();
+			var dpsReportUploader = new DpsReportUploader(Settings.DpsReportUploadDetailedWvw);
 			UploadProcessor = new UploadProcessor(dpsReportUploader, LogCache);
 			ApiProcessor = new ApiProcessor(ApiData, new Gw2Client());
 			LogDataProcessor = new LogDataProcessor(LogCache, ApiProcessor, LogAnalytics);
@@ -124,6 +124,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			};
 
 			Settings.DpsReportDomainChanged += (sender, args) => { dpsReportUploader.Domain = Settings.DpsReportDomain; };
+			Settings.DpsReportUploadDetailedWvwChanged += (sender, args) => { dpsReportUploader.UploadDetailedWvw = Settings.DpsReportUploadDetailedWvw; };
 
 			// Form layout
 			Icon = Resources.GetProgramIcon();
