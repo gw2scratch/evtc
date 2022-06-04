@@ -126,18 +126,18 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/gw2scratch/evtc/new/master/apiSpec/new?filename=GW2Scratch_EVTCAnalytics_Events_EffectEvent__ctor_System_Int64_GW2Scratch_EVTCAnalytics_Model_Agents_Agent_System_UInt32_GW2Scratch_EVTCAnalytics_Model_Agents_Agent_System_Single___System_Single___System_Boolean_System_UInt16_.md&amp;value=---%0Auid%3A%20GW2Scratch.EVTCAnalytics.Events.EffectEvent.%23ctor(System.Int64%2CGW2Scratch.EVTCAnalytics.Model.Agents.Agent%2CSystem.UInt32%2CGW2Scratch.EVTCAnalytics.Model.Agents.Agent%2CSystem.Single%5B%5D%2CSystem.Single%5B%5D%2CSystem.Boolean%2CSystem.UInt16)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/gw2scratch/evtc/new/master/apiSpec/new?filename=GW2Scratch_EVTCAnalytics_Events_EffectEvent__ctor_System_Int64_GW2Scratch_EVTCAnalytics_Model_Agents_Agent_GW2Scratch_EVTCAnalytics_Model_Effects_Effect_GW2Scratch_EVTCAnalytics_Model_Agents_Agent_System_Single___System_Single___System_Boolean_System_UInt16_.md&amp;value=---%0Auid%3A%20GW2Scratch.EVTCAnalytics.Events.EffectEvent.%23ctor(System.Int64%2CGW2Scratch.EVTCAnalytics.Model.Agents.Agent%2CGW2Scratch.EVTCAnalytics.Model.Effects.Effect%2CGW2Scratch.EVTCAnalytics.Model.Agents.Agent%2CSystem.Single%5B%5D%2CSystem.Single%5B%5D%2CSystem.Boolean%2CSystem.UInt16)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gw2scratch/evtc/blob/master/EVTCAnalytics/Events/AgentEvents.cs/#L352">View Source</a>
+    <a href="https://github.com/gw2scratch/evtc/blob/master/EVTCAnalytics/Events/AgentEvents.cs/#L353">View Source</a>
   </span>
   <a id="GW2Scratch_EVTCAnalytics_Events_EffectEvent__ctor_" data-uid="GW2Scratch.EVTCAnalytics.Events.EffectEvent.#ctor*"></a>
-  <h4 id="GW2Scratch_EVTCAnalytics_Events_EffectEvent__ctor_System_Int64_GW2Scratch_EVTCAnalytics_Model_Agents_Agent_System_UInt32_GW2Scratch_EVTCAnalytics_Model_Agents_Agent_System_Single___System_Single___System_Boolean_System_UInt16_" data-uid="GW2Scratch.EVTCAnalytics.Events.EffectEvent.#ctor(System.Int64,GW2Scratch.EVTCAnalytics.Model.Agents.Agent,System.UInt32,GW2Scratch.EVTCAnalytics.Model.Agents.Agent,System.Single[],System.Single[],System.Boolean,System.UInt16)">EffectEvent(Int64, Agent, UInt32, Agent, Single[], Single[], Boolean, UInt16)</h4>
+  <h4 id="GW2Scratch_EVTCAnalytics_Events_EffectEvent__ctor_System_Int64_GW2Scratch_EVTCAnalytics_Model_Agents_Agent_GW2Scratch_EVTCAnalytics_Model_Effects_Effect_GW2Scratch_EVTCAnalytics_Model_Agents_Agent_System_Single___System_Single___System_Boolean_System_UInt16_" data-uid="GW2Scratch.EVTCAnalytics.Events.EffectEvent.#ctor(System.Int64,GW2Scratch.EVTCAnalytics.Model.Agents.Agent,GW2Scratch.EVTCAnalytics.Model.Effects.Effect,GW2Scratch.EVTCAnalytics.Model.Agents.Agent,System.Single[],System.Single[],System.Boolean,System.UInt16)">EffectEvent(Int64, Agent, Effect, Agent, Single[], Single[], Boolean, UInt16)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public EffectEvent(long time, Agent agent, uint effectId, Agent agentTarget, float[] position, float[] orientation, bool zAxisOrientationOnly, ushort duration)</code></pre>
+    <pre><code class="lang-csharp hljs">public EffectEvent(long time, Agent agent, Effect effect, Agent agentTarget, float[] position, float[] orientation, bool zAxisOrientationOnly, ushort duration)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -160,8 +160,8 @@
         <td></td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.uint32">UInt32</a></td>
-        <td><span class="parametername">effectId</span></td>
+        <td><a class="xref" href="GW2Scratch.EVTCAnalytics.Model.Effects.Effect.html">Effect</a></td>
+        <td><span class="parametername">effect</span></td>
         <td></td>
       </tr>
       <tr>
@@ -198,7 +198,7 @@
     <a href="https://github.com/gw2scratch/evtc/new/master/apiSpec/new?filename=GW2Scratch_EVTCAnalytics_Events_EffectEvent_AgentTarget.md&amp;value=---%0Auid%3A%20GW2Scratch.EVTCAnalytics.Events.EffectEvent.AgentTarget%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gw2scratch/evtc/blob/master/EVTCAnalytics/Events/AgentEvents.cs/#L328">View Source</a>
+    <a href="https://github.com/gw2scratch/evtc/blob/master/EVTCAnalytics/Events/AgentEvents.cs/#L329">View Source</a>
   </span>
   <a id="GW2Scratch_EVTCAnalytics_Events_EffectEvent_AgentTarget_" data-uid="GW2Scratch.EVTCAnalytics.Events.EffectEvent.AgentTarget*"></a>
   <h4 id="GW2Scratch_EVTCAnalytics_Events_EffectEvent_AgentTarget" data-uid="GW2Scratch.EVTCAnalytics.Events.EffectEvent.AgentTarget">AgentTarget</h4>
@@ -233,7 +233,7 @@
     <a href="https://github.com/gw2scratch/evtc/new/master/apiSpec/new?filename=GW2Scratch_EVTCAnalytics_Events_EffectEvent_Duration.md&amp;value=---%0Auid%3A%20GW2Scratch.EVTCAnalytics.Events.EffectEvent.Duration%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gw2scratch/evtc/blob/master/EVTCAnalytics/Events/AgentEvents.cs/#L350">View Source</a>
+    <a href="https://github.com/gw2scratch/evtc/blob/master/EVTCAnalytics/Events/AgentEvents.cs/#L351">View Source</a>
   </span>
   <a id="GW2Scratch_EVTCAnalytics_Events_EffectEvent_Duration_" data-uid="GW2Scratch.EVTCAnalytics.Events.EffectEvent.Duration*"></a>
   <h4 id="GW2Scratch_EVTCAnalytics_Events_EffectEvent_Duration" data-uid="GW2Scratch.EVTCAnalytics.Events.EffectEvent.Duration">Duration</h4>
@@ -261,19 +261,19 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/gw2scratch/evtc/new/master/apiSpec/new?filename=GW2Scratch_EVTCAnalytics_Events_EffectEvent_EffectId.md&amp;value=---%0Auid%3A%20GW2Scratch.EVTCAnalytics.Events.EffectEvent.EffectId%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/gw2scratch/evtc/new/master/apiSpec/new?filename=GW2Scratch_EVTCAnalytics_Events_EffectEvent_Effect.md&amp;value=---%0Auid%3A%20GW2Scratch.EVTCAnalytics.Events.EffectEvent.Effect%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gw2scratch/evtc/blob/master/EVTCAnalytics/Events/AgentEvents.cs/#L322">View Source</a>
+    <a href="https://github.com/gw2scratch/evtc/blob/master/EVTCAnalytics/Events/AgentEvents.cs/#L323">View Source</a>
   </span>
-  <a id="GW2Scratch_EVTCAnalytics_Events_EffectEvent_EffectId_" data-uid="GW2Scratch.EVTCAnalytics.Events.EffectEvent.EffectId*"></a>
-  <h4 id="GW2Scratch_EVTCAnalytics_Events_EffectEvent_EffectId" data-uid="GW2Scratch.EVTCAnalytics.Events.EffectEvent.EffectId">EffectId</h4>
-  <div class="markdown level1 summary"><p>The id of this effect.</p>
+  <a id="GW2Scratch_EVTCAnalytics_Events_EffectEvent_Effect_" data-uid="GW2Scratch.EVTCAnalytics.Events.EffectEvent.Effect*"></a>
+  <h4 id="GW2Scratch_EVTCAnalytics_Events_EffectEvent_Effect" data-uid="GW2Scratch.EVTCAnalytics.Events.EffectEvent.Effect">Effect</h4>
+  <div class="markdown level1 summary"><p>The Effect created.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public uint EffectId { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Effect Effect { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -285,7 +285,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.uint32">UInt32</a></td>
+        <td><a class="xref" href="GW2Scratch.EVTCAnalytics.Model.Effects.Effect.html">Effect</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -295,7 +295,7 @@
     <a href="https://github.com/gw2scratch/evtc/new/master/apiSpec/new?filename=GW2Scratch_EVTCAnalytics_Events_EffectEvent_EffectOwner.md&amp;value=---%0Auid%3A%20GW2Scratch.EVTCAnalytics.Events.EffectEvent.EffectOwner%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gw2scratch/evtc/blob/master/EVTCAnalytics/Events/AgentEvents.cs/#L317">View Source</a>
+    <a href="https://github.com/gw2scratch/evtc/blob/master/EVTCAnalytics/Events/AgentEvents.cs/#L318">View Source</a>
   </span>
   <a id="GW2Scratch_EVTCAnalytics_Events_EffectEvent_EffectOwner_" data-uid="GW2Scratch.EVTCAnalytics.Events.EffectEvent.EffectOwner*"></a>
   <h4 id="GW2Scratch_EVTCAnalytics_Events_EffectEvent_EffectOwner" data-uid="GW2Scratch.EVTCAnalytics.Events.EffectEvent.EffectOwner">EffectOwner</h4>
@@ -326,7 +326,7 @@
     <a href="https://github.com/gw2scratch/evtc/new/master/apiSpec/new?filename=GW2Scratch_EVTCAnalytics_Events_EffectEvent_Orientation.md&amp;value=---%0Auid%3A%20GW2Scratch.EVTCAnalytics.Events.EffectEvent.Orientation%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gw2scratch/evtc/blob/master/EVTCAnalytics/Events/AgentEvents.cs/#L340">View Source</a>
+    <a href="https://github.com/gw2scratch/evtc/blob/master/EVTCAnalytics/Events/AgentEvents.cs/#L341">View Source</a>
   </span>
   <a id="GW2Scratch_EVTCAnalytics_Events_EffectEvent_Orientation_" data-uid="GW2Scratch.EVTCAnalytics.Events.EffectEvent.Orientation*"></a>
   <h4 id="GW2Scratch_EVTCAnalytics_Events_EffectEvent_Orientation" data-uid="GW2Scratch.EVTCAnalytics.Events.EffectEvent.Orientation">Orientation</h4>
@@ -358,7 +358,7 @@ first two values are not valid.</p>
     <a href="https://github.com/gw2scratch/evtc/new/master/apiSpec/new?filename=GW2Scratch_EVTCAnalytics_Events_EffectEvent_Position.md&amp;value=---%0Auid%3A%20GW2Scratch.EVTCAnalytics.Events.EffectEvent.Position%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gw2scratch/evtc/blob/master/EVTCAnalytics/Events/AgentEvents.cs/#L334">View Source</a>
+    <a href="https://github.com/gw2scratch/evtc/blob/master/EVTCAnalytics/Events/AgentEvents.cs/#L335">View Source</a>
   </span>
   <a id="GW2Scratch_EVTCAnalytics_Events_EffectEvent_Position_" data-uid="GW2Scratch.EVTCAnalytics.Events.EffectEvent.Position*"></a>
   <h4 id="GW2Scratch_EVTCAnalytics_Events_EffectEvent_Position" data-uid="GW2Scratch.EVTCAnalytics.Events.EffectEvent.Position">Position</h4>
@@ -393,7 +393,7 @@ first two values are not valid.</p>
     <a href="https://github.com/gw2scratch/evtc/new/master/apiSpec/new?filename=GW2Scratch_EVTCAnalytics_Events_EffectEvent_ZAxisOrientationOnly.md&amp;value=---%0Auid%3A%20GW2Scratch.EVTCAnalytics.Events.EffectEvent.ZAxisOrientationOnly%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gw2scratch/evtc/blob/master/EVTCAnalytics/Events/AgentEvents.cs/#L345">View Source</a>
+    <a href="https://github.com/gw2scratch/evtc/blob/master/EVTCAnalytics/Events/AgentEvents.cs/#L346">View Source</a>
   </span>
   <a id="GW2Scratch_EVTCAnalytics_Events_EffectEvent_ZAxisOrientationOnly_" data-uid="GW2Scratch.EVTCAnalytics.Events.EffectEvent.ZAxisOrientationOnly*"></a>
   <h4 id="GW2Scratch_EVTCAnalytics_Events_EffectEvent_ZAxisOrientationOnly" data-uid="GW2Scratch.EVTCAnalytics.Events.EffectEvent.ZAxisOrientationOnly">ZAxisOrientationOnly</h4>
@@ -430,7 +430,7 @@ first two values are not valid.</p>
                     <a href="https://github.com/gw2scratch/evtc/new/master/apiSpec/new?filename=GW2Scratch_EVTCAnalytics_Events_EffectEvent.md&amp;value=---%0Auid%3A%20GW2Scratch.EVTCAnalytics.Events.EffectEvent%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/gw2scratch/evtc/blob/master/EVTCAnalytics/Events/AgentEvents.cs/#L312" class="contribution-link">View Source</a>
+                    <a href="https://github.com/gw2scratch/evtc/blob/master/EVTCAnalytics/Events/AgentEvents.cs/#L313" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

@@ -742,15 +742,15 @@ references:
   commentId: T:GW2Scratch.EVTCAnalytics.Events.EffectEvent
   fullName: GW2Scratch.EVTCAnalytics.Events.EffectEvent
   nameWithType: EffectEvent
-- uid: GW2Scratch.EVTCAnalytics.Events.EffectEvent.#ctor(System.Int64,GW2Scratch.EVTCAnalytics.Model.Agents.Agent,System.UInt32,GW2Scratch.EVTCAnalytics.Model.Agents.Agent,System.Single[],System.Single[],System.Boolean,System.UInt16)
-  name: EffectEvent(Int64, Agent, UInt32, Agent, Single[], Single[], Boolean, UInt16)
-  href: api/GW2Scratch.EVTCAnalytics.Events.EffectEvent.html#GW2Scratch_EVTCAnalytics_Events_EffectEvent__ctor_System_Int64_GW2Scratch_EVTCAnalytics_Model_Agents_Agent_System_UInt32_GW2Scratch_EVTCAnalytics_Model_Agents_Agent_System_Single___System_Single___System_Boolean_System_UInt16_
-  commentId: M:GW2Scratch.EVTCAnalytics.Events.EffectEvent.#ctor(System.Int64,GW2Scratch.EVTCAnalytics.Model.Agents.Agent,System.UInt32,GW2Scratch.EVTCAnalytics.Model.Agents.Agent,System.Single[],System.Single[],System.Boolean,System.UInt16)
-  name.vb: EffectEvent(Int64, Agent, UInt32, Agent, Single(), Single(), Boolean, UInt16)
-  fullName: GW2Scratch.EVTCAnalytics.Events.EffectEvent.EffectEvent(System.Int64, GW2Scratch.EVTCAnalytics.Model.Agents.Agent, System.UInt32, GW2Scratch.EVTCAnalytics.Model.Agents.Agent, System.Single[], System.Single[], System.Boolean, System.UInt16)
-  fullName.vb: GW2Scratch.EVTCAnalytics.Events.EffectEvent.EffectEvent(System.Int64, GW2Scratch.EVTCAnalytics.Model.Agents.Agent, System.UInt32, GW2Scratch.EVTCAnalytics.Model.Agents.Agent, System.Single(), System.Single(), System.Boolean, System.UInt16)
-  nameWithType: EffectEvent.EffectEvent(Int64, Agent, UInt32, Agent, Single[], Single[], Boolean, UInt16)
-  nameWithType.vb: EffectEvent.EffectEvent(Int64, Agent, UInt32, Agent, Single(), Single(), Boolean, UInt16)
+- uid: GW2Scratch.EVTCAnalytics.Events.EffectEvent.#ctor(System.Int64,GW2Scratch.EVTCAnalytics.Model.Agents.Agent,GW2Scratch.EVTCAnalytics.Model.Effects.Effect,GW2Scratch.EVTCAnalytics.Model.Agents.Agent,System.Single[],System.Single[],System.Boolean,System.UInt16)
+  name: EffectEvent(Int64, Agent, Effect, Agent, Single[], Single[], Boolean, UInt16)
+  href: api/GW2Scratch.EVTCAnalytics.Events.EffectEvent.html#GW2Scratch_EVTCAnalytics_Events_EffectEvent__ctor_System_Int64_GW2Scratch_EVTCAnalytics_Model_Agents_Agent_GW2Scratch_EVTCAnalytics_Model_Effects_Effect_GW2Scratch_EVTCAnalytics_Model_Agents_Agent_System_Single___System_Single___System_Boolean_System_UInt16_
+  commentId: M:GW2Scratch.EVTCAnalytics.Events.EffectEvent.#ctor(System.Int64,GW2Scratch.EVTCAnalytics.Model.Agents.Agent,GW2Scratch.EVTCAnalytics.Model.Effects.Effect,GW2Scratch.EVTCAnalytics.Model.Agents.Agent,System.Single[],System.Single[],System.Boolean,System.UInt16)
+  name.vb: EffectEvent(Int64, Agent, Effect, Agent, Single(), Single(), Boolean, UInt16)
+  fullName: GW2Scratch.EVTCAnalytics.Events.EffectEvent.EffectEvent(System.Int64, GW2Scratch.EVTCAnalytics.Model.Agents.Agent, GW2Scratch.EVTCAnalytics.Model.Effects.Effect, GW2Scratch.EVTCAnalytics.Model.Agents.Agent, System.Single[], System.Single[], System.Boolean, System.UInt16)
+  fullName.vb: GW2Scratch.EVTCAnalytics.Events.EffectEvent.EffectEvent(System.Int64, GW2Scratch.EVTCAnalytics.Model.Agents.Agent, GW2Scratch.EVTCAnalytics.Model.Effects.Effect, GW2Scratch.EVTCAnalytics.Model.Agents.Agent, System.Single(), System.Single(), System.Boolean, System.UInt16)
+  nameWithType: EffectEvent.EffectEvent(Int64, Agent, Effect, Agent, Single[], Single[], Boolean, UInt16)
+  nameWithType.vb: EffectEvent.EffectEvent(Int64, Agent, Effect, Agent, Single(), Single(), Boolean, UInt16)
 - uid: GW2Scratch.EVTCAnalytics.Events.EffectEvent.#ctor*
   name: EffectEvent
   href: api/GW2Scratch.EVTCAnalytics.Events.EffectEvent.html#GW2Scratch_EVTCAnalytics_Events_EffectEvent__ctor_
@@ -784,19 +784,19 @@ references:
   isSpec: "True"
   fullName: GW2Scratch.EVTCAnalytics.Events.EffectEvent.Duration
   nameWithType: EffectEvent.Duration
-- uid: GW2Scratch.EVTCAnalytics.Events.EffectEvent.EffectId
-  name: EffectId
-  href: api/GW2Scratch.EVTCAnalytics.Events.EffectEvent.html#GW2Scratch_EVTCAnalytics_Events_EffectEvent_EffectId
-  commentId: P:GW2Scratch.EVTCAnalytics.Events.EffectEvent.EffectId
-  fullName: GW2Scratch.EVTCAnalytics.Events.EffectEvent.EffectId
-  nameWithType: EffectEvent.EffectId
-- uid: GW2Scratch.EVTCAnalytics.Events.EffectEvent.EffectId*
-  name: EffectId
-  href: api/GW2Scratch.EVTCAnalytics.Events.EffectEvent.html#GW2Scratch_EVTCAnalytics_Events_EffectEvent_EffectId_
-  commentId: Overload:GW2Scratch.EVTCAnalytics.Events.EffectEvent.EffectId
+- uid: GW2Scratch.EVTCAnalytics.Events.EffectEvent.Effect
+  name: Effect
+  href: api/GW2Scratch.EVTCAnalytics.Events.EffectEvent.html#GW2Scratch_EVTCAnalytics_Events_EffectEvent_Effect
+  commentId: P:GW2Scratch.EVTCAnalytics.Events.EffectEvent.Effect
+  fullName: GW2Scratch.EVTCAnalytics.Events.EffectEvent.Effect
+  nameWithType: EffectEvent.Effect
+- uid: GW2Scratch.EVTCAnalytics.Events.EffectEvent.Effect*
+  name: Effect
+  href: api/GW2Scratch.EVTCAnalytics.Events.EffectEvent.html#GW2Scratch_EVTCAnalytics_Events_EffectEvent_Effect_
+  commentId: Overload:GW2Scratch.EVTCAnalytics.Events.EffectEvent.Effect
   isSpec: "True"
-  fullName: GW2Scratch.EVTCAnalytics.Events.EffectEvent.EffectId
-  nameWithType: EffectEvent.EffectId
+  fullName: GW2Scratch.EVTCAnalytics.Events.EffectEvent.Effect
+  nameWithType: EffectEvent.Effect
 - uid: GW2Scratch.EVTCAnalytics.Events.EffectEvent.EffectOwner
   name: EffectOwner
   href: api/GW2Scratch.EVTCAnalytics.Events.EffectEvent.html#GW2Scratch_EVTCAnalytics_Events_EffectEvent_EffectOwner
@@ -5057,6 +5057,70 @@ references:
   commentId: F:GW2Scratch.EVTCAnalytics.Model.CoreSpecialization.Zeal
   fullName: GW2Scratch.EVTCAnalytics.Model.CoreSpecialization.Zeal
   nameWithType: CoreSpecialization.Zeal
+- uid: GW2Scratch.EVTCAnalytics.Model.Effects
+  name: GW2Scratch.EVTCAnalytics.Model.Effects
+  href: api/GW2Scratch.EVTCAnalytics.Model.Effects.html
+  commentId: N:GW2Scratch.EVTCAnalytics.Model.Effects
+  fullName: GW2Scratch.EVTCAnalytics.Model.Effects
+  nameWithType: GW2Scratch.EVTCAnalytics.Model.Effects
+- uid: GW2Scratch.EVTCAnalytics.Model.Effects.Effect
+  name: Effect
+  href: api/GW2Scratch.EVTCAnalytics.Model.Effects.Effect.html
+  commentId: T:GW2Scratch.EVTCAnalytics.Model.Effects.Effect
+  fullName: GW2Scratch.EVTCAnalytics.Model.Effects.Effect
+  nameWithType: Effect
+- uid: GW2Scratch.EVTCAnalytics.Model.Effects.Effect.#ctor(System.UInt32)
+  name: Effect(UInt32)
+  href: api/GW2Scratch.EVTCAnalytics.Model.Effects.Effect.html#GW2Scratch_EVTCAnalytics_Model_Effects_Effect__ctor_System_UInt32_
+  commentId: M:GW2Scratch.EVTCAnalytics.Model.Effects.Effect.#ctor(System.UInt32)
+  fullName: GW2Scratch.EVTCAnalytics.Model.Effects.Effect.Effect(System.UInt32)
+  nameWithType: Effect.Effect(UInt32)
+- uid: GW2Scratch.EVTCAnalytics.Model.Effects.Effect.#ctor*
+  name: Effect
+  href: api/GW2Scratch.EVTCAnalytics.Model.Effects.Effect.html#GW2Scratch_EVTCAnalytics_Model_Effects_Effect__ctor_
+  commentId: Overload:GW2Scratch.EVTCAnalytics.Model.Effects.Effect.#ctor
+  isSpec: "True"
+  fullName: GW2Scratch.EVTCAnalytics.Model.Effects.Effect.Effect
+  nameWithType: Effect.Effect
+- uid: GW2Scratch.EVTCAnalytics.Model.Effects.Effect.ContentGuid
+  name: ContentGuid
+  href: api/GW2Scratch.EVTCAnalytics.Model.Effects.Effect.html#GW2Scratch_EVTCAnalytics_Model_Effects_Effect_ContentGuid
+  commentId: P:GW2Scratch.EVTCAnalytics.Model.Effects.Effect.ContentGuid
+  fullName: GW2Scratch.EVTCAnalytics.Model.Effects.Effect.ContentGuid
+  nameWithType: Effect.ContentGuid
+- uid: GW2Scratch.EVTCAnalytics.Model.Effects.Effect.ContentGuid*
+  name: ContentGuid
+  href: api/GW2Scratch.EVTCAnalytics.Model.Effects.Effect.html#GW2Scratch_EVTCAnalytics_Model_Effects_Effect_ContentGuid_
+  commentId: Overload:GW2Scratch.EVTCAnalytics.Model.Effects.Effect.ContentGuid
+  isSpec: "True"
+  fullName: GW2Scratch.EVTCAnalytics.Model.Effects.Effect.ContentGuid
+  nameWithType: Effect.ContentGuid
+- uid: GW2Scratch.EVTCAnalytics.Model.Effects.Effect.Id
+  name: Id
+  href: api/GW2Scratch.EVTCAnalytics.Model.Effects.Effect.html#GW2Scratch_EVTCAnalytics_Model_Effects_Effect_Id
+  commentId: P:GW2Scratch.EVTCAnalytics.Model.Effects.Effect.Id
+  fullName: GW2Scratch.EVTCAnalytics.Model.Effects.Effect.Id
+  nameWithType: Effect.Id
+- uid: GW2Scratch.EVTCAnalytics.Model.Effects.Effect.Id*
+  name: Id
+  href: api/GW2Scratch.EVTCAnalytics.Model.Effects.Effect.html#GW2Scratch_EVTCAnalytics_Model_Effects_Effect_Id_
+  commentId: Overload:GW2Scratch.EVTCAnalytics.Model.Effects.Effect.Id
+  isSpec: "True"
+  fullName: GW2Scratch.EVTCAnalytics.Model.Effects.Effect.Id
+  nameWithType: Effect.Id
+- uid: GW2Scratch.EVTCAnalytics.Model.Effects.Effect.ToString
+  name: ToString()
+  href: api/GW2Scratch.EVTCAnalytics.Model.Effects.Effect.html#GW2Scratch_EVTCAnalytics_Model_Effects_Effect_ToString
+  commentId: M:GW2Scratch.EVTCAnalytics.Model.Effects.Effect.ToString
+  fullName: GW2Scratch.EVTCAnalytics.Model.Effects.Effect.ToString()
+  nameWithType: Effect.ToString()
+- uid: GW2Scratch.EVTCAnalytics.Model.Effects.Effect.ToString*
+  name: ToString
+  href: api/GW2Scratch.EVTCAnalytics.Model.Effects.Effect.html#GW2Scratch_EVTCAnalytics_Model_Effects_Effect_ToString_
+  commentId: Overload:GW2Scratch.EVTCAnalytics.Model.Effects.Effect.ToString
+  isSpec: "True"
+  fullName: GW2Scratch.EVTCAnalytics.Model.Effects.Effect.ToString
+  nameWithType: Effect.ToString
 - uid: GW2Scratch.EVTCAnalytics.Model.InstanceStart
   name: InstanceStart
   href: api/GW2Scratch.EVTCAnalytics.Model.InstanceStart.html
@@ -5108,6 +5172,19 @@ references:
   isSpec: "True"
   fullName: GW2Scratch.EVTCAnalytics.Model.Log.Agents
   nameWithType: Log.Agents
+- uid: GW2Scratch.EVTCAnalytics.Model.Log.Effects
+  name: Effects
+  href: api/GW2Scratch.EVTCAnalytics.Model.Log.html#GW2Scratch_EVTCAnalytics_Model_Log_Effects
+  commentId: P:GW2Scratch.EVTCAnalytics.Model.Log.Effects
+  fullName: GW2Scratch.EVTCAnalytics.Model.Log.Effects
+  nameWithType: Log.Effects
+- uid: GW2Scratch.EVTCAnalytics.Model.Log.Effects*
+  name: Effects
+  href: api/GW2Scratch.EVTCAnalytics.Model.Log.html#GW2Scratch_EVTCAnalytics_Model_Log_Effects_
+  commentId: Overload:GW2Scratch.EVTCAnalytics.Model.Log.Effects
+  isSpec: "True"
+  fullName: GW2Scratch.EVTCAnalytics.Model.Log.Effects
+  nameWithType: Log.Effects
 - uid: GW2Scratch.EVTCAnalytics.Model.Log.EncounterData
   name: EncounterData
   href: api/GW2Scratch.EVTCAnalytics.Model.Log.html#GW2Scratch_EVTCAnalytics_Model_Log_EncounterData
@@ -9492,6 +9569,19 @@ references:
   isSpec: "True"
   fullName: GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.AwareTimesSet
   nameWithType: LogProcessorState.AwareTimesSet
+- uid: GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.EffectsById
+  name: EffectsById
+  href: api/GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.html#GW2Scratch_EVTCAnalytics_Processing_LogProcessorState_EffectsById
+  commentId: P:GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.EffectsById
+  fullName: GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.EffectsById
+  nameWithType: LogProcessorState.EffectsById
+- uid: GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.EffectsById*
+  name: EffectsById
+  href: api/GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.html#GW2Scratch_EVTCAnalytics_Processing_LogProcessorState_EffectsById_
+  commentId: Overload:GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.EffectsById
+  isSpec: "True"
+  fullName: GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.EffectsById
+  nameWithType: LogProcessorState.EffectsById
 - uid: GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.EncounterData
   name: EncounterData
   href: api/GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.html#GW2Scratch_EVTCAnalytics_Processing_LogProcessorState_EncounterData
