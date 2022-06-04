@@ -929,9 +929,6 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					case StateChange.SkillTiming:
 						// TODO: Figure out what the contents are
 						return new UnknownEvent(item.Time, item);
-					case StateChange.Error:
-						// TODO: Implement
-						return new UnknownEvent(item.Time, item);
 					case StateChange.Tag:
 						return new AgentTagEvent(item.Time, GetAgentByAddress(item.SrcAgent), item.Value);
 					case StateChange.BarrierUpdate:
