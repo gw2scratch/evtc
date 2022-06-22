@@ -11,6 +11,8 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 	{
 		private LogData logData;
 
+		public event EventHandler InspectorOpened;
+		
 		public LogData LogData
 		{
 			get => logData;
@@ -66,6 +68,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 					var browserForm = new InspectorForm();
 					browserForm.SelectLog(logData.FileName);
 					browserForm.Show();
+					InspectorOpened?.Invoke(this, EventArgs.Empty);
 				};
 
 				Content = layout;

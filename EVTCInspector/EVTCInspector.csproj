@@ -11,8 +11,4 @@
   <ItemGroup>
     <ProjectReference Include="..\EVTCAnalytics\EVTCAnalytics.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties" />
-    <Folder Include="PropertyGridCells" />
-  </ItemGroup>
 </Project>

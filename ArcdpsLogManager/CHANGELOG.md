@@ -2,7 +2,35 @@
 
 This is the full changelog of the arcdps Log Manager.
 
-## Log Manager v1.4 (unreleased)
+## Log Manager v1.6 (unreleased)
+
+#### New features
+- Added CM detection for Kaineng Overlook for real this time
+- Added an option to generate detailed WvW reports when uploading (thanks, Somec!)
+- The *Advanced filters* button text now changes to show when advanced filters are active.
+- Added filtering by players to *Advanced filters*.
+- Added *None of these* as an option to instability filters.
+- Added new event types to the Inspector
+- Added processed skill and effect tabs to the Inspector
+
+#### Changes
+- *Advanced filters* are now split into tabs to provide space for more filters.
+
+#### Fixes
+- Fixed Elite Specializations statistics not fitting into their box with default window size on Windows
+- Fixed blurry specialization icons on Windows with DPI scaling enabled
+
+## Log Manager v1.5
+
+#### New features
+- Added CM detection for Aetherblade Hideout
+- Added CM detection for Xunlai Jade Junkyard
+- Added CM detection for Kaineng Overlook (we are assuming the main foe will have more health in CM)
+
+#### Fixes
+- Added End of Dragons Elite Specializations to the Statistics tab.
+
+## Log Manager v1.4
 
 #### New features
 - Added support for all 4 End of Dragons strike missions.

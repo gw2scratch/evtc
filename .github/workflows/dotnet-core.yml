@@ -35,10 +35,6 @@ jobs:
       run: dotnet publish EVTCInspector.Wpf --configuration Release -r win-x64 --self-contained=false -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:IncludeAllContentForSelfExtract=true -o artifacts/inspector/win64/
     - name: Package EVTC Inspector (Linux, GTK)
       run: dotnet publish EVTCInspector.Gtk --configuration Release -r linux-x64 --self-contained=false -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:IncludeAllContentForSelfExtract=true -o artifacts/inspector/linux64/
-    - name: Package Rotation Comparison (Windows)
-      run: dotnet publish RotationComparison --configuration Release -r win-x64 --self-contained=false -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:IncludeAllContentForSelfExtract=true -o artifacts/rotcomp/win64/
-    - name: Package Rotation Comparison (Linux)
-      run: dotnet publish RotationComparison --configuration Release -r linux-x64 --self-contained=false -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:IncludeAllContentForSelfExtract=true -o artifacts/rotcomp/linux64/
     # The PDB files for the self-contained versions should be the same as the non-self-contained version, so we only keep one.
     # Same thing for console projects that are aimed at different runtime platforms.
     - name: Bundle PDBs
@@ -47,12 +43,10 @@ jobs:
           mkdir -p artifacts/pdb/manager/linux64/
           mkdir -p artifacts/pdb/inspector/win64/
           mkdir -p artifacts/pdb/inspector/linux64/
-          mkdir -p artifacts/pdb/rotcomp/win64/
           mv artifacts/manager/win64/*.pdb artifacts/pdb/manager/win64/
           mv artifacts/manager/linux64/*.pdb artifacts/pdb/manager/linux64/
           mv artifacts/inspector/win64/*.pdb artifacts/pdb/inspector/win64/
           mv artifacts/inspector/linux64/*.pdb artifacts/pdb/inspector/linux64/
-          mv artifacts/rotcomp/win64/*.pdb artifacts/pdb/rotcomp/win64/
     - name: Prettify executable filenames
       run: |
           mv artifacts/manager/win64/GW2Scratch.ArcdpsLogManager.Wpf.exe artifacts/manager/win64/ArcdpsLogManager.exe
@@ -61,8 +55,6 @@ jobs:
           mv artifacts/manager/linux64-sc/GW2Scratch.ArcdpsLogManager.Gtk artifacts/manager/linux64-sc/ArcdpsLogManager
           mv artifacts/inspector/win64/GW2Scratch.EVTCInspector.Wpf.exe artifacts/inspector/win64/EVTCInspector.exe
           mv artifacts/inspector/linux64/GW2Scratch.EVTCInspector.Gtk artifacts/inspector/linux64/EVTCInspector
-          mv artifacts/rotcomp/win64/GW2Scratch.RotationComparison.exe artifacts/rotcomp/win64/RotationComparison.exe
-          mv artifacts/rotcomp/linux64/GW2Scratch.RotationComparison artifacts/rotcomp/linux64/RotationComparison
     - name: Upload Log Manager (Windows)
       uses: actions/upload-artifact@v2
       with:
@@ -93,16 +85,6 @@ jobs:
       with:
         name: EVTC Inspector (Linux)
         path: artifacts/inspector/linux64/EVTCInspector
-    - name: Upload Rotation Comparison (Windows)
-      uses: actions/upload-artifact@v2
-      with:
-        name: Rotation Comparison (Windows)
-        path: artifacts/rotcomp/win64/RotationComparison.exe
-    - name: Upload Rotation Comparison (Linux)
-      uses: actions/upload-artifact@v2
-      with:
-        name: Rotation Comparison (Linux)
-        path: artifacts/rotcomp/linux64/RotationComparison
     - name: Upload PDB files
       uses: actions/upload-artifact@v2
       with:

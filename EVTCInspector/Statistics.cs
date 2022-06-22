@@ -1,8 +1,11 @@
 using System;
 using GW2Scratch.EVTCAnalytics.GameData.Encounters;
+using GW2Scratch.EVTCAnalytics.Model;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace GW2Scratch.EVTCInspector
 {
@@ -17,9 +20,11 @@ namespace GW2Scratch.EVTCInspector
 
 		public TimeSpan EncounterDuration { get; }
 		public string LogVersion { get; }
+		
+		public List<LogError> LogErrors { get; }
 
 		public Statistics(DateTimeOffset fightStart, Player logAuthor, EncounterResult encounterResult, EncounterMode encounterMode, Encounter encounter,
-			string logVersion, TimeSpan encounterDuration)
+			string logVersion, TimeSpan encounterDuration, IEnumerable<LogError> logErrors)
 		{
 			Encounter = encounter;
 			LogVersion = logVersion;
@@ -28,6 +33,7 @@ namespace GW2Scratch.EVTCInspector
 			FightStart = fightStart;
 			LogAuthor = logAuthor;
 			EncounterDuration = encounterDuration;
+			LogErrors = logErrors.ToList();
 		}
 	}
 }

@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 
 namespace GW2Scratch.ArcdpsLogManager.Logs.Filters.Composition
 {
-	public abstract class PlayerCountFilter : ILogFilter, INotifyPropertyChanged
+	public abstract class PlayerCountFilter : ILogFilter, INotifyPropertyChanged, IDefaultable
 	{
 		// Important: The filter has to always succeed with default settings.
 		// For more details, see the FilterLog implementation.
@@ -36,6 +36,12 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters.Composition
 		}
 
 		public bool IsDefault => FilterType == DefaultType && PlayerCount == DefaultPlayerCount;
+		
+		public void ResetToDefault()
+		{
+			PlayerCount = DefaultPlayerCount;
+			FilterType = DefaultType;
+		}
 
 		protected abstract int GetPlayerCount(LogData log);
 

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using GW2Scratch.EVTCAnalytics.GameData.Encounters;
+using GW2Scratch.EVTCAnalytics.Model;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
@@ -83,6 +84,19 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Updates
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 4, 0, 1)
 					&& log.Encounter == Encounter.Other,
 				"Add support for End of Dragons strike missions."),
+			new LogUpdate(log => log.ParsingVersion < new Version(1, 5, 0, 0)
+					&& log.Encounter == Encounter.AetherbladeHideout
+					&& log.GameBuild >= 127931,
+				"Add CM detection for Aetherblade Hideout."),
+			new LogUpdate(log => log.ParsingVersion < new Version(1, 5, 0, 1)
+					&& log.Encounter == Encounter.XunlaiJadeJunkyard
+					&& log.GameBuild >= 128773,
+				"Add CM detection for Xunlai Jade Junkyard."),
+			new LogUpdate(log => log.ParsingVersion < new Version(1, 5, 1, 1)
+					&& log.Encounter == Encounter.Other
+					&& log.MapId == 1451
+					&& log.GameBuild >= 129355,
+				"Add CM detection for Kaineng Overlook."),
 			// When adding a new update, you need to increase the revision (last value) of the version in the .csproj file
 			// unless the version changes more significantly, in that case it can be reset to 0.
 		};
