@@ -39,6 +39,7 @@ namespace GW2Scratch.ArcdpsLogManager.Configuration
 			DpsReportDomainChanged += (sender, args) => SaveToFile();
 			MinimumLogDurationSecondsChanged += (sender, args) => SaveToFile();
 			IgnoredUpdateVersionsChanged += (sender, args) => SaveToFile();
+			DpsReportUploadDetailedWvwChanged += (sender, args) => SaveToFile();
 
 			return LoadFromFile();
 		});
@@ -263,6 +264,19 @@ namespace GW2Scratch.ArcdpsLogManager.Configuration
 			}
 		}
 
+		public static bool DpsReportUploadDetailedWvw
+		{
+			get => Values.DpsReportUploadDetailedWvw;
+			set
+			{
+				if (Values.DpsReportUploadDetailedWvw != value)
+				{
+					Values.DpsReportUploadDetailedWvw = value;
+					OnDpsReportUploadDetailedWvwChanged();
+				}
+			}
+		}
+
 		public static event EventHandler<EventArgs> LogRootPathChanged;
 		public static event EventHandler<EventArgs> ShowDebugDataChanged;
 		public static event EventHandler<EventArgs> HiddenLogListColumnsChanged;
@@ -275,6 +289,7 @@ namespace GW2Scratch.ArcdpsLogManager.Configuration
 		public static event EventHandler<EventArgs> DpsReportDomainChanged;
 		public static event EventHandler<EventArgs> MinimumLogDurationSecondsChanged;
 		public static event EventHandler<EventArgs> IgnoredUpdateVersionsChanged;
+		public static event EventHandler<EventArgs> DpsReportUploadDetailedWvwChanged;
 
 		private static void OnLogRootPathsChanged()
 		{
@@ -334,6 +349,11 @@ namespace GW2Scratch.ArcdpsLogManager.Configuration
 		private static void OnIgnoredUpdateVersionsChanged()
 		{
 			IgnoredUpdateVersionsChanged?.Invoke(null, EventArgs.Empty);
+		}
+
+		private static void OnDpsReportUploadDetailedWvwChanged()
+		{
+			DpsReportUploadDetailedWvwChanged?.Invoke(null, EventArgs.Empty);
 		}
 	}
 }

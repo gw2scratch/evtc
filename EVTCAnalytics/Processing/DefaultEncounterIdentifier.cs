@@ -468,13 +468,14 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				{
 					return GetDefaultBuilder(encounter, mainTarget)
 						.WithResult(new AgentBuffGainedDeterminer(mainTarget, SkillIds.Determined895))
-						.WithModes(new AgentHealthModeDeterminer(mainTarget, 9569560))
+						.WithModes(new AgentHealthModeDeterminer(mainTarget, 9_569_560))
 						.Build();
 				}
 				case Encounter.AetherbladeHideout:
 				{
 					return GetDefaultBuilder(encounter, mainTarget)
 						.WithResult(new AgentBuffGainedDeterminer(mainTarget, SkillIds.Determined895))
+						.WithModes(new AgentHealthModeDeterminer(mainTarget, 8_800_000))
 						.Build();
 				}
 				case Encounter.XunlaiJadeJunkyard:
@@ -486,6 +487,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						// Ankka changes teams twice at the start and then once when she is beaten.
 						// We just pick an arbitrary conservative threshold that her health needs to reach first: 50%.
 						.WithResult(new TeamChangedBelowHealthThresholdDeterminer(mainTarget, 0.5f))
+						.WithModes(new AgentHealthModeDeterminer(mainTarget, 50_000_000))
 						.Build();
 				}
 				case Encounter.KainengOverlook:
@@ -493,6 +495,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					return GetDefaultBuilder(encounter, mainTarget)
 						// This has the same rationale behind it as the check for Xunlai Jade Junkyard.
 						.WithResult(new TeamChangedBelowHealthThresholdDeterminer(mainTarget, 0.5f))
+						.WithModes(new AgentHealthModeDeterminer(mainTarget, 30_000_000))
 						.Build();
 				}
 				case Encounter.HarvestTemple:
@@ -703,6 +706,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					case SpeciesIds.Ankka:
 						return Encounter.XunlaiJadeJunkyard;
 					case SpeciesIds.MinisterLi:
+					case SpeciesIds.MinisterLiChallengeMode:
 						return Encounter.KainengOverlook;
 					case SpeciesIds.VoidAmalgamate:
 						return Encounter.HarvestTemple;

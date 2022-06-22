@@ -1,3 +1,4 @@
+using GW2Scratch.ArcdpsLogManager.Configuration;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,6 +7,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using GW2Scratch.ArcdpsLogManager.Logs;
+using GW2Scratch.EVTCAnalytics.GameData.Encounters;
 using Newtonsoft.Json;
 
 namespace GW2Scratch.ArcdpsLogManager.Uploads
@@ -34,14 +36,21 @@ namespace GW2Scratch.ArcdpsLogManager.Uploads
 		};
 
 		public string Domain { get; set; }
+		
+		public bool UploadDetailedWvw { get; set; }
 
 		public DpsReportUploader() : this(DefaultDomain)
 		{
 		}
 
-		public DpsReportUploader(DpsReportDomain domain)
+		public DpsReportUploader(bool detailedWvw) : this(DefaultDomain, detailedWvw)
+		{
+		}
+
+		public DpsReportUploader(DpsReportDomain domain, bool detailedWvw = false)
 		{
 			Domain = domain.Domain;
+			UploadDetailedWvw = detailedWvw;
 		}
 
 		public DpsReportUploader(string domain)
@@ -53,6 +62,12 @@ namespace GW2Scratch.ArcdpsLogManager.Uploads
 			string userToken = null)
 		{
 			string query = Domain + UploadEndpoint + "?json=1&generator=ei";
+			
+			if (log.Encounter == Encounter.WorldVersusWorld && UploadDetailedWvw)
+			{
+				query += "&detailedwvw=true";
+			}
+			
 			if (userToken != null)
 			{
 				query += $"&userToken={userToken}";

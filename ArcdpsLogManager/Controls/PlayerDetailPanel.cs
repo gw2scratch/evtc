@@ -37,9 +37,12 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			}
 		}
 
+		private bool ShowLogListButtons { get; }
+
 		public PlayerDetailPanel(LogCache logCache, ApiData apiData, LogDataProcessor logProcessor, UploadProcessor uploadProcessor,
-			ImageProvider imageProvider, ILogNameProvider logNameProvider)
+			ImageProvider imageProvider, ILogNameProvider logNameProvider, bool showLogListButtons = true)
 		{
+			ShowLogListButtons = showLogListButtons;
 			Padding = new Padding(10);
 			Width = 350;
 			Visible = false;
@@ -112,7 +115,10 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 									Text = $"{character.Logs.Count}",
 									VerticalAlignment = VerticalAlignment.Center
 								});
-								knownCharacters.Add(showLogsButton);
+								if (ShowLogListButtons)
+								{
+									knownCharacters.Add(showLogsButton);
+								}
 								knownCharacters.Add(null);
 							}
 							knownCharacters.EndHorizontal();
@@ -140,26 +146,27 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				}
 				EndVertical();
 
-				var logListButton = new Button {Text = "Show logs with this player"};
-				logListButton.Click += (sender, args) =>
+				if (ShowLogListButtons)
 				{
-					var form = new Form
+					var logListButton = new Button { Text = "Show logs with this player" };
+					logListButton.Click += (sender, args) =>
 					{
-						Content = new LogList(logCache, apiData, logProcessor, uploadProcessor, imageProvider, logNameProvider)
+						var form = new Form
 						{
-							DataStore = new FilterCollection<LogData>(PlayerData.Logs)
-						},
-						Width = 900,
-						Height = 700,
-						Title = $"arcdps Log Manager: logs with {PlayerData.AccountName.Substring(1)}"
+							Content = new LogList(logCache, apiData, logProcessor, uploadProcessor, imageProvider,
+									logNameProvider) { DataStore = new FilterCollection<LogData>(PlayerData.Logs) },
+							Width = 900,
+							Height = 700,
+							Title = $"arcdps Log Manager: logs with {PlayerData.AccountName.Substring(1)}"
+						};
+						form.Show();
 					};
-					form.Show();
-				};
-				BeginVertical();
-				{
-					Add(logListButton);
+					BeginVertical();
+					{
+						Add(logListButton);
+					}
+					EndVertical();
 				}
-				EndVertical();
 			}
 			EndVertical();
 		}

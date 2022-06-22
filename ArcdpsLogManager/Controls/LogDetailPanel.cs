@@ -272,6 +272,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				var debugData = new DebugData {LogData = LogData};
 				var dialog = new Form {Content = debugData, Width = 500, Title = "Debug data"};
 				dialog.Show();
+				debugData.InspectorOpened += (_, _) => dialog.Close();
 			};
 
 			reparseButton.Click += (sender, args) => logProcessor.Schedule(logData);

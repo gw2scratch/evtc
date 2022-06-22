@@ -8,7 +8,7 @@ using GW2Scratch.ArcdpsLogManager.Logs.Filters.Composition;
 
 namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 {
-	public class CompositionFilters : ILogFilter, INotifyPropertyChanged
+	public class CompositionFilters : ILogFilter, INotifyPropertyChanged, IDefaultable
 	{
 		public IReadOnlyList<CoreProfessionPlayerCountFilter> CoreProfessionFilters { get; }
 		public IReadOnlyList<EliteSpecializationPlayerCountFilter> HeartOfThornsSpecializationFilters { get; }
@@ -32,7 +32,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 			IEnumerable<EliteSpecializationPlayerCountFilter> hotFilters,
 			IEnumerable<EliteSpecializationPlayerCountFilter> pofFilters,
 			IEnumerable<EliteSpecializationPlayerCountFilter> eodFilters
-			)
+		)
 		{
 			CoreProfessionFilters = coreFilters.ToList();
 			HeartOfThornsSpecializationFilters = hotFilters.ToList();
@@ -53,7 +53,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 			{
 				filter.PropertyChanged += (_, _) => OnPropertyChanged(nameof(PathOfFireSpecializationFilters));
 			}
-			
+
 			foreach (var filter in EndOfDragonsSpecializationFilters)
 			{
 				filter.PropertyChanged += (_, _) => OnPropertyChanged(nameof(EndOfDragonsSpecializationFilters));
@@ -113,18 +113,39 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 			{
 				code.Add(filter.GetHashCode());
 			}
-			
+
 			foreach (var filter in PathOfFireSpecializationFilters)
 			{
 				code.Add(filter.GetHashCode());
 			}
-			
+
 			foreach (var filter in EndOfDragonsSpecializationFilters)
 			{
 				code.Add(filter.GetHashCode());
 			}
 
 			return code.ToHashCode();
+		}
+
+		public bool IsDefault => Equals(new CompositionFilters());
+
+		public void ResetToDefault()
+		{
+			var filterGroups = new IReadOnlyList<PlayerCountFilter>[]
+			{
+				CoreProfessionFilters,
+				HeartOfThornsSpecializationFilters,
+				PathOfFireSpecializationFilters,
+				EndOfDragonsSpecializationFilters,
+			};
+			
+			foreach (var group in filterGroups)
+			{
+				foreach (var filter in group)
+				{
+					filter.ResetToDefault();
+				}
+			}
 		}
 	}
 }

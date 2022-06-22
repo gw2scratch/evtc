@@ -3,18 +3,26 @@ using System.Collections.Generic;
 using System.Linq;
 using Eto.Drawing;
 using Eto.Forms;
+using GW2Scratch.ArcdpsLogManager.Gw2Api;
 using GW2Scratch.ArcdpsLogManager.Logs;
 using GW2Scratch.ArcdpsLogManager.Logs.Filters;
+using GW2Scratch.ArcdpsLogManager.Logs.Naming;
+using GW2Scratch.ArcdpsLogManager.Processing;
 
 namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 {
 	public class LogFilterPanel : DynamicLayout
 	{
 		private LogFilters Filters { get; }
+		private IReadOnlyList<LogData> Logs { get; set; } = new List<LogData>();
 
 		private readonly LogEncounterFilterTree encounterTree;
+		
+		private event EventHandler<IReadOnlyList<LogData>> LogsUpdated;
 
-		public LogFilterPanel(ImageProvider imageProvider, LogFilters filters)
+		public LogFilterPanel(LogCache logCache, ApiData apiData, LogDataProcessor logProcessor,
+			UploadProcessor uploadProcessor, ImageProvider imageProvider, ILogNameProvider logNameProvider,
+			LogFilters filters)
 		{
 			Filters = filters;
 
@@ -81,12 +89,34 @@ namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 			var advancedFiltersButton = new Button {Text = "Advanced filters"};
 			advancedFiltersButton.Click += (sender, args) =>
 			{
+				var advancedFilterPanel = new AdvancedFilterPanel(logCache, apiData, logProcessor, uploadProcessor,
+					imageProvider, logNameProvider, filters);
+				
 				var form = new Form
 				{
 					Title = "Advanced filters - arcdps Log Manager",
-					Content = new AdvancedFilterPanel(imageProvider, filters)
+					Content = advancedFilterPanel,
 				};
+				
+				// Make sure we update the logs within the advanced filter form now and with each update later.
+				advancedFilterPanel.UpdateLogs(Logs);
+				var updateLogs = new EventHandler<IReadOnlyList<LogData>>((_, logs) => advancedFilterPanel.UpdateLogs(logs));
+				LogsUpdated += updateLogs;
+				form.Closed += (_, _) => LogsUpdated -= updateLogs;
+				
 				form.Show();
+			};
+			filters.PropertyChanged += (sender, args) =>
+			{
+				var nonDefaultCount = AdvancedFilterPanel.CountNonDefaultAdvancedFilters(filters);
+				if (nonDefaultCount > 0)
+				{
+					advancedFiltersButton.Text = $"Advanced filters ({nonDefaultCount} set)";
+				}
+				else
+				{
+					advancedFiltersButton.Text = "Advanced filters";
+				}
 			};
 
 			BeginVertical(new Padding(0, 0, 0, 4), spacing: new Size(4, 4));
@@ -183,7 +213,9 @@ namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 		/// <param name="logs">Logs to be available for filtering.</param>
 		public void UpdateLogs(IReadOnlyList<LogData> logs)
 		{
+			Logs = logs;
 			encounterTree.UpdateLogs(logs);
+			LogsUpdated?.Invoke(this, logs);
 		}
 	}
 }

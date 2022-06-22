@@ -9,6 +9,7 @@ using GW2Scratch.EVTCAnalytics.IO;
 using GW2Scratch.EVTCAnalytics.Parsed;
 using GW2Scratch.EVTCAnalytics.Parsed.Enums;
 using GW2Scratch.EVTCAnalytics.Processing;
+using System.Runtime.CompilerServices;
 
 namespace GW2Scratch.EVTCAnalytics
 {
@@ -149,7 +150,7 @@ namespace GW2Scratch.EVTCAnalytics
 		/// <item><see cref="GetCombatItemReader" /></item>
 		/// </list>
 		/// <para>
-		/// Note that all readers have to be fully exhausted before calling the method.
+		/// Note that all readers have to be fully exhausted before calling the next method.
 		/// </para>
 		/// </remarks>
 		internal class SinglePassEVTCReader
@@ -719,31 +720,34 @@ namespace GW2Scratch.EVTCAnalytics
 			item.Padding = reader.ReadUInt32();
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		private static FriendOrFoe GetFriendOrFoeFromByte(byte b)
 		{
-			return b < (byte) FriendOrFoe.Unknown ? (FriendOrFoe) b : FriendOrFoe.Unknown;
+			return (FriendOrFoe) b;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		private static Result GetResultFromByte(byte b)
 		{
-			// Does not perform checking as that would change the result value
-			// which is used in buff remove events to indicate remaining stacks
 			return (Result) b;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		private static BuffRemove GetBuffRemoveFromByte(byte b)
 		{
-			return b <= 3 ? (BuffRemove) b : BuffRemove.None;
+			return (BuffRemove) b;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		private static Activation GetActivationFromByte(byte b)
 		{
-			return b < (byte) Activation.Unknown ? (Activation) b : Activation.Unknown;
+			return (Activation) b;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		private static StateChange GetStateChangeFromByte(byte b)
 		{
-			return b < (byte) StateChange.Unknown ? (StateChange) b : StateChange.Unknown;
+			return (StateChange) b;
 		}
 	}
 }

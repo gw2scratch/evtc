@@ -5,8 +5,8 @@
 	/// </summary>
 	public enum BuffRemove : byte
 	{
-		None   = 0,
-		All    = 1,
+		None = 0,
+		All = 1,
 		Single = 2,
 		Manual = 3,
 	};

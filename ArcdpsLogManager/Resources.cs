@@ -122,7 +122,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		// WING 3
 		public static Image GetEscortIcon() => GetEncounterImage("Mini_McLeod_the_Silent");
 		public static Image GetKeepConstructIcon() => GetEncounterImage("Mini_Keep_Construct");
-		public static Image GetTwistedCastleIcon() => GetEncounterImage("Legendary_Insight");
+		public static Image GetTwistedCastleIcon() => GetEncounterImage("Twisted_Castle");
 		public static Image GetXeraIcon() => GetEncounterImage("Mini_Xera");
 
 		// WING 4
@@ -133,14 +133,14 @@ namespace GW2Scratch.ArcdpsLogManager
 
 		// WING 5
 		public static Image GetDesminaIcon() => GetEncounterImage("Mini_Desmina");
-		public static Image GetRiverOfSoulsIcon() => GetEncounterImage("Legendary_Divination");
+		public static Image GetRiverOfSoulsIcon() => GetEncounterImage("Skeleton");
 		public static Image GetBrokenKingIcon() => GetEncounterImage("Mini_Broken_King");
-		public static Image GetEaterOfSoulsIcon() => GetEncounterImage("Legendary_Divination");
-		public static Image GetEyesIcon() => GetEncounterImage("Legendary_Divination");
+		public static Image GetEaterOfSoulsIcon() => GetEncounterImage("Eater_Of_Souls");
+		public static Image GetEyesIcon() => GetEncounterImage("Eye_Of_Judgment");
 		public static Image GetDhuumIcon() => GetEncounterImage("Mini_Dhuum");
 
 		// WING 6
-		public static Image GetConjuredAmalgamatedIcon() => GetEncounterImage("Legendary_Divination");
+		public static Image GetConjuredAmalgamatedIcon() => GetEncounterImage("Conjured_Amalgamated");
 		public static Image GetTwinLargosIcon() => GetEncounterImage("Mini_Nikare");
 		public static Image GetQadimIcon() => GetEncounterImage("Mini_Qadim");
 
