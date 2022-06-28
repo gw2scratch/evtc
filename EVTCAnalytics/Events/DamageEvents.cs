@@ -105,6 +105,18 @@ namespace GW2Scratch.EVTCAnalytics.Events
 		{
 		}
 	}
+	
+	/// <summary>
+	/// An event specifying that the defiance bar of a <see cref="Agent"/> was damaged directly by a <see cref="Skill"/>.
+	/// </summary>
+	public class DefianceBarDamageEvent : DamageEvent
+	{
+		public DefianceBarDamageEvent(long time, Agent attacker, Agent defender, Skill skill, int damage, bool isMoving,
+			bool isNinety, bool isFlanking) : base(time, attacker, defender, skill,
+			damage, isMoving, isNinety, isFlanking)
+		{
+		}
+	}
 
 	/// <summary>
 	/// An event specifying damage inflicted to an agent.

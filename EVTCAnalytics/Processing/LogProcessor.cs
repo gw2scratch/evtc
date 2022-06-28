@@ -1116,6 +1116,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 
 				// TODO: Rewrite
 				bool ignored = false;
+				bool defianceBar = false;
 				var hitResult = PhysicalDamageEvent.Result.Normal;
 				var ignoreReason = IgnoredPhysicalDamageEvent.Reason.Absorbed;
 				switch (item.Result)
@@ -1154,19 +1155,30 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					case Result.Downed:
 						hitResult = PhysicalDamageEvent.Result.DowningBlow;
 						break;
+					case Result.DefianceBar:
+						defianceBar = true;
+						break;
 					default:
 						return new UnknownEvent(item.Time, item);
 				}
 
-				if (!ignored)
+				if (!defianceBar)
 				{
-					return new PhysicalDamageEvent(item.Time, attacker, defender, skill, damage, isMoving,
-						isNinety, isFlanking, shieldDamage, hitResult);
+					if (!ignored)
+					{
+						return new PhysicalDamageEvent(item.Time, attacker, defender, skill, damage, isMoving,
+							isNinety, isFlanking, shieldDamage, hitResult);
+					}
+					else
+					{
+						return new IgnoredPhysicalDamageEvent(item.Time, attacker, defender, skill, damage,
+							isMoving, isNinety, isFlanking, shieldDamage, ignoreReason);
+					}
 				}
 				else
 				{
-					return new IgnoredPhysicalDamageEvent(item.Time, attacker, defender, skill, damage,
-						isMoving, isNinety, isFlanking, shieldDamage, ignoreReason);
+					return new DefianceBarDamageEvent(item.Time, attacker, defender, skill, damage, isMoving,
+						isNinety, isFlanking);
 				}
 			}
 

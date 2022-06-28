@@ -15,5 +15,6 @@ namespace GW2Scratch.EVTCAnalytics.Parsed.Enums
 		Blind = 7,
 		KillingBlow = 8,
 		Downed = 9,
+		DefianceBar = 10,
 	}
 }
