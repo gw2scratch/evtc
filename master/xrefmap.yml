@@ -3661,6 +3661,12 @@ references:
   commentId: F:GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.VoidAmalgamate
   fullName: GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.VoidAmalgamate
   nameWithType: SpeciesIds.VoidAmalgamate
+- uid: GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.VoidMelter
+  name: VoidMelter
+  href: api/GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.html#GW2Scratch_EVTCAnalytics_GameData_SpeciesIds_VoidMelter
+  commentId: F:GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.VoidMelter
+  fullName: GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.VoidMelter
+  nameWithType: SpeciesIds.VoidMelter
 - uid: GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.WhisperOfJormag
   name: WhisperOfJormag
   href: api/GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.html#GW2Scratch_EVTCAnalytics_GameData_SpeciesIds_WhisperOfJormag
