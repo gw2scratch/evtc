@@ -10,6 +10,7 @@ using GW2Scratch.ArcdpsLogManager.Logs.Naming;
 using GW2Scratch.ArcdpsLogManager.Logs.Tagging;
 using GW2Scratch.ArcdpsLogManager.Processing;
 using GW2Scratch.ArcdpsLogManager.Sections;
+using GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
 
 namespace GW2Scratch.ArcdpsLogManager.Controls
@@ -23,7 +24,8 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 		private LogData logData;
 
 		private readonly Label nameLabel = new Label {Font = Fonts.Sans(16, FontStyle.Bold), Wrap = WrapMode.Word};
-		private readonly Label resultLabel = new Label {Font = Fonts.Sans(12)};
+		private readonly Label modeLabel = new Label {Font = Fonts.Sans(12, FontStyle.Italic), Wrap = WrapMode.Word};
+		private readonly Label resultLabel = new Label {Font = Fonts.Sans(11)};
 		private readonly LinkButton fileNameButton = new LinkButton();
 		private readonly GroupCompositionControl groupComposition;
 		private readonly Label parseTimeLabel = new Label();
@@ -54,6 +56,20 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				Visible = true;
 
 				nameLabel.Text = NameProvider.GetName(logData);
+
+				modeLabel.Text = logData.EncounterMode switch
+				{
+					EncounterMode.Unknown => "",
+					EncounterMode.Normal => "",
+					EncounterMode.Challenge => "Challenge Mode",
+					EncounterMode.Emboldened1 => "Emboldened 1",
+					EncounterMode.Emboldened2 => "Emboldened 2",
+					EncounterMode.Emboldened3 => "Emboldened 3",
+					EncounterMode.Emboldened4 => "Emboldened 4",
+					EncounterMode.Emboldened5 => "Emboldened 5",
+					_ => throw new ArgumentOutOfRangeException()
+				};
+				modeLabel.Visible = !String.IsNullOrWhiteSpace(modeLabel.Text);
 
 				string result;
 				switch (logData.EncounterResult)
@@ -160,6 +176,11 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 					BeginVertical();
 					{
 						Add(nameLabel);
+						Add(modeLabel);
+					}
+					EndVertical();
+					BeginVertical();
+					{
 						Add(resultLabel);
 					}
 					EndVertical();
