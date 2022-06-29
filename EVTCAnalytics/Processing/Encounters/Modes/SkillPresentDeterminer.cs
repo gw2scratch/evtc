@@ -9,19 +9,16 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes
 	{
 		private readonly int skillId;
 		private readonly EncounterMode skillPresentMode;
-		private readonly EncounterMode skillNotPresentMode;
 
 		public SkillPresentModeDeterminer(
 			int skillId,
-			EncounterMode skillPresentMode = EncounterMode.Challenge,
-			EncounterMode skillNotPresentMode = EncounterMode.Normal)
+			EncounterMode skillPresentMode = EncounterMode.Challenge)
 		{
 			this.skillId = skillId;
 			this.skillPresentMode = skillPresentMode;
-			this.skillNotPresentMode = skillNotPresentMode;
 		}
 
-		public EncounterMode GetMode(Log log)
+		public EncounterMode? GetMode(Log log)
 		{
 			foreach (var skill in log.Skills)
 			{
@@ -31,7 +28,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes
 				}
 			}
 
-			return skillNotPresentMode;
+			return null;
 		}
 	}
 }

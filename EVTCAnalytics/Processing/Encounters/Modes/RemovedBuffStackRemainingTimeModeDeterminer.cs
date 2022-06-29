@@ -16,7 +16,6 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes
 		private readonly int remaining1;
 		private readonly EncounterMode mode2;
 		private readonly int remaining2;
-		private readonly EncounterMode defaultMode;
 
 		/// <summary>
 		/// Creates a determiner that identifies the encounter mode according to whether a buff was removed with a specific remaining time.
@@ -26,7 +25,6 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes
 		/// <param name="remaining1">The remaining time of the buff in order to identify the encounter as <paramref name="mode1"/>.</param>
 		/// <param name="mode2">Second encounter mode option.</param>
 		/// <param name="remaining2">The remaining time of the buff in order to identify the encounter as <paramref name="mode2"/>.</param>
-		/// <param name="defaultMode">The default mode to fall to in case neither <paramref name="mode1"/> or <paramref name="mode2"/> is identified.</param>
 		/// <exception cref="ArgumentException">Thrown if <paramref name="remaining1"/> and <paramref name="remaining2"/> are within
 		/// 2*<see cref="RemainingTimePrecision"/>, which would result in ambiguous mode detection as a remaining buff duration would be too close to both.</exception>
 		public RemovedBuffStackRemainingTimeModeDeterminer(
@@ -34,8 +32,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes
 			EncounterMode mode1,
 			int remaining1,
 			EncounterMode mode2,
-			int remaining2,
-			EncounterMode defaultMode
+			int remaining2
 		)
 		{
 			this.buffId = buffId;
@@ -43,7 +40,6 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes
 			this.remaining1 = remaining1;
 			this.mode2 = mode2;
 			this.remaining2 = remaining2;
-			this.defaultMode = defaultMode;
 			if (Math.Abs(this.remaining1 - this.remaining2) < RemainingTimePrecision * 2)
 			{
 				throw new ArgumentException("Ambiguous buff remaining times." +
@@ -54,7 +50,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes
 			}
 		}
 
-		public EncounterMode GetMode(Log log)
+		public EncounterMode? GetMode(Log log)
 		{
 			// First we try to determine which of the two possible modes this is.
 			EncounterMode? mode = null;
@@ -100,7 +96,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes
 			}
 			else
 			{
-				return defaultMode;
+				return null;
 			}
 		}
 	}

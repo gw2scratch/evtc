@@ -163,14 +163,12 @@ namespace GW2Scratch.EVTCAnalytics.Events
 	/// <summary>
 	/// An event specifying that an <see cref="Agent"/> has an ongoing buff at the time tracking starts.
 	/// </summary>
-	public class InitialBuffEvent : AgentEvent
+	public class InitialBuffEvent : BuffApplyEvent
 	{
-		public Skill Skill { get; }
-
-		public InitialBuffEvent(long time, Agent agent, Skill skill) : base(time, agent)
-		{
-			Skill = skill;
-		}
+		public InitialBuffEvent(long time, Agent agent, Skill buff, Agent sourceAgent, int durationApplied,
+			uint durationOfRemovedStack) : base(time, agent, buff, sourceAgent, durationApplied, durationOfRemovedStack) {
+			
+			}
 	}
 
 	/// <summary>

@@ -168,6 +168,16 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 								return "CM";
 							case EncounterMode.Normal:
 								return "";
+							case EncounterMode.Emboldened1:
+								return "E1";
+							case EncounterMode.Emboldened2:
+								return "E2";
+							case EncounterMode.Emboldened3:
+								return "E3";
+							case EncounterMode.Emboldened4:
+								return "E4";
+							case EncounterMode.Emboldened5:
+								return "E5";
 							case EncounterMode.Unknown:
 								return "?";
 							default:

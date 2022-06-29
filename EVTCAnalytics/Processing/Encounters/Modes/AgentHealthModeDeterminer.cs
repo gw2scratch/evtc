@@ -15,21 +15,18 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes
 		private readonly Agent agent;
 		private readonly ulong maxHealth;
 		private readonly EncounterMode enoughHealthMode;
-		private readonly EncounterMode lessHealthMode;
 
 		public AgentHealthModeDeterminer(
 			Agent agent,
 			ulong maxHealth,
-			EncounterMode enoughHealthMode = EncounterMode.Challenge,
-			EncounterMode lessHealthMode = EncounterMode.Normal)
+			EncounterMode enoughHealthMode = EncounterMode.Challenge)
 		{
 			this.agent = agent;
 			this.maxHealth = maxHealth;
 			this.enoughHealthMode = enoughHealthMode;
-			this.lessHealthMode = lessHealthMode;
 		}
 
-		public EncounterMode GetMode(Log log)
+		public EncounterMode? GetMode(Log log)
 		{
 			if (agent == null)
 			{
@@ -48,7 +45,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes
 				}
 			}
 
-			return lessHealthMode;
+			return null;
 		}
 	}
 }

@@ -16,23 +16,20 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes
 		private readonly int count;
 		private readonly long timeSpan;
 		private readonly EncounterMode spawnOccuredMode;
-		private readonly EncounterMode spawnNotOccuredMode;
 
 		public GroupedSpawnModeDeterminer(
 			Func<Agent, bool> agentCounted,
 			int count,
 			long timeSpan,
-			EncounterMode spawnOccuredMode = EncounterMode.Challenge,
-			EncounterMode spawnNotOccuredMode = EncounterMode.Normal)
+			EncounterMode spawnOccuredMode = EncounterMode.Challenge)
 		{
 			this.agentCounted = agentCounted ?? throw new ArgumentNullException(nameof(agentCounted));
 			this.count = count;
 			this.timeSpan = timeSpan;
 			this.spawnOccuredMode = spawnOccuredMode;
-			this.spawnNotOccuredMode = spawnNotOccuredMode;
 		}
 
-		public EncounterMode GetMode(Log log)
+		public EncounterMode? GetMode(Log log)
 		{
 			var countedEvents = new LinkedList<AgentSpawnEvent>();
 
@@ -51,7 +48,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes
 				}
 			}
 
-			return spawnNotOccuredMode;
+			return null;
 		}
 	}
 }

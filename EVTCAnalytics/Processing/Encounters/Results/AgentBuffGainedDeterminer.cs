@@ -12,16 +12,30 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 	{
 		private readonly Agent agent;
 		private readonly int buffId;
+		private readonly bool ignoreInitial;
 
-		public AgentBuffGainedDeterminer(Agent agent, int buffId)
+		public AgentBuffGainedDeterminer(Agent agent, int buffId, bool ignoreInitial = true)
 		{
 			this.agent = agent;
 			this.buffId = buffId;
+			this.ignoreInitial = ignoreInitial;
 		}
 
 		protected override Event GetEvent(IEnumerable<Event> events)
 		{
-			return events.OfType<BuffApplyEvent>().FirstOrDefault(x => x.Agent == agent && x.Buff.Id == buffId);
+			if (ignoreInitial)
+			{
+				return events
+					.OfType<BuffApplyEvent>()
+					.Where(x => x is not InitialBuffEvent)
+					.FirstOrDefault(x => x.Agent == agent && x.Buff.Id == buffId);
+			}
+			else
+			{
+				return events
+					.OfType<BuffApplyEvent>()
+					.FirstOrDefault(x => x.Agent == agent && x.Buff.Id == buffId);
+			}
 		}
 	}
 }

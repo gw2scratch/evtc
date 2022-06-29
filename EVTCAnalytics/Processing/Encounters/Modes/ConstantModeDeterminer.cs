@@ -17,7 +17,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes
 			this.mode = mode;
 		}
 
-		public EncounterMode GetMode(Log log)
+		public EncounterMode? GetMode(Log log)
 		{
 			return mode;
 		}

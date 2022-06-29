@@ -21,6 +21,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 		private bool showSuccessfulLogs = true;
 		private bool showFailedLogs = true;
 		private bool showUnknownLogs = true;
+		private bool showEmboldenedLogs = true;
 		private bool showNormalModeLogs = true;
 		private bool showChallengeModeLogs = true;
 		private bool showNonFavoriteLogs = true;
@@ -131,6 +132,16 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 			}
 		}
 
+		public bool ShowEmboldenedModeLogs
+		{
+			get => showEmboldenedLogs;
+			set
+			{
+				if (value == showEmboldenedLogs) return;
+				showEmboldenedLogs = value;
+				OnPropertyChanged();
+			}
+		}
 		public bool ShowNormalModeLogs
 		{
 			get => showNormalModeLogs;
@@ -308,7 +319,8 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 		{
 			return (log.EncounterMode == EncounterMode.Normal && ShowNormalModeLogs) ||
 			       (log.EncounterMode == EncounterMode.Unknown && ShowNormalModeLogs) ||
-			       (log.EncounterMode == EncounterMode.Challenge && ShowChallengeModeLogs);
+			       (log.EncounterMode == EncounterMode.Challenge && ShowChallengeModeLogs) ||
+			       (log.EncounterMode.IsEmboldened() && ShowEmboldenedModeLogs);
 		}
 
 		private bool FilterByFavoriteStatus(LogData log)

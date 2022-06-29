@@ -8,9 +8,10 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes
 	public interface IModeDeterminer
 	{
 		/// <summary>
-		/// Determines the mode of the encounter recorded by a log.
+		/// Determines the mode of the encounter recorded by a log. May return null if detection
+		/// should fall back to a default implementation.
 		/// </summary>
 		/// <param name="log">The log of the encounter.</param>
-		EncounterMode GetMode(Log log);
+		EncounterMode? GetMode(Log log);
 	}
 }

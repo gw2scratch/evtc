@@ -19,6 +19,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 		private Encounter Encounter { get; set; }
 		private IResultDeterminer ResultDeterminer { get; set; }
 		private IModeDeterminer ModeDeterminer { get; set; }
+		private IModeDeterminer FallbackModeDeterminer { get; set; }
 		private IHealthDeterminer HealthDeterminer { get; set; }
 		private List<IPostProcessingStep> ProcessingSteps { get; set; }
 		private List<Agent> Targets { get; set; }
@@ -27,7 +28,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			Encounter defaultEncounter,
 			List<Agent> defaultTargets,
 			IResultDeterminer defaultResultDeterminer,
-			IModeDeterminer defaultModeDeterminer,
+			IModeDeterminer fallbackModeDeterminer,
 			IHealthDeterminer defaultHealthDeterminer,
 			IEnumerable<IPostProcessingStep> defaultProcessingSteps = null
 		)
@@ -35,7 +36,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			Encounter = defaultEncounter;
 			Targets = defaultTargets ?? throw new ArgumentNullException(nameof(defaultTargets));
 			ResultDeterminer = defaultResultDeterminer ?? throw new ArgumentNullException(nameof(defaultResultDeterminer));
-			ModeDeterminer = defaultModeDeterminer ?? throw new ArgumentNullException(nameof(defaultModeDeterminer));
+			FallbackModeDeterminer = fallbackModeDeterminer ?? throw new ArgumentNullException(nameof(fallbackModeDeterminer));
 			HealthDeterminer = defaultHealthDeterminer ?? throw new ArgumentNullException(nameof(defaultHealthDeterminer));
 			ProcessingSteps = (defaultProcessingSteps ?? Enumerable.Empty<IPostProcessingStep>()).ToList();
 		}
@@ -90,11 +91,15 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 
 		public IEncounterData Build()
 		{
+			IModeDeterminer mode = ModeDeterminer != null
+				? new FallbackModeDeterminer(ModeDeterminer, FallbackModeDeterminer)
+				: FallbackModeDeterminer;
+
 			return new BaseEncounterData(
 				Encounter,
 				Targets,
 				ResultDeterminer,
-				ModeDeterminer,
+				mode,
 				HealthDeterminer,
 				ProcessingSteps
 			);

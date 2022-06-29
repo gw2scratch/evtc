@@ -803,6 +803,19 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 
 				return null;
 			}
+			
+			Skill GetSkillByIdOrAdd(uint id)
+			{
+				if (state.SkillsById.TryGetValue(id, out Skill skill))
+				{
+					return skill;
+				}
+
+				var newSkill = new Skill(id, $"{id} (not in skill list)");
+				state.Skills.Add(newSkill);
+				state.SkillsById.Add(id, newSkill);
+				return newSkill;
+			}
 
 			if (item.IsStateChange != StateChange.Normal)
 			{
@@ -856,8 +869,18 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					case StateChange.Reward:
 						return new RewardEvent(item.Time, item.DstAgent, item.Value);
 					case StateChange.BuffInitial:
-						return new InitialBuffEvent(item.Time, GetAgentByAddress(item.SrcAgent),
-							GetSkillById(item.SkillId));
+					{
+						// arcdps up to 20220628 missed skills referenced only from buff initials in the skill list.
+						// To deal with that, we might need to add the skill if it does not exist.
+						Skill buff = GetSkillByIdOrAdd(item.SkillId);
+						
+						int durationApplied = item.Value;
+						uint durationOfRemovedStack = item.OverstackValue;
+						var agent = GetAgentByAddress(item.DstAgent);
+						var sourceAgent = GetAgentByAddress(item.SrcAgent);
+						return new InitialBuffEvent(item.Time, agent, buff, sourceAgent, durationApplied,
+							durationOfRemovedStack);
+					}
 					case StateChange.Position:
 					{
 						float x = BitConversions.ToSingle((uint) (item.DstAgent & 0xFFFFFFFF));

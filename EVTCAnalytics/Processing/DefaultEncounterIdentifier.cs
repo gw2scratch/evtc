@@ -212,7 +212,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						// Necrosis is applied faster in Challenge Mode. It is first removed and then reapplied
 						// so we check the remaining time of the removed buff.
 						.WithModes(new RemovedBuffStackRemainingTimeModeDeterminer(SkillIds.Necrosis,
-							EncounterMode.Challenge, 23000, EncounterMode.Normal, 18000, EncounterMode.Normal))
+							EncounterMode.Challenge, 23000, EncounterMode.Normal, 18000))
 						.Build();
 				}
 				case Encounter.RiverOfSouls:
@@ -734,7 +734,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				encounter,
 				new List<Agent> {mainTarget},
 				new AgentKilledDeterminer(mainTarget),
-				new ConstantModeDeterminer(EncounterMode.Normal),
+				new EmboldenedDetectingModeDeterminer(),
 				new MaxMinHealthDeterminer()
 			);
 			if (mergeMainTarget && mainTarget is NPC npc)
@@ -766,7 +766,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				encounter,
 				targets.ToList(),
 				result,
-				new ConstantModeDeterminer(EncounterMode.Normal),
+				new EmboldenedDetectingModeDeterminer(),
 				new MaxMinHealthDeterminer()
 			);
 		}
