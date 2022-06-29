@@ -40,8 +40,8 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 		private static readonly Dictionary<string, string> Abbreviations = new Dictionary<string, string>
 		{
 			{ "★", "Favorite" },
-			{ "CM", "Challenge Mode" },
-			{ "Instabilities", "Mistlock Instabilities - Fractals of the Mists" },
+			{ "CM", "Challenge Mode or Emboldened" },
+			{ "Instabilities", "Fractals of the Mists" },
 		};
 		
 		public bool ReadOnly { get; init; }
