@@ -37,9 +37,9 @@ namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 
 			var normalModeCheckBox = new CheckBox {Text = "Normal"};
 			normalModeCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowNormalModeLogs);
-			var challengeModeCheckBox = new CheckBox {Text = "Challenge (CM)"};
+			var challengeModeCheckBox = new CheckBox {Text = "Challenge"};
 			challengeModeCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowChallengeModeLogs);
-			var emboldenedCheckBox = new CheckBox {Text = "Emboldened (E)"};
+			var emboldenedCheckBox = new CheckBox {Text = "Emboldened"};
 			emboldenedCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowEmboldenedModeLogs);
 
 			var nonFavoritesCheckBox = new CheckBox {Text = "☆ Non-favorites"};
