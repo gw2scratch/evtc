@@ -1,3 +1,4 @@
+using GW2Scratch.EVTCAnalytics.GameData;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -94,9 +95,14 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Updates
 				"Add CM detection for Xunlai Jade Junkyard."),
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 5, 1, 1)
 					&& log.Encounter == Encounter.Other
-					&& log.MapId == 1451
+					&& log.MapId == MapIds.XunlaiJadeJunkyard
 					&& log.GameBuild >= 129355,
 				"Add CM detection for Kaineng Overlook."),
+			new LogUpdate(log => log.ParsingVersion < new Version(1, 6, 0, 0)
+					// Some raid enemies can be manually added and they would be categorized as Other.
+					&& (log.Encounter.IsRaid() || (log.MapId != null && MapIds.IsRaidMap(log.MapId.Value)))
+					&& log.GameBuild >= 130910,
+				"Add Emboldened (easy) mode detection for raids."),
 			// When adding a new update, you need to increase the revision (last value) of the version in the .csproj file
 			// unless the version changes more significantly, in that case it can be reset to 0.
 		};
