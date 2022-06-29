@@ -7,6 +7,7 @@ This is the full changelog of the arcdps Log Manager.
 #### New features
 - Added Emboldened (easy) mode detection and filtering.
 - Added CM detection for Kaineng Overlook for real this time.
+- Added CM detection for Harvest Temple.
 - Added an option to generate detailed WvW reports when uploading (thanks, Somec!)
 - Added filtering by players to *Advanced filters*.
 - Added *None of these* as an option to instability filters.
