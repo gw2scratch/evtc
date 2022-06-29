@@ -120,6 +120,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		public const int MinisterLi = 24485;
 		public const int MinisterLiChallengeMode = 24266;
 		public const int VoidAmalgamate = 24375;
+		public const int VoidMelter = 24223;
 		
 		// Story
 		public const int HeartsAndMindsMordremoth = 15884;

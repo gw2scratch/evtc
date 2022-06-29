@@ -502,10 +502,19 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				{
 					var builder = GetDefaultBuilder(encounter, mainTarget);
 						
+					// This is the gadget that represents the first 5 dragons.
+					Gadget firstGadget = agents.OfType<Gadget>().FirstOrDefault(x =>
+						x.VolatileId == GadgetIds.TheDragonvoid && x.AttackTargets.Count == 3);
+					if (firstGadget != null)
+					{
+						builder.WithModes(new GroupedSpawnModeDeterminer(agent => agent is NPC { SpeciesId: SpeciesIds.VoidMelter }, 6, 200));
+					}
+					
 					// This is the gadget that represents Soo-Won. The previous phases share the same
 					// gadget (GadgetIds.TheDragonvoid), but this one has a unique one with different max health.
 					Gadget finalGadget = agents.OfType<Gadget>().FirstOrDefault(x =>
 						x.VolatileId == GadgetIds.TheDragonvoidFinal && x.AttackTargets.Count == 3);
+					
 					
 					if (finalGadget == null)
 					{

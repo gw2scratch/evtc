@@ -103,6 +103,11 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Updates
 					&& (log.Encounter.IsRaid() || (log.MapId != null && MapIds.IsRaidMap(log.MapId.Value)))
 					&& log.GameBuild >= 130910,
 				"Add Emboldened (easy) mode detection for raids."),
+			new LogUpdate(log => log.ParsingVersion < new Version(1, 6, 0, 1)
+					// Some raid enemies can be manually added and they would be categorized as Other.
+					&& log.Encounter == Encounter.HarvestTemple
+					&& log.GameBuild >= 130910,
+				"Add CM detection for Harvest Temple."),
 			// When adding a new update, you need to increase the revision (last value) of the version in the .csproj file
 			// unless the version changes more significantly, in that case it can be reset to 0.
 		};
