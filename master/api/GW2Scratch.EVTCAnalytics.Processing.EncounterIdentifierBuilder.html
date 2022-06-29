@@ -118,7 +118,7 @@
     <a href="https://github.com/gw2scratch/evtc/new/master/apiSpec/new?filename=GW2Scratch_EVTCAnalytics_Processing_EncounterIdentifierBuilder__ctor_GW2Scratch_EVTCAnalytics_GameData_Encounters_Encounter_System_Collections_Generic_List_GW2Scratch_EVTCAnalytics_Model_Agents_Agent__GW2Scratch_EVTCAnalytics_Processing_Encounters_Results_IResultDeterminer_GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_IModeDeterminer_GW2Scratch_EVTCAnalytics_Processing_Encounters_Results_Health_IHealthDeterminer_System_Collections_Generic_IEnumerable_GW2Scratch_EVTCAnalytics_Processing_Steps_IPostProcessingStep__.md&amp;value=---%0Auid%3A%20GW2Scratch.EVTCAnalytics.Processing.EncounterIdentifierBuilder.%23ctor(GW2Scratch.EVTCAnalytics.GameData.Encounters.Encounter%2CSystem.Collections.Generic.List%7BGW2Scratch.EVTCAnalytics.Model.Agents.Agent%7D%2CGW2Scratch.EVTCAnalytics.Processing.Encounters.Results.IResultDeterminer%2CGW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.IModeDeterminer%2CGW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.IHealthDeterminer%2CSystem.Collections.Generic.IEnumerable%7BGW2Scratch.EVTCAnalytics.Processing.Steps.IPostProcessingStep%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gw2scratch/evtc/blob/master/EVTCAnalytics/Processing/EncounterIdentifierBuilder.cs/#L26">View Source</a>
+    <a href="https://github.com/gw2scratch/evtc/blob/master/EVTCAnalytics/Processing/EncounterIdentifierBuilder.cs/#L27">View Source</a>
   </span>
   <a id="GW2Scratch_EVTCAnalytics_Processing_EncounterIdentifierBuilder__ctor_" data-uid="GW2Scratch.EVTCAnalytics.Processing.EncounterIdentifierBuilder.#ctor*"></a>
   <h4 id="GW2Scratch_EVTCAnalytics_Processing_EncounterIdentifierBuilder__ctor_GW2Scratch_EVTCAnalytics_GameData_Encounters_Encounter_System_Collections_Generic_List_GW2Scratch_EVTCAnalytics_Model_Agents_Agent__GW2Scratch_EVTCAnalytics_Processing_Encounters_Results_IResultDeterminer_GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_IModeDeterminer_GW2Scratch_EVTCAnalytics_Processing_Encounters_Results_Health_IHealthDeterminer_System_Collections_Generic_IEnumerable_GW2Scratch_EVTCAnalytics_Processing_Steps_IPostProcessingStep__" data-uid="GW2Scratch.EVTCAnalytics.Processing.EncounterIdentifierBuilder.#ctor(GW2Scratch.EVTCAnalytics.GameData.Encounters.Encounter,System.Collections.Generic.List{GW2Scratch.EVTCAnalytics.Model.Agents.Agent},GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.IResultDeterminer,GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.IModeDeterminer,GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.IHealthDeterminer,System.Collections.Generic.IEnumerable{GW2Scratch.EVTCAnalytics.Processing.Steps.IPostProcessingStep})">EncounterIdentifierBuilder(Encounter, List&lt;Agent&gt;, IResultDeterminer, IModeDeterminer, IHealthDeterminer, IEnumerable&lt;IPostProcessingStep&gt;)</h4>
@@ -126,7 +126,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public EncounterIdentifierBuilder(Encounter defaultEncounter, List&lt;Agent&gt; defaultTargets, IResultDeterminer defaultResultDeterminer, IModeDeterminer defaultModeDeterminer, IHealthDeterminer defaultHealthDeterminer, IEnumerable&lt;IPostProcessingStep&gt; defaultProcessingSteps = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public EncounterIdentifierBuilder(Encounter defaultEncounter, List&lt;Agent&gt; defaultTargets, IResultDeterminer defaultResultDeterminer, IModeDeterminer fallbackModeDeterminer, IHealthDeterminer defaultHealthDeterminer, IEnumerable&lt;IPostProcessingStep&gt; defaultProcessingSteps = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -155,7 +155,7 @@
       </tr>
       <tr>
         <td><a class="xref" href="GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.IModeDeterminer.html">IModeDeterminer</a></td>
-        <td><span class="parametername">defaultModeDeterminer</span></td>
+        <td><span class="parametername">fallbackModeDeterminer</span></td>
         <td></td>
       </tr>
       <tr>
@@ -177,7 +177,7 @@
     <a href="https://github.com/gw2scratch/evtc/new/master/apiSpec/new?filename=GW2Scratch_EVTCAnalytics_Processing_EncounterIdentifierBuilder_AddPostProcessingStep_GW2Scratch_EVTCAnalytics_Processing_Steps_IPostProcessingStep_.md&amp;value=---%0Auid%3A%20GW2Scratch.EVTCAnalytics.Processing.EncounterIdentifierBuilder.AddPostProcessingStep(GW2Scratch.EVTCAnalytics.Processing.Steps.IPostProcessingStep)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gw2scratch/evtc/blob/master/EVTCAnalytics/Processing/EncounterIdentifierBuilder.cs/#L67">View Source</a>
+    <a href="https://github.com/gw2scratch/evtc/blob/master/EVTCAnalytics/Processing/EncounterIdentifierBuilder.cs/#L68">View Source</a>
   </span>
   <a id="GW2Scratch_EVTCAnalytics_Processing_EncounterIdentifierBuilder_AddPostProcessingStep_" data-uid="GW2Scratch.EVTCAnalytics.Processing.EncounterIdentifierBuilder.AddPostProcessingStep*"></a>
   <h4 id="GW2Scratch_EVTCAnalytics_Processing_EncounterIdentifierBuilder_AddPostProcessingStep_GW2Scratch_EVTCAnalytics_Processing_Steps_IPostProcessingStep_" data-uid="GW2Scratch.EVTCAnalytics.Processing.EncounterIdentifierBuilder.AddPostProcessingStep(GW2Scratch.EVTCAnalytics.Processing.Steps.IPostProcessingStep)">AddPostProcessingStep(IPostProcessingStep)</h4>
@@ -224,7 +224,7 @@
     <a href="https://github.com/gw2scratch/evtc/new/master/apiSpec/new?filename=GW2Scratch_EVTCAnalytics_Processing_EncounterIdentifierBuilder_Build.md&amp;value=---%0Auid%3A%20GW2Scratch.EVTCAnalytics.Processing.EncounterIdentifierBuilder.Build%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gw2scratch/evtc/blob/master/EVTCAnalytics/Processing/EncounterIdentifierBuilder.cs/#L91">View Source</a>
+    <a href="https://github.com/gw2scratch/evtc/blob/master/EVTCAnalytics/Processing/EncounterIdentifierBuilder.cs/#L92">View Source</a>
   </span>
   <a id="GW2Scratch_EVTCAnalytics_Processing_EncounterIdentifierBuilder_Build_" data-uid="GW2Scratch.EVTCAnalytics.Processing.EncounterIdentifierBuilder.Build*"></a>
   <h4 id="GW2Scratch_EVTCAnalytics_Processing_EncounterIdentifierBuilder_Build" data-uid="GW2Scratch.EVTCAnalytics.Processing.EncounterIdentifierBuilder.Build">Build()</h4>
@@ -254,7 +254,7 @@
     <a href="https://github.com/gw2scratch/evtc/new/master/apiSpec/new?filename=GW2Scratch_EVTCAnalytics_Processing_EncounterIdentifierBuilder_WithEncounter_GW2Scratch_EVTCAnalytics_GameData_Encounters_Encounter_.md&amp;value=---%0Auid%3A%20GW2Scratch.EVTCAnalytics.Processing.EncounterIdentifierBuilder.WithEncounter(GW2Scratch.EVTCAnalytics.GameData.Encounters.Encounter)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gw2scratch/evtc/blob/master/EVTCAnalytics/Processing/EncounterIdentifierBuilder.cs/#L43">View Source</a>
+    <a href="https://github.com/gw2scratch/evtc/blob/master/EVTCAnalytics/Processing/EncounterIdentifierBuilder.cs/#L44">View Source</a>
   </span>
   <a id="GW2Scratch_EVTCAnalytics_Processing_EncounterIdentifierBuilder_WithEncounter_" data-uid="GW2Scratch.EVTCAnalytics.Processing.EncounterIdentifierBuilder.WithEncounter*"></a>
   <h4 id="GW2Scratch_EVTCAnalytics_Processing_EncounterIdentifierBuilder_WithEncounter_GW2Scratch_EVTCAnalytics_GameData_Encounters_Encounter_" data-uid="GW2Scratch.EVTCAnalytics.Processing.EncounterIdentifierBuilder.WithEncounter(GW2Scratch.EVTCAnalytics.GameData.Encounters.Encounter)">WithEncounter(Encounter)</h4>
@@ -301,7 +301,7 @@
     <a href="https://github.com/gw2scratch/evtc/new/master/apiSpec/new?filename=GW2Scratch_EVTCAnalytics_Processing_EncounterIdentifierBuilder_WithHealth_GW2Scratch_EVTCAnalytics_Processing_Encounters_Results_Health_IHealthDeterminer_.md&amp;value=---%0Auid%3A%20GW2Scratch.EVTCAnalytics.Processing.EncounterIdentifierBuilder.WithHealth(GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.IHealthDeterminer)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gw2scratch/evtc/blob/master/EVTCAnalytics/Processing/EncounterIdentifierBuilder.cs/#L61">View Source</a>
+    <a href="https://github.com/gw2scratch/evtc/blob/master/EVTCAnalytics/Processing/EncounterIdentifierBuilder.cs/#L62">View Source</a>
   </span>
   <a id="GW2Scratch_EVTCAnalytics_Processing_EncounterIdentifierBuilder_WithHealth_" data-uid="GW2Scratch.EVTCAnalytics.Processing.EncounterIdentifierBuilder.WithHealth*"></a>
   <h4 id="GW2Scratch_EVTCAnalytics_Processing_EncounterIdentifierBuilder_WithHealth_GW2Scratch_EVTCAnalytics_Processing_Encounters_Results_Health_IHealthDeterminer_" data-uid="GW2Scratch.EVTCAnalytics.Processing.EncounterIdentifierBuilder.WithHealth(GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.IHealthDeterminer)">WithHealth(IHealthDeterminer)</h4>
@@ -348,7 +348,7 @@
     <a href="https://github.com/gw2scratch/evtc/new/master/apiSpec/new?filename=GW2Scratch_EVTCAnalytics_Processing_EncounterIdentifierBuilder_WithModes_GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_IModeDeterminer_.md&amp;value=---%0Auid%3A%20GW2Scratch.EVTCAnalytics.Processing.EncounterIdentifierBuilder.WithModes(GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.IModeDeterminer)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gw2scratch/evtc/blob/master/EVTCAnalytics/Processing/EncounterIdentifierBuilder.cs/#L55">View Source</a>
+    <a href="https://github.com/gw2scratch/evtc/blob/master/EVTCAnalytics/Processing/EncounterIdentifierBuilder.cs/#L56">View Source</a>
   </span>
   <a id="GW2Scratch_EVTCAnalytics_Processing_EncounterIdentifierBuilder_WithModes_" data-uid="GW2Scratch.EVTCAnalytics.Processing.EncounterIdentifierBuilder.WithModes*"></a>
   <h4 id="GW2Scratch_EVTCAnalytics_Processing_EncounterIdentifierBuilder_WithModes_GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_IModeDeterminer_" data-uid="GW2Scratch.EVTCAnalytics.Processing.EncounterIdentifierBuilder.WithModes(GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.IModeDeterminer)">WithModes(IModeDeterminer)</h4>
@@ -395,7 +395,7 @@
     <a href="https://github.com/gw2scratch/evtc/new/master/apiSpec/new?filename=GW2Scratch_EVTCAnalytics_Processing_EncounterIdentifierBuilder_WithPostProcessingSteps_GW2Scratch_EVTCAnalytics_Processing_Steps_IPostProcessingStep___.md&amp;value=---%0Auid%3A%20GW2Scratch.EVTCAnalytics.Processing.EncounterIdentifierBuilder.WithPostProcessingSteps(GW2Scratch.EVTCAnalytics.Processing.Steps.IPostProcessingStep%5B%5D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gw2scratch/evtc/blob/master/EVTCAnalytics/Processing/EncounterIdentifierBuilder.cs/#L73">View Source</a>
+    <a href="https://github.com/gw2scratch/evtc/blob/master/EVTCAnalytics/Processing/EncounterIdentifierBuilder.cs/#L74">View Source</a>
   </span>
   <a id="GW2Scratch_EVTCAnalytics_Processing_EncounterIdentifierBuilder_WithPostProcessingSteps_" data-uid="GW2Scratch.EVTCAnalytics.Processing.EncounterIdentifierBuilder.WithPostProcessingSteps*"></a>
   <h4 id="GW2Scratch_EVTCAnalytics_Processing_EncounterIdentifierBuilder_WithPostProcessingSteps_GW2Scratch_EVTCAnalytics_Processing_Steps_IPostProcessingStep___" data-uid="GW2Scratch.EVTCAnalytics.Processing.EncounterIdentifierBuilder.WithPostProcessingSteps(GW2Scratch.EVTCAnalytics.Processing.Steps.IPostProcessingStep[])">WithPostProcessingSteps(IPostProcessingStep[])</h4>
@@ -442,7 +442,7 @@
     <a href="https://github.com/gw2scratch/evtc/new/master/apiSpec/new?filename=GW2Scratch_EVTCAnalytics_Processing_EncounterIdentifierBuilder_WithPostProcessingSteps_System_Collections_Generic_IEnumerable_GW2Scratch_EVTCAnalytics_Processing_Steps_IPostProcessingStep__.md&amp;value=---%0Auid%3A%20GW2Scratch.EVTCAnalytics.Processing.EncounterIdentifierBuilder.WithPostProcessingSteps(System.Collections.Generic.IEnumerable%7BGW2Scratch.EVTCAnalytics.Processing.Steps.IPostProcessingStep%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gw2scratch/evtc/blob/master/EVTCAnalytics/Processing/EncounterIdentifierBuilder.cs/#L79">View Source</a>
+    <a href="https://github.com/gw2scratch/evtc/blob/master/EVTCAnalytics/Processing/EncounterIdentifierBuilder.cs/#L80">View Source</a>
   </span>
   <a id="GW2Scratch_EVTCAnalytics_Processing_EncounterIdentifierBuilder_WithPostProcessingSteps_" data-uid="GW2Scratch.EVTCAnalytics.Processing.EncounterIdentifierBuilder.WithPostProcessingSteps*"></a>
   <h4 id="GW2Scratch_EVTCAnalytics_Processing_EncounterIdentifierBuilder_WithPostProcessingSteps_System_Collections_Generic_IEnumerable_GW2Scratch_EVTCAnalytics_Processing_Steps_IPostProcessingStep__" data-uid="GW2Scratch.EVTCAnalytics.Processing.EncounterIdentifierBuilder.WithPostProcessingSteps(System.Collections.Generic.IEnumerable{GW2Scratch.EVTCAnalytics.Processing.Steps.IPostProcessingStep})">WithPostProcessingSteps(IEnumerable&lt;IPostProcessingStep&gt;)</h4>
@@ -489,7 +489,7 @@
     <a href="https://github.com/gw2scratch/evtc/new/master/apiSpec/new?filename=GW2Scratch_EVTCAnalytics_Processing_EncounterIdentifierBuilder_WithResult_GW2Scratch_EVTCAnalytics_Processing_Encounters_Results_IResultDeterminer_.md&amp;value=---%0Auid%3A%20GW2Scratch.EVTCAnalytics.Processing.EncounterIdentifierBuilder.WithResult(GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.IResultDeterminer)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gw2scratch/evtc/blob/master/EVTCAnalytics/Processing/EncounterIdentifierBuilder.cs/#L49">View Source</a>
+    <a href="https://github.com/gw2scratch/evtc/blob/master/EVTCAnalytics/Processing/EncounterIdentifierBuilder.cs/#L50">View Source</a>
   </span>
   <a id="GW2Scratch_EVTCAnalytics_Processing_EncounterIdentifierBuilder_WithResult_" data-uid="GW2Scratch.EVTCAnalytics.Processing.EncounterIdentifierBuilder.WithResult*"></a>
   <h4 id="GW2Scratch_EVTCAnalytics_Processing_EncounterIdentifierBuilder_WithResult_GW2Scratch_EVTCAnalytics_Processing_Encounters_Results_IResultDeterminer_" data-uid="GW2Scratch.EVTCAnalytics.Processing.EncounterIdentifierBuilder.WithResult(GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.IResultDeterminer)">WithResult(IResultDeterminer)</h4>
@@ -536,7 +536,7 @@
     <a href="https://github.com/gw2scratch/evtc/new/master/apiSpec/new?filename=GW2Scratch_EVTCAnalytics_Processing_EncounterIdentifierBuilder_WithTargets_System_Collections_Generic_List_GW2Scratch_EVTCAnalytics_Model_Agents_Agent__.md&amp;value=---%0Auid%3A%20GW2Scratch.EVTCAnalytics.Processing.EncounterIdentifierBuilder.WithTargets(System.Collections.Generic.List%7BGW2Scratch.EVTCAnalytics.Model.Agents.Agent%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gw2scratch/evtc/blob/master/EVTCAnalytics/Processing/EncounterIdentifierBuilder.cs/#L85">View Source</a>
+    <a href="https://github.com/gw2scratch/evtc/blob/master/EVTCAnalytics/Processing/EncounterIdentifierBuilder.cs/#L86">View Source</a>
   </span>
   <a id="GW2Scratch_EVTCAnalytics_Processing_EncounterIdentifierBuilder_WithTargets_" data-uid="GW2Scratch.EVTCAnalytics.Processing.EncounterIdentifierBuilder.WithTargets*"></a>
   <h4 id="GW2Scratch_EVTCAnalytics_Processing_EncounterIdentifierBuilder_WithTargets_System_Collections_Generic_List_GW2Scratch_EVTCAnalytics_Model_Agents_Agent__" data-uid="GW2Scratch.EVTCAnalytics.Processing.EncounterIdentifierBuilder.WithTargets(System.Collections.Generic.List{GW2Scratch.EVTCAnalytics.Model.Agents.Agent})">WithTargets(List&lt;Agent&gt;)</h4>

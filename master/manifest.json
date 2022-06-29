@@ -192,7 +192,7 @@
       "output": {
         ".html": {
           "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.AgentEvent.html",
-          "hash": "sMsOT42K5HEVSNE05GPd5WYd+ISIxljsb6p1IhXTufk="
+          "hash": "RvDn7old4Z/VQ+8GRPRl8ul37D4pUMm6uTSQ2r2FXoU="
         }
       },
       "is_incremental": false,
@@ -300,7 +300,7 @@
       "output": {
         ".html": {
           "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.BarrierUpdateEvent.html",
-          "hash": "img/uxnO1qnJJ6fxzPymdO2ATazGo93WHpcy5W7c83k="
+          "hash": "MlJEl5HNvFH0sxkWnckiYBBESpoXEPMOL54kkYd2X+s="
         }
       },
       "is_incremental": false,
@@ -312,7 +312,7 @@
       "output": {
         ".html": {
           "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.BuffApplyEvent.html",
-          "hash": "bPLXXijAFbA1tes3daOxEURQiDtGqePrQ7T/mYi+/Tw="
+          "hash": "GbHab/mltAykZjGjuVpdTCDo9zzq38uAODtIc9W3jV8="
         }
       },
       "is_incremental": false,
@@ -360,7 +360,19 @@
       "output": {
         ".html": {
           "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.DamageEvent.html",
-          "hash": "NZyTDpccZ8tuoDtIK5jn+eLlegpZ60nISwaesjC5Is8="
+          "hash": "9MDQRHm7sMj5l0PrcS14zMO0fj3NoCBrJ5Vck1zH3+8="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Events.DefianceBarDamageEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.DefianceBarDamageEvent.html",
+          "hash": "8yeZzt9emTICbLp8vxFyZtp+inrMAwIZz4JPAFZT0BA="
         }
       },
       "is_incremental": false,
@@ -372,7 +384,7 @@
       "output": {
         ".html": {
           "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.DefianceBarHealthUpdateEvent.html",
-          "hash": "ZKh29iEFuAXH2906D3VyJx4+B3hYIF1OaXvOflFy2bM="
+          "hash": "UkJBSqOABOKoIZ7/ZdpjETzNDFW5qPZqWNwtkU1yUgI="
         }
       },
       "is_incremental": false,
@@ -384,7 +396,7 @@
       "output": {
         ".html": {
           "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.DefianceBarStateUpdateEvent.DefianceBarState.html",
-          "hash": "FxDhqQzUHik9Sw9ysN9PtPGKBjeY4C+T1dVQL+Pgf38="
+          "hash": "5FMpS0/TQFMDjxOsRVgnQSwN78d50o+vAGzjr0xHdB8="
         }
       },
       "is_incremental": false,
@@ -396,7 +408,7 @@
       "output": {
         ".html": {
           "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.DefianceBarStateUpdateEvent.html",
-          "hash": "i9jgi7hDvehHEhWHfF7Q9bh+z2J/uoHV0IN9lxFB3HU="
+          "hash": "1dWaGNc+pQydUuYqhg2siJ0eakFRVHxvH6qBjYe6YIk="
         }
       },
       "is_incremental": false,
@@ -408,7 +420,7 @@
       "output": {
         ".html": {
           "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.EffectEvent.html",
-          "hash": "nRFzg9bIjC0hgyRE2yBhDDWEISHjGO/zjltwg5rAwjs="
+          "hash": "djytFWYaAmUFaJTgkm85FBYeYGDNQOZ/Pdh/rieZFdU="
         }
       },
       "is_incremental": false,
@@ -456,7 +468,7 @@
       "output": {
         ".html": {
           "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.FacingChangeEvent.html",
-          "hash": "443l9mjEh+rDi3mqt13XqHA61E2vQdmcQ/Zv3J4Reek="
+          "hash": "MSW3SQMBNEc0EvhYh8H1O5tvXyXsEijXOEw8EUYK68k="
         }
       },
       "is_incremental": false,
@@ -516,7 +528,7 @@
       "output": {
         ".html": {
           "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.InitialBuffEvent.html",
-          "hash": "qMX5p7Ld3Mn2d4ASN36sYBuaL5RMEnTUhHC99JKsaNA="
+          "hash": "1hM+fjjSCz1NaGQYx6j1zxIGr8+S4V/oeV3cmG3kOYA="
         }
       },
       "is_incremental": false,
@@ -576,7 +588,7 @@
       "output": {
         ".html": {
           "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.PositionChangeEvent.html",
-          "hash": "NURwMCeOUjVxVQhE/TGPOCU4JlE6UpFMc1GeNiZ4e/U="
+          "hash": "J2DKSJ6S8TEACHc10z9/IBrJHyldCtF3d08a10bdWNc="
         }
       },
       "is_incremental": false,
@@ -672,7 +684,7 @@
       "output": {
         ".html": {
           "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.TargetableChangeEvent.html",
-          "hash": "bnabgZN34g8wT8ExOEwhqaL++Gco9W9Dgu8ALgV8jAA="
+          "hash": "XdeK5759cq2Pl0Yui8s7jVjzHH/13AtQan+4vy4n7/s="
         }
       },
       "is_incremental": false,
@@ -684,7 +696,7 @@
       "output": {
         ".html": {
           "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.TeamChangeEvent.html",
-          "hash": "Ukb0Sch6WrC8Sq/q6G6qF0ugnwIYoM3X1/1y4cI0IIE="
+          "hash": "X3Ao9jPAgY+ywKaR6NvlNEvZXiZRvpMqahBJSM0wp/k="
         }
       },
       "is_incremental": false,
@@ -708,7 +720,7 @@
       "output": {
         ".html": {
           "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.VelocityChangeEvent.html",
-          "hash": "xXv4w95+5xDvI1Ru5H91QrrO9Vg2KgOuMvNFE6mAF8c="
+          "hash": "M7daj/vbIA5RIwbk9MHkxeDdCvraYhIQR26d5jkxe1s="
         }
       },
       "is_incremental": false,
@@ -720,7 +732,7 @@
       "output": {
         ".html": {
           "relative_path": "api/GW2Scratch.EVTCAnalytics.Events.html",
-          "hash": "C2wzjtXKhIz1xkOtE6XrnShf7pqRKSbRIoQ1CffrADc="
+          "hash": "0xi8cjiRybOPoFzCABzO8HYS/wxdkJ3H8gyhNRqxGEM="
         }
       },
       "is_incremental": false,
@@ -884,11 +896,23 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.GameData.MapIds.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.GameData.MapIds.html",
+          "hash": "6PMAfITmCz9Vu0z0aietK0K1HRfoz95Dm7wcj+YXJoE="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.GameData.SkillIds.yml",
       "output": {
         ".html": {
           "relative_path": "api/GW2Scratch.EVTCAnalytics.GameData.SkillIds.html",
-          "hash": "H6AgVmrsXOvN/oqZ5HDU2W8qQMMCB+fOAfhP7UyGAV8="
+          "hash": "wro+J/UdY+d3AwPYKEj4OI3eu/5sDJDx6j+WXKnEeIk="
         }
       },
       "is_incremental": false,
@@ -912,7 +936,7 @@
       "output": {
         ".html": {
           "relative_path": "api/GW2Scratch.EVTCAnalytics.GameData.html",
-          "hash": "OAgYS/IIp7H7gudHcFOV0/mGvXshUBJZq4sju+awMT8="
+          "hash": "U/1vEUdqKe1YrGlZysdN3alDf7dKnNRbv+0zdtKjfbE="
         }
       },
       "is_incremental": false,
@@ -1380,7 +1404,7 @@
       "output": {
         ".html": {
           "relative_path": "api/GW2Scratch.EVTCAnalytics.Parsed.Enums.Result.html",
-          "hash": "LJXs5hRLXo9v5BHSuhA5Yz/OIHBZgRXJO/YFleNqq6U="
+          "hash": "WDKZoe2pigIb5Kj7xoVSxnpK+ng437EQOmp9ze9UmTE="
         }
       },
       "is_incremental": false,
@@ -1512,7 +1536,7 @@
       "output": {
         ".html": {
           "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.EncounterIdentifierBuilder.html",
-          "hash": "HdCXYDM4sUvjfln17kMqejJtwVntF44WD+wMmGouxQI="
+          "hash": "yFRdu7FNkF8Y7HOXStuC/RQOzlCtZawNojW4Ro0lcaE="
         }
       },
       "is_incremental": false,
@@ -1548,7 +1572,7 @@
       "output": {
         ".html": {
           "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.AgentHealthModeDeterminer.html",
-          "hash": "ld0QUNe+5o16KKzktpvY8cvCZ2PtMTBFETC9YjLTwPs="
+          "hash": "sAdONLd+nqqs5X5vBWM6SMVhZFWdKi3MXGs2NB3wPpM="
         }
       },
       "is_incremental": false,
@@ -1560,7 +1584,19 @@
       "output": {
         ".html": {
           "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.ConstantModeDeterminer.html",
-          "hash": "vl08qN7qwJ4w6iLmKiX7Bbwk4GWm6OtC7rwfZ+Y5FCg="
+          "hash": "o7yaoeIaZjY1ZrvQDdXC6I3JRDHtVBB/OAx7S8/c7+Q="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EmboldenedDetectingModeDeterminer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EmboldenedDetectingModeDeterminer.html",
+          "hash": "SmsZHeJhrqLcAQ29DEcZ8b/TyopycT5fb181y2U1EoE="
         }
       },
       "is_incremental": false,
@@ -1572,7 +1608,31 @@
       "output": {
         ".html": {
           "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode.html",
-          "hash": "5d1rYJnrnQ+X0Gl+k4NZWYw9m20Lqxe6M9S3kYwF60I="
+          "hash": "SrRkLUFsyETjtF30ViT3+B4lINAG1u4OK0UWMI0Qc2c="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterModeExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterModeExtensions.html",
+          "hash": "cKbH3UghDXh8aPiM/btWHlZrvdEsKb1PnzGQOTNBIlM="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.FallbackModeDeterminer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.FallbackModeDeterminer.html",
+          "hash": "dBxEciczCiy4sGrtqrPoURElv+ZB+24NSKcp6uazz7Q="
         }
       },
       "is_incremental": false,
@@ -1584,7 +1644,7 @@
       "output": {
         ".html": {
           "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.GroupedSpawnModeDeterminer.html",
-          "hash": "QEOGHi8/8rBN6nzk7l8Y9hLzHAAa9+xVVw/J6hXnC18="
+          "hash": "cU2Dsd0seklYvFUQoGFfBiD872cFJQ+Ey+3DT9KO5gQ="
         }
       },
       "is_incremental": false,
@@ -1596,7 +1656,7 @@
       "output": {
         ".html": {
           "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.IModeDeterminer.html",
-          "hash": "+QZ0Lcgi52Dt6LXP3Mj/oo3ATwSp1FpQk3fJ4kSorMI="
+          "hash": "ccRo6Xu/yabgCcdzSbJ28ekzusJZmpGsPeSBoYizZ5c="
         }
       },
       "is_incremental": false,
@@ -1608,7 +1668,7 @@
       "output": {
         ".html": {
           "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.RemovedBuffStackRemainingTimeModeDeterminer.html",
-          "hash": "dB3RF6vRyy6bIL4N/8pUw4tTxvnFayRWLa1RwczPvIU="
+          "hash": "6tTCrn3qZ63jNqw/1p8VVkUESaeXGmrOw8SHFm4ojwA="
         }
       },
       "is_incremental": false,
@@ -1620,7 +1680,7 @@
       "output": {
         ".html": {
           "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.SkillPresentModeDeterminer.html",
-          "hash": "LRpfpUt3BOmTqTBhL9BII/rebxo/krKxaWPddOH8JDI="
+          "hash": "DnIGZvoOB+J1xROFLuGsGNL43ybiUGcwHGEHfMknTtE="
         }
       },
       "is_incremental": false,
@@ -1632,7 +1692,7 @@
       "output": {
         ".html": {
           "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.html",
-          "hash": "x96mZ/3qPmfjKdnvacf2/QDCuXqz4hGxuNt7V17oxxQ="
+          "hash": "BS6OMnEy6qc/X6oKPt4kIV4exTRl1F9Gs/8xxsX6R4U="
         }
       },
       "is_incremental": false,
@@ -1740,7 +1800,7 @@
       "output": {
         ".html": {
           "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.AgentBuffGainedDeterminer.html",
-          "hash": "I0ZN7b86KuLxAzwhsl7qaOhuErVdO8C5Df6bAsQx7QM="
+          "hash": "TUfpx6fE3lkm4KYU2WogNTB2RN8Qot5KBUmUoZzi5Wg="
         }
       },
       "is_incremental": false,
@@ -2256,7 +2316,7 @@
       "output": {
         ".html": {
           "relative_path": "api/toc.html",
-          "hash": "IaSqZx/UYHFCS9Ef/Z4btAc8XH122N6jCGO0+RFBmA8="
+          "hash": "OK2dLkYrxMicwpMNTliaN7otEvwO1YoMBUfmBqOPuHw="
         }
       },
       "is_incremental": false,
@@ -2295,7 +2355,7 @@
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 179,
+          "total_file_count": 184,
           "skipped_file_count": 0
         },
         "TocDocumentProcessor": {

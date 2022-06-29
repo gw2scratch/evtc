@@ -119,19 +119,19 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/gw2scratch/evtc/new/master/apiSpec/new?filename=GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_RemovedBuffStackRemainingTimeModeDeterminer__ctor_System_Int32_GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_EncounterMode_System_Int32_GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_EncounterMode_System_Int32_GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_EncounterMode_.md&amp;value=---%0Auid%3A%20GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.RemovedBuffStackRemainingTimeModeDeterminer.%23ctor(System.Int32%2CGW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode%2CSystem.Int32%2CGW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode%2CSystem.Int32%2CGW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/gw2scratch/evtc/new/master/apiSpec/new?filename=GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_RemovedBuffStackRemainingTimeModeDeterminer__ctor_System_Int32_GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_EncounterMode_System_Int32_GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_EncounterMode_System_Int32_.md&amp;value=---%0Auid%3A%20GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.RemovedBuffStackRemainingTimeModeDeterminer.%23ctor(System.Int32%2CGW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode%2CSystem.Int32%2CGW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode%2CSystem.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gw2scratch/evtc/blob/master/EVTCAnalytics/Processing/Encounters/Modes/RemovedBuffStackRemainingTimeModeDeterminer.cs/#L32">View Source</a>
+    <a href="https://github.com/gw2scratch/evtc/blob/master/EVTCAnalytics/Processing/Encounters/Modes/RemovedBuffStackRemainingTimeModeDeterminer.cs/#L30">View Source</a>
   </span>
   <a id="GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_RemovedBuffStackRemainingTimeModeDeterminer__ctor_" data-uid="GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.RemovedBuffStackRemainingTimeModeDeterminer.#ctor*"></a>
-  <h4 id="GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_RemovedBuffStackRemainingTimeModeDeterminer__ctor_System_Int32_GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_EncounterMode_System_Int32_GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_EncounterMode_System_Int32_GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_EncounterMode_" data-uid="GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.RemovedBuffStackRemainingTimeModeDeterminer.#ctor(System.Int32,GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode,System.Int32,GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode,System.Int32,GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode)">RemovedBuffStackRemainingTimeModeDeterminer(Int32, EncounterMode, Int32, EncounterMode, Int32, EncounterMode)</h4>
+  <h4 id="GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_RemovedBuffStackRemainingTimeModeDeterminer__ctor_System_Int32_GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_EncounterMode_System_Int32_GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_EncounterMode_System_Int32_" data-uid="GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.RemovedBuffStackRemainingTimeModeDeterminer.#ctor(System.Int32,GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode,System.Int32,GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode,System.Int32)">RemovedBuffStackRemainingTimeModeDeterminer(Int32, EncounterMode, Int32, EncounterMode, Int32)</h4>
   <div class="markdown level1 summary"><p>Creates a determiner that identifies the encounter mode according to whether a buff was removed with a specific remaining time.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public RemovedBuffStackRemainingTimeModeDeterminer(int buffId, EncounterMode mode1, int remaining1, EncounterMode mode2, int remaining2, EncounterMode defaultMode)</code></pre>
+    <pre><code class="lang-csharp hljs">public RemovedBuffStackRemainingTimeModeDeterminer(int buffId, EncounterMode mode1, int remaining1, EncounterMode mode2, int remaining2)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -171,12 +171,6 @@
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
         <td><span class="parametername">remaining2</span></td>
         <td><p>The remaining time of the buff in order to identify the encounter as <code data-dev-comment-type="paramref" class="paramref">mode2</code>.</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode.html">EncounterMode</a></td>
-        <td><span class="parametername">defaultMode</span></td>
-        <td><p>The default mode to fall to in case neither <code data-dev-comment-type="paramref" class="paramref">mode1</code> or <code data-dev-comment-type="paramref" class="paramref">mode2</code> is identified.</p>
 </td>
       </tr>
     </tbody>
@@ -236,7 +230,7 @@
     <a href="https://github.com/gw2scratch/evtc/new/master/apiSpec/new?filename=GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_RemovedBuffStackRemainingTimeModeDeterminer_GetMode_GW2Scratch_EVTCAnalytics_Model_Log_.md&amp;value=---%0Auid%3A%20GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.RemovedBuffStackRemainingTimeModeDeterminer.GetMode(GW2Scratch.EVTCAnalytics.Model.Log)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gw2scratch/evtc/blob/master/EVTCAnalytics/Processing/Encounters/Modes/RemovedBuffStackRemainingTimeModeDeterminer.cs/#L57">View Source</a>
+    <a href="https://github.com/gw2scratch/evtc/blob/master/EVTCAnalytics/Processing/Encounters/Modes/RemovedBuffStackRemainingTimeModeDeterminer.cs/#L53">View Source</a>
   </span>
   <a id="GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_RemovedBuffStackRemainingTimeModeDeterminer_GetMode_" data-uid="GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.RemovedBuffStackRemainingTimeModeDeterminer.GetMode*"></a>
   <h4 id="GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_RemovedBuffStackRemainingTimeModeDeterminer_GetMode_GW2Scratch_EVTCAnalytics_Model_Log_" data-uid="GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.RemovedBuffStackRemainingTimeModeDeterminer.GetMode(GW2Scratch.EVTCAnalytics.Model.Log)">GetMode(Log)</h4>
@@ -244,7 +238,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public EncounterMode GetMode(Log log)</code></pre>
+    <pre><code class="lang-csharp hljs">public EncounterMode? GetMode(Log log)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -273,7 +267,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode.html">EncounterMode</a></td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.nullable-1">Nullable</a>&lt;<a class="xref" href="GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode.html">EncounterMode</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>

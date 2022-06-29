@@ -668,6 +668,25 @@ references:
   isSpec: "True"
   fullName: GW2Scratch.EVTCAnalytics.Events.DamageEvent.Skill
   nameWithType: DamageEvent.Skill
+- uid: GW2Scratch.EVTCAnalytics.Events.DefianceBarDamageEvent
+  name: DefianceBarDamageEvent
+  href: api/GW2Scratch.EVTCAnalytics.Events.DefianceBarDamageEvent.html
+  commentId: T:GW2Scratch.EVTCAnalytics.Events.DefianceBarDamageEvent
+  fullName: GW2Scratch.EVTCAnalytics.Events.DefianceBarDamageEvent
+  nameWithType: DefianceBarDamageEvent
+- uid: GW2Scratch.EVTCAnalytics.Events.DefianceBarDamageEvent.#ctor(System.Int64,GW2Scratch.EVTCAnalytics.Model.Agents.Agent,GW2Scratch.EVTCAnalytics.Model.Agents.Agent,GW2Scratch.EVTCAnalytics.Model.Skills.Skill,System.Int32,System.Boolean,System.Boolean,System.Boolean)
+  name: DefianceBarDamageEvent(Int64, Agent, Agent, Skill, Int32, Boolean, Boolean, Boolean)
+  href: api/GW2Scratch.EVTCAnalytics.Events.DefianceBarDamageEvent.html#GW2Scratch_EVTCAnalytics_Events_DefianceBarDamageEvent__ctor_System_Int64_GW2Scratch_EVTCAnalytics_Model_Agents_Agent_GW2Scratch_EVTCAnalytics_Model_Agents_Agent_GW2Scratch_EVTCAnalytics_Model_Skills_Skill_System_Int32_System_Boolean_System_Boolean_System_Boolean_
+  commentId: M:GW2Scratch.EVTCAnalytics.Events.DefianceBarDamageEvent.#ctor(System.Int64,GW2Scratch.EVTCAnalytics.Model.Agents.Agent,GW2Scratch.EVTCAnalytics.Model.Agents.Agent,GW2Scratch.EVTCAnalytics.Model.Skills.Skill,System.Int32,System.Boolean,System.Boolean,System.Boolean)
+  fullName: GW2Scratch.EVTCAnalytics.Events.DefianceBarDamageEvent.DefianceBarDamageEvent(System.Int64, GW2Scratch.EVTCAnalytics.Model.Agents.Agent, GW2Scratch.EVTCAnalytics.Model.Agents.Agent, GW2Scratch.EVTCAnalytics.Model.Skills.Skill, System.Int32, System.Boolean, System.Boolean, System.Boolean)
+  nameWithType: DefianceBarDamageEvent.DefianceBarDamageEvent(Int64, Agent, Agent, Skill, Int32, Boolean, Boolean, Boolean)
+- uid: GW2Scratch.EVTCAnalytics.Events.DefianceBarDamageEvent.#ctor*
+  name: DefianceBarDamageEvent
+  href: api/GW2Scratch.EVTCAnalytics.Events.DefianceBarDamageEvent.html#GW2Scratch_EVTCAnalytics_Events_DefianceBarDamageEvent__ctor_
+  commentId: Overload:GW2Scratch.EVTCAnalytics.Events.DefianceBarDamageEvent.#ctor
+  isSpec: "True"
+  fullName: GW2Scratch.EVTCAnalytics.Events.DefianceBarDamageEvent.DefianceBarDamageEvent
+  nameWithType: DefianceBarDamageEvent.DefianceBarDamageEvent
 - uid: GW2Scratch.EVTCAnalytics.Events.DefianceBarHealthUpdateEvent
   name: DefianceBarHealthUpdateEvent
   href: api/GW2Scratch.EVTCAnalytics.Events.DefianceBarHealthUpdateEvent.html
@@ -1165,12 +1184,12 @@ references:
   commentId: T:GW2Scratch.EVTCAnalytics.Events.InitialBuffEvent
   fullName: GW2Scratch.EVTCAnalytics.Events.InitialBuffEvent
   nameWithType: InitialBuffEvent
-- uid: GW2Scratch.EVTCAnalytics.Events.InitialBuffEvent.#ctor(System.Int64,GW2Scratch.EVTCAnalytics.Model.Agents.Agent,GW2Scratch.EVTCAnalytics.Model.Skills.Skill)
-  name: InitialBuffEvent(Int64, Agent, Skill)
-  href: api/GW2Scratch.EVTCAnalytics.Events.InitialBuffEvent.html#GW2Scratch_EVTCAnalytics_Events_InitialBuffEvent__ctor_System_Int64_GW2Scratch_EVTCAnalytics_Model_Agents_Agent_GW2Scratch_EVTCAnalytics_Model_Skills_Skill_
-  commentId: M:GW2Scratch.EVTCAnalytics.Events.InitialBuffEvent.#ctor(System.Int64,GW2Scratch.EVTCAnalytics.Model.Agents.Agent,GW2Scratch.EVTCAnalytics.Model.Skills.Skill)
-  fullName: GW2Scratch.EVTCAnalytics.Events.InitialBuffEvent.InitialBuffEvent(System.Int64, GW2Scratch.EVTCAnalytics.Model.Agents.Agent, GW2Scratch.EVTCAnalytics.Model.Skills.Skill)
-  nameWithType: InitialBuffEvent.InitialBuffEvent(Int64, Agent, Skill)
+- uid: GW2Scratch.EVTCAnalytics.Events.InitialBuffEvent.#ctor(System.Int64,GW2Scratch.EVTCAnalytics.Model.Agents.Agent,GW2Scratch.EVTCAnalytics.Model.Skills.Skill,GW2Scratch.EVTCAnalytics.Model.Agents.Agent,System.Int32,System.UInt32)
+  name: InitialBuffEvent(Int64, Agent, Skill, Agent, Int32, UInt32)
+  href: api/GW2Scratch.EVTCAnalytics.Events.InitialBuffEvent.html#GW2Scratch_EVTCAnalytics_Events_InitialBuffEvent__ctor_System_Int64_GW2Scratch_EVTCAnalytics_Model_Agents_Agent_GW2Scratch_EVTCAnalytics_Model_Skills_Skill_GW2Scratch_EVTCAnalytics_Model_Agents_Agent_System_Int32_System_UInt32_
+  commentId: M:GW2Scratch.EVTCAnalytics.Events.InitialBuffEvent.#ctor(System.Int64,GW2Scratch.EVTCAnalytics.Model.Agents.Agent,GW2Scratch.EVTCAnalytics.Model.Skills.Skill,GW2Scratch.EVTCAnalytics.Model.Agents.Agent,System.Int32,System.UInt32)
+  fullName: GW2Scratch.EVTCAnalytics.Events.InitialBuffEvent.InitialBuffEvent(System.Int64, GW2Scratch.EVTCAnalytics.Model.Agents.Agent, GW2Scratch.EVTCAnalytics.Model.Skills.Skill, GW2Scratch.EVTCAnalytics.Model.Agents.Agent, System.Int32, System.UInt32)
+  nameWithType: InitialBuffEvent.InitialBuffEvent(Int64, Agent, Skill, Agent, Int32, UInt32)
 - uid: GW2Scratch.EVTCAnalytics.Events.InitialBuffEvent.#ctor*
   name: InitialBuffEvent
   href: api/GW2Scratch.EVTCAnalytics.Events.InitialBuffEvent.html#GW2Scratch_EVTCAnalytics_Events_InitialBuffEvent__ctor_
@@ -1178,19 +1197,6 @@ references:
   isSpec: "True"
   fullName: GW2Scratch.EVTCAnalytics.Events.InitialBuffEvent.InitialBuffEvent
   nameWithType: InitialBuffEvent.InitialBuffEvent
-- uid: GW2Scratch.EVTCAnalytics.Events.InitialBuffEvent.Skill
-  name: Skill
-  href: api/GW2Scratch.EVTCAnalytics.Events.InitialBuffEvent.html#GW2Scratch_EVTCAnalytics_Events_InitialBuffEvent_Skill
-  commentId: P:GW2Scratch.EVTCAnalytics.Events.InitialBuffEvent.Skill
-  fullName: GW2Scratch.EVTCAnalytics.Events.InitialBuffEvent.Skill
-  nameWithType: InitialBuffEvent.Skill
-- uid: GW2Scratch.EVTCAnalytics.Events.InitialBuffEvent.Skill*
-  name: Skill
-  href: api/GW2Scratch.EVTCAnalytics.Events.InitialBuffEvent.html#GW2Scratch_EVTCAnalytics_Events_InitialBuffEvent_Skill_
-  commentId: Overload:GW2Scratch.EVTCAnalytics.Events.InitialBuffEvent.Skill
-  isSpec: "True"
-  fullName: GW2Scratch.EVTCAnalytics.Events.InitialBuffEvent.Skill
-  nameWithType: InitialBuffEvent.Skill
 - uid: GW2Scratch.EVTCAnalytics.Events.ManualStackRemovedBuffEvent
   name: ManualStackRemovedBuffEvent
   href: api/GW2Scratch.EVTCAnalytics.Events.ManualStackRemovedBuffEvent.html
@@ -2682,6 +2688,73 @@ references:
   isSpec: "True"
   fullName: GW2Scratch.EVTCAnalytics.GameData.GameLanguageIds.GetLanguageById
   nameWithType: GameLanguageIds.GetLanguageById
+- uid: GW2Scratch.EVTCAnalytics.GameData.MapIds
+  name: MapIds
+  href: api/GW2Scratch.EVTCAnalytics.GameData.MapIds.html
+  commentId: T:GW2Scratch.EVTCAnalytics.GameData.MapIds
+  fullName: GW2Scratch.EVTCAnalytics.GameData.MapIds
+  nameWithType: MapIds
+- uid: GW2Scratch.EVTCAnalytics.GameData.MapIds.IsRaidMap(System.Int32)
+  name: IsRaidMap(Int32)
+  href: api/GW2Scratch.EVTCAnalytics.GameData.MapIds.html#GW2Scratch_EVTCAnalytics_GameData_MapIds_IsRaidMap_System_Int32_
+  commentId: M:GW2Scratch.EVTCAnalytics.GameData.MapIds.IsRaidMap(System.Int32)
+  fullName: GW2Scratch.EVTCAnalytics.GameData.MapIds.IsRaidMap(System.Int32)
+  nameWithType: MapIds.IsRaidMap(Int32)
+- uid: GW2Scratch.EVTCAnalytics.GameData.MapIds.IsRaidMap*
+  name: IsRaidMap
+  href: api/GW2Scratch.EVTCAnalytics.GameData.MapIds.html#GW2Scratch_EVTCAnalytics_GameData_MapIds_IsRaidMap_
+  commentId: Overload:GW2Scratch.EVTCAnalytics.GameData.MapIds.IsRaidMap
+  isSpec: "True"
+  fullName: GW2Scratch.EVTCAnalytics.GameData.MapIds.IsRaidMap
+  nameWithType: MapIds.IsRaidMap
+- uid: GW2Scratch.EVTCAnalytics.GameData.MapIds.RaidWing1
+  name: RaidWing1
+  href: api/GW2Scratch.EVTCAnalytics.GameData.MapIds.html#GW2Scratch_EVTCAnalytics_GameData_MapIds_RaidWing1
+  commentId: F:GW2Scratch.EVTCAnalytics.GameData.MapIds.RaidWing1
+  fullName: GW2Scratch.EVTCAnalytics.GameData.MapIds.RaidWing1
+  nameWithType: MapIds.RaidWing1
+- uid: GW2Scratch.EVTCAnalytics.GameData.MapIds.RaidWing2
+  name: RaidWing2
+  href: api/GW2Scratch.EVTCAnalytics.GameData.MapIds.html#GW2Scratch_EVTCAnalytics_GameData_MapIds_RaidWing2
+  commentId: F:GW2Scratch.EVTCAnalytics.GameData.MapIds.RaidWing2
+  fullName: GW2Scratch.EVTCAnalytics.GameData.MapIds.RaidWing2
+  nameWithType: MapIds.RaidWing2
+- uid: GW2Scratch.EVTCAnalytics.GameData.MapIds.RaidWing3
+  name: RaidWing3
+  href: api/GW2Scratch.EVTCAnalytics.GameData.MapIds.html#GW2Scratch_EVTCAnalytics_GameData_MapIds_RaidWing3
+  commentId: F:GW2Scratch.EVTCAnalytics.GameData.MapIds.RaidWing3
+  fullName: GW2Scratch.EVTCAnalytics.GameData.MapIds.RaidWing3
+  nameWithType: MapIds.RaidWing3
+- uid: GW2Scratch.EVTCAnalytics.GameData.MapIds.RaidWing4
+  name: RaidWing4
+  href: api/GW2Scratch.EVTCAnalytics.GameData.MapIds.html#GW2Scratch_EVTCAnalytics_GameData_MapIds_RaidWing4
+  commentId: F:GW2Scratch.EVTCAnalytics.GameData.MapIds.RaidWing4
+  fullName: GW2Scratch.EVTCAnalytics.GameData.MapIds.RaidWing4
+  nameWithType: MapIds.RaidWing4
+- uid: GW2Scratch.EVTCAnalytics.GameData.MapIds.RaidWing5
+  name: RaidWing5
+  href: api/GW2Scratch.EVTCAnalytics.GameData.MapIds.html#GW2Scratch_EVTCAnalytics_GameData_MapIds_RaidWing5
+  commentId: F:GW2Scratch.EVTCAnalytics.GameData.MapIds.RaidWing5
+  fullName: GW2Scratch.EVTCAnalytics.GameData.MapIds.RaidWing5
+  nameWithType: MapIds.RaidWing5
+- uid: GW2Scratch.EVTCAnalytics.GameData.MapIds.RaidWing6
+  name: RaidWing6
+  href: api/GW2Scratch.EVTCAnalytics.GameData.MapIds.html#GW2Scratch_EVTCAnalytics_GameData_MapIds_RaidWing6
+  commentId: F:GW2Scratch.EVTCAnalytics.GameData.MapIds.RaidWing6
+  fullName: GW2Scratch.EVTCAnalytics.GameData.MapIds.RaidWing6
+  nameWithType: MapIds.RaidWing6
+- uid: GW2Scratch.EVTCAnalytics.GameData.MapIds.RaidWing7
+  name: RaidWing7
+  href: api/GW2Scratch.EVTCAnalytics.GameData.MapIds.html#GW2Scratch_EVTCAnalytics_GameData_MapIds_RaidWing7
+  commentId: F:GW2Scratch.EVTCAnalytics.GameData.MapIds.RaidWing7
+  fullName: GW2Scratch.EVTCAnalytics.GameData.MapIds.RaidWing7
+  nameWithType: MapIds.RaidWing7
+- uid: GW2Scratch.EVTCAnalytics.GameData.MapIds.XunlaiJadeJunkyard
+  name: XunlaiJadeJunkyard
+  href: api/GW2Scratch.EVTCAnalytics.GameData.MapIds.html#GW2Scratch_EVTCAnalytics_GameData_MapIds_XunlaiJadeJunkyard
+  commentId: F:GW2Scratch.EVTCAnalytics.GameData.MapIds.XunlaiJadeJunkyard
+  fullName: GW2Scratch.EVTCAnalytics.GameData.MapIds.XunlaiJadeJunkyard
+  nameWithType: MapIds.XunlaiJadeJunkyard
 - uid: GW2Scratch.EVTCAnalytics.GameData.SkillIds
   name: SkillIds
   href: api/GW2Scratch.EVTCAnalytics.GameData.SkillIds.html
@@ -2802,6 +2875,12 @@ references:
   commentId: F:GW2Scratch.EVTCAnalytics.GameData.SkillIds.Determined895
   fullName: GW2Scratch.EVTCAnalytics.GameData.SkillIds.Determined895
   nameWithType: SkillIds.Determined895
+- uid: GW2Scratch.EVTCAnalytics.GameData.SkillIds.Emboldened
+  name: Emboldened
+  href: api/GW2Scratch.EVTCAnalytics.GameData.SkillIds.html#GW2Scratch_EVTCAnalytics_GameData_SkillIds_Emboldened
+  commentId: F:GW2Scratch.EVTCAnalytics.GameData.SkillIds.Emboldened
+  fullName: GW2Scratch.EVTCAnalytics.GameData.SkillIds.Emboldened
+  nameWithType: SkillIds.Emboldened
 - uid: GW2Scratch.EVTCAnalytics.GameData.SkillIds.Fear
   name: Fear
   href: api/GW2Scratch.EVTCAnalytics.GameData.SkillIds.html#GW2Scratch_EVTCAnalytics_GameData_SkillIds_Fear
@@ -6573,6 +6652,12 @@ references:
   commentId: F:GW2Scratch.EVTCAnalytics.Parsed.Enums.Result.Critical
   fullName: GW2Scratch.EVTCAnalytics.Parsed.Enums.Result.Critical
   nameWithType: Result.Critical
+- uid: GW2Scratch.EVTCAnalytics.Parsed.Enums.Result.DefianceBar
+  name: DefianceBar
+  href: api/GW2Scratch.EVTCAnalytics.Parsed.Enums.Result.html#GW2Scratch_EVTCAnalytics_Parsed_Enums_Result_DefianceBar
+  commentId: F:GW2Scratch.EVTCAnalytics.Parsed.Enums.Result.DefianceBar
+  fullName: GW2Scratch.EVTCAnalytics.Parsed.Enums.Result.DefianceBar
+  nameWithType: Result.DefianceBar
 - uid: GW2Scratch.EVTCAnalytics.Parsed.Enums.Result.Downed
   name: Downed
   href: api/GW2Scratch.EVTCAnalytics.Parsed.Enums.Result.html#GW2Scratch_EVTCAnalytics_Parsed_Enums_Result_Downed
@@ -7973,12 +8058,12 @@ references:
   commentId: T:GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.AgentHealthModeDeterminer
   fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.AgentHealthModeDeterminer
   nameWithType: AgentHealthModeDeterminer
-- uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.AgentHealthModeDeterminer.#ctor(GW2Scratch.EVTCAnalytics.Model.Agents.Agent,System.UInt64,GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode,GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode)
-  name: AgentHealthModeDeterminer(Agent, UInt64, EncounterMode, EncounterMode)
-  href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.AgentHealthModeDeterminer.html#GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_AgentHealthModeDeterminer__ctor_GW2Scratch_EVTCAnalytics_Model_Agents_Agent_System_UInt64_GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_EncounterMode_GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_EncounterMode_
-  commentId: M:GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.AgentHealthModeDeterminer.#ctor(GW2Scratch.EVTCAnalytics.Model.Agents.Agent,System.UInt64,GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode,GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode)
-  fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.AgentHealthModeDeterminer.AgentHealthModeDeterminer(GW2Scratch.EVTCAnalytics.Model.Agents.Agent, System.UInt64, GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode, GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode)
-  nameWithType: AgentHealthModeDeterminer.AgentHealthModeDeterminer(Agent, UInt64, EncounterMode, EncounterMode)
+- uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.AgentHealthModeDeterminer.#ctor(GW2Scratch.EVTCAnalytics.Model.Agents.Agent,System.UInt64,GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode)
+  name: AgentHealthModeDeterminer(Agent, UInt64, EncounterMode)
+  href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.AgentHealthModeDeterminer.html#GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_AgentHealthModeDeterminer__ctor_GW2Scratch_EVTCAnalytics_Model_Agents_Agent_System_UInt64_GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_EncounterMode_
+  commentId: M:GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.AgentHealthModeDeterminer.#ctor(GW2Scratch.EVTCAnalytics.Model.Agents.Agent,System.UInt64,GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode)
+  fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.AgentHealthModeDeterminer.AgentHealthModeDeterminer(GW2Scratch.EVTCAnalytics.Model.Agents.Agent, System.UInt64, GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode)
+  nameWithType: AgentHealthModeDeterminer.AgentHealthModeDeterminer(Agent, UInt64, EncounterMode)
 - uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.AgentHealthModeDeterminer.#ctor*
   name: AgentHealthModeDeterminer
   href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.AgentHealthModeDeterminer.html#GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_AgentHealthModeDeterminer__ctor_
@@ -8031,6 +8116,25 @@ references:
   isSpec: "True"
   fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.ConstantModeDeterminer.GetMode
   nameWithType: ConstantModeDeterminer.GetMode
+- uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EmboldenedDetectingModeDeterminer
+  name: EmboldenedDetectingModeDeterminer
+  href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EmboldenedDetectingModeDeterminer.html
+  commentId: T:GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EmboldenedDetectingModeDeterminer
+  fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EmboldenedDetectingModeDeterminer
+  nameWithType: EmboldenedDetectingModeDeterminer
+- uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EmboldenedDetectingModeDeterminer.GetMode(GW2Scratch.EVTCAnalytics.Model.Log)
+  name: GetMode(Log)
+  href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EmboldenedDetectingModeDeterminer.html#GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_EmboldenedDetectingModeDeterminer_GetMode_GW2Scratch_EVTCAnalytics_Model_Log_
+  commentId: M:GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EmboldenedDetectingModeDeterminer.GetMode(GW2Scratch.EVTCAnalytics.Model.Log)
+  fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EmboldenedDetectingModeDeterminer.GetMode(GW2Scratch.EVTCAnalytics.Model.Log)
+  nameWithType: EmboldenedDetectingModeDeterminer.GetMode(Log)
+- uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EmboldenedDetectingModeDeterminer.GetMode*
+  name: GetMode
+  href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EmboldenedDetectingModeDeterminer.html#GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_EmboldenedDetectingModeDeterminer_GetMode_
+  commentId: Overload:GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EmboldenedDetectingModeDeterminer.GetMode
+  isSpec: "True"
+  fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EmboldenedDetectingModeDeterminer.GetMode
+  nameWithType: EmboldenedDetectingModeDeterminer.GetMode
 - uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode
   name: EncounterMode
   href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode.html
@@ -8043,6 +8147,36 @@ references:
   commentId: F:GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode.Challenge
   fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode.Challenge
   nameWithType: EncounterMode.Challenge
+- uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode.Emboldened1
+  name: Emboldened1
+  href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode.html#GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_EncounterMode_Emboldened1
+  commentId: F:GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode.Emboldened1
+  fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode.Emboldened1
+  nameWithType: EncounterMode.Emboldened1
+- uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode.Emboldened2
+  name: Emboldened2
+  href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode.html#GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_EncounterMode_Emboldened2
+  commentId: F:GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode.Emboldened2
+  fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode.Emboldened2
+  nameWithType: EncounterMode.Emboldened2
+- uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode.Emboldened3
+  name: Emboldened3
+  href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode.html#GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_EncounterMode_Emboldened3
+  commentId: F:GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode.Emboldened3
+  fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode.Emboldened3
+  nameWithType: EncounterMode.Emboldened3
+- uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode.Emboldened4
+  name: Emboldened4
+  href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode.html#GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_EncounterMode_Emboldened4
+  commentId: F:GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode.Emboldened4
+  fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode.Emboldened4
+  nameWithType: EncounterMode.Emboldened4
+- uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode.Emboldened5
+  name: Emboldened5
+  href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode.html#GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_EncounterMode_Emboldened5
+  commentId: F:GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode.Emboldened5
+  fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode.Emboldened5
+  nameWithType: EncounterMode.Emboldened5
 - uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode.Normal
   name: Normal
   href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode.html#GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_EncounterMode_Normal
@@ -8055,21 +8189,72 @@ references:
   commentId: F:GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode.Unknown
   fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode.Unknown
   nameWithType: EncounterMode.Unknown
+- uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterModeExtensions
+  name: EncounterModeExtensions
+  href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterModeExtensions.html
+  commentId: T:GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterModeExtensions
+  fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterModeExtensions
+  nameWithType: EncounterModeExtensions
+- uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterModeExtensions.IsEmboldened(GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode)
+  name: IsEmboldened(EncounterMode)
+  href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterModeExtensions.html#GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_EncounterModeExtensions_IsEmboldened_GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_EncounterMode_
+  commentId: M:GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterModeExtensions.IsEmboldened(GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode)
+  fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterModeExtensions.IsEmboldened(GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode)
+  nameWithType: EncounterModeExtensions.IsEmboldened(EncounterMode)
+- uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterModeExtensions.IsEmboldened*
+  name: IsEmboldened
+  href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterModeExtensions.html#GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_EncounterModeExtensions_IsEmboldened_
+  commentId: Overload:GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterModeExtensions.IsEmboldened
+  isSpec: "True"
+  fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterModeExtensions.IsEmboldened
+  nameWithType: EncounterModeExtensions.IsEmboldened
+- uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.FallbackModeDeterminer
+  name: FallbackModeDeterminer
+  href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.FallbackModeDeterminer.html
+  commentId: T:GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.FallbackModeDeterminer
+  fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.FallbackModeDeterminer
+  nameWithType: FallbackModeDeterminer
+- uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.FallbackModeDeterminer.#ctor(GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.IModeDeterminer,GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.IModeDeterminer)
+  name: FallbackModeDeterminer(IModeDeterminer, IModeDeterminer)
+  href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.FallbackModeDeterminer.html#GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_FallbackModeDeterminer__ctor_GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_IModeDeterminer_GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_IModeDeterminer_
+  commentId: M:GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.FallbackModeDeterminer.#ctor(GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.IModeDeterminer,GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.IModeDeterminer)
+  fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.FallbackModeDeterminer.FallbackModeDeterminer(GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.IModeDeterminer, GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.IModeDeterminer)
+  nameWithType: FallbackModeDeterminer.FallbackModeDeterminer(IModeDeterminer, IModeDeterminer)
+- uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.FallbackModeDeterminer.#ctor*
+  name: FallbackModeDeterminer
+  href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.FallbackModeDeterminer.html#GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_FallbackModeDeterminer__ctor_
+  commentId: Overload:GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.FallbackModeDeterminer.#ctor
+  isSpec: "True"
+  fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.FallbackModeDeterminer.FallbackModeDeterminer
+  nameWithType: FallbackModeDeterminer.FallbackModeDeterminer
+- uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.FallbackModeDeterminer.GetMode(GW2Scratch.EVTCAnalytics.Model.Log)
+  name: GetMode(Log)
+  href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.FallbackModeDeterminer.html#GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_FallbackModeDeterminer_GetMode_GW2Scratch_EVTCAnalytics_Model_Log_
+  commentId: M:GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.FallbackModeDeterminer.GetMode(GW2Scratch.EVTCAnalytics.Model.Log)
+  fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.FallbackModeDeterminer.GetMode(GW2Scratch.EVTCAnalytics.Model.Log)
+  nameWithType: FallbackModeDeterminer.GetMode(Log)
+- uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.FallbackModeDeterminer.GetMode*
+  name: GetMode
+  href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.FallbackModeDeterminer.html#GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_FallbackModeDeterminer_GetMode_
+  commentId: Overload:GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.FallbackModeDeterminer.GetMode
+  isSpec: "True"
+  fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.FallbackModeDeterminer.GetMode
+  nameWithType: FallbackModeDeterminer.GetMode
 - uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.GroupedSpawnModeDeterminer
   name: GroupedSpawnModeDeterminer
   href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.GroupedSpawnModeDeterminer.html
   commentId: T:GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.GroupedSpawnModeDeterminer
   fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.GroupedSpawnModeDeterminer
   nameWithType: GroupedSpawnModeDeterminer
-- uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.GroupedSpawnModeDeterminer.#ctor(System.Func{GW2Scratch.EVTCAnalytics.Model.Agents.Agent,System.Boolean},System.Int32,System.Int64,GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode,GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode)
-  name: GroupedSpawnModeDeterminer(Func<Agent, Boolean>, Int32, Int64, EncounterMode, EncounterMode)
-  href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.GroupedSpawnModeDeterminer.html#GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_GroupedSpawnModeDeterminer__ctor_System_Func_GW2Scratch_EVTCAnalytics_Model_Agents_Agent_System_Boolean__System_Int32_System_Int64_GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_EncounterMode_GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_EncounterMode_
-  commentId: M:GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.GroupedSpawnModeDeterminer.#ctor(System.Func{GW2Scratch.EVTCAnalytics.Model.Agents.Agent,System.Boolean},System.Int32,System.Int64,GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode,GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode)
-  name.vb: GroupedSpawnModeDeterminer(Func(Of Agent, Boolean), Int32, Int64, EncounterMode, EncounterMode)
-  fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.GroupedSpawnModeDeterminer.GroupedSpawnModeDeterminer(System.Func<GW2Scratch.EVTCAnalytics.Model.Agents.Agent, System.Boolean>, System.Int32, System.Int64, GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode, GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode)
-  fullName.vb: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.GroupedSpawnModeDeterminer.GroupedSpawnModeDeterminer(System.Func(Of GW2Scratch.EVTCAnalytics.Model.Agents.Agent, System.Boolean), System.Int32, System.Int64, GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode, GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode)
-  nameWithType: GroupedSpawnModeDeterminer.GroupedSpawnModeDeterminer(Func<Agent, Boolean>, Int32, Int64, EncounterMode, EncounterMode)
-  nameWithType.vb: GroupedSpawnModeDeterminer.GroupedSpawnModeDeterminer(Func(Of Agent, Boolean), Int32, Int64, EncounterMode, EncounterMode)
+- uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.GroupedSpawnModeDeterminer.#ctor(System.Func{GW2Scratch.EVTCAnalytics.Model.Agents.Agent,System.Boolean},System.Int32,System.Int64,GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode)
+  name: GroupedSpawnModeDeterminer(Func<Agent, Boolean>, Int32, Int64, EncounterMode)
+  href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.GroupedSpawnModeDeterminer.html#GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_GroupedSpawnModeDeterminer__ctor_System_Func_GW2Scratch_EVTCAnalytics_Model_Agents_Agent_System_Boolean__System_Int32_System_Int64_GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_EncounterMode_
+  commentId: M:GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.GroupedSpawnModeDeterminer.#ctor(System.Func{GW2Scratch.EVTCAnalytics.Model.Agents.Agent,System.Boolean},System.Int32,System.Int64,GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode)
+  name.vb: GroupedSpawnModeDeterminer(Func(Of Agent, Boolean), Int32, Int64, EncounterMode)
+  fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.GroupedSpawnModeDeterminer.GroupedSpawnModeDeterminer(System.Func<GW2Scratch.EVTCAnalytics.Model.Agents.Agent, System.Boolean>, System.Int32, System.Int64, GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode)
+  fullName.vb: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.GroupedSpawnModeDeterminer.GroupedSpawnModeDeterminer(System.Func(Of GW2Scratch.EVTCAnalytics.Model.Agents.Agent, System.Boolean), System.Int32, System.Int64, GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode)
+  nameWithType: GroupedSpawnModeDeterminer.GroupedSpawnModeDeterminer(Func<Agent, Boolean>, Int32, Int64, EncounterMode)
+  nameWithType.vb: GroupedSpawnModeDeterminer.GroupedSpawnModeDeterminer(Func(Of Agent, Boolean), Int32, Int64, EncounterMode)
 - uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.GroupedSpawnModeDeterminer.#ctor*
   name: GroupedSpawnModeDeterminer
   href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.GroupedSpawnModeDeterminer.html#GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_GroupedSpawnModeDeterminer__ctor_
@@ -8115,12 +8300,12 @@ references:
   commentId: T:GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.RemovedBuffStackRemainingTimeModeDeterminer
   fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.RemovedBuffStackRemainingTimeModeDeterminer
   nameWithType: RemovedBuffStackRemainingTimeModeDeterminer
-- uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.RemovedBuffStackRemainingTimeModeDeterminer.#ctor(System.Int32,GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode,System.Int32,GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode,System.Int32,GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode)
-  name: RemovedBuffStackRemainingTimeModeDeterminer(Int32, EncounterMode, Int32, EncounterMode, Int32, EncounterMode)
-  href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.RemovedBuffStackRemainingTimeModeDeterminer.html#GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_RemovedBuffStackRemainingTimeModeDeterminer__ctor_System_Int32_GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_EncounterMode_System_Int32_GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_EncounterMode_System_Int32_GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_EncounterMode_
-  commentId: M:GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.RemovedBuffStackRemainingTimeModeDeterminer.#ctor(System.Int32,GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode,System.Int32,GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode,System.Int32,GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode)
-  fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.RemovedBuffStackRemainingTimeModeDeterminer.RemovedBuffStackRemainingTimeModeDeterminer(System.Int32, GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode, System.Int32, GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode, System.Int32, GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode)
-  nameWithType: RemovedBuffStackRemainingTimeModeDeterminer.RemovedBuffStackRemainingTimeModeDeterminer(Int32, EncounterMode, Int32, EncounterMode, Int32, EncounterMode)
+- uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.RemovedBuffStackRemainingTimeModeDeterminer.#ctor(System.Int32,GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode,System.Int32,GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode,System.Int32)
+  name: RemovedBuffStackRemainingTimeModeDeterminer(Int32, EncounterMode, Int32, EncounterMode, Int32)
+  href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.RemovedBuffStackRemainingTimeModeDeterminer.html#GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_RemovedBuffStackRemainingTimeModeDeterminer__ctor_System_Int32_GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_EncounterMode_System_Int32_GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_EncounterMode_System_Int32_
+  commentId: M:GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.RemovedBuffStackRemainingTimeModeDeterminer.#ctor(System.Int32,GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode,System.Int32,GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode,System.Int32)
+  fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.RemovedBuffStackRemainingTimeModeDeterminer.RemovedBuffStackRemainingTimeModeDeterminer(System.Int32, GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode, System.Int32, GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode, System.Int32)
+  nameWithType: RemovedBuffStackRemainingTimeModeDeterminer.RemovedBuffStackRemainingTimeModeDeterminer(Int32, EncounterMode, Int32, EncounterMode, Int32)
 - uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.RemovedBuffStackRemainingTimeModeDeterminer.#ctor*
   name: RemovedBuffStackRemainingTimeModeDeterminer
   href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.RemovedBuffStackRemainingTimeModeDeterminer.html#GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_RemovedBuffStackRemainingTimeModeDeterminer__ctor_
@@ -8153,12 +8338,12 @@ references:
   commentId: T:GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.SkillPresentModeDeterminer
   fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.SkillPresentModeDeterminer
   nameWithType: SkillPresentModeDeterminer
-- uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.SkillPresentModeDeterminer.#ctor(System.Int32,GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode,GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode)
-  name: SkillPresentModeDeterminer(Int32, EncounterMode, EncounterMode)
-  href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.SkillPresentModeDeterminer.html#GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_SkillPresentModeDeterminer__ctor_System_Int32_GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_EncounterMode_GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_EncounterMode_
-  commentId: M:GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.SkillPresentModeDeterminer.#ctor(System.Int32,GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode,GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode)
-  fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.SkillPresentModeDeterminer.SkillPresentModeDeterminer(System.Int32, GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode, GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode)
-  nameWithType: SkillPresentModeDeterminer.SkillPresentModeDeterminer(Int32, EncounterMode, EncounterMode)
+- uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.SkillPresentModeDeterminer.#ctor(System.Int32,GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode)
+  name: SkillPresentModeDeterminer(Int32, EncounterMode)
+  href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.SkillPresentModeDeterminer.html#GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_SkillPresentModeDeterminer__ctor_System_Int32_GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_EncounterMode_
+  commentId: M:GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.SkillPresentModeDeterminer.#ctor(System.Int32,GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode)
+  fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.SkillPresentModeDeterminer.SkillPresentModeDeterminer(System.Int32, GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.EncounterMode)
+  nameWithType: SkillPresentModeDeterminer.SkillPresentModeDeterminer(Int32, EncounterMode)
 - uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.SkillPresentModeDeterminer.#ctor*
   name: SkillPresentModeDeterminer
   href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes.SkillPresentModeDeterminer.html#GW2Scratch_EVTCAnalytics_Processing_Encounters_Modes_SkillPresentModeDeterminer__ctor_
@@ -8445,12 +8630,12 @@ references:
   commentId: T:GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.AgentBuffGainedDeterminer
   fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.AgentBuffGainedDeterminer
   nameWithType: AgentBuffGainedDeterminer
-- uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.AgentBuffGainedDeterminer.#ctor(GW2Scratch.EVTCAnalytics.Model.Agents.Agent,System.Int32)
-  name: AgentBuffGainedDeterminer(Agent, Int32)
-  href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.AgentBuffGainedDeterminer.html#GW2Scratch_EVTCAnalytics_Processing_Encounters_Results_AgentBuffGainedDeterminer__ctor_GW2Scratch_EVTCAnalytics_Model_Agents_Agent_System_Int32_
-  commentId: M:GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.AgentBuffGainedDeterminer.#ctor(GW2Scratch.EVTCAnalytics.Model.Agents.Agent,System.Int32)
-  fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.AgentBuffGainedDeterminer.AgentBuffGainedDeterminer(GW2Scratch.EVTCAnalytics.Model.Agents.Agent, System.Int32)
-  nameWithType: AgentBuffGainedDeterminer.AgentBuffGainedDeterminer(Agent, Int32)
+- uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.AgentBuffGainedDeterminer.#ctor(GW2Scratch.EVTCAnalytics.Model.Agents.Agent,System.Int32,System.Boolean)
+  name: AgentBuffGainedDeterminer(Agent, Int32, Boolean)
+  href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.AgentBuffGainedDeterminer.html#GW2Scratch_EVTCAnalytics_Processing_Encounters_Results_AgentBuffGainedDeterminer__ctor_GW2Scratch_EVTCAnalytics_Model_Agents_Agent_System_Int32_System_Boolean_
+  commentId: M:GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.AgentBuffGainedDeterminer.#ctor(GW2Scratch.EVTCAnalytics.Model.Agents.Agent,System.Int32,System.Boolean)
+  fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.AgentBuffGainedDeterminer.AgentBuffGainedDeterminer(GW2Scratch.EVTCAnalytics.Model.Agents.Agent, System.Int32, System.Boolean)
+  nameWithType: AgentBuffGainedDeterminer.AgentBuffGainedDeterminer(Agent, Int32, Boolean)
 - uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.AgentBuffGainedDeterminer.#ctor*
   name: AgentBuffGainedDeterminer
   href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.AgentBuffGainedDeterminer.html#GW2Scratch_EVTCAnalytics_Processing_Encounters_Results_AgentBuffGainedDeterminer__ctor_

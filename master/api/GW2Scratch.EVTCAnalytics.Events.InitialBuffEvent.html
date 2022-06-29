@@ -81,10 +81,24 @@
     <div class="level0"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
     <div class="level1"><a class="xref" href="GW2Scratch.EVTCAnalytics.Events.Event.html">Event</a></div>
     <div class="level2"><a class="xref" href="GW2Scratch.EVTCAnalytics.Events.AgentEvent.html">AgentEvent</a></div>
-    <div class="level3"><span class="xref">InitialBuffEvent</span></div>
+    <div class="level3"><a class="xref" href="GW2Scratch.EVTCAnalytics.Events.BuffEvent.html">BuffEvent</a></div>
+    <div class="level4"><a class="xref" href="GW2Scratch.EVTCAnalytics.Events.BuffApplyEvent.html">BuffApplyEvent</a></div>
+    <div class="level5"><span class="xref">InitialBuffEvent</span></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="GW2Scratch.EVTCAnalytics.Events.BuffApplyEvent.html#GW2Scratch_EVTCAnalytics_Events_BuffApplyEvent_DurationApplied">BuffApplyEvent.DurationApplied</a>
+    </div>
+    <div>
+      <a class="xref" href="GW2Scratch.EVTCAnalytics.Events.BuffApplyEvent.html#GW2Scratch_EVTCAnalytics_Events_BuffApplyEvent_DurationOfRemovedStack">BuffApplyEvent.DurationOfRemovedStack</a>
+    </div>
+    <div>
+      <a class="xref" href="GW2Scratch.EVTCAnalytics.Events.BuffEvent.html#GW2Scratch_EVTCAnalytics_Events_BuffEvent_Buff">BuffEvent.Buff</a>
+    </div>
+    <div>
+      <a class="xref" href="GW2Scratch.EVTCAnalytics.Events.BuffEvent.html#GW2Scratch_EVTCAnalytics_Events_BuffEvent_SourceAgent">BuffEvent.SourceAgent</a>
+    </div>
     <div>
       <a class="xref" href="GW2Scratch.EVTCAnalytics.Events.AgentEvent.html#GW2Scratch_EVTCAnalytics_Events_AgentEvent_Agent">AgentEvent.Agent</a>
     </div>
@@ -117,24 +131,24 @@
   <h6><strong>Assembly</strong>: GW2Scratch.EVTCAnalytics.dll</h6>
   <h5 id="GW2Scratch_EVTCAnalytics_Events_InitialBuffEvent_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class InitialBuffEvent : AgentEvent</code></pre>
+    <pre><code class="lang-csharp hljs">public class InitialBuffEvent : BuffApplyEvent</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/gw2scratch/evtc/new/master/apiSpec/new?filename=GW2Scratch_EVTCAnalytics_Events_InitialBuffEvent__ctor_System_Int64_GW2Scratch_EVTCAnalytics_Model_Agents_Agent_GW2Scratch_EVTCAnalytics_Model_Skills_Skill_.md&amp;value=---%0Auid%3A%20GW2Scratch.EVTCAnalytics.Events.InitialBuffEvent.%23ctor(System.Int64%2CGW2Scratch.EVTCAnalytics.Model.Agents.Agent%2CGW2Scratch.EVTCAnalytics.Model.Skills.Skill)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/gw2scratch/evtc/new/master/apiSpec/new?filename=GW2Scratch_EVTCAnalytics_Events_InitialBuffEvent__ctor_System_Int64_GW2Scratch_EVTCAnalytics_Model_Agents_Agent_GW2Scratch_EVTCAnalytics_Model_Skills_Skill_GW2Scratch_EVTCAnalytics_Model_Agents_Agent_System_Int32_System_UInt32_.md&amp;value=---%0Auid%3A%20GW2Scratch.EVTCAnalytics.Events.InitialBuffEvent.%23ctor(System.Int64%2CGW2Scratch.EVTCAnalytics.Model.Agents.Agent%2CGW2Scratch.EVTCAnalytics.Model.Skills.Skill%2CGW2Scratch.EVTCAnalytics.Model.Agents.Agent%2CSystem.Int32%2CSystem.UInt32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gw2scratch/evtc/blob/master/EVTCAnalytics/Events/AgentEvents.cs/#L170">View Source</a>
+    <a href="https://github.com/gw2scratch/evtc/blob/master/EVTCAnalytics/Events/AgentEvents.cs/#L168">View Source</a>
   </span>
   <a id="GW2Scratch_EVTCAnalytics_Events_InitialBuffEvent__ctor_" data-uid="GW2Scratch.EVTCAnalytics.Events.InitialBuffEvent.#ctor*"></a>
-  <h4 id="GW2Scratch_EVTCAnalytics_Events_InitialBuffEvent__ctor_System_Int64_GW2Scratch_EVTCAnalytics_Model_Agents_Agent_GW2Scratch_EVTCAnalytics_Model_Skills_Skill_" data-uid="GW2Scratch.EVTCAnalytics.Events.InitialBuffEvent.#ctor(System.Int64,GW2Scratch.EVTCAnalytics.Model.Agents.Agent,GW2Scratch.EVTCAnalytics.Model.Skills.Skill)">InitialBuffEvent(Int64, Agent, Skill)</h4>
+  <h4 id="GW2Scratch_EVTCAnalytics_Events_InitialBuffEvent__ctor_System_Int64_GW2Scratch_EVTCAnalytics_Model_Agents_Agent_GW2Scratch_EVTCAnalytics_Model_Skills_Skill_GW2Scratch_EVTCAnalytics_Model_Agents_Agent_System_Int32_System_UInt32_" data-uid="GW2Scratch.EVTCAnalytics.Events.InitialBuffEvent.#ctor(System.Int64,GW2Scratch.EVTCAnalytics.Model.Agents.Agent,GW2Scratch.EVTCAnalytics.Model.Skills.Skill,GW2Scratch.EVTCAnalytics.Model.Agents.Agent,System.Int32,System.UInt32)">InitialBuffEvent(Int64, Agent, Skill, Agent, Int32, UInt32)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public InitialBuffEvent(long time, Agent agent, Skill skill)</code></pre>
+    <pre><code class="lang-csharp hljs">public InitialBuffEvent(long time, Agent agent, Skill buff, Agent sourceAgent, int durationApplied, uint durationOfRemovedStack)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -158,39 +172,22 @@
       </tr>
       <tr>
         <td><a class="xref" href="GW2Scratch.EVTCAnalytics.Model.Skills.Skill.html">Skill</a></td>
-        <td><span class="parametername">skill</span></td>
+        <td><span class="parametername">buff</span></td>
         <td></td>
       </tr>
-    </tbody>
-  </table>
-  <h3 id="properties">Properties
-  </h3>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/gw2scratch/evtc/new/master/apiSpec/new?filename=GW2Scratch_EVTCAnalytics_Events_InitialBuffEvent_Skill.md&amp;value=---%0Auid%3A%20GW2Scratch.EVTCAnalytics.Events.InitialBuffEvent.Skill%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/gw2scratch/evtc/blob/master/EVTCAnalytics/Events/AgentEvents.cs/#L168">View Source</a>
-  </span>
-  <a id="GW2Scratch_EVTCAnalytics_Events_InitialBuffEvent_Skill_" data-uid="GW2Scratch.EVTCAnalytics.Events.InitialBuffEvent.Skill*"></a>
-  <h4 id="GW2Scratch_EVTCAnalytics_Events_InitialBuffEvent_Skill" data-uid="GW2Scratch.EVTCAnalytics.Events.InitialBuffEvent.Skill">Skill</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Skill Skill { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
       <tr>
-        <th>Type</th>
-        <th>Description</th>
+        <td><a class="xref" href="GW2Scratch.EVTCAnalytics.Model.Agents.Agent.html">Agent</a></td>
+        <td><span class="parametername">sourceAgent</span></td>
+        <td></td>
       </tr>
-    </thead>
-    <tbody>
       <tr>
-        <td><a class="xref" href="GW2Scratch.EVTCAnalytics.Model.Skills.Skill.html">Skill</a></td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="parametername">durationApplied</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.uint32">UInt32</a></td>
+        <td><span class="parametername">durationOfRemovedStack</span></td>
         <td></td>
       </tr>
     </tbody>
