@@ -55,22 +55,6 @@ namespace GW2Scratch.EVTCInspector
 			var formLayout = new DynamicLayout();
 			Content = formLayout;
 
-			var openFileMenuItem = new ButtonMenuItem {Text = "&Open EVTC log"};
-			openFileMenuItem.Click += OpenFileButtonOnClick;
-			openFileMenuItem.Shortcut = Application.Instance.CommonModifier | Keys.O;
-
-			var fileMenuItem = new ButtonMenuItem {Text = "&File"};
-			fileMenuItem.Items.Add(openFileMenuItem);
-			
-			var skipParsingMenuItem = new CheckMenuItem {Text = "Merge parsing and processing into one step"};
-			skipParsingMenuItem.Checked = SkipParsing;
-			skipParsingMenuItem.CheckedChanged += (sender, args) => SkipParsing = skipParsingMenuItem.Checked;
-			
-			var optionsMenuItem = new ButtonMenuItem {Text = "&Options"};
-			optionsMenuItem.Items.Add(skipParsingMenuItem);
-
-			Menu = new MenuBar(fileMenuItem, optionsMenuItem);
-
 			openFileDialog = new OpenFileDialog();
 			openFileDialog.Filters.Add(new FileFilter("EVTC logs", ".evtc", ".evtc.zip", ".zevtc"));
 
@@ -117,6 +101,28 @@ namespace GW2Scratch.EVTCInspector
 			formLayout.BeginVertical();
 			formLayout.AddRow(mainTabControl);
 			formLayout.EndVertical();
+			
+			var openFileMenuItem = new ButtonMenuItem {Text = "&Open EVTC log"};
+			openFileMenuItem.Click += OpenFileButtonOnClick;
+			openFileMenuItem.Shortcut = Application.Instance.CommonModifier | Keys.O;
+
+			var fileMenuItem = new ButtonMenuItem {Text = "&File"};
+			fileMenuItem.Items.Add(openFileMenuItem);
+			
+			var skipParsingMenuItem = new CheckMenuItem {Text = "Merge parsing and processing into one step"};
+			skipParsingMenuItem.Checked = SkipParsing;
+			skipParsingMenuItem.CheckedChanged += (sender, args) => SkipParsing = skipParsingMenuItem.Checked;
+			
+			var showTimeSinceStartOfLogMenuItem = new CheckMenuItem {Text = "Show times since start of log"};
+			showTimeSinceStartOfLogMenuItem.Checked = eventListControl.ShowTimeSinceFirstEvent;
+			showTimeSinceStartOfLogMenuItem.CheckedChanged += (sender, args) => 
+				eventListControl.ShowTimeSinceFirstEvent = showTimeSinceStartOfLogMenuItem.Checked;
+			
+			var optionsMenuItem = new ButtonMenuItem {Text = "&Options"};
+			optionsMenuItem.Items.Add(skipParsingMenuItem);
+			optionsMenuItem.Items.Add(showTimeSinceStartOfLogMenuItem);
+
+			Menu = new MenuBar(fileMenuItem, optionsMenuItem);
 		}
 
 		private void AgentGridViewOnSelectedKeyChanged(object sender, EventArgs e)

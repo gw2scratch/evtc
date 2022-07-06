@@ -2,7 +2,12 @@
 
 This is the full changelog of the arcdps Log Manager.
 
-## Log Manager v1.6 (unreleased)
+## Log Manager v1.7
+
+#### New features (Inspector)
+- Added an option to show times since start of log (enabled by default)
+
+## Log Manager v1.6
 
 #### New features
 - Added Emboldened (easy) mode detection and filtering.

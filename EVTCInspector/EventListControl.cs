@@ -105,6 +105,16 @@ namespace GW2Scratch.EVTCInspector
 			{
 				events.Clear();
 				events.AddRange(value);
+				try
+				{
+					timeOfOldestEvent = events.Where(x => !(x is UnknownEvent)).Min(x => x.Time);
+				}
+				catch (InvalidOperationException)
+				{
+					// Event list is empty
+					timeOfOldestEvent = 0;
+				}
+
 				eventGridView.DataStore = new FilterCollection<Event>(events) {Filter = GetEventFilter};
 
 				UpdateFilterView();
@@ -121,6 +131,9 @@ namespace GW2Scratch.EVTCInspector
 			}
 		}
 
+		public bool ShowTimeSinceFirstEvent { get; set; } = true;
+
+		private long timeOfOldestEvent = 0;
 		private readonly List<Event> events = new List<Event>();
 		private readonly List<Agent> agents = new List<Agent>();
 
@@ -140,7 +153,20 @@ namespace GW2Scratch.EVTCInspector
 		public EventListControl()
 		{
 			eventGridView = new GridView<Event>();
-			eventGridView.Columns.Add(new GridColumn() {HeaderText = "Time", DataCell = new TextBoxCell("Time")});
+			eventGridView.Columns.Add(new GridColumn() 
+			{
+				HeaderText = "Time", 
+				DataCell = new TextBoxCell("Time") {Binding = new DelegateBinding<Event,string>(x =>
+				{
+					if (!(x is UnknownEvent) && ShowTimeSinceFirstEvent)
+					{
+						return $"{((x.Time - timeOfOldestEvent) / 1000.0):0.000}";
+					}
+
+					return x.Time.ToString();
+				})}
+				
+			});
 			eventGridView.Columns.Add(new GridColumn()
 			{
 				HeaderText = "Event Type",
