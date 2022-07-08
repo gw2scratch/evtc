@@ -8,10 +8,12 @@ namespace GW2Scratch.EVTCAnalytics.LogTests.LocalSets
 	{
 		public bool PrintUnchecked { get; set; } = false;
 
-		public void TestLogs(IEnumerable<LogDefinition> logs, TextWriter writer)
+		public bool TestLogs(IEnumerable<LogDefinition> logs, TextWriter writer)
 		{
 			var checker = new DefinitionLogChecker();
 			var results = new List<CheckResult>();
+
+			bool success = true;
 
 			foreach (var log in logs)
 			{
@@ -26,6 +28,7 @@ namespace GW2Scratch.EVTCAnalytics.LogTests.LocalSets
 
 				if (result.ProcessingFailed)
 				{
+					success = false;
 					writer.WriteLine($"FAILED {log.Filename} {log.Comment}");
 					writer.WriteLine($"\tException: {result.ProcessingException}");
 					continue;
@@ -34,6 +37,7 @@ namespace GW2Scratch.EVTCAnalytics.LogTests.LocalSets
 				writer.WriteLine($"{(result.Correct ? "OK" : "WRONG")} {log.Filename} {log.Comment}");
 				if (!result.Correct)
 				{
+					success = false;
 					PrintResult(result.Encounter, "Encounter", writer);
 					PrintResult(result.Result, "Result", writer);
 					PrintResult(result.Mode, "Mode", writer);
@@ -45,6 +49,8 @@ namespace GW2Scratch.EVTCAnalytics.LogTests.LocalSets
 			writer.WriteLine($"{results.Count(x => x.Correct)}/{results.Count} OK");
 			writer.WriteLine($"{results.Count(x => !x.Correct && !x.ProcessingFailed)}/{results.Count} WRONG");
 			writer.WriteLine($"{results.Count(x => x.ProcessingFailed)}/{results.Count} FAILED");
+
+			return success;
 		}
 
 		private void PrintPlayerResult(Result<List<LogPlayer>> result, string name, TextWriter writer)

@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+using Tomlyn;
 
 namespace GW2Scratch.EVTCAnalytics.LogTests.LocalSets
 {
 	internal class Program
 	{
-		public static void Main(string[] args)
+		public static int Main(string[] args)
 		{
 			List<string> configFilenames = new List<string>();
 			for (int i = 0; i < args.Length - 1; i++)
@@ -33,7 +32,8 @@ namespace GW2Scratch.EVTCAnalytics.LogTests.LocalSets
 					Console.Error.WriteLine($"Failed to read log definitions {filename}:\n{e}");
 				}
 
-				var definitions = JsonConvert.DeserializeObject<List<LogDefinition>>(serialized, new StringEnumConverter());
+				var definitions = Toml.ToModel<LogList>(serialized).Logs;
+				//var definitions = JsonConvert.DeserializeObject<List<LogDefinition>>(serialized, new StringEnumConverter());
 				foreach (var definition in definitions)
 				{
 					// Paths in the config are relative to the location of the config.
@@ -44,7 +44,9 @@ namespace GW2Scratch.EVTCAnalytics.LogTests.LocalSets
 			}
 
 			var testRunner = new TestRunner();
-			testRunner.TestLogs(logs, Console.Out);
+			bool success = testRunner.TestLogs(logs, Console.Out);
+			
+			return success ? 0 : 1;
 		}
 	}
 }

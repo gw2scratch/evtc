@@ -14,7 +14,7 @@ Logs for uncommon edge cases and broken logs will also be included.
 
 ## Usage
 ```
-dotnet run --local config.json
+dotnet run --local config.toml
 ```
 Multiple local configs may be specified with multiple `--local filename` arguments.
 
@@ -22,33 +22,27 @@ Multiple local configs may be specified with multiple `--local filename` argumen
 Filenames are relative to the location of the config.
 `null` values are not checked, specified values have to match.
 
-```json
-[
-  {
-    "Filename": "20190807-195107.zevtc",
-    "Encounter": "Deimos",
-    "Result": "Failure",
-    "Mode": "Normal",
-    "Players": null,
-    "Comment": "Failure; last player died at 0.49% of Deimos' health."
-  },
-  {
-    "Filename": "20190807-213308.zevtc",
-    "Encounter": "Sabetha",
-    "Result": "Success",
-    "Mode": "Normal",
-    "Players": null,
-    "Comment": "Successful Sabetha with split main agent at 25%"
-  },
-  {
-    "Filename": "20190807-153724.zevtc",
-    "Encounter": "Sabetha",
-    "Result": "Success",
-    "Mode": "Normal",
-    "Players": null,
-    "Comment": "Successful Sabetha with split main agent at 25%"
-  }
-]
+```toml
+[[log]]
+filename = "encounters/deimos_fail_close.zevtc"
+encounter = "Deimos"
+result = "Failure"
+mode = "Normal"
+comment = "Failure; last player died at 0.49% of Deimos' health."
+
+[[log]]
+filename = "unusual/sabetha_split_agent.zevtc"
+encounter = "Sabetha"
+result = "Success"
+mode = "Normal"
+comment = "Successful Sabetha with split main agent at 25%"
+
+[[log]]
+filename = "unusual/sabetha_split_agent2.zevtc"
+encounter = "Sabetha"
+result = "Success"
+mode = "Normal"
+comment = "Successful Sabetha with split main agent at 25%"
 ```
 
 ### Sample output
