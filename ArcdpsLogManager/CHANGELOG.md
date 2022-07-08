@@ -7,6 +7,9 @@ This is the full changelog of the arcdps Log Manager.
 #### New features (Inspector)
 - Added an option to show times since start of log (enabled by default)
 
+#### Changes
+- Linux only (already worked on Windows): Clicking on the filename in the log detail panel now selects the file (requires dbus).
+
 ## Log Manager v1.6
 
 #### New features

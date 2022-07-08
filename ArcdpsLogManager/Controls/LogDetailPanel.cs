@@ -306,12 +306,35 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				}
 				else
 				{
-					var processInfo = new ProcessStartInfo()
+					// On linux, we try to use dbus and if that fails, we fallback to just opening the directory.
+					// The dbus invocation can fail for a variety of reasons:
+					// - dbus is not available
+					// - no programs implement the service,
+					// - ...
+					
+					var dbusArgs = "--session --dest=org.freedesktop.FileManager1 " +
+						"--type=method_call /org/freedesktop/FileManager1 org.freedesktop.FileManager1.ShowItems " +
+						$"array:string:\"{logData.FileName}\" string:\"\"";
+					var dbusProcessInfo = new ProcessStartInfo()
 					{
-						FileName = System.IO.Path.GetDirectoryName(logData.FileName),
+						FileName = "dbus-send",
+						Arguments = dbusArgs,
 						UseShellExecute = true
 					};
-					Process.Start(processInfo);
+					var dbusProcess = Process.Start(dbusProcessInfo);
+					dbusProcess?.WaitForExit();
+					bool success = (dbusProcess?.ExitCode ?? 1) == 0;
+					
+					if (!success)
+					{
+						// Just open the directory instead.
+						var processInfo = new ProcessStartInfo()
+						{
+							FileName = System.IO.Path.GetDirectoryName(logData.FileName),
+							UseShellExecute = true
+						};
+						Process.Start(processInfo);
+					}
 				}
 			};
 
