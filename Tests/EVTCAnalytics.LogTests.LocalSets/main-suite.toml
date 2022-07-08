@@ -1,0 +1,276 @@
+# Main log testing suite
+
+# Standard encounters
+
+## W1
+# TODO: VG kill
+# TODO: VG fail
+# TODO: Gorseval kill
+# TODO: Gorseval fail
+# TODO: Sabetha kill
+# TODO: Sabetha fail
+
+## W2
+# TODO: Sloth kill
+# TODO: Sloth fail
+# TODO: Trio kill
+# TODO: Trio fail
+# TODO: Matthias kill
+# TODO: Matthias fail
+
+## W3
+# TODO: KC kill
+# TODO: KC fail
+# TODO: KC CM
+# TODO: TC kill
+# TODO: TC fail
+# TODO: Xera kill
+# TODO: Xera fail
+# TODO: Xera fail before 50% (no final agent)
+
+## W4
+# TODO: Cairn kill
+# TODO: Cairn fail
+# TODO: Cairn CM
+# TODO: MO kill
+# TODO: MO fail
+# TODO: MO CM
+# TODO: Samarog kill
+# TODO: Samarog fail
+# TODO: Samarog CM
+# TODO: Deimos kill
+# TODO: Deimos fail
+# TODO: Deimos CM
+
+## W5
+# TODO: SH kill
+# TODO: SH fail
+# TODO: SH CM
+# TODO: River kill
+# TODO: River fail
+# TODO: Broken King kill
+# TODO: Broken King fail
+# TODO: Eater of Souls kill
+# TODO: Eater of Souls fail
+# TODO: Eyes kill
+# TODO: Eyes fail
+# TODO: Eyes with Dhuum as target
+# TODO: Dhuum kill
+# TODO: Dhuum fail
+# TODO: Dhuum CM
+
+## W6
+# TODO: CA kill
+# TODO: CA fail
+# TODO: CA CM
+# TODO: Largos kill
+# TODO: Largos fail
+# TODO: Largos CM
+# TODO: Qadim kill
+# TODO: Qadim fail
+# TODO: Qadim CM
+
+## W7
+# TODO: Adina kill
+# TODO: Adina fail
+# TODO: Adina CM
+# TODO: Sabir kill
+# TODO: Sabir fail
+# TODO: Sabir CM
+# TODO: Qadim 2 kill
+# TODO: Qadim 2 fail
+# TODO: Qadim 2 CM
+
+## IBS Strikes
+# TODO: Icebrood Construct kill
+# TODO: Icebrood Construct fail
+# TODO: Voice and the Claw kill
+# TODO: Voice and the Claw fail
+# TODO: Fraenir kill
+# TODO: Fraenir fail
+# TODO: Boneskinner kill
+# TODO: Boneskinner fail
+# TODO: Whisper of Jormag kill
+# TODO: Whisper of Jormag fail
+
+## EoD Strikes
+# TODO: Aetherblade Hideout kill
+# TODO: Aetherblade Hideout fail
+# TODO: Aetherblade Hideout CM
+# TODO: Xunlai Jade Junkyard kill
+# TODO: Xunlai Jade Junkyard fail
+# TODO: Xunlai Jade Junkyard CM
+# TODO: Kaineng Overlook kill
+# TODO: Kaineng Overlook fail
+# TODO: Kaineng Overlook CM
+# TODO: Harvest Temple kill
+# TODO: Harvest Temple fail
+# TODO: Harvest Temple CM
+
+## Festival strikes
+# TODO: Freezie kill
+# TODO: Freezie fail
+
+## Fractals
+# TODO: MAMA kill
+# TODO: MAMA fail
+# TODO: Siax kill
+# TODO: Siax fail
+# TODO: Ensolyss kill
+# TODO: Ensolyss fail
+# TODO: Skorvald kill
+# TODO: Skorvald fail
+# TODO: Skorvald CM
+# TODO: Artsariiv kill
+# TODO: Artsariiv fail
+# TODO: Arkk kill
+# TODO: Arkk fail
+# TODO: Ai - Both phases kill
+# TODO: Ai - Both phases fail
+# TODO: Ai - Elemental kill
+# TODO: Ai - Elemental fail
+# TODO: Ai - Dark kill
+# TODO: Ai - Dark fail
+
+## Golems
+# TODO: Golems kill
+# TODO: Golems fail
+# for all golems
+
+## WvW
+# TODO: EBG
+# TODO: Desert
+# TODO: Blue Alpine
+# TODO: Green Alpine
+# TODO: Obsidian sanctum
+# TODO: Edge of the Mists
+# TODO: Armistice Bastion
+
+
+[[log]]
+filename = "encounters/deimos_fail_close.zevtc"
+encounter = "Deimos"
+result = "Failure"
+mode = "Normal"
+comment = "Failure; last player died at 0.49% of Deimos' health."
+
+[[log]]
+filename = "encounters/deimos_fail_longcombat.zevtc"
+encounter = "Deimos"
+result = "Failure"
+mode = "Challenge"
+comment = "Deimos failure that records for a longer time than usual - the main attack target goes untargetable."
+
+[[log]]
+filename = "unusual/duplicate_log_end_20200506.zevtc"
+encounter = "EnsolyssOfTheEndlessTorment"
+result = "Success"
+mode = "Challenge"
+comment = "Duplicate Log End from EVTC 20200506"
+
+[[log]]
+filename = "encounters/largos_fail_kenut_dead_nikare_alive.zevtc"
+encounter = "TwinLargos"
+result = "Failure"
+mode = "Normal"
+comment = "Twin Largos failure Kenut dies, Nikare alive"
+
+[[log]]
+filename = "encounters/varinia_fail.zevtc"
+encounter = "VariniaStormsounder"
+result = "Failure"
+mode = "Normal"
+comment = "Varinia Stormsounder failure"
+
+[[log]]
+filename = "encounters/varinia_kill.zevtc"
+encounter = "VariniaStormsounder"
+result = "Success"
+mode = "Normal"
+comment = "Varinia Stormsounder success"
+
+[[log]]
+filename = "encounters/largos_fail_early.zevtc"
+encounter = "TwinLargos"
+result = "Failure"
+mode = "Challenge"
+comment = "Twin Largos failure Kenut not present in the log as the group did not progress far enough."
+
+[[log]]
+filename = "encounters/ai_both_kill.zevtc"
+encounter = "AiKeeperOfThePeakDayAndNight"
+result = "Success"
+mode = "Challenge"
+comment = "Ai Both phases killed in one log"
+
+[[log]]
+filename = "encounters/xera_kill.zevtc"
+encounter = "Xera"
+result = "Success"
+mode = "Normal"
+comment = "Xera success"
+
+# Emboldened logs
+
+[[log]]
+filename = "emboldened/vg_emboldened1.zevtc"
+mode = "Emboldened1"
+comment = "VG, Emboldened x1"
+
+[[log]]
+filename = "emboldened/vg_emboldened2.zevtc"
+mode = "Emboldened2"
+comment = "VG, Emboldened x2"
+
+[[log]]
+filename = "emboldened/vg_emboldened3.zevtc"
+mode = "Emboldened3"
+comment = "VG, Emboldened x3"
+
+[[log]]
+filename = "emboldened/vg_emboldened4.zevtc"
+mode = "Emboldened4"
+comment = "VG, Emboldened x4"
+
+[[log]]
+filename = "emboldened/vg_emboldened5.zevtc"
+mode = "Emboldened5"
+comment = "VG, Emboldened x5"
+
+# Unusual logs - various arcdps bugs and oddities
+
+[[log]]
+filename = "unusual/tc_xera_target.zevtc"
+encounter = "TwistedCastle"
+result = "Success"
+mode = "Normal"
+comment = "Twisted Castle with Xera as the target"
+
+[[log]]
+filename = "unusual/sabetha_split_agent.zevtc"
+encounter = "Sabetha"
+result = "Success"
+mode = "Normal"
+comment = "Successful Sabetha with split main agent at 25%"
+
+[[log]]
+filename = "unusual/sabetha_split_agent2.zevtc"
+encounter = "Sabetha"
+result = "Success"
+mode = "Normal"
+comment = "Successful Sabetha with split main agent at 25%"
+
+[[log]]
+filename = "unusual/arkk_split_agent.zevtc"
+encounter = "Arkk"
+result = "Success"
+mode = "Challenge"
+comment = "Successful Arkk with split main agent pov player fell down"
+
+[[log]]
+filename = "unusual/deimos_normal_max_health_update_trash_data.zevtc"
+encounter = "Deimos"
+result = "Success"
+mode = "Normal"
+comment = "Not a CM; contains a max health update putting max health of Deimos at 9223372036854775808."
+
