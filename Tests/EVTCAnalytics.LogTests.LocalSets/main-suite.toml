@@ -24,7 +24,13 @@
 # TODO: KC CM
 # TODO: TC kill
 # TODO: TC fail
-# TODO: Xera kill
+# Xera
+[[log]]
+filename = "encounters/xera_kill.zevtc"
+encounter = "Xera"
+result = "Success"
+mode = "Normal"
+comment = "Xera success"
 # TODO: Xera fail
 # TODO: Xera fail before 50% (no final agent)
 
@@ -40,6 +46,19 @@
 # TODO: Samarog CM
 # TODO: Deimos kill
 # TODO: Deimos fail
+[[log]]
+filename = "encounters/deimos_fail_close.zevtc"
+encounter = "Deimos"
+result = "Failure"
+mode = "Normal"
+comment = "Failure; last player died at 0.49% of Deimos' health."
+[[log]]
+filename = "encounters/deimos_fail_longcombat.zevtc"
+encounter = "Deimos"
+result = "Failure"
+mode = "Challenge"
+comment = "Deimos failure that records for a longer time than usual - the main attack target goes untargetable."
+
 # TODO: Deimos CM
 
 ## W5
@@ -65,6 +84,20 @@
 # TODO: CA CM
 # TODO: Largos kill
 # TODO: Largos fail
+[[log]]
+filename = "encounters/largos_fail_early.zevtc"
+encounter = "TwinLargos"
+result = "Failure"
+mode = "Challenge"
+comment = "Twin Largos failure Kenut not present in the log as the group did not progress far enough."
+
+[[log]]
+filename = "encounters/largos_fail_kenut_dead_nikare_alive.zevtc"
+encounter = "TwinLargos"
+result = "Failure"
+mode = "Normal"
+comment = "Twin Largos failure Kenut dies, Nikare alive"
+
 # TODO: Largos CM
 # TODO: Qadim kill
 # TODO: Qadim fail
@@ -92,6 +125,19 @@
 # TODO: Boneskinner fail
 # TODO: Whisper of Jormag kill
 # TODO: Whisper of Jormag fail
+# Varinia Stormsounder (Cold War)
+[[log]]
+filename = "encounters/varinia_kill.zevtc"
+encounter = "VariniaStormsounder"
+result = "Success"
+mode = "Normal"
+comment = "Varinia Stormsounder success"
+[[log]]
+filename = "encounters/varinia_fail.zevtc"
+encounter = "VariniaStormsounder"
+result = "Failure"
+mode = "Normal"
+comment = "Varinia Stormsounder failure"
 
 ## EoD Strikes
 # TODO: Aetherblade Hideout kill
@@ -125,7 +171,13 @@
 # TODO: Artsariiv fail
 # TODO: Arkk kill
 # TODO: Arkk fail
-# TODO: Ai - Both phases kill
+# Ai - Both phases
+[[log]]
+filename = "encounters/ai_both_kill.zevtc"
+encounter = "AiKeeperOfThePeakDayAndNight"
+result = "Success"
+mode = "Challenge"
+comment = "Ai Both phases killed in one log"
 # TODO: Ai - Both phases fail
 # TODO: Ai - Elemental kill
 # TODO: Ai - Elemental fail
@@ -145,70 +197,6 @@
 # TODO: Obsidian sanctum
 # TODO: Edge of the Mists
 # TODO: Armistice Bastion
-
-
-[[log]]
-filename = "encounters/deimos_fail_close.zevtc"
-encounter = "Deimos"
-result = "Failure"
-mode = "Normal"
-comment = "Failure; last player died at 0.49% of Deimos' health."
-
-[[log]]
-filename = "encounters/deimos_fail_longcombat.zevtc"
-encounter = "Deimos"
-result = "Failure"
-mode = "Challenge"
-comment = "Deimos failure that records for a longer time than usual - the main attack target goes untargetable."
-
-[[log]]
-filename = "unusual/duplicate_log_end_20200506.zevtc"
-encounter = "EnsolyssOfTheEndlessTorment"
-result = "Success"
-mode = "Challenge"
-comment = "Duplicate Log End from EVTC 20200506"
-
-[[log]]
-filename = "encounters/largos_fail_kenut_dead_nikare_alive.zevtc"
-encounter = "TwinLargos"
-result = "Failure"
-mode = "Normal"
-comment = "Twin Largos failure Kenut dies, Nikare alive"
-
-[[log]]
-filename = "encounters/varinia_fail.zevtc"
-encounter = "VariniaStormsounder"
-result = "Failure"
-mode = "Normal"
-comment = "Varinia Stormsounder failure"
-
-[[log]]
-filename = "encounters/varinia_kill.zevtc"
-encounter = "VariniaStormsounder"
-result = "Success"
-mode = "Normal"
-comment = "Varinia Stormsounder success"
-
-[[log]]
-filename = "encounters/largos_fail_early.zevtc"
-encounter = "TwinLargos"
-result = "Failure"
-mode = "Challenge"
-comment = "Twin Largos failure Kenut not present in the log as the group did not progress far enough."
-
-[[log]]
-filename = "encounters/ai_both_kill.zevtc"
-encounter = "AiKeeperOfThePeakDayAndNight"
-result = "Success"
-mode = "Challenge"
-comment = "Ai Both phases killed in one log"
-
-[[log]]
-filename = "encounters/xera_kill.zevtc"
-encounter = "Xera"
-result = "Success"
-mode = "Normal"
-comment = "Xera success"
 
 # Emboldened logs
 
@@ -273,4 +261,11 @@ encounter = "Deimos"
 result = "Success"
 mode = "Normal"
 comment = "Not a CM; contains a max health update putting max health of Deimos at 9223372036854775808."
+
+[[log]]
+filename = "unusual/duplicate_log_end_20200506.zevtc"
+encounter = "EnsolyssOfTheEndlessTorment"
+result = "Success"
+mode = "Challenge"
+comment = "Duplicate Log End from EVTC 20200506"
 
