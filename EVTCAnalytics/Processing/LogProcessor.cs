@@ -69,6 +69,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			state.AgentsByAddress = new Dictionary<ulong, Agent>();
 			state.AgentsById = new Dictionary<int, List<Agent>>();
 			state.EffectsById = new Dictionary<uint, Effect>();
+			state.MarkersById = new Dictionary<uint, Marker>();
 			state.Errors = new List<LogError>();
 			foreach (var agent in state.Agents)
 			{
@@ -175,6 +176,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			state.Events = new List<Event>();
 			state.Errors = new List<LogError>();
 			state.EffectsById = new Dictionary<uint, Effect>();
+			state.MarkersById = new Dictionary<uint, Marker>();
 			
 			var combatItemReader = reader.GetCombatItemReader();
 			ParsedCombatItem combatItem;
@@ -754,6 +756,17 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 							BitConverter.GetBytes(item.DstAgent).CopyTo(guid, 8);
 						}
 					}
+					else if (item.OverstackValue == 1)
+					{
+						// Marker
+						if (state.MarkersById.TryGetValue(item.SkillId, out var marker))
+						{
+							var guid = new byte[16];
+							marker.ContentGuid = guid;
+							BitConverter.GetBytes(item.SrcAgent).CopyTo(guid, 0);
+							BitConverter.GetBytes(item.DstAgent).CopyTo(guid, 8);
+						}
+					}
 					return;
 				case StateChange.Error:
 					Span<byte> error = stackalloc byte[32];
@@ -953,7 +966,14 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						// TODO: Figure out what the contents are
 						return new UnknownEvent(item.Time, item);
 					case StateChange.Tag:
-						return new AgentTagEvent(item.Time, GetAgentByAddress(item.SrcAgent), item.Value);
+						uint markerId = (uint) item.Value;
+						if (!state.MarkersById.TryGetValue(markerId, out Marker marker))
+						{
+							marker = new Marker(markerId);
+							state.MarkersById[markerId] = marker;
+						}
+						
+						return new AgentTagEvent(item.Time, GetAgentByAddress(item.SrcAgent), marker);
 					case StateChange.BarrierUpdate:
 						var barrierFraction = item.DstAgent / 10000f;
 						return new BarrierUpdateEvent(item.Time, GetAgentByAddress(item.SrcAgent), barrierFraction);
@@ -976,8 +996,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						
 						// skillid = effectid,
 						uint effectId = item.SkillId;
-						Effect effect;
-						if (!state.EffectsById.TryGetValue(effectId, out effect))
+						if (!state.EffectsById.TryGetValue(effectId, out Effect effect))
 						{
 							effect = new Effect(effectId);
 							state.EffectsById[effectId] = effect;
