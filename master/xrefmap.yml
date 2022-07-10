@@ -308,12 +308,12 @@ references:
   commentId: T:GW2Scratch.EVTCAnalytics.Events.AgentTagEvent
   fullName: GW2Scratch.EVTCAnalytics.Events.AgentTagEvent
   nameWithType: AgentTagEvent
-- uid: GW2Scratch.EVTCAnalytics.Events.AgentTagEvent.#ctor(System.Int64,GW2Scratch.EVTCAnalytics.Model.Agents.Agent,System.Int32)
-  name: AgentTagEvent(Int64, Agent, Int32)
-  href: api/GW2Scratch.EVTCAnalytics.Events.AgentTagEvent.html#GW2Scratch_EVTCAnalytics_Events_AgentTagEvent__ctor_System_Int64_GW2Scratch_EVTCAnalytics_Model_Agents_Agent_System_Int32_
-  commentId: M:GW2Scratch.EVTCAnalytics.Events.AgentTagEvent.#ctor(System.Int64,GW2Scratch.EVTCAnalytics.Model.Agents.Agent,System.Int32)
-  fullName: GW2Scratch.EVTCAnalytics.Events.AgentTagEvent.AgentTagEvent(System.Int64, GW2Scratch.EVTCAnalytics.Model.Agents.Agent, System.Int32)
-  nameWithType: AgentTagEvent.AgentTagEvent(Int64, Agent, Int32)
+- uid: GW2Scratch.EVTCAnalytics.Events.AgentTagEvent.#ctor(System.Int64,GW2Scratch.EVTCAnalytics.Model.Agents.Agent,GW2Scratch.EVTCAnalytics.Model.Marker)
+  name: AgentTagEvent(Int64, Agent, Marker)
+  href: api/GW2Scratch.EVTCAnalytics.Events.AgentTagEvent.html#GW2Scratch_EVTCAnalytics_Events_AgentTagEvent__ctor_System_Int64_GW2Scratch_EVTCAnalytics_Model_Agents_Agent_GW2Scratch_EVTCAnalytics_Model_Marker_
+  commentId: M:GW2Scratch.EVTCAnalytics.Events.AgentTagEvent.#ctor(System.Int64,GW2Scratch.EVTCAnalytics.Model.Agents.Agent,GW2Scratch.EVTCAnalytics.Model.Marker)
+  fullName: GW2Scratch.EVTCAnalytics.Events.AgentTagEvent.AgentTagEvent(System.Int64, GW2Scratch.EVTCAnalytics.Model.Agents.Agent, GW2Scratch.EVTCAnalytics.Model.Marker)
+  nameWithType: AgentTagEvent.AgentTagEvent(Int64, Agent, Marker)
 - uid: GW2Scratch.EVTCAnalytics.Events.AgentTagEvent.#ctor*
   name: AgentTagEvent
   href: api/GW2Scratch.EVTCAnalytics.Events.AgentTagEvent.html#GW2Scratch_EVTCAnalytics_Events_AgentTagEvent__ctor_
@@ -321,19 +321,19 @@ references:
   isSpec: "True"
   fullName: GW2Scratch.EVTCAnalytics.Events.AgentTagEvent.AgentTagEvent
   nameWithType: AgentTagEvent.AgentTagEvent
-- uid: GW2Scratch.EVTCAnalytics.Events.AgentTagEvent.Id
-  name: Id
-  href: api/GW2Scratch.EVTCAnalytics.Events.AgentTagEvent.html#GW2Scratch_EVTCAnalytics_Events_AgentTagEvent_Id
-  commentId: P:GW2Scratch.EVTCAnalytics.Events.AgentTagEvent.Id
-  fullName: GW2Scratch.EVTCAnalytics.Events.AgentTagEvent.Id
-  nameWithType: AgentTagEvent.Id
-- uid: GW2Scratch.EVTCAnalytics.Events.AgentTagEvent.Id*
-  name: Id
-  href: api/GW2Scratch.EVTCAnalytics.Events.AgentTagEvent.html#GW2Scratch_EVTCAnalytics_Events_AgentTagEvent_Id_
-  commentId: Overload:GW2Scratch.EVTCAnalytics.Events.AgentTagEvent.Id
+- uid: GW2Scratch.EVTCAnalytics.Events.AgentTagEvent.Marker
+  name: Marker
+  href: api/GW2Scratch.EVTCAnalytics.Events.AgentTagEvent.html#GW2Scratch_EVTCAnalytics_Events_AgentTagEvent_Marker
+  commentId: P:GW2Scratch.EVTCAnalytics.Events.AgentTagEvent.Marker
+  fullName: GW2Scratch.EVTCAnalytics.Events.AgentTagEvent.Marker
+  nameWithType: AgentTagEvent.Marker
+- uid: GW2Scratch.EVTCAnalytics.Events.AgentTagEvent.Marker*
+  name: Marker
+  href: api/GW2Scratch.EVTCAnalytics.Events.AgentTagEvent.html#GW2Scratch_EVTCAnalytics_Events_AgentTagEvent_Marker_
+  commentId: Overload:GW2Scratch.EVTCAnalytics.Events.AgentTagEvent.Marker
   isSpec: "True"
-  fullName: GW2Scratch.EVTCAnalytics.Events.AgentTagEvent.Id
-  nameWithType: AgentTagEvent.Id
+  fullName: GW2Scratch.EVTCAnalytics.Events.AgentTagEvent.Marker
+  nameWithType: AgentTagEvent.Marker
 - uid: GW2Scratch.EVTCAnalytics.Events.AgentWeaponSwapEvent
   name: AgentWeaponSwapEvent
   href: api/GW2Scratch.EVTCAnalytics.Events.AgentWeaponSwapEvent.html
@@ -5471,6 +5471,19 @@ references:
   isSpec: "True"
   fullName: GW2Scratch.EVTCAnalytics.Model.Log.MapId
   nameWithType: Log.MapId
+- uid: GW2Scratch.EVTCAnalytics.Model.Log.Markers
+  name: Markers
+  href: api/GW2Scratch.EVTCAnalytics.Model.Log.html#GW2Scratch_EVTCAnalytics_Model_Log_Markers
+  commentId: P:GW2Scratch.EVTCAnalytics.Model.Log.Markers
+  fullName: GW2Scratch.EVTCAnalytics.Model.Log.Markers
+  nameWithType: Log.Markers
+- uid: GW2Scratch.EVTCAnalytics.Model.Log.Markers*
+  name: Markers
+  href: api/GW2Scratch.EVTCAnalytics.Model.Log.html#GW2Scratch_EVTCAnalytics_Model_Log_Markers_
+  commentId: Overload:GW2Scratch.EVTCAnalytics.Model.Log.Markers
+  isSpec: "True"
+  fullName: GW2Scratch.EVTCAnalytics.Model.Log.Markers
+  nameWithType: Log.Markers
 - uid: GW2Scratch.EVTCAnalytics.Model.Log.PointOfView
   name: PointOfView
   href: api/GW2Scratch.EVTCAnalytics.Model.Log.html#GW2Scratch_EVTCAnalytics_Model_Log_PointOfView
@@ -5631,6 +5644,64 @@ references:
   commentId: F:GW2Scratch.EVTCAnalytics.Model.LogType.WorldVersusWorld
   fullName: GW2Scratch.EVTCAnalytics.Model.LogType.WorldVersusWorld
   nameWithType: LogType.WorldVersusWorld
+- uid: GW2Scratch.EVTCAnalytics.Model.Marker
+  name: Marker
+  href: api/GW2Scratch.EVTCAnalytics.Model.Marker.html
+  commentId: T:GW2Scratch.EVTCAnalytics.Model.Marker
+  fullName: GW2Scratch.EVTCAnalytics.Model.Marker
+  nameWithType: Marker
+- uid: GW2Scratch.EVTCAnalytics.Model.Marker.#ctor(System.UInt32)
+  name: Marker(UInt32)
+  href: api/GW2Scratch.EVTCAnalytics.Model.Marker.html#GW2Scratch_EVTCAnalytics_Model_Marker__ctor_System_UInt32_
+  commentId: M:GW2Scratch.EVTCAnalytics.Model.Marker.#ctor(System.UInt32)
+  fullName: GW2Scratch.EVTCAnalytics.Model.Marker.Marker(System.UInt32)
+  nameWithType: Marker.Marker(UInt32)
+- uid: GW2Scratch.EVTCAnalytics.Model.Marker.#ctor*
+  name: Marker
+  href: api/GW2Scratch.EVTCAnalytics.Model.Marker.html#GW2Scratch_EVTCAnalytics_Model_Marker__ctor_
+  commentId: Overload:GW2Scratch.EVTCAnalytics.Model.Marker.#ctor
+  isSpec: "True"
+  fullName: GW2Scratch.EVTCAnalytics.Model.Marker.Marker
+  nameWithType: Marker.Marker
+- uid: GW2Scratch.EVTCAnalytics.Model.Marker.ContentGuid
+  name: ContentGuid
+  href: api/GW2Scratch.EVTCAnalytics.Model.Marker.html#GW2Scratch_EVTCAnalytics_Model_Marker_ContentGuid
+  commentId: P:GW2Scratch.EVTCAnalytics.Model.Marker.ContentGuid
+  fullName: GW2Scratch.EVTCAnalytics.Model.Marker.ContentGuid
+  nameWithType: Marker.ContentGuid
+- uid: GW2Scratch.EVTCAnalytics.Model.Marker.ContentGuid*
+  name: ContentGuid
+  href: api/GW2Scratch.EVTCAnalytics.Model.Marker.html#GW2Scratch_EVTCAnalytics_Model_Marker_ContentGuid_
+  commentId: Overload:GW2Scratch.EVTCAnalytics.Model.Marker.ContentGuid
+  isSpec: "True"
+  fullName: GW2Scratch.EVTCAnalytics.Model.Marker.ContentGuid
+  nameWithType: Marker.ContentGuid
+- uid: GW2Scratch.EVTCAnalytics.Model.Marker.Id
+  name: Id
+  href: api/GW2Scratch.EVTCAnalytics.Model.Marker.html#GW2Scratch_EVTCAnalytics_Model_Marker_Id
+  commentId: P:GW2Scratch.EVTCAnalytics.Model.Marker.Id
+  fullName: GW2Scratch.EVTCAnalytics.Model.Marker.Id
+  nameWithType: Marker.Id
+- uid: GW2Scratch.EVTCAnalytics.Model.Marker.Id*
+  name: Id
+  href: api/GW2Scratch.EVTCAnalytics.Model.Marker.html#GW2Scratch_EVTCAnalytics_Model_Marker_Id_
+  commentId: Overload:GW2Scratch.EVTCAnalytics.Model.Marker.Id
+  isSpec: "True"
+  fullName: GW2Scratch.EVTCAnalytics.Model.Marker.Id
+  nameWithType: Marker.Id
+- uid: GW2Scratch.EVTCAnalytics.Model.Marker.ToString
+  name: ToString()
+  href: api/GW2Scratch.EVTCAnalytics.Model.Marker.html#GW2Scratch_EVTCAnalytics_Model_Marker_ToString
+  commentId: M:GW2Scratch.EVTCAnalytics.Model.Marker.ToString
+  fullName: GW2Scratch.EVTCAnalytics.Model.Marker.ToString()
+  nameWithType: Marker.ToString()
+- uid: GW2Scratch.EVTCAnalytics.Model.Marker.ToString*
+  name: ToString
+  href: api/GW2Scratch.EVTCAnalytics.Model.Marker.html#GW2Scratch_EVTCAnalytics_Model_Marker_ToString_
+  commentId: Overload:GW2Scratch.EVTCAnalytics.Model.Marker.ToString
+  isSpec: "True"
+  fullName: GW2Scratch.EVTCAnalytics.Model.Marker.ToString
+  nameWithType: Marker.ToString
 - uid: GW2Scratch.EVTCAnalytics.Model.MistlockInstability
   name: MistlockInstability
   href: api/GW2Scratch.EVTCAnalytics.Model.MistlockInstability.html
@@ -10045,6 +10116,19 @@ references:
   isSpec: "True"
   fullName: GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.MapId
   nameWithType: LogProcessorState.MapId
+- uid: GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.MarkersById
+  name: MarkersById
+  href: api/GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.html#GW2Scratch_EVTCAnalytics_Processing_LogProcessorState_MarkersById
+  commentId: P:GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.MarkersById
+  fullName: GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.MarkersById
+  nameWithType: LogProcessorState.MarkersById
+- uid: GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.MarkersById*
+  name: MarkersById
+  href: api/GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.html#GW2Scratch_EVTCAnalytics_Processing_LogProcessorState_MarkersById_
+  commentId: Overload:GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.MarkersById
+  isSpec: "True"
+  fullName: GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.MarkersById
+  nameWithType: LogProcessorState.MarkersById
 - uid: GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.MastersAssigned
   name: MastersAssigned
   href: api/GW2Scratch.EVTCAnalytics.Processing.LogProcessorState.html#GW2Scratch_EVTCAnalytics_Processing_LogProcessorState_MastersAssigned
