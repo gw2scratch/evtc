@@ -4,13 +4,15 @@ A simple and small program for testing processing EVTC logs in sets with GW2Scra
 
 Allows specifying expected results. Reports how many logs and what does not match expected values.
 
-## Log database
-TODO
+## Main suite
+Currently hosted at [datasets.gw2scratch.com](https://datasets.gw2scratch.com/).
 
-There will be a database of anonymized logs for testing. It will contain at least one
+This is a suite of of anonymized logs for testing. It contains at least one
 success and one failure log for each boss and a Challenge Mode log if applicable.
 
-Logs for uncommon edge cases and broken logs will also be included.
+Logs for uncommon edge cases and broken logs are also included.
+
+The config is available in the `main-suite.toml` file.
 
 ## Usage
 ```
