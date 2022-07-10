@@ -3,49 +3,205 @@
 # Standard encounters
 
 ## W1
-# TODO: VG kill
-# TODO: VG fail
-# TODO: Gorseval kill
-# TODO: Gorseval fail
-# TODO: Sabetha kill
-# TODO: Sabetha fail
+# VG
+[[log]]
+filename = "encounters/vg_kill.zevtc"
+encounter = "ValeGuardian"
+result = "Success"
+mode = "Normal"
+[[log]]
+filename = "encounters/vg_fail.zevtc"
+encounter = "ValeGuardian"
+result = "Failure"
+mode = "Normal"
+
+# Gorseval
+[[log]]
+filename = "encounters/gorse_kill.zevtc"
+encounter = "Gorseval"
+result = "Success"
+mode = "Normal"
+[[log]]
+filename = "encounters/gorse_fail.zevtc"
+encounter = "Gorseval"
+result = "Failure"
+mode = "Normal"
+
+# Sabetha
+[[log]]
+filename = "encounters/sabetha_kill.zevtc"
+encounter = "Sabetha"
+result = "Success"
+mode = "Normal"
+[[log]]
+filename = "encounters/sabetha_kill_bug_no_mechanics.zevtc"
+encounter = "Sabetha"
+result = "Success"
+mode = "Normal"
+[[log]]
+filename = "encounters/sabetha_fail.zevtc"
+encounter = "Sabetha"
+result = "Failure"
+mode = "Normal"
 
 ## W2
-# TODO: Sloth kill
-# TODO: Sloth fail
-# TODO: Trio kill
-# TODO: Trio fail
-# TODO: Matthias kill
-# TODO: Matthias fail
+# Sloth
+[[log]]
+filename = "encounters/sloth_kill.zevtc"
+encounter = "Slothasor"
+result = "Success"
+mode = "Normal"
+[[log]]
+filename = "encounters/sloth_fail.zevtc"
+encounter = "Slothasor"
+result = "Failure"
+mode = "Normal"
+
+# Trio
+[[log]]
+filename = "encounters/trio_kill.zevtc"
+encounter = "BanditTrio"
+result = "Success"
+mode = "Normal"
+[[log]]
+filename = "encounters/trio_kill_no_killing_blow_narella.zevtc"
+encounter = "BanditTrio"
+result = "Success"
+mode = "Normal"
+comment = "Bandit Trio kill; Narella dies without a killing blow"
+[[log]]
+filename = "encounters/trio_fail.zevtc"
+encounter = "BanditTrio"
+result = "Failure"
+mode = "Normal"
+
+# Matthias
+[[log]]
+filename = "encounters/matthias_kill.zevtc"
+encounter = "Matthias"
+result = "Success"
+mode = "Normal"
+[[log]]
+filename = "encounters/matthias_fail.zevtc"
+encounter = "Matthias"
+result = "Failure"
+mode = "Normal"
 
 ## W3
-# TODO: KC kill
-# TODO: KC fail
-# TODO: KC CM
-# TODO: TC kill
-# TODO: TC fail
+# KC
+[[log]]
+filename = "encounters/kc_kill.zevtc"
+encounter = "KeepConstruct"
+mode = "Normal"
+result = "Success"
+[[log]]
+filename = "encounters/kc_fail.zevtc"
+encounter = "KeepConstruct"
+mode = "Normal"
+result = "Failure"
+[[log]]
+filename = "encounters/kc_cm_kill.zevtc"
+encounter = "KeepConstruct"
+mode = "Challenge"
+result = "Success"
+
+# TC
+[[log]]
+filename = "encounters/tc_kill.zevtc"
+encounter = "TwistedCastle"
+result = "Success"
+[[log]]
+filename = "encounters/tc_fail.zevtc"
+encounter = "TwistedCastle"
+result = "Failure"
+
 # Xera
 [[log]]
 filename = "encounters/xera_kill.zevtc"
 encounter = "Xera"
 result = "Success"
 mode = "Normal"
-comment = "Xera success"
-# TODO: Xera fail
-# TODO: Xera fail before 50% (no final agent)
+[[log]]
+filename = "encounters/xera_fail.zevtc"
+encounter = "Xera"
+result = "Failure"
+mode = "Normal"
+[[log]]
+filename = "encounters/xera_fail_phase1.zevtc"
+encounter = "Xera"
+result = "Failure"
+mode = "Normal"
+comment = "Xera failure before 50% (no final agent)"
 
 ## W4
-# TODO: Cairn kill
-# TODO: Cairn fail
-# TODO: Cairn CM
-# TODO: MO kill
-# TODO: MO fail
-# TODO: MO CM
-# TODO: Samarog kill
-# TODO: Samarog fail
-# TODO: Samarog CM
-# TODO: Deimos kill
-# TODO: Deimos fail
+# Cairn
+[[log]]
+filename = "encounters/cairn_kill.zevtc"
+encounter = "Cairn"
+mode = "Normal"
+result = "Success"
+[[log]]
+filename = "encounters/cairn_fail.zevtc"
+encounter = "Cairn"
+mode = "Normal"
+result = "Failure"
+[[log]]
+filename = "encounters/cairn_cm_kill.zevtc"
+encounter = "Cairn"
+mode = "Challenge"
+result = "Success"
+
+# MO
+[[log]]
+filename = "encounters/mo_kill.zevtc"
+encounter = "MursaatOverseer"
+mode = "Normal"
+result = "Success"
+[[log]]
+filename = "encounters/mo_fail.zevtc"
+encounter = "MursaatOverseer"
+mode = "Normal"
+result = "Failure"
+[[log]]
+filename = "encounters/mo_cm_kill.zevtc"
+encounter = "MursaatOverseer"
+mode = "Challenge"
+result = "Success"
+
+# Samarog
+[[log]]
+filename = "encounters/samarog_kill.zevtc"
+encounter = "Samarog"
+mode = "Normal"
+result = "Success"
+[[log]]
+filename = "encounters/samarog_fail.zevtc"
+encounter = "Samarog"
+mode = "Normal"
+result = "Failure"
+[[log]]
+filename = "encounters/samarog_cm_kill.zevtc"
+encounter = "Samarog"
+mode = "Challenge"
+result = "Success"
+
+# Deimos
+[[log]]
+filename = "encounters/deimos_kill.zevtc"
+encounter = "Deimos"
+mode = "Normal"
+result = "Success"
+[[log]]
+filename = "encounters/deimos_fail.zevtc"
+encounter = "Deimos"
+mode = "Normal"
+result = "Failure"
+comment = "Failure; did not reach last phase."
+[[log]]
+filename = "encounters/deimos_cm_kill.zevtc"
+encounter = "Deimos"
+mode = "Challenge"
+result = "Success"
 [[log]]
 filename = "encounters/deimos_fail_close.zevtc"
 encounter = "Deimos"
@@ -59,38 +215,151 @@ result = "Failure"
 mode = "Challenge"
 comment = "Deimos failure that records for a longer time than usual - the main attack target goes untargetable."
 
-# TODO: Deimos CM
-
 ## W5
-# TODO: SH kill
-# TODO: SH fail
-# TODO: SH CM
-# TODO: River kill
-# TODO: River fail
-# TODO: Broken King kill
-# TODO: Broken King fail
-# TODO: Eater of Souls kill
-# TODO: Eater of Souls fail
-# TODO: Eyes kill
-# TODO: Eyes fail
-# TODO: Eyes with Dhuum as target
-# TODO: Dhuum kill
-# TODO: Dhuum fail
-# TODO: Dhuum CM
+# SH
+[[log]]
+filename = "encounters/sh_kill.zevtc"
+encounter = "SoullessHorror"
+mode = "Normal"
+result = "Success"
+[[log]]
+filename = "encounters/sh_fail.zevtc"
+encounter = "SoullessHorror"
+mode = "Normal"
+result = "Failure"
+[[log]]
+filename = "encounters/sh_cm_kill.zevtc"
+encounter = "SoullessHorror"
+mode = "Challenge"
+result = "Success"
+
+# River
+[[log]]
+filename = "encounters/river_kill.zevtc"
+encounter = "RiverOfSouls"
+mode = "Normal"
+result = "Success"
+[[log]]
+filename = "encounters/river_fail.zevtc"
+encounter = "RiverOfSouls"
+mode = "Normal"
+result = "Failure"
+
+# Broken King
+[[log]]
+filename = "encounters/broken_king_kill.zevtc"
+encounter = "BrokenKing"
+mode = "Normal"
+result = "Success"
+[[log]]
+filename = "encounters/broken_king_fail.zevtc"
+encounter = "BrokenKing"
+mode = "Normal"
+result = "Failure"
+
+# Eater of Souls
+[[log]]
+filename = "encounters/eater_kill.zevtc"
+encounter = "EaterOfSouls"
+mode = "Normal"
+result = "Success"
+[[log]]
+filename = "encounters/eater_fail.zevtc"
+encounter = "EaterOfSouls"
+mode = "Normal"
+result = "Failure"
+
+# Eyes
+[[log]]
+filename = "encounters/eyes_kill.zevtc"
+encounter = "Eyes"
+mode = "Normal"
+result = "Success"
+[[log]]
+filename = "encounters/eyes_fail.zevtc"
+encounter = "Eyes"
+mode = "Normal"
+result = "Failure"
+[[log]]
+filename = "encounters/eyes_dhuum_target.zevtc"
+encounter = "Eyes"
+mode = "Normal"
+result = "Success"
+comment = "Eyes with Dhuum as the main target."
+
+[[log]]
+filename = "encounters/dhuum_kill.zevtc"
+encounter = "Dhuum"
+mode = "Normal"
+result = "Success"
+[[log]]
+filename = "encounters/dhuum_fail.zevtc"
+encounter = "Dhuum"
+mode = "Normal"
+result = "Failure"
+[[log]]
+filename = "encounters/dhuum_fail_pre.zevtc"
+encounter = "Dhuum"
+mode = "Normal"
+result = "Failure"
+comment = "Failure; failed in pre-event."
+[[log]]
+filename = "encounters/dhuum_fail_10.zevtc"
+encounter = "Dhuum"
+mode = "Normal"
+result = "Failure"
+comment = "Failure; failed in last 10% phase."
+[[log]]
+filename = "encounters/dhuum_cm_kill.zevtc"
+encounter = "Dhuum"
+mode = "Challenge"
+result = "Success"
 
 ## W6
-# TODO: CA kill
-# TODO: CA fail
-# TODO: CA CM
-# TODO: Largos kill
-# TODO: Largos fail
+# CA
+[[log]]
+filename = "encounters/ca_kill.zevtc"
+encounter = "ConjuredAmalgamate"
+mode = "Normal"
+result = "Success"
+[[log]]
+filename = "encounters/ca_fail.zevtc"
+encounter = "ConjuredAmalgamate"
+mode = "Normal"
+result = "Failure"
+[[log]]
+filename = "encounters/ca_cm_kill.zevtc"
+encounter = "ConjuredAmalgamate"
+mode = "Challenge"
+result = "Success"
+
+# Largos
+[[log]]
+filename = "encounters/largos_kill.zevtc"
+encounter = "TwinLargos"
+mode = "Normal"
+result = "Success"
+[[log]]
+filename = "encounters/largos_fail.zevtc"
+encounter = "TwinLargos"
+mode = "Normal"
+result = "Failure"
+[[log]]
+filename = "encounters/largos_cm_kill.zevtc"
+encounter = "TwinLargos"
+mode = "Challenge"
+result = "Success"
+[[log]]
+filename = "encounters/largos_cm_kill.zevtc"
+encounter = "TwinLargos"
+mode = "Challenge"
+result = "Success"
 [[log]]
 filename = "encounters/largos_fail_early.zevtc"
 encounter = "TwinLargos"
 result = "Failure"
 mode = "Challenge"
 comment = "Twin Largos failure Kenut not present in the log as the group did not progress far enough."
-
 [[log]]
 filename = "encounters/largos_fail_kenut_dead_nikare_alive.zevtc"
 encounter = "TwinLargos"
@@ -98,33 +367,136 @@ result = "Failure"
 mode = "Normal"
 comment = "Twin Largos failure Kenut dies, Nikare alive"
 
-# TODO: Largos CM
-# TODO: Qadim kill
-# TODO: Qadim fail
-# TODO: Qadim CM
+# Qadim
+[[log]]
+filename = "encounters/qadim_kill.zevtc"
+encounter = "Qadim"
+mode = "Normal"
+result = "Success"
+[[log]]
+filename = "encounters/qadim_fail.zevtc"
+encounter = "Qadim"
+mode = "Normal"
+result = "Failure"
+[[log]]
+filename = "encounters/qadim_cm_kill.zevtc"
+encounter = "Qadim"
+mode = "Challenge"
+result = "Success"
 
 ## W7
-# TODO: Adina kill
-# TODO: Adina fail
-# TODO: Adina CM
-# TODO: Sabir kill
-# TODO: Sabir fail
-# TODO: Sabir CM
-# TODO: Qadim 2 kill
-# TODO: Qadim 2 fail
-# TODO: Qadim 2 CM
+# Adina
+[[log]]
+filename = "encounters/adina_kill.zevtc"
+encounter = "Adina"
+mode = "Normal"
+result = "Success"
+[[log]]
+filename = "encounters/adina_fail.zevtc"
+encounter = "Adina"
+mode = "Normal"
+result = "Failure"
+[[log]]
+filename = "encounters/adina_cm_kill.zevtc"
+encounter = "Adina"
+mode = "Challenge"
+result = "Success"
+
+# Sabir
+[[log]]
+filename = "encounters/sabir_kill.zevtc"
+encounter = "Sabir"
+mode = "Normal"
+result = "Success"
+[[log]]
+filename = "encounters/sabir_fail.zevtc"
+encounter = "Sabir"
+mode = "Normal"
+result = "Failure"
+[[log]]
+filename = "encounters/sabir_cm_kill.zevtc"
+encounter = "Sabir"
+mode = "Challenge"
+result = "Success"
+
+# Qadim 2
+[[log]]
+filename = "encounters/qadim2_kill.zevtc"
+encounter = "QadimThePeerless"
+mode = "Normal"
+result = "Success"
+[[log]]
+filename = "encounters/qadim2_fail.zevtc"
+encounter = "QadimThePeerless"
+mode = "Normal"
+result = "Failure"
+[[log]]
+filename = "encounters/qadim2_cm_kill.zevtc"
+encounter = "QadimThePeerless"
+mode = "Challenge"
+result = "Success"
 
 ## IBS Strikes
-# TODO: Icebrood Construct kill
-# TODO: Icebrood Construct fail
-# TODO: Voice and the Claw kill
-# TODO: Voice and the Claw fail
-# TODO: Fraenir kill
-# TODO: Fraenir fail
-# TODO: Boneskinner kill
-# TODO: Boneskinner fail
-# TODO: Whisper of Jormag kill
-# TODO: Whisper of Jormag fail
+# Icebrood Construct
+[[log]]
+filename = "encounters/icebrood_construct_kill.zevtc"
+encounter = "ShiverpeaksPass"
+mode = "Normal"
+result = "Success"
+[[log]]
+filename = "encounters/icebrood_construct_fail.zevtc"
+encounter = "ShiverpeaksPass"
+mode = "Normal"
+result = "Failure"
+
+# Voice & Claw
+[[log]]
+filename = "encounters/voice_claw_kill.zevtc"
+encounter = "VoiceAndClawOfTheFallen"
+mode = "Normal"
+result = "Success"
+[[log]]
+filename = "encounters/voice_claw_fail.zevtc"
+encounter = "VoiceAndClawOfTheFallen"
+mode = "Normal"
+result = "Failure"
+
+# Fraenir
+[[log]]
+filename = "encounters/fraenir_kill.zevtc"
+encounter = "FraenirOfJormag"
+mode = "Normal"
+result = "Success"
+[[log]]
+filename = "encounters/fraenir_fail.zevtc"
+encounter = "FraenirOfJormag"
+mode = "Normal"
+result = "Failure"
+
+# Boneskinner
+[[log]]
+filename = "encounters/boneskinner_kill.zevtc"
+encounter = "Boneskinner"
+mode = "Normal"
+result = "Success"
+[[log]]
+filename = "encounters/boneskinner_fail.zevtc"
+encounter = "Boneskinner"
+mode = "Normal"
+result = "Failure"
+
+# Whisper of Jormag
+[[log]]
+filename = "encounters/whisper_kill.zevtc"
+encounter = "WhisperOfJormag"
+mode = "Normal"
+result = "Success"
+[[log]]
+filename = "encounters/whisper_fail.zevtc"
+encounter = "WhisperOfJormag"
+mode = "Normal"
+result = "Failure"
+
 # Varinia Stormsounder (Cold War)
 [[log]]
 filename = "encounters/varinia_kill.zevtc"
@@ -140,63 +512,229 @@ mode = "Normal"
 comment = "Varinia Stormsounder failure"
 
 ## EoD Strikes
-# TODO: Aetherblade Hideout kill
-# TODO: Aetherblade Hideout fail
-# TODO: Aetherblade Hideout CM
-# TODO: Xunlai Jade Junkyard kill
-# TODO: Xunlai Jade Junkyard fail
-# TODO: Xunlai Jade Junkyard CM
-# TODO: Kaineng Overlook kill
-# TODO: Kaineng Overlook fail
-# TODO: Kaineng Overlook CM
-# TODO: Harvest Temple kill
-# TODO: Harvest Temple fail
-# TODO: Harvest Temple CM
+# Aetherblade Hideout
+[[log]]
+filename = "encounters/mai_trin_kill.zevtc"
+encounter = "AetherbladeHideout"
+result = "Success"
+mode = "Normal"
+[[log]]
+filename = "encounters/mai_trin_fail.zevtc"
+encounter = "AetherbladeHideout"
+result = "Failure"
+mode = "Normal"
+[[log]]
+filename = "encounters/mai_trin_fail_no_echo.zevtc"
+encounter = "AetherbladeHideout"
+result = "Failure"
+mode = "Normal"
+comment = "Failure in first phase before Echo appears."
+[[log]]
+filename = "encounters/mai_trin_cm_kill.zevtc"
+encounter = "AetherbladeHideout"
+result = "Success"
+mode = "Challenge"
+
+# Xunlai Jade Junkyard
+[[log]]
+filename = "encounters/ankka_kill.zevtc"
+encounter = "XunlaiJadeJunkyard"
+result = "Success"
+mode = "Normal"
+[[log]]
+filename = "encounters/ankka_fail_solo.zevtc"
+encounter = "XunlaiJadeJunkyard"
+result = "Failure"
+mode = "Normal"
+comment = "Failure in last phase in a long solo attempt."
+[[log]]
+filename = "encounters/ankka_cm_kill.zevtc"
+encounter = "XunlaiJadeJunkyard"
+result = "Success"
+mode = "Challenge"
+
+# Kaineng Overlook
+[[log]]
+filename = "encounters/kaineng_kill.zevtc"
+encounter = "KainengOverlook"
+result = "Success"
+mode = "Normal"
+[[log]]
+filename = "encounters/kaineng_fail.zevtc"
+encounter = "KainengOverlook"
+result = "Failure"
+mode = "Normal"
+[[log]]
+filename = "encounters/kaineng_cm_kill.zevtc"
+encounter = "KainengOverlook"
+result = "Success"
+mode = "Challenge"
+
+# Harvest Temple
+[[log]]
+filename = "encounters/harvest_temple_kill.zevtc"
+encounter = "HarvestTemple"
+result = "Success"
+mode = "Normal"
+[[log]]
+filename = "encounters/harvest_temple_fail.zevtc"
+encounter = "HarvestTemple"
+result = "Failure"
+mode = "Normal"
+[[log]]
+filename = "encounters/harvest_temple_fail_early.zevtc"
+encounter = "HarvestTemple"
+result = "Failure"
+mode = "Normal"
+comment = "Failure in first phase"
+[[log]]
+filename = "encounters/harvest_temple_cm_kill.zevtc"
+encounter = "HarvestTemple"
+result = "Success"
+mode = "Challenge"
 
 ## Festival strikes
-# TODO: Freezie kill
+[[log]]
+filename = "encounters/freezie_kill.zevtc"
+encounter = "Freezie"
+result = "Success"
+mode = "Normal"
 # TODO: Freezie fail
 
 ## Fractals
-# TODO: MAMA kill
-# TODO: MAMA fail
-# TODO: Siax kill
-# TODO: Siax fail
-# TODO: Ensolyss kill
-# TODO: Ensolyss fail
-# TODO: Skorvald kill
-# TODO: Skorvald fail
-# TODO: Skorvald CM
-# TODO: Artsariiv kill
-# TODO: Artsariiv fail
-# TODO: Arkk kill
-# TODO: Arkk fail
-# Ai - Both phases
+# MAMA
+[[log]]
+filename = "encounters/mama_kill.zevtc"
+encounter = "MAMA"
+result = "Success"
+mode = "Challenge"
+[[log]]
+filename = "encounters/mama_fail.zevtc"
+encounter = "MAMA"
+result = "Failure"
+mode = "Challenge"
+
+# Siax
+[[log]]
+filename = "encounters/siax_kill.zevtc"
+encounter = "SiaxTheCorrupted"
+result = "Success"
+mode = "Challenge"
+[[log]]
+filename = "encounters/siax_fail.zevtc"
+encounter = "SiaxTheCorrupted"
+result = "Failure"
+mode = "Challenge"
+
+# Ensolyss
+[[log]]
+filename = "encounters/ensolyss_kill.zevtc"
+encounter = "EnsolyssOfTheEndlessTorment"
+result = "Success"
+mode = "Challenge"
+[[log]]
+filename = "encounters/ensolyss_fail.zevtc"
+encounter = "EnsolyssOfTheEndlessTorment"
+result = "Failure"
+mode = "Challenge"
+
+# Artsariiv
+[[log]]
+filename = "encounters/artsariiv_kill.zevtc"
+encounter = "Artsariiv"
+result = "Success"
+mode = "Challenge"
+[[log]]
+filename = "encounters/artsariiv_fail.zevtc"
+encounter = "Artsariiv"
+result = "Failure"
+mode = "Challenge"
+
+# Arkk
+[[log]]
+filename = "encounters/arkk_kill.zevtc"
+encounter = "Arkk"
+result = "Success"
+mode = "Challenge"
+[[log]]
+filename = "encounters/arkk_fail.zevtc"
+encounter = "Arkk"
+result = "Failure"
+mode = "Challenge"
+
+# Ai
 [[log]]
 filename = "encounters/ai_both_kill.zevtc"
 encounter = "AiKeeperOfThePeakDayAndNight"
 result = "Success"
 mode = "Challenge"
 comment = "Ai Both phases killed in one log"
-# TODO: Ai - Both phases fail
-# TODO: Ai - Elemental kill
-# TODO: Ai - Elemental fail
-# TODO: Ai - Dark kill
-# TODO: Ai - Dark fail
+[[log]]
+filename = "encounters/ai_both_fail.zevtc"
+encounter = "AiKeeperOfThePeakDayAndNight"
+result = "Failure"
+mode = "Challenge"
+comment = "Ai Both phases, fail in middle of dark phase"
+
+[[log]]
+filename = "encounters/ai_elemental_kill.zevtc"
+encounter = "AiKeeperOfThePeakDayOnly"
+result = "Success"
+mode = "Challenge"
+comment = "Ai kill first phase and then /gg before dark phase"
+[[log]]
+filename = "encounters/ai_elemental_fail.zevtc"
+encounter = "AiKeeperOfThePeakDayOnly"
+result = "Failure"
+mode = "Challenge"
+comment = "Ai fail during first phase"
+
+[[log]]
+filename = "encounters/ai_dark_kill.zevtc"
+encounter = "AiKeeperOfThePeakNightOnly"
+result = "Success"
+mode = "Challenge"
+[[log]]
+filename = "encounters/ai_dark_fail.zevtc"
+encounter = "AiKeeperOfThePeakNightOnly"
+result = "Failure"
+mode = "Challenge"
 
 ## Golems
-# TODO: Golems kill
-# TODO: Golems fail
-# for all golems
+[[log]]
+filename = "encounters/golem_kill.zevtc"
+encounter = "StandardKittyGolem"
+result = "Success"
+mode = "Normal"
+[[log]]
+filename = "encounters/golem_fail.zevtc"
+encounter = "StandardKittyGolem"
+result = "Failure"
+mode = "Normal"
+# TODO: all golems
 
 ## WvW
-# TODO: EBG
-# TODO: Desert
-# TODO: Blue Alpine
-# TODO: Green Alpine
-# TODO: Obsidian sanctum
-# TODO: Edge of the Mists
-# TODO: Armistice Bastion
+[[log]]
+filename = "wvw/ebg.zevtc"
+encounter = "WorldVersusWorld"
+[[log]]
+filename = "wvw/armistice.zevtc"
+encounter = "WorldVersusWorld"
+[[log]]
+filename = "wvw/eotm.zevtc"
+encounter = "WorldVersusWorld"
+[[log]]
+filename = "wvw/obsidian_sanctum.zevtc"
+encounter = "WorldVersusWorld"
+[[log]]
+filename = "wvw/red_border.zevtc"
+encounter = "WorldVersusWorld"
+[[log]]
+filename = "wvw/green_border.zevtc"
+encounter = "WorldVersusWorld"
+[[log]]
+filename = "wvw/blue_border.zevtc"
+encounter = "WorldVersusWorld"
 
 # Emboldened logs
 
