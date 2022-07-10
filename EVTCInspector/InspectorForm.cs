@@ -334,6 +334,31 @@ namespace GW2Scratch.EVTCInspector
 				}
 			});
 			
+			var menu = new ContextMenu();
+			menu.Items.Add(new ButtonMenuItem
+			{
+				Text = "Copy ID",
+				Command = new Command((_, _) =>
+				{
+					if (grid.SelectedItem != null)
+					{
+						Clipboard.Instance.Text = grid.SelectedItem.Id.ToString();
+					}
+				})
+			});
+			menu.Items.Add(new ButtonMenuItem
+			{
+				Text = "Copy GUID",
+				Command = new Command((_, _) =>
+				{
+					if (grid.SelectedItem != null)
+					{
+						Clipboard.Instance.Text = GuidToString(grid.SelectedItem.ContentGuid);
+					}
+				})
+			});
+			grid.ContextMenu = menu;
+			
 			grid.DataStore = effects;
 			new GridViewSorter<Effect>(grid, effects).EnableSorting();
 
@@ -357,8 +382,33 @@ namespace GW2Scratch.EVTCInspector
 				DataCell = new TextBoxCell
 				{
 					Binding = new DelegateBinding<Marker, string>(x => GuidToString(x.ContentGuid))
-				}
+				},
 			});
+			
+			var menu = new ContextMenu();
+			menu.Items.Add(new ButtonMenuItem
+			{
+				Text = "Copy ID",
+				Command = new Command((_, _) =>
+				{
+					if (grid.SelectedItem != null)
+					{
+						Clipboard.Instance.Text = grid.SelectedItem.Id.ToString();
+					}
+				})
+			});
+			menu.Items.Add(new ButtonMenuItem
+			{
+				Text = "Copy GUID",
+				Command = new Command((_, _) =>
+				{
+					if (grid.SelectedItem != null)
+					{
+						Clipboard.Instance.Text = GuidToString(grid.SelectedItem.ContentGuid);
+					}
+				})
+			});
+			grid.ContextMenu = menu;
 			
 			grid.DataStore = markers;
 			new GridViewSorter<Marker>(grid, markers).EnableSorting();
