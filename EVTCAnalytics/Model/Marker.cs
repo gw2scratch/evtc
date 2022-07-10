@@ -1,27 +1,24 @@
 using System;
 using System.Text;
 
-namespace GW2Scratch.EVTCAnalytics.Model.Effects;
+namespace GW2Scratch.EVTCAnalytics.Model;
 
 /// <summary>
-/// Represents a game visual effect.
+/// Represents a game marker above an agent.
 /// </summary>
-public class Effect
+public class Marker
 {
 	/// <summary>
-	/// The ID number of the effect.
+	/// The ID number of the marker.
 	/// </summary>
 	public uint Id { get; }
 
 	/// <summary>
-	/// The content GUID of this effect stored as 16 bytes.
+	/// The content GUID of this marker stored as 16 bytes.
 	/// </summary>
-	/// <remarks>
-	/// Values from arcdps versions before 20220709 are wrong.
-	/// </remarks>
 	public byte[] ContentGuid { get; internal set; }
 
-	public Effect(uint id)
+	public Marker(uint id)
 	{
 		Id = id;
 	}

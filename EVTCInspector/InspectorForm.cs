@@ -44,6 +44,9 @@ namespace GW2Scratch.EVTCInspector
 		
 		// Processed effects
 		private readonly FilterCollection<Effect> effects = new FilterCollection<Effect>();
+			
+		// Processed markers
+		private readonly FilterCollection<Marker> markers = new FilterCollection<Marker>();
 
 		// Statistics
 		private readonly PropertyGrid statisticsPropertyGrid = new PropertyGrid();
@@ -88,13 +91,13 @@ namespace GW2Scratch.EVTCInspector
 			processedTabControl.Pages.Add(new TabPage(agentSplitter) {Text = "Agents"});
 			processedTabControl.Pages.Add(new TabPage(ConstructSkillGridView()) {Text = "Skills"});
 			processedTabControl.Pages.Add(new TabPage(ConstructEffectGridView()) {Text = "Effects"});
+			processedTabControl.Pages.Add(new TabPage(ConstructMarkerGridView()) {Text = "Markers"});
 
 			var statisticsLayout = new DynamicLayout();
 			statisticsLayout.Add(statisticsPropertyGrid);
 
 			mainTabControl.Pages.Add(new TabPage(parsedTabControl) {Text = "Parsed data", Padding = MainTabPadding});
-			mainTabControl.Pages.Add(new TabPage(processedTabControl)
-				{Text = "Processed data", Padding = MainTabPadding});
+			mainTabControl.Pages.Add(new TabPage(processedTabControl) {Text = "Processed data", Padding = MainTabPadding});
 			mainTabControl.Pages.Add(new TabPage(parsedStateLabel) {Text = "Log", Padding = MainTabPadding});
 			mainTabControl.Pages.Add(new TabPage(statisticsLayout) {Text = "Statistics", Padding = MainTabPadding});
 
@@ -236,6 +239,8 @@ namespace GW2Scratch.EVTCInspector
 					skills.AddRange(processedLog.Skills);
 					effects.Clear();
 					effects.AddRange(processedLog.Effects);
+					markers.Clear();
+					markers.AddRange(processedLog.Markers);
 				});
 			}
 			catch (Exception ex)
@@ -334,6 +339,33 @@ namespace GW2Scratch.EVTCInspector
 
 			return grid;
 		}
+		
+		private GridView<Marker> ConstructMarkerGridView()
+		{
+			var grid = new GridView<Marker>();
+			grid.Columns.Add(new GridColumn
+			{
+				HeaderText = "ID",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Marker, string>(x => x.Id.ToString())
+				}
+			});
+			grid.Columns.Add(new GridColumn
+			{
+				HeaderText = "Content GUID",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Marker, string>(x => GuidToString(x.ContentGuid))
+				}
+			});
+			
+			grid.DataStore = markers;
+			new GridViewSorter<Marker>(grid, markers).EnableSorting();
+
+			return grid;
+		}
+		
 		
 		private GridView<Agent> ConstructAgentGridView()
 		{
