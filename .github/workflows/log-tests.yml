@@ -1,0 +1,30 @@
+name: Main log test suite
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: true
+    - name: Setup .NET 6
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+    # This is a workaround for issue https://github.com/actions/virtual-environments/issues/1090,
+    # which causes to nuget restores to fail
+    - name: Clean NuGet cache
+      run: dotnet nuget locals all --clear
+    - name: Build
+      run: dotnet build --configuration Release
+    - name: Download log suite
+      run: |
+        wget -m -np -c -U "wget-gh-actions-evtc" -R "index.html*" "https://datasets.gw2scratch.com/datasets/main-suite/"
+        mv datasets.gw2scratch.com/datasets/main-suite suite-logs
+        cp Tests/EVTCAnalytics.LogTests.LocalSets/main-suite.toml suite-logs/main-suite.toml
+    - name: Test
+      run: dotnet run --configuration Release --project Tests/EVTCAnalytics.LogTests.LocalSets --local suite-logs/main-suite.toml
