@@ -20,7 +20,7 @@ jobs:
     - name: Clean NuGet cache
       run: dotnet nuget locals all --clear
     - name: Build
-      run: dotnet build --configuration Release
+      run: dotnet build --configuration Release --project Tests/EVTCAnalytics.LogTests.LocalSets
     - name: Download log suite
       run: |
         wget -m -np -c -U "wget-gh-actions-evtc" -R "index.html*" "https://datasets.gw2scratch.com/datasets/main-suite/"
