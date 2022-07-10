@@ -63,12 +63,15 @@ filename = "encounters/trio_kill.zevtc"
 encounter = "BanditTrio"
 result = "Success"
 mode = "Normal"
-[[log]]
-filename = "encounters/trio_kill_no_killing_blow_narella.zevtc"
-encounter = "BanditTrio"
-result = "Success"
-mode = "Normal"
-comment = "Bandit Trio kill; Narella dies without a killing blow"
+
+# Currently disabled as it is broken and somewhat rare: tracking issue at https://github.com/gw2scratch/evtc/issues/31
+# [[log]]
+# filename = "encounters/trio_kill_no_killing_blow_narella.zevtc"
+# encounter = "BanditTrio"
+# result = "Success"
+# mode = "Normal"
+# comment = "Bandit Trio kill; Narella dies without a killing blow"
+
 [[log]]
 filename = "encounters/trio_fail.zevtc"
 encounter = "BanditTrio"
