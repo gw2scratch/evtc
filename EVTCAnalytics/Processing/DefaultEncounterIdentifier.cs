@@ -667,14 +667,14 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 							bool determinedPreDark = false;
 							foreach (var ev in events)
 							{
-								if (ev is BuffApplyEvent {Buff: {Id: SkillIds.Determined895}})
+								if (ev is BuffApplyEvent {Buff.Id: SkillIds.Determined895 } and not InitialBuffEvent)
 								{
 									// This buff application is the transition between the two phases.
 									// This works because we stop enumerating events once we reach the dark phase.
 									determinedPreDark = true;
 								}
 
-								if (ev is SkillCastEvent {Skill: {Id: SkillIds.AiDarkEarlySkill}})
+								if (ev is SkillCastEvent {Skill.Id: SkillIds.AiDarkEarlySkill })
 								{
 									inDark = true;
 									break;

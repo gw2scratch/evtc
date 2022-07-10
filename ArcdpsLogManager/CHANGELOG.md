@@ -10,6 +10,11 @@ This is the full changelog of the arcdps Log Manager.
 #### Changes
 - Linux only (already worked on Windows): Clicking on the filename in the log detail panel now selects the file (requires dbus).
 
+#### Fixes
+- Fixed Ai logs always being categorized as both phases.
+
+*We now also have an automatic log test suite (134 logs) to avoid issues similar to what happened to Ai in the last release.*
+
 ## Log Manager v1.6
 
 #### New features

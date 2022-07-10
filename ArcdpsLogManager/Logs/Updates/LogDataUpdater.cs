@@ -108,6 +108,10 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Updates
 					&& log.Encounter == Encounter.HarvestTemple
 					&& log.GameBuild >= 130910,
 				"Add CM detection for Harvest Temple."),
+			new LogUpdate(log => log.ParsingVersion < new Version(1, 6, 0, 2)
+					&& log.Encounter == Encounter.AiKeeperOfThePeakDayAndNight
+					&& log.ParsingVersion >= new Version(1, 6, 0, 0),
+				"Fixes Ai logs always being categorized as both phases"),
 			// When adding a new update, you need to increase the revision (last value) of the version in the .csproj file
 			// unless the version changes more significantly, in that case it can be reset to 0.
 		};
