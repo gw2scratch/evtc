@@ -118,8 +118,11 @@ namespace GW2Scratch.EVTCInspector
 			
 			var showTimeSinceStartOfLogMenuItem = new CheckMenuItem {Text = "Show times since start of log"};
 			showTimeSinceStartOfLogMenuItem.Checked = eventListControl.ShowTimeSinceFirstEvent;
-			showTimeSinceStartOfLogMenuItem.CheckedChanged += (sender, args) => 
+			showTimeSinceStartOfLogMenuItem.CheckedChanged += (sender, args) =>
+			{
 				eventListControl.ShowTimeSinceFirstEvent = showTimeSinceStartOfLogMenuItem.Checked;
+				agentControl.ShowTimeSinceFirstEvent = showTimeSinceStartOfLogMenuItem.Checked;
+			};
 			
 			var optionsMenuItem = new ButtonMenuItem {Text = "&Options"};
 			optionsMenuItem.Items.Add(skipParsingMenuItem);
@@ -230,6 +233,7 @@ namespace GW2Scratch.EVTCInspector
 					eventList.Clear();
 					eventList.AddRange(processedLog.Events);
 					eventListControl.Events = eventList;
+					eventListControl.TimeOfOldestEvent = eventList.Where(x => x is not UnknownEvent).Select(x => x.Time).DefaultIfEmpty().Min();
 					eventListControl.Agents = processedLog.Agents.ToArray();
 					agents.Clear();
 					agents.AddRange(new FilterCollection<Agent>(processedLog.Agents));

@@ -31,6 +31,12 @@ namespace GW2Scratch.EVTCInspector
 			}
 		}
 
+		public bool ShowTimeSinceFirstEvent
+		{
+			get => eventListControl.ShowTimeSinceFirstEvent;
+			set => eventListControl.ShowTimeSinceFirstEvent = true;
+		}
+
 		private Agent agent;
 
 		private readonly JsonSerializationControl agentJsonControl;
@@ -79,9 +85,9 @@ namespace GW2Scratch.EVTCInspector
 			}
 			else
 			{
-				eventListControl.Events = events.Where(x => EventFilters.IsAgentInEvent(x, agent,
-					eventFilterAttackerCheckBox.Checked.Value, eventFilterDefenderCheckBox.Checked.Value)).ToArray();
+				eventListControl.Events = events.Where(x => EventFilters.IsAgentInEvent(x, agent, eventFilterAttackerCheckBox.Checked.Value, eventFilterDefenderCheckBox.Checked.Value)).ToArray();
 			}
+			eventListControl.TimeOfOldestEvent = events.Where(x => x is not UnknownEvent).Select(x => x.Time).DefaultIfEmpty().Min();
 		}
 	}
 }
