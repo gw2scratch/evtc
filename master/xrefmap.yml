@@ -3661,12 +3661,60 @@ references:
   commentId: F:GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.VoidAmalgamate
   fullName: GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.VoidAmalgamate
   nameWithType: SpeciesIds.VoidAmalgamate
+- uid: GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.VoidBrandbomber
+  name: VoidBrandbomber
+  href: api/GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.html#GW2Scratch_EVTCAnalytics_GameData_SpeciesIds_VoidBrandbomber
+  commentId: F:GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.VoidBrandbomber
+  fullName: GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.VoidBrandbomber
+  nameWithType: SpeciesIds.VoidBrandbomber
+- uid: GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.VoidGiant
+  name: VoidGiant
+  href: api/GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.html#GW2Scratch_EVTCAnalytics_GameData_SpeciesIds_VoidGiant
+  commentId: F:GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.VoidGiant
+  fullName: GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.VoidGiant
+  nameWithType: SpeciesIds.VoidGiant
+- uid: GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.VoidGoliath
+  name: VoidGoliath
+  href: api/GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.html#GW2Scratch_EVTCAnalytics_GameData_SpeciesIds_VoidGoliath
+  commentId: F:GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.VoidGoliath
+  fullName: GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.VoidGoliath
+  nameWithType: SpeciesIds.VoidGoliath
 - uid: GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.VoidMelter
   name: VoidMelter
   href: api/GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.html#GW2Scratch_EVTCAnalytics_GameData_SpeciesIds_VoidMelter
   commentId: F:GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.VoidMelter
   fullName: GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.VoidMelter
   nameWithType: SpeciesIds.VoidMelter
+- uid: GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.VoidObliterator
+  name: VoidObliterator
+  href: api/GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.html#GW2Scratch_EVTCAnalytics_GameData_SpeciesIds_VoidObliterator
+  commentId: F:GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.VoidObliterator
+  fullName: GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.VoidObliterator
+  nameWithType: SpeciesIds.VoidObliterator
+- uid: GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.VoidSaltsprayDragon
+  name: VoidSaltsprayDragon
+  href: api/GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.html#GW2Scratch_EVTCAnalytics_GameData_SpeciesIds_VoidSaltsprayDragon
+  commentId: F:GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.VoidSaltsprayDragon
+  fullName: GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.VoidSaltsprayDragon
+  nameWithType: SpeciesIds.VoidSaltsprayDragon
+- uid: GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.VoidStormseer
+  name: VoidStormseer
+  href: api/GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.html#GW2Scratch_EVTCAnalytics_GameData_SpeciesIds_VoidStormseer
+  commentId: F:GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.VoidStormseer
+  fullName: GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.VoidStormseer
+  nameWithType: SpeciesIds.VoidStormseer
+- uid: GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.VoidTimeCaster
+  name: VoidTimeCaster
+  href: api/GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.html#GW2Scratch_EVTCAnalytics_GameData_SpeciesIds_VoidTimeCaster
+  commentId: F:GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.VoidTimeCaster
+  fullName: GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.VoidTimeCaster
+  nameWithType: SpeciesIds.VoidTimeCaster
+- uid: GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.VoidWarforged
+  name: VoidWarforged
+  href: api/GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.html#GW2Scratch_EVTCAnalytics_GameData_SpeciesIds_VoidWarforged
+  commentId: F:GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.VoidWarforged
+  fullName: GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.VoidWarforged
+  nameWithType: SpeciesIds.VoidWarforged
 - uid: GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.WhisperOfJormag
   name: WhisperOfJormag
   href: api/GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.html#GW2Scratch_EVTCAnalytics_GameData_SpeciesIds_WhisperOfJormag
@@ -7859,6 +7907,15 @@ references:
   commentId: M:GW2Scratch.EVTCAnalytics.Processing.EncounterIdentifierBuilder.WithHealth(GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.IHealthDeterminer)
   fullName: GW2Scratch.EVTCAnalytics.Processing.EncounterIdentifierBuilder.WithHealth(GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.IHealthDeterminer)
   nameWithType: EncounterIdentifierBuilder.WithHealth(IHealthDeterminer)
+- uid: GW2Scratch.EVTCAnalytics.Processing.EncounterIdentifierBuilder.WithHealth(System.Func{GW2Scratch.EVTCAnalytics.Model.Log,System.Nullable{System.Single}})
+  name: WithHealth(Func<Log, Nullable<Single>>)
+  href: api/GW2Scratch.EVTCAnalytics.Processing.EncounterIdentifierBuilder.html#GW2Scratch_EVTCAnalytics_Processing_EncounterIdentifierBuilder_WithHealth_System_Func_GW2Scratch_EVTCAnalytics_Model_Log_System_Nullable_System_Single___
+  commentId: M:GW2Scratch.EVTCAnalytics.Processing.EncounterIdentifierBuilder.WithHealth(System.Func{GW2Scratch.EVTCAnalytics.Model.Log,System.Nullable{System.Single}})
+  name.vb: WithHealth(Func(Of Log, Nullable(Of Single)))
+  fullName: GW2Scratch.EVTCAnalytics.Processing.EncounterIdentifierBuilder.WithHealth(System.Func<GW2Scratch.EVTCAnalytics.Model.Log, System.Nullable<System.Single>>)
+  fullName.vb: GW2Scratch.EVTCAnalytics.Processing.EncounterIdentifierBuilder.WithHealth(System.Func(Of GW2Scratch.EVTCAnalytics.Model.Log, System.Nullable(Of System.Single)))
+  nameWithType: EncounterIdentifierBuilder.WithHealth(Func<Log, Nullable<Single>>)
+  nameWithType.vb: EncounterIdentifierBuilder.WithHealth(Func(Of Log, Nullable(Of Single)))
 - uid: GW2Scratch.EVTCAnalytics.Processing.EncounterIdentifierBuilder.WithHealth*
   name: WithHealth
   href: api/GW2Scratch.EVTCAnalytics.Processing.EncounterIdentifierBuilder.html#GW2Scratch_EVTCAnalytics_Processing_EncounterIdentifierBuilder_WithHealth_
@@ -9187,6 +9244,73 @@ references:
   commentId: N:GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health
   fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health
   nameWithType: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health
+- uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.AdHocHealthDeterminer
+  name: AdHocHealthDeterminer
+  href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.AdHocHealthDeterminer.html
+  commentId: T:GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.AdHocHealthDeterminer
+  fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.AdHocHealthDeterminer
+  nameWithType: AdHocHealthDeterminer
+- uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.AdHocHealthDeterminer.#ctor(System.Func{GW2Scratch.EVTCAnalytics.Model.Log,System.Nullable{System.Single}})
+  name: AdHocHealthDeterminer(Func<Log, Nullable<Single>>)
+  href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.AdHocHealthDeterminer.html#GW2Scratch_EVTCAnalytics_Processing_Encounters_Results_Health_AdHocHealthDeterminer__ctor_System_Func_GW2Scratch_EVTCAnalytics_Model_Log_System_Nullable_System_Single___
+  commentId: M:GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.AdHocHealthDeterminer.#ctor(System.Func{GW2Scratch.EVTCAnalytics.Model.Log,System.Nullable{System.Single}})
+  name.vb: AdHocHealthDeterminer(Func(Of Log, Nullable(Of Single)))
+  fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.AdHocHealthDeterminer.AdHocHealthDeterminer(System.Func<GW2Scratch.EVTCAnalytics.Model.Log, System.Nullable<System.Single>>)
+  fullName.vb: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.AdHocHealthDeterminer.AdHocHealthDeterminer(System.Func(Of GW2Scratch.EVTCAnalytics.Model.Log, System.Nullable(Of System.Single)))
+  nameWithType: AdHocHealthDeterminer.AdHocHealthDeterminer(Func<Log, Nullable<Single>>)
+  nameWithType.vb: AdHocHealthDeterminer.AdHocHealthDeterminer(Func(Of Log, Nullable(Of Single)))
+- uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.AdHocHealthDeterminer.#ctor*
+  name: AdHocHealthDeterminer
+  href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.AdHocHealthDeterminer.html#GW2Scratch_EVTCAnalytics_Processing_Encounters_Results_Health_AdHocHealthDeterminer__ctor_
+  commentId: Overload:GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.AdHocHealthDeterminer.#ctor
+  isSpec: "True"
+  fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.AdHocHealthDeterminer.AdHocHealthDeterminer
+  nameWithType: AdHocHealthDeterminer.AdHocHealthDeterminer
+- uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.AdHocHealthDeterminer.GetMainEnemyHealthFraction(GW2Scratch.EVTCAnalytics.Model.Log)
+  name: GetMainEnemyHealthFraction(Log)
+  href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.AdHocHealthDeterminer.html#GW2Scratch_EVTCAnalytics_Processing_Encounters_Results_Health_AdHocHealthDeterminer_GetMainEnemyHealthFraction_GW2Scratch_EVTCAnalytics_Model_Log_
+  commentId: M:GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.AdHocHealthDeterminer.GetMainEnemyHealthFraction(GW2Scratch.EVTCAnalytics.Model.Log)
+  fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.AdHocHealthDeterminer.GetMainEnemyHealthFraction(GW2Scratch.EVTCAnalytics.Model.Log)
+  nameWithType: AdHocHealthDeterminer.GetMainEnemyHealthFraction(Log)
+- uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.AdHocHealthDeterminer.GetMainEnemyHealthFraction*
+  name: GetMainEnemyHealthFraction
+  href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.AdHocHealthDeterminer.html#GW2Scratch_EVTCAnalytics_Processing_Encounters_Results_Health_AdHocHealthDeterminer_GetMainEnemyHealthFraction_
+  commentId: Overload:GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.AdHocHealthDeterminer.GetMainEnemyHealthFraction
+  isSpec: "True"
+  fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.AdHocHealthDeterminer.GetMainEnemyHealthFraction
+  nameWithType: AdHocHealthDeterminer.GetMainEnemyHealthFraction
+- uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.AgentHealthDeterminer
+  name: AgentHealthDeterminer
+  href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.AgentHealthDeterminer.html
+  commentId: T:GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.AgentHealthDeterminer
+  fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.AgentHealthDeterminer
+  nameWithType: AgentHealthDeterminer
+- uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.AgentHealthDeterminer.#ctor(GW2Scratch.EVTCAnalytics.Model.Agents.Agent)
+  name: AgentHealthDeterminer(Agent)
+  href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.AgentHealthDeterminer.html#GW2Scratch_EVTCAnalytics_Processing_Encounters_Results_Health_AgentHealthDeterminer__ctor_GW2Scratch_EVTCAnalytics_Model_Agents_Agent_
+  commentId: M:GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.AgentHealthDeterminer.#ctor(GW2Scratch.EVTCAnalytics.Model.Agents.Agent)
+  fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.AgentHealthDeterminer.AgentHealthDeterminer(GW2Scratch.EVTCAnalytics.Model.Agents.Agent)
+  nameWithType: AgentHealthDeterminer.AgentHealthDeterminer(Agent)
+- uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.AgentHealthDeterminer.#ctor*
+  name: AgentHealthDeterminer
+  href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.AgentHealthDeterminer.html#GW2Scratch_EVTCAnalytics_Processing_Encounters_Results_Health_AgentHealthDeterminer__ctor_
+  commentId: Overload:GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.AgentHealthDeterminer.#ctor
+  isSpec: "True"
+  fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.AgentHealthDeterminer.AgentHealthDeterminer
+  nameWithType: AgentHealthDeterminer.AgentHealthDeterminer
+- uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.AgentHealthDeterminer.GetMainEnemyHealthFraction(GW2Scratch.EVTCAnalytics.Model.Log)
+  name: GetMainEnemyHealthFraction(Log)
+  href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.AgentHealthDeterminer.html#GW2Scratch_EVTCAnalytics_Processing_Encounters_Results_Health_AgentHealthDeterminer_GetMainEnemyHealthFraction_GW2Scratch_EVTCAnalytics_Model_Log_
+  commentId: M:GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.AgentHealthDeterminer.GetMainEnemyHealthFraction(GW2Scratch.EVTCAnalytics.Model.Log)
+  fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.AgentHealthDeterminer.GetMainEnemyHealthFraction(GW2Scratch.EVTCAnalytics.Model.Log)
+  nameWithType: AgentHealthDeterminer.GetMainEnemyHealthFraction(Log)
+- uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.AgentHealthDeterminer.GetMainEnemyHealthFraction*
+  name: GetMainEnemyHealthFraction
+  href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.AgentHealthDeterminer.html#GW2Scratch_EVTCAnalytics_Processing_Encounters_Results_Health_AgentHealthDeterminer_GetMainEnemyHealthFraction_
+  commentId: Overload:GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.AgentHealthDeterminer.GetMainEnemyHealthFraction
+  isSpec: "True"
+  fullName: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.AgentHealthDeterminer.GetMainEnemyHealthFraction
+  nameWithType: AgentHealthDeterminer.GetMainEnemyHealthFraction
 - uid: GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.ConstantHealthDeterminer
   name: ConstantHealthDeterminer
   href: api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.ConstantHealthDeterminer.html

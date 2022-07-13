@@ -924,7 +924,7 @@
       "output": {
         ".html": {
           "relative_path": "api/GW2Scratch.EVTCAnalytics.GameData.SpeciesIds.html",
-          "hash": "+X8WbSGrb3OeQURMDsF1/2Vly8+zZsitfRQF9DVJYE0="
+          "hash": "Dlu6LkUT7YLcrDJIS0sTIqxpUmpMHlhIbapQBZxE6Qw="
         }
       },
       "is_incremental": false,
@@ -1536,7 +1536,7 @@
       "output": {
         ".html": {
           "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.DefaultEncounterIdentifier.html",
-          "hash": "Y3gOMcrGAQ+18V7b9NgMPreR1xDza9ieCUN2VAklfbw="
+          "hash": "vKUuoPGdQsv1YVsuXcbIOzLyplRiEel+8sile+Q83XA="
         }
       },
       "is_incremental": false,
@@ -1548,7 +1548,7 @@
       "output": {
         ".html": {
           "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.EncounterIdentifierBuilder.html",
-          "hash": "yFRdu7FNkF8Y7HOXStuC/RQOzlCtZawNojW4Ro0lcaE="
+          "hash": "AZPgy/hUK8FAA2KJQiCEWlVSCNxHmu0pdy+w0WEqpcY="
         }
       },
       "is_incremental": false,
@@ -1964,6 +1964,30 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.AdHocHealthDeterminer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.AdHocHealthDeterminer.html",
+          "hash": "eEagno+K54yLPDdbt1QKRSTXdVKA+c6NHNDR7WD5v7c="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.AgentHealthDeterminer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.AgentHealthDeterminer.html",
+          "hash": "JpWgjd936AvDEeO6fNWPUJxndD13PBjag2aJXS/++L8="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "obj/api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.ConstantHealthDeterminer.yml",
       "output": {
         ".html": {
@@ -2028,7 +2052,7 @@
       "output": {
         ".html": {
           "relative_path": "api/GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health.html",
-          "hash": "5ys9EfEFoAyHzLkLpqpl3ZcKBWlKBYAmcGC1JFxVxyE="
+          "hash": "VtfROkT5utDwv9jNH2M37afZRDTCOcPdIr/dqEASu/M="
         }
       },
       "is_incremental": false,
@@ -2328,7 +2352,7 @@
       "output": {
         ".html": {
           "relative_path": "api/toc.html",
-          "hash": "PVxcCrutxLjxf3OvOdwE5GnCD9+4N45AWmmBZYHj2Wk="
+          "hash": "uB0fMyXjxGpTfK3F45dDeLqjEs+f0CqpD1H9pdoY4lc="
         }
       },
       "is_incremental": false,
@@ -2367,7 +2391,7 @@
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 185,
+          "total_file_count": 187,
           "skipped_file_count": 0
         },
         "TocDocumentProcessor": {
