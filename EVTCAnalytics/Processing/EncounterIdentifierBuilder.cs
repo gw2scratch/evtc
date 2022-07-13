@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using GW2Scratch.EVTCAnalytics.GameData.Encounters;
+using GW2Scratch.EVTCAnalytics.Model;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes;
@@ -62,6 +63,12 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 		public EncounterIdentifierBuilder WithHealth(IHealthDeterminer determiner)
 		{
 			HealthDeterminer = determiner;
+			return this;
+		}
+		
+		public EncounterIdentifierBuilder WithHealth(Func<Log, float?> determinerFunc)
+		{
+			HealthDeterminer = new AdHocHealthDeterminer(determinerFunc);
 			return this;
 		}
 

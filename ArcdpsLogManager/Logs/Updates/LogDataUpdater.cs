@@ -112,6 +112,9 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Updates
 					&& log.Encounter == Encounter.AiKeeperOfThePeakDayAndNight
 					&& log.ParsingVersion >= new Version(1, 6, 0, 0),
 				"Fixes Ai logs always being categorized as both phases"),
+			new LogUpdate(log => log.ParsingVersion < new Version(1, 6, 0, 3)
+					&& log.Encounter == Encounter.HarvestTemple,
+				"Slightly improved health percentage display for Harvest Temple (16.66% per phase)"),
 			// When adding a new update, you need to increase the revision (last value) of the version in the .csproj file
 			// unless the version changes more significantly, in that case it can be reset to 0.
 		};

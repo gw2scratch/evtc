@@ -4,8 +4,9 @@ This is the full changelog of the arcdps Log Manager.
 
 ## Log Manager v1.7
 
-#### New features (Inspector)
-- Added an option to show times since start of log (enabled by default)
+#### New features
+- Slightly improved health display for Harvest Temple (16.66% per phase), a better phase display might come in the future.
+- *Inspector*: Added an option to show times since start of log (enabled by default)
 
 #### Changes
 - Linux only (already worked on Windows): Clicking on the filename in the log detail panel now selects the file (requires dbus).

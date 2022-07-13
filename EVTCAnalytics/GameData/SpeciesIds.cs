@@ -121,6 +121,14 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		public const int MinisterLiChallengeMode = 24266;
 		public const int VoidAmalgamate = 24375;
 		public const int VoidMelter = 24223;
+		public const int VoidStormseer = 24677;
+		public const int VoidWarforged = 24129;
+		public const int VoidBrandbomber = 24783;
+		public const int VoidTimeCaster = 25025;
+		public const int VoidGiant = 24450;
+		public const int VoidSaltsprayDragon = 23846;
+		public const int VoidObliterator = 23995;
+		public const int VoidGoliath = 24761;
 		
 		// Story
 		public const int HeartsAndMindsMordremoth = 15884;
