@@ -553,21 +553,14 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 
 						return 1 - finishedHealth + remainingInPhase;
 					});
-					
+
 					if (finalGadget == null)
 					{
 						builder.WithResult(new ConstantResultDeterminer(EncounterResult.Unknown));
 					}
 					else
 					{
-						// We use a health threshold instead of checking for the gadget going
-						// through enable->disable->enable->disable to make it possible to correctly detect success
-						// if the PoV player joins the instance late. This should work unless they join after
-						// the last health update.
-						
-						// Note that the gadget keeps its initial health from the previous attempt if the fight
-						// is reset within the same instance.
-						builder.WithResult(new TargetableChangedBelowHealthThresholdDeterminer(finalGadget, false, 0.3f));
+						builder.WithResult(new HarvestTempleResultDeterminer(finalGadget, agents.OfType<Player>().ToList()));
 					}
 
 					return builder.Build();

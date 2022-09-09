@@ -19,11 +19,13 @@ public class AgentHealthDeterminer : IHealthDeterminer
 
 	public float? GetMainEnemyHealthFraction(Log log)
 	{
-		float? healthPercentage = log.Events.OfType<AgentHealthUpdateEvent>()
+		var healthPercentage = log.Events.OfType<AgentHealthUpdateEvent>()
 			.Where(e => e.Agent == agent)
 			.Select(a => (float?) a.HealthFraction)
+			.Reverse()
+			.Take(2)
 			.DefaultIfEmpty(1)
-			.Last();
+			.Min();
 
 		return healthPercentage;
 	}
