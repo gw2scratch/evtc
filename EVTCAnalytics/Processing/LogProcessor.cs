@@ -797,14 +797,29 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			Debug.Assert(state.AgentsByAddress != null);
 			Debug.Assert(state.SkillsById != null);
 
-			Agent GetAgentByAddress(ulong address)
+			Agent GetAgentOrCreate(ulong address, int id)
 			{
 				if (state.AgentsByAddress.TryGetValue(address, out Agent agent))
 				{
 					return agent;
 				}
 
-				return null;
+				if (address == 0)
+				{
+					return null;
+				}
+
+				var newAgent = new UnlistedAgent(new AgentOrigin(new OriginalAgentData(address, id)));
+				state.Agents.Add(newAgent);
+				if (!state.AgentsById.TryGetValue(id, out var agentsWithId))
+				{
+					agentsWithId = new List<Agent>();
+					state.AgentsById[id] = agentsWithId;
+				}
+				agentsWithId.Add(newAgent);
+				state.AgentsByAddress.Add(address, newAgent);
+				
+				return newAgent;
 			}
 
 			Skill GetSkillById(uint id)
@@ -835,23 +850,23 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				switch (item.IsStateChange)
 				{
 					case StateChange.EnterCombat:
-						return new AgentEnterCombatEvent(item.Time, GetAgentByAddress(item.SrcAgent),
+						return new AgentEnterCombatEvent(item.Time, GetAgentOrCreate(item.SrcAgent, item.SrcAgentId),
 							(int) item.DstAgent);
 					case StateChange.ExitCombat:
-						return new AgentExitCombatEvent(item.Time, GetAgentByAddress(item.SrcAgent));
+						return new AgentExitCombatEvent(item.Time, GetAgentOrCreate(item.SrcAgent, item.SrcAgentId));
 					case StateChange.ChangeUp:
-						return new AgentRevivedEvent(item.Time, GetAgentByAddress(item.SrcAgent));
+						return new AgentRevivedEvent(item.Time, GetAgentOrCreate(item.SrcAgent, item.SrcAgentId));
 					case StateChange.ChangeDead:
-						return new AgentDeadEvent(item.Time, GetAgentByAddress(item.SrcAgent));
+						return new AgentDeadEvent(item.Time, GetAgentOrCreate(item.SrcAgent, item.SrcAgentId));
 					case StateChange.ChangeDown:
-						return new AgentDownedEvent(item.Time, GetAgentByAddress(item.SrcAgent));
+						return new AgentDownedEvent(item.Time, GetAgentOrCreate(item.SrcAgent, item.SrcAgentId));
 					case StateChange.Spawn:
-						return new AgentSpawnEvent(item.Time, GetAgentByAddress(item.SrcAgent));
+						return new AgentSpawnEvent(item.Time, GetAgentOrCreate(item.SrcAgent, item.SrcAgentId));
 					case StateChange.Despawn:
-						return new AgentDespawnEvent(item.Time, GetAgentByAddress(item.SrcAgent));
+						return new AgentDespawnEvent(item.Time, GetAgentOrCreate(item.SrcAgent, item.SrcAgentId));
 					case StateChange.HealthUpdate:
 						var healthFraction = item.DstAgent / 10000f;
-						return new AgentHealthUpdateEvent(item.Time, GetAgentByAddress(item.SrcAgent),
+						return new AgentHealthUpdateEvent(item.Time, GetAgentOrCreate(item.SrcAgent, item.SrcAgentId),
 							healthFraction);
 					case StateChange.WeaponSwap:
 						WeaponSet newWeaponSet;
@@ -874,10 +889,10 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 								break;
 						}
 
-						return new AgentWeaponSwapEvent(item.Time, GetAgentByAddress(item.SrcAgent),
+						return new AgentWeaponSwapEvent(item.Time, GetAgentOrCreate(item.SrcAgent, item.SrcAgentId),
 							newWeaponSet);
 					case StateChange.MaxHealthUpdate:
-						return new AgentMaxHealthUpdateEvent(item.Time, GetAgentByAddress(item.SrcAgent),
+						return new AgentMaxHealthUpdateEvent(item.Time, GetAgentOrCreate(item.SrcAgent, item.SrcAgentId),
 							item.DstAgent);
 					case StateChange.Reward:
 						return new RewardEvent(item.Time, item.DstAgent, item.Value);
@@ -889,8 +904,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						
 						int durationApplied = item.Value;
 						uint durationOfRemovedStack = item.OverstackValue;
-						var agent = GetAgentByAddress(item.DstAgent);
-						var sourceAgent = GetAgentByAddress(item.SrcAgent);
+						var agent = GetAgentOrCreate(item.DstAgent, item.DstAgentId);
+						var sourceAgent = GetAgentOrCreate(item.SrcAgent, item.SrcAgentId);
 						return new InitialBuffEvent(item.Time, agent, buff, sourceAgent, durationApplied,
 							durationOfRemovedStack);
 					}
@@ -900,7 +915,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						float y = BitConversions.ToSingle((uint) (item.DstAgent >> 32 & 0xFFFFFFFF));
 						float z = BitConversions.ToSingle(item.Value);
 
-						return new PositionChangeEvent(item.Time, GetAgentByAddress(item.SrcAgent), x, y, z);
+						return new PositionChangeEvent(item.Time, GetAgentOrCreate(item.SrcAgent, item.SrcAgentId), x, y, z);
 					}
 					case StateChange.Velocity:
 					{
@@ -908,21 +923,21 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						float y = BitConversions.ToSingle((uint) (item.DstAgent >> 32 & 0xFFFFFFFF));
 						float z = BitConversions.ToSingle(item.Value);
 
-						return new VelocityChangeEvent(item.Time, GetAgentByAddress(item.SrcAgent), x, y, z);
+						return new VelocityChangeEvent(item.Time, GetAgentOrCreate(item.SrcAgent, item.SrcAgentId), x, y, z);
 					}
 					case StateChange.Rotation:
 					{
 						float x = BitConversions.ToSingle((uint) (item.DstAgent & 0xFFFFFFFF));
 						float y = BitConversions.ToSingle((uint) (item.DstAgent >> 32 & 0xFFFFFFFF));
 
-						return new FacingChangeEvent(item.Time, GetAgentByAddress(item.SrcAgent), x, y);
+						return new FacingChangeEvent(item.Time, GetAgentOrCreate(item.SrcAgent, item.SrcAgentId), x, y);
 					}
 					case StateChange.TeamChange:
-						return new TeamChangeEvent(item.Time, GetAgentByAddress(item.SrcAgent),
+						return new TeamChangeEvent(item.Time, GetAgentOrCreate(item.SrcAgent, item.SrcAgentId),
 							item.DstAgent);
 					case StateChange.Targetable:
 					{
-						var agent = GetAgentByAddress(item.SrcAgent);
+						var agent = GetAgentOrCreate(item.SrcAgent, item.SrcAgentId);
 						if (agent is AttackTarget target)
 						{
 							return new TargetableChangeEvent(item.Time, target, item.DstAgent != 0);
@@ -935,11 +950,9 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					case StateChange.ReplInfo:
 						return new UnknownEvent(item.Time, item);
 					case StateChange.StackActive:
-						return new ActiveBuffStackEvent(item.Time, GetAgentByAddress(item.SrcAgent),
-							(uint) item.DstAgent);
+						return new ActiveBuffStackEvent(item.Time, GetAgentOrCreate(item.SrcAgent, item.SrcAgentId), (uint) item.DstAgent);
 					case StateChange.StackReset:
-						return new ResetBuffStackEvent(item.Time, GetAgentByAddress(item.SrcAgent), item.Padding,
-							item.Value);
+						return new ResetBuffStackEvent(item.Time, GetAgentOrCreate(item.SrcAgent, item.SrcAgentId), item.Padding, item.Value);
 					case StateChange.BreakbarState:
 						var breakbarState = item.Value switch
 						{
@@ -949,13 +962,11 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 							3 => DefianceBarStateUpdateEvent.DefianceBarState.None,
 							_ => DefianceBarStateUpdateEvent.DefianceBarState.Unknown
 						};
-						return new DefianceBarStateUpdateEvent(item.Time, GetAgentByAddress(item.SrcAgent),
-							breakbarState);
+						return new DefianceBarStateUpdateEvent(item.Time, GetAgentOrCreate(item.SrcAgent, item.SrcAgentId), breakbarState);
 					case StateChange.BreakbarPercent:
 						// This encoding is inconsistent with the health update.
 						float breakbarHealthFraction = BitConversions.ToSingle(item.Value);
-						return new DefianceBarHealthUpdateEvent(item.Time, GetAgentByAddress(item.SrcAgent),
-							breakbarHealthFraction);
+						return new DefianceBarHealthUpdateEvent(item.Time, GetAgentOrCreate(item.SrcAgent, item.SrcAgentId), breakbarHealthFraction);
 					case StateChange.BuffInfo:
 						// TODO: Figure out what the contents are
 					case StateChange.BuffFormula:
@@ -973,10 +984,10 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 							state.MarkersById[markerId] = marker;
 						}
 						
-						return new AgentTagEvent(item.Time, GetAgentByAddress(item.SrcAgent), marker);
+						return new AgentTagEvent(item.Time, GetAgentOrCreate(item.SrcAgent, item.SrcAgentId), marker);
 					case StateChange.BarrierUpdate:
 						var barrierFraction = item.DstAgent / 10000f;
-						return new BarrierUpdateEvent(item.Time, GetAgentByAddress(item.SrcAgent), barrierFraction);
+						return new BarrierUpdateEvent(item.Time, GetAgentOrCreate(item.SrcAgent, item.SrcAgentId), barrierFraction);
 					case StateChange.StatReset:
 						// Should not appear in logs
 						return new UnknownEvent(item.Time, item);
@@ -992,7 +1003,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						return new UnknownEvent(item.Time, item);
 					case StateChange.Effect:
 						// src_agent effect master.
-						Agent master = GetAgentByAddress(item.SrcAgent);
+						Agent master = GetAgentOrCreate(item.SrcAgent, item.SrcAgentId);
 						
 						// skillid = effectid,
 						uint effectId = item.SkillId;
@@ -1006,7 +1017,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						// else value/buffdmg/overstack = float[3] xyz,
 						//      &iff = float[2] xy orient,
 						//      &pad61 = float[1] z orient,
-						Agent aroundAgent = GetAgentByAddress(item.DstAgent);
+						Agent aroundAgent = GetAgentOrCreate(item.DstAgent, item.DstAgentId);
 
 						float[] position = null;
 						float[] orientation = new float[3];
@@ -1057,20 +1068,20 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				switch (item.IsActivation)
 				{
 					case Activation.CancelCancel:
-						return new EndSkillCastEvent(item.Time, GetAgentByAddress(item.SrcAgent),
+						return new EndSkillCastEvent(item.Time, GetAgentOrCreate(item.SrcAgent, item.SrcAgentId),
 							GetSkillById(item.SkillId), item.Value, EndSkillCastEvent.SkillEndType.Cancel);
 					case Activation.CancelFire:
-						return new EndSkillCastEvent(item.Time, GetAgentByAddress(item.SrcAgent),
+						return new EndSkillCastEvent(item.Time, GetAgentOrCreate(item.SrcAgent, item.SrcAgentId),
 							GetSkillById(item.SkillId), item.Value, EndSkillCastEvent.SkillEndType.Fire);
 					case Activation.Normal:
-						return new StartSkillCastEvent(item.Time, GetAgentByAddress(item.SrcAgent),
+						return new StartSkillCastEvent(item.Time, GetAgentOrCreate(item.SrcAgent, item.SrcAgentId),
 							GetSkillById(item.SkillId), item.Value, StartSkillCastEvent.SkillCastType.Normal);
 					case Activation.Quickness:
-						return new StartSkillCastEvent(item.Time, GetAgentByAddress(item.SrcAgent),
+						return new StartSkillCastEvent(item.Time, GetAgentOrCreate(item.SrcAgent, item.SrcAgentId),
 							GetSkillById(item.SkillId), item.Value,
 							StartSkillCastEvent.SkillCastType.WithQuickness);
 					case Activation.Reset:
-						return new ResetSkillCastEvent(item.Time, GetAgentByAddress(item.SrcAgent),
+						return new ResetSkillCastEvent(item.Time, GetAgentOrCreate(item.SrcAgent, item.SrcAgentId),
 							GetSkillById(item.SkillId), item.Value);
 					default:
 						return new UnknownEvent(item.Time, item);
@@ -1082,13 +1093,12 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				int remainingDuration = item.Value;
 				int remainingIntensity = item.BuffDmg;
 				int stacksRemoved = (int) item.Result;
-				var cleansingAgent = GetAgentByAddress(item.DstAgent);
-				var agent = GetAgentByAddress(item.SrcAgent);
+				var cleansingAgent = GetAgentOrCreate(item.DstAgent, item.DstAgentId);
+				var agent = GetAgentOrCreate(item.SrcAgent, item.SrcAgentId);
 				switch (item.IsBuffRemove)
 				{
 					case BuffRemove.All:
-						return new AllStacksRemovedBuffEvent(item.Time, agent, buff, cleansingAgent,
-							stacksRemoved);
+						return new AllStacksRemovedBuffEvent(item.Time, agent, buff, cleansingAgent, stacksRemoved);
 					case BuffRemove.Single:
 						uint stackId = item.Padding;
 						return new SingleStackRemovedBuffEvent(item.Time, agent, buff, cleansingAgent,
@@ -1105,18 +1115,17 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				Skill buff = GetSkillById(item.SkillId);
 				int durationApplied = item.Value;
 				uint durationOfRemovedStack = item.OverstackValue;
-				var agent = GetAgentByAddress(item.DstAgent);
-				var sourceAgent = GetAgentByAddress(item.SrcAgent);
-				return new BuffApplyEvent(item.Time, agent, buff, sourceAgent, durationApplied,
-					durationOfRemovedStack);
+				var agent = GetAgentOrCreate(item.DstAgent, item.DstAgentId);
+				var sourceAgent = GetAgentOrCreate(item.SrcAgent, item.SrcAgentId);
+				return new BuffApplyEvent(item.Time, agent, buff, sourceAgent, durationApplied, durationOfRemovedStack);
 			}
 			else if (item.Buff > 0 && item.Value == 0)
 			{
 				Skill buff = GetSkillById(item.SkillId);
 				int buffDamage = item.BuffDmg;
 				bool isOffCycle = item.IsOffCycle > 0;
-				Agent attacker = GetAgentByAddress(item.SrcAgent);
-				Agent defender = GetAgentByAddress(item.DstAgent);
+				Agent attacker = GetAgentOrCreate(item.SrcAgent, item.SrcAgentId);
+				Agent defender = GetAgentOrCreate(item.DstAgent, item.DstAgentId);
 				bool isMoving = item.IsMoving > 0;
 				bool isNinety = item.IsNinety > 0;
 				bool isFlanking = item.IsFlanking > 0;
@@ -1149,8 +1158,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			{
 				int damage = item.Value;
 				uint shieldDamage = item.OverstackValue;
-				Agent attacker = GetAgentByAddress(item.SrcAgent);
-				Agent defender = GetAgentByAddress(item.DstAgent);
+				Agent attacker = GetAgentOrCreate(item.SrcAgent, item.SrcAgentId);
+				Agent defender = GetAgentOrCreate(item.DstAgent, item.DstAgentId);
 				Skill skill = GetSkillById(item.SkillId);
 				bool isMoving = item.IsMoving > 0;
 				bool isNinety = item.IsNinety > 0;

@@ -429,7 +429,15 @@ namespace GW2Scratch.EVTCInspector
 				HeaderText = "Type",
 				DataCell = new TextBoxCell()
 				{
-					Binding = new DelegateBinding<object, string>(x => x.GetType().Name)
+					Binding = new DelegateBinding<object, string>(x =>
+					{
+						var name = x.GetType().Name;
+						return name switch
+						{
+							"UnlistedAgent" => "Unknown",
+							_ => name
+						};
+					})
 				}
 			});
 			agentsGridView.Columns.Add(new GridColumn
