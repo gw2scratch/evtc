@@ -5,6 +5,7 @@ This is the full changelog of the arcdps Log Manager.
 ## Log Manager v1.7
 
 #### New features
+- Added support for Old Lion's Court (categorized under EoD strikes for now; might change later)
 - Slightly improved health display for Harvest Temple (16.66% per phase), a better phase display might come in the future.
 - *EVTC Inspector*: Added an option to show times since start of log (enabled by default)
 - *EVTC Inspector*: Added more log information (map id, game build, ...) to statistics tab

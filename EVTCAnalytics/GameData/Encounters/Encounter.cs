@@ -111,6 +111,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 		XunlaiJadeJunkyard = 41002,
 		KainengOverlook = 41003,
 		HarvestTemple = 41004,
+		OldLionsCourt = 42001,
 		
 		// Story
 		Mordremoth = 50001,

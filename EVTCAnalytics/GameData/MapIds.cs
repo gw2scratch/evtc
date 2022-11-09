@@ -11,6 +11,7 @@ public static class MapIds
 	public const int RaidWing7 = 1323;
 
 	public const int XunlaiJadeJunkyard = 1451;
+	public const int OldLionsCourt = 1485;
 
 	public static bool IsRaidMap(int id)
 	{

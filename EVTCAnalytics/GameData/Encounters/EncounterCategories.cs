@@ -67,6 +67,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 				{Encounter.XunlaiJadeJunkyard, EncounterCategory.StrikeMissionEndOfDragons},
 				{Encounter.KainengOverlook, EncounterCategory.StrikeMissionEndOfDragons},
 				{Encounter.HarvestTemple, EncounterCategory.StrikeMissionEndOfDragons},
+				{Encounter.OldLionsCourt, EncounterCategory.StrikeMissionEndOfDragons},
 			};
 
 		private static readonly HashSet<EncounterCategory> RaidCategories =

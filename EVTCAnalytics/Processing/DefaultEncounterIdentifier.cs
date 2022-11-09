@@ -572,6 +572,36 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 
 					return builder.Build();
 				}
+				case Encounter.OldLionsCourt:
+				{
+					var vermillion = GetTargetBySpeciesId(agents, SpeciesIds.PrototypeVermillion);
+					var arsenite = GetTargetBySpeciesId(agents, SpeciesIds.PrototypeArsenite);
+					var indigo = GetTargetBySpeciesId(agents, SpeciesIds.PrototypeIndigo);
+
+					var targets = new Agent[] {vermillion, arsenite, indigo}.Where(x => x != null).ToArray();
+					var builder = GetDefaultBuilder(encounter, targets);
+					if (targets.Length == 3)
+					{
+						builder.WithResult(new AllCombinedResultDeterminer(
+							new AgentKilledDeterminer(vermillion),
+							new AgentKilledDeterminer(arsenite),
+							new AgentKilledDeterminer(indigo)
+						));
+					}
+					else
+					{
+						builder.WithResult(new ConstantResultDeterminer(EncounterResult.Unknown));
+					}
+
+					if (vermillion != null)
+					{
+						// We are hoping this works, this is written before CM is released.
+						// As of release, health is 14,156,640 in normal mode.
+						builder.WithModes(new AgentHealthModeDeterminer(vermillion, 14_200_000));
+					}
+
+					return builder.Build();
+				}
 				default:
 					return GetDefaultBuilder(encounter, mainTarget, mergeMainTarget: false).Build();
 			}
@@ -757,6 +787,10 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						return Encounter.KainengOverlook;
 					case SpeciesIds.VoidAmalgamate:
 						return Encounter.HarvestTemple;
+					case SpeciesIds.PrototypeVermillion:
+					case SpeciesIds.PrototypeArsenite:
+					case SpeciesIds.PrototypeIndigo:
+						return Encounter.OldLionsCourt;
 				}
 			}
 			else if (mainTarget is Gadget gadgetBoss)

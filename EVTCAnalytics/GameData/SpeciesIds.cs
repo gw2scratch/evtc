@@ -129,6 +129,9 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		public const int VoidSaltsprayDragon = 23846;
 		public const int VoidObliterator = 23995;
 		public const int VoidGoliath = 24761;
+		public const int PrototypeVermillion = 25413;
+		public const int PrototypeArsenite = 25415;
+		public const int PrototypeIndigo = 25419;
 		
 		// Story
 		public const int HeartsAndMindsMordremoth = 15884;
