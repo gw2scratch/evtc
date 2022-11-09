@@ -1,3 +1,4 @@
+using GW2Scratch.EVTCAnalytics.GameData;
 using System;
 using GW2Scratch.EVTCAnalytics.GameData.Encounters;
 using GW2Scratch.EVTCAnalytics.Model;
@@ -22,9 +23,14 @@ namespace GW2Scratch.EVTCInspector
 		public string LogVersion { get; }
 		
 		public List<LogError> LogErrors { get; }
+		public int? GameBuild { get; }
+		public GameLanguage GameLanguage { get; }
+		public int? GameShardId { get; }
+		public int? MapId { get; }
 
-		public Statistics(DateTimeOffset fightStart, Player logAuthor, EncounterResult encounterResult, EncounterMode encounterMode, Encounter encounter,
-			string logVersion, TimeSpan encounterDuration, IEnumerable<LogError> logErrors)
+		public Statistics(DateTimeOffset fightStart, Player logAuthor, EncounterResult encounterResult,
+			EncounterMode encounterMode, Encounter encounter, string logVersion, TimeSpan encounterDuration,
+			int? gameBuild, GameLanguage language, int? gameShardId, int? mapId, IEnumerable<LogError> logErrors)
 		{
 			Encounter = encounter;
 			LogVersion = logVersion;
@@ -34,6 +40,10 @@ namespace GW2Scratch.EVTCInspector
 			LogAuthor = logAuthor;
 			EncounterDuration = encounterDuration;
 			LogErrors = logErrors.ToList();
+			GameBuild = gameBuild;
+			GameLanguage = language;
+			GameShardId = gameShardId;
+			MapId = mapId;
 		}
 	}
 }

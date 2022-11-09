@@ -266,6 +266,10 @@ namespace GW2Scratch.EVTCInspector
 					analyzer.GetEncounter(),
 					processedLog.EvtcVersion,
 					analyzer.GetEncounterDuration(),
+					processedLog.GameBuild,
+					processedLog.GameLanguage,
+					processedLog.GameShardId,
+					processedLog.MapId,
 					processedLog.Errors
 				);
 
