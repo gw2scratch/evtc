@@ -15,7 +15,8 @@ jobs:
     - name: Setup .NET 6
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 6.0.x
+        # This is required to avoid a breaking change in 6.0.2 https://github.com/dotnet/core/pull/7346/ 
+        dotnet-version: 6.0.1
     # This is a workaround for issue https://github.com/actions/virtual-environments/issues/1090,
     # which causes to nuget restores to fail
     - name: Clean NuGet cache
