@@ -121,6 +121,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		private Lazy<Image> XunlaiJadeJunkyardIcon { get; } = new Lazy<Image>(Resources.GetXunlaiJadeJunkyardIcon);
 		private Lazy<Image> KainengOverlookIcon { get; } = new Lazy<Image>(Resources.GetKainengOverlookIcon);
 		private Lazy<Image> HarvestTempleIcon { get; } = new Lazy<Image>(Resources.GetHarvestTempleIcon);
+		private Lazy<Image> OldLionsCourtIcon { get; } = new Lazy<Image>(Resources.GetOldLionsCourtIcon);
 
 		// FRACTALS
 		private Lazy<Image> MAMAIcon { get; } = new Lazy<Image>(Resources.GetMAMAIcon);
@@ -300,6 +301,7 @@ namespace GW2Scratch.ArcdpsLogManager
 				Encounter.XunlaiJadeJunkyard => XunlaiJadeJunkyardIcon.Value,
 				Encounter.KainengOverlook => KainengOverlookIcon.Value,
 				Encounter.HarvestTemple => HarvestTempleIcon.Value,
+				Encounter.OldLionsCourt => OldLionsCourtIcon.Value,
 				// FRACTALS
 				Encounter.MAMA => MAMAIcon.Value,
 				Encounter.SiaxTheCorrupted => SiaxTheCorruptedIcon.Value,
