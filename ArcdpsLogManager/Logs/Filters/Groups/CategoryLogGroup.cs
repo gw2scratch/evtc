@@ -1,3 +1,4 @@
+using GW2Scratch.ArcdpsLogManager.Logs.Naming;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -73,6 +74,20 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters.Groups
 				.Select(x => new EncounterLogGroup(x));
 			
 			return new CategoryLogGroup(EncounterCategory.Other, encounters.Concat<LogGroup>(subgroups));
+		}
+
+		/// <summary>
+		/// Creates a category log group for <see cref="EncounterCategory.Map"/>. If specifying map ids,
+		/// subgroups are created for each individual map.
+		/// </summary>
+		/// <param name="mapIds">Map ids for maps contained within.</param>
+		/// <param name="nameProvider">Name provider.</param>
+		/// <returns>A category group for <see cref="EncounterCategory.Map"/> with subgroups for each specified map.</returns>
+		public static CategoryLogGroup Map(IEnumerable<int?> mapIds, ILogNameProvider nameProvider)
+		{
+			var subgroups = mapIds.Select(x => new MapLogGroup(x, nameProvider, true));
+			
+			return new CategoryLogGroup(EncounterCategory.Map, subgroups);
 		}
 
 		public override bool IsInGroup(LogData log)

@@ -26,7 +26,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 		{
 			Filters = filters;
 
-			encounterTree = new LogEncounterFilterTree(imageProvider, Filters);
+			encounterTree = new LogEncounterFilterTree(imageProvider, Filters, logNameProvider);
 
 			var successCheckBox = new CheckBox {Text = "Success"};
 			successCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowSuccessfulLogs);

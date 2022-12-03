@@ -2,6 +2,13 @@ namespace GW2Scratch.EVTCAnalytics.GameData;
 
 public static class MapIds
 {
+	public const int EternalBattlegrounds = 38;
+	public const int RedDesertBorderlands = 1099;
+	public const int BlueAlpineBorderlands = 96;
+	public const int GreenAlpineBorderlands = 95;
+	public const int ObsidianSanctum = 899;
+	public const int EdgeOfTheMists = 968;
+	public const int ArmisticeBastion = 1315;
 	public const int RaidWing1 = 1062;
 	public const int RaidWing2 = 1149;
 	public const int RaidWing3 = 1156;

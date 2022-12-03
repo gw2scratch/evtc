@@ -5,6 +5,7 @@ using Eto.Forms;
 using GW2Scratch.ArcdpsLogManager.Logs;
 using GW2Scratch.ArcdpsLogManager.Logs.Filters;
 using GW2Scratch.ArcdpsLogManager.Logs.Filters.Groups;
+using GW2Scratch.ArcdpsLogManager.Logs.Naming;
 using GW2Scratch.EVTCAnalytics.GameData.Encounters;
 using Image = Eto.Drawing.Image;
 
@@ -63,16 +64,20 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			EncounterCategory.Festival,
 			// An obscure category. May be confusing to users if they have not done any of the fights within.
 			EncounterCategory.StrikeMissionFestival,
+			// Not supported by all tools and not enabled by all users.
+			EncounterCategory.Map,
 			// No reason showing this if there is nothing to select inside.
 			EncounterCategory.Other
 		};
 
 		private readonly ImageProvider imageProvider;
+		private readonly ILogNameProvider logNameProvider;
 		private LogFilters Filters { get; }
 
-		public LogEncounterFilterTree(ImageProvider imageProvider, LogFilters filters)
+		public LogEncounterFilterTree(ImageProvider imageProvider, LogFilters filters, ILogNameProvider logNameProvider)
 		{
 			this.imageProvider = imageProvider;
+			this.logNameProvider = logNameProvider;
 			Filters = filters;
 
 			AllowMultipleSelection = true;
@@ -157,7 +162,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			// All raid wings which have separate categories are within a meta group "Raids". Other than that, only
 			// Encounter.Other logs have special handling - each unique target getting its own group.
 
-			var rootGroup = new RootLogGroup(logs);
+			var rootGroup = new RootLogGroup(logs, logNameProvider);
 			var rootItem = new GroupFilterTreeItem(rootGroup);
 
 			void UpdateIcons(GroupFilterTreeItem item)
@@ -169,7 +174,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 					RaidLogGroup => imageProvider.GetTinyRaidIcon(),
 					CategoryLogGroup categoryGroup => GetCategoryIcon(categoryGroup.Category),
 					EncounterLogGroup encounterGroup => GetEncounterIcon(encounterGroup.Encounter),
-					MapLogGroup mapGroup => imageProvider.GetWvWMapIcon(mapGroup.Map),
+					MapLogGroup mapGroup => imageProvider.GetWvWMapIcon(mapGroup.MapId),
 					_ => item.Icon
 				};
 

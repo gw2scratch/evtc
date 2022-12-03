@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using GW2Scratch.ArcdpsLogManager.Logs.Filters.Groups;
+using GW2Scratch.ArcdpsLogManager.Logs.Naming;
 using GW2Scratch.ArcdpsLogManager.Logs.Tagging;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
@@ -16,7 +17,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 		private bool showParseParsingLogs = true;
 		private bool showParseParsedLogs = true;
 		private bool showParseFailedLogs = true;
-		private IReadOnlyList<LogGroup> logGroups = new List<LogGroup> {new RootLogGroup(Enumerable.Empty<LogData>())};
+		private IReadOnlyList<LogGroup> logGroups;
 		private IReadOnlyList<string> requiredTags = new List<string>();
 		private bool showSuccessfulLogs = true;
 		private bool showFailedLogs = true;
@@ -241,8 +242,9 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 			}
 		}
 
-		public LogFilters(params ILogFilter[] additionalFilters)
+		public LogFilters(ILogNameProvider logNameProvider, params ILogFilter[] additionalFilters)
 		{
+			logGroups = new List<LogGroup> {new RootLogGroup(new List<LogData>(), logNameProvider)};
 			this.additionalFilters = additionalFilters;
 			CompositionFilters = new CompositionFilters();
 			CompositionFilters.PropertyChanged += (_, _) => OnPropertyChanged(nameof(CompositionFilters));

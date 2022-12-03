@@ -2,6 +2,7 @@ using System;
 using Eto.Drawing;
 using GW2Scratch.ArcdpsLogManager.GameData;
 using GW2Scratch.ArcdpsLogManager.Logs;
+using GW2Scratch.EVTCAnalytics.GameData;
 using GW2Scratch.EVTCAnalytics.GameData.Encounters;
 using GW2Scratch.EVTCAnalytics.Model;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
@@ -331,17 +332,17 @@ namespace GW2Scratch.ArcdpsLogManager
 			return GenericRaidWing.Value;
 		}
 
-		public Image GetWvWMapIcon(GameMap map)
+		public Image GetWvWMapIcon(int? mapId)
 		{
-			return map switch
+			return mapId switch
 			{
-				GameMap.EternalBattlegrounds => EternalBattlegroundsIcon.Value,
-				GameMap.RedDesertBorderlands => RedBorderlandsIcon.Value,
-				GameMap.BlueAlpineBorderlands => BlueBorderlandsIcon.Value,
-				GameMap.GreenAlpineBorderlands => GreenBorderlandsIcon.Value,
-				GameMap.ObsidianSanctum => ObsidianSanctumIcon.Value,
-				GameMap.EdgeOfTheMists => EdgeOfTheMistsIcon.Value,
-				GameMap.ArmisticeBastion => ArmisticeBastionIcon.Value,
+				MapIds.EternalBattlegrounds => EternalBattlegroundsIcon.Value,
+				MapIds.RedDesertBorderlands => RedBorderlandsIcon.Value,
+				MapIds.BlueAlpineBorderlands => BlueBorderlandsIcon.Value,
+				MapIds.GreenAlpineBorderlands => GreenBorderlandsIcon.Value,
+				MapIds.ObsidianSanctum => ObsidianSanctumIcon.Value,
+				MapIds.EdgeOfTheMists => EdgeOfTheMistsIcon.Value,
+				MapIds.ArmisticeBastion => ArmisticeBastionIcon.Value,
 				_ => null
 			};
 		}

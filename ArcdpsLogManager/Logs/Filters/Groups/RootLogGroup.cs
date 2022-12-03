@@ -1,3 +1,4 @@
+using GW2Scratch.ArcdpsLogManager.Logs.Naming;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters.Groups
 		public override string Name { get; } = "All logs";
 		public override IEnumerable<LogGroup> Subgroups => subgroups;
 
-		public RootLogGroup(IEnumerable<LogData> logs)
+		public RootLogGroup(IReadOnlyList<LogData> logs, ILogNameProvider nameProvider)
 		{
 			// All logs
 			// - Raids
@@ -46,6 +47,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters.Groups
 			{
 				EncounterCategory.Fractal,
 				EncounterCategory.SpecialForcesTrainingArea,
+				EncounterCategory.Map,
 				EncounterCategory.Other,
 				EncounterCategory.WorldVersusWorld
 			};
@@ -68,6 +70,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters.Groups
 			}
 			groups.Add(CategoryLogGroup.Other(logs.Where(x => x.Encounter == Encounter.Other).Select(x => x.MainTargetName).Distinct()));
 			groups.Add(new WorldVersusWorldLogGroup());
+			groups.Add(CategoryLogGroup.Map(logs.Where(x => x.Encounter == Encounter.Map).Select(x => x.MapId).Distinct().OrderBy(x => x), nameProvider));
 
 			this.subgroups = groups;
 		}

@@ -103,7 +103,7 @@ namespace GW2Scratch.ArcdpsLogManager
 					$"Please report the following error:\n\nException: {args.Exception}", "Error", MessageBoxType.Error));
 			};
 
-			Filters = new LogFilters(new SettingsFilters());
+			Filters = new LogFilters(LogNameProvider, new SettingsFilters());
 			Filters.PropertyChanged += (sender, args) => logsFiltered.Refresh();
 
 			if (Settings.UseGW2Api)
@@ -380,6 +380,8 @@ namespace GW2Scratch.ArcdpsLogManager
 					Application.Instance.AsyncInvoke(() => filterPanel.UpdateLogs(logs));
 				}
 			};
+			// Required in case the map name API request takes longer than creation of the panel.
+			LogNameProvider.MapNamesUpdated += (_, _) => filterPanel.UpdateLogs(logs);
 
 			return filterPanel;
 		}
