@@ -17,7 +17,7 @@
         Each new log data update causes a revision increase.
         See LogDataUpdater for the updates.
         -->
-        <Version>1.7.0.0</Version>
+        <Version>1.7.1.0</Version>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Eto.Forms" Version="2.6.1" />

@@ -132,6 +132,9 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		public const int PrototypeVermillion = 25413;
 		public const int PrototypeArsenite = 25415;
 		public const int PrototypeIndigo = 25419;
+		public const int PrototypeVermillionChallengeMode = 25414;
+		public const int PrototypeArseniteChallengeMode = 25416;
+		public const int PrototypeIndigoChallengeMode = 25423;
 		
 		// Story
 		public const int HeartsAndMindsMordremoth = 15884;

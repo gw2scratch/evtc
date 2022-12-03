@@ -574,30 +574,61 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				}
 				case Encounter.OldLionsCourt:
 				{
-					var vermillion = GetTargetBySpeciesId(agents, SpeciesIds.PrototypeVermillion);
-					var arsenite = GetTargetBySpeciesId(agents, SpeciesIds.PrototypeArsenite);
-					var indigo = GetTargetBySpeciesId(agents, SpeciesIds.PrototypeIndigo);
+					var targetOptions = new (int Normal, int Challenge)[]
+					{
+						(SpeciesIds.PrototypeArsenite, SpeciesIds.PrototypeArseniteChallengeMode),
+						(SpeciesIds.PrototypeVermillion, SpeciesIds.PrototypeVermillionChallengeMode),
+						(SpeciesIds.PrototypeIndigo, SpeciesIds.PrototypeIndigoChallengeMode)
+					};
 
-					var targets = new Agent[] {vermillion, arsenite, indigo}.Where(x => x != null).ToArray();
+					if (mainTarget is not NPC npc)
+					{
+						throw new InvalidOperationException("Old Lion's Court should have NPC as the target.");
+					}
+
+					bool isChallenge = (targetOptions.Select(target => target.Challenge).Contains(npc.SpeciesId));
+					bool isNormal = (targetOptions.Select(target => target.Normal).Contains(npc.SpeciesId));
+					EncounterMode mode = (isNormal, isChallenge) switch
+					{
+						(false, false) => EncounterMode.Unknown,
+						(false, true) => EncounterMode.Challenge,
+						(true, false) => EncounterMode.Normal,
+						(true, true) => EncounterMode.Unknown,
+					};
+
+
+					Agent[] targets;
+					if (mode == EncounterMode.Normal)
+					{
+						var vermillion = GetTargetBySpeciesId(agents, SpeciesIds.PrototypeVermillion);
+						var arsenite = GetTargetBySpeciesId(agents, SpeciesIds.PrototypeArsenite);
+						var indigo = GetTargetBySpeciesId(agents, SpeciesIds.PrototypeIndigo);
+						targets = new Agent[] { vermillion, arsenite, indigo }.Where(x => x != null).ToArray();
+					}
+					else if (mode == EncounterMode.Challenge)
+					{
+						var vermillion = GetTargetBySpeciesId(agents, SpeciesIds.PrototypeVermillionChallengeMode);
+						var arsenite = GetTargetBySpeciesId(agents, SpeciesIds.PrototypeArseniteChallengeMode);
+						var indigo = GetTargetBySpeciesId(agents, SpeciesIds.PrototypeIndigoChallengeMode);
+						targets = new Agent[] { vermillion, arsenite, indigo }.Where(x => x != null).ToArray();
+					}
+					else
+					{
+						return GetDefaultBuilder(encounter, mainTarget)
+							.WithModes(new ConstantModeDeterminer(mode))
+							.WithResult(new ConstantResultDeterminer(EncounterResult.Unknown))
+							.Build();
+					}
+
 					var builder = GetDefaultBuilder(encounter, targets);
 					if (targets.Length == 3)
 					{
-						builder.WithResult(new AllCombinedResultDeterminer(
-							new AgentKilledDeterminer(vermillion),
-							new AgentKilledDeterminer(arsenite),
-							new AgentKilledDeterminer(indigo)
-						));
+						var kills = targets.Select(x => new AgentKilledDeterminer(x)).ToArray<IResultDeterminer>();
+						builder.WithResult(new AllCombinedResultDeterminer(kills));
 					}
 					else
 					{
 						builder.WithResult(new ConstantResultDeterminer(EncounterResult.Unknown));
-					}
-
-					if (vermillion != null)
-					{
-						// We are hoping this works, this is written before CM is released.
-						// As of release, health is 14,156,640 in normal mode.
-						builder.WithModes(new AgentHealthModeDeterminer(vermillion, 14_200_000));
 					}
 
 					return builder.Build();
@@ -790,6 +821,9 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					case SpeciesIds.PrototypeVermillion:
 					case SpeciesIds.PrototypeArsenite:
 					case SpeciesIds.PrototypeIndigo:
+					case SpeciesIds.PrototypeVermillionChallengeMode:
+					case SpeciesIds.PrototypeArseniteChallengeMode:
+					case SpeciesIds.PrototypeIndigoChallengeMode:
 						return Encounter.OldLionsCourt;
 				}
 			}
