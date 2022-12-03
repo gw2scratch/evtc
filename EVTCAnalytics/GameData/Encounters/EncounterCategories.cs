@@ -68,10 +68,11 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 				{Encounter.KainengOverlook, EncounterCategory.StrikeMissionEndOfDragons},
 				{Encounter.HarvestTemple, EncounterCategory.StrikeMissionEndOfDragons},
 				{Encounter.OldLionsCourt, EncounterCategory.StrikeMissionEndOfDragons},
+				{Encounter.Map, EncounterCategory.Map},
 			};
 
 		private static readonly HashSet<EncounterCategory> RaidCategories =
-			new HashSet<EncounterCategory>()
+			new HashSet<EncounterCategory>
 			{
 				EncounterCategory.RaidWing1,
 				EncounterCategory.RaidWing2,
@@ -83,7 +84,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 			};
 		
 		private static readonly HashSet<EncounterCategory> StrikeMissionCategories =
-			new HashSet<EncounterCategory>()
+			new HashSet<EncounterCategory>
 			{
 				EncounterCategory.StrikeMissionIcebroodSaga,
 				EncounterCategory.StrikeMissionEndOfDragons,

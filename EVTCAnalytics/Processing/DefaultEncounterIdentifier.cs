@@ -30,9 +30,24 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					return GetPvEEncounterData(mainTarget, events, agents, skills, gameBuild);
 				case LogType.WorldVersusWorld:
 					return GetWvWEncounterData(agents);
+				case LogType.Map:
+					return GetMapEncounterData();
 				default:
 					throw new ArgumentOutOfRangeException();
 			}
+		}
+		
+		private IEncounterData GetMapEncounterData()
+		{
+			var builder = new EncounterIdentifierBuilder(
+				Encounter.Map,
+				new List<Agent>(),
+				new ConstantResultDeterminer(EncounterResult.Unknown),
+				new ConstantModeDeterminer(EncounterMode.Unknown),
+				new ConstantHealthDeterminer(null)
+			);
+
+			return builder.Build();
 		}
 
 		private IEncounterData GetWvWEncounterData(IReadOnlyList<Agent> agents)

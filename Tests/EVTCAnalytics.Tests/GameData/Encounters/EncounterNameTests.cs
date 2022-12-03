@@ -16,6 +16,12 @@ namespace GW2Scratch.EVTCAnalytics.Tests.GameData.Encounters
 					// No name is expected for the uncommon encounters
 					continue;
 				}
+				
+				if (encounter == Encounter.Map)
+				{
+					// No name is expected for map logs
+					continue;
+				}
 
 				Assert.That(EncounterNames.EnglishNames.ContainsKey(encounter),
 					$"Encounter {encounter} does not have an English name.");

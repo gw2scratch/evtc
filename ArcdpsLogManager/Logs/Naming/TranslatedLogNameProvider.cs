@@ -14,7 +14,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Naming
 
 		public string GetName(LogData logData)
 		{
-			if (logData.Encounter != Encounter.Other)
+			if (logData.Encounter != Encounter.Other && logData.Encounter != Encounter.Map)
 			{
 				if (EncounterNames.TryGetNamesForLanguage(language, out var names))
 				{
@@ -24,6 +24,16 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Naming
 					}
 				}
 			}
+
+			if (logData.Encounter == Encounter.Map)
+			{
+				if (logData.MapId == null)
+				{
+					return "Unknown map";
+				}
+				return $"Map {logData.MapId}";
+			}
+			
 			// We default to the name of the main target in case a translated name
 			// for the encounter is not available or we don't know the encounter.
 			return logData.MainTargetName;

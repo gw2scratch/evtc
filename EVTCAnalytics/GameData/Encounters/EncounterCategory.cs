@@ -1,7 +1,7 @@
 namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 {
 	/// <summary>
-	/// Represents an encounter category. These categories are defined
+	/// Represents an encounter category. These categories are defined arbitrarily.
 	/// </summary>
 	public enum EncounterCategory
 	{
@@ -21,5 +21,6 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 		RaidWing5 = 105,
 		RaidWing6 = 106,
 		RaidWing7 = 107,
+		Map = 2000,
 	}
 }

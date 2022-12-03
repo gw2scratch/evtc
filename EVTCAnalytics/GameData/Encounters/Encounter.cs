@@ -118,5 +118,6 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 
 		// Other
 		WorldVersusWorld = 100000,
+		Map = 200000,
 	}
 }

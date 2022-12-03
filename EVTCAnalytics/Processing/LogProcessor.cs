@@ -332,6 +332,10 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			{
 				state.LogType = LogType.WorldVersusWorld;
 			}
+			else if (bossData.ID == 2)
+			{
+				state.LogType = LogType.Map;
+			}
 			else
 			{
 				// The boss id may be either an NPC species id or a Gadget id.

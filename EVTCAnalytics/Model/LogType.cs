@@ -10,6 +10,10 @@ namespace GW2Scratch.EVTCAnalytics.Model
 		/// </summary>
 		PvE,
 		/// <summary>
+		/// PvE log recording the entire instance instead of just individual encounters.
+		/// </summary>
+		Map,
+		/// <summary>
 		/// World vs World logs, with restrictions on the information available about enemy players.
 		/// </summary>
 		WorldVersusWorld
