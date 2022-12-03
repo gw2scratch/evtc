@@ -126,6 +126,10 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Updates
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 7, 1, 1)
 					&& log.Encounter == Encounter.Other,
 				"Add basic support for map logs"),
+			new LogUpdate(log => log.ParsingVersion < new Version(1, 7, 1, 2)
+					&& log.ParsingVersion >= new Version(1, 7, 1, 0)
+					&& log.Encounter == Encounter.OldLionsCourt,
+				"Fix CM detection for Old Lion's Court"),
 			// When adding a new update, you need to increase the revision (last value) of the version in the .csproj file
 			// unless the version changes more significantly, in that case it can be reset to 0.
 		};

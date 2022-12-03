@@ -645,6 +645,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					{
 						builder.WithResult(new ConstantResultDeterminer(EncounterResult.Unknown));
 					}
+					builder.WithModes(new ConstantModeDeterminer(mode));
 
 					return builder.Build();
 				}
