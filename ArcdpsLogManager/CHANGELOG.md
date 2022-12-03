@@ -5,6 +5,7 @@ This is the full changelog of the arcdps Log Manager.
 ## Log Manager v1.7.1
 #### New features
 - Added support for Old Lion's Court CM
+- Added rudimentary support for map (full instance) logs – they are correctly identified, have proper map names, and a filtering category.
 
 ## Log Manager v1.7
 
