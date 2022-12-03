@@ -19,9 +19,9 @@ namespace GW2Scratch.ArcdpsLogManager.Configuration
 				{
 					layout.AddRow(new Label
 					{
-						Text = "The program can use the official Guild Wars 2 API to retrieve guild data. " +
-						       "No API key is required. If this is not enabled, guild names and " +
-						       "tags will not be available.",
+						Text = "The program can use the official Guild Wars 2 API to retrieve guild data and map names. " +
+						       "No API key is required. If this is not enabled, guild names and their " +
+						       "tags along with map names will not be available.",
 						Wrap = WrapMode.Word,
 						Height = 50
 					});
