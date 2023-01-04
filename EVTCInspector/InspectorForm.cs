@@ -325,7 +325,16 @@ namespace GW2Scratch.EVTCInspector
 				DataCell = new TextBoxCell
 				{
 					// TODO: Improve for older versions without SkillInfo
-					Binding = new DelegateBinding<Skill, string>(x => x.SkillData != null ? "Ability" : "Buff")
+					Binding = new DelegateBinding<Skill, string>(x =>
+					{
+						return (x.SkillData != null, x.BuffData != null) switch
+						{
+							(true, true) => "Both?",
+							(true, false) => "Ability",
+							(false, true) => "Buff",
+							(false, false) => "Unknown",
+						};
+					})
 				}
 			});
 
