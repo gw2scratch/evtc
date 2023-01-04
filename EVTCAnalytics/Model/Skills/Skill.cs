@@ -22,6 +22,15 @@ namespace GW2Scratch.EVTCAnalytics.Model.Skills
 		/// It is very common for skills to not have a name other than the numerical ID.
 		/// </remarks>
 		public string Name { get; }
+		
+		/// <summary>
+		/// Contains skill data.
+		/// </summary>
+		/// <remarks>
+		/// This data was first added with EVTC20191225.
+		/// May be null.
+		/// </remarks>
+		public SkillData SkillData { get; internal set; }
 
 		/// <summary>
 		/// Creates a new instance of a <see cref="Skill"/>.

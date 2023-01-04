@@ -745,6 +745,26 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					// Only used for master assignment
 					// Contains if the attack target is targetable as the value.
 					return;
+				case StateChange.SkillInfo:
+				{
+					// (float*)&time[4]
+					// recharge range0 range1 tooltiptime
+					Span<byte> bytes = stackalloc byte[16];
+					BitConverter.GetBytes(item.Time).CopyTo(bytes[..8]);
+					BitConverter.GetBytes(item.SrcAgent).CopyTo(bytes[8..16]);
+					if (state.SkillsById.TryGetValue(item.SkillId, out var skill))
+					{
+						skill.SkillData = new SkillData
+						{
+							Recharge = BitConverter.ToSingle(bytes[..4]),
+							Range0 = BitConverter.ToSingle(bytes[4..8]),
+							Range1 = BitConverter.ToSingle(bytes[8..12]),
+							TooltipTime = BitConverter.ToSingle(bytes[12..16]),
+						};
+					}
+
+					return;
+				}
 				case StateChange.InstanceStart:
 					state.InstanceStart = new InstanceStart(item.SrcAgent);
 					return;
@@ -961,11 +981,9 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						return new DefianceBarHealthUpdateEvent(item.Time, GetAgentByAddress(item.SrcAgent),
 							breakbarHealthFraction);
 					case StateChange.BuffInfo:
-						// TODO: Figure out what the contents are
+					// TODO: Figure out what the contents are
 					case StateChange.BuffFormula:
-						// TODO: Figure out what the contents are
-					case StateChange.SkillInfo:
-						// TODO: Figure out what the contents are
+					// TODO: Figure out what the contents are
 					case StateChange.SkillTiming:
 						// TODO: Figure out what the contents are
 						return new UnknownEvent(item.Time, item);
