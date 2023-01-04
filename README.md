@@ -1,4 +1,4 @@
-[![Build and test (.NET Core)](https://img.shields.io/github/workflow/status/gw2scratch/evtc/Build%20and%20test%20(.NET%20Core)?logo=github)](https://github.com/gw2scratch/evtc/actions?query=workflow%3A%22Build+and+test+%28.NET+Core%29%22)
+[![Build and test (.NET Core)](https://img.shields.io/github/actions/workflow/status/gw2scratch/evtc/dotnet-core.yml?branch=master&logo=github)](https://github.com/gw2scratch/evtc/actions?query=workflow%3A%22Build+and+test+%28.NET+Core%29%22)
 [![Discord](https://img.shields.io/discord/543804828808249374?label=discord&logo=discord&logoColor=white&)](https://discord.gg/TnHpN34)
 
 # GW2Scratch EVTC Tools
