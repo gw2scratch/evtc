@@ -28,10 +28,19 @@ namespace GW2Scratch.EVTCAnalytics.Model.Skills
 		/// </summary>
 		/// <remarks>
 		/// This data was first added with EVTC20191225.
-		/// May be null.
+		/// May be null for older versions and for buffs.
 		/// </remarks>
 		public SkillData SkillData { get; internal set; }
 
+		/// <summary>
+		/// Contains buff data.
+		/// </summary>
+		/// <remarks>
+		/// This data was first added with EVTC20191225.
+		/// May be null for older versions and for abilities.
+		/// </remarks>
+		public BuffData BuffData { get; internal set; }
+		
 		/// <summary>
 		/// Creates a new instance of a <see cref="Skill"/>.
 		/// </summary>

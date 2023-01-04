@@ -745,13 +745,37 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					// Only used for master assignment
 					// Contains if the attack target is targetable as the value.
 					return;
+				case StateChange.BuffInfo:
+				{
+					if (state.SkillsById.TryGetValue(item.SkillId, out var skill))
+					{
+						bool isResistanceAvailable = string.Compare(state.EvtcVersion, "EVTC20200428", StringComparison.OrdinalIgnoreCase) >= 0;
+						
+						Span<byte> padding = stackalloc byte[4];
+						BitConverter.TryWriteBytes(padding, item.Padding);
+						
+						skill.BuffData = new BuffData
+						{
+							IsInversion = item.IsShields != 0,
+							IsInvulnerability = item.IsFlanking != 0,
+							IsResistance = isResistanceAvailable ? padding[1] != 0 : null,
+							Category = (BuffCategory) item.IsOffCycle,
+							StackingType = padding[0],
+							MaxStacks = item.SrcMasterId,
+							DurationCap = item.OverstackValue
+						};
+						
+					}
+
+					return;
+				}
 				case StateChange.SkillInfo:
 				{
 					// (float*)&time[4]
 					// recharge range0 range1 tooltiptime
 					Span<byte> bytes = stackalloc byte[16];
-					BitConverter.GetBytes(item.Time).CopyTo(bytes[..8]);
-					BitConverter.GetBytes(item.SrcAgent).CopyTo(bytes[8..16]);
+					BitConverter.TryWriteBytes(bytes[..8], item.Time);
+					BitConverter.TryWriteBytes(bytes[8..16], item.SrcAgent);
 					if (state.SkillsById.TryGetValue(item.SkillId, out var skill))
 					{
 						skill.SkillData = new SkillData
@@ -980,8 +1004,6 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						float breakbarHealthFraction = BitConversions.ToSingle(item.Value);
 						return new DefianceBarHealthUpdateEvent(item.Time, GetAgentByAddress(item.SrcAgent),
 							breakbarHealthFraction);
-					case StateChange.BuffInfo:
-					// TODO: Figure out what the contents are
 					case StateChange.BuffFormula:
 					// TODO: Figure out what the contents are
 					case StateChange.SkillTiming:
