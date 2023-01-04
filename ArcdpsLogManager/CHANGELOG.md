@@ -14,6 +14,7 @@ This is the full changelog of the arcdps Log Manager.
 - Slightly improved health display for Harvest Temple (16.66% per phase), a better phase display might come in the future.
 - *EVTC Inspector*: Added an option to show times since start of log (enabled by default)
 - *EVTC Inspector*: Added more log information (map id, game build, ...) to statistics tab
+- *EVTC Inspector*: Added skill and buff info from logs to Processed skills tab (no skill timings and buff formulas yet)
 
 #### Changes
 - Linux only (already worked on Windows): Clicking on the filename in the log detail panel now selects the file (requires dbus).
