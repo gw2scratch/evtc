@@ -259,6 +259,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				EncounterCategory.RaidWing5 => imageProvider.GetRaidWingIcon(),
 				EncounterCategory.RaidWing6 => imageProvider.GetRaidWingIcon(),
 				EncounterCategory.RaidWing7 => imageProvider.GetRaidWingIcon(),
+				EncounterCategory.Map => imageProvider.GetTinyInstanceIcon(),
 				_ => null
 			};
 		}
