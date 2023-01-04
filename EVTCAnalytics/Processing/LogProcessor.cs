@@ -994,8 +994,16 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 							marker = new Marker(markerId);
 							state.MarkersById[markerId] = marker;
 						}
+
+						// Added in aug.23.2022
+						bool isCommanderAvailable = string.Compare(state.EvtcVersion, "EVTC20220823", StringComparison.OrdinalIgnoreCase) >= 0;
+						bool? isCommander = isCommanderAvailable switch
+						{
+							true => item.Buff != 0,
+							false => null,
+						};
 						
-						return new AgentTagEvent(item.Time, GetAgentByAddress(item.SrcAgent), marker);
+						return new AgentTagEvent(item.Time, GetAgentByAddress(item.SrcAgent), marker, isCommander);
 					case StateChange.BarrierUpdate:
 						var barrierFraction = item.DstAgent / 10000f;
 						return new BarrierUpdateEvent(item.Time, GetAgentByAddress(item.SrcAgent), barrierFraction);

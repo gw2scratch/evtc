@@ -150,10 +150,19 @@ namespace GW2Scratch.EVTCAnalytics.Events
 	public class AgentTagEvent : AgentEvent
 	{
 		public Marker Marker { get; }
+		
+		/// <summary>
+		/// True if this is a commander tag.
+		/// </summary>
+		/// <remarks>
+		/// Introduced in EVTC20220823.
+		/// </remarks>
+		public bool? IsCommander { get; }
 
-		public AgentTagEvent(long time, Agent agent, Marker marker) : base(time, agent)
+		public AgentTagEvent(long time, Agent agent, Marker marker, bool? isCommander) : base(time, agent)
 		{
 			Marker = marker;
+			IsCommander = isCommander;
 		}
 	}
 
@@ -165,7 +174,7 @@ namespace GW2Scratch.EVTCAnalytics.Events
 		public InitialBuffEvent(long time, Agent agent, Skill buff, Agent sourceAgent, int durationApplied,
 			uint durationOfRemovedStack) : base(time, agent, buff, sourceAgent, durationApplied, durationOfRemovedStack) {
 			
-			}
+		}
 	}
 
 	/// <summary>
