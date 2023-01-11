@@ -833,6 +833,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					case SpeciesIds.MinisterLiChallengeMode:
 						return Encounter.KainengOverlook;
 					case SpeciesIds.VoidAmalgamate:
+					case SpeciesIds.VoidMelter:
 						return Encounter.HarvestTemple;
 					case SpeciesIds.PrototypeVermillion:
 					case SpeciesIds.PrototypeArsenite:

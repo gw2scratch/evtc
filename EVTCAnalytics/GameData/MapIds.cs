@@ -19,6 +19,7 @@ public static class MapIds
 
 	public const int XunlaiJadeJunkyard = 1451;
 	public const int OldLionsCourt = 1485;
+	public const int HarvestTemple = 1437;
 
 	public static bool IsRaidMap(int id)
 	{
