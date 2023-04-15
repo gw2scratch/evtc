@@ -2,6 +2,14 @@
 
 This is the full changelog of the arcdps Log Manager.
 
+## Log Manager v1.9 (unreleased)
+#### New features
+#### Changes
+
+- The game data collecting tab (requires Show -> Debug data to be enabled) now scans multiple files at once. This
+  provides a nice performance benefit on SSDs, but may result in slowdowns with HDDs (not tested).
+#### Fixes
+
 ## Log Manager v1.8
 #### New features
 - Added support for Old Lion's Court CM

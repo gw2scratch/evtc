@@ -14,6 +14,7 @@ using GW2Scratch.EVTCAnalytics;
 using GW2Scratch.EVTCAnalytics.Model;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
 using GW2Scratch.EVTCAnalytics.Processing;
+using System.Collections.Concurrent;
 
 namespace GW2Scratch.ArcdpsLogManager.Sections
 {
@@ -357,12 +358,12 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 		{
 			return Task.Run(() =>
 			{
-				var species = new Dictionary<int, Dictionary<SpeciesData, List<LogData>>>();
-				var skills = new Dictionary<uint, Dictionary<SkillData, List<LogData>>>();
+				var species = new ConcurrentDictionary<int, ConcurrentDictionary<SpeciesData, List<LogData>>>();
+				var skills = new ConcurrentDictionary<uint, ConcurrentDictionary<SkillData, List<LogData>>>();
 
 				int done = 0;
 				int failed = 0;
-				foreach (var log in logs)
+				Parallel.ForEach(logs, log =>
 				{
 					cancellationToken.ThrowIfCancellationRequested();
 
@@ -374,8 +375,8 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 					}
 					catch
 					{
-						failed++;
-						continue;
+						Interlocked.Increment(ref failed);
+						return;
 					}
 
 					foreach (var agent in processedLog.Agents.OfType<NPC>())
@@ -387,17 +388,11 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 						if (id == 0) continue;
 
 						var speciesData = new SpeciesData(id, name);
-						if (!species.ContainsKey(id))
-						{
-							species[id] = new Dictionary<SpeciesData, List<LogData>>();
-						}
+						var dictForSpecies =
+							species.GetOrAdd(id, new ConcurrentDictionary<SpeciesData, List<LogData>>());
 
-						if (!species[id].ContainsKey(speciesData))
-						{
-							species[id][speciesData] = new List<LogData>();
-						}
-
-						species[id][speciesData].Add(log);
+						var listForSpeciesData = dictForSpecies.GetOrAdd(speciesData, new List<LogData>());
+						listForSpeciesData.Add(log);
 					}
 
 					foreach (var skill in processedLog.Skills)
@@ -409,22 +404,15 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 						if (id == 0) continue;
 
 						var skillData = new SkillData(id, name);
-						if (!skills.ContainsKey(id))
-						{
-							skills[id] = new Dictionary<SkillData, List<LogData>>();
-						}
+						var dictForSkill = skills.GetOrAdd(id, new ConcurrentDictionary<SkillData, List<LogData>>());
 
-						if (!skills[id].ContainsKey(skillData))
-						{
-							skills[id][skillData] = new List<LogData>();
-						}
-
-						skills[id][skillData].Add(log);
+						var listForSkillData = dictForSkill.GetOrAdd(skillData, new List<LogData>());
+						listForSkillData.Add(log);
 					}
 
-					done++;
+					Interlocked.Increment(ref done);
 					progress?.Report((done, logs.Count, failed));
-				}
+				});
 
 				var speciesEnumerable = (IEnumerable<SpeciesData>) species.Values.SelectMany(x => x).Select(x =>
 					{
