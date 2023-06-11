@@ -50,6 +50,12 @@ namespace GW2Scratch.ArcdpsLogManager.Processing
 					notFound = true;
 					retry = false;
 				}
+				catch (ServerErrorException)
+				{
+					// Currently a bug in the gw2 api. It is throwing "unknown error" for not existent guilds
+					notFound = true;
+					retry = false;
+				}
 			} while (retry);
 
 			if (guild != null)
