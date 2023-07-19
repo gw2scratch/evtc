@@ -274,6 +274,7 @@ namespace GW2Scratch.EVTCInspector
 					processedLog.GameLanguage,
 					processedLog.GameShardId,
 					processedLog.MapId,
+					processedLog.FractalScale,
 					processedLog.Errors
 				);
 

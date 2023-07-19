@@ -827,6 +827,9 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					
 					state.Errors.Add(new LogError(errorString));
 					return;
+				case StateChange.FractalScale:
+					state.FractalScale = (int) item.SrcAgent;
+					return;
 				default:
 				{
 					var processedEvent = GetEvent(state, item);
@@ -1100,6 +1103,14 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 
 						return new EffectEvent(item.Time, master, effect, aroundAgent, position, orientation,
 							zOrientationOnly, duration);
+					case StateChange.LogNPCUpdate:
+						// TODO: implement
+						return new UnknownEvent(item.Time, item);
+					case StateChange.IdleEvent:
+						return new UnknownEvent(item.Time, item);
+					case StateChange.ExtensionCombat:
+						// Not sure if this ever appears in logs.
+						return new UnknownEvent(item.Time, item);
 					default:
 						return new UnknownEvent(item.Time, item);
 				}

@@ -110,6 +110,14 @@ namespace GW2Scratch.EVTCAnalytics.Model
 		/// Provides a numeric ID of the map the encounter occured in.
 		/// </summary>
 		public int? MapId { get; }
+		
+		/// <summary>
+		/// Provides the number of the fractal scale of the encounter.
+		/// </summary>
+		/// <remarks>
+		/// Introduced in arcdps 20230718.
+		/// </remarks>
+		public int? FractalScale { get; }
 
 		/// <summary>
 		/// Provides access to encounter-specific data and definitions.
@@ -120,7 +128,7 @@ namespace GW2Scratch.EVTCAnalytics.Model
 		/// Provides the start time of the recorded instance if available.
 		/// </summary>
 		/// <remarks>
-		/// Added in arcdps 20211214.
+		/// Introduced in arcdps 20211214.
 		/// </remarks>
 		public InstanceStart InstanceStart { get; }
 		
@@ -128,7 +136,7 @@ namespace GW2Scratch.EVTCAnalytics.Model
 		/// Provides a list of all errors logged by arcdps.
 		/// </summary>
 		/// <remarks>
-		/// Added in arcdps 20200513.
+		/// Introduced in arcdps 20200513.
 		/// </remarks>
 		public IReadOnlyList<LogError> Errors { get; }
 
@@ -150,6 +158,7 @@ namespace GW2Scratch.EVTCAnalytics.Model
 			GameLanguage = state.GameLanguage;
 			GameBuild = state.GameBuild;
 			GameShardId = state.GameShardId;
+			FractalScale = state.FractalScale;
 			MapId = state.MapId;
 			Events = state.Events;
 			Agents = state.Agents;
@@ -167,7 +176,7 @@ namespace GW2Scratch.EVTCAnalytics.Model
 			IEnumerable<Skill> skills, IEnumerable<Effect> effects, IEnumerable<Marker> markers, IEnumerable<LogError> errors,
 			IEncounterData encounterData, GameLanguage gameLanguage, string evtcVersion, LogTime startTime,
 			LogTime endTime, Player pointOfView, int? language, int? gameBuild, int? gameShardId, int? mapId,
-			InstanceStart instanceStart)
+			InstanceStart instanceStart, int? fractalScale)
 		{
 			MainTarget = mainTarget;
 			LogType = logType;
@@ -182,6 +191,7 @@ namespace GW2Scratch.EVTCAnalytics.Model
 			GameShardId = gameShardId;
 			MapId = mapId;
 			InstanceStart = instanceStart;
+			FractalScale = fractalScale;
 			Events = events as Event[] ?? events.ToArray();
 			Agents = agents as Agent[] ?? agents.ToArray();
 			Skills = skills as Skill[] ?? skills.ToArray();

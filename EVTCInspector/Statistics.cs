@@ -27,10 +27,11 @@ namespace GW2Scratch.EVTCInspector
 		public GameLanguage GameLanguage { get; }
 		public int? GameShardId { get; }
 		public int? MapId { get; }
+		public int? FractalScale { get; }
 
 		public Statistics(DateTimeOffset fightStart, Player logAuthor, EncounterResult encounterResult,
 			EncounterMode encounterMode, Encounter encounter, string logVersion, TimeSpan encounterDuration,
-			int? gameBuild, GameLanguage language, int? gameShardId, int? mapId, IEnumerable<LogError> logErrors)
+			int? gameBuild, GameLanguage language, int? gameShardId, int? mapId, int? fractalScale, IEnumerable<LogError> logErrors)
 		{
 			Encounter = encounter;
 			LogVersion = logVersion;
@@ -44,6 +45,7 @@ namespace GW2Scratch.EVTCInspector
 			GameLanguage = language;
 			GameShardId = gameShardId;
 			MapId = mapId;
+			FractalScale = fractalScale;
 		}
 	}
 }
