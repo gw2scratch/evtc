@@ -50,6 +50,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 				{Encounter.AiKeeperOfThePeakDayOnly, EncounterCategory.Fractal},
 				{Encounter.AiKeeperOfThePeakNightOnly, EncounterCategory.Fractal},
 				{Encounter.AiKeeperOfThePeakDayAndNight, EncounterCategory.Fractal},
+				{Encounter.Kanaxai, EncounterCategory.Fractal},
 				{Encounter.Freezie, EncounterCategory.StrikeMissionFestival},
 				{Encounter.StandardKittyGolem, EncounterCategory.SpecialForcesTrainingArea},
 				{Encounter.MediumKittyGolem, EncounterCategory.SpecialForcesTrainingArea},

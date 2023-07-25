@@ -32,6 +32,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 		public int? GameShardId { get; set; }
 		public int? GameLanguageId { get; set; }
 		public int? MapId { get; set; }
+		public int? FractalScale { get; set; }
 		public LogType LogType { get; set; }
 		public GameLanguage GameLanguage { get; set; }
 		public IEncounterData EncounterData { get; set; }

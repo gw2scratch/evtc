@@ -48,6 +48,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 			{Encounter.AiKeeperOfThePeakDayOnly, "Ai, Keeper of the Peak – Elemental"},
 			{Encounter.AiKeeperOfThePeakNightOnly, "Ai, Keeper of the Peak – Dark"},
 			{Encounter.AiKeeperOfThePeakDayAndNight, "Ai, Keeper of the Peak – Both Phases"},
+			{Encounter.Kanaxai, "Kanaxai, Scythe of House Aurkus"},
 			{Encounter.Freezie, "Freezie"},
 			{Encounter.StandardKittyGolem, "Standard Kitty Golem"},
 			{Encounter.MediumKittyGolem, "Medium Kitty Golem"},

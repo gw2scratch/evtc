@@ -87,6 +87,9 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 		AiKeeperOfThePeakDayOnly = 10022,
 		AiKeeperOfThePeakNightOnly = 10023,
 		AiKeeperOfThePeakDayAndNight = 10024,
+		
+		// Fractals - Silent Surf
+		Kanaxai = 10031,
 
 		// Festivals - Wintersday
 		Freezie = 20001,

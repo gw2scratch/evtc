@@ -69,6 +69,16 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 					EncounterMode.Emboldened5 => "Emboldened 5",
 					_ => throw new ArgumentOutOfRangeException()
 				};
+
+				if (logData.LogExtras.FractalExtras?.FractalScale != null)
+				{
+					if (modeLabel.Text != "")
+					{
+						modeLabel.Text += ", ";
+					}
+					modeLabel.Text += $"Scale {logData.LogExtras.FractalExtras.FractalScale}";
+				}
+				
 				modeLabel.Visible = !String.IsNullOrWhiteSpace(modeLabel.Text);
 
 				string result;

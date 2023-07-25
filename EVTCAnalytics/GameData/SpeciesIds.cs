@@ -101,6 +101,9 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		public const int Arkk = 17759;
 		// Sunqua Peak
 		public const int AiKeeperOfThePeak = 23254;
+		// Silent Surf
+		public const int KanaxaiNM = 25572;
+		public const int KanaxaiCM = 25577;
 
 		// Festivals
 		public const int Freezie = 21333;

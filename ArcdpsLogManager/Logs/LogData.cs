@@ -295,11 +295,14 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 				}
 
 				LogExtras = new LogExtras();
-				if (Encounter.GetEncounterCategory() == EncounterCategory.Fractal)
+				
+				var mistlockInstabilities = logAnalytics.FractalInstabilityDetector.GetInstabilities(log).ToList();
+				if (Encounter.GetEncounterCategory() == EncounterCategory.Fractal || mistlockInstabilities.Count > 0 || log.FractalScale != null)
 				{
 					LogExtras.FractalExtras = new FractalExtras
 					{
-						MistlockInstabilities = logAnalytics.FractalInstabilityDetector.GetInstabilities(log).ToList()
+						MistlockInstabilities = mistlockInstabilities,
+						FractalScale = log.FractalScale,
 					};
 				}
 

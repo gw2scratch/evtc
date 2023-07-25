@@ -745,6 +745,50 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					// Only used for master assignment
 					// Contains if the attack target is targetable as the value.
 					return;
+				case StateChange.BuffInfo:
+				{
+					if (state.SkillsById.TryGetValue(item.SkillId, out var skill))
+					{
+						bool isResistanceAvailable = string.Compare(state.EvtcVersion, "EVTC20200428", StringComparison.OrdinalIgnoreCase) >= 0;
+						
+						Span<byte> padding = stackalloc byte[4];
+						BitConverter.TryWriteBytes(padding, item.Padding);
+						
+						skill.BuffData = new BuffData
+						{
+							IsInversion = item.IsShields != 0,
+							IsInvulnerability = item.IsFlanking != 0,
+							IsResistance = isResistanceAvailable ? padding[1] != 0 : null,
+							Category = (BuffCategory) item.IsOffCycle,
+							StackingType = padding[0],
+							MaxStacks = item.SrcMasterId,
+							DurationCap = item.OverstackValue
+						};
+						
+					}
+
+					return;
+				}
+				case StateChange.SkillInfo:
+				{
+					// (float*)&time[4]
+					// recharge range0 range1 tooltiptime
+					Span<byte> bytes = stackalloc byte[16];
+					BitConverter.TryWriteBytes(bytes[..8], item.Time);
+					BitConverter.TryWriteBytes(bytes[8..16], item.SrcAgent);
+					if (state.SkillsById.TryGetValue(item.SkillId, out var skill))
+					{
+						skill.SkillData = new SkillData
+						{
+							Recharge = BitConverter.ToSingle(bytes[..4]),
+							Range0 = BitConverter.ToSingle(bytes[4..8]),
+							Range1 = BitConverter.ToSingle(bytes[8..12]),
+							TooltipTime = BitConverter.ToSingle(bytes[12..16]),
+						};
+					}
+
+					return;
+				}
 				case StateChange.InstanceStart:
 					state.InstanceStart = new InstanceStart(item.SrcAgent);
 					return;
@@ -782,6 +826,9 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					var errorString = Encoding.UTF8.GetString(error);
 					
 					state.Errors.Add(new LogError(errorString));
+					return;
+				case StateChange.FractalScale:
+					state.FractalScale = (int) item.SrcAgent;
 					return;
 				default:
 				{
@@ -960,12 +1007,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						float breakbarHealthFraction = BitConversions.ToSingle(item.Value);
 						return new DefianceBarHealthUpdateEvent(item.Time, GetAgentByAddress(item.SrcAgent),
 							breakbarHealthFraction);
-					case StateChange.BuffInfo:
-						// TODO: Figure out what the contents are
 					case StateChange.BuffFormula:
-						// TODO: Figure out what the contents are
-					case StateChange.SkillInfo:
-						// TODO: Figure out what the contents are
+					// TODO: Figure out what the contents are
 					case StateChange.SkillTiming:
 						// TODO: Figure out what the contents are
 						return new UnknownEvent(item.Time, item);
@@ -976,8 +1019,16 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 							marker = new Marker(markerId);
 							state.MarkersById[markerId] = marker;
 						}
+
+						// Added in aug.23.2022
+						bool isCommanderAvailable = string.Compare(state.EvtcVersion, "EVTC20220823", StringComparison.OrdinalIgnoreCase) >= 0;
+						bool? isCommander = isCommanderAvailable switch
+						{
+							true => item.Buff != 0,
+							false => null,
+						};
 						
-						return new AgentTagEvent(item.Time, GetAgentByAddress(item.SrcAgent), marker);
+						return new AgentTagEvent(item.Time, GetAgentByAddress(item.SrcAgent), marker, isCommander);
 					case StateChange.BarrierUpdate:
 						var barrierFraction = item.DstAgent / 10000f;
 						return new BarrierUpdateEvent(item.Time, GetAgentByAddress(item.SrcAgent), barrierFraction);
@@ -995,9 +1046,12 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					case StateChange.Last90BeforeDown:
 						return new UnknownEvent(item.Time, item);
 					case StateChange.Effect:
+					{
+						// Note that the meaning of fields silently changed at some point (notably, is_flanking).
+						
 						// src_agent effect master.
 						Agent master = GetAgentByAddress(item.SrcAgent);
-						
+
 						// skillid = effectid,
 						uint effectId = item.SkillId;
 						if (!state.EffectsById.TryGetValue(effectId, out Effect effect))
@@ -1005,7 +1059,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 							effect = new Effect(effectId);
 							state.EffectsById[effectId] = effect;
 						}
-						
+
 						// dst_agent if around dst,
 						// else value/buffdmg/overstack = float[3] xyz,
 						//      &iff = float[2] xy orient,
@@ -1014,34 +1068,34 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 
 						float[] position = null;
 						float[] orientation = new float[3];
-						
+
 						if (item.DstAgent == 0)
 						{
 							position = new float[3];
-							position[0] = BitConversions.ToSingle(item.Value);          // x
-							position[1] = BitConversions.ToSingle(item.BuffDmg);        // y
+							position[0] = BitConversions.ToSingle(item.Value); // x
+							position[1] = BitConversions.ToSingle(item.BuffDmg); // y
 							position[2] = BitConversions.ToSingle(item.OverstackValue); // z
 						}
-						
+
 						// iff + buff + result + is_activation = x orientation
 						Span<byte> xOrientationBytes = stackalloc byte[4];
 						xOrientationBytes[0] = (byte) item.Iff;
 						xOrientationBytes[1] = item.Buff;
 						xOrientationBytes[2] = (byte) item.Result;
 						xOrientationBytes[3] = (byte) item.IsActivation;
-						
+
 						// is_buffremove + is_ninety + is_fifty + is_moving = y orientation
 						Span<byte> yOrientationBytes = stackalloc byte[4];
 						yOrientationBytes[0] = (byte) item.IsBuffRemove;
 						yOrientationBytes[1] = item.IsNinety;
 						yOrientationBytes[2] = item.IsFifty;
 						yOrientationBytes[3] = item.IsMoving;
-						
+
 						// &is_shields = uint16 duration,
 						Span<byte> durationBytes = stackalloc byte[2];
 						durationBytes[0] = item.IsShields;
 						durationBytes[1] = item.IsOffCycle;
-						
+
 						orientation[0] = BitConverter.ToSingle(xOrientationBytes);
 						orientation[1] = BitConverter.ToSingle(yOrientationBytes);
 						orientation[2] = BitConversions.ToSingle(item.Padding);
@@ -1050,8 +1104,91 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						// is_flanking = only z orient
 						bool zOrientationOnly = item.IsFlanking > 0;
 
-						return new EffectEvent(item.Time, master, effect, aroundAgent, position, orientation,
-							zOrientationOnly, duration);
+						return new EffectEvent(item.Time, master, effect, aroundAgent, position, orientation, zOrientationOnly, duration);
+					}
+					case StateChange.LogNPCUpdate:
+						// TODO: implement
+						return new UnknownEvent(item.Time, item);
+					case StateChange.IdleEvent:
+						return new UnknownEvent(item.Time, item);
+					case StateChange.ExtensionCombat:
+						// Not sure if this ever appears in logs.
+						return new UnknownEvent(item.Time, item);
+					case StateChange.Effect2:
+					{
+						// Official docs as of 2023-07-18:
+						// src_agent is owner. dst_agent if at agent, else &value = float[3] xyz.
+						// &iff = uint32 duration.
+						// &buffremove = uint32 trackable id.
+						// &is_shields = int16[3] orientation, value ranges from -31415 (pi) to +31415 or int16 MIN/MAX if out of those bounds
+						
+						// Official docs as of 2023-07-20:
+						// src_agent is owner. dst_agent if at agent, else &value = float[3] xyz.
+						// &iff = uint32 duraation.
+						// &buffremove = uint32 trackable id.
+						// &is_shields = int16[3] orientation, values are original*1000 clamped to int16 (not in realtime api)
+						
+						// src_agent is owner of the effect.
+						Agent master = GetAgentByAddress(item.SrcAgent);
+
+						// is_buffremove + is_ninety + is_fifty + is_moving = trackable id
+						Span<byte> trackableIdBytes = stackalloc byte[4];
+						trackableIdBytes[0] = (byte) item.IsBuffRemove;
+						trackableIdBytes[1] = item.IsNinety;
+						trackableIdBytes[2] = item.IsFifty;
+						trackableIdBytes[3] = item.IsMoving;
+						uint trackableId = BitConverter.ToUInt32(trackableIdBytes);
+						
+						// skillid = effectid (not documented)
+						uint effectId = item.SkillId;
+						Effect effect;
+						if (effectId != 0)
+						{
+							if (!state.EffectsById.TryGetValue(effectId, out effect))
+							{
+								effect = new Effect(effectId);
+								state.EffectsById[effectId] = effect;
+							}
+						}
+						else
+						{
+							// TODO: retrieve effect from a list of ongoing effects
+							return new EffectEndEvent(item.Time, trackableId);
+						}
+
+						// dst_agent if around dst,
+						Agent aroundAgent = GetAgentByAddress(item.DstAgent);
+
+						float[] position = null;
+						ushort[] orientation = new ushort[3];
+
+						// else &value = float[3] xyz
+						if (item.DstAgent == 0)
+						{
+							position = new float[3];
+							position[0] = BitConversions.ToSingle(item.Value); // x
+							position[1] = BitConversions.ToSingle(item.BuffDmg); // y
+							position[2] = BitConversions.ToSingle(item.OverstackValue); // z
+						}
+
+						// iff + buff + result + is_activation = duration
+						Span<byte> durationBytes = stackalloc byte[4];
+						durationBytes[0] = (byte) item.Iff;
+						durationBytes[1] = item.Buff;
+						durationBytes[2] = (byte) item.Result;
+						durationBytes[3] = (byte) item.IsActivation;
+						
+
+						// is shields + is_offcycle + pad61 + pad62 + pad63 + pad64 = int16[3] orientation
+						Span<byte> orientationBytes = stackalloc byte[6];
+						durationBytes[0] = item.IsShields;
+						durationBytes[1] = item.IsOffCycle;
+						BitConverter.TryWriteBytes(orientationBytes[2..6], item.Padding);
+
+						ushort duration = BitConverter.ToUInt16(durationBytes);
+
+						return new EffectStartEvent(item.Time, master, effect, aroundAgent, position, orientation, duration, trackableId);
+					}
 					default:
 						return new UnknownEvent(item.Time, item);
 				}

@@ -23,6 +23,6 @@ public class StoredSettings
 	public string DpsReportDomain { get; set; } = DpsReportUploader.DefaultDomain.Domain;
 	public bool DpsReportUploadDetailedWvw { get; set; } = false;
 	public int? MinimumLogDurationSeconds { get; set; } = null;
-	public List<string> HiddenLogListColumns { get; set; } = new List<string>() {"Character", "Map ID", "Game Version", "arcdps Version", "Instabilities"};
+	public List<string> HiddenLogListColumns { get; set; } = new List<string>() {"Character", "Map ID", "Game Version", "arcdps Version", "Instabilities", "Scale"};
 	public List<string> IgnoredUpdateVersions { get; set; } = new List<string>();
 }

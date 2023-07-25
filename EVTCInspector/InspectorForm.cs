@@ -41,6 +41,7 @@ namespace GW2Scratch.EVTCInspector
 		
 		// Processed skills
 		private readonly FilterCollection<Skill> skills = new FilterCollection<Skill>();
+		private readonly SkillControl skillControl;
 		
 		// Processed effects
 		private readonly FilterCollection<Effect> effects = new FilterCollection<Effect>();
@@ -84,12 +85,15 @@ namespace GW2Scratch.EVTCInspector
 			agentsDetailLayout.Add(agentControl);
 			agentsDetailLayout.EndVertical();
 
-			var agentSplitter = new Splitter {Panel1 = agentsGridView, Panel2 = agentsDetailLayout, Position = 300};
+			var agentSplitter = new Splitter {Panel1 = agentsGridView, Panel2 = agentsDetailLayout, Position = 400};
+
+			skillControl = new SkillControl();
+			var skillSplitter = new Splitter {Panel1 = ConstructSkillGridView(), Panel2 = skillControl, Position = 400};
 
 			var processedTabControl = new TabControl();
 			processedTabControl.Pages.Add(new TabPage(eventsDetailLayout) {Text = "Events"});
 			processedTabControl.Pages.Add(new TabPage(agentSplitter) {Text = "Agents"});
-			processedTabControl.Pages.Add(new TabPage(ConstructSkillGridView()) {Text = "Skills"});
+			processedTabControl.Pages.Add(new TabPage(skillSplitter) {Text = "Skills"});
 			processedTabControl.Pages.Add(new TabPage(ConstructEffectGridView()) {Text = "Effects"});
 			processedTabControl.Pages.Add(new TabPage(ConstructMarkerGridView()) {Text = "Markers"});
 
@@ -270,6 +274,7 @@ namespace GW2Scratch.EVTCInspector
 					processedLog.GameLanguage,
 					processedLog.GameShardId,
 					processedLog.MapId,
+					processedLog.FractalScale,
 					processedLog.Errors
 				);
 
@@ -315,7 +320,26 @@ namespace GW2Scratch.EVTCInspector
 					Binding = new DelegateBinding<Skill, string>(x => x.Name)
 				}
 			});
-			
+			grid.Columns.Add(new GridColumn
+			{
+				HeaderText = "Type",
+				DataCell = new TextBoxCell
+				{
+					// TODO: Improve for older versions without SkillInfo
+					Binding = new DelegateBinding<Skill, string>(x =>
+					{
+						return (x.SkillData != null, x.BuffData != null) switch
+						{
+							(true, true) => "Both?",
+							(true, false) => "Ability",
+							(false, true) => "Buff",
+							(false, false) => "Unknown",
+						};
+					})
+				}
+			});
+
+			grid.SelectedItemsChanged += (_, _) => {skillControl.Skill = grid.SelectedItem;};
 			grid.DataStore = skills;
 			new GridViewSorter<Skill>(grid, skills).EnableSorting();
 

@@ -33,24 +33,24 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Updates
 			                     && string.Compare(log.EvtcVersion, "EVTC20200609", StringComparison.OrdinalIgnoreCase) >= 0,
 				"Commander tag identification is now available."),
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 0, 0, 0)
-					&& log.EncounterResult == EncounterResult.Failure,
+			                     && log.EncounterResult == EncounterResult.Failure,
 				"Add health percentage for failed logs"),
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 0, 0, 0)
-					&& log.Encounter == Encounter.TwinLargos
-					&& log.EncounterResult == EncounterResult.Unknown,
+			                     && log.Encounter == Encounter.TwinLargos
+			                     && log.EncounterResult == EncounterResult.Unknown,
 				"Twin Largos logs had Unknown results if Kenut did not appear in the log."),
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 0, 0, 0),
 				"Durations are significantly more accurate."),
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 0, 0, 1)
-					&& log.Encounter == Encounter.Other,
+			                     && log.Encounter == Encounter.Other,
 				"Support for Ai, Keeper of the Peak"),
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 0, 3, 1)
-					&& log.Encounter == Encounter.KeepConstruct,
+			                     && log.Encounter == Encounter.KeepConstruct,
 				"Adds Keep Construct CM detection."),
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 0, 3, 2)
-					&& log.Encounter == Encounter.Xera
-					&& log.EncounterResult == EncounterResult.Failure
-					&& log.HealthPercentage > 0.998,
+			                     && log.Encounter == Encounter.Xera
+			                     && log.EncounterResult == EncounterResult.Failure
+			                     && log.HealthPercentage > 0.998,
 				"Twisted Castle logs may have been incorrectly identified as Xera."),
 #pragma warning disable 618
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 0, 3, 3)
@@ -83,53 +83,66 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Updates
 			                     && log.Encounter.GetEncounterCategory() == EncounterCategory.Fractal,
 				"Adds Mistlock Instabilities for fractal log details, filters, and log list column."),
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 4, 0, 1)
-					&& log.Encounter == Encounter.Other,
+			                     && log.Encounter == Encounter.Other,
 				"Add support for End of Dragons strike missions."),
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 5, 0, 0)
-					&& log.Encounter == Encounter.AetherbladeHideout
-					&& log.GameBuild >= 127931,
+			                     && log.Encounter == Encounter.AetherbladeHideout
+			                     && log.GameBuild >= 127931,
 				"Add CM detection for Aetherblade Hideout."),
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 5, 0, 1)
-					&& log.Encounter == Encounter.XunlaiJadeJunkyard
-					&& log.GameBuild >= 128773,
+			                     && log.Encounter == Encounter.XunlaiJadeJunkyard
+			                     && log.GameBuild >= 128773,
 				"Add CM detection for Xunlai Jade Junkyard."),
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 5, 1, 1)
-					&& log.Encounter == Encounter.Other
-					&& log.MapId == MapIds.XunlaiJadeJunkyard
-					&& log.GameBuild >= 129355,
+			                     && log.Encounter == Encounter.Other
+			                     && log.MapId == MapIds.XunlaiJadeJunkyard
+			                     && log.GameBuild >= 129355,
 				"Add CM detection for Kaineng Overlook."),
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 6, 0, 0)
-					// Some raid enemies can be manually added and they would be categorized as Other.
-					&& (log.Encounter.IsRaid() || (log.MapId != null && MapIds.IsRaidMap(log.MapId.Value)))
-					&& log.GameBuild >= 130910,
+			                     // Some raid enemies can be manually added and they would be categorized as Other.
+			                     && (log.Encounter.IsRaid() || (log.MapId != null && MapIds.IsRaidMap(log.MapId.Value)))
+			                     && log.GameBuild >= 130910,
 				"Add Emboldened (easy) mode detection for raids."),
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 6, 0, 1)
-					// Some raid enemies can be manually added and they would be categorized as Other.
-					&& log.Encounter == Encounter.HarvestTemple
-					&& log.GameBuild >= 130910,
+			                     // Some raid enemies can be manually added and they would be categorized as Other.
+			                     && log.Encounter == Encounter.HarvestTemple
+			                     && log.GameBuild >= 130910,
 				"Add CM detection for Harvest Temple."),
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 6, 0, 2)
-					&& log.Encounter == Encounter.AiKeeperOfThePeakDayAndNight
-					&& log.ParsingVersion >= new Version(1, 6, 0, 0),
+			                     && log.Encounter == Encounter.AiKeeperOfThePeakDayAndNight
+			                     && log.ParsingVersion >= new Version(1, 6, 0, 0),
 				"Fixes Ai logs always being categorized as both phases"),
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 6, 0, 3)
-					&& log.Encounter == Encounter.HarvestTemple,
+			                     && log.Encounter == Encounter.HarvestTemple,
 				"Slightly improved health percentage display for Harvest Temple (16.66% per phase)"),
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 7, 0, 0)
-					&& log.Encounter == Encounter.Other
-					&& log.MapId == MapIds.OldLionsCourt,
+			                     && log.Encounter == Encounter.Other
+			                     && log.MapId == MapIds.OldLionsCourt,
 				"Add support for Old Lion's Court"),
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 7, 1, 0)
-					&& log.Encounter == Encounter.Other
-					&& log.MapId == MapIds.OldLionsCourt,
+			                     && log.Encounter == Encounter.Other
+			                     && log.MapId == MapIds.OldLionsCourt,
 				"Add support for Old Lion's Court CM"),
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 7, 1, 1)
-					&& log.Encounter == Encounter.Other,
+			                     && log.Encounter == Encounter.Other,
 				"Add basic support for map logs"),
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 7, 1, 2)
-					&& log.ParsingVersion >= new Version(1, 7, 1, 0)
-					&& log.Encounter == Encounter.OldLionsCourt,
+			                     && log.ParsingVersion >= new Version(1, 7, 1, 0)
+			                     && log.Encounter == Encounter.OldLionsCourt,
 				"Fix CM detection for Old Lion's Court"),
+			new LogUpdate(log => log.ParsingVersion < new Version(1, 8, 1, 0)
+			                     && log.Encounter == Encounter.Other
+			                     && log.MapId == MapIds.HarvestTemple,
+				"Add support for Harvest Temple logs triggered by Void Melters"),
+			new LogUpdate(log => log.ParsingVersion < new Version(1, 9, 0, 0)
+			                     && log.Encounter == Encounter.Other
+			                     && log.MapId == MapIds.SilentSurf,
+				"Add support for Silent Surf CM"),
+			new LogUpdate(log => log.ParsingVersion < new Version(1, 9, 0, 1)
+			                     // There may be fractal encounters that are added manually and are not supported, so we also go through other logs.
+			                     && (log.Encounter == Encounter.Other || log.Encounter.GetEncounterCategory() == EncounterCategory.Fractal)
+			                     && string.Compare(log.EvtcVersion, "EVTC20230716", StringComparison.OrdinalIgnoreCase) >= 0,
+				"Add support for fractal scale."),
 			// When adding a new update, you need to increase the revision (last value) of the version in the .csproj file
 			// unless the version changes more significantly, in that case it can be reset to 0.
 		};

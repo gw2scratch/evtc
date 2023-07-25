@@ -50,7 +50,12 @@
 		InstanceStart = 42,
 		TickRate = 43,
 		Last90BeforeDown = 44,
-		Effect = 45,
+		Effect = 45, // Not used since 20230716
 		IdToGuid = 46,
+		LogNPCUpdate = 47,
+		IdleEvent = 48, // Internal in arcdps; shouldn't appear
+		ExtensionCombat = 49, // Intended for extensions to indicate used skills for the skill table
+		FractalScale = 50,
+		Effect2 = 51, // Replaces Effect since 20230716
 	};
 }
