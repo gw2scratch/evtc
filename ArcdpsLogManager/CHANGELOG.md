@@ -12,7 +12,7 @@ s Added support for Silent Surf CM
 - The game data collecting tab (requires Show -> Debug data to be enabled) now scans multiple files at once. This
   provides a nice performance benefit on SSDs, but may result in slowdowns with HDDs (not tested on a HDD).
 #### Fixes
-- Fixed API error caused by adding a workaround for a GW2 API internal error when searching for unknown guilds.
+- Fixed API error caused by adding a workaround for a GW2 API internal error when searching for unknown guilds (thank you, @Denrage!)
 
 ## Log Manager v1.8
 #### New features
