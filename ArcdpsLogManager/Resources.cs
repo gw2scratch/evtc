@@ -175,6 +175,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		public static Image GetElementalAiKeeperOfThePeakIcon() => GetEncounterImage("Elemental_Ai");
 		public static Image GetDarkAiKeeperOfThePeakIcon() => GetEncounterImage("Dark_Ai");
 		public static Image GetBothPhasesAiKeeperOfThePeakIcon() => GetEncounterImage("Both_Phases_Ai");
+		public static Image GetKanaxaiIcon() => GetEncounterImage("Mini_Kanaxai");
 
 		// FESTIVALS
 		public static Image GetFreezieIcon() => GetEncounterImage("Mini_Freezie");
