@@ -330,7 +330,10 @@ namespace GW2Scratch.EVTCAnalytics.Events
 	/// An event specifying that an effect was created.
 	/// </summary>
 	/// <remarks>
-	/// Introduced in EVTC20220602.
+	/// Introduced in EVTC20220602. Retired in EVTC20230718.
+	/// 
+	/// Meaning of some values silently changed sometime in-between without any mention in the changelog.
+	/// Notably, ZAxisOrientationOnly likely changed meaning.
 	/// </remarks>
 	public class EffectEvent : AgentEvent
 	{
@@ -381,6 +384,83 @@ namespace GW2Scratch.EVTCAnalytics.Events
 			Orientation = orientation;
 			ZAxisOrientationOnly = zAxisOrientationOnly;
 			Duration = duration;
+		}
+	}
+	
+	/// <summary>
+	/// An event specifying that an effect was created.
+	/// </summary>
+	/// <remarks>
+	/// Introduced in EVTC20220602.
+	/// </remarks>
+	public class EffectStartEvent : Event
+	{
+		/// <summary>
+		/// The owner of this effect.
+		/// </summary>
+		public Agent EffectOwner { get; }
+
+		/// <summary>
+		/// The Effect created.
+		/// </summary>
+		public Effect Effect { get; }
+
+		/// <summary>
+		/// The <see cref="Agent"/> this effect is anchored to if anchored. May be <see langword="null" />.
+		/// </summary>
+		/// <seealso cref="Position"/>
+		public Agent AgentTarget { get; }
+
+		/// <summary>
+		/// Position (x, y, z) of the effect when not anchored to a target. May be <see langword="null" />.
+		/// </summary>
+		/// <seealso cref="AgentTarget"/>
+		public float[] Position { get; }
+
+		/// <summary>
+		/// The orientation (x, y, z) of the effect.
+		/// </summary>
+		public ushort[] Orientation { get; }
+
+		/// <summary>
+		/// The duration of the effect in milliseconds.
+		/// </summary>
+		public ushort Duration { get; }
+		
+		/// <summary>
+		/// Trackable id of this effect. Used for pairing with a corresponding EffectEndEvent.
+		/// </summary>
+		public uint TrackableId { get; }
+
+		public EffectStartEvent(long time, Agent effectOwner, Effect effect, Agent agentTarget, float[] position,
+			ushort[] orientation, ushort duration, uint trackableId) : base(time)
+		{
+			EffectOwner = effectOwner;
+			Effect = effect;
+			AgentTarget = agentTarget;
+			Position = position;
+			Orientation = orientation;
+			Duration = duration;
+			TrackableId = trackableId;
+		}
+	}
+	
+	/// <summary>
+	/// An event specifying that an effect ended.
+	/// </summary>
+	/// <remarks>
+	/// Introduced in EVTC20220602.
+	/// </remarks>
+	public class EffectEndEvent : Event
+	{
+		/// <summary>
+		/// Trackable id of this effect. Used for pairing with a corresponding EffectStartEvent.
+		/// </summary>
+		public uint TrackableId { get; }
+
+		public EffectEndEvent(long time, uint trackableId) : base(time)
+		{
+			TrackableId = trackableId;
 		}
 	}
 }
