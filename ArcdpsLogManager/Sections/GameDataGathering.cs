@@ -376,8 +376,8 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			return Task.Run(() =>
 			{
 				// TODO: Change List into some kind of concurrent bag
-				var species = new ConcurrentDictionary<int, ConcurrentDictionary<SpeciesData, List<LogData>>>();
-				var skills = new ConcurrentDictionary<uint, ConcurrentDictionary<SkillData, List<LogData>>>();
+				var species = new ConcurrentDictionary<int, ConcurrentDictionary<SpeciesData, ConcurrentBag<LogData>>>();
+				var skills = new ConcurrentDictionary<uint, ConcurrentDictionary<SkillData, ConcurrentBag<LogData>>>();
 
 				int done = 0;
 				int failed = 0;
@@ -405,9 +405,9 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 						if (id == 0) continue;
 
 						var speciesData = new SpeciesData(id, name);
-						var dictForSpecies = species.GetOrAdd(id, new ConcurrentDictionary<SpeciesData, List<LogData>>());
+						var dictForSpecies = species.GetOrAdd(id, new ConcurrentDictionary<SpeciesData, ConcurrentBag<LogData>>());
 
-						var listForSpeciesData = dictForSpecies.GetOrAdd(speciesData, new List<LogData>());
+						var listForSpeciesData = dictForSpecies.GetOrAdd(speciesData, new ConcurrentBag<LogData>());
 						listForSpeciesData.Add(log);
 					}
 
@@ -426,9 +426,9 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 						if (id == 0) continue;
 
 						var skillData = new SkillData(id, name, skillType);
-						var dictForSkill = skills.GetOrAdd(id, new ConcurrentDictionary<SkillData, List<LogData>>());
+						var dictForSkill = skills.GetOrAdd(id, new ConcurrentDictionary<SkillData, ConcurrentBag<LogData>>());
 
-						var listForSkillData = dictForSkill.GetOrAdd(skillData, new List<LogData>());
+						var listForSkillData = dictForSkill.GetOrAdd(skillData, new ConcurrentBag<LogData>());
 						listForSkillData.Add(log);
 					}
 
