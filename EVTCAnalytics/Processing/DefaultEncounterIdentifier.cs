@@ -649,6 +649,13 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 
 					return builder.Build();
 				}
+				case Encounter.Kanaxai:
+				{
+					return GetDefaultBuilder(encounter, mainTarget)
+						.WithResult(new AgentBuffGainedDeterminer(mainTarget, SkillIds.Determined))
+						.WithModes(new ConstantModeDeterminer(EncounterMode.Challenge))
+						.Build();
+				}
 				default:
 					return GetDefaultBuilder(encounter, mainTarget, mergeMainTarget: false).Build();
 			}
@@ -808,6 +815,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 							}
 						}
 					}
+					case SpeciesIds.KanaxaiCM:
+						return Encounter.Kanaxai;
 					case SpeciesIds.Freezie:
 						return Encounter.Freezie;
 					case SpeciesIds.IcebroodConstruct:

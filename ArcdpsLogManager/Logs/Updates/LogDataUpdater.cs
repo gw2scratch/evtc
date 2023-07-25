@@ -134,6 +134,10 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Updates
 			                     && log.Encounter == Encounter.Other
 			                     && log.MapId == MapIds.HarvestTemple,
 				"Add support for Harvest Temple logs triggered by Void Melters"),
+			new LogUpdate(log => log.ParsingVersion < new Version(1, 9, 0, 0)
+			                     && log.Encounter == Encounter.Other
+			                     && log.MapId == MapIds.SilentSurf,
+				"Add support for Silent Surf CM"),
 			// When adding a new update, you need to increase the revision (last value) of the version in the .csproj file
 			// unless the version changes more significantly, in that case it can be reset to 0.
 		};
