@@ -218,6 +218,16 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			};
 			gridView.Columns.Add(resultColumn);
 			
+			var fractalScaleColumn = new GridColumn
+			{
+				HeaderText = "Scale",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<LogData, string>(x => x.LogExtras?.FractalExtras?.FractalScale?.ToString() ?? "")
+				}
+			};
+			gridView.Columns.Add(fractalScaleColumn);
+
 			var instabilityCell = new DrawableCell();
 			instabilityCell.Paint += (sender, args) =>
 			{
@@ -247,16 +257,6 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			};
 			gridView.Columns.Add(instabilityColumn);
 			
-			var fractalScaleColumn = new GridColumn
-			{
-				HeaderText = "Scale",
-				DataCell = new TextBoxCell
-				{
-					Binding = new DelegateBinding<LogData, string>(x => x.LogExtras?.FractalExtras?.FractalScale?.ToString() ?? "")
-				}
-			};
-			gridView.Columns.Add(fractalScaleColumn);
-
 			var dateColumn = new GridColumn()
 			{
 				HeaderText = "Date",
