@@ -4,10 +4,11 @@ This is the full changelog of the arcdps Log Manager.
 
 ## Log Manager v1.9 (unreleased)
 #### New features
-s Added support for Silent Surf CM
+- Added support for Silent Surf CM and NM
 - Added fractal scale as a column to the log list; right-click to hide/show (in logs since 2023-07-16)
 - Added fractal scale to the log detail panel (in logs since 2023-07-16)
 - *EVTC Inspector*: Added rudimentary support for the reworked effect events (since 2023-07-16).
+- Added ability/buff column for skills to the Game data gathering tab (View -> Debug Data must be enabled to see this tab).
 #### Changes
 - The game data collecting tab (requires Show -> Debug data to be enabled) now scans multiple files at once. This
   provides a nice performance benefit on SSDs, but may result in slowdowns with HDDs (not tested on a HDD).

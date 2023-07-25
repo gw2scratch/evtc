@@ -63,16 +63,25 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			}
 		}
 
+		private enum SkillType
+		{
+			Unknown,
+			Buff,
+			Ability,
+		}
+		
 		private class SkillData : IEquatable<SkillData>
 		{
 			public uint SkillId { get; }
 			public string Name { get; }
 			public List<LogData> Logs { get; } = new List<LogData>();
+			public SkillType Type { get; }
 
-			public SkillData(uint skillId, string name)
+			public SkillData(uint skillId, string name, SkillType type)
 			{
 				SkillId = skillId;
 				Name = name;
+				Type = type;
 			}
 
 			public bool Equals(SkillData other)
@@ -92,7 +101,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 
 			public override int GetHashCode()
 			{
-				return HashCode.Combine(SkillId, Name);
+				return HashCode.Combine(SkillId, Name, Type);
 			}
 
 			public static bool operator ==(SkillData left, SkillData right)
@@ -229,6 +238,14 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			});
 			skillGridView.Columns.Add(new GridColumn
 			{
+				HeaderText = "Type",
+				DataCell = new TextBoxCell()
+				{
+					Binding = new DelegateBinding<SkillData, string>(x => x.Type.ToString())
+				}
+			});
+			skillGridView.Columns.Add(new GridColumn
+			{
 				HeaderText = "Times seen",
 				DataCell = new TextBoxCell()
 				{
@@ -358,6 +375,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 		{
 			return Task.Run(() =>
 			{
+				// TODO: Change List into some kind of concurrent bag
 				var species = new ConcurrentDictionary<int, ConcurrentDictionary<SpeciesData, List<LogData>>>();
 				var skills = new ConcurrentDictionary<uint, ConcurrentDictionary<SkillData, List<LogData>>>();
 
@@ -384,12 +402,10 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 						int id = agent.SpeciesId;
 						string name = agent.Name;
 
-						// Ignore missing data. If the species id, in most cases all other data is meaningless.
 						if (id == 0) continue;
 
 						var speciesData = new SpeciesData(id, name);
-						var dictForSpecies =
-							species.GetOrAdd(id, new ConcurrentDictionary<SpeciesData, List<LogData>>());
+						var dictForSpecies = species.GetOrAdd(id, new ConcurrentDictionary<SpeciesData, List<LogData>>());
 
 						var listForSpeciesData = dictForSpecies.GetOrAdd(speciesData, new List<LogData>());
 						listForSpeciesData.Add(log);
@@ -399,11 +415,17 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 					{
 						uint id = skill.Id;
 						string name = skill.Name;
+						var skillType = (skill.SkillData, skill.BuffData) switch
+						{
+							(null, null) => SkillType.Unknown,
+							(_, null) => SkillType.Ability,
+							(null, _) => SkillType.Buff,
+							_ => SkillType.Unknown,
+						};
 
-						// Ignore missing data. If the species id, in most cases all other data is meaningless.
 						if (id == 0) continue;
 
-						var skillData = new SkillData(id, name);
+						var skillData = new SkillData(id, name, skillType);
 						var dictForSkill = skills.GetOrAdd(id, new ConcurrentDictionary<SkillData, List<LogData>>());
 
 						var listForSkillData = dictForSkill.GetOrAdd(skillData, new List<LogData>());
