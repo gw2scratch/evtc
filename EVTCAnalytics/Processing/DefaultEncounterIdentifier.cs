@@ -651,9 +651,16 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				}
 				case Encounter.Kanaxai:
 				{
+					var mode = mainTarget switch
+					{
+						NPC { SpeciesId: SpeciesIds.KanaxaiNM } => EncounterMode.Normal,
+						NPC { SpeciesId: SpeciesIds.KanaxaiCM } => EncounterMode.Challenge,
+						_ => EncounterMode.Unknown,
+					};
+					
 					return GetDefaultBuilder(encounter, mainTarget)
 						.WithResult(new AgentBuffGainedDeterminer(mainTarget, SkillIds.Determined))
-						.WithModes(new ConstantModeDeterminer(EncounterMode.Challenge))
+						.WithModes(new ConstantModeDeterminer(mode))
 						.Build();
 				}
 				default:
@@ -815,6 +822,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 							}
 						}
 					}
+					case SpeciesIds.KanaxaiNM:
+						return Encounter.Kanaxai;
 					case SpeciesIds.KanaxaiCM:
 						return Encounter.Kanaxai;
 					case SpeciesIds.Freezie:
