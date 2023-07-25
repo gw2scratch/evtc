@@ -138,6 +138,11 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Updates
 			                     && log.Encounter == Encounter.Other
 			                     && log.MapId == MapIds.SilentSurf,
 				"Add support for Silent Surf CM"),
+			new LogUpdate(log => log.ParsingVersion < new Version(1, 9, 0, 1)
+			                     // There may be fractal encounters that are added manually and are not supported, so we also go through other logs.
+			                     && (log.Encounter == Encounter.Other || log.Encounter.GetEncounterCategory() == EncounterCategory.Fractal)
+			                     && string.Compare(log.EvtcVersion, "EVTC20230716", StringComparison.OrdinalIgnoreCase) >= 0,
+				"Add support for fractal scale."),
 			// When adding a new update, you need to increase the revision (last value) of the version in the .csproj file
 			// unless the version changes more significantly, in that case it can be reset to 0.
 		};
