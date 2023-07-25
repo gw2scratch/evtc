@@ -8,4 +8,7 @@ public class FractalExtras
 {
 	[JsonProperty]
 	public List<MistlockInstability> MistlockInstabilities { get; set; } = new List<MistlockInstability>();
+
+	[JsonProperty]
+	public int? FractalScale { get; set; } = null;
 }
