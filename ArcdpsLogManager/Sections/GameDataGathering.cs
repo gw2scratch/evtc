@@ -193,7 +193,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 				HeaderText = "Logs",
 				DataCell = new TextBoxCell()
 				{
-					Binding = new DelegateBinding<SpeciesData, string>(x => "Click me to open log list"),
+					Binding = new DelegateBinding<SpeciesData, string>(x => $"{x.Logs.Count}, click me to open log list"),
 				}
 			};
 			speciesGridView.Columns.Add(speciesLogsColumn);
@@ -257,7 +257,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 				HeaderText = "Logs",
 				DataCell = new TextBoxCell()
 				{
-					Binding = new DelegateBinding<SkillData, string>(x => "Click me to open log list"),
+					Binding = new DelegateBinding<SkillData, string>(x => $"{x.Logs.Count}, click me to open log list"),
 				}
 			};
 			skillGridView.Columns.Add(skillLogsColumn);
