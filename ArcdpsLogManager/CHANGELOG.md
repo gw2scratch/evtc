@@ -2,7 +2,7 @@
 
 This is the full changelog of the arcdps Log Manager.
 
-## Log Manager v1.9 (unreleased)
+## Log Manager v1.9
 #### New features
 - Added support for Silent Surf CM and NM
 - Added fractal scale as a column to the log list; right-click to hide/show (in logs since 2023-07-16)
