@@ -177,7 +177,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 
 			dpsReportCancelButton.Click += (sender, args) => { uploadProcessor.CancelDpsReportEIUpload(logData); };
 
-			DynamicTable debugSection;
+			DynamicGroup debugSection;
 
 			tagControl = new TagControl {ReadOnly = readOnly};
 			tagControl.TagAdded += (sender, args) =>
@@ -280,11 +280,18 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			}
 			EndVertical();
 
-			Settings.ShowDebugDataChanged += (sender, args) => { debugSection.Visible = Settings.ShowDebugData; };
+			// We need to hide the inner groupbox as hiding just the section does not work.
+			Settings.ShowDebugDataChanged += (sender, args) =>
+			{
+				debugSection.Visible = Settings.ShowDebugData;
+				debugSection.GroupBox.Visible = Settings.ShowDebugData;
+			};
+
 			Shown += (sender, args) =>
 			{
 				// Assigning visibility in the constructor does not work
 				debugSection.Visible = Settings.ShowDebugData;
+				debugSection.GroupBox.Visible = Settings.ShowDebugData;
 			};
 
 			uploadProcessor.Processed += OnUploadProcessorUpdate;
