@@ -2,6 +2,11 @@
 
 This is the full changelog of the arcdps Log Manager.
 
+## Log Manager v1.9.1
+#### Fixes
+- Fixed log detail pane not appearing for selected logs processed with Log Manager versions 1.3 and older.
+- Fixed a stray debug data section appearing when multiple logs were selected even if debug data wasn't enabled
+
 ## Log Manager v1.9
 #### New features
 - Added support for Silent Surf CM and NM

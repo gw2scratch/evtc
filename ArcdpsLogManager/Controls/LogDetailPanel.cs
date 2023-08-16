@@ -70,7 +70,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 					_ => throw new ArgumentOutOfRangeException()
 				};
 
-				if (logData.LogExtras.FractalExtras?.FractalScale != null)
+				if (logData.LogExtras?.FractalExtras?.FractalScale != null)
 				{
 					if (modeLabel.Text != "")
 					{
