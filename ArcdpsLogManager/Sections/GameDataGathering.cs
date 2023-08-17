@@ -122,6 +122,13 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 		public GameDataCollecting(LogList logList, LogCache logCache, ApiData apiData, LogDataProcessor logProcessor,
 			UploadProcessor uploadProcessor, ImageProvider imageProvider, ILogNameProvider nameProvider)
 		{
+			var threadCountStepper = new NumericStepper
+			{
+				// 4 seems to be a good default value, there doesn't seem to be any scaling beyond this,
+				// at least on a Ryzen 5900X with an SSD.
+				Value = Math.Min(Environment.ProcessorCount, 4),
+				MinValue = 1, Increment = 1.0
+			};
 			var gatherButton = new Button {Text = "Collect data"};
 			var cancelButton = new Button {Text = "Cancel"};
 			var exportSpeciesButton = new Button {Text = "Export species data to csv"};
@@ -140,6 +147,13 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 				AddCentered(
 					"Collects a list of all different agent species and skills found in logs (uses current filters).");
 				AddCentered("Requires all logs to be processed again as this data is not cached.");
+				AddSpace(yscale: false);
+				BeginCentered(spacing: new Size(5, 5));
+				{
+					var label = new Label { Text = "Threads to use for parallel processing", VerticalAlignment = VerticalAlignment.Center };
+					AddRow(label, threadCountStepper);
+				}
+				EndCentered();
 				BeginCentered(spacing: new Size(5, 5));
 				{
 					AddRow(gatherButton, cancelButton);
@@ -292,8 +306,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 
 			cancelButton.Click += (sender, args) => cancellationTokenSource?.Cancel();
 			gatherButton.Click += (sender, args) =>
-				GatherData(logList, progressBar, progressLabel, speciesGridView, skillGridView, speciesSorter,
-					skillSorter);
+				GatherData(logList, progressBar, progressLabel, speciesGridView, skillGridView, speciesSorter, skillSorter, (int) threadCountStepper.Value);
 			exportSkillsButton.Click += (sender, args) =>
 				SaveToCsv(skillGridView.DataStore ?? Enumerable.Empty<SkillData>());
 			exportSpeciesButton.Click += (sender, args) =>
@@ -334,7 +347,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 
 		private void GatherData(LogList logList, ProgressBar progressBar, Label progressLabel,
 			GridView<SpeciesData> speciesGridView, GridView<SkillData> skillGridView,
-			GridViewSorter<SpeciesData> speciesSorter, GridViewSorter<SkillData> skillSorter)
+			GridViewSorter<SpeciesData> speciesSorter, GridViewSorter<SkillData> skillSorter, int maxDegreeOfParallelism)
 		{
 			cancellationTokenSource?.Cancel();
 			cancellationTokenSource = new CancellationTokenSource();
@@ -343,6 +356,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			ParseLogs(
 				logs,
 				cancellationTokenSource.Token,
+				maxDegreeOfParallelism,
 				new Progress<(int done, int totalLogs, int failed)>(progress =>
 				{
 					(int done, int totalLogs, int failed) = progress;
@@ -371,17 +385,17 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 		}
 
 		private Task<(IEnumerable<SpeciesData>, IEnumerable<SkillData>)> ParseLogs(IReadOnlyCollection<LogData> logs,
-			CancellationToken cancellationToken, IProgress<(int done, int totalLogs, int failed)> progress = null)
+			CancellationToken cancellationToken, int maxDegreeOfParallelism, IProgress<(int done, int totalLogs, int failed)> progress = null)
 		{
 			return Task.Run(() =>
 			{
-				// TODO: Change List into some kind of concurrent bag
 				var species = new ConcurrentDictionary<int, ConcurrentDictionary<SpeciesData, ConcurrentBag<LogData>>>();
 				var skills = new ConcurrentDictionary<uint, ConcurrentDictionary<SkillData, ConcurrentBag<LogData>>>();
 
 				int done = 0;
 				int failed = 0;
-				Parallel.ForEach(logs, log =>
+				var options = new ParallelOptions { MaxDegreeOfParallelism = maxDegreeOfParallelism };
+				Parallel.ForEach(logs, options, log =>
 				{
 					cancellationToken.ThrowIfCancellationRequested();
 
