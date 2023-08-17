@@ -10,6 +10,8 @@ namespace GW2Scratch.ArcdpsLogManager.Configuration
 	{
 		private readonly RadioButtonList domainList;
 		private readonly CheckBox uploadDetailedWvwCheckbox;
+		
+		private bool EditingUserToken { get; set; }
 
 		public DpsReportUploadSettingsPage()
 		{
@@ -66,11 +68,38 @@ namespace GW2Scratch.ArcdpsLogManager.Configuration
 				Enabled = false
 			};
 
-			var showUserTokenButton = new Button {Text = "Show user token"};
+			var showUserTokenButton = new Button {Text = "Show"};
 			showUserTokenButton.Click += (sender, args) =>
 			{
 				userTokenTextBox.Text = Settings.DpsReportUserToken;
 				userTokenTextBox.Enabled = true;
+			};
+			var changeUserTokenButton = new Button {Text = "Change"};
+			changeUserTokenButton.Click += (_, _) =>
+			{
+				if (EditingUserToken)
+				{
+					EditingUserToken = false;
+					
+					Settings.DpsReportUserToken = userTokenTextBox.Text;
+					userTokenTextBox.ReadOnly = true;
+					userTokenTextBox.Text = "************";
+					userTokenTextBox.Enabled = false;
+					
+					changeUserTokenButton.Text = "Change";
+					showUserTokenButton.Visible = true;
+				}
+				else
+				{
+					EditingUserToken = true;
+
+					userTokenTextBox.ReadOnly = false;
+					userTokenTextBox.Text = Settings.DpsReportUserToken;
+					userTokenTextBox.Enabled = true;
+
+					changeUserTokenButton.Text = "Save";
+					showUserTokenButton.Visible = false;
+				}
 			};
 
 			var layout = new DynamicLayout();
@@ -101,12 +130,13 @@ namespace GW2Scratch.ArcdpsLogManager.Configuration
 						});
 					}
 					layout.EndVertical();
-					layout.BeginVertical();
+					layout.BeginVertical(spacing: new Size(5, 5));
 					{
 						layout.BeginHorizontal();
 						{
 							layout.Add(userTokenTextBox, true);
 							layout.Add(showUserTokenButton, false);
+							layout.Add(changeUserTokenButton, false);
 						}
 						layout.EndHorizontal();
 					}
@@ -115,6 +145,7 @@ namespace GW2Scratch.ArcdpsLogManager.Configuration
 				layout.EndGroup();
 			}
 			layout.EndVertical();
+			layout.AddRow();
 
 			Content = layout;
 		}
