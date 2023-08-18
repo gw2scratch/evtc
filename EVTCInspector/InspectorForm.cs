@@ -20,6 +20,7 @@ namespace GW2Scratch.EVTCInspector
 	{
 		private static readonly Padding MainTabPadding = new Padding(2);
 
+		private string OpenedLogFile { get; set; }= null;
 		private bool SkipParsing { get; set; } = false;
 
 		private readonly OpenFileDialog openFileDialog;
@@ -112,9 +113,14 @@ namespace GW2Scratch.EVTCInspector
 			var openFileMenuItem = new ButtonMenuItem {Text = "&Open EVTC log"};
 			openFileMenuItem.Click += OpenFileButtonOnClick;
 			openFileMenuItem.Shortcut = Application.Instance.CommonModifier | Keys.O;
+			
+			var reprocessMenuItem = new ButtonMenuItem {Text = "&Reprocess opened log"};
+			reprocessMenuItem.Click += ReprocessButtonOnClick;
+			reprocessMenuItem.Shortcut = Application.Instance.CommonModifier | Keys.R;
 
 			var fileMenuItem = new ButtonMenuItem {Text = "&File"};
 			fileMenuItem.Items.Add(openFileMenuItem);
+			fileMenuItem.Items.Add(reprocessMenuItem);
 			
 			var skipParsingMenuItem = new CheckMenuItem {Text = "Merge parsing and processing into one step"};
 			skipParsingMenuItem.Checked = SkipParsing;
@@ -151,9 +157,21 @@ namespace GW2Scratch.EVTCInspector
 				SelectLog(logFilename);
 			}
 		}
+		
+		private void ReprocessButtonOnClick(object s, EventArgs e)
+		{
+			if (OpenedLogFile != null) {
+				SelectLog(OpenedLogFile);
+			}
+			else
+			{
+				MessageBox.Show("No log opened.", MessageBoxType.Error);
+			}
+		}
 
 		public void SelectLog(string logFilename)
 		{
+			OpenedLogFile = logFilename;
 			var statusStringBuilder = new StringBuilder();
 
 			var parser = new EVTCParser();
