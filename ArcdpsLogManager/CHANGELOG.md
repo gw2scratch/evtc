@@ -3,9 +3,14 @@
 This is the full changelog of the arcdps Log Manager.
 
 ## Log Manager v1.10
+
 #### New features
 - Added a button to set the dps.report user token in the settings
 - Added max parallel threads setting to the Game data gathering tab (View -> Debug Data must be enabled to see this tab).
+
+#### Performance improvements
+- Improved log processing performance by ~25% for 10man logs, even more in WvW logs.
+
 #### Fixes
 - Fixed log detail pane not appearing for selected logs processed with Log Manager versions 1.3 and older.
 - Fixed a stray debug data section appearing when multiple logs were selected even if debug data wasn't enabled
