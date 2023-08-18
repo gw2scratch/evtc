@@ -12,6 +12,7 @@ using GW2Scratch.EVTCAnalytics.Model.Effects;
 using GW2Scratch.EVTCAnalytics.Model.Skills;
 using GW2Scratch.EVTCAnalytics.Parsed;
 using GW2Scratch.EVTCAnalytics.Parsed.Enums;
+using System.IO;
 using System.Text;
 
 namespace GW2Scratch.EVTCAnalytics.Processing
@@ -111,15 +112,23 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 		/// </summary>
 		public Log ProcessLog(string evtcFilename, EVTCParser parser)
 		{
-			return ProcessLog(parser.GetSinglePassReader(evtcFilename));
+			using var reader = parser.GetSinglePassReader(evtcFilename);
+			return ProcessLog(reader);
 		}
 
 		public Log ProcessLog(byte[] bytes, EVTCParser parser)
 		{
-			return ProcessLog(parser.GetSinglePassReader(bytes));
+			using var reader = parser.GetSinglePassReader(bytes);
+			return ProcessLog(reader);
+		}
+		
+		public Log ProcessLog(Stream stream, EVTCParser parser)
+		{
+			using var reader = parser.GetSinglePassReader(stream);
+			return ProcessLog(reader);
 		}
 
-		private Log ProcessLog(EVTCParser.SinglePassEVTCReader reader)
+		private Log ProcessLog(EVTCParser.ISinglePassEVTCReader reader)
 		{
 			// For now, we mostly duplicate ProcessLog(ParsedLog log) above.
 			// It might be worth it to unify the interface somehow.

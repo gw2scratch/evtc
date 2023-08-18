@@ -9,7 +9,9 @@ using GW2Scratch.EVTCAnalytics.IO;
 using GW2Scratch.EVTCAnalytics.Parsed;
 using GW2Scratch.EVTCAnalytics.Parsed.Enums;
 using GW2Scratch.EVTCAnalytics.Processing;
+using System.Buffers.Binary;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace GW2Scratch.EVTCAnalytics
 {
@@ -18,7 +20,13 @@ namespace GW2Scratch.EVTCAnalytics
 	/// </summary>
 	public class EVTCParser
 	{
-		internal class AgentReader
+		internal interface IAgentReader
+		{
+			bool Exhausted { get; }
+			bool GetNext(out ParsedAgent agent);
+		}
+
+		internal class AgentReader : IAgentReader
 		{
 			public bool Exhausted { get; private set; }
 			
@@ -47,8 +55,44 @@ namespace GW2Scratch.EVTCAnalytics
 				return false;
 			}
 		}
+		
+		internal class AgentReaderStream : IAgentReader
+		{
+			public bool Exhausted { get; private set; }
+			
+			private readonly Stream stream;
+			private readonly int agentCount;
+			private int position;
 
-		internal class SkillReader
+			public AgentReaderStream(Stream stream, int agentCount)
+			{
+				this.stream = stream;
+				this.agentCount = agentCount;
+				this.position = 0;
+			}
+
+			public bool GetNext(out ParsedAgent agent)
+			{
+				if (position < agentCount)
+				{
+					ParseAgent(stream, out agent);
+					position += 1;
+					return true;
+				}
+
+				agent = default;
+				Exhausted = true;
+				return false;
+			}
+		}
+
+		internal interface ISkillReader
+		{
+			bool Exhausted { get; }
+			bool GetNext(out ParsedSkill skill);
+		}
+
+		internal class SkillReader : ISkillReader
 		{
 			public bool Exhausted { get; private set; }
 			
@@ -68,6 +112,36 @@ namespace GW2Scratch.EVTCAnalytics
 				if (position < skillCount)
 				{
 					ParseSkill(reader, out skill);
+					position += 1;
+					return true;
+				}
+
+				skill = default;
+				Exhausted = true;
+				return false;
+			}
+		}
+		
+		internal class SkillReaderStream : ISkillReader
+		{
+			public bool Exhausted { get; private set; }
+			
+			private readonly Stream stream;
+			private readonly int skillCount;
+			private int position;
+
+			public SkillReaderStream(Stream stream, int skillCount)
+			{
+				this.stream = stream;
+				this.skillCount = skillCount;
+				this.position = 0;
+			}
+
+			public bool GetNext(out ParsedSkill skill)
+			{
+				if (position < skillCount)
+				{
+					ParseSkill(stream, out skill);
 					position += 1;
 					return true;
 				}
@@ -136,6 +210,40 @@ namespace GW2Scratch.EVTCAnalytics
 			}
 		}
 		
+		private class CombatItemReaderRevision1Stream : ICombatItemReader
+		{
+			public bool Exhausted { get; private set; }
+			
+			private readonly Stream stream;
+
+			public CombatItemReaderRevision1Stream(Stream stream)
+			{
+				this.stream = stream;
+			}
+
+			public bool GetNext(out ParsedCombatItem combatItem)
+			{
+				// 64 bytes: combat item
+				if (ReadCombatItemRevision1(stream, out combatItem))
+				{
+					return true;
+				}
+
+				combatItem = default;
+				Exhausted = true;
+				return false;
+			}
+		}
+
+		internal interface ISinglePassEVTCReader : IDisposable
+		{
+			LogVersion ReadLogVersion();
+			ParsedBossData ReadBossData();
+			IAgentReader GetAgentReader();
+			ISkillReader GetSkillReader();
+			ICombatItemReader GetCombatItemReader();
+		}
+
 		/// <summary>
 		/// Allows reading the EVTC file in a single pass effectively.
 		/// The methods have to be called in the correct order (see remarks).
@@ -153,7 +261,7 @@ namespace GW2Scratch.EVTCAnalytics
 		/// Note that all readers have to be fully exhausted before calling the next method.
 		/// </para>
 		/// </remarks>
-		internal class SinglePassEVTCReader
+		internal class SinglePassEVTCReader : ISinglePassEVTCReader
 		{
 			enum ReaderPosition
 			{
@@ -210,7 +318,7 @@ namespace GW2Scratch.EVTCAnalytics
 				return bossData;
 			}
 			
-			public AgentReader GetAgentReader()
+			public IAgentReader GetAgentReader()
 			{
 				if (position != ReaderPosition.BeforeAgents)
 				{
@@ -228,7 +336,7 @@ namespace GW2Scratch.EVTCAnalytics
 				return agentReader;
 			}
 			
-			public SkillReader GetSkillReader()
+			public ISkillReader GetSkillReader()
 			{
 				if (position != ReaderPosition.InAgents)
 				{
@@ -277,6 +385,164 @@ namespace GW2Scratch.EVTCAnalytics
 				};
 
 				return combatItemReader;
+			}
+
+			public void Dispose()
+			{
+			}
+		}
+		
+		/// <summary>
+		/// Allows reading the EVTC file in a single pass effectively.
+		/// The methods have to be called in the correct order (see remarks).
+		/// </summary>
+		/// <remarks>
+		/// The correct order of calling methods is as follows:
+		/// <list type="number">
+		/// <item><see cref="ReadLogVersion" /></item>
+		/// <item><see cref="ReadBossData" /></item>
+		/// <item><see cref="GetAgentReader" /></item>
+		/// <item><see cref="GetSkillReader" /></item>
+		/// <item><see cref="GetCombatItemReader" /></item>
+		/// </list>
+		/// <para>
+		/// Note that all readers have to be fully exhausted before calling the next method.
+		/// </para>
+		/// </remarks>
+		internal class SinglePassEVTCReaderStream : ISinglePassEVTCReader
+		{
+			enum ReaderPosition
+			{
+				BeforeVersion,
+				BeforeBossData,
+				BeforeAgents,
+				InAgents,
+				InSkills,
+				InCombatItems,
+			}
+
+			private readonly EVTCParser parser;
+			private readonly Stream stream;
+			private readonly IDisposable[] disposables;
+			private ReaderPosition position;
+			private AgentReaderStream agentReader;
+			private SkillReaderStream skillReader;
+			private ICombatItemReader combatItemReader;
+			private int revision;
+
+			public SinglePassEVTCReaderStream(EVTCParser parser, Stream stream, params IDisposable[] disposables)
+			{
+				this.parser = parser;
+				this.stream = stream;
+				this.disposables = disposables;
+				position = ReaderPosition.BeforeVersion;
+			}
+
+			public LogVersion ReadLogVersion()
+			{
+				if (position != ReaderPosition.BeforeVersion)
+				{
+					throw new InvalidOperationException("ReadLogVersion must be called when the reader is positioned before the log version.");
+				}
+
+				var version = parser.ParseLogVersion(stream);
+				position = ReaderPosition.BeforeBossData;
+				revision = version.Revision;
+				return version;
+			}
+
+			public ParsedBossData ReadBossData()
+			{
+				if (position != ReaderPosition.BeforeBossData)
+				{
+					throw new InvalidOperationException("ReadBossData must be called when the reader is positioned just before the boss data.");
+				}
+
+				var bossData = parser.ParseBossData(stream);
+				position = ReaderPosition.BeforeAgents;
+				return bossData;
+			}
+			
+			public IAgentReader GetAgentReader()
+			{
+				if (position != ReaderPosition.BeforeAgents)
+				{
+					throw new InvalidOperationException("GetAgentReader must be called when the reader is positioned just before the agent data.");
+				}
+
+				if (agentReader != null)
+				{
+					throw new InvalidOperationException("GetAgentReader must only be called once.");
+				}
+				
+				Span<byte> bytes = stackalloc byte[4];
+				ReadBytesExact(stream, bytes);
+				int agentCount = BinaryPrimitives.ReadInt32LittleEndian(bytes);
+				position = ReaderPosition.InAgents;
+				agentReader = new AgentReaderStream(stream, agentCount);
+				return agentReader;
+			}
+			
+			public ISkillReader GetSkillReader()
+			{
+				if (position != ReaderPosition.InAgents)
+				{
+					throw new InvalidOperationException("GetSkillReader must be called directly after reading agent data.");
+				}
+				
+				if (skillReader != null)
+				{
+					throw new InvalidOperationException("GetSkillReader must only be called once.");
+				}
+				
+				if (!agentReader.Exhausted)
+				{
+					throw new InvalidOperationException("The agent reader obtained previously must be exhausted fully.");
+				}
+
+				Span<byte> bytes = stackalloc byte[4];
+				ReadBytesExact(stream, bytes);
+				int skillCount = BinaryPrimitives.ReadInt32LittleEndian(bytes);
+				position = ReaderPosition.InSkills;
+				skillReader = new SkillReaderStream(stream, skillCount);
+				return skillReader;
+			}
+			
+			public ICombatItemReader GetCombatItemReader()
+			{
+				if (position != ReaderPosition.InSkills)
+				{
+					throw new InvalidOperationException("GetCombatItemReader must be called directly after reading skill data.");
+				}
+				
+				if (combatItemReader != null)
+				{
+					throw new InvalidOperationException("GetCombatItemReader must only be called once.");
+				}
+				
+				if (!skillReader.Exhausted)
+				{
+					throw new InvalidOperationException("The skill reader obtained previously must be exhausted fully.");
+				}
+
+				position = ReaderPosition.InCombatItems;
+				combatItemReader = revision switch
+				{
+					0 => throw new NotImplementedException("Not implemented yet."),
+					1 => new CombatItemReaderRevision1Stream(stream),
+					_ => throw new NotSupportedException("Only EVTC revisions 0 and 1 are supported.")
+				};
+
+				return combatItemReader;
+			}
+
+			public void Dispose()
+			{
+				stream?.Dispose();
+				foreach (var disposable in disposables)
+				{
+					disposable?.Dispose();
+				}
 			}
 		}
 
@@ -397,7 +663,8 @@ namespace GW2Scratch.EVTCAnalytics
 			return new ParsedLog(logVersion, bossData, agents, skills, combatItems);
 		}
 		
-		internal SinglePassEVTCReader GetSinglePassReader(string evtcFilename)
+		/*
+		internal ISinglePassEVTCReader GetSinglePassReader(string evtcFilename)
 		{
 			if (evtcFilename.EndsWith(".zip", StringComparison.OrdinalIgnoreCase) ||
 			    evtcFilename.EndsWith(".zevtc", StringComparison.OrdinalIgnoreCase))
@@ -424,10 +691,37 @@ namespace GW2Scratch.EVTCAnalytics
 			var fileBytes = File.ReadAllBytes(evtcFilename);
 			return GetSinglePassReader(fileBytes);
 		}
+		*/
 
-		internal SinglePassEVTCReader GetSinglePassReader(byte[] bytes)
+		internal ISinglePassEVTCReader GetSinglePassReader(string evtcFilename)
+		{
+			if (evtcFilename.EndsWith(".zip", StringComparison.OrdinalIgnoreCase) ||
+			    evtcFilename.EndsWith(".zevtc", StringComparison.OrdinalIgnoreCase))
+			{
+				// Disposed by the single pass reader when it is disposed
+				var fileStream = new FileStream(evtcFilename, FileMode.Open, FileAccess.Read, FileShare.Read);
+				var arch = new ZipArchive(fileStream, ZipArchiveMode.Read);
+				if (arch.Entries.Count == 0)
+				{
+					throw new LogParsingException("No EVTC file in ZIP archive.");
+				}
+
+				return GetSinglePassReader(arch.Entries[0].Open(), fileStream, arch);
+			}
+
+			// TODO: stream here as well
+			var fileBytes = File.ReadAllBytes(evtcFilename);
+			return GetSinglePassReader(fileBytes);
+		}
+
+		internal ISinglePassEVTCReader GetSinglePassReader(byte[] bytes)
 		{
 			return new SinglePassEVTCReader(this, new ByteArrayBinaryReader(bytes, Encoding.UTF8));
+		}
+		
+		internal ISinglePassEVTCReader GetSinglePassReader(Stream stream, params IDisposable[] disposables)
+		{
+			return new SinglePassEVTCReaderStream(this, stream, disposables);
 		}
 
 		/// <summary>
@@ -443,6 +737,23 @@ namespace GW2Scratch.EVTCAnalytics
 
 			return new LogVersion(buildVersion, revision);
 		}
+		
+		/// <summary>
+		/// Parses log metadata.
+		/// </summary>
+		private LogVersion ParseLogVersion(Stream stream)
+		{
+			// 12 bytes: arc build version
+			Span<byte> bytes = stackalloc byte[13];
+			ReadBytesExact(stream, bytes);
+			
+			string buildVersion = Encoding.UTF8.GetString(bytes[..12]);
+
+			// 1 byte: revision
+			byte revision = bytes[12];
+
+			return new LogVersion(buildVersion, revision);
+		}
 
 		/// <summary>
 		/// Parses boss related data.
@@ -453,6 +764,21 @@ namespace GW2Scratch.EVTCAnalytics
 			ushort id = reader.ReadUInt16();
 			// 1 byte: unused
 			reader.Skip(1);
+
+			return new ParsedBossData(id);
+		}
+		
+		/// <summary>
+		/// Parses boss related data.
+		/// </summary>
+		private ParsedBossData ParseBossData(Stream stream)
+		{
+			Span<byte> bytes = stackalloc byte[3];
+			ReadBytesExact(stream, bytes);
+
+			// 2 bytes: boss species ID
+			ushort id = BinaryPrimitives.ReadUInt16LittleEndian(bytes[..2]);
+			// 1 byte: unused
 
 			return new ParsedBossData(id);
 		}
@@ -492,6 +818,46 @@ namespace GW2Scratch.EVTCAnalytics
 			agent = new ParsedAgent(address, name, prof, isElite, toughness, concentration,
 				healing, condition, hitboxWidth, hitboxHeight);
 		}
+	
+		/// <summary>
+		/// Parses a single agent from a stream.
+		/// </summary>
+		/// <remarks>
+		/// Consumes 96 bytes from the stream.
+		/// </remarks>
+		private static void ParseAgent(Stream stream, out ParsedAgent agent)
+		{
+			// TODO: try heap-allocating this one (reusing one instance)
+			Span<byte> bytes = stackalloc byte[96];
+			ReadBytesExact(stream, bytes);
+			
+			// 8 bytes: agent address
+			ulong address = BinaryPrimitives.ReadUInt64LittleEndian(bytes[..8]);
+
+			// 4 bytes: profession
+			uint prof = BinaryPrimitives.ReadUInt32LittleEndian(bytes[8..12]);
+
+			// 4 bytes: is_elite
+			uint isElite = BinaryPrimitives.ReadUInt32LittleEndian(bytes[12..16]);
+
+			// 2 bytes: toughness
+			short toughness = BinaryPrimitives.ReadInt16LittleEndian(bytes[16..18]);
+			// 2 bytes: concentration
+			short concentration = BinaryPrimitives.ReadInt16LittleEndian(bytes[18..20]);
+			// 2 bytes: healing
+			short healing = BinaryPrimitives.ReadInt16LittleEndian(bytes[20..22]);
+			// 2 bytes: hb_width
+			short hitboxWidth = BinaryPrimitives.ReadInt16LittleEndian(bytes[22..24]);
+			// 2 bytes: condition
+			short condition = BinaryPrimitives.ReadInt16LittleEndian(bytes[24..26]);
+			// 2 bytes: hb_height
+			short hitboxHeight = BinaryPrimitives.ReadInt16LittleEndian(bytes[26..28]);
+			// 68 bytes: name
+			string name = Encoding.UTF8.GetString(bytes[28..]);
+
+			agent = new ParsedAgent(address, name, prof, isElite, toughness, concentration,
+				healing, condition, hitboxWidth, hitboxHeight);
+		}
 
 		/// <summary>
 		/// Parses agent related data.
@@ -502,6 +868,26 @@ namespace GW2Scratch.EVTCAnalytics
 			int agentCount = reader.ReadInt32();
 
 			var agentReader = new AgentReader(reader, agentCount);
+
+			ParsedAgent agent;
+			while (agentReader.GetNext(out agent))
+			{
+				yield return agent;
+			}
+		}
+		
+		/// <summary>
+		/// Parses agent related data.
+		/// </summary>
+		private IEnumerable<ParsedAgent> ParseAgents(Stream stream)
+		{
+			Span<byte> bytes = stackalloc byte[4];
+			ReadBytesExact(stream, bytes);
+			
+			// 4 bytes: agent count
+			int agentCount = BinaryPrimitives.ReadInt32LittleEndian(bytes);
+
+			var agentReader = new AgentReaderStream(stream, agentCount);
 
 			ParsedAgent agent;
 			while (agentReader.GetNext(out agent))
@@ -527,6 +913,27 @@ namespace GW2Scratch.EVTCAnalytics
 				yield return skill;
 			}
 		}
+		
+		/// <summary>
+		/// Parses skill related data.
+		/// </summary>
+		private IEnumerable<ParsedSkill> ParseSkills(Stream stream)
+		{
+			Span<byte> bytes = stackalloc byte[4];
+			ReadBytesExact(stream, bytes);
+			
+			// 4 bytes: skill count
+			int skillCount = BinaryPrimitives.ReadInt32LittleEndian(bytes);
+
+			// 68 bytes: each skill
+			var skillReader = new SkillReaderStream(stream, skillCount);
+			
+			ParsedSkill skill;
+			while (skillReader.GetNext(out skill))
+			{
+				yield return skill;
+			}
+		}
 
 		/// <summary>
 		/// Parses a single skill.
@@ -541,6 +948,24 @@ namespace GW2Scratch.EVTCAnalytics
 
 			skill = new ParsedSkill(skillId, name);
 		}
+		
+		/// <summary>
+		/// Parses a single skill.
+		/// </summary>
+		private static void ParseSkill(Stream stream, out ParsedSkill skill)
+		{
+			// TODO: try heap-allocating this one (reusing one instance)
+			Span<byte> bytes = stackalloc byte[68];
+			ReadBytesExact(stream, bytes);
+
+			// 4 bytes: skill ID
+			int skillId = BinaryPrimitives.ReadInt32LittleEndian(bytes[0..4]);
+
+			// 64 bytes: name
+			var name = Encoding.UTF8.GetString(bytes[4..]);
+
+			skill = new ParsedSkill(skillId, name);
+		}
 
 		/// <summary>
 		/// Parses combat related data.
@@ -551,6 +976,25 @@ namespace GW2Scratch.EVTCAnalytics
 			{
 				0 => new CombatItemReaderRevision0(reader),
 				1 => new CombatItemReaderRevision1(reader),
+				_ => throw new NotSupportedException("Only EVTC revisions 0 and 1 are supported.")
+			};
+			
+			ParsedCombatItem combatItem;
+			while (combatItemReader.GetNext(out combatItem))
+			{
+				yield return combatItem;
+			}
+		}
+		
+		/// <summary>
+		/// Parses combat related data.
+		/// </summary>
+		private IEnumerable<ParsedCombatItem> ParseCombatItems(int revision, Stream stream)
+		{
+			ICombatItemReader combatItemReader = revision switch
+			{
+				0 => throw new NotImplementedException("This is not implemented yet."),
+				1 => new CombatItemReaderRevision1Stream(stream),
 				_ => throw new NotSupportedException("Only EVTC revisions 0 and 1 are supported.")
 			};
 			
@@ -718,6 +1162,38 @@ namespace GW2Scratch.EVTCAnalytics
 
 			// 4 bytes: "padding"
 			item.Padding = reader.ReadUInt32();
+		}
+		
+		private static bool ReadCombatItemRevision1(Stream stream, out ParsedCombatItem item)
+		{
+			Unsafe.SkipInit(out item);
+			Span<byte> buffer = MemoryMarshal.Cast<ParsedCombatItem, byte>(MemoryMarshal.CreateSpan(ref item, 1));
+
+			int read = 0;
+			while (read != buffer.Length)
+			{
+				int bytesRead = stream.Read(buffer[read..]);
+				if (bytesRead == 0)
+				{
+					item = default;
+					return false;
+				}
+
+				read += bytesRead;
+			}
+
+			return true;
+		}
+
+		private static void ReadBytesExact(Stream stream, Span<byte> buffer)
+		{
+			int read = 0;
+			while (read != buffer.Length)
+			{
+				int bytesRead = stream.Read(buffer[read..]);
+				if (bytesRead == 0) throw new EndOfStreamException();
+				read += bytesRead;
+			}
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
