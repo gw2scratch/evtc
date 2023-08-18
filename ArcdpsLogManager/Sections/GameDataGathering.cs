@@ -402,8 +402,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 					Log processedLog;
 					try
 					{
-						var parsedLog = Parser.ParseLog(log.FileName);
-						processedLog = Processor.ProcessLog(parsedLog);
+						processedLog = Processor.ProcessLog(log.FileName, Parser);
 					}
 					catch
 					{
