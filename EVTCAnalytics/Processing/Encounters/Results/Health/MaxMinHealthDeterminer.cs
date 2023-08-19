@@ -1,6 +1,8 @@
 using System.Linq;
 using GW2Scratch.EVTCAnalytics.Events;
 using GW2Scratch.EVTCAnalytics.Model;
+using System;
+using System.Collections.Generic;
 
 namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health
 {
@@ -13,6 +15,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health
 	/// </remarks>
 	public class MaxMinHealthDeterminer : IHealthDeterminer
 	{
+		public virtual IReadOnlyList<Type> RequiredEventTypes { get; } = new List<Type> { typeof(AgentHealthUpdateEvent) };
+		
 		public virtual float? GetMainEnemyHealthFraction(Log log)
 		{
 			var targets = log.EncounterData.Targets.ToHashSet();

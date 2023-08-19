@@ -529,8 +529,9 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					// gadget (GadgetIds.TheDragonvoid), but this one has a unique one with different max health.
 					Gadget finalGadget = agents.OfType<Gadget>().FirstOrDefault(x =>
 						x.VolatileId == GadgetIds.TheDragonvoidFinal && x.AttackTargets.Count == 3);
-					
-					builder.WithHealth(log =>
+
+					builder.WithHealth(new AgentHealthDeterminer(null).RequiredEventTypes,
+						log =>
 					{
 						const float healthPerPhase = 1.0f / 6.0f;
 						

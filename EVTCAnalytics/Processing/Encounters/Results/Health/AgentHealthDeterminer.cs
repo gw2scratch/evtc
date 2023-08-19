@@ -1,6 +1,8 @@
 using GW2Scratch.EVTCAnalytics.Events;
 using GW2Scratch.EVTCAnalytics.Model;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health;
@@ -16,6 +18,8 @@ public class AgentHealthDeterminer : IHealthDeterminer
 	{
 		this.agent = agent;
 	}
+
+	public IReadOnlyList<Type> RequiredEventTypes { get; } = new List<Type> { typeof(AgentHealthUpdateEvent) };
 
 	public float? GetMainEnemyHealthFraction(Log log)
 	{

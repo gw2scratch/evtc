@@ -66,9 +66,9 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			return this;
 		}
 		
-		public EncounterIdentifierBuilder WithHealth(Func<Log, float?> determinerFunc)
+		public EncounterIdentifierBuilder WithHealth(IReadOnlyList<Type> requiredEventTypes, Func<Log, float?> determinerFunc)
 		{
-			HealthDeterminer = new AdHocHealthDeterminer(determinerFunc);
+			HealthDeterminer = new AdHocHealthDeterminer(determinerFunc, requiredEventTypes);
 			return this;
 		}
 
