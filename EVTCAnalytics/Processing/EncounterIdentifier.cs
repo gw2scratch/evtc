@@ -1,0 +1,222 @@
+using GW2Scratch.EVTCAnalytics.Events;
+using GW2Scratch.EVTCAnalytics.GameData;
+using GW2Scratch.EVTCAnalytics.GameData.Encounters;
+using GW2Scratch.EVTCAnalytics.Model.Agents;
+using GW2Scratch.EVTCAnalytics.Model.Skills;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace GW2Scratch.EVTCAnalytics.Processing;
+
+public class EncounterIdentifier : IEncounterIdentifier
+{
+	public Encounter IdentifyEncounter(Agent mainTarget, IReadOnlyList<Agent> agents, IReadOnlyList<Event> events, IReadOnlyList<Skill> skills)
+	{
+		if (mainTarget is NPC boss)
+		{
+			switch (boss.SpeciesId)
+			{
+				case SpeciesIds.ValeGuardian:
+					return Encounter.ValeGuardian;
+				case SpeciesIds.Gorseval:
+					return Encounter.Gorseval;
+				case SpeciesIds.Sabetha:
+					return Encounter.Sabetha;
+				case SpeciesIds.Slothasor:
+					return Encounter.Slothasor;
+				case SpeciesIds.Berg:
+				case SpeciesIds.Zane:
+				case SpeciesIds.Narella:
+					return Encounter.BanditTrio;
+				case SpeciesIds.MatthiasGabrel:
+					return Encounter.Matthias;
+				case SpeciesIds.MushroomKing:
+					return Encounter.Escort;
+				case SpeciesIds.KeepConstruct:
+					return Encounter.KeepConstruct;
+				case SpeciesIds.HauntingStatue:
+					return Encounter.TwistedCastle;
+				case SpeciesIds.Xera:
+					// Twisted Castle logs sometimes get Xera as the main target when the player is too close to her
+					if (agents.OfType<NPC>().Any(x => x.SpeciesId == SpeciesIds.HauntingStatue))
+					{
+						return Encounter.TwistedCastle;
+					}
+
+					return Encounter.Xera;
+				case SpeciesIds.XeraSecondPhase:
+					return Encounter.Xera;
+				case SpeciesIds.CairnTheIndomitable:
+					return Encounter.Cairn;
+				case SpeciesIds.MursaatOverseer:
+					return Encounter.MursaatOverseer;
+				case SpeciesIds.Samarog:
+					return Encounter.Samarog;
+				case SpeciesIds.Deimos:
+					return Encounter.Deimos;
+				case SpeciesIds.SoullessHorror:
+					return Encounter.SoullessHorror;
+				case SpeciesIds.Desmina:
+					return Encounter.RiverOfSouls;
+				case SpeciesIds.BrokenKing:
+					return Encounter.BrokenKing;
+				case SpeciesIds.EaterOfSouls:
+					return Encounter.EaterOfSouls;
+				case SpeciesIds.EyeOfJudgment:
+				case SpeciesIds.EyeOfFate:
+					return Encounter.Eyes;
+				case SpeciesIds.Dhuum:
+					// Eyes logs sometimes get Dhuum as the main target when the player is too close to him
+					if (agents.OfType<NPC>().Any(x => x.SpeciesId == SpeciesIds.EyeOfFate))
+					{
+						return Encounter.Eyes;
+					}
+
+					return Encounter.Dhuum;
+				case SpeciesIds.Nikare:
+				case SpeciesIds.Kenut:
+					return Encounter.TwinLargos;
+				case SpeciesIds.Qadim:
+					return Encounter.Qadim;
+				case SpeciesIds.CardinalAdina:
+					return Encounter.Adina;
+				case SpeciesIds.CadinalSabir:
+					return Encounter.Sabir;
+				case SpeciesIds.QadimThePeerless:
+					return Encounter.QadimThePeerless;
+				case SpeciesIds.StandardKittyGolem:
+					return Encounter.StandardKittyGolem;
+				case SpeciesIds.MediumKittyGolem:
+					return Encounter.MediumKittyGolem;
+				case SpeciesIds.LargeKittyGolem:
+					return Encounter.LargeKittyGolem;
+				case SpeciesIds.MassiveKittyGolem:
+					return Encounter.MassiveKittyGolem;
+				case SpeciesIds.MAMA:
+					return Encounter.MAMA;
+				case SpeciesIds.SiaxTheCorrupted:
+					return Encounter.SiaxTheCorrupted;
+				case SpeciesIds.EnsolyssOfTheEndlessTorment:
+					return Encounter.EnsolyssOfTheEndlessTorment;
+				case SpeciesIds.Skorvald:
+					return Encounter.Skorvald;
+				case SpeciesIds.Artsariiv:
+					return Encounter.Artsariiv;
+				case SpeciesIds.Arkk:
+					return Encounter.Arkk;
+				case SpeciesIds.AiKeeperOfThePeak:
+				{
+					// This encounter has two phases with the same enemy. The enemy gains short invulnerability
+					// and regains full health between these two phases.
+					// However, if the fight has been progressed into the second (dark) phase and failed, the next attempt
+					// starts at the second phase, so the first phase might not be in the log.
+
+					// 895 - Determined, applied at end of first phase along with 762 Determined and a short Daze
+					// 53569 - nameless skill used when transitioning between phases, only in the log if both phases are present
+					// 61356 - nameless skill cast early in phase 2
+					// 895 - Determined, applied at end of second phase along with 762 Determined and a short Daze
+
+					// No 61356 - always a failure, did not reach dark phase, health +100%
+					// 61356 && no determined afterwards -> failure in the second (dark) phase
+					// 61356 && Determined afterwards -> success
+
+					if (skills.All(x => x.Id != SkillIds.Determined895))
+					{
+						// This is a quick path that doesn't require enumerating through events. 
+
+						// As there is no Determined, the log is a failure, and this cannot occur in a log
+						// that has both phases (as the Determined buff is applied in between).
+
+						bool hasDarkPhase = skills.Any(x => x.Id == SkillIds.AiDarkEarlySkill);
+						return hasDarkPhase
+							? Encounter.AiKeeperOfThePeakNightOnly
+							: Encounter.AiKeeperOfThePeakDayOnly;
+					}
+					else
+					{
+						bool inDark = false;
+						bool determinedPreDark = false;
+						foreach (var ev in events)
+						{
+							if (ev is BuffApplyEvent { Buff.Id: SkillIds.Determined895 } and not InitialBuffEvent)
+							{
+								// This buff application is the transition between the two phases.
+								// This works because we stop enumerating events once we reach the dark phase.
+								determinedPreDark = true;
+							}
+
+							if (ev is SkillCastEvent { Skill.Id: SkillIds.AiDarkEarlySkill })
+							{
+								inDark = true;
+								break;
+							}
+						}
+
+						if (inDark)
+						{
+							return determinedPreDark
+								? Encounter.AiKeeperOfThePeakDayAndNight
+								: Encounter.AiKeeperOfThePeakNightOnly;
+						}
+						else
+						{
+							return Encounter.AiKeeperOfThePeakDayOnly;
+						}
+					}
+				}
+				case SpeciesIds.KanaxaiNM:
+					return Encounter.Kanaxai;
+				case SpeciesIds.KanaxaiCM:
+					return Encounter.Kanaxai;
+				case SpeciesIds.Freezie:
+					return Encounter.Freezie;
+				case SpeciesIds.IcebroodConstruct:
+					return Encounter.ShiverpeaksPass;
+				case SpeciesIds.VoiceOfTheFallen:
+				case SpeciesIds.ClawOfTheFallen:
+					return Encounter.VoiceAndClawOfTheFallen;
+				case SpeciesIds.FraenirOfJormag:
+					return Encounter.FraenirOfJormag;
+				case SpeciesIds.Boneskinner:
+					return Encounter.Boneskinner;
+				case SpeciesIds.WhisperOfJormag:
+					return Encounter.WhisperOfJormag;
+				case SpeciesIds.VariniaStormsounder:
+					return Encounter.VariniaStormsounder;
+				case SpeciesIds.HeartsAndMindsMordremoth:
+					return Encounter.Mordremoth;
+				case SpeciesIds.MaiTrin:
+					return Encounter.AetherbladeHideout;
+				case SpeciesIds.Ankka:
+					return Encounter.XunlaiJadeJunkyard;
+				case SpeciesIds.MinisterLi:
+				case SpeciesIds.MinisterLiChallengeMode:
+					return Encounter.KainengOverlook;
+				case SpeciesIds.VoidAmalgamate:
+				case SpeciesIds.VoidMelter:
+					return Encounter.HarvestTemple;
+				case SpeciesIds.PrototypeVermillion:
+				case SpeciesIds.PrototypeArsenite:
+				case SpeciesIds.PrototypeIndigo:
+				case SpeciesIds.PrototypeVermillionChallengeMode:
+				case SpeciesIds.PrototypeArseniteChallengeMode:
+				case SpeciesIds.PrototypeIndigoChallengeMode:
+					return Encounter.OldLionsCourt;
+			}
+		}
+		else if (mainTarget is Gadget gadgetBoss)
+		{
+			switch (gadgetBoss.VolatileId)
+			{
+				case GadgetIds.ConjuredAmalgamate:
+					return Encounter.ConjuredAmalgamate;
+				case GadgetIds.TheDragonvoidFinal:
+					return Encounter.HarvestTemple;
+				case GadgetIds.TheDragonvoid:
+					return Encounter.HarvestTemple;
+			}
+		}
+
+		return Encounter.Other;
+	}
+}

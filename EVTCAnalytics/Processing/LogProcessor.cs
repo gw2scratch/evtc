@@ -43,7 +43,16 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 		/// This may be used to add support for more encounters by extending the default encounter identifier
 		/// or it could be used to override the default logic.
 		/// </remarks>
-		public IEncounterIdentifier EncounterIdentifier { get; set; } = new DefaultEncounterIdentifier();
+		public IEncounterIdentifier EncounterIdentifier { get; set; } = new EncounterIdentifier();
+		
+		/// <summary>
+		/// Gets or sets the encounter-specific data provider.
+		/// </summary>
+		/// <remarks>
+		/// This may be used to add support for more encounters by extending the default encounter data provider
+		/// or it could be used to override the default logic.
+		/// </remarks>
+		public IEncounterDataProvider EncounterDataProvider { get; set; } = new EncounterDataProvider();
 
 		/// <summary>
 		/// Gets or sets the handling method for unknown events. The default value is <see langword="true"/>.
@@ -357,7 +366,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 
 		private void SetEncounterData(LogProcessorState state)
 		{
-			state.EncounterData = EncounterIdentifier.GetEncounterData(state.MainTarget, state.Events, state.Agents, state.Skills, state.GameBuild, state.LogType);
+			var encounter = EncounterIdentifier.IdentifyEncounter(state.MainTarget, state.Agents, state.Events, state.Skills);
+			state.EncounterData = EncounterDataProvider.GetEncounterData(encounter, state.MainTarget, state.Events, state.Agents, state.Skills, state.GameBuild, state.LogType);
 		}
 
 		private IEnumerable<Skill> GetSkills(ParsedLog log)

@@ -9,12 +9,12 @@ using GW2Scratch.EVTCAnalytics.Processing.Encounters;
 namespace GW2Scratch.EVTCAnalytics.Processing
 {
 	/// <summary>
-	/// An interface for identifying encounters from log data.
+	/// An interface for providing encounter-specific data for an encounter.
 	/// </summary>
-	public interface IEncounterIdentifier
+	public interface IEncounterDataProvider
 	{
 		/// <summary>
-		/// Identify the encounter within the log.
+		/// Get encounter-specific data for a log while processing the log.
 		/// </summary>
 		/// <remarks>
 		/// <para>
@@ -26,7 +26,9 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 		/// <param name="events">The events of the log.</param>
 		/// <param name="agents">The agents of the log</param>
 		/// <param name="skills">The skills of the log</param>
-		/// <returns>The encounter within this log.</returns>
-		Encounter IdentifyEncounter(Agent mainTarget, IReadOnlyList<Agent> agents, IReadOnlyList<Event> events, IReadOnlyList<Skill> skills);
+		/// <param name="gameBuild">The game build number.</param>
+		/// <param name="logType">The log type.</param>
+		/// <returns>The encounter data for this log.</returns>
+		IEncounterData GetEncounterData(Encounter encounter, Agent mainTarget, IReadOnlyList<Event> events, IReadOnlyList<Agent> agents, IReadOnlyList<Skill> skills, int? gameBuild, LogType logType);
 	}
 }
