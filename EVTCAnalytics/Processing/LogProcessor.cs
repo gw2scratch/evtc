@@ -337,11 +337,11 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			Debug.Assert(state.Agents != null);
 			
 			state.LogType = LogType.PvE;
-			if (bossData.ID == 1)
+			if (bossData.ID == ArcdpsBossIds.WorldVersusWorld)
 			{
 				state.LogType = LogType.WorldVersusWorld;
 			}
-			else if (bossData.ID == 2)
+			else if (bossData.ID == ArcdpsBossIds.Map)
 			{
 				state.LogType = LogType.Map;
 			}

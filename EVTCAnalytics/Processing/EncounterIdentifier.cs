@@ -3,6 +3,7 @@ using GW2Scratch.EVTCAnalytics.GameData;
 using GW2Scratch.EVTCAnalytics.GameData.Encounters;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
 using GW2Scratch.EVTCAnalytics.Model.Skills;
+using GW2Scratch.EVTCAnalytics.Parsed;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -12,6 +13,8 @@ public class EncounterIdentifier : IEncounterIdentifier
 {
 	public Encounter IdentifyEncounter(Agent mainTarget, IReadOnlyList<Agent> agents, IReadOnlyList<Event> events, IReadOnlyList<Skill> skills)
 	{
+		// Important: when adding a new encounter, make sure you also add it to the IdentifyPotentialEncounters method.
+		
 		if (mainTarget is NPC boss)
 		{
 			switch (boss.SpeciesId)
@@ -202,6 +205,7 @@ public class EncounterIdentifier : IEncounterIdentifier
 				case SpeciesIds.PrototypeArseniteChallengeMode:
 				case SpeciesIds.PrototypeIndigoChallengeMode:
 					return Encounter.OldLionsCourt;
+				// Important: when adding a new encounter, make sure you also add it to the IdentifyPotentialEncounters method.
 			}
 		}
 		else if (mainTarget is Gadget gadgetBoss)
@@ -214,9 +218,147 @@ public class EncounterIdentifier : IEncounterIdentifier
 					return Encounter.HarvestTemple;
 				case GadgetIds.TheDragonvoid:
 					return Encounter.HarvestTemple;
+				// Important: when adding a new encounter, make sure you also add it to the IdentifyPotentialEncounters method.
 			}
 		}
 
 		return Encounter.Other;
+	}
+
+	public IEnumerable<Encounter> IdentifyPotentialEncounters(ParsedBossData bossData)
+	{
+		switch (bossData.ID)
+		{
+			case ArcdpsBossIds.WorldVersusWorld:
+				return new[] { Encounter.WorldVersusWorld };
+			case ArcdpsBossIds.Map:
+				return new[] { Encounter.Map };
+			case SpeciesIds.ValeGuardian:
+				return new[] { Encounter.ValeGuardian };
+			case SpeciesIds.Gorseval:
+				return new[] { Encounter.Gorseval };
+			case SpeciesIds.Sabetha:
+				return new[] { Encounter.Sabetha };
+			case SpeciesIds.Slothasor:
+				return new[] { Encounter.Slothasor };
+			case SpeciesIds.Berg:
+			case SpeciesIds.Zane:
+			case SpeciesIds.Narella:
+				return new[] { Encounter.BanditTrio };
+			case SpeciesIds.MatthiasGabrel:
+				return new[] { Encounter.Matthias };
+			case SpeciesIds.MushroomKing:
+				return new[] { Encounter.Escort };
+			case SpeciesIds.KeepConstruct:
+				return new[] { Encounter.KeepConstruct };
+			case SpeciesIds.HauntingStatue:
+				return new[] { Encounter.TwistedCastle };
+			case SpeciesIds.Xera:
+				// Twisted Castle logs sometimes get Xera as the main target when the player is too close to her
+				return new[] { Encounter.TwistedCastle, Encounter.Xera };
+			case SpeciesIds.XeraSecondPhase:
+				return new[] { Encounter.Xera };
+			case SpeciesIds.CairnTheIndomitable:
+				return new[] { Encounter.Cairn };
+			case SpeciesIds.MursaatOverseer:
+				return new[] { Encounter.MursaatOverseer };
+			case SpeciesIds.Samarog:
+				return new[] { Encounter.Samarog };
+			case SpeciesIds.Deimos:
+				return new[] { Encounter.Deimos };
+			case SpeciesIds.SoullessHorror:
+				return new[] { Encounter.SoullessHorror };
+			case SpeciesIds.Desmina:
+				return new[] { Encounter.RiverOfSouls };
+			case SpeciesIds.BrokenKing:
+				return new[] { Encounter.BrokenKing };
+			case SpeciesIds.EaterOfSouls:
+				return new[] { Encounter.EaterOfSouls };
+			case SpeciesIds.EyeOfJudgment:
+			case SpeciesIds.EyeOfFate:
+				return new[] { Encounter.Eyes };
+			case SpeciesIds.Dhuum:
+				// Eyes logs sometimes get Dhuum as the main target when the player is too close to him
+				return new[] { Encounter.Eyes, Encounter.Dhuum };
+			case SpeciesIds.Nikare:
+			case SpeciesIds.Kenut:
+				return new[] { Encounter.TwinLargos };
+			case SpeciesIds.Qadim:
+				return new[] { Encounter.Qadim };
+			case SpeciesIds.CardinalAdina:
+				return new[] { Encounter.Adina };
+			case SpeciesIds.CadinalSabir:
+				return new[] { Encounter.Sabir };
+			case SpeciesIds.QadimThePeerless:
+				return new[] { Encounter.QadimThePeerless };
+			case SpeciesIds.StandardKittyGolem:
+				return new[] { Encounter.StandardKittyGolem };
+			case SpeciesIds.MediumKittyGolem:
+				return new[] { Encounter.MediumKittyGolem };
+			case SpeciesIds.LargeKittyGolem:
+				return new[] { Encounter.LargeKittyGolem };
+			case SpeciesIds.MassiveKittyGolem:
+				return new[] { Encounter.MassiveKittyGolem };
+			case SpeciesIds.MAMA:
+				return new[] { Encounter.MAMA };
+			case SpeciesIds.SiaxTheCorrupted:
+				return new[] { Encounter.SiaxTheCorrupted };
+			case SpeciesIds.EnsolyssOfTheEndlessTorment:
+				return new[] { Encounter.EnsolyssOfTheEndlessTorment };
+			case SpeciesIds.Skorvald:
+				return new[] { Encounter.Skorvald };
+			case SpeciesIds.Artsariiv:
+				return new[] { Encounter.Artsariiv };
+			case SpeciesIds.Arkk:
+				return new[] { Encounter.Arkk };
+			case SpeciesIds.AiKeeperOfThePeak:
+				return new[] { Encounter.AiKeeperOfThePeakDayAndNight, Encounter.AiKeeperOfThePeakNightOnly, Encounter.AiKeeperOfThePeakDayOnly };
+			case SpeciesIds.KanaxaiNM:
+				return new[] { Encounter.Kanaxai };
+			case SpeciesIds.KanaxaiCM:
+				return new[] { Encounter.Kanaxai };
+			case SpeciesIds.Freezie:
+				return new[] { Encounter.Freezie };
+			case SpeciesIds.IcebroodConstruct:
+				return new[] { Encounter.ShiverpeaksPass };
+			case SpeciesIds.VoiceOfTheFallen:
+			case SpeciesIds.ClawOfTheFallen:
+				return new[] { Encounter.VoiceAndClawOfTheFallen };
+			case SpeciesIds.FraenirOfJormag:
+				return new[] { Encounter.FraenirOfJormag };
+			case SpeciesIds.Boneskinner:
+				return new[] { Encounter.Boneskinner };
+			case SpeciesIds.WhisperOfJormag:
+				return new[] { Encounter.WhisperOfJormag };
+			case SpeciesIds.VariniaStormsounder:
+				return new[] { Encounter.VariniaStormsounder };
+			case SpeciesIds.HeartsAndMindsMordremoth:
+				return new[] { Encounter.Mordremoth };
+			case SpeciesIds.MaiTrin:
+				return new[] { Encounter.AetherbladeHideout };
+			case SpeciesIds.Ankka:
+				return new[] { Encounter.XunlaiJadeJunkyard };
+			case SpeciesIds.MinisterLi:
+			case SpeciesIds.MinisterLiChallengeMode:
+				return new[] { Encounter.KainengOverlook };
+			case SpeciesIds.VoidAmalgamate:
+			case SpeciesIds.VoidMelter:
+				return new[] { Encounter.HarvestTemple };
+			case SpeciesIds.PrototypeVermillion:
+			case SpeciesIds.PrototypeArsenite:
+			case SpeciesIds.PrototypeIndigo:
+			case SpeciesIds.PrototypeVermillionChallengeMode:
+			case SpeciesIds.PrototypeArseniteChallengeMode:
+			case SpeciesIds.PrototypeIndigoChallengeMode:
+				return new[] { Encounter.OldLionsCourt };
+			case GadgetIds.ConjuredAmalgamate:
+				return new[] { Encounter.ConjuredAmalgamate };
+			case GadgetIds.TheDragonvoidFinal:
+				return new[] { Encounter.HarvestTemple };
+			case GadgetIds.TheDragonvoid:
+				return new[] { Encounter.HarvestTemple };
+			default:
+				return new[] { Encounter.Other };
+		}
 	}
 }
