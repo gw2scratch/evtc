@@ -29,6 +29,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes
 			this.spawnOccuredMode = spawnOccuredMode;
 		}
 
+		public IReadOnlyList<Type> RequiredEventTypes { get; } = new List<Type> { typeof(AgentSpawnEvent) };
+
 		public EncounterMode? GetMode(Log log)
 		{
 			var countedEvents = new LinkedList<AgentSpawnEvent>();

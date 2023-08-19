@@ -5,7 +5,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes
 	/// <summary>
 	/// Represents a determiner used for identifying the mode of an encounter.
 	/// </summary>
-	public interface IModeDeterminer
+	public interface IModeDeterminer : IDeterminer
 	{
 		/// <summary>
 		/// Determines the mode of the encounter recorded by a log. May return null if detection

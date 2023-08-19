@@ -2,6 +2,8 @@ using System.Linq;
 using GW2Scratch.EVTCAnalytics.Events;
 using GW2Scratch.EVTCAnalytics.Model;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
+using System;
+using System.Collections.Generic;
 
 namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes
 {
@@ -25,6 +27,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes
 			this.maxHealth = maxHealth;
 			this.enoughHealthMode = enoughHealthMode;
 		}
+
+		public IReadOnlyList<Type> RequiredEventTypes { get; } = new List<Type> { typeof(AgentMaxHealthUpdateEvent) };
 
 		public EncounterMode? GetMode(Log log)
 		{

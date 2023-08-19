@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using GW2Scratch.EVTCAnalytics.Events;
 using GW2Scratch.EVTCAnalytics.Model;
+using System.Collections.Generic;
 
 namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes
 {
@@ -49,6 +50,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes
 					nameof(this.remaining1));
 			}
 		}
+
+		public IReadOnlyList<Type> RequiredEventTypes { get; } = new List<Type> { typeof(ManualStackRemovedBuffEvent), typeof(BuffApplyEvent) };
 
 		public EncounterMode? GetMode(Log log)
 		{

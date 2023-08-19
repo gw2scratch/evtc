@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using GW2Scratch.EVTCAnalytics.Events;
 using GW2Scratch.EVTCAnalytics.Model;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
+using System;
 
 namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes
 {
@@ -16,6 +17,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes
 		{
 			this.mode = mode;
 		}
+
+		public IReadOnlyList<Type> RequiredEventTypes { get; } = new List<Type>();
 
 		public EncounterMode? GetMode(Log log)
 		{

@@ -1,4 +1,6 @@
 using GW2Scratch.EVTCAnalytics.Model;
+using System;
+using System.Collections.Generic;
 
 namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes
 {
@@ -17,6 +19,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes
 			this.skillId = skillId;
 			this.skillPresentMode = skillPresentMode;
 		}
+
+		public IReadOnlyList<Type> RequiredEventTypes { get; } = new List<Type>();
 
 		public EncounterMode? GetMode(Log log)
 		{
