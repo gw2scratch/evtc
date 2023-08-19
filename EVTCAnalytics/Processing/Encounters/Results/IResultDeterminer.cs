@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using GW2Scratch.EVTCAnalytics.Events;
+using System;
 
 namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 {
@@ -13,5 +14,10 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 		/// </summary>
 		/// <param name="events">The events in an encounter.</param>
 		ResultDeterminerResult GetResult(IEnumerable<Event> events);
+		
+		/// <summary>
+		/// A list of all event types that are required for this determiner to work.
+		/// </summary>
+		IReadOnlyList<Type> RequiredEventTypes { get; }
 	}
 }

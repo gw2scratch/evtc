@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using GW2Scratch.EVTCAnalytics.Events;
+using System;
 
 namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 {
@@ -15,6 +16,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 		{
 			this.rewardId = rewardId;
 		}
+		
+		public override IReadOnlyList<Type> RequiredEventTypes { get; } = new List<Type> { typeof(RewardEvent) };
 
 		protected override Event GetEvent(IEnumerable<Event> events)
 		{

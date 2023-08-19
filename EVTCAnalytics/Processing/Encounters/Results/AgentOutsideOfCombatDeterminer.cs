@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using GW2Scratch.EVTCAnalytics.Events;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
+using System;
 
 namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 {
@@ -15,6 +16,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 		{
 			this.agent = agent;
 		}
+		
+		public IReadOnlyList<Type> RequiredEventTypes { get; } = new List<Type> { typeof(AgentEnterCombatEvent), typeof(AgentExitCombatEvent) };
 
 		public ResultDeterminerResult GetResult(IEnumerable<Event> events)
 		{

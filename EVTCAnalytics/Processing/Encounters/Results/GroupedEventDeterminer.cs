@@ -29,6 +29,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 			this.timeSpan = timeSpan;
 		}
 
+		public IReadOnlyList<Type> RequiredEventTypes { get; } = new List<Type> { typeof(T) };
+
 		public ResultDeterminerResult GetResult(IEnumerable<Event> events)
 		{
 			var countedEvents = new LinkedList<T>();

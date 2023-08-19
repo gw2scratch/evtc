@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GW2Scratch.EVTCAnalytics.Events;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
+using System;
 
 namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 {
@@ -17,6 +18,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 			this.agent = agent;
 		}
 
+		public override IReadOnlyList<Type> RequiredEventTypes { get; } = new List<Type> { typeof(AgentDeadEvent) };
 		protected override EncounterResult EventFound { get; } = EncounterResult.Failure;
 		protected override EncounterResult EventNotFound { get; } = EncounterResult.Success;
 
