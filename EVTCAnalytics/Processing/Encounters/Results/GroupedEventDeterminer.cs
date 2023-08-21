@@ -15,6 +15,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 		private readonly Func<T, bool> eventCounted;
 		private readonly int count;
 		private readonly long timeSpan;
+		private readonly long minTimeSinceStart;
 
 		/// <summary>
 		/// Creates a new <see cref="GroupedEventDeterminer{T}"/>.
@@ -22,11 +23,13 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 		/// <param name="eventCounted">A predicate checking whether an event is counted or not.</param>
 		/// <param name="count">The required amount of counted events to result in success.</param>
 		/// <param name="timeSpan">The time span in which <paramref name="count"/> events have to occur.</param>
-		public GroupedEventDeterminer(Func<T, bool> eventCounted, int count, long timeSpan)
+		/// <param name="minTimeSinceStart">The time that has to have occured since the first event of any kind for this to be eligible.</param>
+		public GroupedEventDeterminer(Func<T, bool> eventCounted, int count, long timeSpan, long minTimeSinceStart = 0)
 		{
 			this.eventCounted = eventCounted ?? throw new ArgumentNullException(nameof(eventCounted));
 			this.count = count;
 			this.timeSpan = timeSpan;
+			this.minTimeSinceStart = minTimeSinceStart;
 		}
 
 		public IReadOnlyList<Type> RequiredEventTypes { get; } = new List<Type> { typeof(T) };
@@ -35,18 +38,30 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 		{
 			var countedEvents = new LinkedList<T>();
 
-			foreach (var current in events.OfType<T>().Where(x => eventCounted(x)))
+			long? startTime = null;
+			
+			foreach (var e in events)
 			{
-				while (countedEvents.Count > 0 && countedEvents.First.Value.Time < current.Time - timeSpan)
+				if (startTime == null && e ! is UnknownEvent)
 				{
-					countedEvents.RemoveFirst();
+					startTime = e.Time;
 				}
+				
+				var isEligibleTime = startTime != null && e.Time - startTime >= minTimeSinceStart;
 
-				countedEvents.AddLast(current);
-
-				if (countedEvents.Count >= count)
+				if (e is T current && eventCounted(current) && isEligibleTime)
 				{
-					return new ResultDeterminerResult(EncounterResult.Success, current.Time);
+					while (countedEvents.Count > 0 && countedEvents.First.Value.Time < current.Time - timeSpan)
+					{
+						countedEvents.RemoveFirst();
+					}
+
+					countedEvents.AddLast(current);
+
+					if (countedEvents.Count >= count)
+					{
+						return new ResultDeterminerResult(EncounterResult.Success, current.Time);
+					}
 				}
 			}
 

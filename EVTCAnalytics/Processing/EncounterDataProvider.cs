@@ -21,13 +21,12 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 	/// </summary>
 	public class EncounterDataProvider : IEncounterDataProvider
 	{
-		public IEncounterData GetEncounterData(Encounter encounter, Agent mainTarget, IReadOnlyList<Event> events,
-			IReadOnlyList<Agent> agents, IReadOnlyList<Skill> skills, int? gameBuild, LogType logType)
+		public IEncounterData GetEncounterData(Encounter encounter, Agent mainTarget, IReadOnlyList<Agent> agents, int? gameBuild, LogType logType)
 		{
 			switch (logType)
 			{
 				case LogType.PvE:
-					return GetPvEEncounterData(encounter, mainTarget, events, agents, skills, gameBuild);
+					return GetPvEEncounterData(encounter, mainTarget, agents, gameBuild);
 				case LogType.WorldVersusWorld:
 					return GetWvWEncounterData(agents);
 				case LogType.Map:
@@ -57,8 +56,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			);
 		}
 
-		private IEncounterData GetPvEEncounterData(Encounter encounter, Agent mainTarget, IReadOnlyList<Event> events,
-			IReadOnlyList<Agent> agents, IReadOnlyList<Skill> skills, int? gameBuild)
+		private IEncounterData GetPvEEncounterData(Encounter encounter, Agent mainTarget, IReadOnlyList<Agent> agents, int? gameBuild)
 		{
 			switch (encounter)
 			{
@@ -230,11 +228,10 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				}
 				case Encounter.RiverOfSouls:
 				{
-					long startTime = events.FirstOrDefault()?.Time ?? -1;
 					return GetDefaultBuilder(encounter, mainTarget)
 						// At the end of the event, 8 of the rifts become untargetable
 						.WithResult(new GroupedEventDeterminer<TargetableChangeEvent>(
-							e => e.Time - startTime > 3000 && e.IsTargetable == false, 8, 1000))
+							e => e.IsTargetable == false, 8, 1000, 3000))
 						.Build();
 				}
 				case Encounter.Eyes:

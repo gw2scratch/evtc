@@ -158,6 +158,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			}
 			state.AgentsByAddress = agentsByAddress;
 			
+			SetLogTypeAndTarget(state, bossData);
+			
 			// Get data from skills.
 			var skillsById = new Dictionary<uint, Skill>();
 			var skillReader = reader.GetSkillReader();
@@ -186,8 +188,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			state.Errors = new List<LogError>();
 			state.EffectsById = new Dictionary<uint, Effect>();
 			state.MarkersById = new Dictionary<uint, Marker>();
-			
-			var combatItemReader = reader.GetCombatItemReader();
+
+			var combatItemReader = reader.GetCombatItemReader(bossData, state.MainTarget, state.Agents, state.GameBuild, state.LogType, EncounterIdentifier, EncounterDataProvider);
 			ParsedCombatItem combatItem;
 			state.Events = new List<Event>();
 			while (combatItemReader.GetNext(out combatItem))
@@ -263,7 +265,6 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				}
 			}
 			
-			SetLogTypeAndTarget(state, bossData);
 			SetAgentAwareTimes(state);
 			
 			// Resolve masters, requires aware times.
@@ -367,7 +368,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 		private void SetEncounterData(LogProcessorState state)
 		{
 			var encounter = EncounterIdentifier.IdentifyEncounter(state.MainTarget, state.Agents, state.Events, state.Skills);
-			state.EncounterData = EncounterDataProvider.GetEncounterData(encounter, state.MainTarget, state.Events, state.Agents, state.Skills, state.GameBuild, state.LogType);
+			state.EncounterData = EncounterDataProvider.GetEncounterData(encounter, state.MainTarget, state.Agents, state.GameBuild, state.LogType);
 		}
 
 		private IEnumerable<Skill> GetSkills(ParsedLog log)

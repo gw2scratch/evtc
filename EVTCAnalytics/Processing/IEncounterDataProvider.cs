@@ -22,13 +22,12 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 		/// which is why passing in individual parts of the log is required.
 		/// </para>
 		/// </remarks>
+		/// <param name="encounter">The encounter of the log.</param>
 		/// <param name="mainTarget">The main target of the log.</param>
-		/// <param name="events">The events of the log.</param>
-		/// <param name="agents">The agents of the log</param>
-		/// <param name="skills">The skills of the log</param>
+		/// <param name="agents">The agents of the log.</param>
 		/// <param name="gameBuild">The game build number.</param>
 		/// <param name="logType">The log type.</param>
 		/// <returns>The encounter data for this log.</returns>
-		IEncounterData GetEncounterData(Encounter encounter, Agent mainTarget, IReadOnlyList<Event> events, IReadOnlyList<Agent> agents, IReadOnlyList<Skill> skills, int? gameBuild, LogType logType);
+		IEncounterData GetEncounterData(Encounter encounter, Agent mainTarget, IReadOnlyList<Agent> agents, int? gameBuild, LogType logType);
 	}
 }

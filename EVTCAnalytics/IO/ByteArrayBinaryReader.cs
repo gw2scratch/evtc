@@ -29,6 +29,11 @@ namespace GW2Scratch.EVTCAnalytics.IO
 			Position++;
 			return value;
 		}
+		
+		public byte PeekByte(int offset)
+		{
+			return bytes[Position + offset];
+		}
 
 		public sbyte ReadSByte()
 		{

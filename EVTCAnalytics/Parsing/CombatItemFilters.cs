@@ -5,11 +5,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 
 namespace GW2Scratch.EVTCAnalytics.Parsing;
 
-public class CombatItemFilters
+public class CombatItemFilters : ICombatItemFilters
 {
 	private IReadOnlyList<Type> RequiredEventTypes { get; }
 	private bool[] StateChangeFilter { get; }
@@ -36,6 +35,14 @@ public class CombatItemFilters
 		foreach (var type in eventTypes)
 		{
 			foreach (var stateChange in GetStateChangesForEventType(type))
+			{
+				stateChanges[(int) stateChange] = true;
+			}
+		}
+
+		foreach (StateChange stateChange in Enum.GetValues(typeof(StateChange)))
+		{
+			if (IsAlwaysKept(stateChange))
 			{
 				stateChanges[(int) stateChange] = true;
 			}
@@ -128,5 +135,75 @@ public class CombatItemFilters
 		if (eventType == typeof(UnknownEvent)) return Enumerable.Range(0, 256).Select(x => (StateChange) x);
 
 		throw new ArgumentException($"Event type {eventType} is not supported.");
+	}
+
+	/// <summary>
+	/// Returns whether a state change is always kept in the log.
+	///
+	/// Important: Do not use for state changes that are not defined enum values of <see cref="StateChange"/>.
+	/// The expected use is to check only for <c>Enum.GetValues(typeof(StateChange))</c>.
+	/// </summary>
+	/// <exception cref="ArgumentOutOfRangeException">Thrown if a state change is not a built-in handled one.</exception>
+	public static bool IsAlwaysKept(StateChange stateChange)
+	{
+		// This is implemented this way to make any newly introduced StateChange
+		// fail a test in EVTCAnalytics.Tests unless explicitly implemented here.
+
+		return stateChange switch
+		{
+			StateChange.Normal => true,
+			StateChange.EnterCombat => false,
+			StateChange.ExitCombat => false,
+			StateChange.ChangeUp => false,
+			StateChange.ChangeDead => false,
+			StateChange.ChangeDown => false,
+			StateChange.Spawn => false,
+			StateChange.Despawn => false,
+			StateChange.HealthUpdate => false,
+			StateChange.LogStart => true,
+			StateChange.LogEnd => true,
+			StateChange.WeaponSwap => false,
+			StateChange.MaxHealthUpdate => false,
+			StateChange.PointOfView => true,
+			StateChange.Language => true,
+			StateChange.GWBuild => true,
+			StateChange.ShardId => true,
+			StateChange.Reward => false,
+			StateChange.BuffInitial => false,
+			StateChange.Position => false,
+			StateChange.Velocity => false,
+			StateChange.Rotation => false,
+			StateChange.TeamChange => false,
+			StateChange.AttackTarget => true,
+			StateChange.Targetable => false,
+			StateChange.MapId => true,
+			StateChange.ReplInfo => false,
+			StateChange.StackActive => false,
+			StateChange.StackReset => false,
+			StateChange.Guild => true,
+			StateChange.BuffInfo => true,
+			StateChange.BuffFormula => true,
+			StateChange.SkillInfo => true,
+			StateChange.SkillTiming => true,
+			StateChange.BreakbarState => false,
+			StateChange.BreakbarPercent => false,
+			StateChange.Error => true,
+			StateChange.Tag => false,
+			StateChange.BarrierUpdate => false,
+			StateChange.StatReset => true,
+			StateChange.Extension => true,
+			StateChange.ApiDelayed => true,
+			StateChange.InstanceStart => true,
+			StateChange.TickRate => true,
+			StateChange.Last90BeforeDown => false,
+			StateChange.Effect => false,
+			StateChange.IdToGuid => true,
+			StateChange.LogNPCUpdate => true,
+			StateChange.IdleEvent => false,
+			StateChange.ExtensionCombat => true,
+			StateChange.FractalScale => true,
+			StateChange.Effect2 => false,
+			_ => throw new ArgumentOutOfRangeException(nameof(stateChange), stateChange, null)
+		};
 	}
 }
