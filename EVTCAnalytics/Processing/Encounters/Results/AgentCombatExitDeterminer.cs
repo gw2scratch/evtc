@@ -19,7 +19,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 			this.agent = agent;
 		}
 
-		public override IReadOnlyList<Type> RequiredEventTypes { get; } = new List<Type> { typeof(AgentEvent), typeof(AgentCombatExitDeterminer) };
+		public override IReadOnlyList<Type> RequiredEventTypes { get; } = new List<Type> { typeof(AgentEvent), typeof(AgentExitCombatEvent) };
 
 		protected override Event GetEvent(IEnumerable<Event> events)
 		{
