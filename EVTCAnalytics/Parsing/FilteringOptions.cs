@@ -19,7 +19,7 @@ public class FilteringOptions
 	/// The pruning occurs during the parsing phase, while there may still be multiple possible encounters for the log (sharing the same boss id).
 	/// In this case, potentially needed events are kept for all possible encounters, reducing the effectiveness.
 	/// </remarks>
-	public bool PruneForEncounterData { get; } = false;
+	public bool PruneForEncounterData { get; set; } = false;
 
 	/// <summary>
 	/// Event types that will be kept even if <see cref="PruneForEncounterData"/> is enabled.
