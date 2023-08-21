@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GW2Scratch.EVTCAnalytics.LogTests.LocalSets.Extraction;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using Tomlyn;
@@ -44,9 +45,18 @@ namespace GW2Scratch.EVTCAnalytics.LogTests.LocalSets
 			}
 
 			var testRunner = new TestRunner();
-			bool success = testRunner.TestLogs(logs, Console.Out);
+			Console.WriteLine("Simple data extraction (parse -> process -> analyze)");
+			bool successSimple = testRunner.TestLogs(logs, Console.Out, new SimpleLogDataExtractor());
+			Console.WriteLine("Merged data extraction (parse & process -> analyze)");
+			bool successMerged = testRunner.TestLogs(logs, Console.Out, new MergedParseProcessLogDataExtractor());
+			Console.WriteLine("Merged data extraction with pruning (parse & process -> analyze), some combat items removed during parsing");
+			bool successPruned = testRunner.TestLogs(logs, Console.Out, new PrunedMergedParseProcessLogDataExtractor());
 			
-			return success ? 0 : 1;
+			if (!successSimple) Console.WriteLine("Simple data extraction failed");
+			if (!successMerged) Console.WriteLine("Merged data extraction failed");
+			if (!successPruned) Console.WriteLine("Merged data extraction with pruning failed");
+			
+			return successSimple && successMerged && successPruned ? 0 : 1;
 		}
 	}
 }
