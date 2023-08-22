@@ -115,7 +115,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			}
 		}
 
-		private EVTCParser Parser { get; } = new EVTCParser();
+		private EVTCParser Parser { get; } = new EVTCParser() {SinglePassFilteringOptions = { PruneForEncounterData = true}};
 		private LogProcessor Processor { get; } = new LogProcessor();
 		private CancellationTokenSource cancellationTokenSource;
 
