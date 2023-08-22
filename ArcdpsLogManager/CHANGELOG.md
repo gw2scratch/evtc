@@ -10,6 +10,7 @@ This is the full changelog of the arcdps Log Manager.
 
 #### Performance improvements
 - Improved log processing performance by ~25% for 10man logs, even more in WvW logs.
+- Improved log processing performance by ~60% for all logs.
 
 #### Fixes
 - Slightly improved Bandit Trio success detection in cases when the recording player leaves the fort.
