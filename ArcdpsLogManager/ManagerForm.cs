@@ -25,6 +25,7 @@ using GW2Scratch.ArcdpsLogManager.Timing;
 using GW2Scratch.ArcdpsLogManager.Updates;
 using GW2Scratch.ArcdpsLogManager.Uploads;
 using GW2Scratch.EVTCAnalytics;
+using GW2Scratch.EVTCAnalytics.Events;
 using GW2Scratch.EVTCAnalytics.GameData;
 using GW2Scratch.EVTCAnalytics.Processing;
 using Gw2Sharp;
@@ -42,7 +43,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		private LogFinder LogFinder { get; } = new LogFinder();
 
 		private LogAnalytics LogAnalytics { get; } = new LogAnalytics(
-			new EVTCParser(),
+			new EVTCParser() { SinglePassFilteringOptions = { PruneForEncounterData = true, ExtraRequiredEventTypes = new [] {typeof(AgentTagEvent) }} },
 			new LogProcessor(),
 			new FractalInstabilityDetector(),
 			log => new LogAnalyzer(log)

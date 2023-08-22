@@ -24,7 +24,7 @@ public class FilteringOptions
 	/// <summary>
 	/// Event types that will be kept even if <see cref="PruneForEncounterData"/> is enabled.
 	/// </summary>
-	public IEnumerable<Type> ExtraRequiredEventTypes { get; } = Array.Empty<Type>();
+	public IReadOnlyList<Type> ExtraRequiredEventTypes { get; set; } = Array.Empty<Type>();
 
 	public ICombatItemFilters CreateFilters(IEnumerable<IEncounterData> encounterDatas)
 	{
