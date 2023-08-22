@@ -79,21 +79,17 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 
 					var targets = new Agent[] {berg, zane, narella}.Where(x => x != null).ToArray();
 					var builder = GetDefaultBuilder(encounter, targets);
-					if (berg != null && zane != null && narella != null && prisoner != null)
-					{
-						builder.WithResult(new AllCombinedResultDeterminer(
-							new AgentKilledDeterminer(berg), // Berg has to die
-							new AgentKilledDeterminer(zane), // So does Zane
-							new AgentAliveDeterminer(prisoner), // The prisoner in the cage must survive
-							new AgentKilledDeterminer(narella) // And finally, Narella has to perish as well
-						));
-					}
-					else
-					{
-						builder.WithResult(new ConstantResultDeterminer(EncounterResult.Unknown));
-					}
 
-					return builder.Build();
+					return builder
+						.WithResult(new ConditionalResultDeterminer(
+							(berg != null && zane != null && narella != null && prisoner != null, new AllCombinedResultDeterminer(
+								new AgentKilledDeterminer(berg), // Berg has to die
+								new AgentKilledDeterminer(zane), // So does Zane
+								new AgentAliveDeterminer(prisoner), // The prisoner in the cage must survive
+								new AgentKilledDeterminer(narella) // And finally, Narella has to perish as well
+							)),
+							(true, new ConstantResultDeterminer(EncounterResult.Unknown))
+						)).Build();
 				}
 				case Encounter.Matthias:
 					return GetDefaultBuilder(encounter, mainTarget).Build();
