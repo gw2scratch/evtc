@@ -167,6 +167,17 @@ namespace GW2Scratch.EVTCAnalytics
 						continue;
 					}
 					ReadCombatItemRevision0(reader, out combatItem);
+					
+					// Checking after reading the item rather than peeking at the values before is slightly faster.
+					if (stateChange == 0 && combatItem.IsActivation == Activation.None && combatItem.Buff != 0 &&
+					    (combatItem.IsBuffRemove != BuffRemove.None || combatItem.BuffDmg == 0))
+					{
+						// This is a buff apply or remove.
+						if (!filters.IsBuffEventRequired(combatItem.SkillId))
+						{
+							continue;
+						}
+					}
 
 					return true;
 				}
