@@ -151,8 +151,6 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				}
 				case Encounter.Deimos:
 				{
-					var builder = GetDefaultBuilder(encounter, mainTarget);
-					
 					// This release reworked rewards, currently a reward event is not present if an encounter was
 					// finished a second time within a week. Before that, we can safely just check for the
 					// presence of such a reward.
@@ -175,7 +173,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 
 					var targets = new List<Agent> { mainTarget, mainGadget }.Where(x => x != null).ToList();
 					
-					return builder
+					return GetDefaultBuilder(encounter, mainTarget)
 						.WithModes(new AgentHealthModeDeterminer(mainTarget, 42_000_000))
 						.WithTargets(targets)
 						.WithResult(new ConditionalResultDeterminer(
@@ -226,21 +224,18 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					var fate = GetTargetBySpeciesId(agents, SpeciesIds.EyeOfFate);
 					var judgment = GetTargetBySpeciesId(agents, SpeciesIds.EyeOfJudgment);
 
-					var builder = GetDefaultBuilder(encounter, new[] {fate, judgment});
-					if (fate == null || judgment == null)
-					{
-						builder.WithResult(new ConstantResultDeterminer(EncounterResult.Unknown));
-						builder.WithTargets(new Agent[] {fate, judgment}.Where(x => x != null).ToList());
-					}
-					else
-					{
-						builder.WithResult(new AnyCombinedResultDeterminer(
-							new AgentDeadDeterminer(judgment),
-							new AgentDeadDeterminer(fate)
-						));
-					}
+					var targets = new Agent[] { fate, judgment }.Where(x => x != null).ToList();
 
-					return builder.Build();
+					return GetDefaultBuilder(encounter, new[] { fate, judgment })
+						.WithResult(new ConditionalResultDeterminer(
+							(fate == null || judgment == null, new ConstantResultDeterminer(EncounterResult.Unknown)),
+							(true, new AnyCombinedResultDeterminer(
+								new AgentDeadDeterminer(judgment),
+								new AgentDeadDeterminer(fate)
+							))
+						))
+						.WithTargets(targets)
+						.Build();
 				}
 				case Encounter.Dhuum:
 				{
