@@ -421,24 +421,18 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					var voice = GetTargetBySpeciesId(agents, SpeciesIds.VoiceOfTheFallen);
 					var claw = GetTargetBySpeciesId(agents, SpeciesIds.ClawOfTheFallen);
 
-					var bosses = new List<NPC>();
-					if (voice != null) bosses.Add(voice);
-					if (claw != null) bosses.Add(claw);
+					var targets = new Agent[] { voice, claw }.Where(x => x != null).ToList();
 
-					var builder = GetDefaultBuilder(encounter, bosses);
-					if (voice != null && claw != null)
-					{
-						builder.WithResult(new AllCombinedResultDeterminer(
-							new AgentDeadDeterminer(voice),
-							new AgentDeadDeterminer(claw)
-						));
-					}
-					else
-					{
-						builder.WithResult(new ConstantResultDeterminer(EncounterResult.Unknown));
-					}
-
-					return builder.Build();
+					return GetDefaultBuilder(encounter, targets)
+						.WithResult(new ConditionalResultDeterminer(
+							(voice != null && claw != null, new AllCombinedResultDeterminer(
+								new AgentDeadDeterminer(voice),
+								new AgentDeadDeterminer(claw)
+							)),
+							(true, new ConstantResultDeterminer(EncounterResult.Unknown))
+						))
+						.WithTargets(targets)
+						.Build();
 				}
 				case Encounter.Mordremoth:
 				{
