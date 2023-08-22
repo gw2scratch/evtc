@@ -115,25 +115,24 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					// On Xera, there is a gliding phase once you reach 50% of her health. Afterwards, the original Xera NPC
 					// gets replaced with a different NPC (with higher maximum health, even) that is set to 50% of its health.
 					var secondPhaseXera = GetTargetBySpeciesId(agents, SpeciesIds.XeraSecondPhase);
+					var targets = new List<Agent> { mainTarget, secondPhaseXera }.Where(x => x != null).ToList();
 
-					var builder = GetDefaultBuilder(encounter, mainTarget);
-					if (secondPhaseXera == null)
-					{
-						builder.WithResult(new ConstantResultDeterminer(EncounterResult.Failure));
-					}
-					else
-					{
-						builder.WithHealth(new SequentialHealthDeterminer(mainTarget, secondPhaseXera));
-						// Second phase Xera may infrequently appear drop out of combat for a moment at the start of the phase
-						// before entering combat again. By enforcing a minimum time since her spawn, we can fairly safely
-						// ensure that this will be ignored. It is also very unlikely the boss would be defeated in such a short time,
-						// barring extreme exploits of broken game skills.
-						// Even such exploits from the past would have trouble meeting this time requirement (Shadow Flare, Renegade Invoke Torment).
-						builder.WithResult(new AgentCombatExitDeterminer(secondPhaseXera) {MinTimeSinceSpawn = 10000})
-							.WithTargets(new List<Agent>() {mainTarget, secondPhaseXera});
-					}
-
-					return builder.Build();
+					return GetDefaultBuilder(encounter, mainTarget)
+						.WithResult(new ConditionalResultDeterminer(
+							(secondPhaseXera == null, new ConstantResultDeterminer(EncounterResult.Failure)),
+							// Second phase Xera may infrequently appear drop out of combat for a moment at the start of the phase
+							// before entering combat again. By enforcing a minimum time since her spawn, we can fairly safely
+							// ensure that this will be ignored. It is also very unlikely the boss would be defeated in such a short time,
+							// barring extreme exploits of broken game skills.
+							// Even such exploits from the past would have trouble meeting this time requirement (Shadow Flare, Renegade Invoke Torment).
+							(true, new AgentCombatExitDeterminer(secondPhaseXera) {MinTimeSinceSpawn = 10000})
+						))
+						.WithHealth(new ConditionalHealthDeterminer(
+							(secondPhaseXera == null, new MaxMinHealthDeterminer()),
+							(true, new SequentialHealthDeterminer(mainTarget, secondPhaseXera))
+						))
+						.WithTargets(targets)
+						.Build();
 				}
 				// Raids - Wing 4
 				case Encounter.Cairn:
