@@ -558,7 +558,6 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						(true, true) => EncounterMode.Unknown,
 					};
 
-
 					Agent[] targets;
 					if (mode == EncounterMode.Normal)
 					{
@@ -576,25 +575,17 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					}
 					else
 					{
-						return GetDefaultBuilder(encounter, mainTarget)
-							.WithModes(new ConstantModeDeterminer(mode))
-							.WithResult(new ConstantResultDeterminer(EncounterResult.Unknown))
-							.Build();
+						targets = Array.Empty<Agent>();
 					}
 
-					var builder = GetDefaultBuilder(encounter, targets);
-					if (targets.Length == 3)
-					{
-						var kills = targets.Select(x => new AgentKilledDeterminer(x)).ToArray<IResultDeterminer>();
-						builder.WithResult(new AllCombinedResultDeterminer(kills));
-					}
-					else
-					{
-						builder.WithResult(new ConstantResultDeterminer(EncounterResult.Unknown));
-					}
-					builder.WithModes(new ConstantModeDeterminer(mode));
-
-					return builder.Build();
+					return GetDefaultBuilder(encounter, targets)
+						.WithModes(new ConstantModeDeterminer(mode))
+						.WithResult(new ConditionalResultDeterminer(
+							(targets.Length == 3 && mode != EncounterMode.Unknown, new AllCombinedResultDeterminer(
+								targets.Select(x => new AgentKilledDeterminer(x)).ToArray<IResultDeterminer>()
+							))
+						))
+						.Build();
 				}
 				case Encounter.Kanaxai:
 				{
