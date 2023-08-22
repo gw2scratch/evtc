@@ -103,6 +103,10 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				step.Process(state);
 			}
 
+			// Post-processing steps might have changed the agents (e.g. by merging), which are not yet lazy within encounter data.
+			// For this reason, we need to regenerate the encounter data to update the referenced agents.
+			SetEncounterData(state);
+
 			return new Log(state);
 		}
 
@@ -278,6 +282,10 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			{
 				step.Process(state);
 			}
+			
+			// Post-processing steps might have changed the agents (e.g. by merging), which are not yet lazy within encounter data.
+			// For this reason, we need to regenerate the encounter data to update the referenced agents.
+			SetEncounterData(state);
 
 			return new Log(state);
 		}
