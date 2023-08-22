@@ -256,39 +256,23 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					var nikare = GetTargetBySpeciesId(agents, SpeciesIds.Nikare);
 					var kenut = GetTargetBySpeciesId(agents, SpeciesIds.Kenut);
 
-					var bosses = new List<NPC>();
-					if (nikare != null) bosses.Add(nikare);
-					if (kenut != null) bosses.Add(kenut);
+					var targets = new Agent[] { nikare, kenut }.Where(x => x != null).ToList();
 
-					var builder = GetDefaultBuilder(encounter, bosses);
-					if (nikare == null || kenut == null)
-					{
-						if (kenut == null)
-						{
+					return GetDefaultBuilder(encounter, targets)
+						.WithResult(new ConditionalResultDeterminer(
 							// If the fight does not progress far enough, Kenut might not be present in the log.
-							builder.WithResult(new ConstantResultDeterminer(EncounterResult.Failure));
-						}
-						else
-						{
-							builder.WithResult(new ConstantResultDeterminer(EncounterResult.Unknown));
-						}
-
-						builder.WithTargets(new Agent[] {nikare, kenut}.Where(x => x != null).ToList());
-					}
-					else
-					{
-						builder.WithResult(new AllCombinedResultDeterminer(
-							new AgentDeadDeterminer(nikare),
-							new AgentDeadDeterminer(kenut)
-						));
-					}
-
-					if (nikare != null)
-					{
-						builder.WithModes(new AgentHealthModeDeterminer(nikare, 19_000_000));
-					}
-
-					return builder.Build();
+							(kenut == null, new ConstantResultDeterminer(EncounterResult.Failure)),
+							(nikare == null, new ConstantResultDeterminer(EncounterResult.Unknown)),
+							(nikare != null && kenut != null, new AllCombinedResultDeterminer(
+								new AgentDeadDeterminer(nikare),
+								new AgentDeadDeterminer(kenut)
+							))
+						))
+						.WithModes(new ConditionalModeDeterminer(
+							(nikare != null, new AgentHealthModeDeterminer(nikare, 19_000_000))
+						))
+						.WithTargets(targets)
+						.Build();
 				}
 				case Encounter.Qadim:
 				{

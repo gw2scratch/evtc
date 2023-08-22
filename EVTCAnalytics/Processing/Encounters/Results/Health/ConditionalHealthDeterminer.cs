@@ -1,4 +1,3 @@
-using GW2Scratch.EVTCAnalytics.Events;
 using GW2Scratch.EVTCAnalytics.Model;
 using System;
 using System.Collections.Generic;
