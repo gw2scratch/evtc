@@ -470,78 +470,69 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				}
 				case Encounter.HarvestTemple:
 				{
-					var builder = GetDefaultBuilder(encounter, mainTarget);
-						
 					// This is the gadget that represents the first 5 dragons.
 					Gadget firstGadget = agents.OfType<Gadget>().FirstOrDefault(x =>
 						x.VolatileId == GadgetIds.TheDragonvoid && x.AttackTargets.Count == 3);
-					if (firstGadget != null)
-					{
-						builder.WithModes(new GroupedSpawnModeDeterminer(agent => agent is NPC { SpeciesId: SpeciesIds.VoidMelter }, 6, 200));
-					}
 					
 					// This is the gadget that represents Soo-Won. The previous phases share the same
 					// gadget (GadgetIds.TheDragonvoid), but this one has a unique one with different max health.
 					Gadget finalGadget = agents.OfType<Gadget>().FirstOrDefault(x =>
 						x.VolatileId == GadgetIds.TheDragonvoidFinal && x.AttackTargets.Count == 3);
 
-					builder.WithHealth(new AgentHealthDeterminer(null).RequiredEventTypes,
-						log =>
-					{
-						const float healthPerPhase = 1.0f / 6.0f;
-						
-						//bool pastPre = log.Agents.OfType<NPC>().Any(x => x.SpeciesId == SpeciesIds.VoidStormseer);
-						bool pastJormag = log.Agents.OfType<NPC>().Any(x => x.SpeciesId == SpeciesIds.VoidWarforged);
-						bool pastPrimordus = log.Agents.OfType<NPC>().Any(x => x.SpeciesId == SpeciesIds.VoidBrandbomber);
-						bool pastKralkatorikk = log.Agents.OfType<NPC>().Any(x => x.SpeciesId == SpeciesIds.VoidTimeCaster);
-						bool pastMordemoth = log.Agents.OfType<NPC>().Any(x => x.SpeciesId == SpeciesIds.VoidGiant);
-						bool pastZhaitan = log.Agents.OfType<NPC>().Any(x => x.SpeciesId == SpeciesIds.VoidSaltsprayDragon);
-						//bool pastSooWonPhase1 = log.Agents.OfType<NPC>().Any(x => x.SpeciesId == SpeciesIds.VoidObliterator);
+					return GetDefaultBuilder(encounter, mainTarget)
+						.WithModes(new ConditionalModeDeterminer(
+							(firstGadget != null, new GroupedSpawnModeDeterminer(agent => agent is NPC { SpeciesId: SpeciesIds.VoidMelter }, 6, 200))
+						))
+						.WithResult(new ConditionalResultDeterminer(
+							// We use a health threshold instead of checking for the gadget going
+							// through enable->disable->enable->disable to make it possible to correctly detect success
+							// if the PoV player joins the instance late. This should work unless they join after
+							// the last health update.
+							
+							// Note that the gadget keeps its initial health from the previous attempt if the fight
+							// is reset within the same instance.
+							(finalGadget != null, new TargetableChangedBelowHealthThresholdDeterminer(finalGadget, false, 0.3f))
+						))
+						.WithHealth(new AgentHealthDeterminer(null).RequiredEventTypes,
+							log =>
+							{
+								const float healthPerPhase = 1.0f / 6.0f;
 
-						int completedPhases = 0;
-						if (pastJormag) completedPhases += 1;
-						if (pastPrimordus) completedPhases += 1;
-						if (pastKralkatorikk) completedPhases += 1;
-						if (pastMordemoth) completedPhases += 1;
-						if (pastZhaitan) completedPhases += 1;
+								//bool pastPre = log.Agents.OfType<NPC>().Any(x => x.SpeciesId == SpeciesIds.VoidStormseer);
+								bool pastJormag = log.Agents.OfType<NPC>().Any(x => x.SpeciesId == SpeciesIds.VoidWarforged);
+								bool pastPrimordus = log.Agents.OfType<NPC>().Any(x => x.SpeciesId == SpeciesIds.VoidBrandbomber);
+								bool pastKralkatorikk = log.Agents.OfType<NPC>().Any(x => x.SpeciesId == SpeciesIds.VoidTimeCaster);
+								bool pastMordemoth = log.Agents.OfType<NPC>().Any(x => x.SpeciesId == SpeciesIds.VoidGiant);
+								bool pastZhaitan = log.Agents.OfType<NPC>().Any(x => x.SpeciesId == SpeciesIds.VoidSaltsprayDragon);
+								//bool pastSooWonPhase1 = log.Agents.OfType<NPC>().Any(x => x.SpeciesId == SpeciesIds.VoidObliterator);
 
-						// The first 5 phases use one gadget (firstGadget), the last phase uses a different gadget (finalGadget).
-						// These gadgets have different health amounts, but for now we are pretending they are the same,
-						// they get the same percentage share as other phases.
-						float remainingHealth;
-						if (pastZhaitan && finalGadget != null)
-						{
-							remainingHealth = new AgentHealthDeterminer(finalGadget).GetMainEnemyHealthFraction(log) ?? 1f;
-						}
-						else
-						{
-							remainingHealth = new AgentHealthDeterminer(firstGadget).GetMainEnemyHealthFraction(log) ?? 1f;
-						}
+								int completedPhases = 0;
+								if (pastJormag) completedPhases += 1;
+								if (pastPrimordus) completedPhases += 1;
+								if (pastKralkatorikk) completedPhases += 1;
+								if (pastMordemoth) completedPhases += 1;
+								if (pastZhaitan) completedPhases += 1;
 
-						// Subtract one extra phase as we are re-adding the health of the current phase.
-						float finishedHealth = (completedPhases + 1) * healthPerPhase;
-						float remainingInPhase = remainingHealth * healthPerPhase;
+								// The first 5 phases use one gadget (firstGadget), the last phase uses a different gadget (finalGadget).
+								// These gadgets have different health amounts, but for now we are pretending they are the same,
+								// they get the same percentage share as other phases.
+								float remainingHealth;
+								if (pastZhaitan && finalGadget != null)
+								{
+									remainingHealth = new AgentHealthDeterminer(finalGadget).GetMainEnemyHealthFraction(log) ?? 1f;
+								}
+								else
+								{
+									remainingHealth = new AgentHealthDeterminer(firstGadget).GetMainEnemyHealthFraction(log) ?? 1f;
+								}
 
-						return 1 - finishedHealth + remainingInPhase;
-					});
-					
-					if (finalGadget == null)
-					{
-						builder.WithResult(new ConstantResultDeterminer(EncounterResult.Unknown));
-					}
-					else
-					{
-						// We use a health threshold instead of checking for the gadget going
-						// through enable->disable->enable->disable to make it possible to correctly detect success
-						// if the PoV player joins the instance late. This should work unless they join after
-						// the last health update.
-						
-						// Note that the gadget keeps its initial health from the previous attempt if the fight
-						// is reset within the same instance.
-						builder.WithResult(new TargetableChangedBelowHealthThresholdDeterminer(finalGadget, false, 0.3f));
-					}
+								// Subtract one extra phase as we are re-adding the health of the current phase.
+								float finishedHealth = (completedPhases + 1) * healthPerPhase;
+								float remainingInPhase = remainingHealth * healthPerPhase;
 
-					return builder.Build();
+								return 1 - finishedHealth + remainingInPhase;
+							})
+						.Build();
 				}
 				case Encounter.OldLionsCourt:
 				{
