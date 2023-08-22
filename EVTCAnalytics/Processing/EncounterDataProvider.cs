@@ -216,7 +216,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					return GetDefaultBuilder(encounter, mainTarget)
 						// At the end of the event, 8 of the rifts become untargetable
 						.WithResult(new GroupedEventDeterminer<TargetableChangeEvent>(
-							e => e.IsTargetable == false, 8, 1000, 3000))
+							e => e.IsTargetable == false, 8, 1000, null, 3000))
 						.Build();
 				}
 				case Encounter.Eyes:
@@ -493,7 +493,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 							// is reset within the same instance.
 							(finalGadget != null, new TargetableChangedBelowHealthThresholdDeterminer(finalGadget, false, 0.3f))
 						))
-						.WithHealth(new AgentHealthDeterminer(null).RequiredEventTypes,
+						.WithHealth(new AgentHealthDeterminer(null).RequiredEventTypes, new List<uint>(),
 							log =>
 							{
 								const float healthPerPhase = 1.0f / 6.0f;

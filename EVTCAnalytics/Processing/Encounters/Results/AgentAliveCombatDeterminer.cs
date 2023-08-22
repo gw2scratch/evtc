@@ -19,6 +19,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 		}
 
 		public override IReadOnlyList<Type> RequiredEventTypes { get; } = new List<Type> { typeof(AgentDeadEvent) };
+		public override IReadOnlyList<uint> RequiredBuffSkillIds => new List<uint>();
+		
 		protected override EncounterResult EventFound { get; } = EncounterResult.Failure;
 		protected override EncounterResult EventNotFound { get; } = EncounterResult.Success;
 

@@ -20,6 +20,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 		}
 
 		public IReadOnlyList<Type> RequiredEventTypes { get; } = new List<Type> { typeof(AgentSpawnEvent) };
+		public IReadOnlyList<uint> RequiredBuffSkillIds { get; } = Array.Empty<uint>();
 
 		public ResultDeterminerResult GetResult(IEnumerable<Event> events)
 		{

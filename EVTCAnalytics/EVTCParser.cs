@@ -13,6 +13,7 @@ using GW2Scratch.EVTCAnalytics.Parsed;
 using GW2Scratch.EVTCAnalytics.Parsed.Enums;
 using GW2Scratch.EVTCAnalytics.Parsing;
 using GW2Scratch.EVTCAnalytics.Processing;
+using System.Buffers.Binary;
 using System.Runtime.CompilerServices;
 
 namespace GW2Scratch.EVTCAnalytics
@@ -199,8 +200,20 @@ namespace GW2Scratch.EVTCAnalytics
 						reader.Skip(64);
 						continue;
 					}
+
 					// 64 bytes: combat item
 					ReadCombatItemRevision1(reader, out combatItem);
+					
+					// Checking after reading the item rather than peeking at the values before is slightly faster.
+					if (stateChange == 0 && combatItem.IsActivation == Activation.None && combatItem.Buff != 0 &&
+					    (combatItem.IsBuffRemove != BuffRemove.None || combatItem.BuffDmg == 0))
+					{
+						// This is a buff apply or remove.
+						if (!filters.IsBuffEventRequired(combatItem.SkillId))
+						{
+							continue;
+						}
+					}
 
 					return true;
 				}
@@ -384,7 +397,7 @@ namespace GW2Scratch.EVTCAnalytics
 				}
 
 				var encounters = encounterIdentifier.IdentifyPotentialEncounters(parsedBossData);
-				var filters = filteringOptions.CreateFilters(encounters.Select(encounter => encounterDataProvider.GetEncounterData(encounter, mainTarget, agents, gameBuild, logType)));
+				var filters = filteringOptions.CreateFilters(encounters.Select(encounter => encounterDataProvider.GetEncounterData(encounter, mainTarget, agents, gameBuild, logType)).ToList());
 
 				position = ReaderPosition.InCombatItems;
 				combatItemReader = revision switch

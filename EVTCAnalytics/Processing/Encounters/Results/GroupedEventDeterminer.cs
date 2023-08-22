@@ -23,16 +23,19 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 		/// <param name="eventCounted">A predicate checking whether an event is counted or not.</param>
 		/// <param name="count">The required amount of counted events to result in success.</param>
 		/// <param name="timeSpan">The time span in which <paramref name="count"/> events have to occur.</param>
+		/// <param name="requiredBuffSkillIds">If applying to buff events, specify required buff ids here. If <see langword="null"/>, an empty list is used.</param>
 		/// <param name="minTimeSinceStart">The time that has to have occured since the first event of any kind for this to be eligible.</param>
-		public GroupedEventDeterminer(Func<T, bool> eventCounted, int count, long timeSpan, long minTimeSinceStart = 0)
+		public GroupedEventDeterminer(Func<T, bool> eventCounted, int count, long timeSpan, IReadOnlyList<uint> requiredBuffSkillIds = null, long minTimeSinceStart = 0)
 		{
 			this.eventCounted = eventCounted ?? throw new ArgumentNullException(nameof(eventCounted));
 			this.count = count;
 			this.timeSpan = timeSpan;
+			RequiredBuffSkillIds = requiredBuffSkillIds ?? new List<uint>();
 			this.minTimeSinceStart = minTimeSinceStart;
 		}
 
 		public IReadOnlyList<Type> RequiredEventTypes { get; } = new List<Type> { typeof(T) };
+		public IReadOnlyList<uint> RequiredBuffSkillIds { get; }
 
 		public ResultDeterminerResult GetResult(IEnumerable<Event> events)
 		{

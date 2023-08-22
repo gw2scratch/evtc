@@ -19,6 +19,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 		}
 
 		public IReadOnlyList<Type> RequiredEventTypes { get; } = new List<Type> { typeof(AgentHealthUpdateEvent) };
+		public IReadOnlyList<uint> RequiredBuffSkillIds { get; } = new List<uint>();
 		
 		public ResultDeterminerResult GetResult(IEnumerable<Event> events)
 		{

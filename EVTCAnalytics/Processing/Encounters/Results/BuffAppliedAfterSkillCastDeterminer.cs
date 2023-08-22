@@ -13,7 +13,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 	{
 		private readonly Agent agent;
 		private readonly int skillId;
-		private readonly int buffId;
+		private readonly uint buffId;
 
 		/// <summary>
 		/// Creates a new <see cref="BuffAppliedAfterSkillCastDeterminer"/>.
@@ -21,7 +21,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 		/// <param name="agent">The agent to be considered.</param>
 		/// <param name="skillId">The ID of the skill that has to be cast first.</param>
 		/// <param name="buffId">The ID of the buff skill that has to be applied second.</param>
-		public BuffAppliedAfterSkillCastDeterminer(Agent agent, int skillId, int buffId)
+		public BuffAppliedAfterSkillCastDeterminer(Agent agent, int skillId, uint buffId)
 		{
 			this.agent = agent;
 			this.skillId = skillId;
@@ -29,6 +29,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 		}
 
 		public override IReadOnlyList<Type> RequiredEventTypes { get; } = new List<Type> { typeof(SkillCastEvent), typeof(BuffApplyEvent) };
+		public override IReadOnlyList<uint> RequiredBuffSkillIds => new List<uint> { buffId };
 		
 		protected override Event GetEvent(IEnumerable<Event> events)
 		{

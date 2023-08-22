@@ -26,7 +26,7 @@ public class FilteringOptions
 	/// </summary>
 	public IReadOnlyList<Type> ExtraRequiredEventTypes { get; set; } = Array.Empty<Type>();
 
-	public ICombatItemFilters CreateFilters(IEnumerable<IEncounterData> encounterDatas)
+	public ICombatItemFilters CreateFilters(IReadOnlyList<IEncounterData> encounterDatas)
 	{
 		if (!PruneForEncounterData)
 		{
@@ -39,7 +39,12 @@ public class FilteringOptions
 			ExtraRequiredEventTypes,
 		}).SelectMany(x => x).Distinct().ToList();
 		
-		var filters = new CombatItemFilters(requiredEvents);
+		var requiredBuffIds = encounterDatas.SelectMany(encounter => new[]
+		{
+			encounter.ResultDeterminer.RequiredBuffSkillIds, encounter.HealthDeterminer.RequiredBuffSkillIds, encounter.ModeDeterminer.RequiredBuffSkillIds,
+		}).SelectMany(x => x).Distinct().ToList();
+		
+		var filters = new CombatItemFilters(requiredEvents, requiredBuffIds);
 
 		return filters;
 	}

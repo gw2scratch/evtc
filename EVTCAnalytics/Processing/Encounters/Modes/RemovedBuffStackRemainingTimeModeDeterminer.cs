@@ -12,7 +12,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes
 	public class RemovedBuffStackRemainingTimeModeDeterminer : IModeDeterminer
 	{
 		public const int RemainingTimePrecision = 100;
-		private readonly int buffId;
+		private readonly uint buffId;
 		private readonly EncounterMode mode1;
 		private readonly int remaining1;
 		private readonly EncounterMode mode2;
@@ -29,7 +29,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes
 		/// <exception cref="ArgumentException">Thrown if <paramref name="remaining1"/> and <paramref name="remaining2"/> are within
 		/// 2*<see cref="RemainingTimePrecision"/>, which would result in ambiguous mode detection as a remaining buff duration would be too close to both.</exception>
 		public RemovedBuffStackRemainingTimeModeDeterminer(
-			int buffId,
+			uint buffId,
 			EncounterMode mode1,
 			int remaining1,
 			EncounterMode mode2,
@@ -52,6 +52,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes
 		}
 
 		public IReadOnlyList<Type> RequiredEventTypes { get; } = new List<Type> { typeof(ManualStackRemovedBuffEvent), typeof(BuffApplyEvent) };
+		public IReadOnlyList<uint> RequiredBuffSkillIds => new List<uint> { buffId };
 
 		public EncounterMode? GetMode(Log log)
 		{

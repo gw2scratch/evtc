@@ -21,6 +21,7 @@ public class FallbackModeDeterminer : IModeDeterminer
 	}
 
 	public IReadOnlyList<Type> RequiredEventTypes => firstDeterminer.RequiredEventTypes.Concat(fallbackDeterminer.RequiredEventTypes).Distinct().ToList();
+	public IReadOnlyList<uint> RequiredBuffSkillIds => firstDeterminer.RequiredBuffSkillIds.Concat(fallbackDeterminer.RequiredBuffSkillIds).Distinct().ToList();
 
 	public EncounterMode? GetMode(Log log)
 	{

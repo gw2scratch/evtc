@@ -20,6 +20,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Transformers
 		}
 		
 		public IReadOnlyList<Type> RequiredEventTypes => resultDeterminer.RequiredEventTypes;
+		public IReadOnlyList<uint> RequiredBuffSkillIds => resultDeterminer.RequiredBuffSkillIds;
 
 		public ResultDeterminerResult GetResult(IEnumerable<Event> events)
 		{

@@ -12,4 +12,9 @@ public class AllowAllCombatItemFilters : ICombatItemFilters {
 	{
 		return true;
 	}
+
+	public bool IsBuffEventRequired(uint skillId)
+	{
+		return true;
+	}
 }

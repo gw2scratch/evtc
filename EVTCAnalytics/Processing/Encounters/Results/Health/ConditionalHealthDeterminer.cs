@@ -27,6 +27,7 @@ public class ConditionalHealthDeterminer : IHealthDeterminer
 	}
 
 	public IReadOnlyList<Type> RequiredEventTypes => determiners.SelectMany(x => x.Determiner.RequiredEventTypes).Distinct().ToList();
+	public IReadOnlyList<uint> RequiredBuffSkillIds => determiners.SelectMany(x => x.Determiner.RequiredBuffSkillIds).Distinct().ToList();
 
 	public float? GetMainEnemyHealthFraction(Log log)
 	{

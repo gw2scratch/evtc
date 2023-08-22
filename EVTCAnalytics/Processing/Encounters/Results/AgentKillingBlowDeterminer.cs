@@ -19,6 +19,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 		}
 
 		public override IReadOnlyList<Type> RequiredEventTypes { get; } = new List<Type> { typeof(PhysicalDamageEvent) };
+		public override IReadOnlyList<uint> RequiredBuffSkillIds { get; } = new List<uint>();
 		
 		protected override Event GetEvent(IEnumerable<Event> events)
 		{

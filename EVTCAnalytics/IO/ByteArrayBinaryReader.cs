@@ -34,6 +34,11 @@ namespace GW2Scratch.EVTCAnalytics.IO
 		{
 			return bytes[Position + offset];
 		}
+		
+		public Span<byte> PeekRange(int offset, int length)
+		{
+			return bytes[(Position + offset)..(Position + offset + length)];
+		}
 
 		public sbyte ReadSByte()
 		{

@@ -12,11 +12,18 @@ public class CombatItemFilters : ICombatItemFilters
 {
 	private IReadOnlyList<Type> RequiredEventTypes { get; }
 	private bool[] StateChangeFilter { get; }
+	private IIdFilter BuffIdFilter { get; }
 	
-	public CombatItemFilters(IReadOnlyList<Type> requiredEventTypes)
+	public CombatItemFilters(IReadOnlyList<Type> requiredEventTypes, IReadOnlyList<uint> requiredBuffIds)
 	{
 		RequiredEventTypes = requiredEventTypes;
 		StateChangeFilter = BuildStateChangeFilter(RequiredEventTypes);
+		BuffIdFilter = BuildBuffIdFilter(requiredBuffIds);
+	}
+	
+	public bool IsBuffEventRequired(uint skillId)
+	{
+		return BuffIdFilter.IsKept(skillId);
 	}
 
 	public bool IsStateChangeRequired(StateChange stateChange)
@@ -27,6 +34,19 @@ public class CombatItemFilters : ICombatItemFilters
 	public bool IsStateChangeRequired(byte stateChange)
 	{
 		return StateChangeFilter[stateChange];
+	}
+	
+	private static IIdFilter BuildBuffIdFilter(IReadOnlyList<uint> requiredBuffIds)
+	{
+		var max = requiredBuffIds.DefaultIfEmpty().Max();
+		// If the skills are in a reasonably range, we use an array as the filter (as of 2023, highest skill IDs are ~70000).
+		// In case many new skills are introduced, or more importantly, in case arcdps or an issue in arcdps introduces high ids,
+		// we use a hash set which will not take all available memory.
+		if (max < 262144)
+		{
+			return new UnboundedArrayFilter(requiredBuffIds);
+		}
+		return new HashSetFilter(requiredBuffIds);
 	}
 
 	private static bool[] BuildStateChangeFilter(IEnumerable<Type> eventTypes)

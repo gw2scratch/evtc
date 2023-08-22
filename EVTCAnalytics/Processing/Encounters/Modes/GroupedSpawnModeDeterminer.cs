@@ -30,6 +30,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes
 		}
 
 		public IReadOnlyList<Type> RequiredEventTypes { get; } = new List<Type> { typeof(AgentSpawnEvent) };
+		public IReadOnlyList<uint> RequiredBuffSkillIds { get; } = new List<uint>();
 
 		public EncounterMode? GetMode(Log log)
 		{

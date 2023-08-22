@@ -20,6 +20,7 @@ public class AgentHealthDeterminer : IHealthDeterminer
 	}
 
 	public IReadOnlyList<Type> RequiredEventTypes { get; } = new List<Type> { typeof(AgentHealthUpdateEvent) };
+	public IReadOnlyList<uint> RequiredBuffSkillIds { get; } = new List<uint>();
 
 	public float? GetMainEnemyHealthFraction(Log log)
 	{
