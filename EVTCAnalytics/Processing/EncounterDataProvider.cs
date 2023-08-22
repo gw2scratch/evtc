@@ -78,9 +78,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					var prisoner = GetTargetBySpeciesId(agents, SpeciesIds.TrioCagePrisoner);
 
 					var targets = new Agent[] {berg, zane, narella}.Where(x => x != null).ToArray();
-					var builder = GetDefaultBuilder(encounter, targets);
 
-					return builder
+					return GetDefaultBuilder(encounter, targets)
 						.WithResult(new ConditionalResultDeterminer(
 							(berg != null && zane != null && narella != null && prisoner != null, new AllCombinedResultDeterminer(
 								new AgentKilledDeterminer(berg), // Berg has to die
@@ -625,7 +624,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			return builder;
 		}
 
-		private static EncounterIdentifierBuilder GetDefaultBuilder(Encounter encounter, IEnumerable<Agent> mainTargets)
+		private static EncounterIdentifierBuilder GetDefaultBuilder(Encounter encounter, IEnumerable<Agent> mainTargets, bool mergeMainTargets = true)
 		{
 			var targets = mainTargets.ToArray();
 			IResultDeterminer result;
@@ -640,14 +639,27 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			{
 				result = new ConstantResultDeterminer(EncounterResult.Unknown);
 			}
-
-			return new EncounterIdentifierBuilder(
+			var builder = new EncounterIdentifierBuilder(
 				encounter,
 				targets.ToList(),
 				result,
 				new EmboldenedDetectingModeDeterminer(),
 				new MaxMinHealthDeterminer()
 			);
+
+			if (mergeMainTargets)
+			{
+				foreach (var mainTarget in targets)
+				{
+					if (mainTarget is NPC npc)
+					{
+						// Gadgets do not have to be merged as they never go out of reporting range.
+						builder.AddPostProcessingStep(new MergeSingletonNPC(npc.SpeciesId));
+					}
+				}
+			}
+
+			return builder;
 		}
 
 		// TODO: Remove
