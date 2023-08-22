@@ -1,4 +1,5 @@
 using System;
+using System.Buffers.Binary;
 using System.Text;
 
 namespace GW2Scratch.EVTCAnalytics.IO
@@ -37,7 +38,7 @@ namespace GW2Scratch.EVTCAnalytics.IO
 		
 		public Span<byte> PeekRange(int offset, int length)
 		{
-			return bytes[(Position + offset)..(Position + offset + length)];
+			return bytes.AsSpan()[(Position + offset)..(Position + offset + length)];
 		}
 
 		public sbyte ReadSByte()
@@ -47,22 +48,21 @@ namespace GW2Scratch.EVTCAnalytics.IO
 
 		public short ReadInt16()
 		{
-			short value = (short) (bytes[Position] | bytes[Position + 1] << 8);
+			short value = BinaryPrimitives.ReadInt16LittleEndian(bytes.AsSpan()[Position..]);
 			Position += 2;
 			return value;
 		}
 
 		public ushort ReadUInt16()
 		{
-			return (ushort) ReadInt16();
+			ushort value = BinaryPrimitives.ReadUInt16LittleEndian(bytes.AsSpan()[Position..]);
+			Position += 2;
+			return value;
 		}
 
 		public int ReadInt32()
 		{
-			int value = bytes[Position] |
-			            bytes[Position + 1] << 8 |
-			            bytes[Position + 2] << 16 |
-			            bytes[Position + 3] << 24;
+			int value = BinaryPrimitives.ReadInt32LittleEndian(bytes.AsSpan()[Position..]);
 			Position += 4;
 			return value;
 		}
@@ -74,23 +74,16 @@ namespace GW2Scratch.EVTCAnalytics.IO
 
 		public long ReadInt64()
 		{
-			uint lower = (uint) (bytes[Position] |
-			            bytes[Position + 1] << 8 |
-			            bytes[Position + 2] << 16 |
-			            bytes[Position + 3] << 24);
-
-			uint upper = (uint) (bytes[Position + 4] |
-			            bytes[Position + 5] << 8 |
-			            bytes[Position + 6] << 16 |
-			            bytes[Position + 7] << 24);
-
+			long value = BinaryPrimitives.ReadInt64LittleEndian(bytes.AsSpan()[Position..]);
 			Position += 8;
-			return (long) (lower | (ulong) upper << 32);
+			return value;
 		}
 
 		public ulong ReadUInt64()
 		{
-			return (ulong) ReadInt64();
+			ulong value = BinaryPrimitives.ReadUInt64LittleEndian(bytes.AsSpan()[Position..]);
+			Position += 8;
+			return value;
 		}
 
 		public float ReadSingle()
