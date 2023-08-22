@@ -166,18 +166,24 @@ namespace GW2Scratch.EVTCAnalytics
 						reader.Skip(64);
 						continue;
 					}
-					ReadCombatItemRevision0(reader, out combatItem);
 					
-					// Checking after reading the item rather than peeking at the values before is slightly faster.
-					if (stateChange == 0 && combatItem.IsActivation == Activation.None && combatItem.Buff != 0 &&
-					    (combatItem.IsBuffRemove != BuffRemove.None || combatItem.BuffDmg == 0))
+					var buff = reader.PeekByte(52);
+					var isActivation = reader.PeekByte(54);
+					var buffRemove = reader.PeekByte(55);
+					var buffDmg = reader.PeekRange(28, 4);
+					
+					if (stateChange == 0 && isActivation == (byte) Activation.None && buff != 0 && (buffRemove != (byte) BuffRemove.None || (buffDmg[0] == 0 && buffDmg[1] == 0 && buffDmg[2] == 0 && buffDmg[3] == 0)))
 					{
-						// This is a buff apply or remove.
-						if (!filters.IsBuffEventRequired(combatItem.SkillId))
+						var skillId = BinaryPrimitives.ReadUInt16LittleEndian(reader.PeekRange(34, 2));
+						if (!filters.IsBuffEventRequired(skillId))
 						{
+							reader.Skip(64);
 							continue;
 						}
 					}
+					
+					ReadCombatItemRevision0(reader, out combatItem);
+					
 
 					return true;
 				}
@@ -212,9 +218,25 @@ namespace GW2Scratch.EVTCAnalytics
 						continue;
 					}
 
+					var buff = reader.PeekByte(49);
+					var isActivation = reader.PeekByte(51);
+					var buffRemove = reader.PeekByte(52);
+					var buffDmg = reader.PeekRange(28, 4);
+
+					if (stateChange == 0 && isActivation == (byte) Activation.None && buff != 0 && (buffRemove != (byte) BuffRemove.None || (buffDmg[0] == 0 && buffDmg[1] == 0 && buffDmg[2] == 0 && buffDmg[3] == 0)))
+					{
+						var skillId = BinaryPrimitives.ReadUInt32LittleEndian(reader.PeekRange(36, 4));
+						if (!filters.IsBuffEventRequired(skillId))
+						{
+							reader.Skip(64);
+							continue;
+						}
+					}
+						
 					// 64 bytes: combat item
 					ReadCombatItemRevision1(reader, out combatItem);
 					
+					/*
 					// Checking after reading the item rather than peeking at the values before is slightly faster.
 					if (stateChange == 0 && combatItem.IsActivation == Activation.None && combatItem.Buff != 0 &&
 					    (combatItem.IsBuffRemove != BuffRemove.None || combatItem.BuffDmg == 0))
@@ -225,6 +247,7 @@ namespace GW2Scratch.EVTCAnalytics
 							continue;
 						}
 					}
+					*/
 
 					return true;
 				}
