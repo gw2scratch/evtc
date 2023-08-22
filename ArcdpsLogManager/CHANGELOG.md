@@ -12,6 +12,7 @@ This is the full changelog of the arcdps Log Manager.
 - Improved log processing performance by ~25% for 10man logs, even more in WvW logs.
 
 #### Fixes
+- Fixed logs with Emboldened appearing mid-fight failing to be processed.
 - Fixed log detail pane not appearing for selected logs processed with Log Manager versions 1.3 and older.
 - Fixed a stray debug data section appearing when multiple logs were selected even if debug data wasn't enabled
 
