@@ -90,12 +90,32 @@ namespace GW2Scratch.EVTCAnalytics.Events
 	{
 		public int DurationApplied { get; }
 		public uint DurationOfRemovedStack { get; }
+		public uint BuffInstanceId { get; }
 
 		public BuffApplyEvent(long time, Agent agent, Skill buff, Agent sourceAgent, int durationApplied,
-			uint durationOfRemovedStack) : base(time, agent, buff, sourceAgent)
+			uint durationOfRemovedStack, uint instanceId) : base(time, agent, buff, sourceAgent)
 		{
 			DurationApplied = durationApplied;
 			DurationOfRemovedStack = durationOfRemovedStack;
+			BuffInstanceId = instanceId;
+		}
+	}
+	
+	/// <summary>
+	/// An event emitted when a single stack of a buff is added to an <see cref="Agent"/>.
+	/// </summary>
+	public class BuffExtensionEvent : BuffEvent
+	{
+		public int DurationChange { get; }
+		public uint NewDuration { get; }
+		public uint BuffInstanceId { get; }
+
+		public BuffExtensionEvent(long time, Agent agent, Skill buff, Agent sourceAgent, int durationChange,
+			uint newDuration, uint instanceId) : base(time, agent, buff, sourceAgent)
+		{
+			DurationChange = durationChange;
+			NewDuration = newDuration;
+			BuffInstanceId = instanceId;
 		}
 	}
 

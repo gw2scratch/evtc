@@ -942,8 +942,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						uint durationOfRemovedStack = item.OverstackValue;
 						var agent = GetAgentByAddress(item.DstAgent);
 						var sourceAgent = GetAgentByAddress(item.SrcAgent);
-						return new InitialBuffEvent(item.Time, agent, buff, sourceAgent, durationApplied,
-							durationOfRemovedStack);
+						var instanceId = item.Padding;
+						return new InitialBuffEvent(item.Time, agent, buff, sourceAgent, durationApplied, durationOfRemovedStack, instanceId);
 					}
 					case StateChange.Position:
 					{
@@ -1244,12 +1244,22 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			else if (item.Buff > 0 && item.BuffDmg == 0)
 			{
 				Skill buff = GetSkillById(item.SkillId);
-				int durationApplied = item.Value;
-				uint durationOfRemovedStack = item.OverstackValue;
 				var agent = GetAgentByAddress(item.DstAgent);
 				var sourceAgent = GetAgentByAddress(item.SrcAgent);
-				return new BuffApplyEvent(item.Time, agent, buff, sourceAgent, durationApplied,
-					durationOfRemovedStack);
+				var instanceId = item.Padding;
+				var isExtension = item.IsOffCycle != 0;
+				if (isExtension)
+				{
+					int durationChange = item.Value;
+					uint newDuration = item.OverstackValue;
+					return new BuffExtensionEvent(item.Time, agent, buff, sourceAgent, durationChange, newDuration, instanceId);
+				}
+				else
+				{
+					int durationApplied = item.Value;
+					uint durationOfRemovedStack = item.OverstackValue;
+					return new BuffApplyEvent(item.Time, agent, buff, sourceAgent, durationApplied, durationOfRemovedStack, instanceId);
+				}
 			}
 			else if (item.Buff > 0 && item.Value == 0)
 			{
