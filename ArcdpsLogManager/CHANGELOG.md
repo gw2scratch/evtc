@@ -14,8 +14,14 @@ This is the full changelog of the arcdps Log Manager.
 
 #### Fixes
 - Slightly improved Bandit Trio success detection in cases when the recording player leaves the fort.
+- Fixed logs with Emboldened appearing mid-fight failing to be processed.
 - Fixed log detail pane not appearing for selected logs processed with Log Manager versions 1.3 and older.
 - Fixed a stray debug data section appearing when multiple logs were selected even if debug data wasn't enabled
+
+#### EVTC Inspector notes
+- Fixed buff extension events not being distinguished from normal buff applies
+- Added stack ids to buff applies / extends
+- Added "is stack active" to buff applies / extends
 
 ## Log Manager v1.9
 #### New features

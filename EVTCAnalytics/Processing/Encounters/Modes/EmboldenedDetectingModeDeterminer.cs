@@ -38,7 +38,13 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes
 				}
 			}
 
-			var maxEmboldenedCount = emboldenedCounts.Values.Max();
+			// In case Emboldened appears only due to buff applications, we currently default to 0.
+			// Note that this can be both correct and wrong, depending on when this happens:
+			// - at the end of the fight, the log can capture the emboldened buff being applied (if coming from CM fight) / reset, we want to ignore this
+			// - in the middle of a fight, this can be legitimate when the emboldened wing changes to the one the fight is happening in, we want to count this
+			// TODO: fix this ^
+			
+			var maxEmboldenedCount = emboldenedCounts.Values.DefaultIfEmpty(0).Max();
 			var mode = maxEmboldenedCount switch {
 				<= 0 => EncounterMode.Normal,
 				1 => EncounterMode.Emboldened1,
