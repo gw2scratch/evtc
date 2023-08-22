@@ -157,63 +157,55 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				case Encounter.Deimos:
 				{
 					var builder = GetDefaultBuilder(encounter, mainTarget);
-					if (gameBuild != null && gameBuild < GameBuilds.AhdashimRelease)
-					{
-						// This release reworked rewards, currently a reward event is not present if an encounter was
-						// finished a second time within a week. Before that, we can safely just check for the
-						// presence of such a reward.
+					
+					// This release reworked rewards, currently a reward event is not present if an encounter was
+					// finished a second time within a week. Before that, we can safely just check for the
+					// presence of such a reward.
 
-						// We cannot use the targetable detection method before they were introduced, and there was
-						// a long period of time when logs did not contain the main gadget so we need to rely on this.
-						builder.WithResult(new RewardDeterminer(525));
-					}
-					else
-					{
-						// Deimos, the NPC, is replaced with a gadget for the last 10% of the fight.
-						// There may sometimes be other gadgets with the same id. They do not, however,
-						// have an attack target. They also have lower maximum health values.
-						Gadget mainGadget = agents.OfType<Gadget>()
-							.FirstOrDefault(x => x.VolatileId == GadgetIds.DeimosLastPhase && x.AttackTargets.Count == 1);
-						Gadget prisoner = agents.OfType<Gadget>()
-							.FirstOrDefault(x => x.VolatileId == GadgetIds.ShackledPrisoner);
+					// We cannot use the targetable detection method before they were introduced, and there was
+					// a long period of time when logs did not contain the main gadget so we need to rely on this.
+					bool canUseReward = gameBuild != null && gameBuild < GameBuilds.AhdashimRelease;
 
-						if (mainGadget != null)
-						{
-							var attackTarget = mainGadget.AttackTargets.SingleOrDefault();
-							if (attackTarget != null && prisoner != null)
-							{
-								builder.WithResult(new AllCombinedResultDeterminer(
-									new TargetableDeterminer(attackTarget, true, false),
-									// If the log continues recording for longer than usual, it will record the attack target going untargetable.
-									// However, at the same time it will also record the Shackled Prisoner having their health reset.
-									// This health reset cannot happen in a successful log as there is no Shackled Prisoner at that point.
-									new TransformResultDeterminer(
-										new AgentHealthResetDeterminer(prisoner),
-										result => result == EncounterResult.Success ? EncounterResult.Failure : EncounterResult.Success
-									)
-								));
-								// The health of the Deimos gadget on the upper platform is set to 10% only after
-								// the NPC used in the first part of the fight reaches 10% of its health.
+					
+					// Deimos, the NPC, is replaced with a gadget for the last 10% of the fight.
+					// There may sometimes be other gadgets with the same id. They do not, however,
+					// have an attack target. They also have lower maximum health values.
+					Gadget mainGadget = agents.OfType<Gadget>()
+						.FirstOrDefault(x => x.VolatileId == GadgetIds.DeimosLastPhase && x.AttackTargets.Count == 1);
+					Gadget prisoner = agents.OfType<Gadget>()
+						.FirstOrDefault(x => x.VolatileId == GadgetIds.ShackledPrisoner);
 
-								// If there has already been an attempt in this instance before, the gadget
-								// retains its health from the previous attempt until the last phase is reached again.
-								builder.WithHealth(new SequentialHealthDeterminer(mainTarget, mainGadget));
-							}
-							else
-							{
-								builder.WithResult(new ConstantResultDeterminer(EncounterResult.Unknown));
-							}
+					AttackTarget attackTarget = mainGadget?.AttackTargets?.SingleOrDefault();
+					bool canUseTargets = mainGadget != null && attackTarget != null && prisoner != null;
 
-							builder.WithTargets(new List<Agent>() {mainTarget, mainGadget});
-						}
-						else
-						{
-							builder.WithResult(new ConstantResultDeterminer(EncounterResult.Unknown));
-						}
-					}
+					var targets = new List<Agent> { mainTarget, mainGadget }.Where(x => x != null).ToList();
+					
+					return builder
+						.WithModes(new AgentHealthModeDeterminer(mainTarget, 42_000_000))
+						.WithTargets(targets)
+						.WithResult(new ConditionalResultDeterminer(
+							(canUseReward, new RewardDeterminer(525)),
+							(canUseTargets, new AllCombinedResultDeterminer(
+								new TargetableDeterminer(attackTarget, true, false),
+								// If the log continues recording for longer than usual, it will record the attack target going untargetable.
+								// However, at the same time it will also record the Shackled Prisoner having their health reset.
+								// This health reset cannot happen in a successful log as there is no Shackled Prisoner at that point.
+								new TransformResultDeterminer(
+									new AgentHealthResetDeterminer(prisoner),
+									result => result == EncounterResult.Success ? EncounterResult.Failure : EncounterResult.Success
+								)
+							)),
+							(true, new ConstantResultDeterminer(EncounterResult.Unknown))
+						))
+						.WithHealth(new ConditionalHealthDeterminer(
+							// The health of the Deimos gadget on the upper platform is set to 10% only after
+							// the NPC used in the first part of the fight reaches 10% of its health.
 
-					return builder.WithModes(new AgentHealthModeDeterminer(mainTarget, 42_000_000))
-						.Build();
+							// If there has already been an attempt in this instance before, the gadget
+							// retains its health from the previous attempt until the last phase is reached again.
+							(canUseTargets, new SequentialHealthDeterminer(mainTarget, mainGadget)),
+							(true, new MaxMinHealthDeterminer())
+						)).Build();
 				}
 				// Raids - Wing 5
 				case Encounter.SoullessHorror:
