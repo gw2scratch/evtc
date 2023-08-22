@@ -90,7 +90,7 @@ namespace GW2Scratch.EVTCAnalytics.Events
 	{
 		public int DurationApplied { get; }
 		public uint DurationOfRemovedStack { get; }
-		public uint BuffInstanceId { get; }
+		public uint StackId { get; }
 		public bool IsStackActive { get; }
 
 		public BuffApplyEvent(long time, Agent agent, Skill buff, Agent sourceAgent, int durationApplied,
@@ -98,7 +98,7 @@ namespace GW2Scratch.EVTCAnalytics.Events
 		{
 			DurationApplied = durationApplied;
 			DurationOfRemovedStack = durationOfRemovedStack;
-			BuffInstanceId = instanceId;
+			StackId = instanceId;
 			IsStackActive = isStackActive;
 		}
 	}
@@ -110,7 +110,7 @@ namespace GW2Scratch.EVTCAnalytics.Events
 	{
 		public int DurationChange { get; }
 		public uint NewDuration { get; }
-		public uint BuffInstanceId { get; }
+		public uint StackId { get; }
 		public bool IsStackActive { get; }
 
 		public BuffExtensionEvent(long time, Agent agent, Skill buff, Agent sourceAgent, int durationChange,
@@ -118,7 +118,7 @@ namespace GW2Scratch.EVTCAnalytics.Events
 		{
 			DurationChange = durationChange;
 			NewDuration = newDuration;
-			BuffInstanceId = instanceId;
+			StackId = instanceId;
 			IsStackActive = isStackActive;
 		}
 	}
