@@ -172,7 +172,9 @@ namespace GW2Scratch.EVTCAnalytics.Events
 	public class InitialBuffEvent : BuffApplyEvent
 	{
 		public InitialBuffEvent(long time, Agent agent, Skill buff, Agent sourceAgent, int durationApplied,
-			uint durationOfRemovedStack, uint instanceId) : base(time, agent, buff, sourceAgent, durationApplied, durationOfRemovedStack, instanceId) {
+			uint durationOfRemovedStack, uint instanceId, bool isActive) 
+			: base(time, agent, buff, sourceAgent, durationApplied, durationOfRemovedStack, instanceId, isActive)
+		{
 			
 		}
 	}

@@ -19,6 +19,7 @@ This is the full changelog of the arcdps Log Manager.
 #### EVTC Inspector notes
 - Fixed buff extension events not being distinguished from normal buff applies
 - Added buff instance ids to buff applies / extends
+- Added "is stack active" to buff applies / extends
 
 ## Log Manager v1.9
 #### New features
