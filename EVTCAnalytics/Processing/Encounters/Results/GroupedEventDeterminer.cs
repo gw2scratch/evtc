@@ -42,12 +42,12 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 			
 			foreach (var e in events)
 			{
-				if (startTime == null && e ! is UnknownEvent)
+				if (startTime == null && e is not UnknownEvent)
 				{
 					startTime = e.Time;
 				}
 				
-				var isEligibleTime = startTime != null && e.Time - startTime >= minTimeSinceStart;
+				bool isEligibleTime = startTime != null && e.Time - startTime >= minTimeSinceStart;
 
 				if (e is T current && eventCounted(current) && isEligibleTime)
 				{
