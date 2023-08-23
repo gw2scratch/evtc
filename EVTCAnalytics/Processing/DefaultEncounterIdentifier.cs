@@ -103,7 +103,10 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					return GetDefaultBuilder(encounter, mainTarget).Build();
 				// Raids - Wing 3
 				case Encounter.Escort:
-					return GetDefaultBuilder(encounter, new Agent[0]).Build();
+				{
+					var mcleod = GetTargetBySpeciesId(agents, SpeciesIds.McLeod);
+					return GetDefaultBuilder(encounter, mcleod).Build();
+				}
 				case Encounter.KeepConstruct:
 					return GetDefaultBuilder(encounter, mainTarget)
 						.WithModes(new SkillPresentModeDeterminer(34958))
@@ -697,6 +700,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					case SpeciesIds.MatthiasGabrel:
 						return Encounter.Matthias;
 					case SpeciesIds.MushroomKing:
+					case SpeciesIds.McLeod:
 						return Encounter.Escort;
 					case SpeciesIds.KeepConstruct:
 						return Encounter.KeepConstruct;

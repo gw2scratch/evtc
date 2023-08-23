@@ -159,6 +159,10 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Updates
 			                     && log.Encounter == Encounter.Other
 			                     && log.MapId == MapIds.TempleOfFebe,
 				"Add support for Temple of Febe"),
+			new LogUpdate(log => log.ParsingVersion < new Version(1, 10, 0, 3)
+			                     && log.Encounter == Encounter.Other
+			                     && log.MapId == MapIds.RaidWing3,
+				"Add support for Escort"),
 			// When adding a new update, you need to increase the revision (last value) of the version in the .csproj file
 			// unless the version changes more significantly, in that case it can be reset to 0.
 		};

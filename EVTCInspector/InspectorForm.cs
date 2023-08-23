@@ -191,6 +191,7 @@ namespace GW2Scratch.EVTCInspector
 					var parseTime = sw.Elapsed;
 
 					statusStringBuilder.AppendLine($"Parsed in {parseTime}");
+					statusStringBuilder.AppendLine($"Boss ID: {parsedLog.ParsedBossData.ID}");
 
 					Application.Instance.Invoke(() =>
 					{

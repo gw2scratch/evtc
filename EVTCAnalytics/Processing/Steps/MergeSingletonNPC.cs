@@ -146,6 +146,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Steps
 
 			resultingAgent.FirstAwareTime = agentsToMerge.Min(x => x.FirstAwareTime);
 			resultingAgent.LastAwareTime = agentsToMerge.Max(x => x.LastAwareTime);
+			
+			state.Agents.RemoveAll(x => agentsToMerge.Contains(x) && x != resultingAgent);
 		}
 	}
 }
