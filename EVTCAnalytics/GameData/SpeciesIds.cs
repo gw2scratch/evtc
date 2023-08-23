@@ -139,6 +139,10 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		public const int PrototypeArseniteChallengeMode = 25416;
 		public const int PrototypeIndigoChallengeMode = 25423;
 		
+		// Strike Missions - Secrets of the Obscure
+		public const int Dagda = 25705;
+		public const int Cerus = 25989;
+		
 		// Story
 		public const int HeartsAndMindsMordremoth = 15884;
 	}

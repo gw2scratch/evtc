@@ -663,6 +663,14 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						.WithModes(new ConstantModeDeterminer(mode))
 						.Build();
 				}
+				case Encounter.CosmicObservatory:
+				{
+					return GetDefaultBuilder(encounter, mainTarget).Build();
+				}
+				case Encounter.TempleOfFebe:
+				{
+					return GetDefaultBuilder(encounter, mainTarget).Build();
+				}
 				default:
 					return GetDefaultBuilder(encounter, mainTarget, mergeMainTarget: false).Build();
 			}
@@ -860,6 +868,10 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					case SpeciesIds.PrototypeArseniteChallengeMode:
 					case SpeciesIds.PrototypeIndigoChallengeMode:
 						return Encounter.OldLionsCourt;
+					case SpeciesIds.Dagda:
+						return Encounter.CosmicObservatory;
+					case SpeciesIds.Cerus:
+						return Encounter.TempleOfFebe;
 				}
 			}
 			else if (mainTarget is Gadget gadgetBoss)
