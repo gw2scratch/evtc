@@ -92,6 +92,19 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Steps
 						damageEvent.Defender = resultingAgent;
 					}
 				}
+				
+				if (ev is EffectStartEvent effectStartEvent)
+				{
+					if (agentsToMerge.Contains(effectStartEvent.EffectOwner))
+					{
+						effectStartEvent.EffectOwner = resultingAgent;
+					}
+					
+					if (agentsToMerge.Contains(effectStartEvent.AgentTarget))
+					{
+						effectStartEvent.AgentTarget = resultingAgent;
+					}
+				}
 			}
 
 			foreach (var agent in state.Agents)
