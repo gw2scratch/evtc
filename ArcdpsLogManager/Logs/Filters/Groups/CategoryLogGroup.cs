@@ -22,6 +22,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters.Groups
 			{EncounterCategory.RaidWing7, "The Key of Ahdashim (W7)"},
 			{EncounterCategory.StrikeMissionIcebroodSaga, "Icebrood Saga"},
 			{EncounterCategory.StrikeMissionEndOfDragons, "End of Dragons"},
+			{EncounterCategory.StrikeMissionSecretsOfTheObscure, "Secrets of the Obscure"},
 			{EncounterCategory.StrikeMissionFestival, "Festivals"},
 			{EncounterCategory.Fractal, "Fractals of the Mists"},
 			{EncounterCategory.SpecialForcesTrainingArea, "Special Forces Training Area"},

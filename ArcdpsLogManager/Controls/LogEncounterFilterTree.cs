@@ -250,6 +250,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				EncounterCategory.Fractal => imageProvider.GetTinyFractalsIcon(),
 				EncounterCategory.StrikeMissionIcebroodSaga => imageProvider.GetTinyIcebroodSagaIcon(),
 				EncounterCategory.StrikeMissionEndOfDragons => imageProvider.GetTinyEndOfDragonsIcon(),
+				EncounterCategory.StrikeMissionSecretsOfTheObscure => imageProvider.GetTinySecretsOfTheObscureIcon(),
 				EncounterCategory.StrikeMissionFestival => imageProvider.GetTinyFestivalIcon(),
 				EncounterCategory.SpecialForcesTrainingArea => imageProvider.GetTinyTrainingAreaIcon(),
 				EncounterCategory.RaidWing1 => imageProvider.GetRaidWingIcon(),
