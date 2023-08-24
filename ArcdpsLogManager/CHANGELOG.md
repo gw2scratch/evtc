@@ -7,6 +7,7 @@ This is the full changelog of the arcdps Log Manager.
 #### New features
 - Added support for Secrets of the Obscure strike missions
 - Added support for Escort
+- Added total duration and success/fail counts to the multiple log selection panel
 - Added a button to set the dps.report user token in the settings
 - Added max parallel threads setting to the *Game data gathering* tab (View -> Debug Data must be enabled to see this tab).
 
