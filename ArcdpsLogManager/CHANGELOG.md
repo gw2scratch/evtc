@@ -12,10 +12,13 @@ This is the full changelog of the arcdps Log Manager.
 - Added max parallel threads setting to the *Game data gathering* tab (View -> Debug Data must be enabled to see this tab).
 
 #### Performance improvements
-- Improved log processing performance by ~25% for 10man logs, even more in WvW logs.
+- Improved log processing performance ~1.25x for 10man logs, even more in WvW logs.
+- Also improved log processing performance by further ~2.60x for all logs (~35% of original time).
+- Yes, that is about 3.25x speedup overall.
 
 #### Fixes
 - Fixed Harvest Temple success detection.
+- Slightly improved Bandit Trio success detection in cases when the recording player leaves the fort.
 - Fixed logs with Emboldened appearing mid-fight failing to be processed.
 - Fixed log detail pane not appearing for selected logs processed with Log Manager versions 1.3 and older.
 - Fixed a stray debug data section appearing when multiple logs were selected even if debug data wasn't enabled
