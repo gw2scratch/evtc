@@ -92,6 +92,19 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Steps
 						damageEvent.Defender = resultingAgent;
 					}
 				}
+				
+				if (ev is EffectStartEvent effectStartEvent)
+				{
+					if (agentsToMerge.Contains(effectStartEvent.EffectOwner))
+					{
+						effectStartEvent.EffectOwner = resultingAgent;
+					}
+					
+					if (agentsToMerge.Contains(effectStartEvent.AgentTarget))
+					{
+						effectStartEvent.AgentTarget = resultingAgent;
+					}
+				}
 			}
 
 			foreach (var agent in state.Agents)
@@ -133,6 +146,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Steps
 
 			resultingAgent.FirstAwareTime = agentsToMerge.Min(x => x.FirstAwareTime);
 			resultingAgent.LastAwareTime = agentsToMerge.Max(x => x.LastAwareTime);
+			
+			state.Agents.RemoveAll(x => agentsToMerge.Contains(x) && x != resultingAgent);
 		}
 	}
 }

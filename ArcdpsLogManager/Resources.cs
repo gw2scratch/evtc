@@ -78,6 +78,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		public static Image GetTinyIconFestival() => GetImage("ArenaNet.festivals_32px.png");
 		public static Image GetTinyIconIcebroodSaga() => GetImage("ArenaNet.icebrood_saga_32px.png");
 		public static Image GetTinyIconEndOfDragons() => GetImage("ArenaNet.end_of_dragons_32px.png");
+		public static Image GetTinyIconSecretsOfTheObscure() => GetImage("ArenaNet.secrets_of_the_obscure_32px.png");
 		public static Image GetTinyIconInstance() => GetImage("ArenaNet.storyline_32px.png");
 
 		// FRACTAL INSTABILITIES

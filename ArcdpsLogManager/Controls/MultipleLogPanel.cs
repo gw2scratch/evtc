@@ -10,6 +10,7 @@ using GW2Scratch.ArcdpsLogManager.Logs;
 using GW2Scratch.ArcdpsLogManager.Logs.Naming;
 using GW2Scratch.ArcdpsLogManager.Logs.Tagging;
 using GW2Scratch.ArcdpsLogManager.Processing;
+using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
 using Button = Eto.Forms.Button;
 using Label = Eto.Forms.Label;
 
@@ -22,6 +23,9 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 		private ImageProvider imageProvider;
 
 		private readonly Label countLabel = new Label {Font = Fonts.Sans(12)};
+		private readonly Label totalDurationLabel = new Label();
+		private readonly Label successCountLabel = new Label();
+		private readonly Label failureCountLabel = new Label();
 		private readonly Label dpsReportNotUploadedLabel = new Label();
 		private readonly Label dpsReportUploadingLabel = new Label();
 		private readonly Label dpsReportUploadedLabel = new Label();
@@ -53,6 +57,10 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				Visible = true;
 
 				countLabel.Text = $"{logData.Length} logs selected";
+				var totalDuration = logData.Where(x => x.ParsingStatus == ParsingStatus.Parsed).Aggregate(TimeSpan.Zero, (x, y) => x + y.EncounterDuration);
+				totalDurationLabel.Text = FormatTimeSpan(totalDuration);
+				successCountLabel.Text = logData.Count(x => x.ParsingStatus == ParsingStatus.Parsed && x.EncounterResult == EncounterResult.Success).ToString();
+				failureCountLabel.Text = logData.Count(x => x.ParsingStatus == ParsingStatus.Parsed && x.EncounterResult == EncounterResult.Failure).ToString();
 
 				UpdateDpsReportUploadStatus();
 
@@ -214,6 +222,13 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 					Add(countLabel);
 				}
 				EndVertical();
+				BeginGroup("Statistics", new Padding(5), new Size(5, 5));
+				{
+					AddRow("Success logs: ", successCountLabel);
+					AddRow("Failure logs: ", failureCountLabel);
+					AddRow("Total duration: ", totalDurationLabel);
+				}
+				EndGroup();
 				debugSection = BeginGroup("Debug data", new Padding(5));
 				{
 					Add(reparseButton);
@@ -297,6 +312,17 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			uploadProcessor.Processed += OnUploadProcessorUpdate;
 			uploadProcessor.Unscheduled += OnUploadProcessorUpdate;
 			uploadProcessor.Scheduled += OnUploadProcessorUpdate;
+		}
+		
+		private string FormatTimeSpan(TimeSpan time)
+		{
+			var str = $@"{time:hh\h\ mm\m\ ss\s}";
+			if (time.Days > 0)
+			{
+				str = $@"{time:%d\d} " + str;
+			}
+
+			return str;
 		}
 
 		private void OnUploadProcessorUpdate(object sender, EventArgs e)

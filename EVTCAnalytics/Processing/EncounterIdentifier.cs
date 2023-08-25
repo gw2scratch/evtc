@@ -34,6 +34,7 @@ public class EncounterIdentifier : IEncounterIdentifier
 				case SpeciesIds.MatthiasGabrel:
 					return Encounter.Matthias;
 				case SpeciesIds.MushroomKing:
+				case SpeciesIds.McLeod:
 					return Encounter.Escort;
 				case SpeciesIds.KeepConstruct:
 					return Encounter.KeepConstruct;
@@ -205,6 +206,10 @@ public class EncounterIdentifier : IEncounterIdentifier
 				case SpeciesIds.PrototypeArseniteChallengeMode:
 				case SpeciesIds.PrototypeIndigoChallengeMode:
 					return Encounter.OldLionsCourt;
+				case SpeciesIds.Dagda:
+					return Encounter.CosmicObservatory;
+				case SpeciesIds.Cerus:
+					return Encounter.TempleOfFebe;
 				// Important: when adding a new encounter, make sure you also add it to the IdentifyPotentialEncounters method.
 			}
 		}
@@ -248,6 +253,7 @@ public class EncounterIdentifier : IEncounterIdentifier
 			case SpeciesIds.MatthiasGabrel:
 				return new[] { Encounter.Matthias };
 			case SpeciesIds.MushroomKing:
+			case SpeciesIds.McLeod:
 				return new[] { Encounter.Escort };
 			case SpeciesIds.KeepConstruct:
 				return new[] { Encounter.KeepConstruct };
@@ -351,6 +357,10 @@ public class EncounterIdentifier : IEncounterIdentifier
 			case SpeciesIds.PrototypeArseniteChallengeMode:
 			case SpeciesIds.PrototypeIndigoChallengeMode:
 				return new[] { Encounter.OldLionsCourt };
+			case SpeciesIds.Dagda:
+				return new[] { Encounter.CosmicObservatory };
+			case SpeciesIds.Cerus:
+				return new[] { Encounter.TempleOfFebe };
 			case GadgetIds.ConjuredAmalgamate:
 				return new[] { Encounter.ConjuredAmalgamate };
 			case GadgetIds.TheDragonvoidFinal:

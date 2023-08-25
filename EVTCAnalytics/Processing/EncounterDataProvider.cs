@@ -94,7 +94,10 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					return GetDefaultBuilder(encounter, mainTarget).Build();
 				// Raids - Wing 3
 				case Encounter.Escort:
-					return GetDefaultBuilder(encounter, new Agent[0]).Build();
+				{
+					var mcleod = GetTargetBySpeciesId(agents, SpeciesIds.McLeod);
+					return GetDefaultBuilder(encounter, mcleod).Build();
+				}
 				case Encounter.KeepConstruct:
 					return GetDefaultBuilder(encounter, mainTarget)
 						.WithModes(new SkillPresentModeDeterminer(34958))
@@ -599,6 +602,14 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						.WithResult(new AgentBuffGainedDeterminer(mainTarget, SkillIds.Determined))
 						.WithModes(new ConstantModeDeterminer(mode))
 						.Build();
+				}
+				case Encounter.CosmicObservatory:
+				{
+					return GetDefaultBuilder(encounter, mainTarget).Build();
+				}
+				case Encounter.TempleOfFebe:
+				{
+					return GetDefaultBuilder(encounter, mainTarget).Build();
 				}
 				default:
 					return GetDefaultBuilder(encounter, mainTarget, mergeMainTarget: false).Build();

@@ -69,6 +69,8 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 				{Encounter.KainengOverlook, EncounterCategory.StrikeMissionEndOfDragons},
 				{Encounter.HarvestTemple, EncounterCategory.StrikeMissionEndOfDragons},
 				{Encounter.OldLionsCourt, EncounterCategory.StrikeMissionEndOfDragons},
+				{Encounter.CosmicObservatory, EncounterCategory.StrikeMissionSecretsOfTheObscure},
+				{Encounter.TempleOfFebe, EncounterCategory.StrikeMissionSecretsOfTheObscure},
 				{Encounter.Map, EncounterCategory.Map},
 			};
 
@@ -89,6 +91,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 			{
 				EncounterCategory.StrikeMissionIcebroodSaga,
 				EncounterCategory.StrikeMissionEndOfDragons,
+				EncounterCategory.StrikeMissionSecretsOfTheObscure,
 				EncounterCategory.StrikeMissionFestival,
 			};
 

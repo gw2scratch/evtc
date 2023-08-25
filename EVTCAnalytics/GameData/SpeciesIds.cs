@@ -34,6 +34,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		// Wing 3
 		// Escort
 		public const int MushroomKing = 16255;
+		public const int McLeod = 16253;
 		// Keep Construct
 		public const int KeepConstruct = 16235;
 		// Twisted Castle
@@ -138,6 +139,10 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		public const int PrototypeVermillionChallengeMode = 25414;
 		public const int PrototypeArseniteChallengeMode = 25416;
 		public const int PrototypeIndigoChallengeMode = 25423;
+		
+		// Strike Missions - Secrets of the Obscure
+		public const int Dagda = 25705;
+		public const int Cerus = 25989;
 		
 		// Story
 		public const int HeartsAndMindsMordremoth = 15884;

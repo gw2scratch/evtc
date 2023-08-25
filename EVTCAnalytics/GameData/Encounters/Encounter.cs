@@ -114,7 +114,13 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 		XunlaiJadeJunkyard = 41002,
 		KainengOverlook = 41003,
 		HarvestTemple = 41004,
+		
+		// Strike Missions - End of Dragons - Living World Season 1
 		OldLionsCourt = 42001,
+			
+		// Strike Missions - Secrets of the Obscure
+		CosmicObservatory = 43001,
+		TempleOfFebe = 43002,
 		
 		// Story
 		Mordremoth = 50001,

@@ -133,6 +133,7 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(BuffApplyEvent)) return Array.Empty<StateChange>();
 		if (eventType == typeof(ActiveBuffStackEvent)) return new[] { StateChange.StackActive };
 		if (eventType == typeof(ResetBuffStackEvent)) return new[] { StateChange.StackReset };
+		if (eventType == typeof(BuffExtensionEvent)) return Array.Empty<StateChange>();
 		
 		if (eventType == typeof(DamageEvent)) return Array.Empty<StateChange>();
 		if (eventType == typeof(PhysicalDamageEvent)) return Array.Empty<StateChange>();

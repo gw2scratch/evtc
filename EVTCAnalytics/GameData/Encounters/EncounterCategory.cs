@@ -12,6 +12,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 		Fractal = 3,
 		StrikeMissionIcebroodSaga = 4,
 		StrikeMissionEndOfDragons = 5,
+		StrikeMissionSecretsOfTheObscure = 6,
 		StrikeMissionFestival = 9,
 		SpecialForcesTrainingArea = 100,
 		RaidWing1 = 101,

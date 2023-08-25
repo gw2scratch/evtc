@@ -400,7 +400,7 @@ namespace GW2Scratch.EVTCAnalytics.Events
 		/// <summary>
 		/// The owner of this effect.
 		/// </summary>
-		public Agent EffectOwner { get; }
+		public Agent EffectOwner { get; internal set; }
 
 		/// <summary>
 		/// The Effect created.
@@ -411,7 +411,7 @@ namespace GW2Scratch.EVTCAnalytics.Events
 		/// The <see cref="Agent"/> this effect is anchored to if anchored. May be <see langword="null" />.
 		/// </summary>
 		/// <seealso cref="Position"/>
-		public Agent AgentTarget { get; }
+		public Agent AgentTarget { get; internal set; }
 
 		/// <summary>
 		/// Position (x, y, z) of the effect when not anchored to a target. May be <see langword="null" />.

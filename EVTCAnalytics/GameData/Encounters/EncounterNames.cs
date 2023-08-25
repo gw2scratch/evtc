@@ -67,6 +67,8 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 			{Encounter.KainengOverlook, "Kaineng Overlook"},
 			{Encounter.HarvestTemple, "Harvest Temple"},
 			{Encounter.OldLionsCourt, "Old Lion's Court"},
+			{Encounter.CosmicObservatory, "Cosmic Observatory"},
+			{Encounter.TempleOfFebe, "Temple of Febe"},
 		};
 
 		/// <summary>
