@@ -241,7 +241,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				}
 				EndHorizontal();
 
-				BeginGroup("Upload to dps.report (Elite Insights)", spacing: new Size(0, 5), yscale:true);
+				BeginGroup("Upload to dps.report (Elite Insights)", padding: new Padding(5), spacing: new Size(0, 5), yscale: true);
 				{
 					BeginVertical(spacing: new Size(5, 5));
 					{
@@ -263,7 +263,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 					
 					if (!readOnly)
 					{
-						BeginVertical();
+						BeginVertical(spacing: new Size(5, 5));
 						{
 							BeginHorizontal();
 							{
