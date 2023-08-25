@@ -631,7 +631,7 @@ namespace GW2Scratch.EVTCAnalytics
 			if (evtcFilename.EndsWith(".zip", StringComparison.OrdinalIgnoreCase) ||
 			    evtcFilename.EndsWith(".zevtc", StringComparison.OrdinalIgnoreCase))
 			{
-				using var fileStream = new FileStream(evtcFilename, FileMode.Open, FileAccess.Read, FileShare.Read);
+				using var fileStream = new FileStream(evtcFilename, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize: 65536);
 				using var arch = new ZipArchive(fileStream, ZipArchiveMode.Read);
 				if (arch.Entries.Count == 0)
 				{
