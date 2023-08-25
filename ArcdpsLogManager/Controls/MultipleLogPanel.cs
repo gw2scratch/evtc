@@ -23,6 +23,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 		private ImageProvider imageProvider;
 
 		private readonly Label countLabel = new Label {Font = Fonts.Sans(12)};
+		private readonly Label parseTimeLabel = new Label();
 		private readonly Label totalDurationLabel = new Label();
 		private readonly Label successCountLabel = new Label();
 		private readonly Label failureCountLabel = new Label();
@@ -61,6 +62,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				totalDurationLabel.Text = FormatTimeSpan(totalDuration);
 				successCountLabel.Text = logData.Count(x => x.ParsingStatus == ParsingStatus.Parsed && x.EncounterResult == EncounterResult.Success).ToString();
 				failureCountLabel.Text = logData.Count(x => x.ParsingStatus == ParsingStatus.Parsed && x.EncounterResult == EncounterResult.Failure).ToString();
+				parseTimeLabel.Text = $"{logData.Select(x => x.ParseMilliseconds).Sum()} ms";
 
 				UpdateDpsReportUploadStatus();
 
@@ -229,8 +231,9 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 					AddRow("Total duration: ", totalDurationLabel);
 				}
 				EndGroup();
-				debugSection = BeginGroup("Debug data", new Padding(5));
+				debugSection = BeginGroup("Debug data", new Padding(5), new Size(5, 5));
 				{
+					AddRow("Time spent processing", parseTimeLabel);
 					Add(reparseButton);
 				}
 				EndGroup();
