@@ -25,7 +25,7 @@ public class CombatItemFiltersTests
 			}, $"Failed to get state changes for event type {type}"
 		);
 	}
-	
+
 	[Test]
 	[TestCaseSource(nameof(GetStateChanges))]
 	public void StateChangeIsAlwaysKeptIsImplemented(StateChange stateChange)
@@ -37,15 +37,31 @@ public class CombatItemFiltersTests
 		);
 	}
 
+	[Test]
+	[TestCaseSource(nameof(GetPhysicalResults))]
+	public void GetRawResultsIsImplemented(PhysicalDamageEvent.Result result)
+	{
+		Assert.DoesNotThrow(() =>
+			{
+				CombatItemFilters.GetRawResultsForResult(result);
+			}
+		);
+	}
+
 	public static IEnumerable<Type> GetEventTypes()
 	{
 		var assembly = Assembly.GetAssembly(typeof(Event))!;
 		var types = assembly.GetTypes().Where(type => type.IsSubclassOf(typeof(Event)) || type == typeof(Event));
 		return types;
 	}
-	
+
 	public static IEnumerable<StateChange> GetStateChanges()
 	{
 		return Enum.GetValues<StateChange>();
+	}
+
+	public static IEnumerable<PhysicalDamageEvent.Result> GetPhysicalResults()
+	{
+		return Enum.GetValues<PhysicalDamageEvent.Result>();
 	}
 }

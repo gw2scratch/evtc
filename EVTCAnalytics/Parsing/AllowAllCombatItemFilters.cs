@@ -17,4 +17,9 @@ public class AllowAllCombatItemFilters : ICombatItemFilters {
 	{
 		return true;
 	}
+
+	public bool IsPhysicalDamageResultRequired(byte result)
+	{
+		return true;
+	}
 }

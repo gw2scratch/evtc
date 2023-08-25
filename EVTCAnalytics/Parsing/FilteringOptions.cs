@@ -44,7 +44,12 @@ public class FilteringOptions
 			encounter.ResultDeterminer.RequiredBuffSkillIds, encounter.HealthDeterminer.RequiredBuffSkillIds, encounter.ModeDeterminer.RequiredBuffSkillIds,
 		}).SelectMany(x => x).Distinct().ToList();
 		
-		var filters = new CombatItemFilters(requiredEvents, requiredBuffIds);
+		var requiredPhysicalResults = encounterDatas.SelectMany(encounter => new[]
+		{
+			encounter.ResultDeterminer.RequiredPhysicalDamageEventResults, encounter.HealthDeterminer.RequiredPhysicalDamageEventResults, encounter.ModeDeterminer.RequiredPhysicalDamageEventResults,
+		}).SelectMany(x => x).Distinct().ToList();
+		
+		var filters = new CombatItemFilters(requiredEvents, requiredBuffIds, requiredPhysicalResults);
 
 		return filters;
 	}

@@ -12,18 +12,25 @@ public class CombatItemFilters : ICombatItemFilters
 {
 	private IReadOnlyList<Type> RequiredEventTypes { get; }
 	private bool[] StateChangeFilter { get; }
+	private bool[] PhysicalDamageResultFilter { get; }
 	private IIdFilter BuffIdFilter { get; }
 	
-	public CombatItemFilters(IReadOnlyList<Type> requiredEventTypes, IReadOnlyList<uint> requiredBuffIds)
+	public CombatItemFilters(IReadOnlyList<Type> requiredEventTypes, IReadOnlyList<uint> requiredBuffIds, IReadOnlyList<PhysicalDamageEvent.Result> requiredResults)
 	{
 		RequiredEventTypes = requiredEventTypes;
 		StateChangeFilter = BuildStateChangeFilter(RequiredEventTypes);
+		PhysicalDamageResultFilter = BuildPhysicalDamageResultFilter(requiredResults);
 		BuffIdFilter = BuildBuffIdFilter(requiredBuffIds);
 	}
-	
+
 	public bool IsBuffEventRequired(uint skillId)
 	{
 		return BuffIdFilter.IsKept(skillId);
+	}
+
+	public bool IsPhysicalDamageResultRequired(byte result)
+	{
+		return PhysicalDamageResultFilter[result];
 	}
 
 	public bool IsStateChangeRequired(StateChange stateChange)
@@ -70,6 +77,36 @@ public class CombatItemFilters : ICombatItemFilters
 
 		return stateChanges;
 	}
+	
+	private static bool[] BuildPhysicalDamageResultFilter(IEnumerable<PhysicalDamageEvent.Result> requiredResults)
+	{
+		var results = new bool[256];
+		foreach (var result in requiredResults)
+		{
+			foreach (var rawResult in GetRawResultsForResult(result))
+			{
+				results[(int) rawResult] = true;
+			}
+		}
+
+		return results;
+	}
+
+	public static IEnumerable<Result> GetRawResultsForResult(PhysicalDamageEvent.Result result)
+	{
+		return result switch
+		{
+			PhysicalDamageEvent.Result.Normal => new[] { Result.Normal },
+			PhysicalDamageEvent.Result.Critical => new[] { Result.Critical },
+			PhysicalDamageEvent.Result.Glance => new[] { Result.Glance },
+			PhysicalDamageEvent.Result.Interrupt => new[] { Result.Interrupt },
+			PhysicalDamageEvent.Result.DowningBlow => new[] { Result.Downed },
+			PhysicalDamageEvent.Result.KillingBlow => new[] { Result.KillingBlow },
+			PhysicalDamageEvent.Result.Ignored => new[] { Result.Block, Result.Evade, Result.Absorb, Result.Blind },
+			_ => throw new ArgumentOutOfRangeException(nameof(result), result, null)
+		};
+	}
+
 
 	public static IEnumerable<StateChange> GetStateChangesForEventType(Type eventType)
 	{

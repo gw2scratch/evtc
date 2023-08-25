@@ -182,6 +182,16 @@ namespace GW2Scratch.EVTCAnalytics
 						}
 					}
 					
+					if (stateChange == 0 && isActivation == (byte) Activation.None && buff == 0)
+					{
+						var result = reader.PeekByte(53);
+						if (!filters.IsPhysicalDamageResultRequired(result))
+						{
+							reader.Skip(64);
+							continue;
+						}
+					}
+					
 					ReadCombatItemRevision0(reader, out combatItem);
 					
 
@@ -227,6 +237,16 @@ namespace GW2Scratch.EVTCAnalytics
 					{
 						var skillId = BinaryPrimitives.ReadUInt32LittleEndian(reader.PeekRange(36, 4));
 						if (!filters.IsBuffEventRequired(skillId))
+						{
+							reader.Skip(64);
+							continue;
+						}
+					}
+
+					if (stateChange == 0 && isActivation == (byte) Activation.None && buff == 0)
+					{
+						var result = reader.PeekByte(50);
+						if (!filters.IsPhysicalDamageResultRequired(result))
 						{
 							reader.Skip(64);
 							continue;
