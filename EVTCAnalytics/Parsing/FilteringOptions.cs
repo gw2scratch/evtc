@@ -30,7 +30,7 @@ public class FilteringOptions
 	{
 		if (!PruneForEncounterData)
 		{
-			return new AllowAllCombatItemFilters();
+			return new KeepAllCombatItemFilters();
 		}
 		
 		var requiredEvents = encounterDatas.SelectMany(encounter => new[]

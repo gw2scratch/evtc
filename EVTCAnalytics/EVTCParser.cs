@@ -172,6 +172,15 @@ namespace GW2Scratch.EVTCAnalytics
 					var buffRemove = reader.PeekByte(55);
 					var buffDmg = reader.PeekRange(28, 4);
 
+					if (stateChange == 0 && isActivation != (byte) Activation.None)
+					{
+						if (!filters.IsSkillCastRequired())
+						{
+							reader.Skip(64);
+							continue;
+						}
+					}
+					
 					if (stateChange == 0 && isActivation == (byte) Activation.None && buff != 0)
 					{
 						if (buffRemove != (byte) BuffRemove.None || (buffDmg[0] == 0 && buffDmg[1] == 0 && buffDmg[2] == 0 && buffDmg[3] == 0))
@@ -245,6 +254,15 @@ namespace GW2Scratch.EVTCAnalytics
 					var isActivation = reader.PeekByte(51);
 					var buffRemove = reader.PeekByte(52);
 					var buffDmg = reader.PeekRange(28, 4);
+					
+					if (stateChange == 0 && isActivation != (byte) Activation.None)
+					{
+						if (!filters.IsSkillCastRequired())
+						{
+							reader.Skip(64);
+							continue;
+						}
+					}
 
 					if (stateChange == 0 && isActivation == (byte) Activation.None && buff != 0)
 					{

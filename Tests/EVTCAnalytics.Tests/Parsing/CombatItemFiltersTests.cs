@@ -48,6 +48,17 @@ public class CombatItemFiltersTests
 			}
 		);
 	}
+	
+	[Test]
+	[TestCaseSource(nameof(GetEventTypes))]
+	public void IsSkillCastIsHandled(Type type)
+	{
+		Assert.DoesNotThrow(() =>
+			{
+				CombatItemFilters.IsSkillCast(type);
+			}
+		);
+	}
 
 	[Test]
 	[TestCaseSource(nameof(GetStateChanges))]

@@ -15,6 +15,7 @@ public class CombatItemFilters : ICombatItemFilters
 	private bool[] PhysicalDamageResultFilter { get; }
 	private IIdFilter BuffIdFilter { get; }
 	private bool BuffDamageRequired { get; }
+	private bool SkillCastsRequired { get; }
 	
 	public CombatItemFilters(IReadOnlyList<Type> requiredEventTypes, IReadOnlyList<uint> requiredBuffIds, IReadOnlyList<PhysicalDamageEvent.Result> requiredResults)
 	{
@@ -23,6 +24,7 @@ public class CombatItemFilters : ICombatItemFilters
 		PhysicalDamageResultFilter = BuildPhysicalDamageResultFilter(requiredEventTypes, requiredResults);
 		BuffIdFilter = BuildBuffIdFilter(requiredBuffIds);
 		BuffDamageRequired = requiredEventTypes.Any(IsBuffDamage);
+		SkillCastsRequired = requiredEventTypes.Any(IsSkillCast);
 	}
 
 	public bool IsBuffEventRequired(uint skillId)
@@ -36,6 +38,7 @@ public class CombatItemFilters : ICombatItemFilters
 	}
 
 	public bool IsBuffDamageRequired() => BuffDamageRequired;
+	public bool IsSkillCastRequired() => SkillCastsRequired;
 
 	public bool IsStateChangeRequired(StateChange stateChange)
 	{
@@ -159,6 +162,26 @@ public class CombatItemFilters : ICombatItemFilters
 		isBuffDamage = isBuffDamage || IsDirectBuffDamage(eventType);
 
 		return isBuffDamage;
+	}
+	
+	public static bool IsSkillCast(Type eventType)
+	{
+		if (!(eventType.IsSubclassOf(typeof(Event)) || eventType == typeof(Event)))
+		{
+			throw new ArgumentException($"Type {eventType} is not an event type.");
+		}
+		
+		// If a type has children types, we also need to include their state changes.
+		var subclasses = Assembly.GetAssembly(eventType)!.GetTypes().Where(type => type.IsSubclassOf(eventType));
+		bool isSkillCast = false;
+		foreach (var subclass in subclasses)
+		{
+			isSkillCast = isSkillCast || IsSkillCast(subclass);
+		}
+
+		isSkillCast = isSkillCast || IsDirectSkillCast(eventType);
+
+		return isSkillCast;
 	}
 	
 	public static IEnumerable<Result> GetPhysicalResultsForEventType(Type eventType)
@@ -304,6 +327,70 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(EndSkillCastEvent)) return false;
 		if (eventType == typeof(StartSkillCastEvent)) return false;
 		if (eventType == typeof(ResetSkillCastEvent)) return false;
+
+		// The unknown event can come from anything
+		if (eventType == typeof(UnknownEvent)) return true;
+
+		throw new ArgumentException($"Event type {eventType} is not supported.");
+	}
+	
+	/// <summary>
+	/// Returns whether this type requires a skill cast combat item.
+	/// Requirements of subclasses of this type are not included.
+	/// </summary>
+	private static bool IsDirectSkillCast(Type eventType)
+	{
+		if (eventType == typeof(Event)) return false;
+
+		if (eventType == typeof(AgentEvent)) return false;
+		if (eventType == typeof(AgentEnterCombatEvent)) return false;
+		if (eventType == typeof(AgentExitCombatEvent)) return false;
+		if (eventType == typeof(AgentRevivedEvent)) return false;
+		if (eventType == typeof(AgentDownedEvent)) return false;
+		if (eventType == typeof(AgentDeadEvent)) return false;
+		if (eventType == typeof(AgentSpawnEvent)) return false;
+		if (eventType == typeof(AgentDespawnEvent)) return false;
+		if (eventType == typeof(AgentHealthUpdateEvent)) return false;
+		if (eventType == typeof(AgentWeaponSwapEvent)) return false;
+		if (eventType == typeof(AgentMaxHealthUpdateEvent)) return false;
+		if (eventType == typeof(AgentTagEvent)) return false;
+		if (eventType == typeof(InitialBuffEvent)) return false;
+		if (eventType == typeof(PositionChangeEvent)) return false;
+		if (eventType == typeof(VelocityChangeEvent)) return false;
+		if (eventType == typeof(FacingChangeEvent)) return false;
+		if (eventType == typeof(TeamChangeEvent)) return false;
+		if (eventType == typeof(TargetableChangeEvent)) return false;
+		if (eventType == typeof(DefianceBarHealthUpdateEvent)) return false;
+		if (eventType == typeof(BarrierUpdateEvent)) return false;
+		if (eventType == typeof(DefianceBarStateUpdateEvent)) return false;
+		if (eventType == typeof(EffectEvent)) return false;
+		if (eventType == typeof(EffectStartEvent)) return false;
+		if (eventType == typeof(EffectEndEvent)) return false;
+
+		if (eventType == typeof(BuffEvent)) return false;
+		if (eventType == typeof(BuffRemoveEvent)) return false;
+		if (eventType == typeof(AllStacksRemovedBuffEvent)) return false;
+		if (eventType == typeof(SingleStackRemovedBuffEvent)) return false;
+		if (eventType == typeof(ManualStackRemovedBuffEvent)) return false;
+		if (eventType == typeof(BuffApplyEvent)) return false;
+		if (eventType == typeof(ActiveBuffStackEvent)) return false;
+		if (eventType == typeof(ResetBuffStackEvent)) return false;
+		if (eventType == typeof(BuffExtensionEvent)) return false;
+		
+		if (eventType == typeof(DamageEvent)) return false;
+		if (eventType == typeof(PhysicalDamageEvent)) return false;
+		if (eventType == typeof(IgnoredPhysicalDamageEvent)) return false;
+		if (eventType == typeof(IgnoredBuffDamageEvent)) return false;
+		if (eventType == typeof(BuffDamageEvent)) return false;
+		if (eventType == typeof(OffCycleBuffDamageEvent)) return false;
+		if (eventType == typeof(DefianceBarDamageEvent)) return false;
+		
+		if (eventType == typeof(RewardEvent)) return false;
+
+		if (eventType == typeof(SkillCastEvent)) return false;
+		if (eventType == typeof(EndSkillCastEvent)) return true;
+		if (eventType == typeof(StartSkillCastEvent)) return true;
+		if (eventType == typeof(ResetSkillCastEvent)) return true;
 
 		// The unknown event can come from anything
 		if (eventType == typeof(UnknownEvent)) return true;

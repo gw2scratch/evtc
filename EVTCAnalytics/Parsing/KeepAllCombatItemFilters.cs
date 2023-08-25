@@ -2,7 +2,7 @@ using GW2Scratch.EVTCAnalytics.Parsed.Enums;
 
 namespace GW2Scratch.EVTCAnalytics.Parsing;
 
-public class AllowAllCombatItemFilters : ICombatItemFilters {
+public class KeepAllCombatItemFilters : ICombatItemFilters {
 	public bool IsStateChangeRequired(StateChange stateChange)
 	{
 		return true;
@@ -24,6 +24,11 @@ public class AllowAllCombatItemFilters : ICombatItemFilters {
 	}
 
 	public bool IsBuffDamageRequired()
+	{
+		return true;
+	}
+
+	public bool IsSkillCastRequired()
 	{
 		return true;
 	}
