@@ -21,6 +21,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 
 		public abstract IReadOnlyList<Type> RequiredEventTypes { get; }
 		public abstract IReadOnlyList<uint> RequiredBuffSkillIds { get; }
+		public abstract IReadOnlyList<PhysicalDamageEvent.Result> RequiredPhysicalDamageEventResults { get; }
 
 		/// <summary>
 		/// Gets the result returned if an event is found.

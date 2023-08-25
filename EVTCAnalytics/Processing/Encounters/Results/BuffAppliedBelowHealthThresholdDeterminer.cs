@@ -31,6 +31,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 
 		public override IReadOnlyList<Type> RequiredEventTypes { get; } = new List<Type> { typeof(AgentHealthUpdateEvent), typeof(BuffApplyEvent) };
 		public override IReadOnlyList<uint> RequiredBuffSkillIds => new List<uint> { buffId };
+		public override IReadOnlyList<PhysicalDamageEvent.Result> RequiredPhysicalDamageEventResults { get; } = new List<PhysicalDamageEvent.Result>();
 
 		protected override Event GetEvent(IEnumerable<Event> events)
 		{

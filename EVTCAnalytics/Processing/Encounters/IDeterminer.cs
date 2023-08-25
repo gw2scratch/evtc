@@ -1,3 +1,4 @@
+using GW2Scratch.EVTCAnalytics.Events;
 using System;
 using System.Collections.Generic;
 
@@ -14,4 +15,9 @@ public interface IDeterminer
 	/// A list of all ids of skills whose buff events are required for this determiner to work.
 	/// </summary>
 	IReadOnlyList<uint> RequiredBuffSkillIds { get; }
+	
+	/// <summary>
+	/// A list of all physical damage event results that are needed.
+	/// </summary>
+	IReadOnlyList<PhysicalDamageEvent.Result> RequiredPhysicalDamageEventResults { get; }
 }

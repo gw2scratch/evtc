@@ -1,3 +1,4 @@
+using GW2Scratch.EVTCAnalytics.Events;
 using GW2Scratch.EVTCAnalytics.Model;
 using System;
 using System.Collections.Generic;
@@ -28,6 +29,7 @@ public class ConditionalHealthDeterminer : IHealthDeterminer
 
 	public IReadOnlyList<Type> RequiredEventTypes => determiners.SelectMany(x => x.Determiner.RequiredEventTypes).Distinct().ToList();
 	public IReadOnlyList<uint> RequiredBuffSkillIds => determiners.SelectMany(x => x.Determiner.RequiredBuffSkillIds).Distinct().ToList();
+	public IReadOnlyList<PhysicalDamageEvent.Result> RequiredPhysicalDamageEventResults => determiners.SelectMany(x => x.Determiner.RequiredPhysicalDamageEventResults).Distinct().ToList();
 
 	public float? GetMainEnemyHealthFraction(Log log)
 	{

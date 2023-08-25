@@ -218,7 +218,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					return GetDefaultBuilder(encounter, mainTarget)
 						// At the end of the event, 8 of the rifts become untargetable
 						.WithResult(new GroupedEventDeterminer<TargetableChangeEvent>(
-							e => e.IsTargetable == false, 8, 1000, null, 3000))
+							e => e.IsTargetable == false, 8, 1000, null, null, 3000))
 						.Build();
 				}
 				case Encounter.Eyes:
@@ -507,7 +507,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 								new SkillCastAfterBuffApplyDeterminer(x => x is Player, SkillIds.HarvestTempleLiftOff, SkillIds.Determined895)
 							))
 						))
-						.WithHealth(new AgentHealthDeterminer(null).RequiredEventTypes, new List<uint>(),
+						.WithHealth(new AgentHealthDeterminer(null).RequiredEventTypes, new List<uint>(), new List<PhysicalDamageEvent.Result>(),
 							log =>
 							{
 								const float healthPerPhase = 1.0f / 6.0f;

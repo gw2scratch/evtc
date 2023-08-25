@@ -29,6 +29,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health
 
 		public IReadOnlyList<Type> RequiredEventTypes { get; } = new List<Type> { typeof(AgentHealthUpdateEvent) };
 		public IReadOnlyList<uint> RequiredBuffSkillIds { get; } = new List<uint>();
+		public IReadOnlyList<PhysicalDamageEvent.Result> RequiredPhysicalDamageEventResults { get; } = new List<PhysicalDamageEvent.Result>();
 
 		public float? GetMainEnemyHealthFraction(Log log)
 		{

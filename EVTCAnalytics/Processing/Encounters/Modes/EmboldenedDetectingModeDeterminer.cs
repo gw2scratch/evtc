@@ -15,7 +15,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes
 	{
 		public IReadOnlyList<Type> RequiredEventTypes { get; } = new List<Type> { typeof(InitialBuffEvent) };
 		public IReadOnlyList<uint> RequiredBuffSkillIds => new List<uint> { SkillIds.Emboldened };
-		
+		public IReadOnlyList<PhysicalDamageEvent.Result> RequiredPhysicalDamageEventResults { get; } = new List<PhysicalDamageEvent.Result>();
+
 		public EncounterMode? GetMode(Log log)
 		{
 			// In case Emboldened does not appear in the log at all, we can fail quickly without

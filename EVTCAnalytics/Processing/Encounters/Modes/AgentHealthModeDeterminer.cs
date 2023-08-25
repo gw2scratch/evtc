@@ -30,6 +30,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes
 
 		public IReadOnlyList<Type> RequiredEventTypes { get; } = new List<Type> { typeof(AgentMaxHealthUpdateEvent) };
 		public IReadOnlyList<uint> RequiredBuffSkillIds => new List<uint>();
+		public IReadOnlyList<PhysicalDamageEvent.Result> RequiredPhysicalDamageEventResults { get; } = new List<PhysicalDamageEvent.Result>();
 
 		public EncounterMode? GetMode(Log log)
 		{

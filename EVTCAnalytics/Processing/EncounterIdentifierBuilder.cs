@@ -1,3 +1,4 @@
+using GW2Scratch.EVTCAnalytics.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -66,9 +67,14 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			return this;
 		}
 
-		public EncounterIdentifierBuilder WithHealth(IReadOnlyList<Type> requiredEventTypes, IReadOnlyList<uint> requiredBuffSkillIds, Func<Log, float?> determinerFunc)
+		public EncounterIdentifierBuilder WithHealth(
+			IReadOnlyList<Type> requiredEventTypes,
+			IReadOnlyList<uint> requiredBuffSkillIds,
+			IReadOnlyList<PhysicalDamageEvent.Result> requiredPhysicalDamageEventResults,
+			Func<Log, float?> determinerFunc
+		)
 		{
-			HealthDeterminer = new AdHocHealthDeterminer(determinerFunc, requiredEventTypes, requiredBuffSkillIds);
+			HealthDeterminer = new AdHocHealthDeterminer(determinerFunc, requiredEventTypes, requiredBuffSkillIds, requiredPhysicalDamageEventResults);
 			return this;
 		}
 

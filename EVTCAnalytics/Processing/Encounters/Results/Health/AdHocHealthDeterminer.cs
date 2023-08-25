@@ -16,12 +16,14 @@ public class AdHocHealthDeterminer : IHealthDeterminer
 	private readonly Func<Log, float?> func;
 	public IReadOnlyList<Type> RequiredEventTypes { get; }
 	public IReadOnlyList<uint> RequiredBuffSkillIds { get; }
+	public IReadOnlyList<PhysicalDamageEvent.Result> RequiredPhysicalDamageEventResults { get; }
 
-	public AdHocHealthDeterminer(Func<Log, float?> func, IReadOnlyList<Type> requiredEventTypes, IReadOnlyList<uint> requiredBuffSkillIds)
+	public AdHocHealthDeterminer(Func<Log, float?> func, IReadOnlyList<Type> requiredEventTypes, IReadOnlyList<uint> requiredBuffSkillIds, IReadOnlyList<PhysicalDamageEvent.Result> requiredPhysicalDamageEventResults)
 	{
 		this.func = func;
 		RequiredEventTypes = requiredEventTypes;
 		RequiredBuffSkillIds = requiredBuffSkillIds;
+		RequiredPhysicalDamageEventResults = requiredPhysicalDamageEventResults;
 	}
 
 	public float? GetMainEnemyHealthFraction(Log log)
