@@ -171,14 +171,27 @@ namespace GW2Scratch.EVTCAnalytics
 					var isActivation = reader.PeekByte(54);
 					var buffRemove = reader.PeekByte(55);
 					var buffDmg = reader.PeekRange(28, 4);
-					
-					if (stateChange == 0 && isActivation == (byte) Activation.None && buff != 0 && (buffRemove != (byte) BuffRemove.None || (buffDmg[0] == 0 && buffDmg[1] == 0 && buffDmg[2] == 0 && buffDmg[3] == 0)))
+
+					if (stateChange == 0 && isActivation == (byte) Activation.None && buff != 0)
 					{
-						var skillId = BinaryPrimitives.ReadUInt16LittleEndian(reader.PeekRange(34, 2));
-						if (!filters.IsBuffEventRequired(skillId))
+						if (buffRemove != (byte) BuffRemove.None || (buffDmg[0] == 0 && buffDmg[1] == 0 && buffDmg[2] == 0 && buffDmg[3] == 0))
 						{
-							reader.Skip(64);
-							continue;
+							// This is buff remove or a buff apply
+							var skillId = BinaryPrimitives.ReadUInt16LittleEndian(reader.PeekRange(34, 2));
+							if (!filters.IsBuffEventRequired(skillId))
+							{
+								reader.Skip(64);
+								continue;
+							}
+						} 
+						else // buffRemove == None && buffDmg != 0 are implied by previous condition
+						{
+							// This is buff damage
+							if (!filters.IsBuffDamageRequired())
+							{
+								reader.Skip(64);
+								continue;
+							}
 						}
 					}
 					
@@ -233,13 +246,26 @@ namespace GW2Scratch.EVTCAnalytics
 					var buffRemove = reader.PeekByte(52);
 					var buffDmg = reader.PeekRange(28, 4);
 
-					if (stateChange == 0 && isActivation == (byte) Activation.None && buff != 0 && (buffRemove != (byte) BuffRemove.None || (buffDmg[0] == 0 && buffDmg[1] == 0 && buffDmg[2] == 0 && buffDmg[3] == 0)))
+					if (stateChange == 0 && isActivation == (byte) Activation.None && buff != 0)
 					{
-						var skillId = BinaryPrimitives.ReadUInt32LittleEndian(reader.PeekRange(36, 4));
-						if (!filters.IsBuffEventRequired(skillId))
+						if (buffRemove != (byte) BuffRemove.None || (buffDmg[0] == 0 && buffDmg[1] == 0 && buffDmg[2] == 0 && buffDmg[3] == 0))
 						{
-							reader.Skip(64);
-							continue;
+							// This is buff remove or a buff apply
+							var skillId = BinaryPrimitives.ReadUInt16LittleEndian(reader.PeekRange(36, 2));
+							if (!filters.IsBuffEventRequired(skillId))
+							{
+								reader.Skip(64);
+								continue;
+							}
+						} 
+						else // buffRemove == None && buffDmg != 0 are implied by previous condition
+						{
+							// This is buff damage
+							if (!filters.IsBuffDamageRequired())
+							{
+								reader.Skip(64);
+								continue;
+							}
 						}
 					}
 

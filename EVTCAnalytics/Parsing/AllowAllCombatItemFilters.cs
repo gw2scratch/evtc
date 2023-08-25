@@ -22,4 +22,9 @@ public class AllowAllCombatItemFilters : ICombatItemFilters {
 	{
 		return true;
 	}
+
+	public bool IsBuffDamageRequired()
+	{
+		return true;
+	}
 }

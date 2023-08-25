@@ -16,13 +16,24 @@ public class CombatItemFiltersTests
 {
 	[Test]
 	[TestCaseSource(nameof(GetEventTypes))]
-	public void EventIsHandled(Type type)
+	public void StateChangesForEventTypeAreHandled(Type type)
 	{
 		Assert.DoesNotThrow(() =>
 			{
 				var changes = CombatItemFilters.GetStateChangesForEventType(type);
 				Assert.IsNotNull(changes);
 			}, $"Failed to get state changes for event type {type}"
+		);
+	}
+	
+	[Test]
+	[TestCaseSource(nameof(GetEventTypes))]
+	public void IsBuffDamageIsHandled(Type type)
+	{
+		Assert.DoesNotThrow(() =>
+			{
+				CombatItemFilters.IsBuffDamage(type);
+			}
 		);
 	}
 

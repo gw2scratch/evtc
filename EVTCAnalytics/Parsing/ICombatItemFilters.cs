@@ -8,4 +8,5 @@ public interface ICombatItemFilters
 	public bool IsStateChangeRequired(byte stateChange);
 	public bool IsBuffEventRequired(uint skillId);
 	public bool IsPhysicalDamageResultRequired(byte result);
+	public bool IsBuffDamageRequired();
 }
