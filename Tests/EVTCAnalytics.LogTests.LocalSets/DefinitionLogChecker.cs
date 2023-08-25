@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using GW2Scratch.EVTCAnalytics.GameData.Encounters;
-using GW2Scratch.EVTCAnalytics.Processing;
+using GW2Scratch.EVTCAnalytics.LogTests.LocalSets.Extraction;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
 
@@ -10,20 +10,19 @@ namespace GW2Scratch.EVTCAnalytics.LogTests.LocalSets
 {
 	public class DefinitionLogChecker
 	{
+		private readonly ILogDataExtractor logDataExtractor;
+
+		public DefinitionLogChecker(ILogDataExtractor logDataExtractor)
+		{
+			this.logDataExtractor = logDataExtractor;
+		}
+
 		public CheckResult CheckLog(LogDefinition definition)
 		{
 			try
 			{
-				var parser = new EVTCParser();
-				var processor = new LogProcessor();
-				var parsedLog = parser.ParseLog(definition.Filename);
-				var log = processor.ProcessLog(parsedLog);
-				var analyzer = new LogAnalyzer(log);
-
-				var encounter = log.EncounterData.Encounter;
-				var mode = analyzer.GetMode();
-				var result = analyzer.GetResult();
-				var players = analyzer.GetPlayers()
+				var (encounter, mode, result, rawPlayers) = logDataExtractor.ExtractData(definition.Filename);
+				var players = rawPlayers
 					.Select(p => new LogPlayer
 					{
 						CharacterName = p.Name,

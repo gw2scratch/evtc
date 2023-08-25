@@ -1,3 +1,4 @@
+using GW2Scratch.EVTCAnalytics.LogTests.LocalSets.Extraction;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,9 +9,9 @@ namespace GW2Scratch.EVTCAnalytics.LogTests.LocalSets
 	{
 		public bool PrintUnchecked { get; set; } = false;
 
-		public bool TestLogs(IEnumerable<LogDefinition> logs, TextWriter writer)
+		public bool TestLogs(IEnumerable<LogDefinition> logs, TextWriter writer, ILogDataExtractor extractor)
 		{
-			var checker = new DefinitionLogChecker();
+			var checker = new DefinitionLogChecker(extractor);
 			var results = new List<CheckResult>();
 
 			bool success = true;

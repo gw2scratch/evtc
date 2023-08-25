@@ -22,6 +22,7 @@ namespace GW2Scratch.EVTCInspector
 
 		private string OpenedLogFile { get; set; }= null;
 		private bool SkipParsing { get; set; } = false;
+		private bool PruneForEncounterData { get; set; } = false;
 
 		private readonly OpenFileDialog openFileDialog;
 		private readonly Label parsedStateLabel;
@@ -126,6 +127,10 @@ namespace GW2Scratch.EVTCInspector
 			skipParsingMenuItem.Checked = SkipParsing;
 			skipParsingMenuItem.CheckedChanged += (sender, args) => SkipParsing = skipParsingMenuItem.Checked;
 			
+			var pruneForEncounterDataMenuItem = new CheckMenuItem {Text = "Prune for encounter data (requires merged parsing and processing)"};
+			pruneForEncounterDataMenuItem.Checked = PruneForEncounterData;
+			pruneForEncounterDataMenuItem.CheckedChanged += (sender, args) => PruneForEncounterData = pruneForEncounterDataMenuItem.Checked;
+			
 			var showTimeSinceStartOfLogMenuItem = new CheckMenuItem {Text = "Show times since start of log"};
 			showTimeSinceStartOfLogMenuItem.Checked = eventListControl.ShowTimeSinceFirstEvent;
 			showTimeSinceStartOfLogMenuItem.CheckedChanged += (sender, args) =>
@@ -136,6 +141,7 @@ namespace GW2Scratch.EVTCInspector
 			
 			var optionsMenuItem = new ButtonMenuItem {Text = "&Options"};
 			optionsMenuItem.Items.Add(skipParsingMenuItem);
+			optionsMenuItem.Items.Add(pruneForEncounterDataMenuItem);
 			optionsMenuItem.Items.Add(showTimeSinceStartOfLogMenuItem);
 
 			Menu = new MenuBar(fileMenuItem, optionsMenuItem);
@@ -174,7 +180,7 @@ namespace GW2Scratch.EVTCInspector
 			OpenedLogFile = logFilename;
 			var statusStringBuilder = new StringBuilder();
 
-			var parser = new EVTCParser();
+			var parser = new EVTCParser { SinglePassFilteringOptions = { PruneForEncounterData = PruneForEncounterData } };
 			var processor = new LogProcessor()
 			{
 				IgnoreUnknownEvents = false

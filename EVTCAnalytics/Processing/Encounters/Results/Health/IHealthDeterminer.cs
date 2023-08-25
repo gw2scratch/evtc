@@ -1,11 +1,13 @@
 using GW2Scratch.EVTCAnalytics.Model;
+using System;
+using System.Collections.Generic;
 
 namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health
 {
 	/// <summary>
 	/// An interface for determiners that can find the health fraction of the main enemy or enemies of an encounter.
 	/// </summary>
-	public interface IHealthDeterminer
+	public interface IHealthDeterminer : IDeterminer
 	{
 		/// <summary>
 		/// Finds the final health percentage of the main enemy or enemies in an encounter.

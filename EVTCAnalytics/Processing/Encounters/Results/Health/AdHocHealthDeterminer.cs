@@ -1,5 +1,7 @@
+using GW2Scratch.EVTCAnalytics.Events;
 using GW2Scratch.EVTCAnalytics.Model;
 using System;
+using System.Collections.Generic;
 
 namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health;
 
@@ -12,10 +14,14 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health;
 public class AdHocHealthDeterminer : IHealthDeterminer
 {
 	private readonly Func<Log, float?> func;
+	public IReadOnlyList<Type> RequiredEventTypes { get; }
+	public IReadOnlyList<uint> RequiredBuffSkillIds { get; }
 
-	public AdHocHealthDeterminer(Func<Log, float?> func)
+	public AdHocHealthDeterminer(Func<Log, float?> func, IReadOnlyList<Type> requiredEventTypes, IReadOnlyList<uint> requiredBuffSkillIds)
 	{
 		this.func = func;
+		RequiredEventTypes = requiredEventTypes;
+		RequiredBuffSkillIds = requiredBuffSkillIds;
 	}
 
 	public float? GetMainEnemyHealthFraction(Log log)

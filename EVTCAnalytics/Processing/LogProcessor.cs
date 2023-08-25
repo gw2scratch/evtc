@@ -43,7 +43,16 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 		/// This may be used to add support for more encounters by extending the default encounter identifier
 		/// or it could be used to override the default logic.
 		/// </remarks>
-		public IEncounterIdentifier EncounterIdentifier { get; set; } = new DefaultEncounterIdentifier();
+		public IEncounterIdentifier EncounterIdentifier { get; set; } = new EncounterIdentifier();
+		
+		/// <summary>
+		/// Gets or sets the encounter-specific data provider.
+		/// </summary>
+		/// <remarks>
+		/// This may be used to add support for more encounters by extending the default encounter data provider
+		/// or it could be used to override the default logic.
+		/// </remarks>
+		public IEncounterDataProvider EncounterDataProvider { get; set; } = new EncounterDataProvider();
 
 		/// <summary>
 		/// Gets or sets the handling method for unknown events. The default value is <see langword="true"/>.
@@ -153,6 +162,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			}
 			state.AgentsByAddress = agentsByAddress;
 			
+			SetLogTypeAndTarget(state, bossData);
+			
 			// Get data from skills.
 			var skillsById = new Dictionary<uint, Skill>();
 			var skillReader = reader.GetSkillReader();
@@ -181,8 +192,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			state.Errors = new List<LogError>();
 			state.EffectsById = new Dictionary<uint, Effect>();
 			state.MarkersById = new Dictionary<uint, Marker>();
-			
-			var combatItemReader = reader.GetCombatItemReader();
+
+			var combatItemReader = reader.GetCombatItemReader(bossData, state.MainTarget, state.Agents, state.GameBuild, state.LogType, EncounterIdentifier, EncounterDataProvider);
 			ParsedCombatItem combatItem;
 			state.Events = new List<Event>();
 			while (combatItemReader.GetNext(out combatItem))
@@ -258,7 +269,6 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				}
 			}
 			
-			SetLogTypeAndTarget(state, bossData);
 			SetAgentAwareTimes(state);
 			
 			// Resolve masters, requires aware times.
@@ -336,11 +346,11 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			Debug.Assert(state.Agents != null);
 			
 			state.LogType = LogType.PvE;
-			if (bossData.ID == 1)
+			if (bossData.ID == ArcdpsBossIds.WorldVersusWorld)
 			{
 				state.LogType = LogType.WorldVersusWorld;
 			}
-			else if (bossData.ID == 2)
+			else if (bossData.ID == ArcdpsBossIds.Map)
 			{
 				state.LogType = LogType.Map;
 			}
@@ -365,7 +375,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 
 		private void SetEncounterData(LogProcessorState state)
 		{
-			state.EncounterData = EncounterIdentifier.GetEncounterData(state.MainTarget, state.Events, state.Agents, state.Skills, state.GameBuild, state.LogType);
+			var encounter = EncounterIdentifier.IdentifyEncounter(state.MainTarget, state.Agents, state.Events, state.Skills);
+			state.EncounterData = EncounterDataProvider.GetEncounterData(encounter, state.MainTarget, state.Agents, state.GameBuild, state.LogType);
 		}
 
 		private IEnumerable<Skill> GetSkills(ParsedLog log)

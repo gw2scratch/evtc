@@ -19,15 +19,14 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 	/// <summary>
 	/// The encounter identifier used by default. Aims to support encounters logged by default and a few common extras.
 	/// </summary>
-	public class DefaultEncounterIdentifier : IEncounterIdentifier
+	public class EncounterDataProvider : IEncounterDataProvider
 	{
-		public IEncounterData GetEncounterData(Agent mainTarget, IReadOnlyList<Event> events,
-			IReadOnlyList<Agent> agents, IReadOnlyList<Skill> skills, int? gameBuild, LogType logType)
+		public IEncounterData GetEncounterData(Encounter encounter, Agent mainTarget, IReadOnlyList<Agent> agents, int? gameBuild, LogType logType)
 		{
 			switch (logType)
 			{
 				case LogType.PvE:
-					return GetPvEEncounterData(mainTarget, events, agents, skills, gameBuild);
+					return GetPvEEncounterData(encounter, mainTarget, agents, gameBuild);
 				case LogType.WorldVersusWorld:
 					return GetWvWEncounterData(agents);
 				case LogType.Map:
@@ -57,11 +56,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			);
 		}
 
-		private IEncounterData GetPvEEncounterData(Agent mainTarget, IReadOnlyList<Event> events,
-			IReadOnlyList<Agent> agents, IReadOnlyList<Skill> skills, int? gameBuild)
+		private IEncounterData GetPvEEncounterData(Encounter encounter, Agent mainTarget, IReadOnlyList<Agent> agents, int? gameBuild)
 		{
-			var encounter = IdentifyEncounter(mainTarget, agents, events, skills);
-
 			switch (encounter)
 			{
 				// Raids - Wing 1
@@ -82,22 +78,17 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					var prisoner = GetTargetBySpeciesId(agents, SpeciesIds.TrioCagePrisoner);
 
 					var targets = new Agent[] {berg, zane, narella}.Where(x => x != null).ToArray();
-					var builder = GetDefaultBuilder(encounter, targets);
-					if (berg != null && zane != null && narella != null && prisoner != null)
-					{
-						builder.WithResult(new AllCombinedResultDeterminer(
-							new AgentKilledDeterminer(berg), // Berg has to die
-							new AgentKilledDeterminer(zane), // So does Zane
-							new AgentAliveDeterminer(prisoner), // The prisoner in the cage must survive
-							new AgentKilledDeterminer(narella) // And finally, Narella has to perish as well
-						));
-					}
-					else
-					{
-						builder.WithResult(new ConstantResultDeterminer(EncounterResult.Unknown));
-					}
 
-					return builder.Build();
+					return GetDefaultBuilder(encounter, targets)
+						.WithResult(new ConditionalResultDeterminer(
+							(berg != null && zane != null && narella != null && prisoner != null, new AllCombinedResultDeterminer(
+								new AgentKilledDeterminer(berg), // Berg has to die
+								new AgentKilledDeterminer(zane), // So does Zane
+								new AgentAliveDeterminer(prisoner), // The prisoner in the cage must survive
+								new AgentKilledDeterminer(narella) // And finally, Narella has to perish as well
+							)),
+							(true, new ConstantResultDeterminer(EncounterResult.Unknown))
+						)).Build();
 				}
 				case Encounter.Matthias:
 					return GetDefaultBuilder(encounter, mainTarget).Build();
@@ -122,25 +113,24 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					// On Xera, there is a gliding phase once you reach 50% of her health. Afterwards, the original Xera NPC
 					// gets replaced with a different NPC (with higher maximum health, even) that is set to 50% of its health.
 					var secondPhaseXera = GetTargetBySpeciesId(agents, SpeciesIds.XeraSecondPhase);
+					var targets = new List<Agent> { mainTarget, secondPhaseXera }.Where(x => x != null).ToList();
 
-					var builder = GetDefaultBuilder(encounter, mainTarget);
-					if (secondPhaseXera == null)
-					{
-						builder.WithResult(new ConstantResultDeterminer(EncounterResult.Failure));
-					}
-					else
-					{
-						builder.WithHealth(new SequentialHealthDeterminer(mainTarget, secondPhaseXera));
-						// Second phase Xera may infrequently appear drop out of combat for a moment at the start of the phase
-						// before entering combat again. By enforcing a minimum time since her spawn, we can fairly safely
-						// ensure that this will be ignored. It is also very unlikely the boss would be defeated in such a short time,
-						// barring extreme exploits of broken game skills.
-						// Even such exploits from the past would have trouble meeting this time requirement (Shadow Flare, Renegade Invoke Torment).
-						builder.WithResult(new AgentCombatExitDeterminer(secondPhaseXera) {MinTimeSinceSpawn = 10000})
-							.WithTargets(new List<Agent>() {mainTarget, secondPhaseXera});
-					}
-
-					return builder.Build();
+					return GetDefaultBuilder(encounter, mainTarget)
+						.WithResult(new ConditionalResultDeterminer(
+							(secondPhaseXera == null, new ConstantResultDeterminer(EncounterResult.Failure)),
+							// Second phase Xera may infrequently appear drop out of combat for a moment at the start of the phase
+							// before entering combat again. By enforcing a minimum time since her spawn, we can fairly safely
+							// ensure that this will be ignored. It is also very unlikely the boss would be defeated in such a short time,
+							// barring extreme exploits of broken game skills.
+							// Even such exploits from the past would have trouble meeting this time requirement (Shadow Flare, Renegade Invoke Torment).
+							(true, new AgentCombatExitDeterminer(secondPhaseXera) {MinTimeSinceSpawn = 10000})
+						))
+						.WithHealth(new ConditionalHealthDeterminer(
+							(secondPhaseXera == null, new MaxMinHealthDeterminer()),
+							(true, new SequentialHealthDeterminer(mainTarget, secondPhaseXera))
+						))
+						.WithTargets(targets)
+						.Build();
 				}
 				// Raids - Wing 4
 				case Encounter.Cairn:
@@ -163,64 +153,54 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				}
 				case Encounter.Deimos:
 				{
-					var builder = GetDefaultBuilder(encounter, mainTarget);
-					if (gameBuild != null && gameBuild < GameBuilds.AhdashimRelease)
-					{
-						// This release reworked rewards, currently a reward event is not present if an encounter was
-						// finished a second time within a week. Before that, we can safely just check for the
-						// presence of such a reward.
+					// This release reworked rewards, currently a reward event is not present if an encounter was
+					// finished a second time within a week. Before that, we can safely just check for the
+					// presence of such a reward.
 
-						// We cannot use the targetable detection method before they were introduced, and there was
-						// a long period of time when logs did not contain the main gadget so we need to rely on this.
-						builder.WithResult(new RewardDeterminer(525));
-					}
-					else
-					{
-						// Deimos, the NPC, is replaced with a gadget for the last 10% of the fight.
-						// There may sometimes be other gadgets with the same id. They do not, however,
-						// have an attack target. They also have lower maximum health values.
-						Gadget mainGadget = agents.OfType<Gadget>()
-							.FirstOrDefault(x => x.VolatileId == GadgetIds.DeimosLastPhase && x.AttackTargets.Count == 1);
-						Gadget prisoner = agents.OfType<Gadget>()
-							.FirstOrDefault(x => x.VolatileId == GadgetIds.ShackledPrisoner);
+					// We cannot use the targetable detection method before they were introduced, and there was
+					// a long period of time when logs did not contain the main gadget so we need to rely on this.
+					bool canUseReward = gameBuild != null && gameBuild < GameBuilds.AhdashimRelease;
 
-						if (mainGadget != null)
-						{
-							var attackTarget = mainGadget.AttackTargets.SingleOrDefault();
-							if (attackTarget != null && prisoner != null)
-							{
-								builder.WithResult(new AllCombinedResultDeterminer(
-									new TargetableDeterminer(attackTarget, true, false),
-									// If the log continues recording for longer than usual, it will record the attack target going untargetable.
-									// However, at the same time it will also record the Shackled Prisoner having their health reset.
-									// This health reset cannot happen in a successful log as there is no Shackled Prisoner at that point.
-									new TransformResultDeterminer(
-										new AgentHealthResetDeterminer(prisoner),
-										result => result == EncounterResult.Success ? EncounterResult.Failure : EncounterResult.Success
-									)
-								));
-								// The health of the Deimos gadget on the upper platform is set to 10% only after
-								// the NPC used in the first part of the fight reaches 10% of its health.
+					
+					// Deimos, the NPC, is replaced with a gadget for the last 10% of the fight.
+					// There may sometimes be other gadgets with the same id. They do not, however,
+					// have an attack target. They also have lower maximum health values.
+					Gadget mainGadget = agents.OfType<Gadget>()
+						.FirstOrDefault(x => x.VolatileId == GadgetIds.DeimosLastPhase && x.AttackTargets.Count == 1);
+					Gadget prisoner = agents.OfType<Gadget>()
+						.FirstOrDefault(x => x.VolatileId == GadgetIds.ShackledPrisoner);
 
-								// If there has already been an attempt in this instance before, the gadget
-								// retains its health from the previous attempt until the last phase is reached again.
-								builder.WithHealth(new SequentialHealthDeterminer(mainTarget, mainGadget));
-							}
-							else
-							{
-								builder.WithResult(new ConstantResultDeterminer(EncounterResult.Unknown));
-							}
+					AttackTarget attackTarget = mainGadget?.AttackTargets?.SingleOrDefault();
+					bool canUseTargets = mainGadget != null && attackTarget != null && prisoner != null;
 
-							builder.WithTargets(new List<Agent>() {mainTarget, mainGadget});
-						}
-						else
-						{
-							builder.WithResult(new ConstantResultDeterminer(EncounterResult.Unknown));
-						}
-					}
+					var targets = new List<Agent> { mainTarget, mainGadget }.Where(x => x != null).ToList();
+					
+					return GetDefaultBuilder(encounter, mainTarget)
+						.WithModes(new AgentHealthModeDeterminer(mainTarget, 42_000_000))
+						.WithTargets(targets)
+						.WithResult(new ConditionalResultDeterminer(
+							(canUseReward, new RewardDeterminer(525)),
+							(canUseTargets, new AllCombinedResultDeterminer(
+								new TargetableDeterminer(attackTarget, true, false),
+								// If the log continues recording for longer than usual, it will record the attack target going untargetable.
+								// However, at the same time it will also record the Shackled Prisoner having their health reset.
+								// This health reset cannot happen in a successful log as there is no Shackled Prisoner at that point.
+								new TransformResultDeterminer(
+									new AgentHealthResetDeterminer(prisoner),
+									result => result == EncounterResult.Success ? EncounterResult.Failure : EncounterResult.Success
+								)
+							)),
+							(true, new ConstantResultDeterminer(EncounterResult.Unknown))
+						))
+						.WithHealth(new ConditionalHealthDeterminer(
+							// The health of the Deimos gadget on the upper platform is set to 10% only after
+							// the NPC used in the first part of the fight reaches 10% of its health.
 
-					return builder.WithModes(new AgentHealthModeDeterminer(mainTarget, 42_000_000))
-						.Build();
+							// If there has already been an attempt in this instance before, the gadget
+							// retains its health from the previous attempt until the last phase is reached again.
+							(canUseTargets, new SequentialHealthDeterminer(mainTarget, mainGadget)),
+							(true, new MaxMinHealthDeterminer())
+						)).Build();
 				}
 				// Raids - Wing 5
 				case Encounter.SoullessHorror:
@@ -235,11 +215,10 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				}
 				case Encounter.RiverOfSouls:
 				{
-					long startTime = events.FirstOrDefault()?.Time ?? -1;
 					return GetDefaultBuilder(encounter, mainTarget)
 						// At the end of the event, 8 of the rifts become untargetable
 						.WithResult(new GroupedEventDeterminer<TargetableChangeEvent>(
-							e => e.Time - startTime > 3000 && e.IsTargetable == false, 8, 1000))
+							e => e.IsTargetable == false, 8, 1000, null, 3000))
 						.Build();
 				}
 				case Encounter.Eyes:
@@ -247,21 +226,18 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					var fate = GetTargetBySpeciesId(agents, SpeciesIds.EyeOfFate);
 					var judgment = GetTargetBySpeciesId(agents, SpeciesIds.EyeOfJudgment);
 
-					var builder = GetDefaultBuilder(encounter, new[] {fate, judgment});
-					if (fate == null || judgment == null)
-					{
-						builder.WithResult(new ConstantResultDeterminer(EncounterResult.Unknown));
-						builder.WithTargets(new Agent[] {fate, judgment}.Where(x => x != null).ToList());
-					}
-					else
-					{
-						builder.WithResult(new AnyCombinedResultDeterminer(
-							new AgentDeadDeterminer(judgment),
-							new AgentDeadDeterminer(fate)
-						));
-					}
+					var targets = new Agent[] { fate, judgment }.Where(x => x != null).ToList();
 
-					return builder.Build();
+					return GetDefaultBuilder(encounter, new[] { fate, judgment })
+						.WithResult(new ConditionalResultDeterminer(
+							(fate == null || judgment == null, new ConstantResultDeterminer(EncounterResult.Unknown)),
+							(true, new AnyCombinedResultDeterminer(
+								new AgentDeadDeterminer(judgment),
+								new AgentDeadDeterminer(fate)
+							))
+						))
+						.WithTargets(targets)
+						.Build();
 				}
 				case Encounter.Dhuum:
 				{
@@ -282,39 +258,23 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					var nikare = GetTargetBySpeciesId(agents, SpeciesIds.Nikare);
 					var kenut = GetTargetBySpeciesId(agents, SpeciesIds.Kenut);
 
-					var bosses = new List<NPC>();
-					if (nikare != null) bosses.Add(nikare);
-					if (kenut != null) bosses.Add(kenut);
+					var targets = new Agent[] { nikare, kenut }.Where(x => x != null).ToList();
 
-					var builder = GetDefaultBuilder(encounter, bosses);
-					if (nikare == null || kenut == null)
-					{
-						if (kenut == null)
-						{
+					return GetDefaultBuilder(encounter, targets)
+						.WithResult(new ConditionalResultDeterminer(
 							// If the fight does not progress far enough, Kenut might not be present in the log.
-							builder.WithResult(new ConstantResultDeterminer(EncounterResult.Failure));
-						}
-						else
-						{
-							builder.WithResult(new ConstantResultDeterminer(EncounterResult.Unknown));
-						}
-
-						builder.WithTargets(new Agent[] {nikare, kenut}.Where(x => x != null).ToList());
-					}
-					else
-					{
-						builder.WithResult(new AllCombinedResultDeterminer(
-							new AgentDeadDeterminer(nikare),
-							new AgentDeadDeterminer(kenut)
-						));
-					}
-
-					if (nikare != null)
-					{
-						builder.WithModes(new AgentHealthModeDeterminer(nikare, 19_000_000));
-					}
-
-					return builder.Build();
+							(kenut == null, new ConstantResultDeterminer(EncounterResult.Failure)),
+							(nikare == null, new ConstantResultDeterminer(EncounterResult.Unknown)),
+							(nikare != null && kenut != null, new AllCombinedResultDeterminer(
+								new AgentDeadDeterminer(nikare),
+								new AgentDeadDeterminer(kenut)
+							))
+						))
+						.WithModes(new ConditionalModeDeterminer(
+							(nikare != null, new AgentHealthModeDeterminer(nikare, 19_000_000))
+						))
+						.WithTargets(targets)
+						.Build();
 				}
 				case Encounter.Qadim:
 				{
@@ -463,24 +423,18 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					var voice = GetTargetBySpeciesId(agents, SpeciesIds.VoiceOfTheFallen);
 					var claw = GetTargetBySpeciesId(agents, SpeciesIds.ClawOfTheFallen);
 
-					var bosses = new List<NPC>();
-					if (voice != null) bosses.Add(voice);
-					if (claw != null) bosses.Add(claw);
+					var targets = new Agent[] { voice, claw }.Where(x => x != null).ToList();
 
-					var builder = GetDefaultBuilder(encounter, bosses);
-					if (voice != null && claw != null)
-					{
-						builder.WithResult(new AllCombinedResultDeterminer(
-							new AgentDeadDeterminer(voice),
-							new AgentDeadDeterminer(claw)
-						));
-					}
-					else
-					{
-						builder.WithResult(new ConstantResultDeterminer(EncounterResult.Unknown));
-					}
-
-					return builder.Build();
+					return GetDefaultBuilder(encounter, targets)
+						.WithResult(new ConditionalResultDeterminer(
+							(voice != null && claw != null, new AllCombinedResultDeterminer(
+								new AgentDeadDeterminer(voice),
+								new AgentDeadDeterminer(claw)
+							)),
+							(true, new ConstantResultDeterminer(EncounterResult.Unknown))
+						))
+						.WithTargets(targets)
+						.Build();
 				}
 				case Encounter.Mordremoth:
 				{
@@ -518,77 +472,69 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				}
 				case Encounter.HarvestTemple:
 				{
-					var builder = GetDefaultBuilder(encounter, mainTarget);
-						
 					// This is the gadget that represents the first 5 dragons.
 					Gadget firstGadget = agents.OfType<Gadget>().FirstOrDefault(x =>
 						x.VolatileId == GadgetIds.TheDragonvoid && x.AttackTargets.Count == 3);
-					if (firstGadget != null)
-					{
-						builder.WithModes(new GroupedSpawnModeDeterminer(agent => agent is NPC { SpeciesId: SpeciesIds.VoidMelter }, 6, 200));
-					}
 					
 					// This is the gadget that represents Soo-Won. The previous phases share the same
 					// gadget (GadgetIds.TheDragonvoid), but this one has a unique one with different max health.
 					Gadget finalGadget = agents.OfType<Gadget>().FirstOrDefault(x =>
 						x.VolatileId == GadgetIds.TheDragonvoidFinal && x.AttackTargets.Count == 3);
-					
-					builder.WithHealth(log =>
-					{
-						const float healthPerPhase = 1.0f / 6.0f;
-						
-						//bool pastPre = log.Agents.OfType<NPC>().Any(x => x.SpeciesId == SpeciesIds.VoidStormseer);
-						bool pastJormag = log.Agents.OfType<NPC>().Any(x => x.SpeciesId == SpeciesIds.VoidWarforged);
-						bool pastPrimordus = log.Agents.OfType<NPC>().Any(x => x.SpeciesId == SpeciesIds.VoidBrandbomber);
-						bool pastKralkatorikk = log.Agents.OfType<NPC>().Any(x => x.SpeciesId == SpeciesIds.VoidTimeCaster);
-						bool pastMordemoth = log.Agents.OfType<NPC>().Any(x => x.SpeciesId == SpeciesIds.VoidGiant);
-						bool pastZhaitan = log.Agents.OfType<NPC>().Any(x => x.SpeciesId == SpeciesIds.VoidSaltsprayDragon);
-						//bool pastSooWonPhase1 = log.Agents.OfType<NPC>().Any(x => x.SpeciesId == SpeciesIds.VoidObliterator);
 
-						int completedPhases = 0;
-						if (pastJormag) completedPhases += 1;
-						if (pastPrimordus) completedPhases += 1;
-						if (pastKralkatorikk) completedPhases += 1;
-						if (pastMordemoth) completedPhases += 1;
-						if (pastZhaitan) completedPhases += 1;
+					return GetDefaultBuilder(encounter, mainTarget)
+						.WithModes(new ConditionalModeDeterminer(
+							(firstGadget != null, new GroupedSpawnModeDeterminer(agent => agent is NPC { SpeciesId: SpeciesIds.VoidMelter }, 6, 200))
+						))
+						.WithResult(new ConditionalResultDeterminer(
+							// We use a health threshold instead of checking for the gadget going
+							// through enable->disable->enable->disable to make it possible to correctly detect success
+							// if the PoV player joins the instance late. This should work unless they join after
+							// the last health update.
+							
+							// Note that the gadget keeps its initial health from the previous attempt if the fight
+							// is reset within the same instance.
+							(finalGadget != null, new TargetableChangedBelowHealthThresholdDeterminer(finalGadget, false, 0.3f))
+						))
+						.WithHealth(new AgentHealthDeterminer(null).RequiredEventTypes, new List<uint>(),
+							log =>
+							{
+								const float healthPerPhase = 1.0f / 6.0f;
 
-						// The first 5 phases use one gadget (firstGadget), the last phase uses a different gadget (finalGadget).
-						// These gadgets have different health amounts, but for now we are pretending they are the same,
-						// they get the same percentage share as other phases.
-						float remainingHealth;
-						if (pastZhaitan && finalGadget != null)
-						{
-							remainingHealth = new AgentHealthDeterminer(finalGadget).GetMainEnemyHealthFraction(log) ?? 1f;
-						}
-						else
-						{
-							remainingHealth = new AgentHealthDeterminer(firstGadget).GetMainEnemyHealthFraction(log) ?? 1f;
-						}
+								//bool pastPre = log.Agents.OfType<NPC>().Any(x => x.SpeciesId == SpeciesIds.VoidStormseer);
+								bool pastJormag = log.Agents.OfType<NPC>().Any(x => x.SpeciesId == SpeciesIds.VoidWarforged);
+								bool pastPrimordus = log.Agents.OfType<NPC>().Any(x => x.SpeciesId == SpeciesIds.VoidBrandbomber);
+								bool pastKralkatorikk = log.Agents.OfType<NPC>().Any(x => x.SpeciesId == SpeciesIds.VoidTimeCaster);
+								bool pastMordemoth = log.Agents.OfType<NPC>().Any(x => x.SpeciesId == SpeciesIds.VoidGiant);
+								bool pastZhaitan = log.Agents.OfType<NPC>().Any(x => x.SpeciesId == SpeciesIds.VoidSaltsprayDragon);
+								//bool pastSooWonPhase1 = log.Agents.OfType<NPC>().Any(x => x.SpeciesId == SpeciesIds.VoidObliterator);
 
-						// Subtract one extra phase as we are re-adding the health of the current phase.
-						float finishedHealth = (completedPhases + 1) * healthPerPhase;
-						float remainingInPhase = remainingHealth * healthPerPhase;
+								int completedPhases = 0;
+								if (pastJormag) completedPhases += 1;
+								if (pastPrimordus) completedPhases += 1;
+								if (pastKralkatorikk) completedPhases += 1;
+								if (pastMordemoth) completedPhases += 1;
+								if (pastZhaitan) completedPhases += 1;
 
-						return 1 - finishedHealth + remainingInPhase;
-					});
-					
-					if (finalGadget == null)
-					{
-						builder.WithResult(new ConstantResultDeterminer(EncounterResult.Unknown));
-					}
-					else
-					{
-						// We use a health threshold instead of checking for the gadget going
-						// through enable->disable->enable->disable to make it possible to correctly detect success
-						// if the PoV player joins the instance late. This should work unless they join after
-						// the last health update.
-						
-						// Note that the gadget keeps its initial health from the previous attempt if the fight
-						// is reset within the same instance.
-						builder.WithResult(new TargetableChangedBelowHealthThresholdDeterminer(finalGadget, false, 0.3f));
-					}
+								// The first 5 phases use one gadget (firstGadget), the last phase uses a different gadget (finalGadget).
+								// These gadgets have different health amounts, but for now we are pretending they are the same,
+								// they get the same percentage share as other phases.
+								float remainingHealth;
+								if (pastZhaitan && finalGadget != null)
+								{
+									remainingHealth = new AgentHealthDeterminer(finalGadget).GetMainEnemyHealthFraction(log) ?? 1f;
+								}
+								else
+								{
+									remainingHealth = new AgentHealthDeterminer(firstGadget).GetMainEnemyHealthFraction(log) ?? 1f;
+								}
 
-					return builder.Build();
+								// Subtract one extra phase as we are re-adding the health of the current phase.
+								float finishedHealth = (completedPhases + 1) * healthPerPhase;
+								float remainingInPhase = remainingHealth * healthPerPhase;
+
+								return 1 - finishedHealth + remainingInPhase;
+							})
+						.Build();
 				}
 				case Encounter.OldLionsCourt:
 				{
@@ -614,7 +560,6 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						(true, true) => EncounterMode.Unknown,
 					};
 
-
 					Agent[] targets;
 					if (mode == EncounterMode.Normal)
 					{
@@ -632,25 +577,17 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					}
 					else
 					{
-						return GetDefaultBuilder(encounter, mainTarget)
-							.WithModes(new ConstantModeDeterminer(mode))
-							.WithResult(new ConstantResultDeterminer(EncounterResult.Unknown))
-							.Build();
+						targets = Array.Empty<Agent>();
 					}
 
-					var builder = GetDefaultBuilder(encounter, targets);
-					if (targets.Length == 3)
-					{
-						var kills = targets.Select(x => new AgentKilledDeterminer(x)).ToArray<IResultDeterminer>();
-						builder.WithResult(new AllCombinedResultDeterminer(kills));
-					}
-					else
-					{
-						builder.WithResult(new ConstantResultDeterminer(EncounterResult.Unknown));
-					}
-					builder.WithModes(new ConstantModeDeterminer(mode));
-
-					return builder.Build();
+					return GetDefaultBuilder(encounter, targets)
+						.WithModes(new ConstantModeDeterminer(mode))
+						.WithResult(new ConditionalResultDeterminer(
+							(targets.Length == 3 && mode != EncounterMode.Unknown, new AllCombinedResultDeterminer(
+								targets.Select(x => new AgentKilledDeterminer(x)).ToArray<IResultDeterminer>()
+							))
+						))
+						.Build();
 				}
 				case Encounter.Kanaxai:
 				{
@@ -679,220 +616,6 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			}
 		}
 
-		public Encounter IdentifyEncounter(Agent mainTarget, IReadOnlyList<Agent> agents, IReadOnlyList<Event> events, IReadOnlyList<Skill> skills)
-		{
-			if (mainTarget is NPC boss)
-			{
-				switch (boss.SpeciesId)
-				{
-					case SpeciesIds.ValeGuardian:
-						return Encounter.ValeGuardian;
-					case SpeciesIds.Gorseval:
-						return Encounter.Gorseval;
-					case SpeciesIds.Sabetha:
-						return Encounter.Sabetha;
-					case SpeciesIds.Slothasor:
-						return Encounter.Slothasor;
-					case SpeciesIds.Berg:
-					case SpeciesIds.Zane:
-					case SpeciesIds.Narella:
-						return Encounter.BanditTrio;
-					case SpeciesIds.MatthiasGabrel:
-						return Encounter.Matthias;
-					case SpeciesIds.MushroomKing:
-					case SpeciesIds.McLeod:
-						return Encounter.Escort;
-					case SpeciesIds.KeepConstruct:
-						return Encounter.KeepConstruct;
-					case SpeciesIds.HauntingStatue:
-						return Encounter.TwistedCastle;
-					case SpeciesIds.Xera:
-						// Twisted Castle logs sometimes get Xera as the main target when the player is too close to her
-						if (agents.OfType<NPC>().Any(x => x.SpeciesId == SpeciesIds.HauntingStatue))
-						{
-							return Encounter.TwistedCastle;
-						}
-
-						return Encounter.Xera;
-					case SpeciesIds.XeraSecondPhase:
-						return Encounter.Xera;
-					case SpeciesIds.CairnTheIndomitable:
-						return Encounter.Cairn;
-					case SpeciesIds.MursaatOverseer:
-						return Encounter.MursaatOverseer;
-					case SpeciesIds.Samarog:
-						return Encounter.Samarog;
-					case SpeciesIds.Deimos:
-						return Encounter.Deimos;
-					case SpeciesIds.SoullessHorror:
-						return Encounter.SoullessHorror;
-					case SpeciesIds.Desmina:
-						return Encounter.RiverOfSouls;
-					case SpeciesIds.BrokenKing:
-						return Encounter.BrokenKing;
-					case SpeciesIds.EaterOfSouls:
-						return Encounter.EaterOfSouls;
-					case SpeciesIds.EyeOfJudgment:
-					case SpeciesIds.EyeOfFate:
-						return Encounter.Eyes;
-					case SpeciesIds.Dhuum:
-						// Eyes logs sometimes get Dhuum as the main target when the player is too close to him
-						if (agents.OfType<NPC>().Any(x => x.SpeciesId == SpeciesIds.EyeOfFate))
-						{
-							return Encounter.Eyes;
-						}
-
-						return Encounter.Dhuum;
-					case SpeciesIds.Nikare:
-					case SpeciesIds.Kenut:
-						return Encounter.TwinLargos;
-					case SpeciesIds.Qadim:
-						return Encounter.Qadim;
-					case SpeciesIds.CardinalAdina:
-						return Encounter.Adina;
-					case SpeciesIds.CadinalSabir:
-						return Encounter.Sabir;
-					case SpeciesIds.QadimThePeerless:
-						return Encounter.QadimThePeerless;
-					case SpeciesIds.StandardKittyGolem:
-						return Encounter.StandardKittyGolem;
-					case SpeciesIds.MediumKittyGolem:
-						return Encounter.MediumKittyGolem;
-					case SpeciesIds.LargeKittyGolem:
-						return Encounter.LargeKittyGolem;
-					case SpeciesIds.MassiveKittyGolem:
-						return Encounter.MassiveKittyGolem;
-					case SpeciesIds.MAMA:
-						return Encounter.MAMA;
-					case SpeciesIds.SiaxTheCorrupted:
-						return Encounter.SiaxTheCorrupted;
-					case SpeciesIds.EnsolyssOfTheEndlessTorment:
-						return Encounter.EnsolyssOfTheEndlessTorment;
-					case SpeciesIds.Skorvald:
-						return Encounter.Skorvald;
-					case SpeciesIds.Artsariiv:
-						return Encounter.Artsariiv;
-					case SpeciesIds.Arkk:
-						return Encounter.Arkk;
-					case SpeciesIds.AiKeeperOfThePeak:
-					{
-						// This encounter has two phases with the same enemy. The enemy gains short invulnerability
-						// and regains full health between these two phases.
-						// However, if the fight has been progressed into the second (dark) phase and failed, the next attempt
-						// starts at the second phase, so the first phase might not be in the log.
-
-						// 895 - Determined, applied at end of first phase along with 762 Determined and a short Daze
-						// 53569 - nameless skill used when transitioning between phases, only in the log if both phases are present
-						// 61356 - nameless skill cast early in phase 2
-						// 895 - Determined, applied at end of second phase along with 762 Determined and a short Daze
-
-						// No 61356 - always a failure, did not reach dark phase, health +100%
-						// 61356 && no determined afterwards -> failure in the second (dark) phase
-						// 61356 && Determined afterwards -> success
-
-						if (skills.All(x => x.Id != SkillIds.Determined895))
-						{
-							// This is a quick path that doesn't require enumerating through events. 
-
-							// As there is no Determined, the log is a failure, and this cannot occur in a log
-							// that has both phases (as the Determined buff is applied in between).
-
-							bool hasDarkPhase = skills.Any(x => x.Id == SkillIds.AiDarkEarlySkill);
-							return hasDarkPhase
-								? Encounter.AiKeeperOfThePeakNightOnly
-								: Encounter.AiKeeperOfThePeakDayOnly;
-						}
-						else
-						{
-							bool inDark = false;
-							bool determinedPreDark = false;
-							foreach (var ev in events)
-							{
-								if (ev is BuffApplyEvent {Buff.Id: SkillIds.Determined895 } and not InitialBuffEvent)
-								{
-									// This buff application is the transition between the two phases.
-									// This works because we stop enumerating events once we reach the dark phase.
-									determinedPreDark = true;
-								}
-
-								if (ev is SkillCastEvent {Skill.Id: SkillIds.AiDarkEarlySkill })
-								{
-									inDark = true;
-									break;
-								}
-							}
-
-							if (inDark)
-							{
-								return determinedPreDark
-									? Encounter.AiKeeperOfThePeakDayAndNight
-									: Encounter.AiKeeperOfThePeakNightOnly;
-							}
-							else
-							{
-								return Encounter.AiKeeperOfThePeakDayOnly;
-							}
-						}
-					}
-					case SpeciesIds.KanaxaiNM:
-						return Encounter.Kanaxai;
-					case SpeciesIds.KanaxaiCM:
-						return Encounter.Kanaxai;
-					case SpeciesIds.Freezie:
-						return Encounter.Freezie;
-					case SpeciesIds.IcebroodConstruct:
-						return Encounter.ShiverpeaksPass;
-					case SpeciesIds.VoiceOfTheFallen:
-					case SpeciesIds.ClawOfTheFallen:
-						return Encounter.VoiceAndClawOfTheFallen;
-					case SpeciesIds.FraenirOfJormag:
-						return Encounter.FraenirOfJormag;
-					case SpeciesIds.Boneskinner:
-						return Encounter.Boneskinner;
-					case SpeciesIds.WhisperOfJormag:
-						return Encounter.WhisperOfJormag;
-					case SpeciesIds.VariniaStormsounder:
-						return Encounter.VariniaStormsounder;
-					case SpeciesIds.HeartsAndMindsMordremoth:
-						return Encounter.Mordremoth;
-					case SpeciesIds.MaiTrin:
-						return Encounter.AetherbladeHideout;
-					case SpeciesIds.Ankka:
-						return Encounter.XunlaiJadeJunkyard;
-					case SpeciesIds.MinisterLi:
-					case SpeciesIds.MinisterLiChallengeMode:
-						return Encounter.KainengOverlook;
-					case SpeciesIds.VoidAmalgamate:
-					case SpeciesIds.VoidMelter:
-						return Encounter.HarvestTemple;
-					case SpeciesIds.PrototypeVermillion:
-					case SpeciesIds.PrototypeArsenite:
-					case SpeciesIds.PrototypeIndigo:
-					case SpeciesIds.PrototypeVermillionChallengeMode:
-					case SpeciesIds.PrototypeArseniteChallengeMode:
-					case SpeciesIds.PrototypeIndigoChallengeMode:
-						return Encounter.OldLionsCourt;
-					case SpeciesIds.Dagda:
-						return Encounter.CosmicObservatory;
-					case SpeciesIds.Cerus:
-						return Encounter.TempleOfFebe;
-				}
-			}
-			else if (mainTarget is Gadget gadgetBoss)
-			{
-				switch (gadgetBoss.VolatileId)
-				{
-					case GadgetIds.ConjuredAmalgamate:
-						return Encounter.ConjuredAmalgamate;
-					case GadgetIds.TheDragonvoidFinal:
-						return Encounter.HarvestTemple;
-					case GadgetIds.TheDragonvoid:
-						return Encounter.HarvestTemple;
-				}
-			}
-
-			return Encounter.Other;
-		}
 
 		private static EncounterIdentifierBuilder GetDefaultBuilder(Encounter encounter, Agent mainTarget, bool mergeMainTarget = true)
 		{
@@ -912,7 +635,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			return builder;
 		}
 
-		private static EncounterIdentifierBuilder GetDefaultBuilder(Encounter encounter, IEnumerable<Agent> mainTargets)
+		private static EncounterIdentifierBuilder GetDefaultBuilder(Encounter encounter, IEnumerable<Agent> mainTargets, bool mergeMainTargets = true)
 		{
 			var targets = mainTargets.ToArray();
 			IResultDeterminer result;
@@ -927,14 +650,27 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			{
 				result = new ConstantResultDeterminer(EncounterResult.Unknown);
 			}
-
-			return new EncounterIdentifierBuilder(
+			var builder = new EncounterIdentifierBuilder(
 				encounter,
 				targets.ToList(),
 				result,
 				new EmboldenedDetectingModeDeterminer(),
 				new MaxMinHealthDeterminer()
 			);
+
+			if (mergeMainTargets)
+			{
+				foreach (var mainTarget in targets)
+				{
+					if (mainTarget is NPC npc)
+					{
+						// Gadgets do not have to be merged as they never go out of reporting range.
+						builder.AddPostProcessingStep(new MergeSingletonNPC(npc.SpeciesId));
+					}
+				}
+			}
+
+			return builder;
 		}
 
 		// TODO: Remove

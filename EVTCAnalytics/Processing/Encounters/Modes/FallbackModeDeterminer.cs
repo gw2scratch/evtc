@@ -1,4 +1,7 @@
 using GW2Scratch.EVTCAnalytics.Model;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes;
 
@@ -16,6 +19,10 @@ public class FallbackModeDeterminer : IModeDeterminer
 		this.firstDeterminer = firstDeterminer;
 		this.fallbackDeterminer = fallbackDeterminer;
 	}
+
+	public IReadOnlyList<Type> RequiredEventTypes => firstDeterminer.RequiredEventTypes.Concat(fallbackDeterminer.RequiredEventTypes).Distinct().ToList();
+	public IReadOnlyList<uint> RequiredBuffSkillIds => firstDeterminer.RequiredBuffSkillIds.Concat(fallbackDeterminer.RequiredBuffSkillIds).Distinct().ToList();
+
 	public EncounterMode? GetMode(Log log)
 	{
 		return firstDeterminer.GetMode(log) ?? fallbackDeterminer.GetMode(log) ?? EncounterMode.Unknown;

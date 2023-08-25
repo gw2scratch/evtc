@@ -1,4 +1,6 @@
 using GW2Scratch.EVTCAnalytics.Model;
+using System;
+using System.Collections.Generic;
 
 namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health
 {
@@ -13,6 +15,9 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health
 		{
 			this.constantValue = constantValue;
 		}
+
+		public IReadOnlyList<Type> RequiredEventTypes { get; } = new List<Type>();
+		public IReadOnlyList<uint> RequiredBuffSkillIds { get; } = new List<uint>();
 
 		public float? GetMainEnemyHealthFraction(Log log)
 		{

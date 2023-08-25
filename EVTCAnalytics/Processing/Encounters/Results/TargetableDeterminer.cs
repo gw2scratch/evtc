@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GW2Scratch.EVTCAnalytics.Events;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
+using System;
 
 namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 {
@@ -23,6 +24,9 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 			this.attackTarget = attackTarget;
 			this.targetableStates = targetableStates;
 		}
+
+		public IReadOnlyList<Type> RequiredEventTypes { get; } = new List<Type> { typeof(TargetableChangeEvent) };
+		public IReadOnlyList<uint> RequiredBuffSkillIds { get; } = new List<uint>();
 
 		public ResultDeterminerResult GetResult(IEnumerable<Event> events)
 		{

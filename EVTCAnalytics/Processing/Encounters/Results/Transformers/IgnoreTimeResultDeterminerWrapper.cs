@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using GW2Scratch.EVTCAnalytics.Events;
+using System;
 
 namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Transformers
 {
@@ -18,6 +19,9 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Transformers
 		{
 			this.resultDeterminer = resultDeterminer;
 		}
+
+		public IReadOnlyList<Type> RequiredEventTypes => resultDeterminer.RequiredEventTypes;
+		public IReadOnlyList<uint> RequiredBuffSkillIds => resultDeterminer.RequiredBuffSkillIds;
 
 		public ResultDeterminerResult GetResult(IEnumerable<Event> events)
 		{

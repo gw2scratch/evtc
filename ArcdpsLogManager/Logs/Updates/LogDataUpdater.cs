@@ -151,6 +151,9 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Updates
 			                     && log.Encounter == Encounter.Map
 			                     && string.Compare(log.EvtcVersion, "EVTC20230716", StringComparison.OrdinalIgnoreCase) >= 0,
 				"Add support for fractal scale."),
+			new LogUpdate(log => log.ParsingVersion < new Version(1, 10, 0, 1)
+			                     && (log.Encounter == Encounter.BanditTrio),
+				"Slightly improved precision for Bandit Trio success detection when recording player leaves the fort."),
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 10, 0, 2)
 			                     && log.Encounter == Encounter.Other
 			                     && log.MapId == MapIds.CosmicObservatory,

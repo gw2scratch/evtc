@@ -23,6 +23,9 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Transformers
 			this.determiners = determiners;
 		}
 
+		public IReadOnlyList<Type> RequiredEventTypes => determiners.SelectMany(x => x.RequiredEventTypes).Distinct().ToList();
+		public IReadOnlyList<uint> RequiredBuffSkillIds => determiners.SelectMany(x => x.RequiredBuffSkillIds).Distinct().ToList();
+
 		public ResultDeterminerResult GetResult(IEnumerable<Event> events)
 		{
 			var e = events as Event[] ?? events.ToArray();

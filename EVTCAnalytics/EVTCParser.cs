@@ -6,9 +6,14 @@ using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using GW2Scratch.EVTCAnalytics.IO;
+using GW2Scratch.EVTCAnalytics.Model;
+using GW2Scratch.EVTCAnalytics.Model.Agents;
+using GW2Scratch.EVTCAnalytics.Model.Skills;
 using GW2Scratch.EVTCAnalytics.Parsed;
 using GW2Scratch.EVTCAnalytics.Parsed.Enums;
+using GW2Scratch.EVTCAnalytics.Parsing;
 using GW2Scratch.EVTCAnalytics.Processing;
+using System.Buffers.Binary;
 using System.Runtime.CompilerServices;
 
 namespace GW2Scratch.EVTCAnalytics
@@ -18,6 +23,8 @@ namespace GW2Scratch.EVTCAnalytics
 	/// </summary>
 	public class EVTCParser
 	{
+		public FilteringOptions SinglePassFilteringOptions { get; } = new FilteringOptions();
+
 		internal class AgentReader
 		{
 			public bool Exhausted { get; private set; }
@@ -136,6 +143,121 @@ namespace GW2Scratch.EVTCAnalytics
 			}
 		}
 		
+		private class FilteredCombatItemReaderRevision0 : ICombatItemReader
+		{
+			public bool Exhausted { get; private set; }
+			
+			private readonly ByteArrayBinaryReader reader;
+			private readonly ICombatItemFilters filters;
+
+			public FilteredCombatItemReaderRevision0(ByteArrayBinaryReader reader, ICombatItemFilters filters)
+			{
+				this.reader = reader;
+				this.filters = filters;
+			}
+
+			public bool GetNext(out ParsedCombatItem combatItem)
+			{
+				while (reader.Length - reader.Position >= 64)
+				{
+					var stateChange = reader.PeekByte(59);
+					if (!filters.IsStateChangeRequired(stateChange))
+					{
+						reader.Skip(64);
+						continue;
+					}
+					
+					var buff = reader.PeekByte(52);
+					var isActivation = reader.PeekByte(54);
+					var buffRemove = reader.PeekByte(55);
+					var buffDmg = reader.PeekRange(28, 4);
+					
+					if (stateChange == 0 && isActivation == (byte) Activation.None && buff != 0 && (buffRemove != (byte) BuffRemove.None || (buffDmg[0] == 0 && buffDmg[1] == 0 && buffDmg[2] == 0 && buffDmg[3] == 0)))
+					{
+						var skillId = BinaryPrimitives.ReadUInt16LittleEndian(reader.PeekRange(34, 2));
+						if (!filters.IsBuffEventRequired(skillId))
+						{
+							reader.Skip(64);
+							continue;
+						}
+					}
+					
+					ReadCombatItemRevision0(reader, out combatItem);
+					
+
+					return true;
+				}
+
+				combatItem = default;
+				Exhausted = true;
+				return false;
+			}
+		}
+		
+		private class FilteredCombatItemReaderRevision1 : ICombatItemReader
+		{
+			public bool Exhausted { get; private set; }
+			
+			private readonly ByteArrayBinaryReader reader;
+			private readonly ICombatItemFilters filters;
+
+			public FilteredCombatItemReaderRevision1(ByteArrayBinaryReader reader, ICombatItemFilters filters)
+			{
+				this.reader = reader;
+				this.filters = filters;
+			}
+
+			public bool GetNext(out ParsedCombatItem combatItem)
+			{
+				while (reader.Length - reader.Position >= 64)
+				{
+					var stateChange = reader.PeekByte(56);
+					if (!filters.IsStateChangeRequired(stateChange))
+					{
+						reader.Skip(64);
+						continue;
+					}
+
+					var buff = reader.PeekByte(49);
+					var isActivation = reader.PeekByte(51);
+					var buffRemove = reader.PeekByte(52);
+					var buffDmg = reader.PeekRange(28, 4);
+
+					if (stateChange == 0 && isActivation == (byte) Activation.None && buff != 0 && (buffRemove != (byte) BuffRemove.None || (buffDmg[0] == 0 && buffDmg[1] == 0 && buffDmg[2] == 0 && buffDmg[3] == 0)))
+					{
+						var skillId = BinaryPrimitives.ReadUInt32LittleEndian(reader.PeekRange(36, 4));
+						if (!filters.IsBuffEventRequired(skillId))
+						{
+							reader.Skip(64);
+							continue;
+						}
+					}
+						
+					// 64 bytes: combat item
+					ReadCombatItemRevision1(reader, out combatItem);
+					
+					/*
+					// Checking after reading the item rather than peeking at the values before is slightly faster.
+					if (stateChange == 0 && combatItem.IsActivation == Activation.None && combatItem.Buff != 0 &&
+					    (combatItem.IsBuffRemove != BuffRemove.None || combatItem.BuffDmg == 0))
+					{
+						// This is a buff apply or remove.
+						if (!filters.IsBuffEventRequired(combatItem.SkillId))
+						{
+							continue;
+						}
+					}
+					*/
+
+					return true;
+				}
+
+				combatItem = default;
+				Exhausted = true;
+				return false;
+			}
+		}
+		
 		/// <summary>
 		/// Allows reading the EVTC file in a single pass effectively.
 		/// The methods have to be called in the correct order (see remarks).
@@ -167,13 +289,14 @@ namespace GW2Scratch.EVTCAnalytics
 
 			private readonly EVTCParser parser;
 			private readonly ByteArrayBinaryReader reader;
+			private readonly FilteringOptions filteringOptions;
 			private ReaderPosition position;
 			private AgentReader agentReader;
 			private SkillReader skillReader;
 			private ICombatItemReader combatItemReader;
 			private int revision;
 
-			public SinglePassEVTCReader(EVTCParser parser, ByteArrayBinaryReader reader)
+			public SinglePassEVTCReader(EVTCParser parser, ByteArrayBinaryReader reader, FilteringOptions filteringOptions)
 			{
 				if (reader.Position != 0)
 				{
@@ -182,6 +305,7 @@ namespace GW2Scratch.EVTCAnalytics
 
 				this.parser = parser;
 				this.reader = reader;
+				this.filteringOptions = filteringOptions;
 				position = ReaderPosition.BeforeVersion;
 			}
 
@@ -251,6 +375,9 @@ namespace GW2Scratch.EVTCAnalytics
 				return skillReader;
 			}
 			
+			/// <summary>
+			/// Returns a combat item reader without any filtering support.
+			/// </summary>
 			public ICombatItemReader GetCombatItemReader()
 			{
 				if (position != ReaderPosition.InSkills)
@@ -273,6 +400,44 @@ namespace GW2Scratch.EVTCAnalytics
 				{
 					0 => new CombatItemReaderRevision0(reader),
 					1 => new CombatItemReaderRevision1(reader),
+					_ => throw new NotSupportedException("Only EVTC revisions 0 and 1 are supported.")
+				};
+
+				return combatItemReader;
+			}
+			
+			public ICombatItemReader GetCombatItemReader(
+				ParsedBossData parsedBossData,
+				Agent mainTarget,
+				IReadOnlyList<Agent> agents,
+				int? gameBuild,
+				LogType logType,
+				IEncounterIdentifier encounterIdentifier,
+				IEncounterDataProvider encounterDataProvider)
+			{
+				if (position != ReaderPosition.InSkills)
+				{
+					throw new InvalidOperationException("GetCombatItemReader must be called directly after reading skill data.");
+				}
+				
+				if (combatItemReader != null)
+				{
+					throw new InvalidOperationException("GetCombatItemReader must only be called once.");
+				}
+				
+				if (!skillReader.Exhausted)
+				{
+					throw new InvalidOperationException("The skill reader obtained previously must be exhausted fully.");
+				}
+
+				var encounters = encounterIdentifier.IdentifyPotentialEncounters(parsedBossData);
+				var filters = filteringOptions.CreateFilters(encounters.Select(encounter => encounterDataProvider.GetEncounterData(encounter, mainTarget, agents, gameBuild, logType)).ToList());
+
+				position = ReaderPosition.InCombatItems;
+				combatItemReader = revision switch
+				{
+					0 => new FilteredCombatItemReaderRevision0(reader, filters),
+					1 => new FilteredCombatItemReaderRevision1(reader, filters),
 					_ => throw new NotSupportedException("Only EVTC revisions 0 and 1 are supported.")
 				};
 
@@ -427,7 +592,7 @@ namespace GW2Scratch.EVTCAnalytics
 
 		internal SinglePassEVTCReader GetSinglePassReader(byte[] bytes)
 		{
-			return new SinglePassEVTCReader(this, new ByteArrayBinaryReader(bytes, Encoding.UTF8));
+			return new SinglePassEVTCReader(this, new ByteArrayBinaryReader(bytes, Encoding.UTF8), SinglePassFilteringOptions);
 		}
 
 		/// <summary>

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GW2Scratch.EVTCAnalytics.Events;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
+using System;
 
 namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 {
@@ -11,15 +12,18 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 	public class AgentBuffGainedDeterminer : EventFoundResultDeterminer
 	{
 		private readonly Agent agent;
-		private readonly int buffId;
+		private readonly uint buffId;
 		private readonly bool ignoreInitial;
 
-		public AgentBuffGainedDeterminer(Agent agent, int buffId, bool ignoreInitial = true)
+		public AgentBuffGainedDeterminer(Agent agent, uint buffId, bool ignoreInitial = true)
 		{
 			this.agent = agent;
 			this.buffId = buffId;
 			this.ignoreInitial = ignoreInitial;
 		}
+		
+		public override IReadOnlyList<Type> RequiredEventTypes { get; } = new List<Type> { typeof(BuffApplyEvent), typeof(InitialBuffEvent) };
+		public override IReadOnlyList<uint> RequiredBuffSkillIds => new List<uint> { buffId };
 
 		protected override Event GetEvent(IEnumerable<Event> events)
 		{
