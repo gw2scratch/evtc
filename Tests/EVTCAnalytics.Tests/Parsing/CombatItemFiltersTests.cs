@@ -22,7 +22,19 @@ public class CombatItemFiltersTests
 			{
 				var changes = CombatItemFilters.GetStateChangesForEventType(type);
 				Assert.IsNotNull(changes);
-			}, $"Failed to get state changes for event type {type}"
+			}
+		);
+	}
+	
+	[Test]
+	[TestCaseSource(nameof(GetEventTypes))]
+	public void PhysicalResultsForEventTypeAreHandled(Type type)
+	{
+		Assert.DoesNotThrow(() =>
+			{
+				var changes = CombatItemFilters.GetPhysicalResultsForEventType(type);
+				Assert.IsNotNull(changes);
+			}
 		);
 	}
 	

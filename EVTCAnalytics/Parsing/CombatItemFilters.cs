@@ -20,7 +20,7 @@ public class CombatItemFilters : ICombatItemFilters
 	{
 		RequiredEventTypes = requiredEventTypes;
 		StateChangeFilter = BuildStateChangeFilter(RequiredEventTypes);
-		PhysicalDamageResultFilter = BuildPhysicalDamageResultFilter(requiredResults);
+		PhysicalDamageResultFilter = BuildPhysicalDamageResultFilter(requiredEventTypes, requiredResults);
 		BuffIdFilter = BuildBuffIdFilter(requiredBuffIds);
 		BuffDamageRequired = requiredEventTypes.Any(IsBuffDamage);
 	}
@@ -82,12 +82,22 @@ public class CombatItemFilters : ICombatItemFilters
 		return stateChanges;
 	}
 	
-	private static bool[] BuildPhysicalDamageResultFilter(IEnumerable<PhysicalDamageEvent.Result> requiredResults)
+	private static bool[] BuildPhysicalDamageResultFilter(IEnumerable<Type> eventTypes, IEnumerable<PhysicalDamageEvent.Result> requiredResults)
 	{
 		var results = new bool[256];
 		foreach (var result in requiredResults)
 		{
 			foreach (var rawResult in GetRawResultsForResult(result))
+			{
+				results[(int) rawResult] = true;
+			}
+		}
+		
+		// We are using requiredResults to filter through PhysicalDamageEvent and IgnoredPhysicalDamageEvent.
+		// However, some other events may be produced through other raw physical events with other raw results (such as defiance bar events).
+		foreach (var type in eventTypes.Where(x => x != typeof(PhysicalDamageEvent) && x != typeof(IgnoredPhysicalDamageEvent)))
+		{
+			foreach (var rawResult in GetPhysicalResultsForEventType(type))
 			{
 				results[(int) rawResult] = true;
 			}
@@ -110,7 +120,6 @@ public class CombatItemFilters : ICombatItemFilters
 			_ => throw new ArgumentOutOfRangeException(nameof(result), result, null)
 		};
 	}
-
 
 	public static IEnumerable<StateChange> GetStateChangesForEventType(Type eventType)
 	{
@@ -150,6 +159,26 @@ public class CombatItemFilters : ICombatItemFilters
 		isBuffDamage = isBuffDamage || IsDirectBuffDamage(eventType);
 
 		return isBuffDamage;
+	}
+	
+	public static IEnumerable<Result> GetPhysicalResultsForEventType(Type eventType)
+	{
+		if (!(eventType.IsSubclassOf(typeof(Event)) || eventType == typeof(Event)))
+		{
+			throw new ArgumentException($"Type {eventType} is not an event type.");
+		}
+		
+		// If a type has children types, we also need to include their state changes.
+		var subclasses = Assembly.GetAssembly(eventType)!.GetTypes().Where(type => type.IsSubclassOf(eventType));
+		var results = new HashSet<Result>();
+		foreach (var subclass in subclasses)
+		{
+			results.UnionWith(GetPhysicalResultsForEventType(subclass));
+		}
+		
+		results.UnionWith(GetDirectPhysicalResultsForEventType(eventType));
+
+		return results;
 	}
 
 	/// <summary>
@@ -278,6 +307,72 @@ public class CombatItemFilters : ICombatItemFilters
 
 		// The unknown event can come from anything
 		if (eventType == typeof(UnknownEvent)) return true;
+
+		throw new ArgumentException($"Event type {eventType} is not supported.");
+	}
+	
+	/// <summary>
+	/// Returns a list of results that will directly produce this type,
+	/// results that result in subclasses of this type are not included.
+	/// </summary>
+	private static IEnumerable<Result> GetDirectPhysicalResultsForEventType(Type eventType)
+	{
+		if (eventType == typeof(Event)) return Array.Empty<Result>();
+
+		if (eventType == typeof(AgentEvent)) return Array.Empty<Result>();
+		if (eventType == typeof(AgentEnterCombatEvent)) return Array.Empty<Result>();
+		if (eventType == typeof(AgentExitCombatEvent)) return Array.Empty<Result>();
+		if (eventType == typeof(AgentRevivedEvent)) return Array.Empty<Result>();
+		if (eventType == typeof(AgentDownedEvent)) return Array.Empty<Result>();
+		if (eventType == typeof(AgentDeadEvent)) return Array.Empty<Result>();
+		if (eventType == typeof(AgentSpawnEvent)) return Array.Empty<Result>();
+		if (eventType == typeof(AgentDespawnEvent)) return Array.Empty<Result>();
+		if (eventType == typeof(AgentHealthUpdateEvent)) return Array.Empty<Result>();
+		if (eventType == typeof(AgentWeaponSwapEvent)) return Array.Empty<Result>();
+		if (eventType == typeof(AgentMaxHealthUpdateEvent)) return Array.Empty<Result>();
+		if (eventType == typeof(AgentTagEvent)) return Array.Empty<Result>();
+		if (eventType == typeof(InitialBuffEvent)) return Array.Empty<Result>();
+		if (eventType == typeof(PositionChangeEvent)) return Array.Empty<Result>();
+		if (eventType == typeof(VelocityChangeEvent)) return Array.Empty<Result>();
+		if (eventType == typeof(FacingChangeEvent)) return Array.Empty<Result>();
+		if (eventType == typeof(TeamChangeEvent)) return Array.Empty<Result>();
+		if (eventType == typeof(TargetableChangeEvent)) return Array.Empty<Result>();
+		if (eventType == typeof(DefianceBarHealthUpdateEvent)) return Array.Empty<Result>();
+		if (eventType == typeof(BarrierUpdateEvent)) return Array.Empty<Result>();
+		if (eventType == typeof(DefianceBarStateUpdateEvent)) return Array.Empty<Result>();
+		if (eventType == typeof(EffectEvent)) return Array.Empty<Result>();
+		if (eventType == typeof(EffectStartEvent)) return Array.Empty<Result>();
+		if (eventType == typeof(EffectEndEvent)) return Array.Empty<Result>();
+
+		if (eventType == typeof(BuffEvent)) return Array.Empty<Result>();
+		if (eventType == typeof(BuffRemoveEvent)) return Array.Empty<Result>();
+		if (eventType == typeof(AllStacksRemovedBuffEvent)) return Array.Empty<Result>();
+		if (eventType == typeof(SingleStackRemovedBuffEvent)) return Array.Empty<Result>();
+		if (eventType == typeof(ManualStackRemovedBuffEvent)) return Array.Empty<Result>();
+		if (eventType == typeof(BuffApplyEvent)) return Array.Empty<Result>();
+		if (eventType == typeof(ActiveBuffStackEvent)) return Array.Empty<Result>();
+		if (eventType == typeof(ResetBuffStackEvent)) return Array.Empty<Result>();
+		if (eventType == typeof(BuffExtensionEvent)) return Array.Empty<Result>();
+		
+		if (eventType == typeof(DamageEvent)) return Array.Empty<Result>();
+		if (eventType == typeof(PhysicalDamageEvent)) return new[] { Result.Normal, Result.Critical, Result.Glance, Result.Interrupt, Result.KillingBlow, Result.Downed };
+		if (eventType == typeof(IgnoredPhysicalDamageEvent)) return new[] { Result.Block, Result.Evade, Result.Absorb, Result.Blind };
+		if (eventType == typeof(IgnoredBuffDamageEvent)) return Array.Empty<Result>();
+		if (eventType == typeof(BuffDamageEvent)) return Array.Empty<Result>();
+		if (eventType == typeof(OffCycleBuffDamageEvent)) return Array.Empty<Result>();
+		if (eventType == typeof(DefianceBarDamageEvent)) return new[] { Result.DefianceBar };
+		
+		if (eventType == typeof(RewardEvent)) return Array.Empty<Result>();
+		
+		if (eventType == typeof(SkillCastEvent)) return Array.Empty<Result>();
+		if (eventType == typeof(EndSkillCastEvent)) return Array.Empty<Result>();
+		if (eventType == typeof(StartSkillCastEvent)) return Array.Empty<Result>();
+		if (eventType == typeof(ResetSkillCastEvent)) return Array.Empty<Result>();
+
+		// The unknown event can come from any result, including not yet implemented ones,
+		// so we need to return all of them.
+		Debug.Assert(Enum.GetUnderlyingType(typeof(Result)) == typeof(byte));
+		if (eventType == typeof(UnknownEvent)) return Enumerable.Range(0, 256).Select(x => (Result) x);
 
 		throw new ArgumentException($"Event type {eventType} is not supported.");
 	}
