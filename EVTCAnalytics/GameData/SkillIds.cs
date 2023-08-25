@@ -120,6 +120,8 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		// Ai, the Keeper of the Peak, a skill without a name that she casts early into the dark phase.
 		public const int AiDarkEarlySkill = 61356;
 
+		public const int HarvestTempleLiftOff = 63896;
+
 		public const int Emboldened = 68087;
 	}
 }

@@ -11,8 +11,30 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Transformers
 	/// </summary>
 	public class AllCombinedResultDeterminer : IResultDeterminer
 	{
-		private readonly IResultDeterminer[] determiners;
+		public enum TimeSelection
+		{
+			Max,
+			Min
+		}
 
+		private readonly IResultDeterminer[] determiners;
+		private readonly TimeSelection timeSelection;
+
+		public AllCombinedResultDeterminer(TimeSelection timeSelection, params IResultDeterminer[] determiners)
+		{
+			if (determiners.Length == 0)
+			{
+				throw new ArgumentException("At least one determiner has to be provided", nameof(determiners));
+			}
+
+			this.timeSelection = timeSelection;
+			this.determiners = determiners;
+		}
+		
+		/// <summary>
+		/// Time selection is defaulted to <see cref="TimeSelection.Max"/>.
+		/// </summary>
+		/// <exception cref="ArgumentException">Thrown when <paramref name="determiners"/> is empty.</exception>
 		public AllCombinedResultDeterminer(params IResultDeterminer[] determiners)
 		{
 			if (determiners.Length == 0)
@@ -20,6 +42,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Transformers
 				throw new ArgumentException("At least one determiner has to be provided", nameof(determiners));
 			}
 
+			timeSelection = TimeSelection.Max;
 			this.determiners = determiners;
 		}
 
@@ -42,7 +65,12 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Transformers
 				}
 				else
 				{
-					time = results.Where(x => x.Time.HasValue).Select(x => x.Time).Max();
+					time = timeSelection switch
+					{
+						TimeSelection.Max => results.Where(x => x.Time.HasValue).Select(x => x.Time).Max(),
+						TimeSelection.Min => results.Where(x => x.Time.HasValue).Select(x => x.Time).Min(),
+						_ => throw new ArgumentOutOfRangeException()
+					};
 				}
 			}
 			else if (results.Any(x => x.EncounterResult == EncounterResult.Unknown))

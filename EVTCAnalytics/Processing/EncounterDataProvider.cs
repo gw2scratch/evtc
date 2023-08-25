@@ -493,7 +493,19 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 							
 							// Note that the gadget keeps its initial health from the previous attempt if the fight
 							// is reset within the same instance.
-							(finalGadget != null, new TargetableChangedBelowHealthThresholdDeterminer(finalGadget, false, 0.3f))
+							
+							(finalGadget != null, new AllCombinedResultDeterminer(
+								timeSelection: AllCombinedResultDeterminer.TimeSelection.Min,
+								new AnyCombinedResultDeterminer(
+									// The final gadget is likely to be null in case parsing and processing is merged and encounter data is evaluated
+									// for the first time as combat items were not parsed yet to find attack target assignments.
+									// For this reason, we need to create a fake targetable determiner that will never be satisfied when final gadget is null.
+									// We need to provide the same type of determiner as if final gadget was present for event pruning to work correctly.
+									finalGadget?.AttackTargets.Select(x => (IResultDeterminer) new TargetableDeterminer(x, true, false, true, false)).ToArray()
+										?? new IResultDeterminer[] { new TargetableDeterminer(null, true, false, true, false) }
+								),
+								new SkillCastAfterBuffApplyDeterminer(x => x is Player, SkillIds.HarvestTempleLiftOff, SkillIds.Determined895)
+							))
 						))
 						.WithHealth(new AgentHealthDeterminer(null).RequiredEventTypes, new List<uint>(),
 							log =>
