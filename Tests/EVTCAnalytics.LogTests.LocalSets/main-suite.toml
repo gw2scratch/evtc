@@ -595,6 +595,59 @@ filename = "encounters/harvest_temple_cm_kill.zevtc"
 encounter = "HarvestTemple"
 result = "Success"
 mode = "Challenge"
+[[log]]
+filename = "encounters/harvest_temple/fail/20220902-210025.zevtc"
+encounter = "HarvestTemple"
+result = "Failure"
+[[log]]
+filename = "encounters/harvest_temple/fail/20220902-225954.zevtc"
+encounter = "HarvestTemple"
+result = "Failure"
+[[log]]
+filename = "encounters/harvest_temple/fail/20220910-185547.zevtc"
+encounter = "HarvestTemple"
+result = "Failure"
+[[log]]
+filename = "encounters/harvest_temple/fail/20220918-231752.zevtc"
+encounter = "HarvestTemple"
+result = "Failure"
+[[log]]
+filename = "encounters/harvest_temple/fail/20221003-232955.zevtc"
+encounter = "HarvestTemple"
+result = "Failure"
+[[log]]
+filename = "encounters/harvest_temple/fail/20221102-220231.zevtc"
+encounter = "HarvestTemple"
+result = "Failure"
+[[log]]
+filename = "encounters/harvest_temple/fail/cm_fail_ei.zevtc"
+encounter = "HarvestTemple"
+result = "Failure"
+mode = "Challenge"
+[[log]]
+filename = "encounters/harvest_temple/success/20220827-222424.zevtc"
+encounter = "HarvestTemple"
+result = "Success"
+[[log]]
+filename = "encounters/harvest_temple/success/20220917-213558.zevtc"
+encounter = "HarvestTemple"
+result = "Success"
+[[log]]
+filename = "encounters/harvest_temple/success/20220917-222103.zevtc"
+encounter = "HarvestTemple"
+result = "Success"
+[[log]]
+filename = "encounters/harvest_temple/success/20220925-163233.zevtc"
+encounter = "HarvestTemple"
+result = "Success"
+[[log]]
+filename = "encounters/harvest_temple/success/20221003-234519.zevtc"
+encounter = "HarvestTemple"
+result = "Success"
+[[log]]
+filename = "encounters/harvest_temple/success/20221012-213024.zevtc"
+encounter = "HarvestTemple"
+result = "Success"
 
 ## Festival strikes
 [[log]]
