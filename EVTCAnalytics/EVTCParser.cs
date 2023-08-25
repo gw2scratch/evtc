@@ -24,6 +24,13 @@ namespace GW2Scratch.EVTCAnalytics
 	public class EVTCParser
 	{
 		public FilteringOptions SinglePassFilteringOptions { get; } = new FilteringOptions();
+		private CombatItemFilterCache CombatItemFilterCache { get; }
+
+		public EVTCParser()
+		{
+			CombatItemFilterCache = new CombatItemFilterCache();
+			SinglePassFilteringOptions.PropertyChanged += (_, _) => CombatItemFilterCache.Clear();
+		}
 
 		internal class AgentReader
 		{
@@ -341,13 +348,14 @@ namespace GW2Scratch.EVTCAnalytics
 			private readonly EVTCParser parser;
 			private readonly ByteArrayBinaryReader reader;
 			private readonly FilteringOptions filteringOptions;
+			private readonly CombatItemFilterCache combatItemFilterCache;
 			private ReaderPosition position;
 			private AgentReader agentReader;
 			private SkillReader skillReader;
 			private ICombatItemReader combatItemReader;
 			private int revision;
 
-			public SinglePassEVTCReader(EVTCParser parser, ByteArrayBinaryReader reader, FilteringOptions filteringOptions)
+			public SinglePassEVTCReader(EVTCParser parser, ByteArrayBinaryReader reader, FilteringOptions filteringOptions, CombatItemFilterCache combatItemFilterCache)
 			{
 				if (reader.Position != 0)
 				{
@@ -357,6 +365,7 @@ namespace GW2Scratch.EVTCAnalytics
 				this.parser = parser;
 				this.reader = reader;
 				this.filteringOptions = filteringOptions;
+				this.combatItemFilterCache = combatItemFilterCache;
 				position = ReaderPosition.BeforeVersion;
 			}
 
@@ -481,8 +490,12 @@ namespace GW2Scratch.EVTCAnalytics
 					throw new InvalidOperationException("The skill reader obtained previously must be exhausted fully.");
 				}
 
-				var encounters = encounterIdentifier.IdentifyPotentialEncounters(parsedBossData);
-				var filters = filteringOptions.CreateFilters(encounters.Select(encounter => encounterDataProvider.GetEncounterData(encounter, mainTarget, agents, gameBuild, logType)).ToList());
+				if (!combatItemFilterCache.TryGetFilters(parsedBossData, out ICombatItemFilters filters))
+				{
+					var encounters = encounterIdentifier.IdentifyPotentialEncounters(parsedBossData);
+					filters = filteringOptions.CreateFilters(encounters.Select(encounter => encounterDataProvider.GetEncounterData(encounter, mainTarget, agents, gameBuild, logType)).ToList());
+					combatItemFilterCache.CacheFilters(parsedBossData, filters);
+				}
 
 				position = ReaderPosition.InCombatItems;
 				combatItemReader = revision switch
@@ -643,7 +656,7 @@ namespace GW2Scratch.EVTCAnalytics
 
 		internal SinglePassEVTCReader GetSinglePassReader(byte[] bytes)
 		{
-			return new SinglePassEVTCReader(this, new ByteArrayBinaryReader(bytes, Encoding.UTF8), SinglePassFilteringOptions);
+			return new SinglePassEVTCReader(this, new ByteArrayBinaryReader(bytes, Encoding.UTF8), SinglePassFilteringOptions, CombatItemFilterCache);
 		}
 
 		/// <summary>
