@@ -9,6 +9,7 @@ This is the full changelog of the arcdps Log Manager.
 - Added support for Escort in Raid Wing 3
 - Added total duration and success/fail counts to the multiple log selection panel
 - Added a button to set the dps.report user token in the settings
+- Added a copy button to log URLs (thank you, @Linkaaaaa!)
 - Added max parallel threads setting to the *Game data gathering* tab (View -> Debug Data must be enabled to see this tab).
 
 #### Performance improvements
