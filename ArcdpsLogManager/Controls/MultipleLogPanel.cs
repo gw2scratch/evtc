@@ -12,6 +12,7 @@ using GW2Scratch.ArcdpsLogManager.Logs.Naming;
 using GW2Scratch.ArcdpsLogManager.Logs.Tagging;
 using GW2Scratch.ArcdpsLogManager.Processing;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
+using System.Runtime.InteropServices;
 using Button = Eto.Forms.Button;
 using Label = Eto.Forms.Label;
 
@@ -106,7 +107,6 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 
 			int finished = uploaded + uploadsFailed + processingFailed;
 			int totalRequested = queued + uploading + uploaded + uploadsFailed + processingFailed;
-			bool copyEnabled = false;
 			dpsReportUploadProgressBar.MaxValue = totalRequested > 0 ? totalRequested : 1;
 			dpsReportUploadProgressBar.Value = finished;
 			dpsReportUploadButton.Enabled = notUploaded + uploadsFailed > 0;
@@ -123,9 +123,11 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			dpsReportLinkTextArea.Text = string.Join(Environment.NewLine,
 				logData.Where(x => x.DpsReportEIUpload.Url != null).Select(x => x.DpsReportEIUpload.Url));
 			copyButton.Enabled = uploaded > 0;
-			if (uploaded > 0) copyEnabled = true;			
-			if (copyEnabled) copyButton.Image = imageProvider.GetCopyButtonEnabledImage();
-			else copyButton.Image = imageProvider.GetCopyButtonDisabledImage();
+			if (Application.Instance.Platform.IsWpf)
+			{
+				bool copyEnabled = uploaded > 0;
+				copyButton.Image = copyEnabled ? imageProvider.GetCopyButtonEnabledImage() : imageProvider.GetCopyButtonDisabledImage();
+			}
 		}
 
 		public MultipleLogPanel(LogCache logCache, ApiData apiData, LogDataProcessor logProcessor,
@@ -223,9 +225,16 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				}
 			};
 
-			Image copyImage = imageProvider.GetCopyButtonEnabledImage();
-			copyButton = new Button { Image = copyImage, Height = 25, Width = 25 };
-			
+			if (Application.Instance.Platform.IsWpf)
+			{
+				copyButton = new Button { Image = imageProvider.GetCopyButtonEnabledImage(), Height = 25, Width = 25 };
+			}
+			else
+			{
+				// The height is not working correctly on Gtk, and the icon may have clashing colors depending on the Gtk theme.
+				copyButton = new Button { Text = "Copy", Height = 25, Width = 25 };
+			}
+
 			copyButton.Click += (sender, args) =>
 			{
 				var urls = "";
@@ -315,7 +324,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 						EndHorizontal();
 					}
 					EndVertical();
-					BeginVertical(yscale: false);
+					BeginVertical(yscale: false, spacing: new Size(5, 5));
 					{
 						BeginHorizontal();
 						{

@@ -251,8 +251,15 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 					}
 					EndHorizontal();
 
-					Image copyImage = imageProvider.GetCopyButtonEnabledImage();
-					copyButton = new Button { Image = copyImage , Height = 25 , Width = 25};
+					if (Application.Instance.Platform.IsWpf)
+					{
+						copyButton = new Button { Image = imageProvider.GetCopyButtonEnabledImage(), Height = 25, Width = 25 };
+					}
+					else
+					{
+						// The height is not working correctly on Gtk, and the icon may have clashing colors depending on the Gtk theme.
+						copyButton = new Button { Text = "Copy", Height = 25, Width = 25 };
+					}
 					dpsReportUploadButton = new Button();
 					dpsReportTextBox = new TextBox {ReadOnly = true};
 					dpsReportOpenButton = new Button {Text = "Open"};
@@ -422,8 +429,10 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 					throw new ArgumentOutOfRangeException();
 			}
 
-			if (copyEnabled) copyButton.Image = ImageProvider.GetCopyButtonEnabledImage();
-			else copyButton.Image = ImageProvider.GetCopyButtonDisabledImage();
+			if (Application.Instance.Platform.IsWpf)
+			{
+				copyButton.Image = copyEnabled ? ImageProvider.GetCopyButtonEnabledImage() : ImageProvider.GetCopyButtonDisabledImage();
+			}
 
 			copyButton.Enabled = copyEnabled;
 			dpsReportUploadButton.Text = uploadButtonText;
