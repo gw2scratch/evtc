@@ -258,7 +258,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 					else
 					{
 						// The height is not working correctly on Gtk, and the icon may have clashing colors depending on the Gtk theme.
-						copyButton = new Button { Text = "Copy", Height = 25, Width = 25 };
+						copyButton = new Button { Text = "Copy" };
 					}
 					dpsReportUploadButton = new Button();
 					dpsReportTextBox = new TextBox {ReadOnly = true};
@@ -270,7 +270,11 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 						{
 							BeginHorizontal();
 							{
-								Add(copyButton);
+								// On the Gtk platform, there is not enough space for the button with its implicit padding.
+								if (!Application.Instance.Platform.IsGtk)
+								{
+									Add(copyButton);
+								}
 								Add(dpsReportTextBox, true);
 								Add(dpsReportOpenButton);
 								if (!readOnly)

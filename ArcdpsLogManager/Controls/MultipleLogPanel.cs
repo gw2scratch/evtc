@@ -232,7 +232,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			else
 			{
 				// The height is not working correctly on Gtk, and the icon may have clashing colors depending on the Gtk theme.
-				copyButton = new Button { Text = "Copy", Height = 25, Width = 25 };
+				copyButton = new Button { Text = "Copy" };
 			}
 
 			copyButton.Click += (sender, args) =>
