@@ -234,7 +234,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 					var state = log.DpsReportEIUpload.UploadState;
 					if (state == UploadState.Uploaded)
 					{
-						urls += log.DpsReportEIUpload.Url + "\n";
+						urls += log.DpsReportEIUpload.Url + Environment.NewLine;
 					}
 				}
 				var copyClipboard = new Clipboard()
