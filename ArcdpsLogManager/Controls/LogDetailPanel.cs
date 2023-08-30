@@ -33,6 +33,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 		private readonly Button dpsReportUploadButton;
 		private readonly TextBox dpsReportTextBox;
 		private readonly Button dpsReportOpenButton;
+		private readonly Button copyButton;
 		private readonly TagControl tagControl;
 		private readonly DynamicTable groupCompositionSection;
 		private readonly DynamicTable failedProcessingSection;
@@ -250,6 +251,8 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 					}
 					EndHorizontal();
 
+					Image copyImage = imageProvider.GetCopyButtonEnabledImage();
+					copyButton = new Button { Image = copyImage , Height = 25 , Width = 25};
 					dpsReportUploadButton = new Button();
 					dpsReportTextBox = new TextBox {ReadOnly = true};
 					dpsReportOpenButton = new Button {Text = "Open"};
@@ -260,6 +263,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 						{
 							BeginHorizontal();
 							{
+								Add(copyButton);
 								Add(dpsReportTextBox, true);
 								Add(dpsReportOpenButton);
 								if (!readOnly)
@@ -296,6 +300,13 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 					UseShellExecute = true
 				};
 				Process.Start(processInfo);
+			};
+			copyButton.Click += (sender, args) =>
+			{
+				var copyClipboard = new Clipboard()
+				{
+					Text = logData.DpsReportEIUpload.Url,
+				};
 			};
 
 			debugButton.Click += (sender, args) =>
@@ -376,6 +387,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 
 			bool uploadEnabled = false;
 			bool openEnabled = false;
+			bool copyEnabled = false;
 			string text = "";
 			string uploadButtonText;
 			var upload = logData.DpsReportEIUpload;
@@ -403,12 +415,17 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 					uploadButtonText = reuploadButtonText;
 					uploadEnabled = true;
 					openEnabled = true;
+					copyEnabled = true;
 					text = upload.Url;
 					break;
 				default:
 					throw new ArgumentOutOfRangeException();
 			}
 
+			if (copyEnabled) copyButton.Image = ImageProvider.GetCopyButtonEnabledImage();
+			else copyButton.Image = ImageProvider.GetCopyButtonDisabledImage();
+
+			copyButton.Enabled = copyEnabled;
 			dpsReportUploadButton.Text = uploadButtonText;
 			dpsReportUploadButton.Enabled = uploadEnabled;
 			dpsReportOpenButton.Enabled = openEnabled;
