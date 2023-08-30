@@ -179,6 +179,9 @@ namespace GW2Scratch.ArcdpsLogManager
 		private Lazy<Image> VengeanceIcon { get; } = new Lazy<Image>(Resources.GetTinyIconVengeance);
 		private Lazy<Image> WeBleedFireIcon { get; } = new Lazy<Image>(Resources.GetTinyIconWeBleedFire);
 
+		// MISC
+		private Lazy<Image> CopyButtonEnabledIcon { get; } = new Lazy<Image>(Resources.GetCopyButtonEnabledIcon);
+		private Lazy<Image> CopyButtonDisabledIcon { get; } = new Lazy<Image>(Resources.GetCopyButtonDisabledIcon);
 
 		public Image GetTinyLogIcon() => TinyIconLog.Value;
 		public Image GetTinyFractalsIcon() => TinyIconFractals.Value;
@@ -193,6 +196,8 @@ namespace GW2Scratch.ArcdpsLogManager
 		public Image GetTinyEndOfDragonsIcon() => TinyIconEndOfDragons.Value;
 		public Image GetTinySecretsOfTheObscureIcon() => TinyIconSecretsOfTheObscure.Value;
 		public Image GetTinyInstanceIcon() => TinyIconInstance.Value;
+		public Image GetCopyButtonEnabledImage() => CopyButtonEnabledIcon.Value;
+		public Image GetCopyButtonDisabledImage() => CopyButtonDisabledIcon.Value;
 
 		public Image GetTinyProfessionIcon(Profession profession)
 		{

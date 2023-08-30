@@ -7,6 +7,7 @@ using Eto.Forms;
 using GW2Scratch.ArcdpsLogManager.Configuration;
 using GW2Scratch.ArcdpsLogManager.Gw2Api;
 using GW2Scratch.ArcdpsLogManager.Logs;
+using GW2Scratch.ArcdpsLogManager.Logs.Filters;
 using GW2Scratch.ArcdpsLogManager.Logs.Naming;
 using GW2Scratch.ArcdpsLogManager.Logs.Tagging;
 using GW2Scratch.ArcdpsLogManager.Processing;
@@ -36,6 +37,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 		private readonly Button dpsReportUploadButton = new Button();
 		private readonly Button dpsReportCancelButton = new Button {Text = "Cancel"};
 		private readonly Button dpsReportOpenButton = new Button {Text = "Open uploaded logs in a browser", Enabled = false};
+		private readonly Button copyButton;
 		private readonly ProgressBar dpsReportUploadProgressBar = new ProgressBar();
 		private readonly DynamicTable dpsReportUploadFailedRow;
 		private readonly DynamicTable dpsReportProcessingFailedRow;
@@ -104,6 +106,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 
 			int finished = uploaded + uploadsFailed + processingFailed;
 			int totalRequested = queued + uploading + uploaded + uploadsFailed + processingFailed;
+			bool copyEnabled = false;
 			dpsReportUploadProgressBar.MaxValue = totalRequested > 0 ? totalRequested : 1;
 			dpsReportUploadProgressBar.Value = finished;
 			dpsReportUploadButton.Enabled = notUploaded + uploadsFailed > 0;
@@ -119,6 +122,10 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			dpsReportOpenButton.Enabled = uploaded > 0;
 			dpsReportLinkTextArea.Text = string.Join(Environment.NewLine,
 				logData.Where(x => x.DpsReportEIUpload.Url != null).Select(x => x.DpsReportEIUpload.Url));
+			copyButton.Enabled = uploaded > 0;
+			if (uploaded > 0) copyEnabled = true;			
+			if (copyEnabled) copyButton.Image = imageProvider.GetCopyButtonEnabledImage();
+			else copyButton.Image = imageProvider.GetCopyButtonDisabledImage();
 		}
 
 		public MultipleLogPanel(LogCache logCache, ApiData apiData, LogDataProcessor logProcessor,
@@ -216,6 +223,27 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				}
 			};
 
+			Image copyImage = imageProvider.GetCopyButtonEnabledImage();
+			copyButton = new Button { Image = copyImage, Height = 25, Width = 25 };
+			
+			copyButton.Click += (sender, args) =>
+			{
+				var urls = "";
+				foreach (var log in logData)
+				{
+					var state = log.DpsReportEIUpload.UploadState;
+					if (state == UploadState.Uploaded)
+					{
+						urls += log.DpsReportEIUpload.Url + "\n";
+					}
+				}
+				var copyClipboard = new Clipboard()
+				{
+					Text = urls,
+				};
+			};
+
+
 			BeginVertical(spacing: new Size(0, 30));
 			{
 				BeginVertical();
@@ -277,8 +305,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 						}
 						EndVertical();
 					}
-
-					BeginVertical();
+					BeginVertical(yscale: true);
 					{
 						AddRow(dpsReportUploadProgressBar);
 						BeginHorizontal(yscale: true);
@@ -286,11 +313,17 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 							Add(dpsReportLinkTextArea);
 						}
 						EndHorizontal();
-						BeginHorizontal(yscale: false);
+					}
+					EndVertical();
+					BeginVertical(yscale: false);
+					{
+						BeginHorizontal();
 						{
+							Add(copyButton);
 							Add(dpsReportOpenButton);
 						}
 						EndHorizontal();
+						
 					}
 					EndVertical();
 				}
