@@ -320,10 +320,10 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			{
 				using (var writer = new StreamWriter(dialog.FileName))
 				{
-					writer.WriteLine("ID,Name,Times seen");
+					writer.WriteLine("ID,Name,Times seen,Type");
 					foreach (var data in skillData)
 					{
-						writer.WriteLine($"{data.SkillId},{data.Name},{data.Logs.Count}");
+						writer.WriteLine($"{data.SkillId},{data.Name},{data.Logs.Count},{data.Type}");
 					}
 				}
 			}
