@@ -40,11 +40,14 @@ namespace GW2Scratch.EVTCInspector
 					{
 						var parent = (TypeFilterItem) Parent;
 						bool? newValue;
-						if (parent.Children.All(x => ((TypeFilterItem) x).Checked == true))
+						
+						bool isAbstract = parent.Type.IsAbstract;
+
+						if (parent.Children.All(x => ((TypeFilterItem) x).Checked == true) && isAbstract)
 						{
 							newValue = true;
 						}
-						else if (parent.Children.All(x => ((TypeFilterItem) x).Checked == false))
+						else if (parent.Children.All(x => ((TypeFilterItem) x).Checked == false) && isAbstract)
 						{
 							newValue = false;
 						}
