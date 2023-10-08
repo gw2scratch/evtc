@@ -9,7 +9,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health;
 /// A health determiner that runs a provided function. Useful for determiners that are inherently not reusable.
 /// </summary>
 /// <remarks>
-/// <see cref="EncounterIdentifierBuilder" /> provides an overload which creates this automatically.
+/// <see cref="EncounterDataBuilder" /> provides an overload which creates this automatically.
 /// </remarks>
 public class AdHocHealthDeterminer : IHealthDeterminer
 {

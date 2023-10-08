@@ -38,7 +38,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 		
 		private IEncounterData GetMapEncounterData()
 		{
-			var builder = new EncounterIdentifierBuilder(
+			var builder = new EncounterDataBuilder(
 				Encounter.Map,
 				new List<Agent>(),
 				new ConstantResultDeterminer(EncounterResult.Unknown),
@@ -631,9 +631,9 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 		}
 
 
-		private static EncounterIdentifierBuilder GetDefaultBuilder(Encounter encounter, Agent mainTarget, bool mergeMainTarget = true)
+		private static EncounterDataBuilder GetDefaultBuilder(Encounter encounter, Agent mainTarget, bool mergeMainTarget = true)
 		{
-			var builder = new EncounterIdentifierBuilder(
+			var builder = new EncounterDataBuilder(
 				encounter,
 				new List<Agent> {mainTarget},
 				new AgentKilledDeterminer(mainTarget),
@@ -649,7 +649,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			return builder;
 		}
 
-		private static EncounterIdentifierBuilder GetDefaultBuilder(Encounter encounter, IEnumerable<Agent> mainTargets, bool mergeMainTargets = true)
+		private static EncounterDataBuilder GetDefaultBuilder(Encounter encounter, IEnumerable<Agent> mainTargets, bool mergeMainTargets = true)
 		{
 			var targets = mainTargets.ToArray();
 			IResultDeterminer result;
@@ -664,7 +664,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			{
 				result = new ConstantResultDeterminer(EncounterResult.Unknown);
 			}
-			var builder = new EncounterIdentifierBuilder(
+			var builder = new EncounterDataBuilder(
 				encounter,
 				targets.ToList(),
 				result,

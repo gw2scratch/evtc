@@ -16,7 +16,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 	/// <summary>
 	/// A convenient builder for fluently building encounter data.
 	/// </summary>
-	public class EncounterIdentifierBuilder
+	public class EncounterDataBuilder
 	{
 		private Encounter Encounter { get; set; }
 		private IResultDeterminer ResultDeterminer { get; set; }
@@ -26,7 +26,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 		private List<IPostProcessingStep> ProcessingSteps { get; set; }
 		private List<Agent> Targets { get; set; }
 
-		public EncounterIdentifierBuilder(
+		public EncounterDataBuilder(
 			Encounter defaultEncounter,
 			List<Agent> defaultTargets,
 			IResultDeterminer defaultResultDeterminer,
@@ -43,31 +43,31 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			ProcessingSteps = (defaultProcessingSteps ?? Enumerable.Empty<IPostProcessingStep>()).ToList();
 		}
 
-		public EncounterIdentifierBuilder WithEncounter(Encounter encounter)
+		public EncounterDataBuilder WithEncounter(Encounter encounter)
 		{
 			Encounter = encounter;
 			return this;
 		}
 
-		public EncounterIdentifierBuilder WithResult(IResultDeterminer determiner)
+		public EncounterDataBuilder WithResult(IResultDeterminer determiner)
 		{
 			ResultDeterminer = determiner;
 			return this;
 		}
 
-		public EncounterIdentifierBuilder WithModes(IModeDeterminer determiner)
+		public EncounterDataBuilder WithModes(IModeDeterminer determiner)
 		{
 			ModeDeterminer = determiner;
 			return this;
 		}
 
-		public EncounterIdentifierBuilder WithHealth(IHealthDeterminer determiner)
+		public EncounterDataBuilder WithHealth(IHealthDeterminer determiner)
 		{
 			HealthDeterminer = determiner;
 			return this;
 		}
 
-		public EncounterIdentifierBuilder WithHealth(
+		public EncounterDataBuilder WithHealth(
 			IReadOnlyList<Type> requiredEventTypes,
 			IReadOnlyList<uint> requiredBuffSkillIds,
 			IReadOnlyList<PhysicalDamageEvent.Result> requiredPhysicalDamageEventResults,
@@ -78,25 +78,25 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			return this;
 		}
 
-		public EncounterIdentifierBuilder AddPostProcessingStep(IPostProcessingStep step)
+		public EncounterDataBuilder AddPostProcessingStep(IPostProcessingStep step)
 		{
 			ProcessingSteps.Add(step);
 			return this;
 		}
 
-		public EncounterIdentifierBuilder WithPostProcessingSteps(params IPostProcessingStep[] steps)
+		public EncounterDataBuilder WithPostProcessingSteps(params IPostProcessingStep[] steps)
 		{
 			ProcessingSteps = steps.ToList();
 			return this;
 		}
 
-		public EncounterIdentifierBuilder WithPostProcessingSteps(IEnumerable<IPostProcessingStep> steps)
+		public EncounterDataBuilder WithPostProcessingSteps(IEnumerable<IPostProcessingStep> steps)
 		{
 			ProcessingSteps = steps.ToList();
 			return this;
 		}
 
-		public EncounterIdentifierBuilder WithTargets(List<Agent> targets)
+		public EncounterDataBuilder WithTargets(List<Agent> targets)
 		{
 			Targets = targets;
 			return this;
