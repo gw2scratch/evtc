@@ -169,6 +169,10 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Updates
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 10, 0, 4)
 			                     && log.Encounter == Encounter.HarvestTemple,
 				"Fix success detection for Harvest Temple"),
+			new LogUpdate(log => log.ParsingVersion < new Version(1, 10, 0, 5)
+			                     && log.GameBuild >= 151966
+			                     && log.Encounter == Encounter.AiKeeperOfThePeakDayOnly,
+				"Fix success detection for Ai, Keeper of the Peak – Elemental"),
 			// When adding a new update, you need to increase the revision (last value) of the version in the .csproj file
 			// unless the version changes more significantly, in that case it can be reset to 0.
 		};

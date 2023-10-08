@@ -366,9 +366,12 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					// Players commonly reset the fight between "day" and "night" phases.
 					// As such, reaching the invulnerability is considered a success because the fight progresses
 					// and the players only have to do the "night" phase afterwards.
+					
+					// As of build 151966, there is a 2 second Determined applied at the start of each attempt.
+					// We just ignore it based on health.
 
 					return GetDefaultBuilder(encounter, mainTarget)
-						.WithResult(new AgentBuffGainedDeterminer(mainTarget, SkillIds.Determined895))
+						.WithResult(new BuffAppliedBelowHealthThresholdDeterminer(mainTarget, 0.9f, SkillIds.Determined895))
 						.WithModes(new ConstantModeDeterminer(EncounterMode.Challenge))
 						.Build();
 				}
@@ -378,8 +381,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					// of the encounter flow.
 
 					return GetDefaultBuilder(encounter, mainTarget)
-						.WithResult(new BuffAppliedAfterSkillCastDeterminer(mainTarget, SkillIds.AiDarkEarlySkill,
-							SkillIds.Determined895))
+						.WithResult(new BuffAppliedAfterSkillCastDeterminer(mainTarget, SkillIds.AiDarkEarlySkill, SkillIds.Determined895))
 						.WithModes(new ConstantModeDeterminer(EncounterMode.Challenge))
 						.Build();
 				}

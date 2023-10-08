@@ -989,8 +989,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						return new FacingChangeEvent(item.Time, GetAgentByAddress(item.SrcAgent), x, y);
 					}
 					case StateChange.TeamChange:
-						return new TeamChangeEvent(item.Time, GetAgentByAddress(item.SrcAgent),
-							item.DstAgent);
+						return new TeamChangeEvent(item.Time, GetAgentByAddress(item.SrcAgent), item.DstAgent);
 					case StateChange.Targetable:
 					{
 						var agent = GetAgentByAddress(item.SrcAgent);
@@ -1006,11 +1005,9 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					case StateChange.ReplInfo:
 						return new UnknownEvent(item.Time, item);
 					case StateChange.StackActive:
-						return new ActiveBuffStackEvent(item.Time, GetAgentByAddress(item.SrcAgent),
-							(uint) item.DstAgent);
+						return new ActiveBuffStackEvent(item.Time, GetAgentByAddress(item.SrcAgent), (uint) item.DstAgent);
 					case StateChange.StackReset:
-						return new ResetBuffStackEvent(item.Time, GetAgentByAddress(item.SrcAgent), item.Padding,
-							item.Value);
+						return new ResetBuffStackEvent(item.Time, GetAgentByAddress(item.SrcAgent), item.Padding, item.Value);
 					case StateChange.BreakbarState:
 						var breakbarState = item.Value switch
 						{
@@ -1025,10 +1022,17 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					case StateChange.BreakbarPercent:
 						// This encoding is inconsistent with the health update.
 						float breakbarHealthFraction = BitConversions.ToSingle(item.Value);
-						return new DefianceBarHealthUpdateEvent(item.Time, GetAgentByAddress(item.SrcAgent),
-							breakbarHealthFraction);
+						return new DefianceBarHealthUpdateEvent(item.Time, GetAgentByAddress(item.SrcAgent), breakbarHealthFraction);
 					case StateChange.BuffFormula:
-					// TODO: Figure out what the contents are
+					{
+						// (float*)&time[8]: type attr1 attr2 param1 param2 param3 trait_src trait_self,
+						// (float*)&src_instid[2] = buff_src buff_self,
+						// is_flanking = !npc,
+						// is_shields = !player,
+						// is_offcycle = break,
+						// overstack = value of type determined by pad61 (none/number/skill)
+						return new UnknownEvent(item.Time, item);
+					}
 					case StateChange.SkillTiming:
 						// TODO: Figure out what the contents are
 						return new UnknownEvent(item.Time, item);

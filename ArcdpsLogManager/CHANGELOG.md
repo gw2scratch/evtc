@@ -19,6 +19,7 @@ This is the full changelog of the arcdps Log Manager.
 
 #### Fixes
 - Fixed Harvest Temple success detection.
+- Fixed Ai, Keeper of the Peak - Elemental success detection after September 26, 2023 update (game build 151966).
 - Slightly improved Bandit Trio success detection in cases when the recording player leaves the fort.
 - Fixed logs with Emboldened appearing mid-fight failing to be processed.
 - Fixed log detail pane not appearing for selected logs processed with Log Manager versions 1.3 and older.
