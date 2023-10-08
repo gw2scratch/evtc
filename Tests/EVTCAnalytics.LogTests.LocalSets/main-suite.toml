@@ -756,6 +756,19 @@ encounter = "AiKeeperOfThePeakNightOnly"
 result = "Failure"
 mode = "Challenge"
 
+[[log]]
+filename = "encounters/ai_elemental_kill_151966.zevtc"
+encounter = "AiKeeperOfThePeakDayOnly"
+result = "Success"
+mode = "Challenge"
+comment = "Ai - elemental only, kill after Determined added with game build 151966"
+[[log]]
+filename = "encounters/ai_elemental_fail_151966.zevtc"
+encounter = "AiKeeperOfThePeakDayOnly"
+result = "Failure"
+mode = "Challenge"
+comment = "Ai - elemental only, fail after Determined added with game build 151966"
+
 ## Golems
 [[log]]
 filename = "encounters/golem_kill.zevtc"
