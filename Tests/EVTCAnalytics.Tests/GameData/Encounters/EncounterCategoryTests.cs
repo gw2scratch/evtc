@@ -1,18 +1,22 @@
 using System;
 using GW2Scratch.EVTCAnalytics.GameData.Encounters;
 using NUnit.Framework;
+using System.Collections.Generic;
 
 namespace GW2Scratch.EVTCAnalytics.Tests.GameData.Encounters
 {
 	public class EncounterCategoryTests
 	{
 		[Test]
-		public void CategoryAvailableForAllEncounters()
+		[TestCaseSource(nameof(GetEncounters))]
+		public void CategoryAvailableForEncounter(Encounter encounter)
 		{
-			foreach (Encounter encounter in Enum.GetValues(typeof(Encounter)))
-			{
-				Assert.DoesNotThrow(() => encounter.GetEncounterCategory());
-			}
+			Assert.DoesNotThrow(() => encounter.GetEncounterCategory());
+		}
+
+		public static IEnumerable<Encounter> GetEncounters()
+		{
+			return Enum.GetValues<Encounter>();
 		}
 	}
 }
