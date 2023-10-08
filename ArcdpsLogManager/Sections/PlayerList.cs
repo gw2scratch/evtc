@@ -1,3 +1,4 @@
+using DebounceThrottle;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -26,8 +27,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 
 		private ObservableCollection<PlayerData> playerData;
 		private SelectableFilterCollection<PlayerData> filtered;
-		private Task debounceFilterTask;
-		private CancellationTokenSource debounceFilterCancellationTokenSource;
+		private readonly DebounceDispatcher debounceDispatcher = new DebounceDispatcher(200);
 
 		private readonly GridView<PlayerData> playerGridView;
 		private readonly GridViewSorter<PlayerData> sorter;
@@ -85,52 +85,13 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			var playerFilterBox = new TextBox();
 			playerFilterBox.TextBinding.Bind(this, x => x.PlayerFilter);
 			playerFilterBox.TextChanged += (sender, args) => {
-
-				if (this.debounceFilterCancellationTokenSource != null)
-				{
-					this.debounceFilterCancellationTokenSource.Cancel();
-					try
-					{
-						this.debounceFilterTask.Wait();
-					}
-					catch (AggregateException ex)
-					{
-						if (ex.InnerException is TaskCanceledException)
-						{
-							// NOP
-						}
-						else
-						{
-							throw;
-						}
-					}
-					this.debounceFilterTask.Dispose();
-					this.debounceFilterCancellationTokenSource.Dispose();
-					this.debounceFilterTask = null;
-					this.debounceFilterCancellationTokenSource = null;
-				}
-
-				this.debounceFilterCancellationTokenSource = new CancellationTokenSource();
-				this.debounceFilterTask = Task.Run(async () =>
-				{
-					await Task.Delay(200, this.debounceFilterCancellationTokenSource.Token);
-					this.debounceFilterCancellationTokenSource.Token.ThrowIfCancellationRequested();
-
-					await Application.Instance.InvokeAsync(() =>
+				debounceDispatcher.Debounce(() =>
+					Application.Instance.InvokeAsync(() =>
 					{
 						playerGridView.UnselectAll();
 						Refresh();
-					});
-					_ = Task.Run(() =>
-					{
-						this.debounceFilterCancellationTokenSource.Cancel();
-						this.debounceFilterTask.Wait();
-						this.debounceFilterTask.Dispose();
-						this.debounceFilterCancellationTokenSource.Dispose();
-						this.debounceFilterTask = null;
-						this.debounceFilterCancellationTokenSource = null;
-					});
-				});
+					})
+				);
 			};
 
 			BeginVertical(spacing: new Size(5, 5), padding: new Padding(5));

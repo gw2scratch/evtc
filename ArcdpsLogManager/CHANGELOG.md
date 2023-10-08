@@ -16,6 +16,7 @@ This is the full changelog of the arcdps Log Manager.
 - Improved log processing performance ~1.25x for 10man logs, even more in WvW logs.
 - Also improved log processing performance by further ~2.60x for all logs (~35% of original time).
 - Yes, that is about 3.25x speedup overall.
+- Also made character and guild search more responsive (thank you, @Denrage!).
 
 #### Fixes
 - Fixed Harvest Temple success detection.

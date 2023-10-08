@@ -20,6 +20,7 @@
         <Version>1.10.0.5</Version>
     </PropertyGroup>
     <ItemGroup>
+        <PackageReference Include="DebounceThrottle" Version="2.0.0" />
         <PackageReference Include="Eto.Forms" Version="2.6.1" />
         <PackageReference Include="Gw2Sharp" Version="0.6.0" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
