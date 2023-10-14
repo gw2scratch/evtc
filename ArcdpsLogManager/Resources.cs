@@ -166,6 +166,10 @@ namespace GW2Scratch.ArcdpsLogManager
 		public static Image GetHarvestTempleIcon() => GetEncounterImage("Harvest_Temple");
 		public static Image GetOldLionsCourtIcon() => GetEncounterImage("Mini_Vermillion_Assault_Knight");
 
+		// STRIKES - SECRETS OF THE OBSCURE
+		public static Image GetCosmicObservatoryIcon() => GetEncounterImage("Cosmic_Observatory");
+		public static Image GetTempleOfFebeIcon() => GetEncounterImage("Temple_Of_Febe");
+
 		// FRACTALS
 		public static Image GetMAMAIcon() => GetEncounterImage("Mini_MAMA");
 		public static Image GetSiaxTheCorruptedIcon() => GetEncounterImage("Mini_Toxic_Warlock");
