@@ -648,6 +648,10 @@ result = "Success"
 filename = "encounters/harvest_temple/success/20221012-213024.zevtc"
 encounter = "HarvestTemple"
 result = "Success"
+[[log]]
+filename = "encounters/harvest_temple/success/20231016-205708.zevtc"
+encounter = "HarvestTemple"
+result = "Success"
 
 ## Festival strikes
 [[log]]

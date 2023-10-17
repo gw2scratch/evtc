@@ -2,6 +2,11 @@
 
 This is the full changelog of the arcdps Log Manager.
 
+## Log Manager v1.10.1
+
+#### Fixes
+- Fixed a very rare Harvest Temple false failure
+
 ## Log Manager v1.10
 
 #### New features

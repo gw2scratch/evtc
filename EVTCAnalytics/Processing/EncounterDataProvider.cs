@@ -506,7 +506,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 									finalGadget?.AttackTargets.Select(x => (IResultDeterminer) new TargetableDeterminer(x, true, false, true, false)).ToArray()
 										?? new IResultDeterminer[] { new TargetableDeterminer(null, true, false, true, false) }
 								),
-								new SkillCastAfterBuffApplyDeterminer(x => x is Player, SkillIds.HarvestTempleLiftOff, SkillIds.Determined895)
+								new SkillCastAroundBuffApplyDeterminer(x => x is Player, SkillIds.HarvestTempleLiftOff, SkillIds.Determined895, 1000)
 							))
 						))
 						.WithHealth(new AgentHealthDeterminer(null).RequiredEventTypes, new List<uint>(), new List<PhysicalDamageEvent.Result>(),
