@@ -395,12 +395,12 @@ namespace GW2Scratch.EVTCAnalytics.Events
 	/// <remarks>
 	/// Introduced in EVTC20220602.
 	/// </remarks>
-	public class EffectStartEvent : Event
+	public class EffectStartEvent : AgentEvent
 	{
 		/// <summary>
 		/// The owner of this effect.
 		/// </summary>
-		public Agent EffectOwner { get; internal set; }
+		public Agent EffectOwner => Agent;
 
 		/// <summary>
 		/// The Effect created.
@@ -435,9 +435,8 @@ namespace GW2Scratch.EVTCAnalytics.Events
 		public uint TrackableId { get; }
 
 		public EffectStartEvent(long time, Agent effectOwner, Effect effect, Agent agentTarget, float[] position,
-			ushort[] orientation, ushort duration, uint trackableId) : base(time)
+			ushort[] orientation, ushort duration, uint trackableId) : base(time, effectOwner)
 		{
-			EffectOwner = effectOwner;
 			Effect = effect;
 			AgentTarget = agentTarget;
 			Position = position;

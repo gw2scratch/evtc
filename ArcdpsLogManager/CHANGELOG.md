@@ -7,6 +7,10 @@ This is the full changelog of the arcdps Log Manager.
 #### Fixes
 - Fixed a very rare Harvest Temple false failure
 
+#### EVTC Inspector notes
+- Fixed reading effect durations and orientations
+- Effect starts are now categorized as agent effects, effect ends still are not
+
 ## Log Manager v1.10
 
 #### New features

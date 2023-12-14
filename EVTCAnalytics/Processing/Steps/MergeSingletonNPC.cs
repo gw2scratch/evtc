@@ -95,11 +95,6 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Steps
 				
 				if (ev is EffectStartEvent effectStartEvent)
 				{
-					if (agentsToMerge.Contains(effectStartEvent.EffectOwner))
-					{
-						effectStartEvent.EffectOwner = resultingAgent;
-					}
-					
 					if (agentsToMerge.Contains(effectStartEvent.AgentTarget))
 					{
 						effectStartEvent.AgentTarget = resultingAgent;
