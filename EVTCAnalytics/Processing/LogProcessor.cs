@@ -1205,8 +1205,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 
 						// is shields + is_offcycle + pad61 + pad62 + pad63 + pad64 = int16[3] orientation
 						Span<byte> orientationBytes = stackalloc byte[6];
-						durationBytes[0] = item.IsShields;
-						durationBytes[1] = item.IsOffCycle;
+						orientationBytes[0] = item.IsShields;
+						orientationBytes[1] = item.IsOffCycle;
 						BitConverter.TryWriteBytes(orientationBytes[2..6], item.Padding);
 
 						ushort duration = BitConverter.ToUInt16(durationBytes);
