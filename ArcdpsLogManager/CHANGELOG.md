@@ -4,6 +4,9 @@ This is the full changelog of the arcdps Log Manager.
 
 ## Log Manager v1.10.1
 
+#### New features
+- Added Cosmic Observatory CM detection
+
 #### Fixes
 - Fixed a very rare Harvest Temple false failure
 

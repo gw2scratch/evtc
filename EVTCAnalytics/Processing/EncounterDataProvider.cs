@@ -619,7 +619,11 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				}
 				case Encounter.CosmicObservatory:
 				{
-					return GetDefaultBuilder(encounter, mainTarget).Build();
+					return GetDefaultBuilder(encounter, mainTarget)
+						.WithModes(new ConditionalModeDeterminer(
+							(gameBuild != null && gameBuild < GameBuilds.CosmicObservatoryCMRelease, new ConstantModeDeterminer(EncounterMode.Normal)),
+							(true, new AgentHealthModeDeterminer(mainTarget, 56_600_000))))
+                        .Build();
 				}
 				case Encounter.TempleOfFebe:
 				{

@@ -177,6 +177,10 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Updates
 			                     && log.Encounter == Encounter.HarvestTemple
 			                     && log.EncounterResult == EncounterResult.Failure,
 				"Fix very rare false failures for Harvest Temple"),
+			new LogUpdate(log => log.ParsingVersion < new Version(1, 10, 1, 1)
+			                     && log.GameBuild >= 153978
+			                     && log.Encounter == Encounter.CosmicObservatory,
+				"Add support for Cosmic Observatory CM"),
 			// When adding a new update, you need to increase the revision (last value) of the version in the .csproj file
 			// unless the version changes more significantly, in that case it can be reset to 0.
 		};
