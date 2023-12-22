@@ -422,7 +422,7 @@ namespace GW2Scratch.EVTCAnalytics.Events
 		/// <summary>
 		/// The orientation (x, y, z) of the effect.
 		/// </summary>
-		public ushort[] Orientation { get; }
+		public short[] Orientation { get; }
 
 		/// <summary>
 		/// The duration of the effect in milliseconds.
@@ -435,7 +435,7 @@ namespace GW2Scratch.EVTCAnalytics.Events
 		public uint TrackableId { get; }
 
 		public EffectStartEvent(long time, Agent effectOwner, Effect effect, Agent agentTarget, float[] position,
-			ushort[] orientation, ushort duration, uint trackableId) : base(time, effectOwner)
+			short[] orientation, ushort duration, uint trackableId) : base(time, effectOwner)
 		{
 			Effect = effect;
 			AgentTarget = agentTarget;

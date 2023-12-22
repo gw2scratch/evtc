@@ -1184,7 +1184,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						Agent aroundAgent = GetAgentByAddress(item.DstAgent);
 
 						float[] position = null;
-						ushort[] orientation = new ushort[3];
+						short[] orientation = new short[3];
 
 						// else &value = float[3] xyz
 						if (item.DstAgent == 0)
@@ -1210,6 +1210,10 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						BitConverter.TryWriteBytes(orientationBytes[2..6], item.Padding);
 
 						ushort duration = BitConverter.ToUInt16(durationBytes);
+						for (int i = 0; i < 3; i++)
+						{
+							orientation[i] = BitConverter.ToInt16(orientationBytes[(i*2)..(i*2+2)]);
+						}
 
 						return new EffectStartEvent(item.Time, master, effect, aroundAgent, position, orientation, duration, trackableId);
 					}
