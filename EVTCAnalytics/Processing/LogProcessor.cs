@@ -1209,7 +1209,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						orientationBytes[1] = item.IsOffCycle;
 						BitConverter.TryWriteBytes(orientationBytes[2..6], item.Padding);
 
-						ushort duration = BitConverter.ToUInt16(durationBytes);
+						uint duration = BitConverter.ToUInt32(durationBytes);
 						for (int i = 0; i < 3; i++)
 						{
 							orientation[i] = BitConverter.ToInt16(orientationBytes[(i*2)..(i*2+2)]);

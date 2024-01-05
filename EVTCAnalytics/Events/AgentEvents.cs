@@ -427,7 +427,7 @@ namespace GW2Scratch.EVTCAnalytics.Events
 		/// <summary>
 		/// The duration of the effect in milliseconds.
 		/// </summary>
-		public ushort Duration { get; }
+		public uint Duration { get; }
 		
 		/// <summary>
 		/// Trackable id of this effect. Used for pairing with a corresponding EffectEndEvent.
@@ -435,7 +435,7 @@ namespace GW2Scratch.EVTCAnalytics.Events
 		public uint TrackableId { get; }
 
 		public EffectStartEvent(long time, Agent effectOwner, Effect effect, Agent agentTarget, float[] position,
-			short[] orientation, ushort duration, uint trackableId) : base(time, effectOwner)
+			short[] orientation, uint duration, uint trackableId) : base(time, effectOwner)
 		{
 			Effect = effect;
 			AgentTarget = agentTarget;
