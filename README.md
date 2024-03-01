@@ -6,7 +6,7 @@ This repository hosts multiple programs for analysis and management of EVTC logs
 
 #### Dependencies
   - Running programs: .NET 6
-  - Development: .NET 6 SDK or newer
+  - Development: .NET 8 SDK or newer
 
 #### Programs
   - [arcdps Log Manager](#arcdps-log-manager)

@@ -483,6 +483,9 @@ namespace GW2Scratch.ArcdpsLogManager
 					Application.Instance.AsyncInvoke(() => { logList.ReloadData(); });
 				}
 			};
+
+			var weeklyClears = new WeeklyClears();
+			FilteredLogsUpdated += (sender, args) => weeklyClears.UpdateDataFromLogs(logsFiltered);
 	
 			// Player list
 			var playerList = new PlayerList(LogCache, ApiData, LogDataProcessor, UploadProcessor, ImageProvider, LogNameProvider);
@@ -544,6 +547,7 @@ namespace GW2Scratch.ArcdpsLogManager
 
 			var tabs = new TabControl();
 			tabs.Pages.Add(new TabPage {Text = "Logs", Content = logList});
+			tabs.Pages.Add(new TabPage {Text = "Weekly clears", Content = weeklyClears});
 			tabs.Pages.Add(new TabPage {Text = "Players", Content = playerList});
 			tabs.Pages.Add(new TabPage {Text = "Guilds", Content = guildList});
 			tabs.Pages.Add(new TabPage {Text = "Statistics", Content = statistics});
