@@ -9,6 +9,7 @@ This is the full changelog of the arcdps Log Manager.
 - Added Temple of Febe CM detection
 
 #### Fixes
+- Fixed Cosmic Observatory success detection (since CM release)
 - Fixed a very rare Harvest Temple false failure
 - Fixed missing icons for Cosmic Observatory and Temple of Febe
 
