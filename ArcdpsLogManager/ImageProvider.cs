@@ -125,6 +125,10 @@ namespace GW2Scratch.ArcdpsLogManager
 		private Lazy<Image> KainengOverlookIcon { get; } = new Lazy<Image>(Resources.GetKainengOverlookIcon);
 		private Lazy<Image> HarvestTempleIcon { get; } = new Lazy<Image>(Resources.GetHarvestTempleIcon);
 		private Lazy<Image> OldLionsCourtIcon { get; } = new Lazy<Image>(Resources.GetOldLionsCourtIcon);
+		
+		// STRIKES - SECRETS OF THE OBSCURE
+		private Lazy<Image> CosmicObservatoryIcon { get; } = new Lazy<Image>(Resources.GetCosmicObservatoryIcon);
+		private Lazy<Image> TempleOfFebeIcon { get; } = new Lazy<Image>(Resources.GetTempleOfFebeIcon);
 
 		// FRACTALS
 		private Lazy<Image> MAMAIcon { get; } = new Lazy<Image>(Resources.GetMAMAIcon);
@@ -313,6 +317,9 @@ namespace GW2Scratch.ArcdpsLogManager
 				Encounter.KainengOverlook => KainengOverlookIcon.Value,
 				Encounter.HarvestTemple => HarvestTempleIcon.Value,
 				Encounter.OldLionsCourt => OldLionsCourtIcon.Value,
+				// STRIKES - SECRETS OF THE OBSCURE
+				Encounter.CosmicObservatory => CosmicObservatoryIcon.Value,
+				Encounter.TempleOfFebe => TempleOfFebeIcon.Value,
 				// FRACTALS
 				Encounter.MAMA => MAMAIcon.Value,
 				Encounter.SiaxTheCorrupted => SiaxTheCorruptedIcon.Value,

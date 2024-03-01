@@ -10,6 +10,7 @@ This is the full changelog of the arcdps Log Manager.
 
 #### Fixes
 - Fixed a very rare Harvest Temple false failure
+- Fixed missing icons for Cosmic Observatory and Temple of Febe
 
 #### EVTC Inspector notes
 - Fixed reading effect durations and orientations
