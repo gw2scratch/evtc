@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using GW2Scratch.ArcdpsLogManager.Logs;
 using GW2Scratch.EVTCAnalytics.GameData.Encounters;
 using Newtonsoft.Json;
+using System.Net;
 
 namespace GW2Scratch.ArcdpsLogManager.Uploads
 {
@@ -76,38 +77,58 @@ namespace GW2Scratch.ArcdpsLogManager.Uploads
 			bool isZipped = IsZippedLog(log.FileName);
 
 			HttpResponseMessage response;
-			using (var content = new MultipartFormDataContent())
+			while (true)
 			{
-				if (isZipped)
+				using (var content = new MultipartFormDataContent())
 				{
-					await using (var stream = log.FileInfo.OpenRead())
+					if (isZipped)
 					{
-						content.Add(new StreamContent(stream), "file", log.FileInfo.Name);
+						await using (var stream = log.FileInfo.OpenRead())
+						{
+							content.Add(new StreamContent(stream), "file", log.FileInfo.Name);
+							response = await httpClient.PostAsync(query, content, cancellationToken);
+						}
+					}
+					else
+					{
+						string filename = $"{log.FileInfo.Name}.zevtc";
+
+						await using var evtcStream = log.FileInfo.OpenRead();
+
+						await using var archiveMemoryStream = new MemoryStream();
+						using (var archive = new ZipArchive(archiveMemoryStream, ZipArchiveMode.Create, true))
+						{
+							var entry = archive.CreateEntry(filename);
+
+							await using var entryStream = entry.Open();
+							evtcStream.CopyTo(entryStream);
+						}
+
+						archiveMemoryStream.Seek(0, SeekOrigin.Begin);
+						content.Add(new StreamContent(archiveMemoryStream), "file", filename);
 						response = await httpClient.PostAsync(query, content, cancellationToken);
 					}
 				}
+
+				// The DPS report API has a rate limit.
+				// We could read its size in the response; it can change depending
+				// on the current load and we could adapt according to that.
+				// As of early 2024, it sits somewhere between 25 and 15 requests per minute.
+				// As a simple solution that should also alleviate the load on the API, we
+				// just always wait a specific time when the limit is hit. It is likely
+				// inefficient (we could hit the API harder), but it should be good enough.
+				if (response.StatusCode == HttpStatusCode.TooManyRequests)
+				{
+					response.Dispose();
+					await Task.Delay(10000, cancellationToken);
+				}
 				else
 				{
-					string filename = $"{log.FileInfo.Name}.zevtc";
-
-					await using var evtcStream = log.FileInfo.OpenRead();
-
-					await using var archiveMemoryStream = new MemoryStream();
-					using (var archive = new ZipArchive(archiveMemoryStream, ZipArchiveMode.Create, true))
-					{
-						var entry = archive.CreateEntry(filename);
-
-						await using var entryStream = entry.Open();
-						evtcStream.CopyTo(entryStream);
-					}
-
-					archiveMemoryStream.Seek(0, SeekOrigin.Begin);
-					content.Add(new StreamContent(archiveMemoryStream), "file", filename);
-					response = await httpClient.PostAsync(query, content, cancellationToken);
+					break;
 				}
 			}
 
-			string json = await response.Content.ReadAsStringAsync();
+			string json = await response.Content.ReadAsStringAsync(cancellationToken);
 			var responseData = JsonConvert.DeserializeObject<DpsReportResponse>(json);
 
 			return responseData;
