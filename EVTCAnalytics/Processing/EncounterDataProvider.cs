@@ -627,7 +627,9 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				}
 				case Encounter.TempleOfFebe:
 				{
-					return GetDefaultBuilder(encounter, mainTarget).Build();
+					return GetDefaultBuilder(encounter, mainTarget)
+						.WithModes(new AgentHealthModeDeterminer(mainTarget, 60_000_000))
+						.Build();
 				}
 				default:
 					return GetDefaultBuilder(encounter, mainTarget, mergeMainTarget: false).Build();

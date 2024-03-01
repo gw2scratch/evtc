@@ -181,6 +181,10 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Updates
 			                     && log.GameBuild >= 153978
 			                     && log.Encounter == Encounter.CosmicObservatory,
 				"Add support for Cosmic Observatory CM"),
+			new LogUpdate(log => log.ParsingVersion < new Version(1, 11, 0, 0)
+			                     && log.GameBuild >= 158837
+			                     && log.Encounter == Encounter.TempleOfFebe,
+				"Add support for Temple of Febe CM"),
 			// When adding a new update, you need to increase the revision (last value) of the version in the .csproj file
 			// unless the version changes more significantly, in that case it can be reset to 0.
 		};
