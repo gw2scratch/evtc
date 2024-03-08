@@ -484,7 +484,7 @@ namespace GW2Scratch.ArcdpsLogManager
 				}
 			};
 
-			var weeklyClears = new WeeklyClears();
+			var weeklyClears = new WeeklyClears(ImageProvider);
 			FilteredLogsUpdated += (sender, args) => weeklyClears.UpdateDataFromLogs(logsFiltered);
 	
 			// Player list

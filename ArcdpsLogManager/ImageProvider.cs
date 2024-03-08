@@ -186,6 +186,9 @@ namespace GW2Scratch.ArcdpsLogManager
 		// MISC
 		private Lazy<Image> CopyButtonEnabledIcon { get; } = new Lazy<Image>(Resources.GetCopyButtonEnabledIcon);
 		private Lazy<Image> CopyButtonDisabledIcon { get; } = new Lazy<Image>(Resources.GetCopyButtonDisabledIcon);
+		private Lazy<Image> GreenCheckIcon { get; } = new Lazy<Image>(Resources.GetGreenCheckIcon);
+		private Lazy<Image> RedCrossIcon { get; } = new Lazy<Image>(Resources.GetRedCrossIcon);
+		private Lazy<Image> GrayQuestionMarkIcon { get; } = new Lazy<Image>(Resources.GetGrayQuestionMarkIcon);
 
 		public Image GetTinyLogIcon() => TinyIconLog.Value;
 		public Image GetTinyFractalsIcon() => TinyIconFractals.Value;
@@ -202,6 +205,9 @@ namespace GW2Scratch.ArcdpsLogManager
 		public Image GetTinyInstanceIcon() => TinyIconInstance.Value;
 		public Image GetCopyButtonEnabledImage() => CopyButtonEnabledIcon.Value;
 		public Image GetCopyButtonDisabledImage() => CopyButtonDisabledIcon.Value;
+		public Image GetGreenCheckIcon() => GreenCheckIcon.Value;
+		public Image GetRedCrossIcon() => RedCrossIcon.Value;
+		public Image GetGrayQuestionMarkIcon() => GrayQuestionMarkIcon.Value;
 
 		public Image GetTinyProfessionIcon(Profession profession)
 		{

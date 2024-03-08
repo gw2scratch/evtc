@@ -59,7 +59,18 @@ public class WeeklyClears : DynamicLayout
 	];
 
 	private readonly DebounceDispatcher debounceDispatcher = new DebounceDispatcher(200);
-	private string AccountFilter { get; set; } = "";
+
+	private string accountFilter = "";
+
+	private string AccountFilter
+	{
+		get => accountFilter;
+		set
+		{
+			accountFilter = value;
+			UpdateWeeks();
+		}
+	}
 
 	private DateOnly reset = GetResetBefore(DateTimeOffset.Now);
 
@@ -73,21 +84,52 @@ public class WeeklyClears : DynamicLayout
 		}
 	}
 
+	private readonly List<ResetWeek> weeks = GetAllResets().Select(x => new ResetWeek(x)).ToList();
+
 	// Not set directly, instead set through UpdateFinishedLogs
 	private HashSet<(string AccountName, DateOnly ResetDate, IFinishableEncounter Encounter, bool ChallengeMode)> finishedEncounters;
-	private List<ResetWeek> weeks = [];
 
 	private void UpdateFinishedLogs(HashSet<(string AccountName, DateOnly ResetDate, IFinishableEncounter Encounter, bool ChallengeMode)> finished)
 	{
 		finishedEncounters = finished;
-		weeks = finished.Select(x => x.ResetDate).Distinct().OrderByDescending(x => x).Select(x => new ResetWeek(x)).ToList();
 		DataUpdated?.Invoke(this, EventArgs.Empty);
+		UpdateWeeks();
+	}
+
+	private void UpdateWeeks()
+	{
+		foreach (var week in weeks)
+		{
+			week.FinishedNormalEncounters = 0;
+			week.FinishedChallengeModeEncounters = 0;
+		}
+
+		var weeksByReset = weeks.ToDictionary(x => x.Reset);
+
+		foreach ((string accountName, DateOnly resetDate, IFinishableEncounter _, bool challengeMode) in finishedEncounters)
+		{
+			if (accountName != AccountFilter)
+			{
+				continue;
+			}
+
+			var week = weeksByReset[resetDate];
+
+			if (challengeMode)
+			{
+				week.FinishedChallengeModeEncounters++;
+			}
+			else
+			{
+				week.FinishedNormalEncounters++;
+			}
+		}
 	}
 
 	private event EventHandler SelectedResetChanged;
 	private event EventHandler DataUpdated;
 
-	public WeeklyClears()
+	public WeeklyClears(ImageProvider imageProvider)
 	{
 		var accountFilterBox = new TextBox();
 		accountFilterBox.TextBinding.Bind(this, x => x.AccountFilter);
@@ -120,16 +162,19 @@ public class WeeklyClears : DynamicLayout
 					_ => throw new ArgumentOutOfRangeException(nameof(encounter))
 				};
 
+				Size iconSize = new Size(16, 16);
+
 				// For simplicity, we create the checkbox even if they are not used,
 				// but we do not wire them up to updates if the encounter does support the mode.
-				var normalModeCheckbox = new CheckBox { Text = "Normal mode" };
-				var challengeModeCheckbox = new CheckBox { Text = "Challenge mode" };
+				var normalModeCheckbox = new ImageView { Size = iconSize };
+				var challengeModeCheckbox = new ImageView { Size = iconSize };
+
 				if (encounter.HasNormalMode)
 				{
 					void UpdateNormalModeCheckbox()
 					{
 						var finished = finishedEncounters.Contains((AccountFilter, Reset, encounter, false));
-						normalModeCheckbox.Checked = finished;
+						normalModeCheckbox.Image = finished ? imageProvider.GetGreenCheckIcon() : imageProvider.GetRedCrossIcon();
 					}
 
 					DataUpdated += (_, _) => UpdateNormalModeCheckbox();
@@ -141,22 +186,75 @@ public class WeeklyClears : DynamicLayout
 					void UpdateChallengeModeCheckbox()
 					{
 						var finished = finishedEncounters.Contains((AccountFilter, Reset, encounter, true));
-						challengeModeCheckbox.Checked = finished;
+						challengeModeCheckbox.Image = finished ? imageProvider.GetGreenCheckIcon() : imageProvider.GetRedCrossIcon();
 					}
 
 					DataUpdated += (_, _) => UpdateChallengeModeCheckbox();
 					SelectedResetChanged += (_, _) => UpdateChallengeModeCheckbox();
 				}
 
-				Control content = (encounter.HasNormalMode, encounter.HasChallengeMode) switch
+				Control content;
+				switch ((encounter.HasNormalMode, encounter.HasChallengeMode))
 				{
-					(false, false) => new StackLayout { Items = { new Label { Text = "No logs" } }, Padding = new Padding(10) },
-					(true, false) => new StackLayout { Items = { normalModeCheckbox } },
-					(false, true) => new StackLayout { Items = { challengeModeCheckbox } },
-					(true, true) => new StackLayout { Items = { normalModeCheckbox, challengeModeCheckbox } },
-				};
+					case (false, false):
+					{
+						var layout = new StackLayout
+						{
+							Items =
+							{
+								new ImageView { Image = imageProvider.GetGrayQuestionMarkIcon(), Size = iconSize }, new Label { Text = "No logs" }
+							},
+							Orientation = Orientation.Horizontal,
+							Spacing = 6,
+						};
+						content = layout;
+						break;
+					}
+					case (true, false):
+					{
+						var layout = new StackLayout
+						{
+							Items = { normalModeCheckbox, new Label { Text = "Normal mode" } }, Orientation = Orientation.Horizontal, Spacing = 6,
+						};
+						content = layout;
+						break;
+					}
+					case (false, true):
+					{
+						var layout = new StackLayout
+						{
+							Items = { challengeModeCheckbox, new Label { Text = "Challenge mode" } }, Orientation = Orientation.Horizontal, Spacing = 6,
+						};
+						content = layout;
+						break;
+					}
+					case (true, true):
+					{
+						var layout = new StackLayout
+						{
+							Items =
+							{
+								new StackLayout
+								{
+									Items = { normalModeCheckbox, new Label { Text = "Normal mode" } },
+									Orientation = Orientation.Horizontal,
+									Spacing = 6,
+								},
+								new StackLayout
+								{
+									Items = { challengeModeCheckbox, new Label { Text = "Challenge mode" } },
+									Orientation = Orientation.Horizontal,
+									Spacing = 6,
+								}
+							},
+							Spacing = 6
+						};
+						content = layout;
+						break;
+					}
+				}
 
-				var box = new GroupBox { Text = name, Content = content };
+				var box = new GroupBox { Text = name, Content = content, Padding = new Padding(4, 2)};
 
 				table.Add(box, col, row);
 			}
@@ -165,7 +263,16 @@ public class WeeklyClears : DynamicLayout
 		var weekGrid = new GridView<ResetWeek>();
 		weekGrid.Columns.Add(new GridColumn
 		{
-			DataCell = new TextBoxCell { Binding = new DelegateBinding<ResetWeek, string>(x => x.Reset.ToString()) }, HeaderText = "Week"
+			HeaderText = "Week", DataCell = new TextBoxCell { Binding = new DelegateBinding<ResetWeek, string>(x => x.Reset.ToString()) }
+		});
+		weekGrid.Columns.Add(new GridColumn
+		{
+			HeaderText = "NMs", DataCell = new TextBoxCell { Binding = new DelegateBinding<ResetWeek, string>(x => x.FinishedNormalEncounters.ToString()) }
+		});
+		weekGrid.Columns.Add(new GridColumn
+		{
+			HeaderText = "CMs",
+			DataCell = new TextBoxCell { Binding = new DelegateBinding<ResetWeek, string>(x => x.FinishedChallengeModeEncounters.ToString()) }
 		});
 		weekGrid.DataStore = weeks;
 
@@ -265,5 +372,27 @@ public class WeeklyClears : DynamicLayout
 		}
 
 		return DateOnly.FromDateTime(weekStart.Date);
+	}
+
+	/// <summary>
+	/// Gets all reset dates for which logs could be available, in descending order (from newest).
+	/// </summary>
+	/// <remarks>
+	/// The earliest logs known to survive are from early 2017.
+	/// arcdps released on 2016-12-12 revamped how skills are saved, and as far as we are aware,
+	/// no implementations of processing the older format exist.
+	/// </remarks>
+	/// <returns></returns>
+	private static List<DateOnly> GetAllResets()
+	{
+		var resets = new List<DateOnly>();
+		var now = DateTimeOffset.Now;
+		do
+		{
+			resets.Add(GetResetBefore(now));
+			now = now.AddDays(-7);
+		} while (now > new DateTimeOffset(new DateTime(2016, 12, 12, 7, 0, 0), TimeSpan.Zero));
+
+		return resets;
 	}
 }
