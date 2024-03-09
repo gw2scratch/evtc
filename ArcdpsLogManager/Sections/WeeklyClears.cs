@@ -367,7 +367,7 @@ public class WeeklyClears : DynamicLayout
 					Binding = new DelegateBinding<ResetWeek, float?>(week =>
 						(float) week.FinishedNormalModesByCategory[category] / EncounterColumns
 							.SelectMany(col => col.Rows.SelectMany(row => row.Encounters))
-							.Count(encounter => encounter.Category == category))
+							.Count(encounter => encounter.HasNormalMode && encounter.Category == category))
 				}
 			});
 			weekGrid.Columns.Add(new GridColumn
@@ -387,7 +387,7 @@ public class WeeklyClears : DynamicLayout
 					Binding = new DelegateBinding<ResetWeek, float?>(week =>
 						(float) week.FinishedChallengeModesByCategory[category] / EncounterColumns
 							.SelectMany(col => col.Rows.SelectMany(row => row.Encounters))
-							.Count(encounter => encounter.Category == category)),
+							.Count(encounter => encounter.HasChallengeMode && encounter.Category == category)),
 				}
 			});
 		}
