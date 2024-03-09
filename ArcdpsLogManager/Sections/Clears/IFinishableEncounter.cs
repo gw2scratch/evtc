@@ -14,13 +14,15 @@ public interface IFinishableEncounter
 	bool IsChallengeModeSatisfiedBy(IEnumerable<LogData> logs);
 	bool HasNormalMode { get; }
 	bool HasChallengeMode { get; }
+	Category Category { get; }
 }
 
-public class NormalEncounter(Encounter encounter, bool hasChallengeMode) : IFinishableEncounter
+public class NormalEncounter(Encounter encounter, bool hasChallengeMode, Category category) : IFinishableEncounter
 {
 	public Encounter Encounter { get; } = encounter;
 	public bool HasNormalMode => true;
 	public bool HasChallengeMode { get; } = hasChallengeMode;
+	public Category Category { get; } = category;
 
 	public bool IsSatisfiedBy(IEnumerable<LogData> logs)
 	{
@@ -34,11 +36,12 @@ public class NormalEncounter(Encounter encounter, bool hasChallengeMode) : IFini
 	}
 }
 
-public class UnsupportedEncounter(string name) : IFinishableEncounter
+public class UnsupportedEncounter(string name, Category category) : IFinishableEncounter
 {
 	public string Name { get; } = name;
 	public bool HasNormalMode => false;
 	public bool HasChallengeMode => false;
+	public Category Category { get; } = category;
 
 	public bool IsSatisfiedBy(IEnumerable<LogData> logs)
 	{
@@ -51,12 +54,13 @@ public class UnsupportedEncounter(string name) : IFinishableEncounter
 	}
 }
 
-public class MultipartEncounter(string name, IEnumerable<Encounter> encounters, bool hasChallengeMode) : IFinishableEncounter
+public class MultipartEncounter(string name, IEnumerable<Encounter> encounters, bool hasChallengeMode, Category category) : IFinishableEncounter
 {
 	public string Name { get; } = name;
 	private IEnumerable<Encounter> Encounters { get; } = encounters;
 	public bool HasNormalMode => true;
 	public bool HasChallengeMode { get; } = hasChallengeMode;
+	public Category Category { get; } = category;
 
 	public bool IsSatisfiedBy(IEnumerable<LogData> logs)
 	{

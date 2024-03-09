@@ -2,7 +2,6 @@ using DebounceThrottle;
 using Eto.Drawing;
 using Eto.Forms;
 using GW2Scratch.ArcdpsLogManager.Logs;
-using GW2Scratch.ArcdpsLogManager.Logs.Naming;
 using GW2Scratch.ArcdpsLogManager.Sections.Clears;
 using GW2Scratch.EVTCAnalytics.GameData;
 using GW2Scratch.EVTCAnalytics.GameData.Encounters;
@@ -15,47 +14,60 @@ namespace GW2Scratch.ArcdpsLogManager.Sections;
 
 public class WeeklyClears : DynamicLayout
 {
-	private static readonly List<List<IFinishableEncounter>> Categories =
+	private static readonly List<EncounterColumn> EncounterColumns =
 	[
-		[
-			new NormalEncounter(Encounter.ValeGuardian, false),
-			new UnsupportedEncounter("Spirit Woods"),
-			new NormalEncounter(Encounter.Gorseval, false),
-			new NormalEncounter(Encounter.Sabetha, false)
-		],
-		[
-			new NormalEncounter(Encounter.Slothasor, false),
-			new NormalEncounter(Encounter.BanditTrio, false),
-			new NormalEncounter(Encounter.Matthias, false)
-		],
-		[
-			new NormalEncounter(Encounter.Escort, false),
-			new NormalEncounter(Encounter.KeepConstruct, true),
-			new NormalEncounter(Encounter.TwistedCastle, false),
-			new NormalEncounter(Encounter.Xera, false)
-		],
-		[
-			new NormalEncounter(Encounter.Cairn, true),
-			new NormalEncounter(Encounter.MursaatOverseer, true),
-			new NormalEncounter(Encounter.Samarog, true),
-			new NormalEncounter(Encounter.Deimos, true)
-		],
-		[
-			new NormalEncounter(Encounter.SoullessHorror, true),
-			new NormalEncounter(Encounter.RiverOfSouls, false),
-			new MultipartEncounter("Statues", [Encounter.BrokenKing, Encounter.EaterOfSouls, Encounter.Eyes], false),
-			new NormalEncounter(Encounter.Dhuum, true)
-		],
-		[
-			new NormalEncounter(Encounter.ConjuredAmalgamate, true),
-			new NormalEncounter(Encounter.TwinLargos, true),
-			new NormalEncounter(Encounter.Qadim, true)
-		],
-		[
-			new NormalEncounter(Encounter.Adina, true),
-			new NormalEncounter(Encounter.Sabir, true),
-			new NormalEncounter(Encounter.QadimThePeerless, true)
-		],
+		new EncounterColumn("Raids", [
+			new EncounterRow("Spirit Woods (W1)", [
+				new NormalEncounter(Encounter.ValeGuardian, false, Category.Raid),
+				new UnsupportedEncounter("Spirit Woods", Category.Raid),
+				new NormalEncounter(Encounter.Gorseval, false, Category.Raid),
+				new NormalEncounter(Encounter.Sabetha, false, Category.Raid)
+			]),
+			new EncounterRow("Salvation Pass (W2)", [
+				new NormalEncounter(Encounter.Slothasor, false, Category.Raid),
+				new NormalEncounter(Encounter.BanditTrio, false, Category.Raid),
+				new NormalEncounter(Encounter.Matthias, false, Category.Raid)
+			]),
+			new EncounterRow("Stronghold of the Faithful (W3)", [
+				new NormalEncounter(Encounter.Escort, false, Category.Raid),
+				new NormalEncounter(Encounter.KeepConstruct, true, Category.Raid),
+				new NormalEncounter(Encounter.TwistedCastle, false, Category.Raid),
+				new NormalEncounter(Encounter.Xera, false, Category.Raid)
+			]),
+			new EncounterRow("Bastion of the Penitent (W4)", [
+				new NormalEncounter(Encounter.Cairn, true, Category.Raid),
+				new NormalEncounter(Encounter.MursaatOverseer, true, Category.Raid),
+				new NormalEncounter(Encounter.Samarog, true, Category.Raid),
+				new NormalEncounter(Encounter.Deimos, true, Category.Raid)
+			]),
+			new EncounterRow("Hall of Chains (W5)", [
+				new NormalEncounter(Encounter.SoullessHorror, true, Category.Raid),
+				new NormalEncounter(Encounter.RiverOfSouls, false, Category.Raid),
+				new MultipartEncounter("Statues", [Encounter.BrokenKing, Encounter.EaterOfSouls, Encounter.Eyes], false, Category.Raid),
+				new NormalEncounter(Encounter.Dhuum, true, Category.Raid)
+			]),
+			new EncounterRow("Mythwright Gambit (W6)", [
+				new NormalEncounter(Encounter.ConjuredAmalgamate, true, Category.Raid),
+				new NormalEncounter(Encounter.TwinLargos, true, Category.Raid),
+				new NormalEncounter(Encounter.Qadim, true, Category.Raid)
+			]),
+			new EncounterRow("The Key of Ahdashim (W7)", [
+				new NormalEncounter(Encounter.Adina, true, Category.Raid),
+				new NormalEncounter(Encounter.Sabir, true, Category.Raid),
+				new NormalEncounter(Encounter.QadimThePeerless, true, Category.Raid)
+			]),
+			new EncounterRow("End of Dragons", [
+				new NormalEncounter(Encounter.AetherbladeHideout, true, Category.StrikeEndOfDragons),
+				new NormalEncounter(Encounter.XunlaiJadeJunkyard, true, Category.StrikeEndOfDragons),
+				new NormalEncounter(Encounter.KainengOverlook, true, Category.StrikeEndOfDragons),
+				new NormalEncounter(Encounter.HarvestTemple, true, Category.StrikeEndOfDragons),
+				new NormalEncounter(Encounter.OldLionsCourt, true, Category.StrikeEndOfDragons),
+			]),
+			new EncounterRow("Secrets of the Obscure", [
+				new NormalEncounter(Encounter.CosmicObservatory, true, Category.StrikeSecretsOfTheObscure),
+				new NormalEncounter(Encounter.TempleOfFebe, true, Category.StrikeSecretsOfTheObscure),
+			]),
+		])
 	];
 
 	private readonly DebounceDispatcher debounceDispatcher = new DebounceDispatcher(200);
@@ -100,13 +112,16 @@ public class WeeklyClears : DynamicLayout
 	{
 		foreach (var week in weeks)
 		{
-			week.FinishedNormalEncounters = 0;
-			week.FinishedChallengeModeEncounters = 0;
+			foreach (var category in Enum.GetValues<Category>())
+			{
+				week.FinishedNormalModesByCategory[category] = 0;
+				week.FinishedChallengeModesByCategory[category] = 0;
+			}
 		}
 
 		var weeksByReset = weeks.ToDictionary(x => x.Reset);
 
-		foreach ((string accountName, DateOnly resetDate, IFinishableEncounter _, bool challengeMode) in finishedEncounters)
+		foreach ((string accountName, DateOnly resetDate, IFinishableEncounter encounter, bool challengeMode) in finishedEncounters)
 		{
 			if (accountName != AccountFilter)
 			{
@@ -117,11 +132,11 @@ public class WeeklyClears : DynamicLayout
 
 			if (challengeMode)
 			{
-				week.FinishedChallengeModeEncounters++;
+				week.FinishedChallengeModesByCategory[encounter.Category] += 1;
 			}
 			else
 			{
-				week.FinishedNormalEncounters++;
+				week.FinishedNormalModesByCategory[encounter.Category] += 1;
 			}
 		}
 	}
@@ -143,137 +158,197 @@ public class WeeklyClears : DynamicLayout
 			);
 		};
 
-		var table = new TableLayout(Categories.Max(x => x.Count), Categories.Count);
-		table.Spacing = new Size(30, 15);
-		for (int row = 0; row < Categories.Count; row++)
+		var tables = new List<TableLayout>();
+		foreach (var column in EncounterColumns)
 		{
-			List<IFinishableEncounter> category = Categories[row];
-			for (int col = 0; col < category.Count; col++)
+			var table = new TableLayout(column.Rows.Max(x => x.Encounters.Count), column.Rows.Count);
+			table.Spacing = new Size(15, 8);
+			tables.Add(table);
+
+			for (int row = 0; row < column.Rows.Count; row++)
 			{
-				var encounter = category[col];
-				var name = encounter switch
+				EncounterRow encounterRow = column.Rows[row];
+				for (int col = 0; col < encounterRow.Encounters.Count; col++)
 				{
-					MultipartEncounter multipartEncounter => multipartEncounter.Name,
-					NormalEncounter normalEncounter => EncounterNames.TryGetEncounterNameForLanguage(GameLanguage.English, normalEncounter.Encounter,
-						out var normalName)
-						? normalName
-						: normalEncounter.Encounter.ToString(),
-					UnsupportedEncounter unsupportedEncounter => unsupportedEncounter.Name,
-					_ => throw new ArgumentOutOfRangeException(nameof(encounter))
-				};
-
-				Size iconSize = new Size(16, 16);
-
-				// For simplicity, we create the checkbox even if they are not used,
-				// but we do not wire them up to updates if the encounter does support the mode.
-				var normalModeCheckbox = new ImageView { Size = iconSize };
-				var challengeModeCheckbox = new ImageView { Size = iconSize };
-
-				if (encounter.HasNormalMode)
-				{
-					void UpdateNormalModeCheckbox()
+					var encounter = encounterRow.Encounters[col];
+					var name = encounter switch
 					{
-						var finished = finishedEncounters.Contains((AccountFilter, Reset, encounter, false));
-						normalModeCheckbox.Image = finished ? imageProvider.GetGreenCheckIcon() : imageProvider.GetRedCrossIcon();
-					}
+						MultipartEncounter multipartEncounter => multipartEncounter.Name,
+						NormalEncounter normalEncounter => EncounterNames.TryGetEncounterNameForLanguage(GameLanguage.English, normalEncounter.Encounter,
+							out var normalName)
+							? normalName
+							: normalEncounter.Encounter.ToString(),
+						UnsupportedEncounter unsupportedEncounter => unsupportedEncounter.Name,
+						_ => throw new ArgumentOutOfRangeException()
+					};
 
-					DataUpdated += (_, _) => UpdateNormalModeCheckbox();
-					SelectedResetChanged += (_, _) => UpdateNormalModeCheckbox();
-				}
+					Size iconSize = new Size(16, 16);
 
-				if (encounter.HasChallengeMode)
-				{
-					void UpdateChallengeModeCheckbox()
+					// For simplicity, we create the checkbox even if they are not used,
+					// but we do not wire them up to updates if the encounter does support the mode.
+					var normalModeCheckbox = new ImageView { Size = iconSize };
+					var challengeModeCheckbox = new ImageView { Size = iconSize };
+
+					if (encounter.HasNormalMode)
 					{
-						var finished = finishedEncounters.Contains((AccountFilter, Reset, encounter, true));
-						challengeModeCheckbox.Image = finished ? imageProvider.GetGreenCheckIcon() : imageProvider.GetRedCrossIcon();
-					}
-
-					DataUpdated += (_, _) => UpdateChallengeModeCheckbox();
-					SelectedResetChanged += (_, _) => UpdateChallengeModeCheckbox();
-				}
-
-				Control content;
-				switch ((encounter.HasNormalMode, encounter.HasChallengeMode))
-				{
-					case (false, false):
-					{
-						var layout = new StackLayout
+						void UpdateNormalModeCheckbox()
 						{
-							Items =
+							var finished = finishedEncounters.Contains((AccountFilter, Reset, encounter, false));
+							normalModeCheckbox.Image = finished ? imageProvider.GetGreenCheckIcon() : imageProvider.GetRedCrossIcon();
+						}
+
+						DataUpdated += (_, _) => UpdateNormalModeCheckbox();
+						SelectedResetChanged += (_, _) => UpdateNormalModeCheckbox();
+					}
+
+					if (encounter.HasChallengeMode)
+					{
+						void UpdateChallengeModeCheckbox()
+						{
+							var finished = finishedEncounters.Contains((AccountFilter, Reset, encounter, true));
+							challengeModeCheckbox.Image = finished ? imageProvider.GetGreenCheckIcon() : imageProvider.GetRedCrossIcon();
+						}
+
+						DataUpdated += (_, _) => UpdateChallengeModeCheckbox();
+						SelectedResetChanged += (_, _) => UpdateChallengeModeCheckbox();
+					}
+
+					Control content;
+					switch ((encounter.HasNormalMode, encounter.HasChallengeMode))
+					{
+						case (false, false):
+						{
+							var layout = new StackLayout
 							{
-								new ImageView { Image = imageProvider.GetGrayQuestionMarkIcon(), Size = iconSize }, new Label { Text = "No logs" }
-							},
-							Orientation = Orientation.Horizontal,
-							Spacing = 6,
-						};
-						content = layout;
-						break;
-					}
-					case (true, false):
-					{
-						var layout = new StackLayout
-						{
-							Items = { normalModeCheckbox, new Label { Text = "Normal mode" } }, Orientation = Orientation.Horizontal, Spacing = 6,
-						};
-						content = layout;
-						break;
-					}
-					case (false, true):
-					{
-						var layout = new StackLayout
-						{
-							Items = { challengeModeCheckbox, new Label { Text = "Challenge mode" } }, Orientation = Orientation.Horizontal, Spacing = 6,
-						};
-						content = layout;
-						break;
-					}
-					case (true, true):
-					{
-						var layout = new StackLayout
-						{
-							Items =
-							{
-								new StackLayout
+								Items =
 								{
-									Items = { normalModeCheckbox, new Label { Text = "Normal mode" } },
-									Orientation = Orientation.Horizontal,
-									Spacing = 6,
+									new ImageView { Image = imageProvider.GetGrayQuestionMarkIcon(), Size = iconSize }, new Label { Text = "No logs" }
 								},
-								new StackLayout
+								Orientation = Orientation.Horizontal,
+								Spacing = 6,
+							};
+							content = layout;
+							break;
+						}
+						case (true, false):
+						{
+							var layout = new StackLayout
+							{
+								Items = { normalModeCheckbox, new Label { Text = "Normal mode" } }, Orientation = Orientation.Horizontal, Spacing = 6,
+							};
+							content = layout;
+							break;
+						}
+						case (false, true):
+						{
+							var layout = new StackLayout
+							{
+								Items = { challengeModeCheckbox, new Label { Text = "Challenge mode" } }, Orientation = Orientation.Horizontal, Spacing = 6,
+							};
+							content = layout;
+							break;
+						}
+						case (true, true):
+						{
+							var layout = new StackLayout
+							{
+								Items =
 								{
-									Items = { challengeModeCheckbox, new Label { Text = "Challenge mode" } },
-									Orientation = Orientation.Horizontal,
-									Spacing = 6,
-								}
-							},
-							Spacing = 6
-						};
-						content = layout;
-						break;
+									new StackLayout
+									{
+										Items = { normalModeCheckbox, new Label { Text = "Normal mode" } },
+										Orientation = Orientation.Horizontal,
+										Spacing = 6,
+									},
+									new StackLayout
+									{
+										Items = { challengeModeCheckbox, new Label { Text = "Challenge mode" } },
+										Orientation = Orientation.Horizontal,
+										Spacing = 6,
+									}
+								},
+								Spacing = 6
+							};
+							content = layout;
+							break;
+						}
 					}
+
+					var box = new GroupBox { Text = name, Content = content, Padding = new Padding(4, 2) };
+
+					table.Add(box, col, row);
 				}
-
-				var box = new GroupBox { Text = name, Content = content, Padding = new Padding(4, 2)};
-
-				table.Add(box, col, row);
 			}
 		}
 
-		var weekGrid = new GridView<ResetWeek>();
+		var weekGrid = new GridView<ResetWeek> { Height = 150 };
 		weekGrid.Columns.Add(new GridColumn
 		{
 			HeaderText = "Week", DataCell = new TextBoxCell { Binding = new DelegateBinding<ResetWeek, string>(x => x.Reset.ToString()) }
 		});
 		weekGrid.Columns.Add(new GridColumn
 		{
-			HeaderText = "NMs", DataCell = new TextBoxCell { Binding = new DelegateBinding<ResetWeek, string>(x => x.FinishedNormalEncounters.ToString()) }
+			HeaderText = "NMs",
+			DataCell = new TextBoxCell
+			{
+				Binding = new DelegateBinding<ResetWeek, string>(x => x.FinishedNormalModesByCategory.Values.Sum().ToString()),
+				TextAlignment = TextAlignment.Center
+			}
 		});
 		weekGrid.Columns.Add(new GridColumn
 		{
 			HeaderText = "CMs",
-			DataCell = new TextBoxCell { Binding = new DelegateBinding<ResetWeek, string>(x => x.FinishedChallengeModeEncounters.ToString()) }
+			DataCell = new TextBoxCell
+			{
+				Binding = new DelegateBinding<ResetWeek, string>(x => x.FinishedChallengeModesByCategory.Values.Sum().ToString()),
+				TextAlignment = TextAlignment.Center
+			}
 		});
+		foreach ((string name, Category category) in (ReadOnlySpan<(string, Category)>)
+		         [("Raid", Category.Raid), ("EoD", Category.StrikeEndOfDragons), ("SotO", Category.StrikeSecretsOfTheObscure)])
+		{
+			weekGrid.Columns.Add(new GridColumn
+			{
+				HeaderText = $"{name} NMs",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<ResetWeek, string>(week => week.FinishedNormalModesByCategory[category].ToString()),
+					TextAlignment = TextAlignment.Center
+				}
+			});
+			weekGrid.Columns.Add(new GridColumn
+			{
+				HeaderText = $"{name} NMs",
+				DataCell = new ProgressCell
+				{
+					Binding = new DelegateBinding<ResetWeek, float?>(week =>
+						(float) week.FinishedNormalModesByCategory[category] / EncounterColumns
+							.SelectMany(col => col.Rows.SelectMany(row => row.Encounters))
+							.Count(encounter => encounter.Category == category))
+				}
+			});
+			weekGrid.Columns.Add(new GridColumn
+			{
+				HeaderText = $"{name} CMs",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<ResetWeek, string>(week => week.FinishedChallengeModesByCategory[category].ToString()),
+					TextAlignment = TextAlignment.Center,
+				}
+			});
+			weekGrid.Columns.Add(new GridColumn
+			{
+				HeaderText = $"{name} CMs",
+				DataCell = new ProgressCell
+				{
+					Binding = new DelegateBinding<ResetWeek, float?>(week =>
+						(float) week.FinishedChallengeModesByCategory[category] / EncounterColumns
+							.SelectMany(col => col.Rows.SelectMany(row => row.Encounters))
+							.Count(encounter => encounter.Category == category)),
+				}
+			});
+		}
+
 		weekGrid.DataStore = weeks;
 
 		weekGrid.SelectionChanged += (_, _) =>
@@ -291,14 +366,24 @@ public class WeeklyClears : DynamicLayout
 			weekGrid.DataStore = weeks;
 		};
 
-		BeginVertical();
+		// TODO: A better UI for this
+		AddRow(accountFilterBox);
+		// TODO: In the same row, add checkboxes for categories to show
+		BeginVertical(spacing: new Size(10, 10));
 		{
-			// TODO: A better UI for this
-			AddRow(accountFilterBox);
-			AddRow(table, null);
+			BeginScrollable();
+			BeginHorizontal();
+			foreach (var table in tables)
+			{
+				AddSeparateColumn(table, null);
+			}
+
+			Add(null);
+			EndHorizontal();
+			EndScrollable();
 		}
 		EndVertical();
-		AddSeparateRow(controls: [weekGrid], xscale: true);
+		AddSeparateRow(controls: [weekGrid]);
 	}
 
 	public void UpdateDataFromLogs(IEnumerable<LogData> logs)
@@ -328,7 +413,7 @@ public class WeeklyClears : DynamicLayout
 
 			foreach (((string accountName, DateOnly resetDate) key, List<LogData> weekLogs) in logsByAccountNameWeek)
 			{
-				foreach (var encounter in Categories.SelectMany(x => x))
+				foreach (var encounter in EncounterColumns.SelectMany(column => column.Rows.SelectMany(row => row.Encounters)))
 				{
 					if (encounter.HasNormalMode && encounter.IsSatisfiedBy(weekLogs))
 					{

@@ -190,6 +190,13 @@ namespace GW2Scratch.ArcdpsLogManager
 
 			Shown += (sender, args) => ReloadLogs();
 			Shown += (sender, args) => CheckUpdates();
+			Shown += (_, _) =>
+			{
+				if (this.Screen.WorkingArea.Size.Height > 1000f)
+				{
+					ClientSize = new Size(1300, 1000);
+				}
+			};
 		}
 
 		private void CheckUpdates()
