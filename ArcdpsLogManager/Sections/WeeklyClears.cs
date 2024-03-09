@@ -1,12 +1,13 @@
-using DebounceThrottle;
 using Eto.Drawing;
 using Eto.Forms;
+using GW2Scratch.ArcdpsLogManager.Dialogs;
 using GW2Scratch.ArcdpsLogManager.Logs;
 using GW2Scratch.ArcdpsLogManager.Sections.Clears;
 using GW2Scratch.EVTCAnalytics.GameData;
 using GW2Scratch.EVTCAnalytics.GameData.Encounters;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -70,8 +71,6 @@ public class WeeklyClears : DynamicLayout
 		])
 	];
 
-	private readonly DebounceDispatcher debounceDispatcher = new DebounceDispatcher(200);
-
 	private string accountFilter = "";
 
 	private string AccountFilter
@@ -100,6 +99,9 @@ public class WeeklyClears : DynamicLayout
 
 	// Not set directly, instead set through UpdateFinishedLogs
 	private HashSet<(string AccountName, DateOnly ResetDate, IFinishableEncounter Encounter, bool ChallengeMode)> finishedEncounters;
+
+	// Cached from the update, we need this to be able to construct a player selection dialog.
+	private List<LogData> logs = [];
 
 	private void UpdateFinishedLogs(HashSet<(string AccountName, DateOnly ResetDate, IFinishableEncounter Encounter, bool ChallengeMode)> finished)
 	{
@@ -146,16 +148,57 @@ public class WeeklyClears : DynamicLayout
 
 	public WeeklyClears(ImageProvider imageProvider)
 	{
-		var accountFilterBox = new TextBox();
-		accountFilterBox.TextBinding.Bind(this, x => x.AccountFilter);
-		accountFilterBox.TextChanged += (_, _) =>
+		// TODO: Add persistence
+		var accounts = new ObservableCollection<string>();
+		var accountFilterBox = new DropDown { Width = 350 };
+		accountFilterBox.DataStore = accounts;
+		accountFilterBox.SelectedValueChanged += (_, _) =>
 		{
-			debounceDispatcher.Debounce(() =>
-				Application.Instance.InvokeAsync(() =>
+			AccountFilter = $":{accountFilterBox.SelectedValue}";
+			DataUpdated?.Invoke(this, EventArgs.Empty);
+		};
+		
+		var addNewAccountButton = new Button { Text = "Add account" };
+		var removeAccountButton = new Button { Text = "Remove", Enabled = accountFilterBox.SelectedIndex != -1 };
+		addNewAccountButton.Click += (_, _) =>
+		{
+			var dialog = new PlayerSelectDialog(null, null, null, null, imageProvider, null, logs);
+			var selectedPlayer = dialog.ShowDialog(this);
+			if (selectedPlayer != null)
+			{
+				var selectedAccount = selectedPlayer.AccountName;
+				// If this name is already added, we just select it.
+				if (!accounts.Contains(selectedAccount))
 				{
-					DataUpdated?.Invoke(this, EventArgs.Empty);
-				})
-			);
+					accounts.Add(selectedAccount.TrimStart(':'));
+				}
+
+				accountFilterBox.SelectedIndex = accounts.Count - 1;
+				AccountFilter = selectedAccount;
+				removeAccountButton.Enabled = true;
+				DataUpdated?.Invoke(this, EventArgs.Empty);
+			}
+		};
+		removeAccountButton.Click += (_, _) =>
+		{
+			var oldIndex = accountFilterBox.SelectedIndex;
+			if (oldIndex >= 0)
+			{
+				if (accounts.Count == 1)
+				{
+					accountFilterBox.SelectedIndex = -1;
+					AccountFilter = "";
+					removeAccountButton.Enabled = false;
+				}
+				else
+				{
+					accountFilterBox.SelectedIndex = 0;
+					AccountFilter = $":{accounts[0]}";
+				}
+				accounts.RemoveAt(oldIndex);
+
+				DataUpdated?.Invoke(this, EventArgs.Empty);
+			}
 		};
 
 		var tables = new List<TableLayout>();
@@ -350,6 +393,7 @@ public class WeeklyClears : DynamicLayout
 		}
 
 		weekGrid.DataStore = weeks;
+		weekGrid.SelectedRow = 0;
 
 		weekGrid.SelectionChanged += (_, _) =>
 		{
@@ -358,18 +402,15 @@ public class WeeklyClears : DynamicLayout
 
 		DataUpdated += (_, _) =>
 		{
-			// To do this properly, we would need to use SelectableFilterCollection
-			// and update/remove the data within (without replacing it fully).
-			// For now, we try this simplistic approach and see if it's good enough
-			// (likely not).
-			weekGrid.UnselectAll();
-			weekGrid.DataStore = weeks;
+			weekGrid.ReloadData(Eto.Forms.Range.FromLength(0, weeks.Count));
 		};
 
-		// TODO: A better UI for this
-		AddRow(accountFilterBox);
-		// TODO: In the same row, add checkboxes for categories to show
-		BeginVertical(spacing: new Size(10, 10));
+		BeginVertical(padding: new Padding(0, 2), spacing: new Size(10, 10));
+		{
+			AddRow(accountFilterBox, addNewAccountButton, removeAccountButton, null);
+			// TODO: add checkboxes for categories to show
+		}
+		EndBeginVertical(spacing: new Size(10, 10));
 		{
 			BeginScrollable();
 			BeginHorizontal();
@@ -388,6 +429,7 @@ public class WeeklyClears : DynamicLayout
 
 	public void UpdateDataFromLogs(IEnumerable<LogData> logs)
 	{
+		this.logs = logs.ToList();
 		Task.Run(() =>
 		{
 			var logsByAccountNameWeek = new Dictionary<(string accountName, DateOnly resetDate), List<LogData>>();
