@@ -1,5 +1,6 @@
 using Eto.Drawing;
 using Eto.Forms;
+using GW2Scratch.ArcdpsLogManager.Configuration;
 using GW2Scratch.ArcdpsLogManager.Dialogs;
 using GW2Scratch.ArcdpsLogManager.Logs;
 using GW2Scratch.ArcdpsLogManager.Sections.Clears;
@@ -98,7 +99,7 @@ public class WeeklyClears : DynamicLayout
 	private readonly List<ResetWeek> weeks = GetAllResets().Select(x => new ResetWeek(x)).ToList();
 
 	// Not set directly, instead set through UpdateFinishedLogs
-	private HashSet<(string AccountName, DateOnly ResetDate, IFinishableEncounter Encounter, bool ChallengeMode)> finishedEncounters;
+	private HashSet<(string AccountName, DateOnly ResetDate, IFinishableEncounter Encounter, bool ChallengeMode)> finishedEncounters = [];
 
 	// Cached from the update, we need this to be able to construct a player selection dialog.
 	private List<LogData> logs = [];
@@ -148,10 +149,13 @@ public class WeeklyClears : DynamicLayout
 
 	public WeeklyClears(ImageProvider imageProvider)
 	{
-		// TODO: Add persistence
-		var accounts = new ObservableCollection<string>();
 		var accountFilterBox = new DropDown { Width = 350 };
-		accountFilterBox.DataStore = accounts;
+		accountFilterBox.DataStore = Settings.PlayerAccountNames.Select(x => x.TrimStart(':'));
+		if (Settings.PlayerAccountNames.Count != 0)
+		{
+			accountFilterBox.SelectedIndex = 0;
+			AccountFilter = Settings.PlayerAccountNames[0];
+		}
 		accountFilterBox.SelectedValueChanged += (_, _) =>
 		{
 			AccountFilter = $":{accountFilterBox.SelectedValue}";
@@ -168,12 +172,13 @@ public class WeeklyClears : DynamicLayout
 			{
 				var selectedAccount = selectedPlayer.AccountName;
 				// If this name is already added, we just select it.
-				if (!accounts.Contains(selectedAccount))
+				if (!Settings.PlayerAccountNames.Contains(selectedAccount))
 				{
-					accounts.Add(selectedAccount.TrimStart(':'));
+					Settings.PlayerAccountNames = Settings.PlayerAccountNames.Append(selectedAccount).ToList();
 				}
 
-				accountFilterBox.SelectedIndex = accounts.Count - 1;
+				accountFilterBox.DataStore = Settings.PlayerAccountNames.Select(x => x.TrimStart(':'));
+				accountFilterBox.SelectedIndex = Settings.PlayerAccountNames.Count - 1;
 				AccountFilter = selectedAccount;
 				removeAccountButton.Enabled = true;
 				DataUpdated?.Invoke(this, EventArgs.Empty);
@@ -184,18 +189,25 @@ public class WeeklyClears : DynamicLayout
 			var oldIndex = accountFilterBox.SelectedIndex;
 			if (oldIndex >= 0)
 			{
-				if (accounts.Count == 1)
+				var newIndex = -1;
+				if (Settings.PlayerAccountNames.Count == 1)
 				{
-					accountFilterBox.SelectedIndex = -1;
 					AccountFilter = "";
 					removeAccountButton.Enabled = false;
 				}
 				else
 				{
-					accountFilterBox.SelectedIndex = 0;
-					AccountFilter = $":{accounts[0]}";
+					newIndex = 0;
+					AccountFilter = Settings.PlayerAccountNames[0];
 				}
-				accounts.RemoveAt(oldIndex);
+
+				// We need to make a copy of the list to edit it.
+				var newList = Settings.PlayerAccountNames.ToList();
+				newList.RemoveAt(oldIndex);
+				
+				Settings.PlayerAccountNames = newList;
+				accountFilterBox.DataStore = Settings.PlayerAccountNames.Select(x => x.TrimStart(':'));
+				accountFilterBox.SelectedIndex = newIndex;
 
 				DataUpdated?.Invoke(this, EventArgs.Empty);
 			}

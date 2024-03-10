@@ -25,4 +25,5 @@ public class StoredSettings
 	public int? MinimumLogDurationSeconds { get; set; } = null;
 	public List<string> HiddenLogListColumns { get; set; } = new List<string>() {"Character", "Map ID", "Game Version", "arcdps Version", "Instabilities", "Scale"};
 	public List<string> IgnoredUpdateVersions { get; set; } = new List<string>();
+	public List<string> PlayerAccountNames { get; set; } = new List<string>();
 }

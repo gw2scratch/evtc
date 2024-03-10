@@ -40,6 +40,7 @@ namespace GW2Scratch.ArcdpsLogManager.Configuration
 			MinimumLogDurationSecondsChanged += (sender, args) => SaveToFile();
 			IgnoredUpdateVersionsChanged += (sender, args) => SaveToFile();
 			DpsReportUploadDetailedWvwChanged += (sender, args) => SaveToFile();
+			PlayerAccountNamesChanged += (sender, args) => SaveToFile();
 
 			return LoadFromFile();
 		});
@@ -276,6 +277,19 @@ namespace GW2Scratch.ArcdpsLogManager.Configuration
 				}
 			}
 		}
+		
+		public static IReadOnlyList<string> PlayerAccountNames
+		{
+			get => Values.PlayerAccountNames;
+			set
+			{
+				if (!Equals(Values.PlayerAccountNames, value))
+				{
+					Values.PlayerAccountNames = value.ToList();
+					OnPlayerAccountNamesChanged();
+				}
+			}
+		}
 
 		public static event EventHandler<EventArgs> LogRootPathChanged;
 		public static event EventHandler<EventArgs> ShowDebugDataChanged;
@@ -290,6 +304,7 @@ namespace GW2Scratch.ArcdpsLogManager.Configuration
 		public static event EventHandler<EventArgs> MinimumLogDurationSecondsChanged;
 		public static event EventHandler<EventArgs> IgnoredUpdateVersionsChanged;
 		public static event EventHandler<EventArgs> DpsReportUploadDetailedWvwChanged;
+		public static event EventHandler<EventArgs> PlayerAccountNamesChanged;
 
 		private static void OnLogRootPathsChanged()
 		{
@@ -354,6 +369,11 @@ namespace GW2Scratch.ArcdpsLogManager.Configuration
 		private static void OnDpsReportUploadDetailedWvwChanged()
 		{
 			DpsReportUploadDetailedWvwChanged?.Invoke(null, EventArgs.Empty);
+		}
+		
+		private static void OnPlayerAccountNamesChanged()
+		{
+			PlayerAccountNamesChanged?.Invoke(null, EventArgs.Empty);
 		}
 	}
 }
