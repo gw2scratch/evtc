@@ -272,6 +272,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		{
 			var filters = ConstructLogFilters();
 			var tabs = ConstructMainTabControl();
+			tabs.SelectedIndexChanged += (_, _) => { filters.Enabled = tabs.SelectedPage.Text != "Weekly clears"; };
 
 			var sidebar = new Panel {Content = filters, Padding = new Padding(0, 0, 4, 2)};
 			var filterPage = new TabPage {Text = "Filters", Visible = false};
@@ -301,7 +302,7 @@ namespace GW2Scratch.ArcdpsLogManager
 					// This may be called when enlarging the sidebar, we don't want to change the size in that case.
 					if (mainSplitter.Position == 0)
 					{
-						mainSplitter.Position = 300;
+						mainSplitter.Position = 320;
 					}
 				}
 				else
@@ -544,7 +545,11 @@ namespace GW2Scratch.ArcdpsLogManager
 			};
 
 			var weeklyClears = new WeeklyClears(ImageProvider);
-			FilteredLogsUpdated += (sender, args) => weeklyClears.UpdateDataFromLogs(logsFiltered);
+			// We do not really have a better event here, but we want to ignore filters for this tab.
+			// It breaks the intuitive UI of "everything right of filters is filtered", but it is
+			// significantly more confusing if some clears are "randomly" missing. The filters
+			// do not really have much use for that tab.
+			FilteredLogsUpdated += (sender, args) => weeklyClears.UpdateDataFromLogs(logs);
 	
 			// Player list
 			var playerList = new PlayerList(LogCache, ApiData, LogDataProcessor, UploadProcessor, ImageProvider, LogNameProvider);

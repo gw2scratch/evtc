@@ -8,6 +8,7 @@ using GW2Scratch.ArcdpsLogManager.Logs;
 using GW2Scratch.ArcdpsLogManager.Logs.Filters;
 using GW2Scratch.ArcdpsLogManager.Logs.Naming;
 using GW2Scratch.ArcdpsLogManager.Processing;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 {
@@ -17,8 +18,29 @@ namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 		private IReadOnlyList<LogData> Logs { get; set; } = new List<LogData>();
 
 		private readonly LogEncounterFilterTree encounterTree;
-		
+		private bool enabled = true;
+
 		private event EventHandler<IReadOnlyList<LogData>> LogsUpdated;
+		private event EventHandler EnabledChanged;
+
+		public bool Enabled
+		{
+			get => enabled;
+			set
+			{
+				if (enabled != value)
+				{
+					enabled = value;
+					EnabledChanged?.Invoke(this, EventArgs.Empty);
+				}
+			}
+		}
+
+		private void BindEnabled(Control control)
+		{
+			control.Enabled = Enabled;
+			EnabledChanged += (_, _) => control.Enabled = Enabled;
+		}
 
 		public LogFilterPanel(LogCache logCache, ApiData apiData, LogDataProcessor logProcessor,
 			UploadProcessor uploadProcessor, ImageProvider imageProvider, ILogNameProvider logNameProvider,
@@ -27,25 +49,35 @@ namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 			Filters = filters;
 
 			encounterTree = new LogEncounterFilterTree(imageProvider, Filters, logNameProvider);
+			BindEnabled(encounterTree);
+			
 
 			var successCheckBox = new CheckBox {Text = "Success"};
 			successCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowSuccessfulLogs);
+			BindEnabled(successCheckBox);
 			var failureCheckBox = new CheckBox {Text = "Failure"};
 			failureCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowFailedLogs);
+			BindEnabled(failureCheckBox);
 			var unknownCheckBox = new CheckBox {Text = "Unknown"};
 			unknownCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowUnknownLogs);
+			BindEnabled(unknownCheckBox);
 
 			var normalModeCheckBox = new CheckBox {Text = "Normal"};
 			normalModeCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowNormalModeLogs);
+			BindEnabled(normalModeCheckBox);
 			var challengeModeCheckBox = new CheckBox {Text = "Challenge"};
 			challengeModeCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowChallengeModeLogs);
+			BindEnabled(challengeModeCheckBox);
 			var emboldenedCheckBox = new CheckBox {Text = "Emboldened"};
 			emboldenedCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowEmboldenedModeLogs);
+			BindEnabled(emboldenedCheckBox);
 
 			var nonFavoritesCheckBox = new CheckBox {Text = "☆ Non-favorites"};
 			nonFavoritesCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowNonFavoriteLogs);
+			BindEnabled(nonFavoritesCheckBox);
 			var favoritesCheckBox = new CheckBox {Text = "★ Favorites"};
 			favoritesCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowFavoriteLogs);
+			BindEnabled(favoritesCheckBox);
 
 			// TODO: This is currently only a one-way binding
 			var tagText = new TextBox();
@@ -54,11 +86,14 @@ namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 				var tags = tagText.Text.Split(",", StringSplitOptions.RemoveEmptyEntries).Select(tag => tag.Trim()).ToList();
 				filters.RequiredTags = tags;
 			};
+			BindEnabled(tagText);
 
 			var startDateTimePicker = new DateTimePicker {Mode = DateTimePickerMode.DateTime};
 			startDateTimePicker.ValueBinding.Bind(this, x => x.Filters.MinDateTime);
+			BindEnabled(startDateTimePicker);
 			var endDateTimePicker = new DateTimePicker {Mode = DateTimePickerMode.DateTime};
 			endDateTimePicker.ValueBinding.Bind(this, x => x.Filters.MaxDateTime);
+			BindEnabled(endDateTimePicker);
 
 			var lastDayButton = new Button {Text = "Last 24 hours"};
 			lastDayButton.Click += (sender, args) =>
@@ -70,6 +105,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 				startDateTimePicker.Value = newTime;
 				endDateTimePicker.Value = null;
 			};
+			BindEnabled(lastDayButton);
 			
 			var lastWeekButton = new Button {Text = "Last 7 days"};
 			lastWeekButton.Click += (sender, args) =>
@@ -81,14 +117,17 @@ namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 				startDateTimePicker.Value = newTime;
 				endDateTimePicker.Value = null;
 			};
+			BindEnabled(lastWeekButton);
 
 			var allTimeButton = new Button {Text = "All time"};
 			allTimeButton.Click += (sender, args) => {
 				startDateTimePicker.Value = null;
 				endDateTimePicker.Value = null;
 			};
+			BindEnabled(allTimeButton);
 
 			var advancedFiltersButton = new Button {Text = "Advanced filters"};
+			BindEnabled(advancedFiltersButton);
 			advancedFiltersButton.Click += (sender, args) =>
 			{
 				var advancedFilterPanel = new AdvancedFilterPanel(logCache, apiData, logProcessor, uploadProcessor,
