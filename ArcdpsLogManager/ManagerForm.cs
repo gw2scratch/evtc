@@ -29,6 +29,7 @@ using GW2Scratch.EVTCAnalytics.Events;
 using GW2Scratch.EVTCAnalytics.GameData;
 using GW2Scratch.EVTCAnalytics.Processing;
 using Gw2Sharp;
+using System.Runtime.InteropServices;
 
 namespace GW2Scratch.ArcdpsLogManager
 {
@@ -171,6 +172,57 @@ namespace GW2Scratch.ArcdpsLogManager
 				if (updates.Count > 0)
 				{
 					new ProcessingUpdateDialog(LogDataProcessor, updates).ShowModal(this);
+				}
+			};
+			LogSearchFinished += (_, _) =>
+			{
+				// We want to set default player account names from logs.
+				// This is quite tricky as people might have some logs that are not theirs.
+				// Furthermore, they might have renamed their account at some point.
+				if (Settings.PlayerAccountNames.Count == 0)
+				{
+					var povsByCount = new Dictionary<string, int>();
+					int totalLogs = 0;
+					foreach (var log in logs)
+					{
+						if (log.ParsingStatus != ParsingStatus.Parsed) continue;
+						if (log.PointOfView == null) continue;
+						if (log.PointOfView.AccountName == "Unknown") continue;
+						povsByCount.TryAdd(log.PointOfView.AccountName, 0);
+						povsByCount[log.PointOfView.AccountName]++;
+						totalLogs += 1;
+					}
+
+					// If more than 200 logs => any PoV that has appeared at least 50 times.
+					// If there are fewer => any PoV that has appeared at least 20 times.
+					// If there are not any such PoVs (most likely if there are only very few logs),
+					// take the most common PoV.
+					// We do not really want to use log percentage even for users
+					// with more logs as they may have a fairly recent new account.
+					if (totalLogs >= 200 && povsByCount.Any(x => x.Value >= 50))
+					{
+						Settings.PlayerAccountNames = povsByCount
+							.Where(x => x.Value >= 100)
+							.OrderByDescending(x => x.Value)
+							.Select(x => x.Key)
+							.ToList();
+					}
+					else if (totalLogs < 200 && povsByCount.Any(x => x.Value >= 20))
+					{
+						Settings.PlayerAccountNames = povsByCount
+							.OrderByDescending(x => x.Value)
+							.Where(x => x.Value >= 20)
+							.Select(x => x.Key)
+							.ToList();
+					}
+					else
+					{
+						Settings.PlayerAccountNames = povsByCount
+							.OrderByDescending(x => x.Value)
+							.Take(1)
+							.Select(x => x.Key)
+							.ToList();
+					}
 				}
 			};
 

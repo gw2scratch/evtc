@@ -198,6 +198,14 @@ public class WeeklyClears : DynamicLayout
 			DataUpdated?.Invoke(this, EventArgs.Empty);
 		};
 
+		Settings.PlayerAccountNamesChanged += (_, _) =>
+		{
+			accountFilterBox.SelectedIndex = -1;
+			accountFilterBox.DataStore = Settings.PlayerAccountNames.Select(x => x.TrimStart(':'));
+			accountFilterBox.SelectedIndex = Settings.PlayerAccountNames.Count > 0 ? 0 : -1;
+			DataUpdated?.Invoke(this, EventArgs.Empty);
+		};
+
 		var addNewAccountButton = new Button { Text = "Add account" };
 		var removeAccountButton = new Button { Text = "Remove", Enabled = accountFilterBox.SelectedIndex != -1 };
 		addNewAccountButton.Click += (_, _) =>
@@ -212,8 +220,6 @@ public class WeeklyClears : DynamicLayout
 				{
 					Settings.PlayerAccountNames = Settings.PlayerAccountNames.Append(selectedAccount).ToList();
 				}
-
-				accountFilterBox.DataStore = Settings.PlayerAccountNames.Select(x => x.TrimStart(':'));
 				accountFilterBox.SelectedIndex = Settings.PlayerAccountNames.Count - 1;
 				AccountFilter = selectedAccount;
 				removeAccountButton.Enabled = true;
