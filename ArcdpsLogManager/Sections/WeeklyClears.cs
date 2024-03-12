@@ -8,7 +8,6 @@ using GW2Scratch.EVTCAnalytics.GameData;
 using GW2Scratch.EVTCAnalytics.GameData.Encounters;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -16,58 +15,94 @@ namespace GW2Scratch.ArcdpsLogManager.Sections;
 
 public class WeeklyClears : DynamicLayout
 {
+	// Note that these are reset dates (Mondays) preceding the release,
+	// not necessarily the exact date of release (those tend to be Tuesdays).
+	private static readonly DateOnly W1Release = new DateOnly(2015, 11, 16);
+	private static readonly DateOnly W2Release = new DateOnly(2016, 3, 7);
+	private static readonly DateOnly W3Release = new DateOnly(2016, 6, 13);
+	private static readonly DateOnly W4Release = new DateOnly(2017, 2, 6);
+	private static readonly DateOnly W5Release = new DateOnly(2017, 11, 27);
+	private static readonly DateOnly W6Release = new DateOnly(2018, 9, 17);
+	private static readonly DateOnly W7Release = new DateOnly(2019, 6, 10);
+
+	private static readonly DateOnly EoDRelease = new DateOnly(2022, 2, 28);
+
+	// With EoD, strike mission CMs started to be released individually at later dates.
+	private static readonly DateOnly AHCMRelease = new DateOnly(2022, 4, 18);
+	private static readonly DateOnly XJJCMRelease = new DateOnly(2022, 5, 9);
+	private static readonly DateOnly KOCMRelease = new DateOnly(2022, 5, 23);
+	private static readonly DateOnly HTCMRelease = new DateOnly(2022, 6, 27);
+	private static readonly DateOnly OLCRelease = new DateOnly(2022, 11, 7);
+	private static readonly DateOnly OLCCMRelease = new DateOnly(2022, 11, 28);
+
+	private static readonly DateOnly SotORelease = new DateOnly(2023, 8, 21);
+	private static readonly DateOnly COCMRelease = new DateOnly(2023, 11, 6);
+	private static readonly DateOnly ToFCMRelease = new DateOnly(2024, 2, 26);
+
+
 	private static readonly List<EncounterColumn> EncounterColumns =
 	[
 		new EncounterColumn("Raids", [
 			new EncounterRow("Spirit Woods (W1)", [
-				new NormalEncounter(Encounter.ValeGuardian, false, Category.Raid),
+				new NormalEncounter(Encounter.ValeGuardian, Category.Raid, normalModeSince: W1Release, challengeModeSince: null),
 				new UnsupportedEncounter("Spirit Woods", Category.Raid),
-				new NormalEncounter(Encounter.Gorseval, false, Category.Raid),
-				new NormalEncounter(Encounter.Sabetha, false, Category.Raid)
+				new NormalEncounter(Encounter.Gorseval, Category.Raid, normalModeSince: W1Release, challengeModeSince: null),
+				new NormalEncounter(Encounter.Sabetha, Category.Raid, normalModeSince: W1Release, challengeModeSince: null),
 			]),
 			new EncounterRow("Salvation Pass (W2)", [
-				new NormalEncounter(Encounter.Slothasor, false, Category.Raid),
-				new NormalEncounter(Encounter.BanditTrio, false, Category.Raid),
-				new NormalEncounter(Encounter.Matthias, false, Category.Raid)
+				new NormalEncounter(Encounter.Slothasor, Category.Raid, normalModeSince: W2Release, challengeModeSince: null),
+				new NormalEncounter(Encounter.BanditTrio, Category.Raid, normalModeSince: W2Release, challengeModeSince: null),
+				new NormalEncounter(Encounter.Matthias, Category.Raid, normalModeSince: W2Release, challengeModeSince: null),
 			]),
 			new EncounterRow("Stronghold of the Faithful (W3)", [
-				new NormalEncounter(Encounter.Escort, false, Category.Raid),
-				new NormalEncounter(Encounter.KeepConstruct, true, Category.Raid),
-				new NormalEncounter(Encounter.TwistedCastle, false, Category.Raid),
-				new NormalEncounter(Encounter.Xera, false, Category.Raid)
+				// nov.11.2022: removed drawbridge, added mcleod (16253) as siege the stronghold npc.
+				// Since this is a Friday, we have to decide if to use the previous Monday or the next one.
+				// arcdps did not have an easy update mechanism back then, so adoption of update was slow,
+				// and a lot of people do not raid that late in the week (and most people do not care about Escort regardless)
+				// We use the next Monday.
+				new NormalEncounter(Encounter.Escort, Category.Raid, normalModeSince: W3Release, challengeModeSince: null, logsSince: new DateOnly(2022, 11, 14)),
+				new NormalEncounter(Encounter.KeepConstruct, Category.Raid, normalModeSince: W3Release, challengeModeSince: W3Release),
+				// nov.07.2019: added twisted castle to logging defaults.
+				// This is a Thursday, similarly to Escort, we use the next Monday (might as well be consistent).
+				new NormalEncounter(Encounter.TwistedCastle, Category.Raid, normalModeSince: W3Release, challengeModeSince: null, logsSince: new DateOnly(2019, 11, 11)),
+				new NormalEncounter(Encounter.Xera, Category.Raid, normalModeSince: W3Release, challengeModeSince: null),
 			]),
 			new EncounterRow("Bastion of the Penitent (W4)", [
-				new NormalEncounter(Encounter.Cairn, true, Category.Raid),
-				new NormalEncounter(Encounter.MursaatOverseer, true, Category.Raid),
-				new NormalEncounter(Encounter.Samarog, true, Category.Raid),
-				new NormalEncounter(Encounter.Deimos, true, Category.Raid)
+				new NormalEncounter(Encounter.Cairn, Category.Raid, normalModeSince: W4Release, challengeModeSince: W4Release),
+				new NormalEncounter(Encounter.MursaatOverseer, Category.Raid, normalModeSince: W4Release, challengeModeSince: W4Release),
+				new NormalEncounter(Encounter.Samarog, Category.Raid, normalModeSince: W4Release, challengeModeSince: W4Release),
+				new NormalEncounter(Encounter.Deimos, Category.Raid, normalModeSince: W4Release, challengeModeSince: W4Release),
 			]),
 			new EncounterRow("Hall of Chains (W5)", [
-				new NormalEncounter(Encounter.SoullessHorror, true, Category.Raid),
-				new NormalEncounter(Encounter.RiverOfSouls, false, Category.Raid),
-				new MultipartEncounter("Statues", [Encounter.BrokenKing, Encounter.EaterOfSouls, Encounter.Eyes], false, Category.Raid),
-				new NormalEncounter(Encounter.Dhuum, true, Category.Raid)
+				new NormalEncounter(Encounter.SoullessHorror, Category.Raid, normalModeSince: W5Release, challengeModeSince: W5Release),
+				new NormalEncounter(Encounter.RiverOfSouls, Category.Raid, normalModeSince: W5Release, challengeModeSince: null),
+				new MultipartEncounter("Statues", [Encounter.BrokenKing, Encounter.EaterOfSouls, Encounter.Eyes], Category.Raid, normalModeSince: W5Release,
+					challengeModeSince: null),
+				new NormalEncounter(Encounter.Dhuum, Category.Raid, normalModeSince: W5Release, challengeModeSince: W5Release),
 			]),
 			new EncounterRow("Mythwright Gambit (W6)", [
-				new NormalEncounter(Encounter.ConjuredAmalgamate, true, Category.Raid),
-				new NormalEncounter(Encounter.TwinLargos, true, Category.Raid),
-				new NormalEncounter(Encounter.Qadim, true, Category.Raid)
+				new NormalEncounter(Encounter.ConjuredAmalgamate, Category.Raid, normalModeSince: W6Release, challengeModeSince: W6Release),
+				new NormalEncounter(Encounter.TwinLargos, Category.Raid, normalModeSince: W6Release, challengeModeSince: W6Release),
+				new NormalEncounter(Encounter.Qadim, Category.Raid, normalModeSince: W6Release, challengeModeSince: W6Release),
 			]),
 			new EncounterRow("The Key of Ahdashim (W7)", [
-				new NormalEncounter(Encounter.Adina, true, Category.Raid),
-				new NormalEncounter(Encounter.Sabir, true, Category.Raid),
-				new NormalEncounter(Encounter.QadimThePeerless, true, Category.Raid)
+				new NormalEncounter(Encounter.Adina, Category.Raid, normalModeSince: W7Release, challengeModeSince: W7Release),
+				new NormalEncounter(Encounter.Sabir, Category.Raid, normalModeSince: W7Release, challengeModeSince: W7Release),
+				new NormalEncounter(Encounter.QadimThePeerless, Category.Raid, normalModeSince: W7Release, challengeModeSince: W7Release),
 			]),
 			new EncounterRow("End of Dragons", [
-				new NormalEncounter(Encounter.AetherbladeHideout, true, Category.StrikeEndOfDragons),
-				new NormalEncounter(Encounter.XunlaiJadeJunkyard, true, Category.StrikeEndOfDragons),
-				new NormalEncounter(Encounter.KainengOverlook, true, Category.StrikeEndOfDragons),
-				new NormalEncounter(Encounter.HarvestTemple, true, Category.StrikeEndOfDragons),
-				new NormalEncounter(Encounter.OldLionsCourt, true, Category.StrikeEndOfDragons),
+				new NormalEncounter(Encounter.AetherbladeHideout, Category.StrikeEndOfDragons, normalModeSince: EoDRelease, challengeModeSince: AHCMRelease),
+				new NormalEncounter(Encounter.XunlaiJadeJunkyard, Category.StrikeEndOfDragons, normalModeSince: EoDRelease, challengeModeSince: XJJCMRelease),
+				new NormalEncounter(Encounter.KainengOverlook, Category.StrikeEndOfDragons, normalModeSince: EoDRelease, challengeModeSince: KOCMRelease),
+				new NormalEncounter(Encounter.HarvestTemple, Category.StrikeEndOfDragons, normalModeSince: EoDRelease, challengeModeSince: HTCMRelease),
+				// The Old Lion's Court strike mission was released as part of Living World Season 1 and is accessible without End of Dragons (EoD).
+				// However, achievements for it are within EoD categories and it is usually considered part of the EoD strike missions.
+				// Since adding more categories is problematic for layout, it is a simple decision to include it in the EoD category.
+				new NormalEncounter(Encounter.OldLionsCourt, Category.StrikeEndOfDragons, normalModeSince: OLCRelease, challengeModeSince: OLCCMRelease),
 			]),
 			new EncounterRow("Secrets of the Obscure", [
-				new NormalEncounter(Encounter.CosmicObservatory, true, Category.StrikeSecretsOfTheObscure),
-				new NormalEncounter(Encounter.TempleOfFebe, true, Category.StrikeSecretsOfTheObscure),
+				new NormalEncounter(Encounter.CosmicObservatory, Category.StrikeSecretsOfTheObscure, normalModeSince: SotORelease, challengeModeSince: COCMRelease),
+				new NormalEncounter(Encounter.TempleOfFebe, Category.StrikeSecretsOfTheObscure, normalModeSince: SotORelease, challengeModeSince: ToFCMRelease),
 			]),
 		])
 	];
@@ -156,12 +191,13 @@ public class WeeklyClears : DynamicLayout
 			accountFilterBox.SelectedIndex = 0;
 			AccountFilter = Settings.PlayerAccountNames[0];
 		}
+
 		accountFilterBox.SelectedValueChanged += (_, _) =>
 		{
 			AccountFilter = $":{accountFilterBox.SelectedValue}";
 			DataUpdated?.Invoke(this, EventArgs.Empty);
 		};
-		
+
 		var addNewAccountButton = new Button { Text = "Add account" };
 		var removeAccountButton = new Button { Text = "Remove", Enabled = accountFilterBox.SelectedIndex != -1 };
 		addNewAccountButton.Click += (_, _) =>
@@ -204,7 +240,7 @@ public class WeeklyClears : DynamicLayout
 				// We need to make a copy of the list to edit it.
 				var newList = Settings.PlayerAccountNames.ToList();
 				newList.RemoveAt(oldIndex);
-				
+
 				Settings.PlayerAccountNames = newList;
 				accountFilterBox.DataStore = Settings.PlayerAccountNames.Select(x => x.TrimStart(':'));
 				accountFilterBox.SelectedIndex = newIndex;
@@ -239,97 +275,64 @@ public class WeeklyClears : DynamicLayout
 
 					Size iconSize = new Size(16, 16);
 
-					// For simplicity, we create the checkbox even if they are not used,
-					// but we do not wire them up to updates if the encounter does support the mode.
 					var normalModeCheckbox = new ImageView { Size = iconSize };
+					var normalModeLabel = new Label();
 					var challengeModeCheckbox = new ImageView { Size = iconSize };
+					var challengeModeLabel = new Label();
 
-					if (encounter.HasNormalMode)
+					void UpdateCheckbox(ImageView checkBox, Label label, bool isChallengeMode)
 					{
-						void UpdateNormalModeCheckbox()
+						var availability = isChallengeMode ? encounter.GetChallengeModeAvailability(Reset) : encounter.GetNormalModeAvailability(Reset);
+						var standardLabelText = isChallengeMode ? "Challenge Mode" : "Normal Mode";
+						switch (availability)
 						{
-							var finished = finishedEncounters.Contains((AccountFilter, Reset, encounter, false));
-							normalModeCheckbox.Image = finished ? imageProvider.GetGreenCheckIcon() : imageProvider.GetRedCrossIcon();
+							case EncounterAvailability.Available:
+								var finished = finishedEncounters.Contains((AccountFilter, Reset, encounter, isChallengeMode));
+								checkBox.Image = finished ? imageProvider.GetGreenCheckIcon() : imageProvider.GetRedCrossIcon();
+								label.Text = standardLabelText;
+								break;
+							case EncounterAvailability.DoesNotExist:
+								// We only want to show the unavailability within the normal mode row.
+								checkBox.Image = isChallengeMode ? null : imageProvider.GetGrayQuestionMarkIcon();
+								label.Text = isChallengeMode ? "" : "Did not exist";
+								break;
+							case EncounterAvailability.NotLogged:
+								// We only want to show the unavailability within the normal mode row.
+								checkBox.Image = isChallengeMode ? null : imageProvider.GetGrayQuestionMarkIcon();
+								label.Text = isChallengeMode ? "" : standardLabelText;
+								label.Text = isChallengeMode ? "" : "No logs";
+								break;
+							default:
+								throw new ArgumentOutOfRangeException();
 						}
-
-						DataUpdated += (_, _) => UpdateNormalModeCheckbox();
-						SelectedResetChanged += (_, _) => UpdateNormalModeCheckbox();
 					}
 
-					if (encounter.HasChallengeMode)
-					{
-						void UpdateChallengeModeCheckbox()
-						{
-							var finished = finishedEncounters.Contains((AccountFilter, Reset, encounter, true));
-							challengeModeCheckbox.Image = finished ? imageProvider.GetGreenCheckIcon() : imageProvider.GetRedCrossIcon();
-						}
+					DataUpdated += (_, _) => UpdateCheckbox(normalModeCheckbox, normalModeLabel, false);
+					SelectedResetChanged += (_, _) => UpdateCheckbox(normalModeCheckbox, normalModeLabel, false);
+					DataUpdated += (_, _) => UpdateCheckbox(challengeModeCheckbox, challengeModeLabel, true);
+					SelectedResetChanged += (_, _) => UpdateCheckbox(challengeModeCheckbox, challengeModeLabel, true);
 
-						DataUpdated += (_, _) => UpdateChallengeModeCheckbox();
-						SelectedResetChanged += (_, _) => UpdateChallengeModeCheckbox();
-					}
-
-					Control content;
-					switch ((encounter.HasNormalMode, encounter.HasChallengeMode))
+					var layout = new StackLayout
 					{
-						case (false, false):
+						Items =
 						{
-							var layout = new StackLayout
+							new StackLayout
 							{
-								Items =
-								{
-									new ImageView { Image = imageProvider.GetGrayQuestionMarkIcon(), Size = iconSize }, new Label { Text = "No logs" }
-								},
+								Items = { normalModeCheckbox, normalModeLabel },
 								Orientation = Orientation.Horizontal,
 								Spacing = 6,
-							};
-							content = layout;
-							break;
-						}
-						case (true, false):
-						{
-							var layout = new StackLayout
+							},
+							new StackLayout
 							{
-								Items = { normalModeCheckbox, new Label { Text = "Normal mode" } }, Orientation = Orientation.Horizontal, Spacing = 6,
-							};
-							content = layout;
-							break;
-						}
-						case (false, true):
-						{
-							var layout = new StackLayout
-							{
-								Items = { challengeModeCheckbox, new Label { Text = "Challenge mode" } }, Orientation = Orientation.Horizontal, Spacing = 6,
-							};
-							content = layout;
-							break;
-						}
-						case (true, true):
-						{
-							var layout = new StackLayout
-							{
-								Items =
-								{
-									new StackLayout
-									{
-										Items = { normalModeCheckbox, new Label { Text = "Normal mode" } },
-										Orientation = Orientation.Horizontal,
-										Spacing = 6,
-									},
-									new StackLayout
-									{
-										Items = { challengeModeCheckbox, new Label { Text = "Challenge mode" } },
-										Orientation = Orientation.Horizontal,
-										Spacing = 6,
-									}
-								},
-								Spacing = 6
-							};
-							content = layout;
-							break;
-						}
-					}
+								Items = { challengeModeCheckbox, challengeModeLabel },
+								Orientation = Orientation.Horizontal,
+								Spacing = 6,
+							}
+						},
+						Spacing = 6
+					};
 
-					var box = new GroupBox { Text = name, Content = content, Padding = new Padding(4, 2) };
+					var box = new GroupBox { Text = name, Content = layout, Padding = new Padding(4, 2) };
 
 					table.Add(box, col, row);
 				}
@@ -377,9 +380,9 @@ public class WeeklyClears : DynamicLayout
 				DataCell = new ProgressCell
 				{
 					Binding = new DelegateBinding<ResetWeek, float?>(week =>
-						(float) week.FinishedNormalModesByCategory[category] / EncounterColumns
+						(float) week.FinishedNormalModesByCategory[category] / Math.Max(1, EncounterColumns
 							.SelectMany(col => col.Rows.SelectMany(row => row.Encounters))
-							.Count(encounter => encounter.HasNormalMode && encounter.Category == category))
+							.Count(encounter => encounter.GetNormalModeAvailability(week.Reset) == EncounterAvailability.Available && encounter.Category == category)))
 				}
 			});
 			weekGrid.Columns.Add(new GridColumn
@@ -397,9 +400,9 @@ public class WeeklyClears : DynamicLayout
 				DataCell = new ProgressCell
 				{
 					Binding = new DelegateBinding<ResetWeek, float?>(week =>
-						(float) week.FinishedChallengeModesByCategory[category] / EncounterColumns
+						(float) week.FinishedChallengeModesByCategory[category] / Math.Max(1, EncounterColumns
 							.SelectMany(col => col.Rows.SelectMany(row => row.Encounters))
-							.Count(encounter => encounter.HasChallengeMode && encounter.Category == category)),
+							.Count(encounter => encounter.GetChallengeModeAvailability(week.Reset) == EncounterAvailability.Available && encounter.Category == category))),
 				}
 			});
 		}
@@ -469,12 +472,11 @@ public class WeeklyClears : DynamicLayout
 			{
 				foreach (var encounter in EncounterColumns.SelectMany(column => column.Rows.SelectMany(row => row.Encounters)))
 				{
-					if (encounter.HasNormalMode && encounter.IsSatisfiedBy(weekLogs))
+					if (encounter.IsSatisfiedBy(weekLogs))
 					{
 						finished.Add((key.accountName, key.resetDate, encounter, false));
 					}
-
-					if (encounter.HasChallengeMode && encounter.IsChallengeModeSatisfiedBy(weekLogs))
+					if (encounter.IsChallengeModeSatisfiedBy(weekLogs))
 					{
 						finished.Add((key.accountName, key.resetDate, encounter, true));
 					}
