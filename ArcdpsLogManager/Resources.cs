@@ -210,5 +210,6 @@ namespace GW2Scratch.ArcdpsLogManager
 		public static Image GetGreenCheckIcon() => GetImage($"Misc.green_check.png");
 		public static Image GetRedCrossIcon() => GetImage($"Misc.red_cross.png");
 		public static Image GetGrayQuestionMarkIcon() => GetImage($"Misc.gray_question_mark.png");
+		public static Image GetNotYetAvailableIcon() => GetImage($"Misc.not_yet_available.png");
 	}
 }

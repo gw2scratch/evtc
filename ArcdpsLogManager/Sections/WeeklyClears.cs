@@ -299,7 +299,7 @@ public class WeeklyClears : DynamicLayout
 								break;
 							case EncounterAvailability.DoesNotExist:
 								// We only want to show the unavailability within the normal mode row.
-								checkBox.Image = isChallengeMode ? null : imageProvider.GetGrayQuestionMarkIcon();
+								checkBox.Image = isChallengeMode ? null : imageProvider.GetNotYetAvailableIcon();
 								label.Text = isChallengeMode ? "" : "Did not exist";
 								break;
 							case EncounterAvailability.NotLogged:

@@ -189,6 +189,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		private Lazy<Image> GreenCheckIcon { get; } = new Lazy<Image>(Resources.GetGreenCheckIcon);
 		private Lazy<Image> RedCrossIcon { get; } = new Lazy<Image>(Resources.GetRedCrossIcon);
 		private Lazy<Image> GrayQuestionMarkIcon { get; } = new Lazy<Image>(Resources.GetGrayQuestionMarkIcon);
+		private Lazy<Image> NotYetAvailableIcon { get; } = new Lazy<Image>(Resources.GetNotYetAvailableIcon);
 
 		public Image GetTinyLogIcon() => TinyIconLog.Value;
 		public Image GetTinyFractalsIcon() => TinyIconFractals.Value;
@@ -208,6 +209,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		public Image GetGreenCheckIcon() => GreenCheckIcon.Value;
 		public Image GetRedCrossIcon() => RedCrossIcon.Value;
 		public Image GetGrayQuestionMarkIcon() => GrayQuestionMarkIcon.Value;
+		public Image GetNotYetAvailableIcon() => NotYetAvailableIcon.Value;
 
 		public Image GetTinyProfessionIcon(Profession profession)
 		{
