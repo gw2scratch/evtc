@@ -6,6 +6,11 @@ This is the full changelog of the arcdps Log Manager.
 
 #### New features
 - Added a "Weekly clears" tab with a table of encounters finished since weekly reset
+  - yes, it does Strike Missions
+  - yes, it does CMs
+  - yes, it does multiple accounts
+  - oh, and it has a detailed history
+  - relies on your logs, does not use the API
 - Added Cosmic Observatory CM detection
 - Added Temple of Febe CM detection
 
