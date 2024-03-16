@@ -5,11 +5,9 @@ using GW2Scratch.ArcdpsLogManager.Logs;
 using GW2Scratch.ArcdpsLogManager.Logs.Naming;
 using GW2Scratch.ArcdpsLogManager.Processing;
 using GW2Scratch.ArcdpsLogManager.Sections;
-using GW2Scratch.ArcdpsLogManager.Sections.Players;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
 
 namespace GW2Scratch.ArcdpsLogManager.Dialogs;
 

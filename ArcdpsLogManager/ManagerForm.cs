@@ -29,7 +29,6 @@ using GW2Scratch.EVTCAnalytics.Events;
 using GW2Scratch.EVTCAnalytics.GameData;
 using GW2Scratch.EVTCAnalytics.Processing;
 using Gw2Sharp;
-using System.Runtime.InteropServices;
 
 namespace GW2Scratch.ArcdpsLogManager
 {

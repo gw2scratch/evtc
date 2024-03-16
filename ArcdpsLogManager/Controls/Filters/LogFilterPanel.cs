@@ -8,7 +8,6 @@ using GW2Scratch.ArcdpsLogManager.Logs;
 using GW2Scratch.ArcdpsLogManager.Logs.Filters;
 using GW2Scratch.ArcdpsLogManager.Logs.Naming;
 using GW2Scratch.ArcdpsLogManager.Processing;
-using System.Runtime.InteropServices.ComTypes;
 
 namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 {

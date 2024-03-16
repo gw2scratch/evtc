@@ -9,10 +9,7 @@ using GW2Scratch.ArcdpsLogManager.Logs.Naming;
 using GW2Scratch.ArcdpsLogManager.Processing;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
-using Image = Eto.Drawing.Image;
 
 namespace GW2Scratch.ArcdpsLogManager.Controls.Filters;
 

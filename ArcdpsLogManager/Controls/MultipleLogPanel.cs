@@ -12,7 +12,6 @@ using GW2Scratch.ArcdpsLogManager.Logs.Naming;
 using GW2Scratch.ArcdpsLogManager.Logs.Tagging;
 using GW2Scratch.ArcdpsLogManager.Processing;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
-using System.Runtime.InteropServices;
 using Button = Eto.Forms.Button;
 using Label = Eto.Forms.Label;
 
