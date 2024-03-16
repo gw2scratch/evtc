@@ -173,6 +173,57 @@ namespace GW2Scratch.ArcdpsLogManager
 					new ProcessingUpdateDialog(LogDataProcessor, updates).ShowModal(this);
 				}
 			};
+			LogSearchFinished += (_, _) =>
+			{
+				// We want to set default player account names from logs.
+				// This is quite tricky as people might have some logs that are not theirs.
+				// Furthermore, they might have renamed their account at some point.
+				if (Settings.PlayerAccountNames.Count == 0)
+				{
+					var povsByCount = new Dictionary<string, int>();
+					int totalLogs = 0;
+					foreach (var log in logs)
+					{
+						if (log.ParsingStatus != ParsingStatus.Parsed) continue;
+						if (log.PointOfView == null) continue;
+						if (log.PointOfView.AccountName == "Unknown") continue;
+						povsByCount.TryAdd(log.PointOfView.AccountName, 0);
+						povsByCount[log.PointOfView.AccountName]++;
+						totalLogs += 1;
+					}
+
+					// If more than 200 logs => any PoV that has appeared at least 50 times.
+					// If there are fewer => any PoV that has appeared at least 20 times.
+					// If there are not any such PoVs (most likely if there are only very few logs),
+					// take the most common PoV.
+					// We do not really want to use log percentage even for users
+					// with more logs as they may have a fairly recent new account.
+					if (totalLogs >= 200 && povsByCount.Any(x => x.Value >= 50))
+					{
+						Settings.PlayerAccountNames = povsByCount
+							.Where(x => x.Value >= 100)
+							.OrderByDescending(x => x.Value)
+							.Select(x => x.Key)
+							.ToList();
+					}
+					else if (totalLogs < 200 && povsByCount.Any(x => x.Value >= 20))
+					{
+						Settings.PlayerAccountNames = povsByCount
+							.OrderByDescending(x => x.Value)
+							.Where(x => x.Value >= 20)
+							.Select(x => x.Key)
+							.ToList();
+					}
+					else
+					{
+						Settings.PlayerAccountNames = povsByCount
+							.OrderByDescending(x => x.Value)
+							.Take(1)
+							.Select(x => x.Key)
+							.ToList();
+					}
+				}
+			};
 
 			// Collection initialization
 			logsFiltered = new FilterCollection<LogData>(logs);
@@ -190,6 +241,13 @@ namespace GW2Scratch.ArcdpsLogManager
 
 			Shown += (sender, args) => ReloadLogs();
 			Shown += (sender, args) => CheckUpdates();
+			Shown += (_, _) =>
+			{
+				if (this.Screen.WorkingArea.Size.Height > 1000f)
+				{
+					ClientSize = new Size(1300, 1000);
+				}
+			};
 		}
 
 		private void CheckUpdates()
@@ -213,6 +271,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		{
 			var filters = ConstructLogFilters();
 			var tabs = ConstructMainTabControl();
+			tabs.SelectedIndexChanged += (_, _) => { filters.Enabled = tabs.SelectedPage.Text != "Weekly clears"; };
 
 			var sidebar = new Panel {Content = filters, Padding = new Padding(0, 0, 4, 2)};
 			var filterPage = new TabPage {Text = "Filters", Visible = false};
@@ -242,7 +301,7 @@ namespace GW2Scratch.ArcdpsLogManager
 					// This may be called when enlarging the sidebar, we don't want to change the size in that case.
 					if (mainSplitter.Position == 0)
 					{
-						mainSplitter.Position = 300;
+						mainSplitter.Position = 320;
 					}
 				}
 				else
@@ -483,6 +542,13 @@ namespace GW2Scratch.ArcdpsLogManager
 					Application.Instance.AsyncInvoke(() => { logList.ReloadData(); });
 				}
 			};
+
+			var weeklyClears = new WeeklyClears(ImageProvider);
+			// We do not really have a better event here, but we want to ignore filters for this tab.
+			// It breaks the intuitive UI of "everything right of filters is filtered", but it is
+			// significantly more confusing if some clears are "randomly" missing. The filters
+			// do not really have much use for that tab.
+			FilteredLogsUpdated += (sender, args) => weeklyClears.UpdateDataFromLogs(logs);
 	
 			// Player list
 			var playerList = new PlayerList(LogCache, ApiData, LogDataProcessor, UploadProcessor, ImageProvider, LogNameProvider);
@@ -544,6 +610,7 @@ namespace GW2Scratch.ArcdpsLogManager
 
 			var tabs = new TabControl();
 			tabs.Pages.Add(new TabPage {Text = "Logs", Content = logList});
+			tabs.Pages.Add(new TabPage {Text = "Weekly clears", Content = weeklyClears});
 			tabs.Pages.Add(new TabPage {Text = "Players", Content = playerList});
 			tabs.Pages.Add(new TabPage {Text = "Guilds", Content = guildList});
 			tabs.Pages.Add(new TabPage {Text = "Statistics", Content = statistics});

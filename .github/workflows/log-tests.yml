@@ -8,13 +8,13 @@ jobs:
   build:
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
       with:
         submodules: true
-    - name: Setup .NET 6
-      uses: actions/setup-dotnet@v1
+    - name: Setup .NET 8
+      uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 6.0.x
+        dotnet-version: '8.0.x'
     # This is a workaround for issue https://github.com/actions/virtual-environments/issues/1090,
     # which causes to nuget restores to fail
     - name: Clean NuGet cache

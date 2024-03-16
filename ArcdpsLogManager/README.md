@@ -1,7 +1,7 @@
 # arcdps Log Manager
 A manager for all your recorded logs. Filter logs, upload them with one click, find interesting statistics.
 
-Runs on Windows and Linux, requires .NET 6
+Runs on Windows and Linux, requires .NET 8
 
 ## Features
 
