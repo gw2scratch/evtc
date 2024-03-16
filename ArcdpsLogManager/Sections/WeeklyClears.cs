@@ -365,10 +365,11 @@ public class WeeklyClears : DynamicLayout
 			}
 		});
 
-		foreach ((string name, EncounterCategory category) in (ReadOnlySpan<(string, EncounterCategory)>)
+		foreach ((string name, EncounterCategory category, bool hasCMs) in (ReadOnlySpan<(string, EncounterCategory, bool)>)
 		         [
-			         ("Raid", EncounterCategory.Raids), ("IBS", EncounterCategory.StrikeIcebroodSaga), ("EoD", EncounterCategory.StrikeEndOfDragons),
-			         ("SotO", EncounterCategory.StrikeSecretsOfTheObscure)
+			         ("Raid", EncounterCategory.Raids, true), ("IBS", EncounterCategory.StrikeIcebroodSaga, false),
+			         ("EoD", EncounterCategory.StrikeEndOfDragons, true),
+			         ("SotO", EncounterCategory.StrikeSecretsOfTheObscure, true)
 		         ])
 		{
 			var visible = Settings.WeeklyClearGroups.Contains(category);
@@ -423,8 +424,11 @@ public class WeeklyClears : DynamicLayout
 
 			weekGrid.Columns.Add(nmCountColumn);
 			weekGrid.Columns.Add(nmPercentageColumn);
-			weekGrid.Columns.Add(cmCountColumn);
-			weekGrid.Columns.Add(cmPercentageColumn);
+			if (hasCMs)
+			{
+				weekGrid.Columns.Add(cmCountColumn);
+				weekGrid.Columns.Add(cmPercentageColumn);
+			}
 
 			Settings.WeeklyClearGroupsChanged += (_, _) =>
 			{
