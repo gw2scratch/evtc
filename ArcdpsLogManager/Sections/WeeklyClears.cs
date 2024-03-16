@@ -60,11 +60,13 @@ public class WeeklyClears : DynamicLayout
 				// arcdps did not have an easy update mechanism back then, so adoption of update was slow,
 				// and a lot of people do not raid that late in the week (and most people do not care about Escort regardless)
 				// We use the next Monday.
-				new NormalEncounter(Encounter.Escort, Category.Raid, normalModeSince: W3Release, challengeModeSince: null, logsSince: new DateOnly(2022, 11, 14)),
+				new NormalEncounter(Encounter.Escort, Category.Raid, normalModeSince: W3Release, challengeModeSince: null,
+					logsSince: new DateOnly(2022, 11, 14)),
 				new NormalEncounter(Encounter.KeepConstruct, Category.Raid, normalModeSince: W3Release, challengeModeSince: W3Release),
 				// nov.07.2019: added twisted castle to logging defaults.
 				// This is a Thursday, similarly to Escort, we use the next Monday (might as well be consistent).
-				new NormalEncounter(Encounter.TwistedCastle, Category.Raid, normalModeSince: W3Release, challengeModeSince: null, logsSince: new DateOnly(2019, 11, 11)),
+				new NormalEncounter(Encounter.TwistedCastle, Category.Raid, normalModeSince: W3Release, challengeModeSince: null,
+					logsSince: new DateOnly(2019, 11, 11)),
 				new NormalEncounter(Encounter.Xera, Category.Raid, normalModeSince: W3Release, challengeModeSince: null),
 			]),
 			new EncounterRow("Bastion of the Penitent (W4)", [
@@ -101,7 +103,8 @@ public class WeeklyClears : DynamicLayout
 				new NormalEncounter(Encounter.OldLionsCourt, Category.StrikeEndOfDragons, normalModeSince: OLCRelease, challengeModeSince: OLCCMRelease),
 			]),
 			new EncounterRow("Secrets of the Obscure", [
-				new NormalEncounter(Encounter.CosmicObservatory, Category.StrikeSecretsOfTheObscure, normalModeSince: SotORelease, challengeModeSince: COCMRelease),
+				new NormalEncounter(Encounter.CosmicObservatory, Category.StrikeSecretsOfTheObscure, normalModeSince: SotORelease,
+					challengeModeSince: COCMRelease),
 				new NormalEncounter(Encounter.TempleOfFebe, Category.StrikeSecretsOfTheObscure, normalModeSince: SotORelease, challengeModeSince: ToFCMRelease),
 			]),
 		])
@@ -220,6 +223,7 @@ public class WeeklyClears : DynamicLayout
 				{
 					Settings.PlayerAccountNames = Settings.PlayerAccountNames.Append(selectedAccount).ToList();
 				}
+
 				accountFilterBox.SelectedIndex = Settings.PlayerAccountNames.Count - 1;
 				AccountFilter = selectedAccount;
 				removeAccountButton.Enabled = true;
@@ -279,14 +283,10 @@ public class WeeklyClears : DynamicLayout
 						_ => throw new ArgumentOutOfRangeException()
 					};
 
-					Size iconSize = new Size(16, 16);
+					var normalModeCheckbox = new WeeklyCheckBox();
+					var challengeModeCheckbox = new WeeklyCheckBox();
 
-					var normalModeCheckbox = new ImageView { Size = iconSize };
-					var normalModeLabel = new Label();
-					var challengeModeCheckbox = new ImageView { Size = iconSize };
-					var challengeModeLabel = new Label();
-
-					void UpdateCheckbox(ImageView checkBox, Label label, bool isChallengeMode)
+					void UpdateCheckbox(WeeklyCheckBox checkBox, bool isChallengeMode)
 					{
 						var availability = isChallengeMode ? encounter.GetChallengeModeAvailability(Reset) : encounter.GetNormalModeAvailability(Reset);
 						var standardLabelText = isChallengeMode ? "Challenge Mode" : "Normal Mode";
@@ -295,48 +295,30 @@ public class WeeklyClears : DynamicLayout
 							case EncounterAvailability.Available:
 								var finished = finishedEncounters.Contains((AccountFilter, Reset, encounter, isChallengeMode));
 								checkBox.Image = finished ? imageProvider.GetGreenCheckIcon() : imageProvider.GetRedCrossIcon();
-								label.Text = standardLabelText;
+								checkBox.Text = standardLabelText;
 								break;
 							case EncounterAvailability.DoesNotExist:
 								// We only want to show the unavailability within the normal mode row.
 								checkBox.Image = isChallengeMode ? null : imageProvider.GetNotYetAvailableIcon();
-								label.Text = isChallengeMode ? "" : "Did not exist";
+								checkBox.Text = isChallengeMode ? "" : "Did not exist";
 								break;
 							case EncounterAvailability.NotLogged:
 								// We only want to show the unavailability within the normal mode row.
 								checkBox.Image = isChallengeMode ? null : imageProvider.GetGrayQuestionMarkIcon();
-								label.Text = isChallengeMode ? "" : standardLabelText;
-								label.Text = isChallengeMode ? "" : "No logs";
+								checkBox.Text = isChallengeMode ? "" : standardLabelText;
+								checkBox.Text = isChallengeMode ? "" : "No logs";
 								break;
 							default:
 								throw new ArgumentOutOfRangeException();
 						}
 					}
 
-					DataUpdated += (_, _) => UpdateCheckbox(normalModeCheckbox, normalModeLabel, false);
-					SelectedResetChanged += (_, _) => UpdateCheckbox(normalModeCheckbox, normalModeLabel, false);
-					DataUpdated += (_, _) => UpdateCheckbox(challengeModeCheckbox, challengeModeLabel, true);
-					SelectedResetChanged += (_, _) => UpdateCheckbox(challengeModeCheckbox, challengeModeLabel, true);
+					DataUpdated += (_, _) => UpdateCheckbox(normalModeCheckbox, false);
+					SelectedResetChanged += (_, _) => UpdateCheckbox(normalModeCheckbox, false);
+					DataUpdated += (_, _) => UpdateCheckbox(challengeModeCheckbox, true);
+					SelectedResetChanged += (_, _) => UpdateCheckbox(challengeModeCheckbox, true);
 
-					var layout = new StackLayout
-					{
-						Items =
-						{
-							new StackLayout
-							{
-								Items = { normalModeCheckbox, normalModeLabel },
-								Orientation = Orientation.Horizontal,
-								Spacing = 6,
-							},
-							new StackLayout
-							{
-								Items = { challengeModeCheckbox, challengeModeLabel },
-								Orientation = Orientation.Horizontal,
-								Spacing = 6,
-							}
-						},
-						Spacing = 6
-					};
+					var layout = new StackLayout { Items = { normalModeCheckbox, challengeModeCheckbox }, Spacing = 6 };
 
 					var box = new GroupBox { Text = name, Content = layout, Padding = new Padding(4, 2) };
 
@@ -388,7 +370,8 @@ public class WeeklyClears : DynamicLayout
 					Binding = new DelegateBinding<ResetWeek, float?>(week =>
 						(float) week.FinishedNormalModesByCategory[category] / Math.Max(1, EncounterColumns
 							.SelectMany(col => col.Rows.SelectMany(row => row.Encounters))
-							.Count(encounter => encounter.GetNormalModeAvailability(week.Reset) == EncounterAvailability.Available && encounter.Category == category)))
+							.Count(encounter =>
+								encounter.GetNormalModeAvailability(week.Reset) == EncounterAvailability.Available && encounter.Category == category)))
 				}
 			});
 			weekGrid.Columns.Add(new GridColumn
@@ -408,7 +391,8 @@ public class WeeklyClears : DynamicLayout
 					Binding = new DelegateBinding<ResetWeek, float?>(week =>
 						(float) week.FinishedChallengeModesByCategory[category] / Math.Max(1, EncounterColumns
 							.SelectMany(col => col.Rows.SelectMany(row => row.Encounters))
-							.Count(encounter => encounter.GetChallengeModeAvailability(week.Reset) == EncounterAvailability.Available && encounter.Category == category))),
+							.Count(encounter =>
+								encounter.GetChallengeModeAvailability(week.Reset) == EncounterAvailability.Available && encounter.Category == category))),
 				}
 			});
 		}
@@ -482,6 +466,7 @@ public class WeeklyClears : DynamicLayout
 					{
 						finished.Add((key.accountName, key.resetDate, encounter, false));
 					}
+
 					if (encounter.IsChallengeModeSatisfiedBy(weekLogs))
 					{
 						finished.Add((key.accountName, key.resetDate, encounter, true));
