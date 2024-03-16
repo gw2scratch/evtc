@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace GW2Scratch.ArcdpsLogManager.Sections.Clears;
 
-public class EncounterGroup(EncounterGroupId id, string name, IReadOnlyList<EncounterRow> encounters)
+public class EncounterGroup(EncounterCategory category, string name, IReadOnlyList<EncounterRow> encounters)
 {
-	public EncounterGroupId Id { get; } = id;
+	public EncounterCategory Category { get; } = category;
 	public string Name { get; } = name;
 	public IReadOnlyList<EncounterRow> Rows { get; } = encounters;
 }

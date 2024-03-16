@@ -13,7 +13,7 @@ public class MultipartEncounter : IFinishableEncounter
 	private readonly DateOnly? normalModeSince;
 	private readonly DateOnly? challengeModeSince;
 
-	public MultipartEncounter(string name, IEnumerable<Encounter> encounters, Category category, DateOnly? normalModeSince, DateOnly? challengeModeSince)
+	public MultipartEncounter(string name, IEnumerable<Encounter> encounters, DateOnly? normalModeSince, DateOnly? challengeModeSince)
 	{
 		if (normalModeSince.HasValue && normalModeSince.Value.DayOfWeek != DayOfWeek.Monday)
 		{
@@ -29,12 +29,10 @@ public class MultipartEncounter : IFinishableEncounter
 		this.challengeModeSince = challengeModeSince;
 		Name = name;
 		Encounters = encounters;
-		Category = category;
 	}
 
 	public string Name { get; }
 	private IEnumerable<Encounter> Encounters { get; }
-	public Category Category { get; }
 
 	public EncounterAvailability GetNormalModeAvailability(DateOnly resetDate)
 	{

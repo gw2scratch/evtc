@@ -10,5 +10,4 @@ public interface IFinishableEncounter
 	bool IsChallengeModeSatisfiedBy(IEnumerable<LogData> logs);
 	EncounterAvailability GetNormalModeAvailability(DateOnly resetDate);
 	EncounterAvailability GetChallengeModeAvailability(DateOnly resetDate);
-	Category Category { get; }
 }

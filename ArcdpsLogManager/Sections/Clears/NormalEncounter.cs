@@ -14,7 +14,7 @@ public class NormalEncounter : IFinishableEncounter
 	private readonly DateOnly? challengeModeSince;
 	private readonly DateOnly? logsSince;
 
-	public NormalEncounter(Encounter encounter, Category category, DateOnly? normalModeSince, DateOnly? challengeModeSince, DateOnly? logsSince = null)
+	public NormalEncounter(Encounter encounter, DateOnly? normalModeSince, DateOnly? challengeModeSince, DateOnly? logsSince = null)
 	{
 		if (normalModeSince.HasValue && normalModeSince.Value.DayOfWeek != DayOfWeek.Monday)
 		{
@@ -35,7 +35,6 @@ public class NormalEncounter : IFinishableEncounter
 		this.challengeModeSince = challengeModeSince;
 		this.logsSince = logsSince;
 		Encounter = encounter;
-		Category = category;
 	}
 
 	public Encounter Encounter { get; }
@@ -60,8 +59,6 @@ public class NormalEncounter : IFinishableEncounter
 		}
 		return resetDate < logsSince ? EncounterAvailability.NotLogged : EncounterAvailability.Available;
 	}
-
-	public Category Category { get; }
 
 	public bool IsSatisfiedBy(IEnumerable<LogData> logs)
 	{

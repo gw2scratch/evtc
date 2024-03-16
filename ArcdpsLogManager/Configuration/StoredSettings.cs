@@ -25,6 +25,6 @@ public class StoredSettings
 	public List<string> HiddenLogListColumns { get; set; } = new List<string>() {"Character", "Map ID", "Game Version", "arcdps Version", "Instabilities", "Scale"};
 	public List<string> IgnoredUpdateVersions { get; set; } = new List<string>();
 	public List<string> PlayerAccountNames { get; set; } = new List<string>();
-	public List<EncounterGroupId> WeeklyClearGroups { get; set; } =
-		[EncounterGroupId.Raids, EncounterGroupId.EndOfDragonsStrikeMissions, EncounterGroupId.SecretsOfTheObscureStrikeMissions];
+	public List<EncounterCategory> WeeklyClearGroups { get; set; } =
+		[EncounterCategory.Raids, EncounterCategory.StrikeEndOfDragons, EncounterCategory.StrikeSecretsOfTheObscure];
 }

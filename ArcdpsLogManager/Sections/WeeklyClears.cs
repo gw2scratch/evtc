@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EncounterCategory = GW2Scratch.ArcdpsLogManager.Sections.Clears.EncounterCategory;
 
 namespace GW2Scratch.ArcdpsLogManager.Sections;
 
@@ -27,6 +28,13 @@ public class WeeklyClears : DynamicLayout
 
 	private static readonly DateOnly EoDRelease = new DateOnly(2022, 2, 28);
 
+	private static readonly DateOnly ShiverpeaksPassRelease = new DateOnly(2019, 9, 16);
+	private static readonly DateOnly VoiceClawRelease = new DateOnly(2019, 11, 18);
+	private static readonly DateOnly FraenirOfJormagRelease = new DateOnly(2019, 11, 18);
+	private static readonly DateOnly BoneskinnerRelease = new DateOnly(2019, 11, 18);
+	private static readonly DateOnly WhisperOfJormagRelease = new DateOnly(2020, 1, 27);
+	private static readonly DateOnly ColdWarRelease = new DateOnly(2020, 5, 25);
+
 	// With EoD, strike mission CMs started to be released individually at later dates.
 	private static readonly DateOnly AHCMRelease = new DateOnly(2022, 4, 18);
 	private static readonly DateOnly XJJCMRelease = new DateOnly(2022, 5, 9);
@@ -42,17 +50,17 @@ public class WeeklyClears : DynamicLayout
 
 	private static readonly List<EncounterGroup> EncounterGroups =
 	[
-		new EncounterGroup(EncounterGroupId.Raids, "Raids", [
+		new EncounterGroup(EncounterCategory.Raids, "Raids", [
 			new EncounterRow("Spirit Woods (W1)", [
-				new NormalEncounter(Encounter.ValeGuardian, Category.Raid, normalModeSince: W1Release, challengeModeSince: null),
-				new UnsupportedEncounter("Spirit Woods", Category.Raid),
-				new NormalEncounter(Encounter.Gorseval, Category.Raid, normalModeSince: W1Release, challengeModeSince: null),
-				new NormalEncounter(Encounter.Sabetha, Category.Raid, normalModeSince: W1Release, challengeModeSince: null),
+				new NormalEncounter(Encounter.ValeGuardian, normalModeSince: W1Release, challengeModeSince: null),
+				new UnsupportedEncounter("Spirit Woods"),
+				new NormalEncounter(Encounter.Gorseval, normalModeSince: W1Release, challengeModeSince: null),
+				new NormalEncounter(Encounter.Sabetha, normalModeSince: W1Release, challengeModeSince: null),
 			]),
 			new EncounterRow("Salvation Pass (W2)", [
-				new NormalEncounter(Encounter.Slothasor, Category.Raid, normalModeSince: W2Release, challengeModeSince: null),
-				new NormalEncounter(Encounter.BanditTrio, Category.Raid, normalModeSince: W2Release, challengeModeSince: null),
-				new NormalEncounter(Encounter.Matthias, Category.Raid, normalModeSince: W2Release, challengeModeSince: null),
+				new NormalEncounter(Encounter.Slothasor, normalModeSince: W2Release, challengeModeSince: null),
+				new NormalEncounter(Encounter.BanditTrio, normalModeSince: W2Release, challengeModeSince: null),
+				new NormalEncounter(Encounter.Matthias, normalModeSince: W2Release, challengeModeSince: null),
 			]),
 			new EncounterRow("Stronghold of the Faithful (W3)", [
 				// nov.11.2022: removed drawbridge, added mcleod (16253) as siege the stronghold npc.
@@ -60,59 +68,74 @@ public class WeeklyClears : DynamicLayout
 				// arcdps did not have an easy update mechanism back then, so adoption of update was slow,
 				// and a lot of people do not raid that late in the week (and most people do not care about Escort regardless)
 				// We use the next Monday.
-				new NormalEncounter(Encounter.Escort, Category.Raid, normalModeSince: W3Release, challengeModeSince: null,
+				new NormalEncounter(Encounter.Escort, normalModeSince: W3Release, challengeModeSince: null,
 					logsSince: new DateOnly(2022, 11, 14)),
-				new NormalEncounter(Encounter.KeepConstruct, Category.Raid, normalModeSince: W3Release, challengeModeSince: W3Release),
+				new NormalEncounter(Encounter.KeepConstruct, normalModeSince: W3Release, challengeModeSince: W3Release),
 				// nov.07.2019: added twisted castle to logging defaults.
 				// This is a Thursday, similarly to Escort, we use the next Monday (might as well be consistent).
-				new NormalEncounter(Encounter.TwistedCastle, Category.Raid, normalModeSince: W3Release, challengeModeSince: null,
+				new NormalEncounter(Encounter.TwistedCastle, normalModeSince: W3Release, challengeModeSince: null,
 					logsSince: new DateOnly(2019, 11, 11)),
-				new NormalEncounter(Encounter.Xera, Category.Raid, normalModeSince: W3Release, challengeModeSince: null),
+				new NormalEncounter(Encounter.Xera, normalModeSince: W3Release, challengeModeSince: null),
 			]),
 			new EncounterRow("Bastion of the Penitent (W4)", [
-				new NormalEncounter(Encounter.Cairn, Category.Raid, normalModeSince: W4Release, challengeModeSince: W4Release),
-				new NormalEncounter(Encounter.MursaatOverseer, Category.Raid, normalModeSince: W4Release, challengeModeSince: W4Release),
-				new NormalEncounter(Encounter.Samarog, Category.Raid, normalModeSince: W4Release, challengeModeSince: W4Release),
-				new NormalEncounter(Encounter.Deimos, Category.Raid, normalModeSince: W4Release, challengeModeSince: W4Release),
+				new NormalEncounter(Encounter.Cairn, normalModeSince: W4Release, challengeModeSince: W4Release),
+				new NormalEncounter(Encounter.MursaatOverseer, normalModeSince: W4Release, challengeModeSince: W4Release),
+				new NormalEncounter(Encounter.Samarog, normalModeSince: W4Release, challengeModeSince: W4Release),
+				new NormalEncounter(Encounter.Deimos, normalModeSince: W4Release, challengeModeSince: W4Release),
 			]),
 			new EncounterRow("Hall of Chains (W5)", [
-				new NormalEncounter(Encounter.SoullessHorror, Category.Raid, normalModeSince: W5Release, challengeModeSince: W5Release),
-				new NormalEncounter(Encounter.RiverOfSouls, Category.Raid, normalModeSince: W5Release, challengeModeSince: null),
-				new MultipartEncounter("Statues", [Encounter.BrokenKing, Encounter.EaterOfSouls, Encounter.Eyes], Category.Raid, normalModeSince: W5Release,
+				new NormalEncounter(Encounter.SoullessHorror, normalModeSince: W5Release, challengeModeSince: W5Release),
+				new NormalEncounter(Encounter.RiverOfSouls, normalModeSince: W5Release, challengeModeSince: null),
+				new MultipartEncounter("Statues", [Encounter.BrokenKing, Encounter.EaterOfSouls, Encounter.Eyes], normalModeSince: W5Release,
 					challengeModeSince: null),
-				new NormalEncounter(Encounter.Dhuum, Category.Raid, normalModeSince: W5Release, challengeModeSince: W5Release),
+				new NormalEncounter(Encounter.Dhuum, normalModeSince: W5Release, challengeModeSince: W5Release),
 			]),
 			new EncounterRow("Mythwright Gambit (W6)", [
-				new NormalEncounter(Encounter.ConjuredAmalgamate, Category.Raid, normalModeSince: W6Release, challengeModeSince: W6Release),
-				new NormalEncounter(Encounter.TwinLargos, Category.Raid, normalModeSince: W6Release, challengeModeSince: W6Release),
-				new NormalEncounter(Encounter.Qadim, Category.Raid, normalModeSince: W6Release, challengeModeSince: W6Release),
+				new NormalEncounter(Encounter.ConjuredAmalgamate, normalModeSince: W6Release, challengeModeSince: W6Release),
+				new NormalEncounter(Encounter.TwinLargos, normalModeSince: W6Release, challengeModeSince: W6Release),
+				new NormalEncounter(Encounter.Qadim, normalModeSince: W6Release, challengeModeSince: W6Release),
 			]),
 			new EncounterRow("The Key of Ahdashim (W7)", [
-				new NormalEncounter(Encounter.Adina, Category.Raid, normalModeSince: W7Release, challengeModeSince: W7Release),
-				new NormalEncounter(Encounter.Sabir, Category.Raid, normalModeSince: W7Release, challengeModeSince: W7Release),
-				new NormalEncounter(Encounter.QadimThePeerless, Category.Raid, normalModeSince: W7Release, challengeModeSince: W7Release),
+				new NormalEncounter(Encounter.Adina, normalModeSince: W7Release, challengeModeSince: W7Release),
+				new NormalEncounter(Encounter.Sabir, normalModeSince: W7Release, challengeModeSince: W7Release),
+				new NormalEncounter(Encounter.QadimThePeerless, normalModeSince: W7Release, challengeModeSince: W7Release),
 			]),
 		]),
-		new EncounterGroup(EncounterGroupId.EndOfDragonsStrikeMissions, "End of Dragons", [
+		new EncounterGroup(EncounterCategory.StrikeIcebroodSaga, "Icebrood Saga", [
+			new EncounterRow("Icebrood Saga", [
+				new NormalEncounter(Encounter.ShiverpeaksPass, normalModeSince: ShiverpeaksPassRelease, challengeModeSince: null),
+				new NormalEncounter(Encounter.VoiceAndClawOfTheFallen, normalModeSince: VoiceClawRelease, challengeModeSince: null),
+				new NormalEncounter(Encounter.FraenirOfJormag, normalModeSince: FraenirOfJormagRelease, challengeModeSince: null),
+				new NormalEncounter(Encounter.Boneskinner, normalModeSince: BoneskinnerRelease, challengeModeSince: null),
+				new NormalEncounter(Encounter.WhisperOfJormag, normalModeSince: WhisperOfJormagRelease, challengeModeSince: null),
+				// Not sure this is logged by default, it definitely was not initially, and it is often not done by players at all.
+				//new NormalEncounter(Encounter.VariniaStormsounder, normalModeSince: ColdWarRelease, challengeModeSince: null),
+			])
+		]),
+		new EncounterGroup(EncounterCategory.StrikeEndOfDragons, "End of Dragons", [
 			new EncounterRow("End of Dragons", [
-				new NormalEncounter(Encounter.AetherbladeHideout, Category.StrikeEndOfDragons, normalModeSince: EoDRelease, challengeModeSince: AHCMRelease),
-				new NormalEncounter(Encounter.XunlaiJadeJunkyard, Category.StrikeEndOfDragons, normalModeSince: EoDRelease, challengeModeSince: XJJCMRelease),
-				new NormalEncounter(Encounter.KainengOverlook, Category.StrikeEndOfDragons, normalModeSince: EoDRelease, challengeModeSince: KOCMRelease),
-				new NormalEncounter(Encounter.HarvestTemple, Category.StrikeEndOfDragons, normalModeSince: EoDRelease, challengeModeSince: HTCMRelease),
+				new NormalEncounter(Encounter.AetherbladeHideout, normalModeSince: EoDRelease, challengeModeSince: AHCMRelease),
+				new NormalEncounter(Encounter.XunlaiJadeJunkyard, normalModeSince: EoDRelease, challengeModeSince: XJJCMRelease),
+				new NormalEncounter(Encounter.KainengOverlook, normalModeSince: EoDRelease, challengeModeSince: KOCMRelease),
+				new NormalEncounter(Encounter.HarvestTemple, normalModeSince: EoDRelease, challengeModeSince: HTCMRelease),
 				// The Old Lion's Court strike mission was released as part of Living World Season 1 and is accessible without End of Dragons (EoD).
 				// However, achievements for it are within EoD categories and it is usually considered part of the EoD strike missions.
 				// Since adding more categories is problematic for layout, it is a simple decision to include it in the EoD category.
-				new NormalEncounter(Encounter.OldLionsCourt, Category.StrikeEndOfDragons, normalModeSince: OLCRelease, challengeModeSince: OLCCMRelease),
+				new NormalEncounter(Encounter.OldLionsCourt, normalModeSince: OLCRelease, challengeModeSince: OLCCMRelease),
 			]),
 		]),
-		new EncounterGroup(EncounterGroupId.SecretsOfTheObscureStrikeMissions, "Secrets of the Obscure", [
+		new EncounterGroup(EncounterCategory.StrikeSecretsOfTheObscure, "Secrets of the Obscure", [
 			new EncounterRow("Secrets of the Obscure", [
-				new NormalEncounter(Encounter.CosmicObservatory, Category.StrikeSecretsOfTheObscure, normalModeSince: SotORelease,
+				new NormalEncounter(Encounter.CosmicObservatory, normalModeSince: SotORelease,
 					challengeModeSince: COCMRelease),
-				new NormalEncounter(Encounter.TempleOfFebe, Category.StrikeSecretsOfTheObscure, normalModeSince: SotORelease, challengeModeSince: ToFCMRelease),
+				new NormalEncounter(Encounter.TempleOfFebe, normalModeSince: SotORelease, challengeModeSince: ToFCMRelease),
 			]),
 		])
 	];
+
+	private Dictionary<IFinishableEncounter, EncounterCategory> CategoriesByEncounter = EncounterGroups
+		.SelectMany(group => group.Rows.SelectMany(row => row.Encounters.Select(encounter => (encounter, Id: group.Category))))
+		.ToDictionary(x => x.encounter, x => x.Id);
 
 	private string accountFilter = "";
 
@@ -157,7 +180,7 @@ public class WeeklyClears : DynamicLayout
 	{
 		foreach (var week in weeks)
 		{
-			foreach (var category in Enum.GetValues<Category>())
+			foreach (var category in Enum.GetValues<EncounterCategory>())
 			{
 				week.FinishedNormalModesByCategory[category] = 0;
 				week.FinishedChallengeModesByCategory[category] = 0;
@@ -175,13 +198,15 @@ public class WeeklyClears : DynamicLayout
 
 			var week = weeksByReset[resetDate];
 
+			var category = CategoriesByEncounter[encounter];
+
 			if (challengeMode)
 			{
-				week.FinishedChallengeModesByCategory[encounter.Category] += 1;
+				week.FinishedChallengeModesByCategory[category] += 1;
 			}
 			else
 			{
-				week.FinishedNormalModesByCategory[encounter.Category] += 1;
+				week.FinishedNormalModesByCategory[category] += 1;
 			}
 		}
 	}
@@ -339,51 +364,76 @@ public class WeeklyClears : DynamicLayout
 				TextAlignment = TextAlignment.Center
 			}
 		});
-		foreach ((string name, Category category) in (ReadOnlySpan<(string, Category)>)
-		         [("Raid", Category.Raid), ("EoD", Category.StrikeEndOfDragons), ("SotO", Category.StrikeSecretsOfTheObscure)])
+
+		foreach ((string name, EncounterCategory category) in (ReadOnlySpan<(string, EncounterCategory)>)
+		         [
+			         ("Raid", EncounterCategory.Raids), ("IBS", EncounterCategory.StrikeIcebroodSaga), ("EoD", EncounterCategory.StrikeEndOfDragons),
+			         ("SotO", EncounterCategory.StrikeSecretsOfTheObscure)
+		         ])
 		{
-			weekGrid.Columns.Add(new GridColumn
+			var visible = Settings.WeeklyClearGroups.Contains(category);
+			var nmCountColumn = new GridColumn
 			{
 				HeaderText = $"{name} NMs",
 				DataCell = new TextBoxCell
 				{
 					Binding = new DelegateBinding<ResetWeek, string>(week => week.FinishedNormalModesByCategory[category].ToString()),
 					TextAlignment = TextAlignment.Center
-				}
-			});
-			weekGrid.Columns.Add(new GridColumn
+				},
+				Visible = visible
+			};
+			var nmPercentageColumn = new GridColumn
 			{
 				HeaderText = $"{name} NMs",
 				DataCell = new ProgressCell
 				{
 					Binding = new DelegateBinding<ResetWeek, float?>(week =>
 						(float) week.FinishedNormalModesByCategory[category] / Math.Max(1, EncounterGroups
+							.Where(group => group.Category == category)
 							.SelectMany(group => group.Rows.SelectMany(row => row.Encounters))
 							.Count(encounter =>
-								encounter.GetNormalModeAvailability(week.Reset) == EncounterAvailability.Available && encounter.Category == category)))
-				}
-			});
-			weekGrid.Columns.Add(new GridColumn
+								encounter.GetNormalModeAvailability(week.Reset) == EncounterAvailability.Available))),
+				},
+				Visible = visible
+			};
+			var cmCountColumn = new GridColumn
 			{
 				HeaderText = $"{name} CMs",
 				DataCell = new TextBoxCell
 				{
 					Binding = new DelegateBinding<ResetWeek, string>(week => week.FinishedChallengeModesByCategory[category].ToString()),
-					TextAlignment = TextAlignment.Center,
-				}
-			});
-			weekGrid.Columns.Add(new GridColumn
+					TextAlignment = TextAlignment.Center
+				},
+				Visible = visible
+			};
+			var cmPercentageColumn = new GridColumn
 			{
 				HeaderText = $"{name} CMs",
 				DataCell = new ProgressCell
 				{
 					Binding = new DelegateBinding<ResetWeek, float?>(week =>
 						(float) week.FinishedChallengeModesByCategory[category] / Math.Max(1, EncounterGroups
+							.Where(group => group.Category == category)
 							.SelectMany(group => group.Rows.SelectMany(row => row.Encounters))
 							.Count(encounter =>
-								encounter.GetChallengeModeAvailability(week.Reset) == EncounterAvailability.Available && encounter.Category == category))),
-				}
-			});
+								encounter.GetChallengeModeAvailability(week.Reset) == EncounterAvailability.Available))),
+				},
+				Visible = visible
+			};
+
+			weekGrid.Columns.Add(nmCountColumn);
+			weekGrid.Columns.Add(nmPercentageColumn);
+			weekGrid.Columns.Add(cmCountColumn);
+			weekGrid.Columns.Add(cmPercentageColumn);
+
+			Settings.WeeklyClearGroupsChanged += (_, _) =>
+			{
+				var visibility = Settings.WeeklyClearGroups.Contains(category);
+				nmCountColumn.Visible = visibility;
+				nmPercentageColumn.Visible = visibility;
+				cmCountColumn.Visible = visibility;
+				cmPercentageColumn.Visible = visibility;
+			};
 		}
 
 		weekGrid.DataStore = weeks;
@@ -401,17 +451,17 @@ public class WeeklyClears : DynamicLayout
 
 		foreach (var group in EncounterGroups)
 		{
-			var isEnabled = Settings.WeeklyClearGroups.Contains(group.Id);
+			var isEnabled = Settings.WeeklyClearGroups.Contains(group.Category);
 			var groupCheckbox = new CheckBox { Checked = isEnabled, Text = group.Name };
 			groupCheckbox.CheckedChanged += (_, _) =>
 			{
 				if (groupCheckbox.Checked ?? false)
 				{
-					Settings.WeeklyClearGroups = Settings.WeeklyClearGroups.Append(group.Id).ToList();
+					Settings.WeeklyClearGroups = Settings.WeeklyClearGroups.Append(group.Category).ToList();
 				}
 				else
 				{
-					Settings.WeeklyClearGroups = Settings.WeeklyClearGroups.Where(x => x != group.Id).ToList();
+					Settings.WeeklyClearGroups = Settings.WeeklyClearGroups.Where(x => x != group.Category).ToList();
 				}
 
 				RecreateLayout();
@@ -432,7 +482,7 @@ public class WeeklyClears : DynamicLayout
 
 		SuspendLayout();
 		Clear();
-		var enabledGroups = EncounterGroups.Where(group => Settings.WeeklyClearGroups.Contains(group.Id)).ToList();
+		var enabledGroups = EncounterGroups.Where(group => Settings.WeeklyClearGroups.Contains(group.Category)).ToList();
 		Control middleControl;
 		if (enabledGroups.Count > 0)
 		{

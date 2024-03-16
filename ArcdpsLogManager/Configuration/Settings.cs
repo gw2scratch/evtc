@@ -293,7 +293,7 @@ namespace GW2Scratch.ArcdpsLogManager.Configuration
 			}
 		}
 		
-		public static IReadOnlyList<EncounterGroupId> WeeklyClearGroups
+		public static IReadOnlyList<EncounterCategory> WeeklyClearGroups
 		{
 			get => Values.WeeklyClearGroups;
 			set

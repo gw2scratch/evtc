@@ -8,7 +8,7 @@ public class ResetWeek
 	public ResetWeek(DateOnly reset)
 	{
 		Reset = reset;
-		foreach (var category in Enum.GetValues<Category>())
+		foreach (var category in Enum.GetValues<EncounterCategory>())
 		{
 			FinishedNormalModesByCategory[category] = 0;
 			FinishedChallengeModesByCategory[category] = 0;
@@ -16,6 +16,6 @@ public class ResetWeek
 	}
 
 	public DateOnly Reset { get; }
-	public Dictionary<Category, int> FinishedNormalModesByCategory { get; } = new Dictionary<Category, int>();
-	public Dictionary<Category, int> FinishedChallengeModesByCategory { get; } = new Dictionary<Category, int>();
+	public Dictionary<EncounterCategory, int> FinishedNormalModesByCategory { get; } = new Dictionary<EncounterCategory, int>();
+	public Dictionary<EncounterCategory, int> FinishedChallengeModesByCategory { get; } = new Dictionary<EncounterCategory, int>();
 }
