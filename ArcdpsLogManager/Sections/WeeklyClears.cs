@@ -40,9 +40,9 @@ public class WeeklyClears : DynamicLayout
 	private static readonly DateOnly ToFCMRelease = new DateOnly(2024, 2, 26);
 
 
-	private static readonly List<EncounterColumn> EncounterColumns =
+	private static readonly List<EncounterGroup> EncounterGroups =
 	[
-		new EncounterColumn("Raids", [
+		new EncounterGroup(EncounterGroupId.Raids, "Raids", [
 			new EncounterRow("Spirit Woods (W1)", [
 				new NormalEncounter(Encounter.ValeGuardian, Category.Raid, normalModeSince: W1Release, challengeModeSince: null),
 				new UnsupportedEncounter("Spirit Woods", Category.Raid),
@@ -92,6 +92,8 @@ public class WeeklyClears : DynamicLayout
 				new NormalEncounter(Encounter.Sabir, Category.Raid, normalModeSince: W7Release, challengeModeSince: W7Release),
 				new NormalEncounter(Encounter.QadimThePeerless, Category.Raid, normalModeSince: W7Release, challengeModeSince: W7Release),
 			]),
+		]),
+		new EncounterGroup(EncounterGroupId.EndOfDragonsStrikeMissions, "End of Dragons", [
 			new EncounterRow("End of Dragons", [
 				new NormalEncounter(Encounter.AetherbladeHideout, Category.StrikeEndOfDragons, normalModeSince: EoDRelease, challengeModeSince: AHCMRelease),
 				new NormalEncounter(Encounter.XunlaiJadeJunkyard, Category.StrikeEndOfDragons, normalModeSince: EoDRelease, challengeModeSince: XJJCMRelease),
@@ -102,6 +104,8 @@ public class WeeklyClears : DynamicLayout
 				// Since adding more categories is problematic for layout, it is a simple decision to include it in the EoD category.
 				new NormalEncounter(Encounter.OldLionsCourt, Category.StrikeEndOfDragons, normalModeSince: OLCRelease, challengeModeSince: OLCCMRelease),
 			]),
+		]),
+		new EncounterGroup(EncounterGroupId.SecretsOfTheObscureStrikeMissions, "Secrets of the Obscure", [
 			new EncounterRow("Secrets of the Obscure", [
 				new NormalEncounter(Encounter.CosmicObservatory, Category.StrikeSecretsOfTheObscure, normalModeSince: SotORelease,
 					challengeModeSince: COCMRelease),
@@ -185,9 +189,16 @@ public class WeeklyClears : DynamicLayout
 	private event EventHandler SelectedResetChanged;
 	private event EventHandler DataUpdated;
 
+	private readonly Dictionary<IFinishableEncounter, (WeeklyCheckBox, WeeklyCheckBox)> encounterCheckboxes = [];
+	private readonly DropDown accountFilterBox;
+	private readonly Button addNewAccountButton;
+	private readonly Button removeAccountButton;
+	private readonly GridView<ResetWeek> weekGrid;
+	private readonly List<CheckBox> groupCheckboxes = [];
+
 	public WeeklyClears(ImageProvider imageProvider)
 	{
-		var accountFilterBox = new DropDown { Width = 350 };
+		accountFilterBox = new DropDown { Width = 350 };
 		accountFilterBox.DataStore = Settings.PlayerAccountNames.Select(x => x.TrimStart(':'));
 		if (Settings.PlayerAccountNames.Count != 0)
 		{
@@ -209,8 +220,8 @@ public class WeeklyClears : DynamicLayout
 			DataUpdated?.Invoke(this, EventArgs.Empty);
 		};
 
-		var addNewAccountButton = new Button { Text = "Add account" };
-		var removeAccountButton = new Button { Text = "Remove", Enabled = accountFilterBox.SelectedIndex != -1 };
+		addNewAccountButton = new Button { Text = "Add account" };
+		removeAccountButton = new Button { Text = "Remove", Enabled = accountFilterBox.SelectedIndex != -1 };
 		addNewAccountButton.Click += (_, _) =>
 		{
 			var dialog = new PlayerSelectDialog(null, null, null, null, imageProvider, null, logs);
@@ -259,30 +270,12 @@ public class WeeklyClears : DynamicLayout
 			}
 		};
 
-		var tables = new List<TableLayout>();
-		foreach (var column in EncounterColumns)
+		foreach (var group in EncounterGroups)
 		{
-			var table = new TableLayout(column.Rows.Max(x => x.Encounters.Count), column.Rows.Count);
-			table.Spacing = new Size(15, 8);
-			tables.Add(table);
-
-			for (int row = 0; row < column.Rows.Count; row++)
+			foreach (var row in group.Rows)
 			{
-				EncounterRow encounterRow = column.Rows[row];
-				for (int col = 0; col < encounterRow.Encounters.Count; col++)
+				foreach (var encounter in row.Encounters)
 				{
-					var encounter = encounterRow.Encounters[col];
-					var name = encounter switch
-					{
-						MultipartEncounter multipartEncounter => multipartEncounter.Name,
-						NormalEncounter normalEncounter => EncounterNames.TryGetEncounterNameForLanguage(GameLanguage.English, normalEncounter.Encounter,
-							out var normalName)
-							? normalName
-							: normalEncounter.Encounter.ToString(),
-						UnsupportedEncounter unsupportedEncounter => unsupportedEncounter.Name,
-						_ => throw new ArgumentOutOfRangeException()
-					};
-
 					var normalModeCheckbox = new WeeklyCheckBox();
 					var challengeModeCheckbox = new WeeklyCheckBox();
 
@@ -318,16 +311,12 @@ public class WeeklyClears : DynamicLayout
 					DataUpdated += (_, _) => UpdateCheckbox(challengeModeCheckbox, true);
 					SelectedResetChanged += (_, _) => UpdateCheckbox(challengeModeCheckbox, true);
 
-					var layout = new StackLayout { Items = { normalModeCheckbox, challengeModeCheckbox }, Spacing = 6 };
-
-					var box = new GroupBox { Text = name, Content = layout, Padding = new Padding(4, 2) };
-
-					table.Add(box, col, row);
+					encounterCheckboxes[encounter] = (normalModeCheckbox, challengeModeCheckbox);
 				}
 			}
 		}
 
-		var weekGrid = new GridView<ResetWeek> { Height = 150 };
+		weekGrid = new GridView<ResetWeek> { Height = 150 };
 		weekGrid.Columns.Add(new GridColumn
 		{
 			HeaderText = "Week", DataCell = new TextBoxCell { Binding = new DelegateBinding<ResetWeek, string>(x => x.Reset.ToString()) }
@@ -368,8 +357,8 @@ public class WeeklyClears : DynamicLayout
 				DataCell = new ProgressCell
 				{
 					Binding = new DelegateBinding<ResetWeek, float?>(week =>
-						(float) week.FinishedNormalModesByCategory[category] / Math.Max(1, EncounterColumns
-							.SelectMany(col => col.Rows.SelectMany(row => row.Encounters))
+						(float) week.FinishedNormalModesByCategory[category] / Math.Max(1, EncounterGroups
+							.SelectMany(group => group.Rows.SelectMany(row => row.Encounters))
 							.Count(encounter =>
 								encounter.GetNormalModeAvailability(week.Reset) == EncounterAvailability.Available && encounter.Category == category)))
 				}
@@ -389,8 +378,8 @@ public class WeeklyClears : DynamicLayout
 				DataCell = new ProgressCell
 				{
 					Binding = new DelegateBinding<ResetWeek, float?>(week =>
-						(float) week.FinishedChallengeModesByCategory[category] / Math.Max(1, EncounterColumns
-							.SelectMany(col => col.Rows.SelectMany(row => row.Encounters))
+						(float) week.FinishedChallengeModesByCategory[category] / Math.Max(1, EncounterGroups
+							.SelectMany(group => group.Rows.SelectMany(row => row.Encounters))
 							.Count(encounter =>
 								encounter.GetChallengeModeAvailability(week.Reset) == EncounterAvailability.Available && encounter.Category == category))),
 				}
@@ -410,26 +399,121 @@ public class WeeklyClears : DynamicLayout
 			weekGrid.ReloadData(Eto.Forms.Range.FromLength(0, weeks.Count));
 		};
 
+		foreach (var group in EncounterGroups)
+		{
+			var isEnabled = Settings.WeeklyClearGroups.Contains(group.Id);
+			var groupCheckbox = new CheckBox { Checked = isEnabled, Text = group.Name };
+			groupCheckbox.CheckedChanged += (_, _) =>
+			{
+				if (groupCheckbox.Checked ?? false)
+				{
+					Settings.WeeklyClearGroups = Settings.WeeklyClearGroups.Append(group.Id).ToList();
+				}
+				else
+				{
+					Settings.WeeklyClearGroups = Settings.WeeklyClearGroups.Where(x => x != group.Id).ToList();
+				}
+
+				RecreateLayout();
+			};
+
+			groupCheckboxes.Add(groupCheckbox);
+		}
+
+		RecreateLayout();
+	}
+
+	private void RecreateLayout()
+	{
+		// Maintaining everything within one table works best for aligning boxes vertically AND horizontally.
+		// Since we need to be able to hide individual rows according to user preferences,
+		// we need to recreate the layout every time these preferences change as the table does not support removing/adding rows dynamically.
+		// Checkboxes are stored within `encounterCheckboxes` and are reused on table rebuilds.
+
+		SuspendLayout();
+		Clear();
+		var enabledGroups = EncounterGroups.Where(group => Settings.WeeklyClearGroups.Contains(group.Id)).ToList();
+		Control middleControl;
+		if (enabledGroups.Count > 0)
+		{
+			var table = new TableLayout(enabledGroups.Max(group => group.Rows.Max(row => row.Encounters.Count)), enabledGroups.Sum(group => group.Rows.Count));
+			table.Spacing = new Size(15, 8);
+
+			int rowIndex = 0;
+			foreach (var group in enabledGroups)
+			{
+				foreach (var row in group.Rows)
+				{
+					for (int col = 0; col < row.Encounters.Count; col++)
+					{
+						var encounter = row.Encounters[col];
+						var name = encounter switch
+						{
+							MultipartEncounter multipartEncounter => multipartEncounter.Name,
+							NormalEncounter normalEncounter => EncounterNames.TryGetEncounterNameForLanguage(GameLanguage.English, normalEncounter.Encounter,
+								out var normalName)
+								? normalName
+								: normalEncounter.Encounter.ToString(),
+							UnsupportedEncounter unsupportedEncounter => unsupportedEncounter.Name,
+							_ => throw new ArgumentOutOfRangeException()
+						};
+
+						var (normalModeCheckbox, challengeModeCheckbox) = encounterCheckboxes[encounter];
+						var layout = new StackLayout { Items = { normalModeCheckbox, challengeModeCheckbox }, Spacing = 6 };
+						var box = new GroupBox { Text = name, Content = layout, Padding = new Padding(4, 2) };
+
+						table.Add(box, col, rowIndex);
+					}
+
+					rowIndex++;
+				}
+			}
+
+			middleControl = table;
+		}
+		else
+		{
+			middleControl = new StackLayout
+			{
+				Padding = new Padding(20),
+				Items =
+				{
+					new Label
+					{
+						Text = "To see weekly clears of encounters, select groups you are interested in by checking checkboxes above.",
+						Wrap = WrapMode.Word
+					}
+				},
+			};
+		}
+
 		BeginVertical(padding: new Padding(0, 2), spacing: new Size(10, 10));
 		{
 			AddRow(accountFilterBox, addNewAccountButton, removeAccountButton, null);
-			// TODO: add checkboxes for categories to show
 		}
-		EndBeginVertical(spacing: new Size(10, 10));
+		EndBeginVertical(padding: new Padding(0, 2), spacing: new Size(10, 10));
 		{
-			BeginScrollable();
 			BeginHorizontal();
-			foreach (var table in tables)
+			foreach (var groupCheckbox in groupCheckboxes)
 			{
-				AddSeparateColumn(table, null);
+				Add(groupCheckbox);
 			}
 
 			Add(null);
 			EndHorizontal();
+		}
+		EndBeginVertical(spacing: new Size(10, 10));
+		{
+			BeginScrollable();
+			AddRow(middleControl, null);
+			Add(null);
 			EndScrollable();
 		}
 		EndVertical();
 		AddSeparateRow(controls: [weekGrid]);
+
+		Create();
+		ResumeLayout();
 	}
 
 	public void UpdateDataFromLogs(IEnumerable<LogData> logs)
@@ -460,7 +544,7 @@ public class WeeklyClears : DynamicLayout
 
 			foreach (((string accountName, DateOnly resetDate) key, List<LogData> weekLogs) in logsByAccountNameWeek)
 			{
-				foreach (var encounter in EncounterColumns.SelectMany(column => column.Rows.SelectMany(row => row.Encounters)))
+				foreach (var encounter in EncounterGroups.SelectMany(group => group.Rows.SelectMany(row => row.Encounters)))
 				{
 					if (encounter.IsSatisfiedBy(weekLogs))
 					{

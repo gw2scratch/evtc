@@ -1,4 +1,5 @@
 using GW2Scratch.ArcdpsLogManager.Configuration.Migrations;
+using GW2Scratch.ArcdpsLogManager.Sections.Clears;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -41,6 +42,7 @@ namespace GW2Scratch.ArcdpsLogManager.Configuration
 			IgnoredUpdateVersionsChanged += (sender, args) => SaveToFile();
 			DpsReportUploadDetailedWvwChanged += (sender, args) => SaveToFile();
 			PlayerAccountNamesChanged += (sender, args) => SaveToFile();
+			WeeklyClearGroupsChanged += (sender, args) => SaveToFile();
 
 			return LoadFromFile();
 		});
@@ -290,6 +292,19 @@ namespace GW2Scratch.ArcdpsLogManager.Configuration
 				}
 			}
 		}
+		
+		public static IReadOnlyList<EncounterGroupId> WeeklyClearGroups
+		{
+			get => Values.WeeklyClearGroups;
+			set
+			{
+				if (!Equals(Values.WeeklyClearGroups, value))
+				{
+					Values.WeeklyClearGroups = value.ToList();
+					OnWeeklyClearGroupsChanged();
+				}
+			}
+		}
 
 		public static event EventHandler<EventArgs> LogRootPathChanged;
 		public static event EventHandler<EventArgs> ShowDebugDataChanged;
@@ -305,6 +320,7 @@ namespace GW2Scratch.ArcdpsLogManager.Configuration
 		public static event EventHandler<EventArgs> IgnoredUpdateVersionsChanged;
 		public static event EventHandler<EventArgs> DpsReportUploadDetailedWvwChanged;
 		public static event EventHandler<EventArgs> PlayerAccountNamesChanged;
+		public static event EventHandler<EventArgs> WeeklyClearGroupsChanged;
 
 		private static void OnLogRootPathsChanged()
 		{
@@ -374,6 +390,11 @@ namespace GW2Scratch.ArcdpsLogManager.Configuration
 		private static void OnPlayerAccountNamesChanged()
 		{
 			PlayerAccountNamesChanged?.Invoke(null, EventArgs.Empty);
+		}
+		
+		private static void OnWeeklyClearGroupsChanged()
+		{
+			WeeklyClearGroupsChanged?.Invoke(null, EventArgs.Empty);
 		}
 	}
 }

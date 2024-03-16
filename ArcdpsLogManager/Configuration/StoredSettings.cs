@@ -1,8 +1,7 @@
+using GW2Scratch.ArcdpsLogManager.Sections.Clears;
 using GW2Scratch.ArcdpsLogManager.Uploads;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.IO;
 
 namespace GW2Scratch.ArcdpsLogManager.Configuration;
 
@@ -26,4 +25,6 @@ public class StoredSettings
 	public List<string> HiddenLogListColumns { get; set; } = new List<string>() {"Character", "Map ID", "Game Version", "arcdps Version", "Instabilities", "Scale"};
 	public List<string> IgnoredUpdateVersions { get; set; } = new List<string>();
 	public List<string> PlayerAccountNames { get; set; } = new List<string>();
+	public List<EncounterGroupId> WeeklyClearGroups { get; set; } =
+		[EncounterGroupId.Raids, EncounterGroupId.EndOfDragonsStrikeMissions, EncounterGroupId.SecretsOfTheObscureStrikeMissions];
 }
