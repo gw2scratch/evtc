@@ -16,6 +16,8 @@ namespace GW2Scratch.ArcdpsLogManager.Sections;
 
 public class WeeklyClears : DynamicLayout
 {
+	private readonly ImageProvider imageProvider;
+
 	// Note that these are reset dates (Mondays) preceding the release,
 	// not necessarily the exact date of release (those tend to be Tuesdays).
 	private static readonly DateOnly W1Release = new DateOnly(2015, 11, 16);
@@ -223,6 +225,7 @@ public class WeeklyClears : DynamicLayout
 
 	public WeeklyClears(ImageProvider imageProvider)
 	{
+		this.imageProvider = imageProvider;
 		accountFilterBox = new DropDown { Width = 350 };
 		addNewAccountButton = new Button { Text = "Add account" };
 		removeAccountButton = new Button { Text = "Remove", Enabled = accountFilterBox.SelectedIndex != -1 };
@@ -491,7 +494,10 @@ public class WeeklyClears : DynamicLayout
 		Control middleControl;
 		if (enabledGroups.Count > 0)
 		{
-			var table = new TableLayout(enabledGroups.Max(group => group.Rows.Max(row => row.Encounters.Count)), enabledGroups.Sum(group => group.Rows.Count));
+			// We use the first column for an image identifying the row
+			var cols = enabledGroups.Max(group => group.Rows.Max(row => row.Encounters.Count)) + 1;
+			var rows = enabledGroups.Sum(group => group.Rows.Count);
+			var table = new TableLayout(cols, rows);
 			table.Spacing = new Size(10, 6);
 
 			int rowIndex = 0;
@@ -499,6 +505,22 @@ public class WeeklyClears : DynamicLayout
 			{
 				foreach (var row in group.Rows)
 				{
+					// An image at the start of the row
+					var rowImage = new ImageView
+					{
+						Size = new Size(32, 32),
+						Image = group.Category switch
+						{
+							EncounterCategory.Raids => imageProvider.GetRaidWingIcon(),
+							EncounterCategory.StrikeIcebroodSaga => imageProvider.GetTinyIcebroodSagaIcon(),
+							EncounterCategory.StrikeEndOfDragons => imageProvider.GetTinyEndOfDragonsIcon(),
+							EncounterCategory.StrikeSecretsOfTheObscure => imageProvider.GetTinySecretsOfTheObscureIcon(),
+							_ => throw new ArgumentOutOfRangeException()
+						}
+					};
+					table.Add(rowImage, 0, rowIndex);
+					
+					// Checkboxes for encounters
 					for (int col = 0; col < row.Encounters.Count; col++)
 					{
 						var encounter = row.Encounters[col];
@@ -521,7 +543,7 @@ public class WeeklyClears : DynamicLayout
 						var layout = new StackLayout { Items = { normalModeCheckbox, spacer, challengeModeCheckbox } };
 						var box = new GroupBox { Text = name, Content = layout, Padding = new Padding(4, 2) };
 
-						table.Add(box, col, rowIndex);
+						table.Add(box, col + 1, rowIndex);
 					}
 
 					rowIndex++;
@@ -562,11 +584,12 @@ public class WeeklyClears : DynamicLayout
 			EndHorizontal();
 		}
 		EndBeginVertical(spacing: new Size(10, 10));
-		EndVertical();
-			BeginScrollable();
+		{
+			BeginScrollable(padding: new Padding(10, 0, 0, 0));
 			AddRow(middleControl, null);
-			Add(null);
 			EndScrollable();
+		}
+		EndVertical();
 		AddSeparateRow(controls: [weekGrid], yscale: true);
 		Create();
 		ResumeLayout();
