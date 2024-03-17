@@ -224,6 +224,8 @@ public class WeeklyClears : DynamicLayout
 	public WeeklyClears(ImageProvider imageProvider)
 	{
 		accountFilterBox = new DropDown { Width = 350 };
+		addNewAccountButton = new Button { Text = "Add account" };
+		removeAccountButton = new Button { Text = "Remove", Enabled = accountFilterBox.SelectedIndex != -1 };
 		accountFilterBox.DataStore = Settings.PlayerAccountNames.Select(x => x.TrimStart(':'));
 		if (Settings.PlayerAccountNames.Count != 0)
 		{
@@ -242,11 +244,10 @@ public class WeeklyClears : DynamicLayout
 			accountFilterBox.SelectedIndex = -1;
 			accountFilterBox.DataStore = Settings.PlayerAccountNames.Select(x => x.TrimStart(':'));
 			accountFilterBox.SelectedIndex = Settings.PlayerAccountNames.Count > 0 ? 0 : -1;
+			removeAccountButton.Enabled = accountFilterBox.SelectedIndex != -1;
 			DataUpdated?.Invoke(this, EventArgs.Empty);
 		};
 
-		addNewAccountButton = new Button { Text = "Add account" };
-		removeAccountButton = new Button { Text = "Remove", Enabled = accountFilterBox.SelectedIndex != -1 };
 		addNewAccountButton.Click += (_, _) =>
 		{
 			var dialog = new PlayerSelectDialog(null, null, null, null, imageProvider, null, logs);
@@ -491,7 +492,7 @@ public class WeeklyClears : DynamicLayout
 		if (enabledGroups.Count > 0)
 		{
 			var table = new TableLayout(enabledGroups.Max(group => group.Rows.Max(row => row.Encounters.Count)), enabledGroups.Sum(group => group.Rows.Count));
-			table.Spacing = new Size(15, 8);
+			table.Spacing = new Size(10, 6);
 
 			int rowIndex = 0;
 			foreach (var group in enabledGroups)
@@ -513,7 +514,11 @@ public class WeeklyClears : DynamicLayout
 						};
 
 						var (normalModeCheckbox, challengeModeCheckbox) = encounterCheckboxes[encounter];
-						var layout = new StackLayout { Items = { normalModeCheckbox, challengeModeCheckbox }, Spacing = 6 };
+						
+						// Setting Spacing of the Stack Layout results in a trailing gap which we cannot really afford here,
+						// we instead use this image view without an image to create a spacer of a specific height.
+						var spacer = new ImageView { Size = new Size(6, 6) };
+						var layout = new StackLayout { Items = { normalModeCheckbox, spacer, challengeModeCheckbox } };
 						var box = new GroupBox { Text = name, Content = layout, Padding = new Padding(4, 2) };
 
 						table.Add(box, col, rowIndex);
@@ -557,15 +562,12 @@ public class WeeklyClears : DynamicLayout
 			EndHorizontal();
 		}
 		EndBeginVertical(spacing: new Size(10, 10));
-		{
+		EndVertical();
 			BeginScrollable();
 			AddRow(middleControl, null);
 			Add(null);
 			EndScrollable();
-		}
-		EndVertical();
-		AddSeparateRow(controls: [weekGrid]);
-
+		AddSeparateRow(controls: [weekGrid], yscale: true);
 		Create();
 		ResumeLayout();
 	}
