@@ -519,7 +519,7 @@ public class WeeklyClears : DynamicLayout
 						}
 					};
 					table.Add(rowImage, 0, rowIndex);
-					
+
 					// Checkboxes for encounters
 					for (int col = 0; col < row.Encounters.Count; col++)
 					{
@@ -536,7 +536,7 @@ public class WeeklyClears : DynamicLayout
 						};
 
 						var (normalModeCheckbox, challengeModeCheckbox) = encounterCheckboxes[encounter];
-						
+
 						// Setting Spacing of the Stack Layout results in a trailing gap which we cannot really afford here,
 						// we instead use this image view without an image to create a spacer of a specific height.
 						var spacer = new ImageView { Size = new Size(6, 6) };
@@ -583,14 +583,26 @@ public class WeeklyClears : DynamicLayout
 			Add(null);
 			EndHorizontal();
 		}
-		EndBeginVertical(spacing: new Size(10, 10));
+		EndBeginVertical(spacing: new Size(10, 10), yscale: true);
 		{
-			BeginScrollable(padding: new Padding(10, 0, 0, 0));
-			AddRow(middleControl, null);
-			EndScrollable();
+			Add(new Splitter
+			{
+				Panel1 = new Scrollable
+				{
+					Content = middleControl,
+					ExpandContentWidth = false,
+					ExpandContentHeight = false,
+					Padding = new Padding(10, 0, 0, 0),
+					MinimumSize = new Size(0, 0)
+				},
+				Panel2 = weekGrid,
+				Orientation = Orientation.Vertical,
+				Panel1MinimumSize = 0,
+				Panel2MinimumSize = 0,
+				FixedPanel = SplitterFixedPanel.Panel2,
+			});
 		}
 		EndVertical();
-		AddSeparateRow(controls: [weekGrid], yscale: true);
 		Create();
 		ResumeLayout();
 	}
