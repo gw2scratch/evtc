@@ -1,4 +1,3 @@
-using GW2Scratch.ArcdpsLogManager.Configuration;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -7,9 +6,11 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using GW2Scratch.ArcdpsLogManager.Logs;
+using GW2Scratch.ArcdpsLogManager.Updates;
 using GW2Scratch.EVTCAnalytics.GameData.Encounters;
 using Newtonsoft.Json;
 using System.Net;
+using System.Net.Http.Headers;
 
 namespace GW2Scratch.ArcdpsLogManager.Uploads
 {
@@ -33,7 +34,15 @@ namespace GW2Scratch.ArcdpsLogManager.Uploads
 
 		private readonly HttpClient httpClient = new HttpClient
 		{
-			Timeout = Timeout.InfiniteTimeSpan
+			Timeout = Timeout.InfiniteTimeSpan,
+			DefaultRequestHeaders =
+			{
+				UserAgent =
+				{
+					new ProductInfoHeaderValue("arcdpsLogManager", typeof(ProgramUpdateChecker).Assembly.GetName().Version?.ToString())
+				}
+			}
+			
 		};
 
 		public string Domain { get; set; }
