@@ -50,11 +50,8 @@ namespace GW2Scratch.ArcdpsLogManager.Configuration
 				{
 					layout.AddRow(new Label
 					{
-						Text = "The directories in which your arcdps logs are stored. Subdirectories " +
-						       "are also searched, do not choose a parent directory containing more " +
-						       "irrelevant files unless you like extra waiting.",
+						Text = "The directories in which your arcdps logs are stored. Subdirectories are also searched.",
 						Wrap = WrapMode.Word,
-						Height = 70
 					});
 					layout.AddRow(directoryList);
 				}
@@ -66,6 +63,7 @@ namespace GW2Scratch.ArcdpsLogManager.Configuration
 				}
 				layout.EndGroup();
 			}
+			layout.Add(null);
 			layout.EndVertical();
 
 			Content = layout;

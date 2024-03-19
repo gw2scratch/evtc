@@ -12,7 +12,7 @@ namespace GW2Scratch.ArcdpsLogManager.Configuration
 		{
 			Title = "Settings - arcdps Log Manager";
 			ClientSize = new Size(400, -1);
-			MinimumSize = new Size(400, 300);
+			MinimumSize = new Size(400, 500);
 
 			var pages = new SettingsPage[]
 			{

@@ -23,7 +23,6 @@ namespace GW2Scratch.ArcdpsLogManager.Configuration
 						       "No API key is required. If this is not enabled, guild names and their " +
 						       "tags along with map names will not be available.",
 						Wrap = WrapMode.Word,
-						Height = 50
 					});
 					layout.AddRow(apiDataCheckbox);
 				}

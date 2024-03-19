@@ -22,7 +22,6 @@ namespace GW2Scratch.ArcdpsLogManager.Configuration
 						Text = "The program can automatically look for updates on launch and inform you "  +
 						       "when there is a new release available.",
 						Wrap = WrapMode.Word,
-						Height = 50
 					});
 					layout.AddRow(updateCheckbox);
 				}
