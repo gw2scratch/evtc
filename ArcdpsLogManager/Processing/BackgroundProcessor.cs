@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GW2Scratch.ArcdpsLogManager.Processing
 {
-	public abstract class BackgroundProcessor<T> : IBackgroundProcessor
+	public abstract class BackgroundProcessor<T> : IBackgroundProcessor<T>
 	{
 		private readonly HashSet<T> queueSet = new HashSet<T>();
 		private readonly Queue<T> processingQueue = new Queue<T>();
@@ -92,7 +92,7 @@ namespace GW2Scratch.ArcdpsLogManager.Processing
 						}
 
 						Interlocked.Increment(ref processedItemCount);
-						Processed?.Invoke(this, BuildEventArgs());
+						Processed?.Invoke(this, BuildEventArgs(item));
 					}
 					else
 					{
@@ -197,7 +197,7 @@ namespace GW2Scratch.ArcdpsLogManager.Processing
 			if (scheduled)
 			{
 				Interlocked.Increment(ref totalScheduledCount);
-				Scheduled?.Invoke(this, BuildEventArgs());
+				Scheduled?.Invoke(this, BuildEventArgs(item));
 			}
 
 			if (startProcess && !BackgroundTaskRunning)
@@ -249,9 +249,9 @@ namespace GW2Scratch.ArcdpsLogManager.Processing
 				}
 			}
 
-			if (unscheduledItems.Length > 0)
+			foreach (var item in unscheduledItems)
 			{
-				Unscheduled?.Invoke(this, BuildEventArgs());
+				Unscheduled?.Invoke(this, BuildEventArgs(item));
 			}
 		}
 
@@ -283,17 +283,17 @@ namespace GW2Scratch.ArcdpsLogManager.Processing
 		/// <summary>
 		/// Invoked when an item has been processed.
 		/// </summary>
-		public event EventHandler<BackgroundProcessorEventArgs> Processed;
+		public event EventHandler<BackgroundProcessorEventArgs<T>> Processed;
 
 		/// <summary>
 		/// Invoked when a new item has been scheduled.
 		/// </summary>
-		public event EventHandler<BackgroundProcessorEventArgs> Scheduled;
+		public event EventHandler<BackgroundProcessorEventArgs<T>> Scheduled;
 
 		/// <summary>
 		/// Invoked when an item has been unscheduled.
 		/// </summary>
-		public event EventHandler<BackgroundProcessorEventArgs> Unscheduled;
+		public event EventHandler<BackgroundProcessorEventArgs<T>> Unscheduled;
 
 		/// <summary>
 		/// Invoked when the background thread is starting.
@@ -313,9 +313,9 @@ namespace GW2Scratch.ArcdpsLogManager.Processing
 		/// <summary>
 		/// Creates event args, locks.
 		/// </summary>
-		private BackgroundProcessorEventArgs BuildEventArgs()
+		private BackgroundProcessorEventArgs<T> BuildEventArgs(T item)
 		{
-			return new BackgroundProcessorEventArgs(GetScheduledItemCount(), ProcessedItemCount, TotalScheduledCount);
+			return new BackgroundProcessorEventArgs<T>(item, GetScheduledItemCount(), ProcessedItemCount, TotalScheduledCount);
 		}
 	}
 }

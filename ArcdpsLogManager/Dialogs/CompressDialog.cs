@@ -75,7 +75,7 @@ namespace GW2Scratch.ArcdpsLogManager.Dialogs
 				cancelCompressionButton.Enabled = false;
 			}
 
-			void OnLogCompressionProcessorOnProcessed(object sender, BackgroundProcessorEventArgs args)
+			void OnLogCompressionProcessorOnProcessed(object sender, BackgroundProcessorEventArgs<LogData> args)
 			{
 				if (args.CurrentScheduledItems == 0)
 				{

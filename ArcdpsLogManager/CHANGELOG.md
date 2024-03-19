@@ -5,6 +5,7 @@ This is the full changelog of the arcdps Log Manager.
 ## Log Manager v1.11
 
 #### New features
+- Added an option to automatically upload new logs to dps.report (Settings; dps.report tab)
 - Added a "Weekly clears" tab with a table of encounters finished since weekly reset
   - yes, it does Strike Missions
   - yes, it does CMs

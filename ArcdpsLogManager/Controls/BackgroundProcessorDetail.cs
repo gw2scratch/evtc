@@ -7,7 +7,7 @@ using GW2Scratch.ArcdpsLogManager.Processing;
 
 namespace GW2Scratch.ArcdpsLogManager.Controls
 {
-	public sealed class BackgroundProcessorDetail : DynamicLayout, INotifyPropertyChanged
+	public sealed class BackgroundProcessorDetail<T> : DynamicLayout, INotifyPropertyChanged
 	{
 		private readonly Label statusLabel = new Label();
 		private readonly Label queuedLabel = new Label();
@@ -15,9 +15,9 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 		private readonly Label totalQueuedLabel = new Label();
 		private readonly Label concurrencyLabel = new Label();
 
-		private IBackgroundProcessor backgroundProcessor;
+		private IBackgroundProcessor<T> backgroundProcessor;
 		
-		public IBackgroundProcessor BackgroundProcessor
+		public IBackgroundProcessor<T> BackgroundProcessor
 		{
 			get => backgroundProcessor;
 			set

@@ -238,6 +238,17 @@ namespace GW2Scratch.ArcdpsLogManager
 					Application.Instance.AsyncInvoke(logsFiltered.Refresh);
 				}
 			};
+			LogDataProcessor.Processed += (sender, args) =>
+			{
+				if (Settings.DpsReportAutoUpload)
+				{
+					var age = DateTimeOffset.Now - args.Item.EncounterStartTime;
+					if (age < TimeSpan.FromDays(1))
+					{
+						UploadProcessor.ScheduleDpsReportEIUpload(args.Item);
+					}
+				}
+			};
 
 			Shown += (sender, args) => ReloadLogs();
 			Shown += (sender, args) => CheckUpdates();
@@ -372,7 +383,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			// Processing label
 			var processingLabel = new Label();
 
-			void UpdateProcessingLabel(object sender, BackgroundProcessorEventArgs args)
+			void UpdateProcessingLabel(object sender, BackgroundProcessorEventArgs<LogData> args)
 			{
 				Application.Instance.AsyncInvoke(() =>
 				{
@@ -390,7 +401,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			// Upload state label
 			var uploadLabel = new Label();
 
-			void UpdateUploadLabel(object sender, BackgroundProcessorEventArgs args)
+			void UpdateUploadLabel(object sender, BackgroundProcessorEventArgs<UploadProcessor.QueuedUpload> args)
 			{
 				Application.Instance.AsyncInvoke(() =>
 				{
@@ -408,7 +419,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			// API state label
 			var apiLabel = new Label();
 
-			void UpdateApiLabel(object sender, BackgroundProcessorEventArgs args)
+			void UpdateApiLabel(object sender, BackgroundProcessorEventArgs<string> args)
 			{
 				Application.Instance.AsyncInvoke(() =>
 				{
@@ -586,12 +597,12 @@ namespace GW2Scratch.ArcdpsLogManager
 				serviceStatus.Add(new GroupBox
 				{
 					Text = "Uploads",
-					Content = new BackgroundProcessorDetail {BackgroundProcessor = UploadProcessor}
+					Content = new BackgroundProcessorDetail<UploadProcessor.QueuedUpload> {BackgroundProcessor = UploadProcessor}
 				}, xscale: true);
 				serviceStatus.Add(new GroupBox
 				{
 					Text = "Guild Wars 2 API",
-					Content = new BackgroundProcessorDetail {BackgroundProcessor = ApiProcessor}
+					Content = new BackgroundProcessorDetail<string> {BackgroundProcessor = ApiProcessor}
 				}, xscale: true);
 			}
 			serviceStatus.EndHorizontal();
@@ -600,12 +611,12 @@ namespace GW2Scratch.ArcdpsLogManager
 				serviceStatus.Add(new GroupBox
 				{
 					Text = "Log processing",
-					Content = new BackgroundProcessorDetail {BackgroundProcessor = LogDataProcessor}
+					Content = new BackgroundProcessorDetail<LogData> {BackgroundProcessor = LogDataProcessor}
 				}, xscale: true);
 				serviceStatus.Add(new GroupBox
 				{
 					Text = "Log compression",
-					Content = new BackgroundProcessorDetail {BackgroundProcessor = LogCompressionProcessor}
+					Content = new BackgroundProcessorDetail<LogData> {BackgroundProcessor = LogCompressionProcessor}
 				}, xscale: true);
 			}
 			serviceStatus.EndHorizontal();

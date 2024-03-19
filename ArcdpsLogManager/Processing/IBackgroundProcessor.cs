@@ -2,7 +2,7 @@ using System;
 
 namespace GW2Scratch.ArcdpsLogManager.Processing
 {
-	public interface IBackgroundProcessor
+	public interface IBackgroundProcessor<T>
 	{
 		TimeSpan PauseWhenQueueEmpty { get; set; }
 		bool BackgroundTaskRunning { get; }
@@ -30,17 +30,17 @@ namespace GW2Scratch.ArcdpsLogManager.Processing
 		/// <summary>
 		/// Invoked when an item has been processed.
 		/// </summary>
-		event EventHandler<BackgroundProcessorEventArgs> Processed;
+		event EventHandler<BackgroundProcessorEventArgs<T>> Processed;
 
 		/// <summary>
 		/// Invoked when a new item has been scheduled.
 		/// </summary>
-		event EventHandler<BackgroundProcessorEventArgs> Scheduled;
+		event EventHandler<BackgroundProcessorEventArgs<T>> Scheduled;
 
 		/// <summary>
 		/// Invoked when an item has been unscheduled.
 		/// </summary>
-		event EventHandler<BackgroundProcessorEventArgs> Unscheduled;
+		event EventHandler<BackgroundProcessorEventArgs<T>> Unscheduled;
 
 		/// <summary>
 		/// Invoked when the background thread is starting.
