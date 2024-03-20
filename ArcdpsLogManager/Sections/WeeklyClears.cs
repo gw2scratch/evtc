@@ -501,20 +501,36 @@ public class WeeklyClears : DynamicLayout
 			table.Spacing = new Size(10, 6);
 
 			int rowIndex = 0;
+			int raidWing = 0;
 			foreach (var group in enabledGroups)
 			{
 				foreach (var row in group.Rows)
 				{
+					if (group.Category == EncounterCategory.Raids)
+					{
+						raidWing++;
+					}
+
 					// An image at the start of the row
 					var rowImage = new ImageView
 					{
-						Size = new Size(32, 32),
+						Size = new Size(48, 32),
 						Image = group.Category switch
 						{
-							EncounterCategory.Raids => imageProvider.GetRaidWingIcon(),
-							EncounterCategory.StrikeIcebroodSaga => imageProvider.GetTinyIcebroodSagaIcon(),
-							EncounterCategory.StrikeEndOfDragons => imageProvider.GetTinyEndOfDragonsIcon(),
-							EncounterCategory.StrikeSecretsOfTheObscure => imageProvider.GetTinySecretsOfTheObscureIcon(),
+							EncounterCategory.Raids => raidWing switch
+							{
+								1 => imageProvider.GetWideRaidWing1Icon(),
+								2 => imageProvider.GetWideRaidWing2Icon(),
+								3 => imageProvider.GetWideRaidWing3Icon(),
+								4 => imageProvider.GetWideRaidWing4Icon(),
+								5 => imageProvider.GetWideRaidWing5Icon(),
+								6 => imageProvider.GetWideRaidWing6Icon(),
+								7 => imageProvider.GetWideRaidWing7Icon(),
+								_ => throw new ArgumentOutOfRangeException()
+							},
+							EncounterCategory.StrikeIcebroodSaga => imageProvider.GetWideIcebroodSagaIcon(),
+							EncounterCategory.StrikeEndOfDragons => imageProvider.GetWideEndOfDragonsIcon(),
+							EncounterCategory.StrikeSecretsOfTheObscure => imageProvider.GetWideSecretsOfTheObscureIcon(),
 							_ => throw new ArgumentOutOfRangeException()
 						}
 					};

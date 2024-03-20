@@ -204,12 +204,25 @@ namespace GW2Scratch.ArcdpsLogManager
 		{
 			return GetImage($"ArenaNet.Bosses.{iconName}.png");
 		}
+
 		// MISC
 		public static Image GetCopyButtonEnabledIcon() => GetImage($"Misc.Copy_Black_36x36.png");
 		public static Image GetCopyButtonDisabledIcon() => GetImage($"Misc.Copy_Grey_36x36.png");
+		
+		// WEEKLY CLEARS
 		public static Image GetGreenCheckIcon() => GetImage($"Misc.green_check.png");
 		public static Image GetRedCrossIcon() => GetImage($"Misc.red_cross.png");
 		public static Image GetGrayQuestionMarkIcon() => GetImage($"Misc.gray_question_mark.png");
 		public static Image GetNotYetAvailableIcon() => GetImage($"Misc.not_yet_available.png");
+		public static Image GetWideIcebroodSagaIcon() => GetImage("ArenaNet.icebrood_saga_96px_64px.png");
+		public static Image GetWideEndOfDragonsIcon() => GetImage("ArenaNet.end_of_dragons_96px_64px.png");
+		public static Image GetWideSecretsOfTheObscureIcon() => GetImage("ArenaNet.secrets_of_the_obscure_96px_64px.png");
+		public static Image GetWideRaidWing1Icon() => GetImage("ArenaNet.raid_wing1_96px_64px.png");
+		public static Image GetWideRaidWing2Icon() => GetImage("ArenaNet.raid_wing2_96px_64px.png");
+		public static Image GetWideRaidWing3Icon() => GetImage("ArenaNet.raid_wing3_96px_64px.png");
+		public static Image GetWideRaidWing4Icon() => GetImage("ArenaNet.raid_wing4_96px_64px.png");
+		public static Image GetWideRaidWing5Icon() => GetImage("ArenaNet.raid_wing5_96px_64px.png");
+		public static Image GetWideRaidWing6Icon() => GetImage("ArenaNet.raid_wing6_96px_64px.png");
+		public static Image GetWideRaidWing7Icon() => GetImage("ArenaNet.raid_wing7_96px_64px.png");
 	}
 }

@@ -186,10 +186,22 @@ namespace GW2Scratch.ArcdpsLogManager
 		// MISC
 		private Lazy<Image> CopyButtonEnabledIcon { get; } = new Lazy<Image>(Resources.GetCopyButtonEnabledIcon);
 		private Lazy<Image> CopyButtonDisabledIcon { get; } = new Lazy<Image>(Resources.GetCopyButtonDisabledIcon);
+		
+		// WEEKLY CLEARS
 		private Lazy<Image> GreenCheckIcon { get; } = new Lazy<Image>(Resources.GetGreenCheckIcon);
 		private Lazy<Image> RedCrossIcon { get; } = new Lazy<Image>(Resources.GetRedCrossIcon);
 		private Lazy<Image> GrayQuestionMarkIcon { get; } = new Lazy<Image>(Resources.GetGrayQuestionMarkIcon);
 		private Lazy<Image> NotYetAvailableIcon { get; } = new Lazy<Image>(Resources.GetNotYetAvailableIcon);
+		private Lazy<Image> WideIcebroodSagaIcon { get; } = new Lazy<Image>(Resources.GetWideIcebroodSagaIcon);
+		private Lazy<Image> WideEndOfDragonsIcon { get; } = new Lazy<Image>(Resources.GetWideEndOfDragonsIcon);
+		private Lazy<Image> WideSecretsOfTheObscureIcon { get; } = new Lazy<Image>(Resources.GetWideSecretsOfTheObscureIcon);
+		private Lazy<Image> WideRaidWing1Icon { get; } = new Lazy<Image>(Resources.GetWideRaidWing1Icon);
+		private Lazy<Image> WideRaidWing2Icon { get; } = new Lazy<Image>(Resources.GetWideRaidWing2Icon);
+		private Lazy<Image> WideRaidWing3Icon { get; } = new Lazy<Image>(Resources.GetWideRaidWing3Icon);
+		private Lazy<Image> WideRaidWing4Icon { get; } = new Lazy<Image>(Resources.GetWideRaidWing4Icon);
+		private Lazy<Image> WideRaidWing5Icon { get; } = new Lazy<Image>(Resources.GetWideRaidWing5Icon);
+		private Lazy<Image> WideRaidWing6Icon { get; } = new Lazy<Image>(Resources.GetWideRaidWing6Icon);
+		private Lazy<Image> WideRaidWing7Icon { get; } = new Lazy<Image>(Resources.GetWideRaidWing7Icon);
 
 		public Image GetTinyLogIcon() => TinyIconLog.Value;
 		public Image GetTinyFractalsIcon() => TinyIconFractals.Value;
@@ -210,6 +222,16 @@ namespace GW2Scratch.ArcdpsLogManager
 		public Image GetRedCrossIcon() => RedCrossIcon.Value;
 		public Image GetGrayQuestionMarkIcon() => GrayQuestionMarkIcon.Value;
 		public Image GetNotYetAvailableIcon() => NotYetAvailableIcon.Value;
+		public Image GetWideIcebroodSagaIcon() => WideIcebroodSagaIcon.Value;
+		public Image GetWideEndOfDragonsIcon() => WideEndOfDragonsIcon.Value;
+		public Image GetWideSecretsOfTheObscureIcon() => WideSecretsOfTheObscureIcon.Value;
+		public Image GetWideRaidWing1Icon() => WideRaidWing1Icon.Value;
+		public Image GetWideRaidWing2Icon() => WideRaidWing2Icon.Value;
+		public Image GetWideRaidWing3Icon() => WideRaidWing3Icon.Value;
+		public Image GetWideRaidWing4Icon() => WideRaidWing4Icon.Value;
+		public Image GetWideRaidWing5Icon() => WideRaidWing5Icon.Value;
+		public Image GetWideRaidWing6Icon() => WideRaidWing6Icon.Value;
+		public Image GetWideRaidWing7Icon() => WideRaidWing7Icon.Value;
 
 		public Image GetTinyProfessionIcon(Profession profession)
 		{
