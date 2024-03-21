@@ -262,9 +262,13 @@ public class WeeklyClears : DynamicLayout
 				if (!Settings.PlayerAccountNames.Contains(selectedAccount))
 				{
 					Settings.PlayerAccountNames = Settings.PlayerAccountNames.Append(selectedAccount).ToList();
+					accountFilterBox.SelectedIndex = Settings.PlayerAccountNames.Count - 1;
+				}
+				else
+				{
+					accountFilterBox.SelectedIndex = Settings.PlayerAccountNames.ToList().IndexOf(selectedAccount);
 				}
 
-				accountFilterBox.SelectedIndex = Settings.PlayerAccountNames.Count - 1;
 				AccountFilter = selectedAccount;
 				removeAccountButton.Enabled = true;
 				DataUpdated?.Invoke(this, EventArgs.Empty);

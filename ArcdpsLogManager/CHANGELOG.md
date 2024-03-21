@@ -9,6 +9,7 @@ This is the full changelog of the arcdps Log Manager.
 
 #### Fixes
 - Fixed NM detection for Temple of Febe since health fix
+- Fixed weekly clears account selection dropdown selecting wrong account when adding a duplicate account
 
 ## Log Manager v1.11
 
