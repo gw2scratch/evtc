@@ -651,7 +651,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 								new AgentHealthModeDeterminer(mainTarget, 60_000_000, EncounterMode.LegendaryChallenge)),
 							(true, new FallbackModeDeterminer(
 								new AgentHealthModeDeterminer(mainTarget, 107_000_000, EncounterMode.LegendaryChallenge),
-								new AgentHealthModeDeterminer(mainTarget, 60_000_000, EncounterMode.Challenge)))))
+								new AgentHealthModeDeterminer(mainTarget, 60_000_000, EncounterMode.Challenge),
+								finalFallbackMode: null))))
 						.Build();
 				}
 				default:

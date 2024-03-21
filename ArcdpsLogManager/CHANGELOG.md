@@ -7,6 +7,9 @@ This is the full changelog of the arcdps Log Manager.
 #### New features
 - Added dps.report upload status to Advanced filters
 
+#### Fixes
+- Fixed NM detection for Temple of Febe since health fix
+
 ## Log Manager v1.11
 
 #### New features

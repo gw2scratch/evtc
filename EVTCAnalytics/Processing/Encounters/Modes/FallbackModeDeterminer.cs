@@ -14,11 +14,13 @@ public class FallbackModeDeterminer : IModeDeterminer
 {
 	private readonly IModeDeterminer firstDeterminer;
 	private readonly IModeDeterminer fallbackDeterminer;
+	private readonly EncounterMode? finalFallbackMode;
 
-	public FallbackModeDeterminer(IModeDeterminer firstDeterminer, IModeDeterminer fallbackDeterminer)
+	public FallbackModeDeterminer(IModeDeterminer firstDeterminer, IModeDeterminer fallbackDeterminer, EncounterMode? finalFallbackMode = EncounterMode.Unknown)
 	{
 		this.firstDeterminer = firstDeterminer;
 		this.fallbackDeterminer = fallbackDeterminer;
+		this.finalFallbackMode = finalFallbackMode;
 	}
 
 	public IReadOnlyList<Type> RequiredEventTypes => firstDeterminer.RequiredEventTypes.Concat(fallbackDeterminer.RequiredEventTypes).Distinct().ToList();
@@ -27,6 +29,6 @@ public class FallbackModeDeterminer : IModeDeterminer
 
 	public EncounterMode? GetMode(Log log)
 	{
-		return firstDeterminer.GetMode(log) ?? fallbackDeterminer.GetMode(log) ?? EncounterMode.Unknown;
+		return firstDeterminer.GetMode(log) ?? fallbackDeterminer.GetMode(log) ?? finalFallbackMode;
 	}
 }
