@@ -61,16 +61,16 @@ namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 			unknownCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowUnknownLogs);
 			BindEnabled(unknownCheckBox);
 
-			var normalModeCheckBox = new CheckBox {Text = "Normal"};
+			var normalModeCheckBox = new CheckBox {Text = "Normal", ToolTip = "Normal mode"};
 			normalModeCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowNormalModeLogs);
 			BindEnabled(normalModeCheckBox);
-			var emboldenedCheckBox = new CheckBox {Text = "Emboldened"};
+			var emboldenedCheckBox = new CheckBox {Text = "Emboldened", ToolTip = "Emboldened regardless of how many stacks of Emboldened"};
 			emboldenedCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowEmboldenedModeLogs);
 			BindEnabled(emboldenedCheckBox);
-			var challengeModeCheckBox = new CheckBox {Text = "Challenge"};
+			var challengeModeCheckBox = new CheckBox {Text = "Challenge", ToolTip = "Challenge Mode"};
 			challengeModeCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowChallengeModeLogs);
 			BindEnabled(challengeModeCheckBox);
-			var legendaryModeCheckBox = new CheckBox {Text = "Legendary"};
+			var legendaryModeCheckBox = new CheckBox {Text = "Legendary", ToolTip = "Legendary Challenge Mode (Temple of Febe...)"};
 			legendaryModeCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowLegendaryChallengeModeLogs);
 			BindEnabled(legendaryModeCheckBox);
 

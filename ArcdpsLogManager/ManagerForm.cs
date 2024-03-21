@@ -29,6 +29,7 @@ using GW2Scratch.EVTCAnalytics.Events;
 using GW2Scratch.EVTCAnalytics.GameData;
 using GW2Scratch.EVTCAnalytics.Processing;
 using Gw2Sharp;
+using System.Diagnostics;
 
 namespace GW2Scratch.ArcdpsLogManager
 {
@@ -539,7 +540,26 @@ namespace GW2Scratch.ArcdpsLogManager
 			var settingsMenuItem = new ButtonMenuItem {Text = "&Settings"};
 			settingsMenuItem.Items.Add(settingsFormMenuItem);
 
-			var helpMenuItem = new ButtonMenuItem {Text = "Help"};
+			var helpMenuItem = new ButtonMenuItem {Text = "About"};
+			helpMenuItem.Items.Add(new Command((_, _) =>
+			{
+				var processInfo = new ProcessStartInfo
+				{
+					FileName = "https://ko-fi.com/sejsel",
+					UseShellExecute = true
+				};
+				Process.Start(processInfo);
+			}) { MenuText = "Donate" });
+			helpMenuItem.Items.Add(new SeparatorMenuItem());
+			helpMenuItem.Items.Add(new Command((_, _) =>
+			{
+				var processInfo = new ProcessStartInfo
+				{
+					FileName = "https://gw2scratch.com/",
+					UseShellExecute = true
+				};
+				Process.Start(processInfo);
+			}) { MenuText = "Website" });
 			helpMenuItem.Items.Add(new About());
 
 			return new MenuBar(dataMenuItem, viewMenuItem, settingsMenuItem, helpMenuItem);
