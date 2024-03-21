@@ -659,6 +659,14 @@ namespace GW2Scratch.ArcdpsLogManager
 			// This is needed to avoid a Gtk platform issue where the tab is changed to the last one.
 			Shown += (sender, args) => tabs.SelectedIndex = 1;
 
+			KeyUp += (_, args) =>
+			{
+				if (args.Key == Keys.Escape)
+				{
+					logList.ClearSelection();
+				}
+			};
+
 			return tabs;
 		}
 

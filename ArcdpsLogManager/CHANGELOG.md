@@ -7,6 +7,9 @@ This is the full changelog of the arcdps Log Manager.
 #### New features
 - Added dps.report upload status to Advanced filters
 
+#### Changes
+- Pressing ESC now closes the log detail pane
+
 #### Fixes
 - Fixed NM detection for Temple of Febe since health fix
 - Fixed weekly clears account selection dropdown selecting wrong account when adding a duplicate account

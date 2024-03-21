@@ -474,6 +474,11 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			}
 		}
 
+		public void ClearSelection()
+		{
+			logGridView.SelectedRows = [];
+		}
+
 		private ContextMenu ConstructLogGridViewContextMenu(GridView<LogData> gridView)
 		{
 			var contextMenu = new ContextMenu();
