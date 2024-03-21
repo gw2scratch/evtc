@@ -634,8 +634,24 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				}
 				case Encounter.TempleOfFebe:
 				{
+					// NM: before CM release 47,188,800, after CM release: 53,087,400
+					// CM: on release 106,174,800 first phase, second phase 159M
+					// CM: after first fix 130,064,136 in all phases
+					// CM: made easier at 106,174,800 health (2024-03-19)
+					// Legendary Challenge: keeps 130,064,136 (introduced in 2024-03-19)
+					
+					// Achievements were given retroactively, so we count everything above 106,174,800
+					// as legendary challenge even before its introduction
 					return GetDefaultBuilder(encounter, mainTarget)
-						.WithModes(new AgentHealthModeDeterminer(mainTarget, 60_000_000))
+						.WithModes(new ConditionalModeDeterminer(
+							// The first version of CM with varying health is also recognized as legendary challenge.
+							// There were no publicly known kills of this fight, but it makes sense to recognize
+							// the attempts as the legendary version.
+							(gameBuild != null && gameBuild < GameBuilds.TempleOfFebeHealthFix,
+								new AgentHealthModeDeterminer(mainTarget, 60_000_000, EncounterMode.LegendaryChallenge)),
+							(true, new FallbackModeDeterminer(
+								new AgentHealthModeDeterminer(mainTarget, 107_000_000, EncounterMode.LegendaryChallenge),
+								new AgentHealthModeDeterminer(mainTarget, 60_000_000, EncounterMode.Challenge)))))
 						.Build();
 				}
 				default:

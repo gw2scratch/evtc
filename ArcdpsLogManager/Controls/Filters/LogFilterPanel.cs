@@ -64,12 +64,15 @@ namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 			var normalModeCheckBox = new CheckBox {Text = "Normal"};
 			normalModeCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowNormalModeLogs);
 			BindEnabled(normalModeCheckBox);
-			var challengeModeCheckBox = new CheckBox {Text = "Challenge"};
-			challengeModeCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowChallengeModeLogs);
-			BindEnabled(challengeModeCheckBox);
 			var emboldenedCheckBox = new CheckBox {Text = "Emboldened"};
 			emboldenedCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowEmboldenedModeLogs);
 			BindEnabled(emboldenedCheckBox);
+			var challengeModeCheckBox = new CheckBox {Text = "Challenge"};
+			challengeModeCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowChallengeModeLogs);
+			BindEnabled(challengeModeCheckBox);
+			var legendaryModeCheckBox = new CheckBox {Text = "Legendary"};
+			legendaryModeCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowLegendaryChallengeModeLogs);
+			BindEnabled(legendaryModeCheckBox);
 
 			var nonFavoritesCheckBox = new CheckBox {Text = "☆ Non-favorites"};
 			nonFavoritesCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowNonFavoriteLogs);
@@ -177,8 +180,13 @@ namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 					BeginHorizontal();
 					{
 						Add(normalModeCheckBox);
-						Add(challengeModeCheckBox);
 						Add(emboldenedCheckBox);
+					}
+					EndHorizontal();
+					BeginHorizontal();
+					{
+						Add(challengeModeCheckBox);
+						Add(legendaryModeCheckBox);
 					}
 					EndHorizontal();
 				}

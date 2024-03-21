@@ -68,6 +68,6 @@ public class NormalEncounter : IFinishableEncounter
 	public bool IsChallengeModeSatisfiedBy(IEnumerable<LogData> logs)
 	{
 		return logs.Any(log => log.ParsingStatus == ParsingStatus.Parsed && log.EncounterResult == EncounterResult.Success && log.Encounter == Encounter &&
-		                       log.EncounterMode == EncounterMode.Challenge);
+		                       log.EncounterMode is EncounterMode.Challenge or EncounterMode.LegendaryChallenge);
 	}
 }

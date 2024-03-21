@@ -63,6 +63,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 					EncounterMode.Unknown => "",
 					EncounterMode.Normal => "",
 					EncounterMode.Challenge => "Challenge Mode",
+					EncounterMode.LegendaryChallenge => "Legendary Challenge Mode",
 					EncounterMode.Emboldened1 => "Emboldened 1",
 					EncounterMode.Emboldened2 => "Emboldened 2",
 					EncounterMode.Emboldened3 => "Emboldened 3",

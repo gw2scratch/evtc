@@ -13,7 +13,8 @@ This is the full changelog of the arcdps Log Manager.
   - oh, and it has a detailed history
   - relies on your logs, does not use the API
 - Added Cosmic Observatory CM detection
-- Added Temple of Febe CM detection
+- Added Temple of Febe CM/LM detection
+- Added filtering for Legendary Challenge Mode encounters (Temple of Febe)
 
 #### Fixes
 - Fixed dps.report uploads failing when hitting the rate limit

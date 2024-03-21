@@ -56,6 +56,6 @@ public class MultipartEncounter : IFinishableEncounter
 	{
 		return Encounters.All(encounter => logs.Any(log =>
 			log.ParsingStatus == ParsingStatus.Parsed && log.EncounterResult == EncounterResult.Success && log.Encounter == encounter &&
-			log.EncounterMode == EncounterMode.Challenge));
+			log.EncounterMode is EncounterMode.Challenge or EncounterMode.LegendaryChallenge));
 	}
 }

@@ -38,6 +38,10 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes
 		/// 5 stacks of Emboldened (easy mode; extra stats).
 		/// </summary>
 		Emboldened5,
+		/// <summary>
+		/// A harder version of a challenge mode.
+		/// </summary>
+		LegendaryChallenge,
 	}
 	
 	public static class EncounterModeExtensions
