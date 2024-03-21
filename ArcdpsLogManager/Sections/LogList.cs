@@ -158,9 +158,10 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			
 			gridView.Columns.Add(new GridColumn()
 			{
-				HeaderText = "CM",
+				HeaderText = "Mode",
 				DataCell = new TextBoxCell
 				{
+					TextAlignment = TextAlignment.Center,
 					Binding = new DelegateBinding<LogData, string>(x =>
 					{
 						switch (x.EncounterMode)
