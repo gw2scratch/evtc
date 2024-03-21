@@ -43,6 +43,10 @@ namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 			{
 				Text = "Processing status", Content = ConstructProcessingStatus(), Padding = new Padding(5),
 			};
+			var uploadTab = new TabPage
+			{
+				Text = "dps.report uploads", Content = ConstructUploadStatus(), Padding = new Padding(5),
+			};
 
 			void UpdateTabNames()
 			{
@@ -57,6 +61,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 			tabs.Pages.Add(instabilityTab);
 			tabs.Pages.Add(playerTab);
 			tabs.Pages.Add(processingTab);
+			tabs.Pages.Add(uploadTab);
 			UpdateTabNames();
 
 			filters.PropertyChanged += (_, _) => UpdateTabNames();
@@ -98,6 +103,32 @@ namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 				layout.Add(parsingCheckBox);
 				layout.Add(parsedCheckBox);
 				layout.Add(failedCheckBox);
+				layout.Add(null);
+			}
+			layout.EndVertical();
+			return layout;
+		}
+		
+		private Control ConstructUploadStatus()
+		{
+			var notUploadedCheckBox = new CheckBox { Text = "Not uploaded" };
+			notUploadedCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowDpsReportUnuploadedLogs);
+			var queuedCheckBox = new CheckBox { Text = "Queued" };
+			queuedCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowDpsReportQueuedLogs);
+			var uploadedCheckBox = new CheckBox { Text = "Uploaded" };
+			uploadedCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowDpsReportUploadedLogs);
+			var uploadFailedCheckBox = new CheckBox { Text = "Upload failed (dps.report unreachable)" };
+			uploadFailedCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowDpsReportUploadErrorLogs);
+			var processingFailedCheckBox = new CheckBox { Text = "Processing failed (Elite Insights on dps.report failed)" };
+			processingFailedCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowDpsReportProcessingErrorLogs);
+			var layout = new DynamicLayout();
+			layout.BeginVertical(spacing: new Size(5, 5));
+			{
+				layout.Add(notUploadedCheckBox);
+				layout.Add(uploadedCheckBox);
+				layout.Add(queuedCheckBox);
+				layout.Add(uploadFailedCheckBox);
+				layout.Add(processingFailedCheckBox);
 				layout.Add(null);
 			}
 			layout.EndVertical();
