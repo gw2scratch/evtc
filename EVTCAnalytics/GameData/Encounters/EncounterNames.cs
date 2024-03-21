@@ -55,7 +55,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 			{Encounter.LargeKittyGolem, "Large Kitty Golem"},
 			{Encounter.MassiveKittyGolem, "Massive Kitty Golem"},
 			{Encounter.WorldVersusWorld, "World versus World"},
-			{Encounter.ShiverpeaksPass, "Legendary Icebrood Construct"},
+			{Encounter.ShiverpeaksPass, "Icebrood Construct"},
 			{Encounter.VoiceAndClawOfTheFallen, "The Voice and the Claw"},
 			{Encounter.FraenirOfJormag, "Fraenir of Jormag"},
 			{Encounter.Boneskinner, "Boneskinner"},
