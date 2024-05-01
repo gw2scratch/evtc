@@ -43,6 +43,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			{ "CM", "Challenge Mode or Emboldened" },
 			{ "Instabilities", "Fractals of the Mists" },
 			{ "Scale", "Fractals of the Mists" },
+			{ "", "Encounter Icon" },
 		};
 		
 		public bool ReadOnly { get; init; }
@@ -138,6 +139,34 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			};
 
 			gridView.Columns.Add(favoritesColumn);
+
+			var encounterIconCell = new DrawableCell();
+			encounterIconCell.Paint += (sender, args) =>
+			{
+				if (!(args.Item is LogData log)) return;
+				if (log.ParsingStatus != ParsingStatus.Parsed) return;
+
+				var rectangle = new RectangleF(new PointF(0, 0), new SizeF(PlayerIconSize, PlayerIconSize));
+
+				// If the log has no corrisponding icon it will not be drawn.
+				var wvwIcon = imageProvider.GetWvWMapIcon(log.MapId);
+				var encounterIcon = imageProvider.GetTinyEncounterIcon(log.Encounter);
+				if (encounterIcon != null)
+				{
+					args.Graphics.DrawImage(encounterIcon, rectangle);
+				}
+				if (wvwIcon != null)
+				{
+					args.Graphics.DrawImage(wvwIcon, rectangle);
+				}
+			};
+
+			gridView.Columns.Add(new GridColumn()
+			{
+				HeaderText = "",
+				DataCell = encounterIconCell,
+				Visible = false,
+			});
 
 			gridView.Columns.Add(new GridColumn()
 			{
@@ -493,7 +522,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 
 				if (Abbreviations.TryGetValue(menuItem.Text, out string fullName))
 				{
-					menuItem.Text = $"{menuItem.Text} ({fullName})";
+					menuItem.Text = string.IsNullOrEmpty(menuItem.Text) || string.IsNullOrWhiteSpace(menuItem.Text) ? $"{fullName}" : $"{menuItem.Text} ({fullName})";
 				}
 
 				menuItem.CheckedChanged += (item, args) =>
