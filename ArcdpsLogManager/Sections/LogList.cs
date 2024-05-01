@@ -522,7 +522,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 
 				if (Abbreviations.TryGetValue(menuItem.Text, out string fullName))
 				{
-					menuItem.Text = string.IsNullOrEmpty(menuItem.Text) || string.IsNullOrWhiteSpace(menuItem.Text) ? $"{fullName}" : $"{menuItem.Text} ({fullName})";
+					menuItem.Text = string.IsNullOrWhiteSpace(menuItem.Text) ? $"{fullName}" : $"{menuItem.Text} ({fullName})";
 				}
 
 				menuItem.CheckedChanged += (item, args) =>
