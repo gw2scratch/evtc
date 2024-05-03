@@ -146,9 +146,11 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 				if (!(args.Item is LogData log)) return;
 				if (log.ParsingStatus != ParsingStatus.Parsed) return;
 
-				var rectangle = new RectangleF(new PointF(0, 0), new SizeF(PlayerIconSize, PlayerIconSize));
+				args.Graphics.ImageInterpolation = ImageInterpolation.High;
+				var origin = args.ClipRectangle.Location;
+				var rectangle = new RectangleF(origin, new SizeF(PlayerIconSize, PlayerIconSize));
 
-				// If the log has no corrisponding icon it will not be drawn.
+				// If the log has no corresponding icon it will not be drawn.
 				var wvwIcon = imageProvider.GetWvWMapIcon(log.MapId);
 				var encounterIcon = imageProvider.GetTinyEncounterIcon(log.Encounter);
 				if (encounterIcon != null)
