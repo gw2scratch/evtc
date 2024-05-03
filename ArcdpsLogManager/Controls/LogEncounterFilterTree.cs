@@ -23,7 +23,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			{
 				LogGroup = group;
 
-				if (LogGroup is RootLogGroup or RaidLogGroup or StrikeMissionLogGroup)
+				if (LogGroup is RootLogGroup or RaidLogGroup or StrikeMissionLogGroup or FractalLogGroup)
 				{
 					Expanded = true;
 				}
@@ -172,6 +172,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 					RootLogGroup => imageProvider.GetTinyLogIcon(),
 					StrikeMissionLogGroup => imageProvider.GetTinyStrikeIcon(),
 					RaidLogGroup => imageProvider.GetTinyRaidIcon(),
+					FractalLogGroup => imageProvider.GetTinyFractalsIcon(),
 					CategoryLogGroup categoryGroup => GetCategoryIcon(categoryGroup.Category),
 					EncounterLogGroup encounterGroup => GetEncounterIcon(encounterGroup.Encounter),
 					MapLogGroup mapGroup => imageProvider.GetWvWMapIcon(mapGroup.MapId),
@@ -260,6 +261,10 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				EncounterCategory.RaidWing5 => imageProvider.GetRaidWingIcon(),
 				EncounterCategory.RaidWing6 => imageProvider.GetRaidWingIcon(),
 				EncounterCategory.RaidWing7 => imageProvider.GetRaidWingIcon(),
+				EncounterCategory.FractalNightmare => imageProvider.GetFractalMapIcon(),
+				EncounterCategory.FractalShatteredObservatory => imageProvider.GetFractalMapIcon(),
+				EncounterCategory.FractalSunquaPeak => imageProvider.GetFractalMapIcon(),
+				EncounterCategory.FractalSilentSurf => imageProvider.GetFractalMapIcon(),
 				EncounterCategory.Map => imageProvider.GetTinyInstanceIcon(),
 				_ => null
 			};

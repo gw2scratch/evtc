@@ -70,6 +70,9 @@ namespace GW2Scratch.ArcdpsLogManager
 		// RAIDS
 		private Lazy<Image> GenericRaidWing { get; } = new Lazy<Image>(Resources.GetGenericRaidWingIcon);
 
+		// FRACTALS
+		private Lazy<Image> GenericFractalMap { get; } = new Lazy<Image>(Resources.GetGenericFractalMapIcon);
+
 		// RAID BOSSES
 		// WING 1
 		private Lazy<Image> ValeGuardianIcon { get; } = new Lazy<Image>(Resources.GetValeGuardianIcon);
@@ -378,6 +381,11 @@ namespace GW2Scratch.ArcdpsLogManager
 		public Image GetRaidWingIcon()
 		{
 			return GenericRaidWing.Value;
+		}
+
+		public Image GetFractalMapIcon()
+		{
+			return GenericFractalMap.Value;
 		}
 
 		public Image GetWvWMapIcon(int? mapId)

@@ -171,6 +171,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		public static Image GetTempleOfFebeIcon() => GetEncounterImage("Mini_Cerus");
 
 		// FRACTALS
+		public static Image GetGenericFractalMapIcon() => GetImage("ArenaNet.fractal_map_32px.png");
 		public static Image GetMAMAIcon() => GetEncounterImage("Mini_MAMA");
 		public static Image GetSiaxTheCorruptedIcon() => GetEncounterImage("Mini_Toxic_Warlock");
 		public static Image GetEnsolyssOfTheEndlessTormentIcon() => GetEncounterImage("Mini_Ensolyss");
