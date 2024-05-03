@@ -2,6 +2,15 @@
 
 This is the full changelog of the arcdps Log Manager.
 
+## Log Manager v1.11.2 (unreleased)
+
+#### New features
+- Added encounter icons to log list for easier identification (thanks, @Linkaaaaa!)
+
+#### Changes
+- Organized Fractal encounters by scale in category filters (thanks, @Linkaaaaa!)
+
+
 ## Log Manager v1.11.1
 
 #### New features
