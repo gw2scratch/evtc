@@ -32,7 +32,6 @@ public class StoredSettings
 		"arcdps Version",
 		"Instabilities",
 		"Scale",
-		""
 	];
 
 	public List<string> IgnoredUpdateVersions { get; set; } = [];
