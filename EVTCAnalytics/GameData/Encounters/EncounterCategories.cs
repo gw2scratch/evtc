@@ -38,19 +38,19 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 				{Encounter.Adina, EncounterCategory.RaidWing7},
 				{Encounter.Sabir, EncounterCategory.RaidWing7},
 				{Encounter.QadimThePeerless, EncounterCategory.RaidWing7},
-				{Encounter.MAMA, EncounterCategory.Fractal},
-				{Encounter.SiaxTheCorrupted, EncounterCategory.Fractal},
-				{Encounter.EnsolyssOfTheEndlessTorment, EncounterCategory.Fractal},
-				{Encounter.Skorvald, EncounterCategory.Fractal},
-				{Encounter.Artsariiv, EncounterCategory.Fractal},
-				{Encounter.Arkk, EncounterCategory.Fractal},
+				{Encounter.MAMA, EncounterCategory.FractalNightmare},
+				{Encounter.SiaxTheCorrupted, EncounterCategory.FractalNightmare},
+				{Encounter.EnsolyssOfTheEndlessTorment, EncounterCategory.FractalNightmare},
+				{Encounter.Skorvald, EncounterCategory.FractalShatteredObservatory},
+				{Encounter.Artsariiv, EncounterCategory.FractalShatteredObservatory},
+				{Encounter.Arkk, EncounterCategory.FractalShatteredObservatory},
 #pragma warning disable 618
-				{Encounter.AiKeeperOfThePeak, EncounterCategory.Fractal},
+				{Encounter.AiKeeperOfThePeak, EncounterCategory.FractalSunquaPeak},
 #pragma warning restore 618
-				{Encounter.AiKeeperOfThePeakDayOnly, EncounterCategory.Fractal},
-				{Encounter.AiKeeperOfThePeakNightOnly, EncounterCategory.Fractal},
-				{Encounter.AiKeeperOfThePeakDayAndNight, EncounterCategory.Fractal},
-				{Encounter.Kanaxai, EncounterCategory.Fractal},
+				{Encounter.AiKeeperOfThePeakDayOnly, EncounterCategory.FractalSunquaPeak},
+				{Encounter.AiKeeperOfThePeakNightOnly, EncounterCategory.FractalSunquaPeak},
+				{Encounter.AiKeeperOfThePeakDayAndNight, EncounterCategory.FractalSunquaPeak},
+				{Encounter.Kanaxai, EncounterCategory.FractalSilentSurf},
 				{Encounter.Freezie, EncounterCategory.StrikeMissionFestival},
 				{Encounter.StandardKittyGolem, EncounterCategory.SpecialForcesTrainingArea},
 				{Encounter.MediumKittyGolem, EncounterCategory.SpecialForcesTrainingArea},
@@ -93,6 +93,15 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 				EncounterCategory.StrikeMissionEndOfDragons,
 				EncounterCategory.StrikeMissionSecretsOfTheObscure,
 				EncounterCategory.StrikeMissionFestival,
+			};
+
+		private static readonly HashSet<EncounterCategory> FractalCategories =
+			new HashSet<EncounterCategory>
+			{
+				EncounterCategory.FractalNightmare,
+				EncounterCategory.FractalShatteredObservatory,
+				EncounterCategory.FractalSunquaPeak,
+				EncounterCategory.FractalSilentSurf,
 			};
 
 		/// <summary>
@@ -147,6 +156,25 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 		{
 			var category = encounter.GetEncounterCategory();
 			return IsStrikeMission(category);
+		}
+
+		/// <summary>
+		/// Checks if this is a fractal category.
+		/// </summary>
+		/// <returns>A value indicating whether the provided category is a fractal category.</returns>
+		public static bool IsFractal(this EncounterCategory category)
+		{
+			return FractalCategories.Contains(category);
+		}
+
+		/// <summary>
+		/// Checks if this is a fractal encounter.
+		/// </summary>
+		/// <returns>A value indicating whether the provided encounter is a fractal encounter.</returns>
+		public static bool IsFractal(this Encounter encounter)
+		{
+			var category = encounter.GetEncounterCategory();
+			return IsFractal(category);
 		}
 	}
 }

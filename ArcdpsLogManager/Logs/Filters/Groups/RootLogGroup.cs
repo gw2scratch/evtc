@@ -29,6 +29,9 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters.Groups
 			// -- End of Dragons
 			// -- Festivals
 			// - Fractals
+			// -- Nightmare
+			// -- ...
+			// -- Silent Surf
 			// - Special Forces Training Area (Golems)
 			// - Any other non-raid EncounterCategory
 			// - Others
@@ -55,6 +58,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters.Groups
 			var leftoverCategories = ((EncounterCategory[]) Enum.GetValues(typeof(EncounterCategory)))
 				.Where(x => !x.IsRaid() &&
 				            !x.IsStrikeMission() &&
+							!x.IsFractal() &&
 				            !manuallyAddedCategories.Contains(x) &&
 				            !ignoredCategories.Contains(x));
 
@@ -62,7 +66,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters.Groups
 
 			groups.Add(new RaidLogGroup());
 			groups.Add(new StrikeMissionLogGroup());
-			groups.Add(new CategoryLogGroup(EncounterCategory.Fractal));
+			groups.Add(new FractalLogGroup());
 			groups.Add(new CategoryLogGroup(EncounterCategory.SpecialForcesTrainingArea));
 			foreach (var category in leftoverCategories)
 			{
