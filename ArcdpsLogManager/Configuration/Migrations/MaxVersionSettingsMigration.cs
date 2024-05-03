@@ -2,17 +2,8 @@ using System;
 
 namespace GW2Scratch.ArcdpsLogManager.Configuration.Migrations;
 
-public class MaxVersionSettingsMigration : ISettingsMigration
+public class MaxVersionSettingsMigration(Version maxVersion, Action<StoredSettings> migration) : ISettingsMigration
 {
-	private readonly Version maxVersion;
-	private readonly Action<StoredSettings> migration;
-
-	public MaxVersionSettingsMigration(Version minVersion, Action<StoredSettings> migration)
-	{
-		this.maxVersion = minVersion;
-		this.migration = migration;
-	}
-
 	public bool Applies(Version version)
 	{
 		return version < maxVersion;

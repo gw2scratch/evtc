@@ -167,7 +167,6 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			{
 				HeaderText = "",
 				DataCell = encounterIconCell,
-				Visible = false,
 			});
 
 			gridView.Columns.Add(new GridColumn()
