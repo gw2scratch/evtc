@@ -21,6 +21,7 @@ namespace GW2Scratch.ArcdpsLogManager.Configuration
 		private static readonly List<ISettingsMigration> Migrations =
 		[
 			new NullVersionSettingsMigration(settings => settings.HiddenLogListColumns.Add("Instabilities")),
+			new MaxVersionSettingsMigration(new Version(1, 11, 1, 2), settings => settings.HiddenLogListColumns.Add("Account"))
 		];
 
 		private static StoredSettings Values => Stored.Value;

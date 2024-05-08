@@ -340,6 +340,15 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 				}
 			});
 
+			gridView.Columns.Add(new GridColumn
+			{
+				HeaderText = "Account",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<LogData, string>(x => x.PointOfView?.AccountName.TrimStart(':') ?? "Unknown")
+				}
+			});
+
 			var compositionCell = new DrawableCell();
 			compositionCell.Paint += (sender, args) =>
 			{

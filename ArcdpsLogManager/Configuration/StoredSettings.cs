@@ -27,6 +27,7 @@ public class StoredSettings
 	public List<string> HiddenLogListColumns { get; set; } =
 	[
 		"Character",
+		"Account",
 		"Map ID",
 		"Game Version",
 		"arcdps Version",
