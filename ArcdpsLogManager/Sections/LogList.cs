@@ -146,7 +146,13 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 				if (!(args.Item is LogData log)) return;
 				if (log.ParsingStatus != ParsingStatus.Parsed) return;
 
-				args.Graphics.ImageInterpolation = ImageInterpolation.High;
+				// On Gtk, the images look rather distorted without this interpolation settings.
+				// On WPF, rendering breaks with this interpolation setting, so we do not use it there.
+				if (Application.Instance.Platform.IsGtk)
+				{
+					args.Graphics.ImageInterpolation = ImageInterpolation.High;
+				}
+
 				var origin = args.ClipRectangle.Location;
 				var rectangle = new RectangleF(origin, new SizeF(PlayerIconSize, PlayerIconSize));
 
