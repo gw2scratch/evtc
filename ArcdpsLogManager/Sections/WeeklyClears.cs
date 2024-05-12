@@ -680,10 +680,10 @@ public class WeeklyClears : DynamicLayout
 
 		var weekStart = time.ToUniversalTime();
 
-		if (time.DayOfWeek == DayOfWeek.Monday)
+		if (weekStart.DayOfWeek == DayOfWeek.Monday)
 		{
-			var reset = time.Date.AddHours(7.5);
-			if (time < reset)
+			var reset = weekStart.Date.AddHours(7.5);
+			if (weekStart < reset)
 			{
 				weekStart = weekStart.AddDays(-7);
 			}
