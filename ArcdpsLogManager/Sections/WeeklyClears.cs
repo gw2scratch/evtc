@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Timers;
 using EncounterCategory = GW2Scratch.ArcdpsLogManager.Sections.Clears.EncounterCategory;
 
 namespace GW2Scratch.ArcdpsLogManager.Sections;
@@ -222,6 +223,7 @@ public class WeeklyClears : DynamicLayout
 	private readonly Button removeAccountButton;
 	private readonly GridView<ResetWeek> weekGrid;
 	private readonly List<CheckBox> groupCheckboxes = [];
+	private readonly Timer timer = new Timer(TimeSpan.FromMinutes(1));
 
 	public WeeklyClears(ImageProvider imageProvider)
 	{
@@ -375,7 +377,8 @@ public class WeeklyClears : DynamicLayout
 
 		foreach ((string name, EncounterCategory category, bool hasCMs) in (ReadOnlySpan<(string, EncounterCategory, bool)>)
 		         [
-			         ("Raid", EncounterCategory.Raids, true), ("IBS", EncounterCategory.StrikeIcebroodSaga, false),
+			         ("Raid", EncounterCategory.Raids, true),
+			         ("IBS", EncounterCategory.StrikeIcebroodSaga, false),
 			         ("EoD", EncounterCategory.StrikeEndOfDragons, true),
 			         ("SotO", EncounterCategory.StrikeSecretsOfTheObscure, true)
 		         ])
@@ -450,6 +453,8 @@ public class WeeklyClears : DynamicLayout
 
 		var filteredWeeks = new FilterCollection<ResetWeek>(weeks);
 		filteredWeeks.Filter = week => week.Reset <= DateOnly.FromDateTime(DateTime.UtcNow);
+		timer.Elapsed += (_, _) => Application.Instance.Invoke(() => filteredWeeks.Refresh());
+		
 		weekGrid.DataStore = filteredWeeks;
 		weekGrid.SelectedRow = 0;
 
@@ -485,6 +490,9 @@ public class WeeklyClears : DynamicLayout
 		}
 
 		RecreateLayout();
+
+		Shown += (_, _) => timer.Start();
+		UnLoad += (_, _) => timer.Stop();
 	}
 
 	private void RecreateLayout()

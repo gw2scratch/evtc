@@ -10,6 +10,9 @@ This is the full changelog of the arcdps Log Manager.
 #### Changes
 - Organized Fractal encounters by scale in category filters (thanks, @Linkaaaaa!)
 
+#### Fixes
+- Fixed crashes happening at weekly reset and on the midnight of the day for some timezones.
+
 
 ## Log Manager v1.11.1
 
