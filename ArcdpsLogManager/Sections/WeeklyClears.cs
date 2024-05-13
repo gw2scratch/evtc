@@ -135,7 +135,7 @@ public class WeeklyClears : DynamicLayout
 		])
 	];
 
-	private Dictionary<IFinishableEncounter, EncounterCategory> CategoriesByEncounter = EncounterGroups
+	private static readonly Dictionary<IFinishableEncounter, EncounterCategory> CategoriesByEncounter = EncounterGroups
 		.SelectMany(group => group.Rows.SelectMany(row => row.Encounters.Select(encounter => (encounter, Id: group.Category))))
 		.ToDictionary(x => x.encounter, x => x.Id);
 
@@ -448,7 +448,9 @@ public class WeeklyClears : DynamicLayout
 			};
 		}
 
-		weekGrid.DataStore = weeks;
+		var filteredWeeks = new FilterCollection<ResetWeek>(weeks);
+		filteredWeeks.Filter = week => week.Reset <= DateOnly.FromDateTime(DateTime.UtcNow);
+		weekGrid.DataStore = filteredWeeks;
 		weekGrid.SelectedRow = 0;
 
 		weekGrid.SelectionChanged += (_, _) =>
@@ -713,7 +715,7 @@ public class WeeklyClears : DynamicLayout
 	private static List<DateOnly> GetAllResets()
 	{
 		var resets = new List<DateOnly>();
-		var now = DateTimeOffset.Now;
+		var now = DateTimeOffset.Now + TimeSpan.FromDays(365 * 10);
 		do
 		{
 			resets.Add(GetResetBefore(now));
