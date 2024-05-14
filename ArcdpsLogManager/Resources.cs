@@ -182,6 +182,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		public static Image GetDarkAiKeeperOfThePeakIcon() => GetEncounterImage("Dark_Ai");
 		public static Image GetBothPhasesAiKeeperOfThePeakIcon() => GetEncounterImage("Both_Phases_Ai");
 		public static Image GetKanaxaiIcon() => GetEncounterImage("Mini_Kanaxai");
+		public static Image GetLonelyTowerIcon() => GetEncounterImage("Mini_Kanaxai");
 
 		// FESTIVALS
 		public static Image GetFreezieIcon() => GetEncounterImage("Mini_Freezie");

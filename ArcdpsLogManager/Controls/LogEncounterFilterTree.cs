@@ -265,6 +265,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				EncounterCategory.FractalShatteredObservatory => imageProvider.GetFractalMapIcon(),
 				EncounterCategory.FractalSunquaPeak => imageProvider.GetFractalMapIcon(),
 				EncounterCategory.FractalSilentSurf => imageProvider.GetFractalMapIcon(),
+				EncounterCategory.FractalLonelyTower => imageProvider.GetFractalMapIcon(),
 				EncounterCategory.Map => imageProvider.GetTinyInstanceIcon(),
 				_ => null
 			};

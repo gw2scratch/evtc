@@ -26,6 +26,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 		FractalShatteredObservatory = 302,
 		FractalSunquaPeak = 303,
 		FractalSilentSurf = 304,
+		FractalLonelyTower = 305,
 		Map = 2000,
 	}
 }
