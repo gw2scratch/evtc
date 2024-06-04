@@ -308,6 +308,9 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					// Skorvald the Shattered is the same species in Challenge and Normal mode,
 					// unlike most other fractal CM encounters
 					return GetDefaultBuilder(encounter, mainTarget)
+						.WithResult(new AnyCombinedResultDeterminer(
+								new AgentKillingBlowDeterminer(mainTarget),
+								new BuffAppliedBelowHealthThresholdDeterminer(mainTarget, 0.9f, SkillIds.Determined895)))
 						.WithModes(new AgentHealthModeDeterminer(mainTarget, 5_550_000))
 						.Build();
 				}
