@@ -106,7 +106,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		public const int KanaxaiNM = 25572;
 		public const int KanaxaiCM = 25577;
 		// Lonely Tower
-		public const int LonelyTowerTEMP = 30000;
+		public const int Eparch = 26231;
 
 		// Festivals
 		public const int Freezie = 21333;

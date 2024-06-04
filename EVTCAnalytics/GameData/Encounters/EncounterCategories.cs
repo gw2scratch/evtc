@@ -51,7 +51,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 				{Encounter.AiKeeperOfThePeakNightOnly, EncounterCategory.FractalSunquaPeak},
 				{Encounter.AiKeeperOfThePeakDayAndNight, EncounterCategory.FractalSunquaPeak},
 				{Encounter.Kanaxai, EncounterCategory.FractalSilentSurf},
-				{Encounter.LonelyTowerTEMP, EncounterCategory.FractalLonelyTower},
+				{Encounter.Eparch, EncounterCategory.FractalLonelyTower},
 				{Encounter.Freezie, EncounterCategory.StrikeMissionFestival},
 				{Encounter.StandardKittyGolem, EncounterCategory.SpecialForcesTrainingArea},
 				{Encounter.MediumKittyGolem, EncounterCategory.SpecialForcesTrainingArea},

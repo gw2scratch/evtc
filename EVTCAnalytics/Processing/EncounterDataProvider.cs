@@ -655,6 +655,21 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 								finalFallbackMode: null))))
 						.Build();
 				}
+				case Encounter.Eparch:
+				{
+					return GetDefaultBuilder(encounter, mainTarget)
+						.WithResult(new AnyCombinedResultDeterminer(
+								new AgentKillingBlowDeterminer(mainTarget),
+								new BuffAppliedBelowHealthThresholdDeterminer(mainTarget, 0.2f, SkillIds.Determined)))
+						.WithModes(new ConditionalModeDeterminer(
+							(gameBuild != null && gameBuild < GameBuilds.LonelyTowerCMRelease,
+								new AgentHealthModeDeterminer(mainTarget, 31_000_000, EncounterMode.Normal)),
+							(true, new FallbackModeDeterminer(
+								new AgentHealthModeDeterminer(mainTarget, 18_000_000, EncounterMode.Normal),
+								new AgentHealthModeDeterminer(mainTarget, 32_000_000, EncounterMode.Challenge),
+								finalFallbackMode: null))))
+						.Build();
+				}
 				default:
 					return GetDefaultBuilder(encounter, mainTarget, mergeMainTarget: false).Build();
 			}

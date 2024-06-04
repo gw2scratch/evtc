@@ -92,7 +92,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 		Kanaxai = 10031,
 
 		// Fractals - Lonely Tower
-		LonelyTowerTEMP = 10041,
+		Eparch = 10041,
 
 		// Festivals - Wintersday
 		Freezie = 20001,
