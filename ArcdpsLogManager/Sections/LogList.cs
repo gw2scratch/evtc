@@ -322,29 +322,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 				HeaderText = "Duration",
 				DataCell = new TextBoxCell
 				{
-					Binding = new DelegateBinding<LogData, string>(x =>
-					{
-						if (x.ParsingStatus is ParsingStatus.Unparsed or ParsingStatus.Parsing)
-						{
-							// We don't want to make this wider than actual times.
-							return "?";
-						}
-
-						var separator = CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator;
-						var totalSeconds = x.EncounterDuration.TotalSeconds;
-						var minutes = (int)totalSeconds / 60;
-						var seconds = (int)totalSeconds % 60;
-						var milliseconds = (int)((totalSeconds - Math.Floor(totalSeconds)) * 1000);
-
-						if (minutes > 60)
-						{
-							var hours = minutes / 60;
-							minutes -= hours * 60;
-							return $"{hours}h {minutes:0}m {seconds}{separator}{milliseconds.ToString()[0]}s";
-						}
-
-						return $"{minutes:0}m {seconds}{separator}{milliseconds.ToString()[0]}s";
-					})
+					Binding = new DelegateBinding<LogData, string>(x => x.ShortDurationString)
 				}
 			};
 			gridView.Columns.Add(durationColumn);

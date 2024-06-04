@@ -6,13 +6,15 @@ This is the full changelog of the arcdps Log Manager.
 
 #### New features
 - Added encounter icons to log list for easier identification (thanks, @Linkaaaaa!)
+- Added an account name column in the log list; right-click to enable (thanks, @Linkaaaaa!)
+- 
 
 #### Changes
 - Organized Fractal encounters by scale in category filters (thanks, @Linkaaaaa!)
 
 #### Fixes
 - Fixed crashes happening at weekly reset and on the midnight of the day for some timezones.
-
+- Fixed encounter durations rounding to 1m60s.
 
 ## Log Manager v1.11.1
 

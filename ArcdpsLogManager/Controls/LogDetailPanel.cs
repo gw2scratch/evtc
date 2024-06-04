@@ -102,7 +102,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				}
 
 				double seconds = logData.EncounterDuration.TotalSeconds;
-				string duration = $"{(int) seconds / 60:0}m {seconds % 60:0.0}s";
+				string duration = logData.ShortDurationString;
 
 				fileNameButton.Text = System.IO.Path.GetFileName(logData.FileName);
 
