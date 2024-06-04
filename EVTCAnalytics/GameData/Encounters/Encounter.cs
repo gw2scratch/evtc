@@ -91,6 +91,9 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 		// Fractals - Silent Surf
 		Kanaxai = 10031,
 
+		// Fractals - Lonely Tower
+		Eparch = 10041,
+
 		// Festivals - Wintersday
 		Freezie = 20001,
 

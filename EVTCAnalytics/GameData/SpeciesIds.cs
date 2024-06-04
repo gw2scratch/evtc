@@ -105,6 +105,8 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		// Silent Surf
 		public const int KanaxaiNM = 25572;
 		public const int KanaxaiCM = 25577;
+		// Lonely Tower
+		public const int Eparch = 26231;
 
 		// Festivals
 		public const int Freezie = 21333;

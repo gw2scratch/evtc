@@ -29,6 +29,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters.Groups
 			{EncounterCategory.FractalShatteredObservatory, "Shattered Observatory" },
 			{EncounterCategory.FractalSunquaPeak, "Sunqua Peak" },
 			{EncounterCategory.FractalSilentSurf, "Silent Surf" },
+			{EncounterCategory.FractalLonelyTower, "Lonely Tower" },
 			{EncounterCategory.SpecialForcesTrainingArea, "Special Forces Training Area"},
 			{EncounterCategory.Other, "Uncategorized (PvE)"},
 			{EncounterCategory.Festival, "Festivals"},

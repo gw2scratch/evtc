@@ -11,7 +11,8 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		public static int AhdashimRelease = 97235;
 
 		/// <summary>
-		/// The release of Cosmic Observatory Challenge Mode, which revamped the health of the normal mode as well.
+		/// The release of Cosmic Observatory Challenge Mode, which revamped the health of the normal mode as well.<br></br>
+		/// https://wiki.guildwars2.com/wiki/Game_updates/2023-11-07
 		/// </summary>
 		public static int CosmicObservatoryCMRelease = 153978;
 		
@@ -22,5 +23,17 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		/// Note that there were more health changes to this encounter, make sure this is what you mean.
 		/// </remarks>
 		public static int TempleOfFebeHealthFix = 158968;
+
+		/// <summary>
+		/// Lonely Tower release, no challenge mode.<br></br>
+		/// https://wiki.guildwars2.com/wiki/Game_updates/2024-05-21
+		/// </summary>
+		public static int LonelyTowerRelease = 163141;
+
+		/// <summary>
+		/// Lonely Tower Challenge Mode release.<br></br>
+		/// https://wiki.guildwars2.com/wiki/Game_updates/2024-06-04
+		/// </summary>
+		public static int LonelyTowerCMRelease = 163807;
 	}
 }

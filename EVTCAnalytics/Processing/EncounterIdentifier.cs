@@ -172,6 +172,8 @@ public class EncounterIdentifier : IEncounterIdentifier
 					return Encounter.Kanaxai;
 				case SpeciesIds.KanaxaiCM:
 					return Encounter.Kanaxai;
+				case SpeciesIds.Eparch:
+					return Encounter.Eparch;
 				case SpeciesIds.Freezie:
 					return Encounter.Freezie;
 				case SpeciesIds.IcebroodConstruct:
@@ -323,6 +325,8 @@ public class EncounterIdentifier : IEncounterIdentifier
 				return new[] { Encounter.Kanaxai };
 			case SpeciesIds.KanaxaiCM:
 				return new[] { Encounter.Kanaxai };
+			case SpeciesIds.Eparch:
+				return new[] { Encounter.Eparch };
 			case SpeciesIds.Freezie:
 				return new[] { Encounter.Freezie };
 			case SpeciesIds.IcebroodConstruct:
