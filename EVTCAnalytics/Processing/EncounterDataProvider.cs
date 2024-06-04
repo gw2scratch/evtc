@@ -310,7 +310,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					return GetDefaultBuilder(encounter, mainTarget)
 						.WithResult(new AnyCombinedResultDeterminer(
 								new AgentKillingBlowDeterminer(mainTarget),
-								new BuffAppliedBelowHealthThresholdDeterminer(mainTarget, 0.9f, SkillIds.Determined895)))
+								new AgentBuffGainedDeterminer(mainTarget, SkillIds.Determined895)))
 						.WithModes(new AgentHealthModeDeterminer(mainTarget, 5_550_000))
 						.Build();
 				}
