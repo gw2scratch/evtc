@@ -330,8 +330,20 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 							return "?";
 						}
 
-						var seconds = x.EncounterDuration.TotalSeconds;
-						return $"{(int) seconds / 60:0}m {seconds % 60:00.0}s";
+						var separator = CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator;
+						var totalSeconds = x.EncounterDuration.TotalSeconds;
+						var minutes = (int)totalSeconds / 60;
+						var seconds = (int)totalSeconds % 60;
+						var milliseconds = (int)((totalSeconds - Math.Floor(totalSeconds)) * 1000);
+
+						if (minutes > 60)
+						{
+							var hours = minutes / 60;
+							minutes -= hours * 60;
+							return $"{hours}h {minutes:0}m {seconds}{separator}{milliseconds.ToString()[0]}s";
+						}
+
+						return $"{minutes:0}m {seconds}{separator}{milliseconds.ToString()[0]}s";
 					})
 				}
 			};
