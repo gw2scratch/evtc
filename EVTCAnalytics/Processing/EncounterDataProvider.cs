@@ -664,13 +664,9 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						.WithResult(new AnyCombinedResultDeterminer(
 								new AgentKillingBlowDeterminer(mainTarget),
 								new BuffAppliedBelowHealthThresholdDeterminer(mainTarget, 0.2f, SkillIds.Determined)))
-						.WithModes(new ConditionalModeDeterminer(
-							(gameBuild != null && gameBuild < GameBuilds.LonelyTowerCMRelease,
-								new AgentHealthModeDeterminer(mainTarget, 31_000_000, EncounterMode.Normal)),
-							(true, new FallbackModeDeterminer(
-								new AgentHealthModeDeterminer(mainTarget, 18_000_000, EncounterMode.Normal),
-								new AgentHealthModeDeterminer(mainTarget, 32_000_000, EncounterMode.Challenge),
-								finalFallbackMode: null))))
+						// On release, Eparch had 31,771,528 health in NM.
+						// On CM release, Eparch was reduced to 19,857,206 in NM and CM health is 32,618,906
+						.WithModes(new AgentHealthModeDeterminer(mainTarget, 31_800_000))
 						.Build();
 				}
 				default:

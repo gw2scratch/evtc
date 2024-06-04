@@ -5,6 +5,7 @@ This is the full changelog of the arcdps Log Manager.
 ## Log Manager v1.11.2 (unreleased)
 
 #### New features
+- Added support for Eparch in the Lonely Tower fractal (thanks, @Linkaaaaa!)
 - Added encounter icons to log list for easier identification (thanks, @Linkaaaaa!)
 - Added an account name column in the log list; right-click to enable (thanks, @Linkaaaaa!)
 

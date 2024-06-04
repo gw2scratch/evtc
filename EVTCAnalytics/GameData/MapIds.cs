@@ -23,6 +23,7 @@ public static class MapIds
 	public const int SilentSurf = 1500;
 	public const int CosmicObservatory = 1515;
 	public const int TempleOfFebe = 1520;
+	public const int LonelyTower = 1538;
 
 	public static bool IsRaidMap(int id)
 	{
