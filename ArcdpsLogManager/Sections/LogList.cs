@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using Eto.Drawing;
@@ -44,6 +45,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			{ "Instabilities", "Fractals of the Mists" },
 			{ "Scale", "Fractals of the Mists" },
 			{ "", "Encounter Icon" },
+			{ "dps.report", "Open log" },
 		};
 		
 		public bool ReadOnly { get; init; }
@@ -400,6 +402,41 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 					Binding = new DelegateBinding<LogData, string>(x => x.EvtcVersion)
 				}
 			});
+
+			var dpsReportColumn = new GridColumn()
+			{
+				HeaderText = "dps.report",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<LogData, string>(x => !string.IsNullOrEmpty(x.DpsReportEIUpload.Url) ? "🔗 Open" : "")
+				},
+			};
+
+			gridView.CellDoubleClick += (sender, args) =>
+			{
+				if (args.GridColumn == dpsReportColumn)
+				{
+					var data = (LogData)args.Item;
+
+					try
+					{
+						if (!string.IsNullOrEmpty(data.DpsReportEIUpload.Url))
+						{
+							Process.Start(new ProcessStartInfo
+							{
+								FileName = data.DpsReportEIUpload.Url,
+								UseShellExecute = true
+							});
+						}
+					}
+					catch (Exception ex)
+					{
+						MessageBox.Show($"Failed to open report: {ex.Message}");
+					}
+				}
+			};
+
+			gridView.Columns.Add(dpsReportColumn);
 
 			foreach (var column in gridView.Columns)
 			{
