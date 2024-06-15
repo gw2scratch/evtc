@@ -25,10 +25,26 @@ namespace GW2Scratch.EVTCAnalytics.Events
 	public class AgentEnterCombatEvent : AgentEvent
 	{
 		public int Subgroup { get; }
+		/// <summary>
+		/// The Profession of the agent; may be null.
+		/// </summary>
+		/// <remarks>
+		/// Introduced in EVTC20240612.
+		/// </remarks>
+		public Profession? Profession { get; }
+		/// <summary>
+		/// The Elite Specialization of the agent; may be null.
+		/// </summary>
+		/// <remarks>
+		/// Introduced in EVTC20240612.
+		/// </remarks>
+		public EliteSpecialization? EliteSpecialization { get; }
 
-		public AgentEnterCombatEvent(long time, Agent agent, int subgroup) : base(time, agent)
+		public AgentEnterCombatEvent(long time, Agent agent, int subgroup, Profession profession, EliteSpecialization eliteSpecialization) : base(time, agent)
 		{
 			Subgroup = subgroup;
+			Profession = profession;
+			EliteSpecialization = eliteSpecialization;
 		}
 	}
 

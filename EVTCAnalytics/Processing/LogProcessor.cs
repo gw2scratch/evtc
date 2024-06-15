@@ -935,8 +935,32 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				switch (item.IsStateChange)
 				{
 					case StateChange.EnterCombat:
-						return new AgentEnterCombatEvent(item.Time, GetAgentByAddress(item.SrcAgent),
-							(int) item.DstAgent);
+					{
+						int professionId = item.Value - 1;
+						int specializationId = item.BuffDmg;
+						Profession profession;
+
+						if (professionId < Professions.Length && professionId > 0)
+						{
+							profession = Professions[professionId];
+						}
+						else
+						{
+							profession = Profession.None;
+						}
+
+						EliteSpecialization specialization;
+						if (specializationId == 0)
+						{
+							specialization = EliteSpecialization.None;
+						}
+						else
+						{
+							specialization = Characters.GetEliteSpecializationFromId((uint) specializationId);
+						}
+
+						return new AgentEnterCombatEvent(item.Time, GetAgentByAddress(item.SrcAgent), (int) item.DstAgent, profession, specialization);
+					}
 					case StateChange.ExitCombat:
 						return new AgentExitCombatEvent(item.Time, GetAgentByAddress(item.SrcAgent));
 					case StateChange.ChangeUp:

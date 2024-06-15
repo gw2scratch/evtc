@@ -18,7 +18,8 @@ This is the full changelog of the arcdps Log Manager.
 - Fixed encounter durations rounding to 1m60s (thanks, @Linkaaaaa!).
 
 #### EVTC Inspector notes
-- Exact arcdps build is now shown in the Statistics tab for logs generated with arcdps from 2024-06-14 and newer.
+- Exact arcdps build is now shown in the Statistics tabs; requires arcdps 2024-06-14 or newer.
+- Added profession/elite specialization to AgentEnterCombatEvent (useful for mid-log specialization changes); requires arcdps 2024-06-12 or newer.
 
 ## Log Manager v1.11.1
 
