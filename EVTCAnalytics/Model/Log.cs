@@ -139,6 +139,14 @@ namespace GW2Scratch.EVTCAnalytics.Model
 		/// Introduced in arcdps 20200513.
 		/// </remarks>
 		public IReadOnlyList<LogError> Errors { get; }
+		
+		/// <summary>
+		/// Provides the full arcdps version string if available; may be null.
+		/// </summary>
+		/// <remarks>
+		/// Introduced in arcdps 20240614.
+		/// </remarks>
+		public string ArcdpsBuild { get; }
 
 		/// <summary>
 		/// Creates a new instance of a <see cref="Log"/>.
@@ -167,13 +175,14 @@ namespace GW2Scratch.EVTCAnalytics.Model
 			Markers = state.MarkersById.Values.OrderBy(x => x.Id).ToList();
 			Errors = state.Errors;
 			InstanceStart = state.InstanceStart;
+			ArcdpsBuild = state.ArcdpsBuild;
 		}
 
 		/// <summary>
 		/// Creates a new instance of a <see cref="Log"/> without requiring a <see cref="LogProcessorState"/>.
 		/// </summary>
 		internal Log(Agent mainTarget, LogType logType, IEnumerable<Event> events, IEnumerable<Agent> agents,
-			IEnumerable<Skill> skills, IEnumerable<Effect> effects, IEnumerable<Marker> markers, IEnumerable<LogError> errors,
+			IEnumerable<Skill> skills, IEnumerable<Effect> effects, IEnumerable<Marker> markers, IEnumerable<LogError> errors, string arcdpsBuild,
 			IEncounterData encounterData, GameLanguage gameLanguage, string evtcVersion, LogTime startTime,
 			LogTime endTime, Player pointOfView, int? language, int? gameBuild, int? gameShardId, int? mapId,
 			InstanceStart instanceStart, int? fractalScale)
@@ -192,6 +201,7 @@ namespace GW2Scratch.EVTCAnalytics.Model
 			MapId = mapId;
 			InstanceStart = instanceStart;
 			FractalScale = fractalScale;
+			ArcdpsBuild = arcdpsBuild;
 			Events = events as Event[] ?? events.ToArray();
 			Agents = agents as Agent[] ?? agents.ToArray();
 			Skills = skills as Skill[] ?? skills.ToArray();

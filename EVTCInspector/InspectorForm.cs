@@ -300,7 +300,8 @@ namespace GW2Scratch.EVTCInspector
 					processedLog.GameShardId,
 					processedLog.MapId,
 					processedLog.FractalScale,
-					processedLog.Errors
+					processedLog.Errors,
+					processedLog.ArcdpsBuild
 				);
 
 				var statsTime = sw.Elapsed;

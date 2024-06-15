@@ -849,6 +849,36 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				case StateChange.FractalScale:
 					state.FractalScale = (int) item.SrcAgent;
 					return;
+				case StateChange.ArcBuild:
+					// (char*)&src_agent is a null-terminated string matching the full build string in arcdps.log
+					Span<byte> build = stackalloc byte[64-8];
+					BitConverter.GetBytes(item.SrcAgent).CopyTo(build[0..8]);
+					BitConverter.GetBytes(item.DstAgent).CopyTo(build[8..16]);
+					BitConverter.GetBytes(item.Value).CopyTo(build[16..20]);
+					BitConverter.GetBytes(item.BuffDmg).CopyTo(build[20..24]);
+					BitConverter.GetBytes(item.OverstackValue).CopyTo(build[24..28]);
+					BitConverter.GetBytes(item.SkillId).CopyTo(build[28..32]);
+					BitConverter.GetBytes(item.SrcAgentId).CopyTo(build[32..34]);
+					BitConverter.GetBytes(item.DstAgentId).CopyTo(build[34..36]);
+					BitConverter.GetBytes(item.SrcMasterId).CopyTo(build[36..38]);
+					BitConverter.GetBytes(item.DstMasterId).CopyTo(build[38..40]);
+					build[40] = (byte)item.Iff;
+					build[41] = (byte)item.Buff;
+					build[42] = (byte)item.Result;
+					build[43] = (byte)item.IsActivation;
+					build[44] = (byte)item.IsBuffRemove;
+					build[45] = (byte)item.IsNinety;
+					build[46] = (byte)item.IsFifty;
+					build[47] = (byte)item.IsMoving;
+					build[48] = (byte)item.IsStateChange;
+					build[49] = (byte)item.IsFlanking;
+					build[50] = (byte)item.IsShields;
+					build[51] = (byte)item.IsOffCycle;
+					BitConverter.GetBytes(item.Padding).CopyTo(build[52..56]);
+					
+					var buildString = Encoding.UTF8.GetString(build).TrimEnd('\0');;
+					state.ArcdpsBuild = buildString;
+					return;
 				default:
 				{
 					var processedEvent = GetEvent(state, item);

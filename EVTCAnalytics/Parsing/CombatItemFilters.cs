@@ -2,6 +2,7 @@ using GW2Scratch.EVTCAnalytics.Events;
 using GW2Scratch.EVTCAnalytics.Parsed.Enums;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
@@ -530,6 +531,9 @@ public class CombatItemFilters : ICombatItemFilters
 			StateChange.ExtensionCombat => true,
 			StateChange.FractalScale => true,
 			StateChange.Effect2 => false,
+			StateChange.Ruleset => true,
+			StateChange.SquadMarker => true,
+			StateChange.ArcBuild => true,
 			_ => throw new ArgumentOutOfRangeException(nameof(stateChange), stateChange, null)
 		};
 	}

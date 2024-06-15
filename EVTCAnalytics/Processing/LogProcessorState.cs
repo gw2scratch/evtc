@@ -39,5 +39,6 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 		public bool AwareTimesSet { get; set; }
 		public bool MastersAssigned { get; set; }
 		public Agent MainTarget { get; set; }
+		public string ArcdpsBuild { get; set; }
 	}
 }

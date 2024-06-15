@@ -57,5 +57,8 @@
 		ExtensionCombat = 49, // Intended for extensions to indicate used skills for the skill table
 		FractalScale = 50,
 		Effect2 = 51, // Replaces Effect since 20230716
+		Ruleset = 52, // Added 20240328
+		SquadMarker = 53, // Added 20240328
+		ArcBuild = 54, // Added 20240614
 	};
 }
