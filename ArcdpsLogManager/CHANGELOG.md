@@ -17,6 +17,9 @@ This is the full changelog of the arcdps Log Manager.
 - Fixed a Skorvald false failure triggered when the group dies after he reaches 1% (thanks, @Linkaaaaa!)
 - Fixed encounter durations rounding to 1m60s (thanks, @Linkaaaaa!).
 
+#### EVTC Inspector notes
+- Exact arcdps build is now shown in the Statistics tab for logs generated with arcdps from 2024-06-14 and newer.
+
 ## Log Manager v1.11.1
 
 #### New features
