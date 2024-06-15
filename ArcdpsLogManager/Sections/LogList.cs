@@ -12,6 +12,7 @@ using GW2Scratch.ArcdpsLogManager.Gw2Api;
 using GW2Scratch.ArcdpsLogManager.Logs;
 using GW2Scratch.ArcdpsLogManager.Logs.Naming;
 using GW2Scratch.ArcdpsLogManager.Processing;
+using GW2Scratch.EVTCAnalytics.GameData.Encounters;
 using GW2Scratch.EVTCAnalytics.Model;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
@@ -163,9 +164,13 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 				{
 					args.Graphics.DrawImage(encounterIcon, rectangle);
 				}
-				if (wvwIcon != null)
+				else if (wvwIcon != null)
 				{
 					args.Graphics.DrawImage(wvwIcon, rectangle);
+				}
+				else if (log.Encounter == Encounter.Map)
+				{
+					args.Graphics.DrawImage(imageProvider.GetTinyInstanceIcon(), rectangle);
 				}
 			};
 
