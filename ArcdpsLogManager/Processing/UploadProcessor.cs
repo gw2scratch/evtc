@@ -33,6 +33,9 @@ namespace GW2Scratch.ArcdpsLogManager.Processing
 			public override async Task Upload(UploadProcessor processor, CancellationToken cancellationToken)
 			{
 				LogData.DpsReportEIUpload.UploadState = UploadState.Uploading;
+				LogData.DpsReportEIUpload.Url = null;
+				LogData.DpsReportEIUpload.ProcessingError = null;
+				LogData.DpsReportEIUpload.UploadError = null;
 
 				try
 				{
