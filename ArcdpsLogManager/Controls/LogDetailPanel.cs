@@ -347,7 +347,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 					
 					var dbusArgs = "--session --dest=org.freedesktop.FileManager1 " +
 						"--type=method_call /org/freedesktop/FileManager1 org.freedesktop.FileManager1.ShowItems " +
-						$"array:string:\"{logData.FileName}\" string:\"\"";
+						$"array:string:\"file://{logData.FileName}\" string:\"\"";
 					var dbusProcessInfo = new ProcessStartInfo()
 					{
 						FileName = "dbus-send",
