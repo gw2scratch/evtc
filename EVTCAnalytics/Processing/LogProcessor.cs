@@ -1271,6 +1271,43 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 
 						return new EffectStartEvent(item.Time, master, effect, aroundAgent, position, orientation, duration, trackableId);
 					}
+					case StateChange.SquadMarker:
+					{
+						// Squad ground marker
+						// src_agent: (float*)&src_agent is float[3], x/y/z of marker location. if values are all zero or infinity, this marker is removed
+						// skillid: index of marker eg. 0 is arrow
+						
+						// Position is only 12 bytes, but we also include the 4 unused extra bytes from DstAgent here for simplicity
+						Span<byte> positionBytes = stackalloc byte[16];
+						BitConverter.TryWriteBytes(positionBytes[0..8], item.SrcAgent);
+						BitConverter.TryWriteBytes(positionBytes[8..16], item.DstAgent);
+						
+						float[] position = new float[3];
+						position[0] = BitConverter.ToSingle(positionBytes[0..4]);
+						position[1] = BitConverter.ToSingle(positionBytes[4..8]);
+						position[2] = BitConverter.ToSingle(positionBytes[8..12]);
+						SquadMarkerType groundMarker = item.SkillId switch
+						{
+							0 => SquadMarkerType.Arrow,
+							1 => SquadMarkerType.Circle,
+							2 => SquadMarkerType.Heart,
+							3 => SquadMarkerType.Square,
+							4 => SquadMarkerType.Star,
+							5 => SquadMarkerType.Spiral,
+							6 => SquadMarkerType.Triangle,
+							7 => SquadMarkerType.X,
+							_ => SquadMarkerType.Unknown
+						};
+						
+						if (position.All(x => x == 0 || float.IsInfinity(x)))
+						{
+							return new SquadGroundMarkerRemoveEvent(item.Time, groundMarker);
+						}
+						else
+						{
+							return new SquadGroundMarkerPlaceEvent(item.Time, groundMarker, position);
+						}
+					}
 					default:
 						return new UnknownEvent(item.Time, item);
 				}
