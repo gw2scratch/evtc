@@ -13,6 +13,7 @@ This is the full changelog of the arcdps Log Manager.
 - Organized Fractal encounters by scale in category filters (thanks, @Linkaaaaa!)
 
 #### Fixes
+- Fixed upload button not being available for multiple selected logs if logs failed to be processed by dps.report
 - Fixed crashes happening at weekly reset and on the midnight of the day for some timezones.
 - Fixed a Skorvald false failure triggered when the group dies after he reaches 1% (thanks, @Linkaaaaa!)
 - Fixed encounter durations rounding to 1m60s (thanks, @Linkaaaaa!).
