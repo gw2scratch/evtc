@@ -53,8 +53,17 @@ namespace GW2Scratch.ArcdpsLogManager.Processing
 					}
 					else
 					{
-						LogData.DpsReportEIUpload.UploadState = UploadState.ProcessingError;
 						LogData.DpsReportEIUpload.ProcessingError = response.Error;
+						if (response.Permalink != null)
+						{
+							// With some errors, the upload may still go through.
+							LogData.DpsReportEIUpload.Url = response.Permalink;
+							LogData.DpsReportEIUpload.UploadState = UploadState.Uploaded;
+						}
+						else
+						{
+							LogData.DpsReportEIUpload.UploadState = UploadState.ProcessingError;
+						}
 					}
 				}
 				catch (Exception e)

@@ -46,6 +46,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 					layout.AddRow("dps.report upload state", logData.DpsReportEIUpload.UploadState.ToString());
 					layout.AddRow("dps.report upload time", logData.DpsReportEIUpload.UploadTime?.ToString(CultureInfo.InvariantCulture));
 					layout.AddRow("dps.report url", logData.DpsReportEIUpload.Url);
+					layout.AddRow("dps.report processing error", logData.DpsReportEIUpload.ProcessingError);
 					if (logData.ParsingStatus == ParsingStatus.Failed)
 					{
 						layout.EndVertical();
