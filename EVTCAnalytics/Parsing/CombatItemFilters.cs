@@ -263,6 +263,10 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(StartSkillCastEvent)) return Array.Empty<StateChange>();
 		if (eventType == typeof(ResetSkillCastEvent)) return Array.Empty<StateChange>();
 
+		if (eventType == typeof(SquadGroundMarkerEvent)) return Array.Empty<StateChange>();
+		if (eventType == typeof(SquadGroundMarkerPlaceEvent)) return [StateChange.SquadMarker];
+		if (eventType == typeof(SquadGroundMarkerRemoveEvent)) return [StateChange.SquadMarker];
+
 		// The unknown event can come from any state change, including not yet implemented ones,
 		// so we need to return all of them.
 		Debug.Assert(Enum.GetUnderlyingType(typeof(StateChange)) == typeof(byte));
@@ -329,6 +333,10 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(StartSkillCastEvent)) return false;
 		if (eventType == typeof(ResetSkillCastEvent)) return false;
 
+		if (eventType == typeof(SquadGroundMarkerEvent)) return false;
+		if (eventType == typeof(SquadGroundMarkerPlaceEvent)) return false;
+		if (eventType == typeof(SquadGroundMarkerRemoveEvent)) return false;
+
 		// The unknown event can come from anything
 		if (eventType == typeof(UnknownEvent)) return true;
 
@@ -392,6 +400,10 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(EndSkillCastEvent)) return true;
 		if (eventType == typeof(StartSkillCastEvent)) return true;
 		if (eventType == typeof(ResetSkillCastEvent)) return true;
+		
+		if (eventType == typeof(SquadGroundMarkerEvent)) return false;
+		if (eventType == typeof(SquadGroundMarkerPlaceEvent)) return false;
+		if (eventType == typeof(SquadGroundMarkerRemoveEvent)) return false;
 
 		// The unknown event can come from anything
 		if (eventType == typeof(UnknownEvent)) return true;
@@ -456,6 +468,10 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(EndSkillCastEvent)) return Array.Empty<Result>();
 		if (eventType == typeof(StartSkillCastEvent)) return Array.Empty<Result>();
 		if (eventType == typeof(ResetSkillCastEvent)) return Array.Empty<Result>();
+
+		if (eventType == typeof(SquadGroundMarkerEvent)) return Array.Empty<Result>();
+		if (eventType == typeof(SquadGroundMarkerPlaceEvent)) return Array.Empty<Result>();
+		if (eventType == typeof(SquadGroundMarkerRemoveEvent)) return Array.Empty<Result>();
 
 		// The unknown event can come from any result, including not yet implemented ones,
 		// so we need to return all of them.
