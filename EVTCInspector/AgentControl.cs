@@ -43,8 +43,8 @@ namespace GW2Scratch.EVTCInspector
 		private readonly Label nameLabel = new Label();
 		private ICollection<Event> events;
 		private readonly EventListControl eventListControl;
-		private readonly CheckBox eventFilterAttackerCheckBox;
-		private readonly CheckBox eventFilterDefenderCheckBox;
+		private readonly CheckBox eventFilterSourceCheckBox;
+		private readonly CheckBox eventFilterTargetCheckBox;
 
 		public AgentControl()
 		{
@@ -59,10 +59,10 @@ namespace GW2Scratch.EVTCInspector
 			agentJsonControl = new JsonSerializationControl {Height = 200};
 			eventListControl = new EventListControl();
 
-			eventFilterAttackerCheckBox = new CheckBox() {Text = "Damage events where agent is attacker", Checked = true};
-			eventFilterDefenderCheckBox = new CheckBox() {Text = "Damage events where agent is defender", Checked = true};
-			eventFilterAttackerCheckBox.CheckedChanged += (s, e) => UpdateEventList();
-			eventFilterDefenderCheckBox.CheckedChanged += (s, e) => UpdateEventList();
+			eventFilterSourceCheckBox = new CheckBox() {Text = "Events where agent is source (attacker, buff applier, caused effect)", Checked = true};
+			eventFilterTargetCheckBox = new CheckBox() {Text = "Events where agent is target (defender, receiving buffs, affected by effect)", Checked = true};
+			eventFilterSourceCheckBox.CheckedChanged += (s, e) => UpdateEventList();
+			eventFilterTargetCheckBox.CheckedChanged += (s, e) => UpdateEventList();
 
 			agentDataLayout.BeginVertical(new Padding(5));
 			agentDataLayout.AddRow(nameLabel);
@@ -70,7 +70,8 @@ namespace GW2Scratch.EVTCInspector
 			agentDataLayout.EndVertical();
 
 			eventLayout.BeginVertical(new Padding(5));
-			eventLayout.AddRow(eventFilterAttackerCheckBox, eventFilterDefenderCheckBox);
+			eventLayout.AddRow(eventFilterSourceCheckBox);
+			eventLayout.AddRow(eventFilterTargetCheckBox);
 			eventLayout.EndVertical();
 			eventLayout.BeginGroup("Events featuring the agent", new Padding(5));
 			eventLayout.Add(eventListControl);
@@ -85,7 +86,7 @@ namespace GW2Scratch.EVTCInspector
 			}
 			else
 			{
-				eventListControl.Events = events.Where(x => EventFilters.IsAgentInEvent(x, agent, eventFilterAttackerCheckBox.Checked.Value, eventFilterDefenderCheckBox.Checked.Value)).ToArray();
+				eventListControl.Events = events.Where(x => EventFilters.IsAgentInEvent(x, agent, eventFilterSourceCheckBox.Checked.Value, eventFilterTargetCheckBox.Checked.Value)).ToArray();
 			}
 			eventListControl.TimeOfOldestEvent = events.Where(x => x is not UnknownEvent).Select(x => x.Time).DefaultIfEmpty().Min();
 		}

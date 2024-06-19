@@ -39,22 +39,42 @@ namespace GW2Scratch.EVTCInspector
 			return true;
 		}
 
-		public static bool IsAgentInEvent(Event ev, Agent agent, bool ifAttacker = true, bool ifDefender = true)
+		public static bool IsAgentInEvent(Event ev, Agent agent, bool ifSource = true, bool ifTarget = true)
 		{
+			if (ev is BuffEvent buffEvent)
+			{
+				var source = buffEvent.SourceAgent;
+				var target = buffEvent.Agent;
+				return (ifSource && agent == source) || (ifTarget && agent == target);
+			}
+
+			if (ev is EffectEvent effectEvent)
+			{
+				var source = effectEvent.EffectOwner;
+				var target = effectEvent.AgentTarget;
+				return (ifSource && agent == source) || (ifTarget && agent == target);
+			}
+
+			if (ev is EffectStartEvent effectStartEvent)
+			{
+				var source = effectStartEvent.EffectOwner;
+				var target = effectStartEvent.AgentTarget;
+				return (ifSource && agent == source) || (ifTarget && agent == target);
+			}
+
 			if (ev is AgentEvent agentEvent)
 			{
 				return agentEvent.Agent == agent;
 			}
-			else if (ev is DamageEvent damageEvent)
+
+			if (ev is DamageEvent damageEvent)
 			{
-				var attacker = damageEvent.Attacker;
-				var defender = damageEvent.Defender;
-				return (ifAttacker && agent == attacker) || (ifDefender && agent == defender);
+				var source = damageEvent.Attacker;
+				var target = damageEvent.Defender;
+				return (ifSource && agent == source) || (ifTarget && agent == target);
 			}
-			else
-			{
-				return false;
-			}
+
+			return false;
 		}
 
 		public static bool IsTypeName(Event ev, string eventName)
