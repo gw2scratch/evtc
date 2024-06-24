@@ -205,6 +205,9 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Updates
 			                     && log.Encounter == Encounter.Other
 								 && log.MapId == MapIds.LonelyTower,
 				"Added support for Eparch in the Lonely Tower fractal"),
+			new LogUpdate(log => log.ParsingVersion < new Version(1, 11, 1, 5)
+								&& log.Encounter == Encounter.SoullessHorror, 
+				"Fix detection for Soulless Horror in case the encounter resets before all players are dead.")
 			// When adding a new update, you need to increase the revision (last value) of the version in the .csproj file
 			// unless the version changes more significantly, in that case it can be reset to 0.
 		};
