@@ -237,6 +237,8 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(EffectEvent)) return new[] { StateChange.Effect };
 		if (eventType == typeof(EffectStartEvent)) return new[] { StateChange.Effect2 };
 		if (eventType == typeof(EffectEndEvent)) return new[] { StateChange.Effect2 };
+		if (eventType == typeof(AgentGliderOpenEvent)) return new[] { StateChange.Glider };
+		if (eventType == typeof(AgentGliderCloseEvent)) return new[] { StateChange.Glider };
 
 		if (eventType == typeof(BuffEvent)) return Array.Empty<StateChange>();
 		if (eventType == typeof(BuffRemoveEvent)) return Array.Empty<StateChange>();
@@ -307,6 +309,8 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(EffectEvent)) return false;
 		if (eventType == typeof(EffectStartEvent)) return false;
 		if (eventType == typeof(EffectEndEvent)) return false;
+		if (eventType == typeof(AgentGliderOpenEvent)) return false;
+		if (eventType == typeof(AgentGliderCloseEvent)) return false;
 
 		if (eventType == typeof(BuffEvent)) return false;
 		if (eventType == typeof(BuffRemoveEvent)) return false;
@@ -375,6 +379,8 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(EffectEvent)) return false;
 		if (eventType == typeof(EffectStartEvent)) return false;
 		if (eventType == typeof(EffectEndEvent)) return false;
+		if (eventType == typeof(AgentGliderOpenEvent)) return false;
+		if (eventType == typeof(AgentGliderCloseEvent)) return false;
 
 		if (eventType == typeof(BuffEvent)) return false;
 		if (eventType == typeof(BuffRemoveEvent)) return false;
@@ -443,6 +449,8 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(EffectEvent)) return Array.Empty<Result>();
 		if (eventType == typeof(EffectStartEvent)) return Array.Empty<Result>();
 		if (eventType == typeof(EffectEndEvent)) return Array.Empty<Result>();
+		if (eventType == typeof(AgentGliderOpenEvent)) return Array.Empty<Result>();
+		if (eventType == typeof(AgentGliderCloseEvent)) return Array.Empty<Result>();
 
 		if (eventType == typeof(BuffEvent)) return Array.Empty<Result>();
 		if (eventType == typeof(BuffRemoveEvent)) return Array.Empty<Result>();
