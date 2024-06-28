@@ -5,40 +5,6 @@ namespace GW2Scratch.EVTCInspector
 {
 	public static class EventFilters
 	{
-		public static bool IsAgentInEvent(Event ev, string agentName)
-		{
-			if (!string.IsNullOrWhiteSpace(agentName))
-			{
-				if (ev is AgentEvent agentEvent)
-				{
-					var agent = agentEvent.Agent;
-					if (agent == null)
-					{
-						return false;
-					}
-
-					return agent.Name.Contains(agentName);
-				}
-				else if (ev is DamageEvent damageEvent)
-				{
-					var attacker = damageEvent.Attacker;
-					var defender = damageEvent.Defender;
-					if (attacker == null || defender == null)
-					{
-						return false;
-					}
-
-					return attacker.Name.Contains(agentName) || defender.Name.Contains(agentName);
-				}
-				else
-				{
-					return false;
-				}
-			}
-
-			return true;
-		}
-
 		public static bool IsAgentInEvent(Event ev, Agent agent, bool ifSource = true, bool ifTarget = true)
 		{
 			if (ev is BuffEvent buffEvent)
@@ -71,6 +37,13 @@ namespace GW2Scratch.EVTCInspector
 			{
 				var source = damageEvent.Attacker;
 				var target = damageEvent.Defender;
+				return (ifSource && agent == source) || (ifTarget && agent == target);
+			}
+
+			if (ev is CrowdControlEvent crowdControlEvent)
+			{
+				var source = crowdControlEvent.Attacker;
+				var target = crowdControlEvent.Defender;
 				return (ifSource && agent == source) || (ifTarget && agent == target);
 			}
 

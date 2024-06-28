@@ -262,6 +262,8 @@ public class CombatItemFilters : ICombatItemFilters
 
 		if (eventType == typeof(RewardEvent)) return [StateChange.Reward];
 
+		if (eventType == typeof(CrowdControlEvent)) return [];
+
 		if (eventType == typeof(SkillCastEvent)) return [];
 		if (eventType == typeof(EndSkillCastEvent)) return [];
 		if (eventType == typeof(StartSkillCastEvent)) return [];
@@ -332,6 +334,8 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(OffCycleBuffDamageEvent)) return true;
 		if (eventType == typeof(DefianceBarDamageEvent)) return false; // This is a physical event, even "soft CC".
 
+		if (eventType == typeof(CrowdControlEvent)) return false;
+		
 		if (eventType == typeof(RewardEvent)) return false;
 
 		if (eventType == typeof(SkillCastEvent)) return false;
@@ -401,6 +405,8 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(BuffDamageEvent)) return false;
 		if (eventType == typeof(OffCycleBuffDamageEvent)) return false;
 		if (eventType == typeof(DefianceBarDamageEvent)) return false;
+		
+		if (eventType == typeof(CrowdControlEvent)) return false;
 
 		if (eventType == typeof(RewardEvent)) return false;
 
@@ -471,6 +477,8 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(BuffDamageEvent)) return [];
 		if (eventType == typeof(OffCycleBuffDamageEvent)) return [];
 		if (eventType == typeof(DefianceBarDamageEvent)) return [Result.DefianceBar];
+		
+		if (eventType == typeof(CrowdControlEvent)) return [Result.CrowdControl];
 
 		if (eventType == typeof(RewardEvent)) return [];
 

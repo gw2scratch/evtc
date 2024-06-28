@@ -1433,6 +1433,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				// TODO: Rewrite
 				bool ignored = false;
 				bool defianceBar = false;
+				bool crowdControl = false;
 				var hitResult = PhysicalDamageEvent.Result.Normal;
 				var ignoreReason = IgnoredPhysicalDamageEvent.Reason.Absorbed;
 				switch (item.Result)
@@ -1474,28 +1475,25 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					case Result.DefianceBar:
 						defianceBar = true;
 						break;
+					case Result.CrowdControl:
+						crowdControl = true;
+						break;
 					default:
 						return new UnknownEvent(item.Time, item);
 				}
 
-				if (!defianceBar)
+				return (defianceBar, crowdControl, ignored) switch
 				{
-					if (!ignored)
-					{
-						return new PhysicalDamageEvent(item.Time, attacker, defender, skill, damage, isMoving,
-							isNinety, isFlanking, shieldDamage, hitResult);
-					}
-					else
-					{
-						return new IgnoredPhysicalDamageEvent(item.Time, attacker, defender, skill, damage,
-							isMoving, isNinety, isFlanking, shieldDamage, ignoreReason);
-					}
-				}
-				else
-				{
-					return new DefianceBarDamageEvent(item.Time, attacker, defender, skill, damage, isMoving,
-						isNinety, isFlanking);
-				}
+					(true, true, true) => throw new InvalidOperationException(),
+					(true, true, false) => throw new InvalidOperationException(),
+					(true, false, false) => new DefianceBarDamageEvent(item.Time, attacker, defender, skill, damage, isMoving, isNinety, isFlanking),
+					(true, false, true) => throw new InvalidOperationException(),
+					(false, true, false) => new CrowdControlEvent(item.Time, attacker, defender, skill, isMoving, isNinety, isFlanking),
+					(false, true, true) => throw new InvalidOperationException(),
+					(false, false, false) => new PhysicalDamageEvent(item.Time, attacker, defender, skill, damage, isMoving,
+							isNinety, isFlanking, shieldDamage, hitResult),
+					(false, false, true) => new IgnoredPhysicalDamageEvent(item.Time, attacker, defender, skill, damage, isMoving, isNinety, isFlanking, shieldDamage, ignoreReason)
+				};
 			}
 
 			return new UnknownEvent(item.Time, item);

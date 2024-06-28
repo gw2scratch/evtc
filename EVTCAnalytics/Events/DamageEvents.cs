@@ -157,4 +157,25 @@ namespace GW2Scratch.EVTCAnalytics.Events
 		public bool IsNinety { get; } = isNinety;
 		public bool IsFlanking { get; } = isFlanking;
 	}
+
+	/// <summary>
+	/// A crowd control event affecting an enemy without a defiance bar.
+	/// </summary>
+	public class CrowdControlEvent(
+		long time,
+		Agent attacker,
+		Agent defender,
+		Skill skill,
+		bool isMoving,
+		bool isNinety,
+		bool isFlanking)
+		: Event(time)
+	{
+		public Skill Skill { get; } = skill;
+		public Agent Attacker { get; internal set; } = attacker;
+		public Agent Defender { get; internal set; } = defender;
+		public bool IsMoving { get; } = isMoving;
+		public bool IsNinety { get; } = isNinety;
+		public bool IsFlanking { get; } = isFlanking;
+	}
 }

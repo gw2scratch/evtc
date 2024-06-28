@@ -92,6 +92,19 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Steps
 						damageEvent.Defender = resultingAgent;
 					}
 				}
+
+				if (ev is CrowdControlEvent crowdControlEvent)
+				{
+					if (agentsToMerge.Contains(crowdControlEvent.Attacker))
+					{
+						crowdControlEvent.Attacker = resultingAgent;
+					}
+
+					if (agentsToMerge.Contains(crowdControlEvent.Defender))
+					{
+						crowdControlEvent.Defender = resultingAgent;
+					}
+				}
 				
 				if (ev is EffectStartEvent effectStartEvent)
 				{
