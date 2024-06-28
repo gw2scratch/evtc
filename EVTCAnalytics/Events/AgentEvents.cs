@@ -90,9 +90,13 @@ namespace GW2Scratch.EVTCAnalytics.Events
 	/// A weapon set does not necessarily correspond to what players use the weapon swap action for.
 	/// Swapping to a bundle that provides a set of skills will also trigger this event.
 	/// </remarks>
-	public class AgentWeaponSwapEvent(long time, Agent agent, WeaponSet newWeaponSet) : AgentEvent(time, agent)
+	public class AgentWeaponSwapEvent(long time, Agent agent, WeaponSet newWeaponSet, WeaponSet? oldWeaponSet) : AgentEvent(time, agent)
 	{
 		public WeaponSet NewWeaponSet { get; } = newWeaponSet;
+		/// <summary>
+		/// Introduced in EVTC20240627. May be null before.
+		/// </summary>
+		public WeaponSet? OldWeaponSet { get; } = oldWeaponSet;
 	}
 
 	/// <summary>

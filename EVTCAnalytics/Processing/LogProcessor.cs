@@ -978,31 +978,25 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						return new AgentHealthUpdateEvent(item.Time, GetAgentByAddress(item.SrcAgent),
 							healthFraction);
 					case StateChange.WeaponSwap:
-						WeaponSet newWeaponSet;
-						switch (item.DstAgent)
+						static WeaponSet WeaponSetFromId(long id)
 						{
-							case 0:
-								newWeaponSet = WeaponSet.Water1;
-								break;
-							case 1:
-								newWeaponSet = WeaponSet.Water2;
-								break;
-							case 4:
-								newWeaponSet = WeaponSet.Land1;
-								break;
-							case 5:
-								newWeaponSet = WeaponSet.Land2;
-								break;
-							default:
-								newWeaponSet = WeaponSet.Unknown;
-								break;
+							return id switch
+							{
+								0 => WeaponSet.Water1,
+								1 => WeaponSet.Water2,
+								4 => WeaponSet.Land1,
+								5 => WeaponSet.Land2,
+								_ => WeaponSet.Unknown
+							};
 						}
 
-						return new AgentWeaponSwapEvent(item.Time, GetAgentByAddress(item.SrcAgent),
-							newWeaponSet);
+						WeaponSet newWeaponSet = WeaponSetFromId((long) item.DstAgent);
+						bool isOldWeaponSetAvailable = string.Compare(state.EvtcVersion, "EVTC20240627", StringComparison.OrdinalIgnoreCase) >= 0;
+						WeaponSet? oldWeaponSet = isOldWeaponSetAvailable ? WeaponSetFromId(item.Value) : null;
+
+						return new AgentWeaponSwapEvent(item.Time, GetAgentByAddress(item.SrcAgent), newWeaponSet, oldWeaponSet);
 					case StateChange.MaxHealthUpdate:
-						return new AgentMaxHealthUpdateEvent(item.Time, GetAgentByAddress(item.SrcAgent),
-							item.DstAgent);
+						return new AgentMaxHealthUpdateEvent(item.Time, GetAgentByAddress(item.SrcAgent), item.DstAgent);
 					case StateChange.Reward:
 						return new RewardEvent(item.Time, item.DstAgent, item.Value);
 					case StateChange.BuffInitial:

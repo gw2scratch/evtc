@@ -25,6 +25,7 @@ This is the full changelog of the arcdps Log Manager.
 - Added SquadGroundMarkerPlace and SquadGroundMarkerRemove events; requires arcdps 2024-03-28 or newer.
 - Added AgentGliderOpenEvent and AgentGliderClosedEvent; requires arcdps 2024-06-27 or newer.
 - Exact arcdps build is now shown in the Statistics tabs; requires arcdps 2024-06-14 or newer.
+- Added old weapon set to AgentWeaponSwapEvent; requires arcdps 2024-06-27 or newer.
 
 ## Log Manager v1.11.1
 
