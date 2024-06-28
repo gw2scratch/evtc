@@ -548,8 +548,9 @@ public class CombatItemFilters : ICombatItemFilters
 			StateChange.FractalScale => true,
 			StateChange.Effect2 => false,
 			StateChange.Ruleset => true,
-			StateChange.SquadMarker => true,
+			StateChange.SquadMarker => false,
 			StateChange.ArcBuild => true,
+			StateChange.Glider => false,
 			_ => throw new ArgumentOutOfRangeException(nameof(stateChange), stateChange, null)
 		};
 	}

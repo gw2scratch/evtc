@@ -1308,6 +1308,15 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 							return new SquadGroundMarkerPlaceEvent(item.Time, groundMarker, position);
 						}
 					}
+					case StateChange.Glider:
+					{
+						return item.Value switch
+						{
+							0 => new AgentGliderCloseEvent(item.Time, GetAgentByAddress(item.SrcAgent)),
+							1 => new AgentGliderOpenEvent(item.Time, GetAgentByAddress(item.SrcAgent)),
+							_ => new UnknownEvent(item.Time, item)
+						};
+					}
 					default:
 						return new UnknownEvent(item.Time, item);
 				}

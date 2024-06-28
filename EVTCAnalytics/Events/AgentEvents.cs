@@ -409,7 +409,7 @@ namespace GW2Scratch.EVTCAnalytics.Events
 	/// An event specifying that an effect was created.
 	/// </summary>
 	/// <remarks>
-	/// Introduced in EVTC20220602.
+	/// Introduced in EVTC20230718.
 	/// </remarks>
 	public class EffectStartEvent : AgentEvent
 	{
@@ -466,7 +466,7 @@ namespace GW2Scratch.EVTCAnalytics.Events
 	/// An event specifying that an effect ended.
 	/// </summary>
 	/// <remarks>
-	/// Introduced in EVTC20220602.
+	/// Introduced in EVTC20230718.
 	/// </remarks>
 	public class EffectEndEvent : Event
 	{
@@ -480,4 +480,19 @@ namespace GW2Scratch.EVTCAnalytics.Events
 			TrackableId = trackableId;
 		}
 	}
+
+	/// <summary>
+	/// Indicates that an agent opened their glider.
+	/// </summary>
+	/// <remarks>
+	/// Introduced in EVTC20240627.
+	/// </remarks>
+	public class AgentGliderOpenEvent(long time, Agent agent) : AgentEvent(time, agent);
+	/// <summary>
+	/// Indicates that an agent closed their glider.
+	/// </summary>
+	/// <remarks>
+	/// Introduced in EVTC20240627.
+	/// </remarks>
+	public class AgentGliderCloseEvent(long time, Agent agent) : AgentEvent(time, agent);
 }
