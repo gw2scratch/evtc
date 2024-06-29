@@ -205,12 +205,24 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				// Raids - Wing 5
 				case Encounter.SoullessHorror:
 				{
-					return GetDefaultBuilder(encounter, mainTarget)
-						.WithResult(new AgentBuffGainedDeterminer(mainTarget, SkillIds.SoullessHorrorDetermined))
+					var soullessHorror = GetTargetBySpeciesId(agents, SpeciesIds.SoullessHorror);
+					var desmina = GetTargetBySpeciesId(agents, SpeciesIds.Desmina);
+
+					var targets = new Agent[] { soullessHorror, desmina }.Where(x => x != null).ToList();
+
+					return GetDefaultBuilder(encounter, targets)
+						.WithResult(new ConditionalResultDeterminer(
+							(desmina == null, new ConstantResultDeterminer(EncounterResult.Failure)),
+							(soullessHorror != null && desmina != null, new AllCombinedResultDeterminer(
+								new AgentBuffGainedDeterminer(soullessHorror, SkillIds.SoullessHorrorDetermined),
+								new NPCSpawnDeterminer(SpeciesIds.Desmina)
+							))
+						))
 						// Necrosis is applied faster in Challenge Mode. It is first removed and then reapplied
 						// so we check the remaining time of the removed buff.
 						.WithModes(new RemovedBuffStackRemainingTimeModeDeterminer(SkillIds.Necrosis,
 							EncounterMode.Challenge, 23000, EncounterMode.Normal, 18000))
+						.WithTargets(targets)
 						.Build();
 				}
 				case Encounter.RiverOfSouls:
