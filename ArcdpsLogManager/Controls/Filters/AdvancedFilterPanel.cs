@@ -129,6 +129,13 @@ namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 				layout.Add(queuedCheckBox);
 				layout.Add(uploadFailedCheckBox);
 				layout.Add(processingFailedCheckBox);
+				// TODO: Overhaul filtering to account for this state:
+				layout.Add(new Label
+				{
+					Width = 400,
+					Text = "Note: Currently, some logs in the processing failed state may have URLs when dps.report reports an error, but also provides an URL to the uploaded report.",
+					Wrap = WrapMode.Word,
+				});
 				layout.Add(null);
 			}
 			layout.EndVertical();
