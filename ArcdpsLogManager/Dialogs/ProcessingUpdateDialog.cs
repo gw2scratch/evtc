@@ -22,6 +22,7 @@ namespace GW2Scratch.ArcdpsLogManager.Dialogs
 				{
 					layout.AddRow(new Label
 					{
+						Width = 600,
 						Text = "This new version of the log manager brings improvements for processing some of the logs. " +
 						       "They have to be processed again to correctly update the data. " +
 						       "Affected logs are listed below. Do you wish to do so now?",
