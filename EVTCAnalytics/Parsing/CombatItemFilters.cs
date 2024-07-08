@@ -451,7 +451,7 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(AgentWeaponSwapEvent)) return [];
 		if (eventType == typeof(AgentMaxHealthUpdateEvent)) return [];
 		if (eventType == typeof(AgentMarkerEvent)) return [];
-		if (eventType == typeof(AgentMarkerEvent)) return [];
+		if (eventType == typeof(AgentMarkerRemoveAllEvent)) return [];
 		if (eventType == typeof(InitialBuffEvent)) return [];
 		if (eventType == typeof(PositionChangeEvent)) return [];
 		if (eventType == typeof(VelocityChangeEvent)) return [];
