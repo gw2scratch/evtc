@@ -108,12 +108,12 @@ namespace GW2Scratch.EVTCAnalytics.Events
 	}
 
 	/// <summary>
-	/// An event specifying that an <see cref="Agent"/> has a tag. Typically a <see cref="Player"/> with a Commander tag.
+	/// An event specifying that an <see cref="Agent"/> has a tag. Typically, a <see cref="Player"/> with a Commander tag.
 	/// </summary>
 	/// <remarks>
-	/// Introduced in EVTC20200609.
+	/// Introduced in EVTC20200609. 20240328
 	/// </remarks>
-	public class AgentTagEvent(long time, Agent agent, Marker marker, bool? isCommander)
+	public class AgentMarkerEvent(long time, Agent agent, Marker marker, bool? isCommander)
 		: AgentEvent(time, agent)
 	{
 		public Marker Marker { get; } = marker;

@@ -44,7 +44,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		private LogFinder LogFinder { get; } = new LogFinder();
 
 		private LogAnalytics LogAnalytics { get; } = new LogAnalytics(
-			new EVTCParser() { SinglePassFilteringOptions = { PruneForEncounterData = true, ExtraRequiredEventTypes = new [] {typeof(AgentTagEvent) }} },
+			new EVTCParser() { SinglePassFilteringOptions = { PruneForEncounterData = true, ExtraRequiredEventTypes = new [] {typeof(AgentMarkerEvent) }} },
 			new LogProcessor(),
 			new FractalInstabilityDetector(),
 			log => new LogAnalyzer(log)

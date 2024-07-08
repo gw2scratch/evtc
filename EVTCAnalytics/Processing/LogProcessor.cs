@@ -1100,7 +1100,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 							false => null,
 						};
 						
-						return new AgentTagEvent(item.Time, GetAgentByAddress(item.SrcAgent), marker, isCommander);
+						return new AgentMarkerEvent(item.Time, GetAgentByAddress(item.SrcAgent), marker, isCommander);
 					case StateChange.BarrierUpdate:
 						var barrierFraction = item.DstAgent / 10000f;
 						return new BarrierUpdateEvent(item.Time, GetAgentByAddress(item.SrcAgent), barrierFraction);

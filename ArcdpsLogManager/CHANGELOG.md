@@ -14,6 +14,7 @@ This is the full changelog of the arcdps Log Manager.
 
 #### Fixes
 - Fixed urls for some logs not being shown after uploading to dps.report (with error `File had invalid agents. Please update arcdps`).
+- Fixed commander tag identification for fights where multiple overhead markers are used.
 - Fixed upload button not being available for multiple selected logs if logs failed to be processed by dps.report
 - Fixed crashes happening at weekly reset and on the midnight of the day for some timezones.
 - Fixed a Skorvald false failure triggered when the group dies after he reaches 1% (thanks, @Linkaaaaa!)

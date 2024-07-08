@@ -12,7 +12,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Updates
 {
 	public class LogDataUpdater
 	{
-		public static readonly IReadOnlyList<LogUpdate> Updates = new List<LogUpdate>()
+		private static readonly IReadOnlyList<LogUpdate> Updates = new List<LogUpdate>()
 		{
 			new LogUpdate(log => log.ParsingVersion < new Version(0, 7, 1)
 			                     && log.Encounter == Encounter.TwinLargos
@@ -205,6 +205,9 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Updates
 			                     && log.Encounter == Encounter.Other
 								 && log.MapId == MapIds.LonelyTower,
 				"Added support for Eparch in the Lonely Tower fractal"),
+			new LogUpdate(log => log.ParsingVersion < new Version(1, 11, 1, 5)
+			                     && log.Players.Count(x => x.Tag == PlayerTag.Commander) > 1,
+				"Fixed commander tag detection"),
 			// When adding a new update, you need to increase the revision (last value) of the version in the .csproj file
 			// unless the version changes more significantly, in that case it can be reset to 0.
 		};

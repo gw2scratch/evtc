@@ -226,7 +226,7 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(AgentHealthUpdateEvent)) return [StateChange.HealthUpdate];
 		if (eventType == typeof(AgentWeaponSwapEvent)) return [StateChange.WeaponSwap];
 		if (eventType == typeof(AgentMaxHealthUpdateEvent)) return [StateChange.MaxHealthUpdate];
-		if (eventType == typeof(AgentTagEvent)) return [StateChange.Tag];
+		if (eventType == typeof(AgentMarkerEvent)) return [StateChange.Tag];
 		if (eventType == typeof(InitialBuffEvent)) return [StateChange.BuffInitial];
 		if (eventType == typeof(PositionChangeEvent)) return [StateChange.Position];
 		if (eventType == typeof(VelocityChangeEvent)) return [StateChange.Velocity];
@@ -300,7 +300,7 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(AgentHealthUpdateEvent)) return false;
 		if (eventType == typeof(AgentWeaponSwapEvent)) return false;
 		if (eventType == typeof(AgentMaxHealthUpdateEvent)) return false;
-		if (eventType == typeof(AgentTagEvent)) return false;
+		if (eventType == typeof(AgentMarkerEvent)) return false;
 		if (eventType == typeof(InitialBuffEvent)) return false;
 		if (eventType == typeof(PositionChangeEvent)) return false;
 		if (eventType == typeof(VelocityChangeEvent)) return false;
@@ -372,7 +372,7 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(AgentHealthUpdateEvent)) return false;
 		if (eventType == typeof(AgentWeaponSwapEvent)) return false;
 		if (eventType == typeof(AgentMaxHealthUpdateEvent)) return false;
-		if (eventType == typeof(AgentTagEvent)) return false;
+		if (eventType == typeof(AgentMarkerEvent)) return false;
 		if (eventType == typeof(InitialBuffEvent)) return false;
 		if (eventType == typeof(PositionChangeEvent)) return false;
 		if (eventType == typeof(VelocityChangeEvent)) return false;
@@ -444,7 +444,7 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(AgentHealthUpdateEvent)) return [];
 		if (eventType == typeof(AgentWeaponSwapEvent)) return [];
 		if (eventType == typeof(AgentMaxHealthUpdateEvent)) return [];
-		if (eventType == typeof(AgentTagEvent)) return [];
+		if (eventType == typeof(AgentMarkerEvent)) return [];
 		if (eventType == typeof(InitialBuffEvent)) return [];
 		if (eventType == typeof(PositionChangeEvent)) return [];
 		if (eventType == typeof(VelocityChangeEvent)) return [];

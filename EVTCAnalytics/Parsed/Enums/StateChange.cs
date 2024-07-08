@@ -42,7 +42,7 @@
 		BreakbarState = 34,
 		BreakbarPercent = 35,
 		Error = 36,
-		Tag = 37,
+		Tag = 37, // Renamed from CBTS_TAG to CBTS_MARKER within arcdps at some point.
 		BarrierUpdate = 38,
 		StatReset = 39, // Only in realtime API; should not appear in logs
 		Extension = 40,
