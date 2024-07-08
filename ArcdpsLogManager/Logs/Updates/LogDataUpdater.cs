@@ -194,7 +194,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Updates
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 11, 1, 0)
 			                     && log.Encounter == Encounter.TempleOfFebe
 			                     && log.GameBuild >= GameBuilds.TempleOfFebeHealthFix,
-				"Fix NM detection for Temple of Febe".),
+				"Fix NM detection for Temple of Febe."),
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 11, 1, 3)
 			                     && log.Encounter == Encounter.Skorvald,
 				"Fix success detection for Skorvald when all players are dead while the boss is invulnerable at 1%."),
