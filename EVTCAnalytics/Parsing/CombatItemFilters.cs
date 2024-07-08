@@ -553,7 +553,7 @@ public class CombatItemFilters : ICombatItemFilters
 			StateChange.Tag => false,
 			StateChange.BarrierUpdate => false,
 			StateChange.StatReset => true,
-			StateChange.Extension => true,
+			StateChange.Extension => false,
 			StateChange.ApiDelayed => true,
 			StateChange.InstanceStart => true,
 			StateChange.TickRate => true,
