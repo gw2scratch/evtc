@@ -279,7 +279,7 @@ public class CombatItemFilters : ICombatItemFilters
 		// so we need to return all of them.
 		Debug.Assert(Enum.GetUnderlyingType(typeof(StateChange)) == typeof(byte));
 		if (eventType == typeof(UnknownEvent)) return Enumerable.Range(0, 256).Select(x => (StateChange) x);
-		if (eventType == typeof(UnknownExtensionEvent)) return [StateChange.Extension];
+		if (eventType == typeof(UnknownExtensionEvent)) return [StateChange.Extension, StateChange.ExtensionCombat];
 
 		throw new ArgumentException($"Event type {eventType} is not supported.");
 	}

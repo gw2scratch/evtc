@@ -1195,8 +1195,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					case StateChange.IdleEvent:
 						return new UnknownEvent(item.Time, item);
 					case StateChange.ExtensionCombat:
-						// Not sure if this ever appears in logs.
-						return new UnknownEvent(item.Time, item);
+						// Same as StateChange.Extension, but skillid is treated as skill and added to the skill table.
+						return new UnknownExtensionEvent(item.Time, item);
 					case StateChange.Effect2:
 					{
 						// Official docs as of 2023-07-18:
