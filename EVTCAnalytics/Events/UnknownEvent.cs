@@ -13,4 +13,9 @@ namespace GW2Scratch.EVTCAnalytics.Events
 		/// </remarks>
 		public object EventData { get; } = eventData;
 	}
+
+	/// <summary>
+	/// An <see cref="Event"/> from an extension (an addon for arcdps) which is not recognized or implemented yet.
+	/// </summary>
+	public class UnknownExtensionEvent(long time, object eventData) : UnknownEvent(time, eventData);
 }

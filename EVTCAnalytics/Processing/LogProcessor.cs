@@ -1120,8 +1120,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						// Should not appear in logs
 						return new UnknownEvent(item.Time, item);
 					case StateChange.Extension:
-						// TODO: Implement
-						return new UnknownEvent(item.Time, item);
+						return new UnknownExtensionEvent(item.Time, item);
 					case StateChange.ApiDelayed:
 						// Should not appear in logs
 						return new UnknownEvent(item.Time, item);

@@ -279,6 +279,7 @@ public class CombatItemFilters : ICombatItemFilters
 		// so we need to return all of them.
 		Debug.Assert(Enum.GetUnderlyingType(typeof(StateChange)) == typeof(byte));
 		if (eventType == typeof(UnknownEvent)) return Enumerable.Range(0, 256).Select(x => (StateChange) x);
+		if (eventType == typeof(UnknownExtensionEvent)) return [StateChange.Extension];
 
 		throw new ArgumentException($"Event type {eventType} is not supported.");
 	}
@@ -353,6 +354,7 @@ public class CombatItemFilters : ICombatItemFilters
 
 		// The unknown event can come from anything
 		if (eventType == typeof(UnknownEvent)) return true;
+		if (eventType == typeof(UnknownExtensionEvent)) return false;
 
 		throw new ArgumentException($"Event type {eventType} is not supported.");
 	}
@@ -427,6 +429,7 @@ public class CombatItemFilters : ICombatItemFilters
 
 		// The unknown event can come from anything
 		if (eventType == typeof(UnknownEvent)) return true;
+		if (eventType == typeof(UnknownExtensionEvent)) return false;
 
 		throw new ArgumentException($"Event type {eventType} is not supported.");
 	}
@@ -503,6 +506,7 @@ public class CombatItemFilters : ICombatItemFilters
 		// so we need to return all of them.
 		Debug.Assert(Enum.GetUnderlyingType(typeof(Result)) == typeof(byte));
 		if (eventType == typeof(UnknownEvent)) return Enumerable.Range(0, 256).Select(x => (Result) x);
+		if (eventType == typeof(UnknownExtensionEvent)) return [];
 
 		throw new ArgumentException($"Event type {eventType} is not supported.");
 	}
