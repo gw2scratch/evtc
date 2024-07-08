@@ -31,6 +31,7 @@ This is the full changelog of the arcdps Log Manager.
 - Added CrowdControlEvent (crowd control against non-defiant enemies); requires arcdps 2024-06-27 or newer.
 - Added old team ids to TeamChangeEvent; requires arcdps 2024-06-12 or newer.
 - Added RateHealthEvent (reports simulation tick rate drops when server cannot keep up/connection lags); requires arcdps 2022-05-20 or newer.
+- Added AgentMarkerRemoveAllEvent; common with arcdps 2024-03-28 or newer.
 
 ## Log Manager v1.11.1
 

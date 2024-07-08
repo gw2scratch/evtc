@@ -227,6 +227,7 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(AgentWeaponSwapEvent)) return [StateChange.WeaponSwap];
 		if (eventType == typeof(AgentMaxHealthUpdateEvent)) return [StateChange.MaxHealthUpdate];
 		if (eventType == typeof(AgentMarkerEvent)) return [StateChange.Tag];
+		if (eventType == typeof(AgentMarkerRemoveAllEvent)) return [StateChange.Tag];
 		if (eventType == typeof(InitialBuffEvent)) return [StateChange.BuffInitial];
 		if (eventType == typeof(PositionChangeEvent)) return [StateChange.Position];
 		if (eventType == typeof(VelocityChangeEvent)) return [StateChange.Velocity];
@@ -261,6 +262,7 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(DefianceBarDamageEvent)) return [];
 
 		if (eventType == typeof(RewardEvent)) return [StateChange.Reward];
+		if (eventType == typeof(RateHealthEvent)) return [StateChange.TickRate];
 
 		if (eventType == typeof(CrowdControlEvent)) return [];
 
@@ -301,6 +303,7 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(AgentWeaponSwapEvent)) return false;
 		if (eventType == typeof(AgentMaxHealthUpdateEvent)) return false;
 		if (eventType == typeof(AgentMarkerEvent)) return false;
+		if (eventType == typeof(AgentMarkerRemoveAllEvent)) return false;
 		if (eventType == typeof(InitialBuffEvent)) return false;
 		if (eventType == typeof(PositionChangeEvent)) return false;
 		if (eventType == typeof(VelocityChangeEvent)) return false;
@@ -337,6 +340,7 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(CrowdControlEvent)) return false;
 		
 		if (eventType == typeof(RewardEvent)) return false;
+		if (eventType == typeof(RateHealthEvent)) return false;
 
 		if (eventType == typeof(SkillCastEvent)) return false;
 		if (eventType == typeof(EndSkillCastEvent)) return false;
@@ -373,6 +377,7 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(AgentWeaponSwapEvent)) return false;
 		if (eventType == typeof(AgentMaxHealthUpdateEvent)) return false;
 		if (eventType == typeof(AgentMarkerEvent)) return false;
+		if (eventType == typeof(AgentMarkerRemoveAllEvent)) return false;
 		if (eventType == typeof(InitialBuffEvent)) return false;
 		if (eventType == typeof(PositionChangeEvent)) return false;
 		if (eventType == typeof(VelocityChangeEvent)) return false;
@@ -409,6 +414,7 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(CrowdControlEvent)) return false;
 
 		if (eventType == typeof(RewardEvent)) return false;
+		if (eventType == typeof(RateHealthEvent)) return false;
 
 		if (eventType == typeof(SkillCastEvent)) return false;
 		if (eventType == typeof(EndSkillCastEvent)) return true;
@@ -444,6 +450,7 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(AgentHealthUpdateEvent)) return [];
 		if (eventType == typeof(AgentWeaponSwapEvent)) return [];
 		if (eventType == typeof(AgentMaxHealthUpdateEvent)) return [];
+		if (eventType == typeof(AgentMarkerEvent)) return [];
 		if (eventType == typeof(AgentMarkerEvent)) return [];
 		if (eventType == typeof(InitialBuffEvent)) return [];
 		if (eventType == typeof(PositionChangeEvent)) return [];
@@ -481,6 +488,7 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(CrowdControlEvent)) return [Result.CrowdControl];
 
 		if (eventType == typeof(RewardEvent)) return [];
+		if (eventType == typeof(RateHealthEvent)) return [];
 
 		if (eventType == typeof(SkillCastEvent)) return [];
 		if (eventType == typeof(EndSkillCastEvent)) return [];

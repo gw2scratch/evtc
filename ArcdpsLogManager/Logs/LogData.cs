@@ -273,7 +273,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 					HealthPercentage = 0;
 				}
 
-				var tagEvents = log.Events.OfType<AgentMarkerEvent>().Where(x => x.Marker.Id != 0 && x.Agent is Player).ToList();
+				var tagEvents = log.Events.OfType<AgentMarkerEvent>().Where(x => x.Agent is Player).ToList();
 				Players = analyzer.GetPlayers().Where(x => x.Identified).Select(p =>
 					new LogPlayer(p.Name, p.AccountName, p.Subgroup, p.Profession, p.EliteSpecialization,
 						GetGuildGuid(p.GuildGuid))

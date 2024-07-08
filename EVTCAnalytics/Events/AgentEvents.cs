@@ -108,13 +108,12 @@ namespace GW2Scratch.EVTCAnalytics.Events
 	}
 
 	/// <summary>
-	/// An event specifying that an <see cref="Agent"/> has a tag. Typically, a <see cref="Player"/> with a Commander tag.
+	/// An event specifying that an <see cref="Agent"/> has a tag/marker. Typically, a <see cref="Player"/> with a Commander tag.
 	/// </summary>
 	/// <remarks>
-	/// Introduced in EVTC20200609. 20240328
+	/// Introduced in EVTC20200609. Prior to EVTC20240328, this only happened at the start of a log, since then it can happen at any time.
 	/// </remarks>
-	public class AgentMarkerEvent(long time, Agent agent, Marker marker, bool? isCommander)
-		: AgentEvent(time, agent)
+	public class AgentMarkerEvent(long time, Agent agent, Marker marker, bool? isCommander) : AgentEvent(time, agent)
 	{
 		public Marker Marker { get; } = marker;
 
@@ -126,6 +125,14 @@ namespace GW2Scratch.EVTCAnalytics.Events
 		/// </remarks>
 		public bool? IsCommander { get; } = isCommander;
 	}
+
+	/// <summary>
+	/// An event specifying that all tags/markers of an <see cref="Agent"/> have been removed.
+	/// </summary>
+	/// <remarks>
+	/// Commonyl used since EVTC20240328.
+	/// </remarks>
+	public class AgentMarkerRemoveAllEvent(long time, Agent agent) : AgentEvent(time, agent);
 
 	/// <summary>
 	/// An event specifying that an <see cref="Agent"/> has an ongoing buff at the time tracking starts.

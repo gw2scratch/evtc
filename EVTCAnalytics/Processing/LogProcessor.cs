@@ -1094,6 +1094,11 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						return new UnknownEvent(item.Time, item);
 					case StateChange.Tag:
 						uint markerId = (uint) item.Value;
+						if (markerId == 0)
+						{
+							return new AgentMarkerRemoveAllEvent(item.Time, GetAgentByAddress(item.SrcAgent));
+						}
+
 						if (!state.MarkersById.TryGetValue(markerId, out Marker marker))
 						{
 							marker = new Marker(markerId);
