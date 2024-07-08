@@ -190,32 +190,32 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Updates
 				"Fix success detection for Cosmic Observatory"),
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 11, 0, 2)
 			                     && log.Encounter == Encounter.TempleOfFebe,
-				"Add support for Temple of Febe Legendary CM"),
+				"Add support for Temple of Febe Legendary CM."),
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 11, 1, 0)
 			                     && log.Encounter == Encounter.TempleOfFebe
 			                     && log.GameBuild >= GameBuilds.TempleOfFebeHealthFix,
-				"Fixed NM detection for Temple of Febe"),
-			new LogUpdate(log => log.ParsingVersion < new Version(1, 11, 1, 1)
-								 && log.Encounter == Encounter.Skorvald,
-				"Fix success detection for Skorvald when all players are dead while the boss is invulnerable at 1%"),
+				"Fix NM detection for Temple of Febe."),
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 11, 1, 3)
-								 && log.Encounter == Encounter.Skorvald,
-				"Fix success detection for Skorvald when all players are dead while the boss is invulnerable at 1%"),
+			                     && log.Encounter == Encounter.Skorvald,
+				"Fix success detection for Skorvald when all players are dead while the boss is invulnerable at 1%."),
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 11, 1, 4)
 			                     && log.Encounter == Encounter.Other
-								 && log.MapId == MapIds.LonelyTower,
-				"Add support for Eparch in the Lonely Tower fractal"),
-			new LogUpdate(log => log.ParsingVersion < new Version(1, 11, 1, 5)
+			                     && log.MapId == MapIds.LonelyTower,
+				"Add support for Eparch in the Lonely Tower fractal."),
+			new LogUpdate(log => log.ParsingVersion < new Version(1, 11, 1, 7)
+			                     && log.Encounter == Encounter.SoullessHorror, 
+				"Fix detection for Soulless Horror in case the encounter resets before all players are dead."),
+			new LogUpdate(log => log.ParsingVersion < new Version(1, 11, 1, 7)
 			                     && log.Players.Count(x => x.Tag == PlayerTag.Commander) > 1,
-				"Fix commander tag detection"),
-			new LogUpdate(log => log.ParsingVersion < new Version(1, 11, 1, 6)
+				"Fix commander tag detection."),
+			new LogUpdate(log => log.ParsingVersion < new Version(1, 11, 1, 7)
 			                     && log.EncounterResult == EncounterResult.Success
 			                     && string.Compare(log.EvtcVersion, "EVTC20240612", StringComparison.OrdinalIgnoreCase) >= 0
 			                     && log.Encounter is Encounter.XunlaiJadeJunkyard or Encounter.KainengOverlook,
-				"Fix success detection for Xunlai Jade Junkyard and Kaineng Overlook with recent arcdps versions"),
+				"Fix success detection for Xunlai Jade Junkyard and Kaineng Overlook with recent arcdps versions."),
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 11, 1, 7)
 			                     && log.Encounter is Encounter.Adina or Encounter.Sabir,
-				"Fixed Adina and Sabir possibly being identified as the other one in rare scenarios."),
+				"Fix Adina and Sabir possibly being identified as the other one in rare scenarios."),
 			// When adding a new update, you need to increase the revision (last value) of the version in the .csproj file
 			// unless the version changes more significantly, in that case it can be reset to 0.
 		};
