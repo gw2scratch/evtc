@@ -204,10 +204,15 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Updates
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 11, 1, 4)
 			                     && log.Encounter == Encounter.Other
 								 && log.MapId == MapIds.LonelyTower,
-				"Added support for Eparch in the Lonely Tower fractal"),
+				"Add support for Eparch in the Lonely Tower fractal"),
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 11, 1, 5)
 			                     && log.Players.Count(x => x.Tag == PlayerTag.Commander) > 1,
-				"Fixed commander tag detection"),
+				"Fix commander tag detection"),
+			new LogUpdate(log => log.ParsingVersion < new Version(1, 11, 1, 6)
+			                     && log.EncounterResult == EncounterResult.Success
+			                     && string.Compare(log.EvtcVersion, "EVTC20240612", StringComparison.OrdinalIgnoreCase) >= 0
+			                     && log.Encounter is Encounter.XunlaiJadeJunkyard or Encounter.KainengOverlook,
+				"Fix success detection for Xunlai Jade Junkyard and Kaineng Overlook with recent arcdps versions"),
 			// When adding a new update, you need to increase the revision (last value) of the version in the .csproj file
 			// unless the version changes more significantly, in that case it can be reset to 0.
 		};
