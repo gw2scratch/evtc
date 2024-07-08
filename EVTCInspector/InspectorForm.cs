@@ -830,10 +830,10 @@ namespace GW2Scratch.EVTCInspector
 			});
 			gridView.Columns.Add(new GridColumn
 			{
-				HeaderText = "BuffDmg",
+				HeaderText = "Buff",
 				DataCell = new TextBoxCell
 				{
-					Binding = new DelegateBinding<Indexed<ParsedCombatItem>, string>(x => x.Item.BuffDmg.ToString())
+					Binding = new DelegateBinding<Indexed<ParsedCombatItem>, string>(x => x.Item.Buff.ToString())
 				}
 			});
 			gridView.Columns.Add(new GridColumn

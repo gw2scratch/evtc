@@ -33,6 +33,7 @@ This is the full changelog of the arcdps Log Manager.
 - Added RateHealthEvent (reports simulation tick rate drops when server cannot keep up/connection lags); requires arcdps 2022-05-20 or newer.
 - Added AgentMarkerRemoveAllEvent; common with arcdps 2024-03-28 or newer.
 - Events from arcdps extensions (addons, such as healing stats) are now categorized as UnknownExtensionEvents.
+- Fixed missing buff column and duplicate buffdmg column in raw combatitem data
 
 ## Log Manager v1.11.1
 
