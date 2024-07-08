@@ -21,6 +21,7 @@ This is the full changelog of the arcdps Log Manager.
 - Fixed encounter durations rounding to 1m60s (thanks, @Linkaaaaa!).
 
 #### EVTC Inspector notes
+- Added current open file name into the window title
 - Processed agents attacker/defender hitbox is now a more general source/target checkbox, which also works for buff events and visual effect events.
 - Added profession/elite specialization to AgentEnterCombatEvent (useful for mid-log specialization changes); requires arcdps 2024-06-12 or newer.
 - Added SquadGroundMarkerPlace and SquadGroundMarkerRemove events; requires arcdps 2024-03-28 or newer.
