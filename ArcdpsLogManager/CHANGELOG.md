@@ -17,6 +17,7 @@ This is the full changelog of the arcdps Log Manager.
 - Fixed commander tag identification for fights where multiple overhead markers are used.
 - Fixed upload button not being available for multiple selected logs if logs failed to be processed by dps.report
 - Fixed crashes happening at weekly reset and on the midnight of the day for some timezones.
+- Fixed Cardinal Sabir logs very rarely being identified as Cardinal Adina and vice versa.
 - Fixed a Skorvald false failure triggered when the group dies after he reaches 1% (thanks, @Linkaaaaa!)
 - Fixed encounter durations rounding to 1m60s (thanks, @Linkaaaaa!).
 

@@ -80,7 +80,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		// Cardinal Adina
 		public const int CardinalAdina = 22006;
 		// Cardinal Sabir
-		public const int CadinalSabir = 21964;
+		public const int CardinalSabir = 21964;
 		// Qadim the Peerless
 		public const int QadimThePeerless = 22000;
 

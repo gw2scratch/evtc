@@ -213,6 +213,9 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Updates
 			                     && string.Compare(log.EvtcVersion, "EVTC20240612", StringComparison.OrdinalIgnoreCase) >= 0
 			                     && log.Encounter is Encounter.XunlaiJadeJunkyard or Encounter.KainengOverlook,
 				"Fix success detection for Xunlai Jade Junkyard and Kaineng Overlook with recent arcdps versions"),
+			new LogUpdate(log => log.ParsingVersion < new Version(1, 11, 1, 7)
+			                     && log.Encounter is Encounter.Adina or Encounter.Sabir,
+				"Fixed Adina and Sabir possibly being identified as the other one in rare scenarios."),
 			// When adding a new update, you need to increase the revision (last value) of the version in the .csproj file
 			// unless the version changes more significantly, in that case it can be reset to 0.
 		};
