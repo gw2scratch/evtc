@@ -9,59 +9,44 @@ namespace GW2Scratch.EVTCAnalytics.Events
 	/// <remarks>
 	/// Note that buffs are internally <see cref="Skill"/>s in the game.
 	/// </remarks>
-	public abstract class BuffEvent : AgentEvent
+	public abstract class BuffEvent(long time, Agent agent, Skill buff, Agent sourceAgent)
+		: AgentEvent(time, agent)
 	{
-		public Skill Buff { get; }
-		public Agent SourceAgent { get; internal set; }
-
-		protected BuffEvent(long time, Agent agent, Skill buff, Agent sourceAgent) : base(time, agent)
-		{
-			Buff = buff;
-			SourceAgent = sourceAgent;
-		}
+		public Skill Buff { get; } = buff;
+		public Agent SourceAgent { get; internal set; } = sourceAgent;
 	}
 
 	/// <summary>
 	/// An event emitted when a buff is removed from an <see cref="Agent"/>. This may be one or more stacks.
 	/// </summary>
-	public abstract class BuffRemoveEvent : BuffEvent
-	{
-		protected BuffRemoveEvent(long time, Agent agent, Skill buff, Agent sourceAgent) : base(
-			time, agent, buff, sourceAgent)
-		{
-		}
-	}
+	public abstract class BuffRemoveEvent(long time, Agent agent, Skill buff, Agent sourceAgent)
+		: BuffEvent(time, agent, buff, sourceAgent);
 
 	/// <summary>
 	/// An event emitted when a buff is fully removed from an <see cref="Agent"/>. Individual stack removes will also be present.
 	/// </summary>
-	public class AllStacksRemovedBuffEvent : BuffRemoveEvent
+	public class AllStacksRemovedBuffEvent(long time, Agent agent, Skill buff, Agent sourceAgent, int stacksRemoved)
+		: BuffRemoveEvent(time, agent, buff, sourceAgent)
 	{
-		public int StacksRemoved { get; }
-
-		public AllStacksRemovedBuffEvent(long time, Agent agent, Skill buff, Agent sourceAgent, int stacksRemoved)
-			: base(time, agent, buff, sourceAgent)
-		{
-			StacksRemoved = stacksRemoved;
-		}
+		public int StacksRemoved { get; } = stacksRemoved;
 	}
 
 	/// <summary>
 	/// An event emitted when a single stack is removed from an <see cref="Agent"/>.
 	/// </summary>
-	public class SingleStackRemovedBuffEvent : BuffRemoveEvent
+	public class SingleStackRemovedBuffEvent(
+		long time,
+		Agent agent,
+		Skill buff,
+		Agent sourceAgent,
+		int remainingDuration,
+		int remainingIntensity,
+		uint stackId)
+		: BuffRemoveEvent(time, agent, buff, sourceAgent)
 	{
-		public int RemainingDuration { get; }
-		public int RemainingIntensity { get; }
-		public uint StackId { get; }
-
-		public SingleStackRemovedBuffEvent(long time, Agent agent, Skill buff, Agent sourceAgent,
-			int remainingDuration, int remainingIntensity, uint stackId) : base(time, agent, buff, sourceAgent)
-		{
-			RemainingDuration = remainingDuration;
-			RemainingIntensity = remainingIntensity;
-			StackId = stackId;
-		}
+		public int RemainingDuration { get; } = remainingDuration;
+		public int RemainingIntensity { get; } = remainingIntensity;
+		public uint StackId { get; } = stackId;
 	}
 
 	/// <summary>
@@ -70,70 +55,65 @@ namespace GW2Scratch.EVTCAnalytics.Events
 	/// <remarks>
 	/// Happens when going out of combat or stack is full, to be ignored for strip/cleanse, to be used for in/out volume.
 	/// </remarks>
-	public class ManualStackRemovedBuffEvent : BuffRemoveEvent
+	public class ManualStackRemovedBuffEvent(
+		long time,
+		Agent agent,
+		Skill buff,
+		Agent sourceAgent,
+		int remainingDuration,
+		int remainingIntensity)
+		: BuffRemoveEvent(time, agent, buff, sourceAgent)
 	{
-		public int RemainingDuration { get; }
-		public int RemainingIntensity { get; }
-
-		public ManualStackRemovedBuffEvent(long time, Agent agent, Skill buff, Agent sourceAgent, int remainingDuration,
-			int remainingIntensity) : base(time, agent, buff, sourceAgent)
-		{
-			RemainingDuration = remainingDuration;
-			RemainingIntensity = remainingIntensity;
-		}
+		public int RemainingDuration { get; } = remainingDuration;
+		public int RemainingIntensity { get; } = remainingIntensity;
 	}
 
 	/// <summary>
 	/// An event emitted when a single stack of a buff is added to an <see cref="Agent"/>.
 	/// </summary>
-	public class BuffApplyEvent : BuffEvent
+	public class BuffApplyEvent(
+		long time,
+		Agent agent,
+		Skill buff,
+		Agent sourceAgent,
+		int durationApplied,
+		uint durationOfRemovedStack,
+		uint instanceId,
+		bool isStackActive)
+		: BuffEvent(time, agent, buff, sourceAgent)
 	{
-		public int DurationApplied { get; }
-		public uint DurationOfRemovedStack { get; }
-		public uint StackId { get; }
-		public bool IsStackActive { get; }
-
-		public BuffApplyEvent(long time, Agent agent, Skill buff, Agent sourceAgent, int durationApplied,
-			uint durationOfRemovedStack, uint instanceId, bool isStackActive) : base(time, agent, buff, sourceAgent)
-		{
-			DurationApplied = durationApplied;
-			DurationOfRemovedStack = durationOfRemovedStack;
-			StackId = instanceId;
-			IsStackActive = isStackActive;
-		}
+		public int DurationApplied { get; } = durationApplied;
+		public uint DurationOfRemovedStack { get; } = durationOfRemovedStack;
+		public uint StackId { get; } = instanceId;
+		public bool IsStackActive { get; } = isStackActive;
 	}
 	
 	/// <summary>
 	/// An event emitted when a single stack of a buff is added to an <see cref="Agent"/>.
 	/// </summary>
-	public class BuffExtensionEvent : BuffEvent
+	public class BuffExtensionEvent(
+		long time,
+		Agent agent,
+		Skill buff,
+		Agent sourceAgent,
+		int durationChange,
+		uint newDuration,
+		uint instanceId,
+		bool isStackActive)
+		: BuffEvent(time, agent, buff, sourceAgent)
 	{
-		public int DurationChange { get; }
-		public uint NewDuration { get; }
-		public uint StackId { get; }
-		public bool IsStackActive { get; }
-
-		public BuffExtensionEvent(long time, Agent agent, Skill buff, Agent sourceAgent, int durationChange,
-			uint newDuration, uint instanceId, bool isStackActive) : base(time, agent, buff, sourceAgent)
-		{
-			DurationChange = durationChange;
-			NewDuration = newDuration;
-			StackId = instanceId;
-			IsStackActive = isStackActive;
-		}
+		public int DurationChange { get; } = durationChange;
+		public uint NewDuration { get; } = newDuration;
+		public uint StackId { get; } = instanceId;
+		public bool IsStackActive { get; } = isStackActive;
 	}
 
 	/// <summary>
 	/// An event emitted when a stack of a buff becomes the current active one.
 	/// </summary>
-	public class ActiveBuffStackEvent : AgentEvent
+	public class ActiveBuffStackEvent(long time, Agent agent, uint stackId) : AgentEvent(time, agent)
 	{
-		public uint StackId { get; }
-
-		public ActiveBuffStackEvent(long time, Agent agent, uint stackId) : base(time, agent)
-		{
-			StackId = stackId;
-		}
+		public uint StackId { get; } = stackId;
 	}
 
 	/// <summary>
@@ -143,15 +123,10 @@ namespace GW2Scratch.EVTCAnalytics.Events
 	/// This is commonly caused by buff extension skills, which typically
 	/// extend the current stack.
 	/// </remarks>
-	public class ResetBuffStackEvent : AgentEvent
+	public class ResetBuffStackEvent(long time, Agent agent, uint stackId, int duration)
+		: AgentEvent(time, agent)
 	{
-		public uint StackId { get; }
-		public int Duration { get; }
-
-		public ResetBuffStackEvent(long time, Agent agent, uint stackId, int duration) : base(time, agent)
-		{
-			StackId = stackId;
-			Duration = duration;
-		}
+		public uint StackId { get; } = stackId;
+		public int Duration { get; } = duration;
 	}
 }

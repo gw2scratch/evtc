@@ -13,6 +13,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 	{
 		private readonly Agent agent;
 		private readonly float healthThreshold;
+		private readonly bool ignoreTeamZero;
 
 		/// <summary>
 		/// Creates a new <see cref="TeamChangedBelowHealthThresholdDeterminer"/>.
@@ -20,10 +21,12 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 		/// <param name="agent">The agent to be considered.</param>
 		/// <param name="healthThreshold">The health threshold that has to be reached,
 		/// where 1 is 100% and 0 is 0% of maximum health of the <paramref name="agent"/>.</param>
-		public TeamChangedBelowHealthThresholdDeterminer(Agent agent, float healthThreshold)
+		/// <param name="ignoreTeamZero">Ignore events that set team to 0.</param>
+		public TeamChangedBelowHealthThresholdDeterminer(Agent agent, float healthThreshold, bool ignoreTeamZero = true)
 		{
 			this.agent = agent;
 			this.healthThreshold = healthThreshold;
+			this.ignoreTeamZero = ignoreTeamZero;
 		}
 		
 		public override IReadOnlyList<Type> RequiredEventTypes { get; } = new List<Type> { typeof(AgentHealthUpdateEvent), typeof(TeamChangeEvent) };
@@ -39,7 +42,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 				{
 					belowThreshold = healthUpdate.HealthFraction <= healthThreshold;
 				}
-				else if (belowThreshold && e is TeamChangeEvent teamChange && teamChange.Agent == agent)
+				else if (belowThreshold && e is TeamChangeEvent teamChange && teamChange.Agent == agent && (teamChange.NewTeamId != 0 || !ignoreTeamZero))
 				{
 					return teamChange;
 				}

@@ -298,13 +298,17 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				// Raids - Wing 7
 				case Encounter.Adina:
 				{
-					return GetDefaultBuilder(encounter, mainTarget)
+					// We need to explicitly find Adina as this may be a Sabir main target log.
+					var adina = GetTargetBySpeciesId(agents, SpeciesIds.CardinalAdina);
+					return GetDefaultBuilder(encounter, adina ?? mainTarget)
 						.WithModes(new AgentHealthModeDeterminer(mainTarget, 24_000_000))
 						.Build();
 				}
 				case Encounter.Sabir:
 				{
-					return GetDefaultBuilder(encounter, mainTarget)
+					// We need to explicitly find Sabir this may be an Adina main target log.
+					var sabir = GetTargetBySpeciesId(agents, SpeciesIds.CardinalSabir);
+					return GetDefaultBuilder(encounter, sabir ?? mainTarget)
 						.WithModes(new AgentHealthModeDeterminer(mainTarget, 32_000_000))
 						.Build();
 				}

@@ -18,9 +18,10 @@ namespace GW2Scratch.EVTCInspector
 {
 	public sealed class InspectorForm : Form
 	{
+		private const string WindowTitle = "Scratch EVTC Inspector";
 		private static readonly Padding MainTabPadding = new Padding(2);
 
-		private string OpenedLogFile { get; set; }= null;
+		private string OpenedLogFile { get; set; } = null;
 		private bool SkipParsing { get; set; } = false;
 		private bool PruneForEncounterData { get; set; } = false;
 
@@ -56,7 +57,7 @@ namespace GW2Scratch.EVTCInspector
 
 		public InspectorForm()
 		{
-			Title = "Scratch EVTC Inspector";
+			Title = WindowTitle;
 			ClientSize = new Size(800, 600);
 			var formLayout = new DynamicLayout();
 			Content = formLayout;
@@ -175,9 +176,11 @@ namespace GW2Scratch.EVTCInspector
 			}
 		}
 
-		public void SelectLog(string logFilename)
+		public void SelectLog(string logFilePath)
 		{
-			OpenedLogFile = logFilename;
+			OpenedLogFile = logFilePath;
+			var filename = System.IO.Path.GetFileName(logFilePath);
+			Title = $"{WindowTitle} – {filename}";
 			var statusStringBuilder = new StringBuilder();
 
 			var parser = new EVTCParser { SinglePassFilteringOptions = { PruneForEncounterData = PruneForEncounterData } };
@@ -193,7 +196,7 @@ namespace GW2Scratch.EVTCInspector
 			{
 				try
 				{
-					parsedLog = parser.ParseLog(logFilename);
+					parsedLog = parser.ParseLog(logFilePath);
 					var parseTime = sw.Elapsed;
 
 					statusStringBuilder.AppendLine($"Parsed in {parseTime}");
@@ -243,7 +246,7 @@ namespace GW2Scratch.EVTCInspector
 				}
 				else
 				{
-					processedLog = processor.ProcessLog(logFilename, parser);
+					processedLog = processor.ProcessLog(logFilePath, parser);
 				}
 
 				var processTime = sw.Elapsed;
@@ -300,7 +303,8 @@ namespace GW2Scratch.EVTCInspector
 					processedLog.GameShardId,
 					processedLog.MapId,
 					processedLog.FractalScale,
-					processedLog.Errors
+					processedLog.Errors,
+					processedLog.ArcdpsBuild
 				);
 
 				var statsTime = sw.Elapsed;
@@ -826,10 +830,10 @@ namespace GW2Scratch.EVTCInspector
 			});
 			gridView.Columns.Add(new GridColumn
 			{
-				HeaderText = "BuffDmg",
+				HeaderText = "Buff",
 				DataCell = new TextBoxCell
 				{
-					Binding = new DelegateBinding<Indexed<ParsedCombatItem>, string>(x => x.Item.BuffDmg.ToString())
+					Binding = new DelegateBinding<Indexed<ParsedCombatItem>, string>(x => x.Item.Buff.ToString())
 				}
 			});
 			gridView.Columns.Add(new GridColumn

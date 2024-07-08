@@ -122,6 +122,12 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 
 		public const int HarvestTempleLiftOff = 63896;
 
+		
+		// The first attack of Cardinal Adina
+		public const int AdinaChargeUp = 56648;
+		// The first autoattack of Cardinal Sabir
+		public const int SabirFirstAutoattack = 56620;
+
 		public const int Emboldened = 68087;
 	}
 }

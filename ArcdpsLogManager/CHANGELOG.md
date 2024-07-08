@@ -13,9 +13,28 @@ This is the full changelog of the arcdps Log Manager.
 - Organized Fractal encounters by scale in category filters (thanks, @Linkaaaaa!)
 
 #### Fixes
+- Fixed urls for some logs not being shown after uploading to dps.report (with error `File had invalid agents. Please update arcdps`).
+- Fixed commander tag identification for fights where multiple overhead markers are used.
+- Fixed upload button not being available for multiple selected logs if logs failed to be processed by dps.report
 - Fixed crashes happening at weekly reset and on the midnight of the day for some timezones.
+- Fixed Cardinal Sabir logs very rarely being identified as Cardinal Adina and vice versa.
 - Fixed a Skorvald false failure triggered when the group dies after he reaches 1% (thanks, @Linkaaaaa!)
 - Fixed encounter durations rounding to 1m60s (thanks, @Linkaaaaa!).
+
+#### EVTC Inspector notes
+- Added current open file name into the window title
+- Processed agents attacker/defender hitbox is now a more general source/target checkbox, which also works for buff events and visual effect events.
+- Added profession/elite specialization to AgentEnterCombatEvent (useful for mid-log specialization changes); requires arcdps 2024-06-12 or newer.
+- Added SquadGroundMarkerPlace and SquadGroundMarkerRemove events; requires arcdps 2024-03-28 or newer.
+- Added AgentGliderOpenEvent and AgentGliderClosedEvent; requires arcdps 2024-06-27 or newer.
+- Exact arcdps build is now shown in the Statistics tabs; requires arcdps 2024-06-14 or newer.
+- Added old weapon set to AgentWeaponSwapEvent; requires arcdps 2024-06-27 or newer.
+- Added CrowdControlEvent (crowd control against non-defiant enemies); requires arcdps 2024-06-27 or newer.
+- Added old team ids to TeamChangeEvent; requires arcdps 2024-06-12 or newer.
+- Added RateHealthEvent (reports simulation tick rate drops when server cannot keep up/connection lags); requires arcdps 2022-05-20 or newer.
+- Added AgentMarkerRemoveAllEvent; common with arcdps 2024-03-28 or newer.
+- Events from arcdps extensions (addons, such as healing stats) are now categorized as UnknownExtensionEvents.
+- Fixed missing buff column and duplicate buffdmg column in raw combatitem data
 
 ## Log Manager v1.11.1
 

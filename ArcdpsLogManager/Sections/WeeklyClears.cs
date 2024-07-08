@@ -639,11 +639,14 @@ public class WeeklyClears : DynamicLayout
 
 	public void UpdateDataFromLogs(IEnumerable<LogData> logs)
 	{
+		// We cache the logs to be able to select players from them later.
 		this.logs = logs.ToList();
+		// We need to store this specific list for the Task as a race condition could change this.logs before it is accessed.
+		var usedLogs = this.logs;
 		Task.Run(() =>
 		{
 			var logsByAccountNameWeek = new Dictionary<(string accountName, DateOnly resetDate), List<LogData>>();
-			foreach (var log in logs)
+			foreach (var log in usedLogs)
 			{
 				if (log.ParsingStatus != ParsingStatus.Parsed) continue;
 

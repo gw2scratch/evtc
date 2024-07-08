@@ -106,11 +106,12 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 
 			int finished = uploaded + uploadsFailed + processingFailed;
 			int totalRequested = queued + uploading + uploaded + uploadsFailed + processingFailed;
+			int missingUploads = notUploaded + uploadsFailed + processingFailed;
 			dpsReportUploadProgressBar.MaxValue = totalRequested > 0 ? totalRequested : 1;
 			dpsReportUploadProgressBar.Value = finished;
-			dpsReportUploadButton.Enabled = notUploaded + uploadsFailed > 0;
+			dpsReportUploadButton.Enabled = missingUploads > 0;
 			dpsReportCancelButton.Enabled = queued > 0;
-			dpsReportUploadButton.Text = $"Upload missing logs ({notUploaded + uploadsFailed})";
+			dpsReportUploadButton.Text = $"Upload missing logs ({missingUploads})";
 			dpsReportNotUploadedLabel.Text = notUploaded.ToString();
 			dpsReportUploadingLabel.Text = (uploading + queued).ToString();
 			dpsReportUploadedLabel.Text = uploaded.ToString();
@@ -154,7 +155,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				foreach (var log in logData)
 				{
 					var state = log.DpsReportEIUpload.UploadState;
-					if (state == UploadState.NotUploaded || state == UploadState.UploadError)
+					if (state is UploadState.NotUploaded or UploadState.UploadError or UploadState.ProcessingError)
 					{
 						uploadProcessor.ScheduleDpsReportEIUpload(log);
 					}

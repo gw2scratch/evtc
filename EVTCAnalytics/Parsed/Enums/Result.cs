@@ -16,5 +16,7 @@ namespace GW2Scratch.EVTCAnalytics.Parsed.Enums
 		KillingBlow = 8,
 		Downed = 9,
 		DefianceBar = 10,
+		Activation = 11,
+		CrowdControl = 12, // Introduced in arcdps 20240627.
 	}
 }

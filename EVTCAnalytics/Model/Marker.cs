@@ -6,22 +6,17 @@ namespace GW2Scratch.EVTCAnalytics.Model;
 /// <summary>
 /// Represents a game marker above an agent.
 /// </summary>
-public class Marker
+public class Marker(uint id)
 {
 	/// <summary>
 	/// The ID number of the marker.
 	/// </summary>
-	public uint Id { get; }
+	public uint Id { get; } = id;
 
 	/// <summary>
 	/// The content GUID of this marker stored as 16 bytes.
 	/// </summary>
 	public byte[] ContentGuid { get; internal set; }
-
-	public Marker(uint id)
-	{
-		Id = id;
-	}
 
 	public override string ToString()
 	{

@@ -83,9 +83,17 @@ public class EncounterIdentifier : IEncounterIdentifier
 				case SpeciesIds.Qadim:
 					return Encounter.Qadim;
 				case SpeciesIds.CardinalAdina:
-					return Encounter.Adina;
-				case SpeciesIds.CadinalSabir:
-					return Encounter.Sabir;
+					// During initial instance clearing, it is possible for the squad to start combat (clearing) near one boss
+					// and then move to the other and start without leaving combat.
+					// We check for the first cast skill of Sabir, that should happen reasonably early.
+					// If both bosses were attacked at the same time, then choosing one at random is acceptable as well.
+					return skills.Any(x => x.Id == SkillIds.SabirFirstAutoattack) ? Encounter.Sabir : Encounter.Adina;
+				case SpeciesIds.CardinalSabir:
+					// During initial instance clearing, it is possible for the squad to start combat (clearing) near one boss
+					// and then move to the other and start without leaving combat.
+					// We check for the first cast skill of Adina (often within a few milliseconds).
+					// If both bosses were attacked at the same time, then choosing one at random is acceptable as well.
+					return skills.Any(x => x.Id == SkillIds.AdinaChargeUp) ? Encounter.Adina : Encounter.Sabir;
 				case SpeciesIds.QadimThePeerless:
 					return Encounter.QadimThePeerless;
 				case SpeciesIds.StandardKittyGolem:
@@ -294,9 +302,9 @@ public class EncounterIdentifier : IEncounterIdentifier
 			case SpeciesIds.Qadim:
 				return new[] { Encounter.Qadim };
 			case SpeciesIds.CardinalAdina:
-				return new[] { Encounter.Adina };
-			case SpeciesIds.CadinalSabir:
-				return new[] { Encounter.Sabir };
+				return new[] { Encounter.Adina, Encounter.Sabir };
+			case SpeciesIds.CardinalSabir:
+				return new[] { Encounter.Sabir, Encounter.Adina };
 			case SpeciesIds.QadimThePeerless:
 				return new[] { Encounter.QadimThePeerless };
 			case SpeciesIds.StandardKittyGolem:

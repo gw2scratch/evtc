@@ -10,22 +10,19 @@ namespace GW2Scratch.EVTCAnalytics.Events
 	/// <remarks>
 	/// Internally, skill casts are significantly tied to their animations.
 	/// </remarks>
-	public abstract class SkillCastEvent : AgentEvent
+	public abstract class SkillCastEvent(long time, Agent agent, Skill skill, int castingTimeMs)
+		: AgentEvent(time, agent)
 	{
-		public Skill Skill { get; }
-		public int CastingTimeMs { get; }
-
-		public SkillCastEvent(long time, Agent agent, Skill skill, int castingTimeMs) : base(time, agent)
-		{
-			Skill = skill;
-			CastingTimeMs = castingTimeMs;
-		}
+		public Skill Skill { get; } = skill;
+		public int CastingTimeMs { get; } = castingTimeMs;
 	}
 
 	/// <summary>
 	/// An event representing a <see cref="Skill"/> cast ending.
 	/// </summary>
-	public class EndSkillCastEvent : SkillCastEvent
+	public class EndSkillCastEvent(long time, Agent agent, Skill skill, int castingTimeMs, EndSkillCastEvent.SkillEndType skillEndType)
+		: SkillCastEvent(time,
+			agent, skill, castingTimeMs)
 	{
 		public enum SkillEndType
 		{
@@ -33,30 +30,26 @@ namespace GW2Scratch.EVTCAnalytics.Events
 			Fire
 		}
 
-		public SkillEndType EndType { get; }
-
-		public EndSkillCastEvent(long time, Agent agent, Skill skill, int castingTimeMs, SkillEndType skillEndType) : base(time,
-			agent, skill, castingTimeMs)
-		{
-			EndType = skillEndType;
-		}
+		public SkillEndType EndType { get; } = skillEndType;
 	}
 
 	/// <summary>
 	/// An event representing a <see cref="Skill"/> cast animation ending by being reset.
 	/// </summary>
-	public class ResetSkillCastEvent : SkillCastEvent
-	{
-		public ResetSkillCastEvent(long time, Agent agent, Skill skill, int castingTimeMs) : base(time, agent,
-			skill, castingTimeMs)
-		{
-		}
-	}
+	public class ResetSkillCastEvent(long time, Agent agent, Skill skill, int castingTimeMs)
+		: SkillCastEvent(time, agent,
+			skill, castingTimeMs);
 
 	/// <summary>
 	/// An event representing a <see cref="Skill"/> cast starting.
 	/// </summary>
-	public class StartSkillCastEvent : SkillCastEvent
+	public class StartSkillCastEvent(
+		long time,
+		Agent agent,
+		Skill skill,
+		int castingTimeMs,
+		StartSkillCastEvent.SkillCastType castType)
+		: SkillCastEvent(time, agent, skill, castingTimeMs)
 	{
 		public enum SkillCastType
 		{
@@ -64,12 +57,6 @@ namespace GW2Scratch.EVTCAnalytics.Events
 			WithQuickness
 		}
 
-		public SkillCastType CastType { get; }
-
-		public StartSkillCastEvent(long time, Agent agent, Skill skill, int castingTimeMs,
-			SkillCastType castType) : base(time, agent, skill, castingTimeMs)
-		{
-			CastType = castType;
-		}
+		public SkillCastType CastType { get; } = castType;
 	}
 }

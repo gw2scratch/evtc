@@ -5,56 +5,49 @@ namespace GW2Scratch.EVTCInspector
 {
 	public static class EventFilters
 	{
-		public static bool IsAgentInEvent(Event ev, string agentName)
+		public static bool IsAgentInEvent(Event ev, Agent agent, bool ifSource = true, bool ifTarget = true)
 		{
-			if (!string.IsNullOrWhiteSpace(agentName))
+			if (ev is BuffEvent buffEvent)
 			{
-				if (ev is AgentEvent agentEvent)
-				{
-					var agent = agentEvent.Agent;
-					if (agent == null)
-					{
-						return false;
-					}
-
-					return agent.Name.Contains(agentName);
-				}
-				else if (ev is DamageEvent damageEvent)
-				{
-					var attacker = damageEvent.Attacker;
-					var defender = damageEvent.Defender;
-					if (attacker == null || defender == null)
-					{
-						return false;
-					}
-
-					return attacker.Name.Contains(agentName) || defender.Name.Contains(agentName);
-				}
-				else
-				{
-					return false;
-				}
+				var source = buffEvent.SourceAgent;
+				var target = buffEvent.Agent;
+				return (ifSource && agent == source) || (ifTarget && agent == target);
 			}
 
-			return true;
-		}
+			if (ev is EffectEvent effectEvent)
+			{
+				var source = effectEvent.EffectOwner;
+				var target = effectEvent.AgentTarget;
+				return (ifSource && agent == source) || (ifTarget && agent == target);
+			}
 
-		public static bool IsAgentInEvent(Event ev, Agent agent, bool ifAttacker = true, bool ifDefender = true)
-		{
+			if (ev is EffectStartEvent effectStartEvent)
+			{
+				var source = effectStartEvent.EffectOwner;
+				var target = effectStartEvent.AgentTarget;
+				return (ifSource && agent == source) || (ifTarget && agent == target);
+			}
+
 			if (ev is AgentEvent agentEvent)
 			{
 				return agentEvent.Agent == agent;
 			}
-			else if (ev is DamageEvent damageEvent)
+
+			if (ev is DamageEvent damageEvent)
 			{
-				var attacker = damageEvent.Attacker;
-				var defender = damageEvent.Defender;
-				return (ifAttacker && agent == attacker) || (ifDefender && agent == defender);
+				var source = damageEvent.Attacker;
+				var target = damageEvent.Defender;
+				return (ifSource && agent == source) || (ifTarget && agent == target);
 			}
-			else
+
+			if (ev is CrowdControlEvent crowdControlEvent)
 			{
-				return false;
+				var source = crowdControlEvent.Attacker;
+				var target = crowdControlEvent.Defender;
+				return (ifSource && agent == source) || (ifTarget && agent == target);
 			}
+
+			return false;
 		}
 
 		public static bool IsTypeName(Event ev, string eventName)

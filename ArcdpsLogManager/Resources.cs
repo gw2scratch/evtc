@@ -124,25 +124,25 @@ namespace GW2Scratch.ArcdpsLogManager
 		// WING 3
 		public static Image GetEscortIcon() => GetEncounterImage("Mini_McLeod_the_Silent");
 		public static Image GetKeepConstructIcon() => GetEncounterImage("Mini_Keep_Construct");
-		public static Image GetTwistedCastleIcon() => GetEncounterImage("Legendary_Insight");
+		public static Image GetTwistedCastleIcon() => GetEncounterImage("Twisted_Castle");
 		public static Image GetXeraIcon() => GetEncounterImage("Mini_Xera");
 
 		// WING 4
 		public static Image GetCairnIcon() => GetEncounterImage("Mini_Cairn_the_Indomitable");
 		public static Image GetMursaatOverseerIcon() => GetEncounterImage("Mini_Mursaat_Overseer");
 		public static Image GetSamarogIcon() => GetEncounterImage("Mini_Samarog");
-		public static Image GetDeimosIcon() => GetEncounterImage("Mini_Saul");
+		public static Image GetDeimosIcon() => GetEncounterImage("Deimos");
 
 		// WING 5
 		public static Image GetDesminaIcon() => GetEncounterImage("Mini_Desmina");
-		public static Image GetRiverOfSoulsIcon() => GetEncounterImage("Legendary_Divination");
+		public static Image GetRiverOfSoulsIcon() => GetEncounterImage("River_Of_Souls");
 		public static Image GetBrokenKingIcon() => GetEncounterImage("Mini_Broken_King");
-		public static Image GetEaterOfSoulsIcon() => GetEncounterImage("Legendary_Divination");
-		public static Image GetEyesIcon() => GetEncounterImage("Legendary_Divination");
+		public static Image GetEaterOfSoulsIcon() => GetEncounterImage("Eater_Of_Souls");
+		public static Image GetEyesIcon() => GetEncounterImage("Eyes_Of_Fate_And_Judgment");
 		public static Image GetDhuumIcon() => GetEncounterImage("Mini_Dhuum");
 
 		// WING 6
-		public static Image GetConjuredAmalgamatedIcon() => GetEncounterImage("Legendary_Divination");
+		public static Image GetConjuredAmalgamateIcon() => GetEncounterImage("Conjured_Amalgamate");
 		public static Image GetTwinLargosIcon() => GetEncounterImage("Mini_Nikare");
 		public static Image GetQadimIcon() => GetEncounterImage("Mini_Qadim");
 

@@ -849,6 +849,36 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				case StateChange.FractalScale:
 					state.FractalScale = (int) item.SrcAgent;
 					return;
+				case StateChange.ArcBuild:
+					// (char*)&src_agent is a null-terminated string matching the full build string in arcdps.log
+					Span<byte> build = stackalloc byte[64-8];
+					BitConverter.GetBytes(item.SrcAgent).CopyTo(build[0..8]);
+					BitConverter.GetBytes(item.DstAgent).CopyTo(build[8..16]);
+					BitConverter.GetBytes(item.Value).CopyTo(build[16..20]);
+					BitConverter.GetBytes(item.BuffDmg).CopyTo(build[20..24]);
+					BitConverter.GetBytes(item.OverstackValue).CopyTo(build[24..28]);
+					BitConverter.GetBytes(item.SkillId).CopyTo(build[28..32]);
+					BitConverter.GetBytes(item.SrcAgentId).CopyTo(build[32..34]);
+					BitConverter.GetBytes(item.DstAgentId).CopyTo(build[34..36]);
+					BitConverter.GetBytes(item.SrcMasterId).CopyTo(build[36..38]);
+					BitConverter.GetBytes(item.DstMasterId).CopyTo(build[38..40]);
+					build[40] = (byte)item.Iff;
+					build[41] = (byte)item.Buff;
+					build[42] = (byte)item.Result;
+					build[43] = (byte)item.IsActivation;
+					build[44] = (byte)item.IsBuffRemove;
+					build[45] = (byte)item.IsNinety;
+					build[46] = (byte)item.IsFifty;
+					build[47] = (byte)item.IsMoving;
+					build[48] = (byte)item.IsStateChange;
+					build[49] = (byte)item.IsFlanking;
+					build[50] = (byte)item.IsShields;
+					build[51] = (byte)item.IsOffCycle;
+					BitConverter.GetBytes(item.Padding).CopyTo(build[52..56]);
+					
+					var buildString = Encoding.UTF8.GetString(build).TrimEnd('\0');;
+					state.ArcdpsBuild = buildString;
+					return;
 				default:
 				{
 					var processedEvent = GetEvent(state, item);
@@ -899,14 +929,42 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				state.SkillsById.Add(id, newSkill);
 				return newSkill;
 			}
+			
+			bool isOldWeaponSetAvailable = string.Compare(state.EvtcVersion, "EVTC20240627", StringComparison.OrdinalIgnoreCase) >= 0;
+			bool isCommanderAvailable = string.Compare(state.EvtcVersion, "EVTC20220823", StringComparison.OrdinalIgnoreCase) >= 0;
+			bool isOldTeamAvailable = string.Compare(state.EvtcVersion, "EVTC20240612", StringComparison.OrdinalIgnoreCase) >= 0;
 
 			if (item.IsStateChange != StateChange.Normal)
 			{
 				switch (item.IsStateChange)
 				{
 					case StateChange.EnterCombat:
-						return new AgentEnterCombatEvent(item.Time, GetAgentByAddress(item.SrcAgent),
-							(int) item.DstAgent);
+					{
+						int professionId = item.Value - 1;
+						int specializationId = item.BuffDmg;
+						Profession profession;
+
+						if (professionId < Professions.Length && professionId > 0)
+						{
+							profession = Professions[professionId];
+						}
+						else
+						{
+							profession = Profession.None;
+						}
+
+						EliteSpecialization specialization;
+						if (specializationId == 0)
+						{
+							specialization = EliteSpecialization.None;
+						}
+						else
+						{
+							specialization = Characters.GetEliteSpecializationFromId((uint) specializationId);
+						}
+
+						return new AgentEnterCombatEvent(item.Time, GetAgentByAddress(item.SrcAgent), (int) item.DstAgent, profession, specialization);
+					}
 					case StateChange.ExitCombat:
 						return new AgentExitCombatEvent(item.Time, GetAgentByAddress(item.SrcAgent));
 					case StateChange.ChangeUp:
@@ -924,31 +982,24 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						return new AgentHealthUpdateEvent(item.Time, GetAgentByAddress(item.SrcAgent),
 							healthFraction);
 					case StateChange.WeaponSwap:
-						WeaponSet newWeaponSet;
-						switch (item.DstAgent)
+						static WeaponSet WeaponSetFromId(long id)
 						{
-							case 0:
-								newWeaponSet = WeaponSet.Water1;
-								break;
-							case 1:
-								newWeaponSet = WeaponSet.Water2;
-								break;
-							case 4:
-								newWeaponSet = WeaponSet.Land1;
-								break;
-							case 5:
-								newWeaponSet = WeaponSet.Land2;
-								break;
-							default:
-								newWeaponSet = WeaponSet.Unknown;
-								break;
+							return id switch
+							{
+								0 => WeaponSet.Water1,
+								1 => WeaponSet.Water2,
+								4 => WeaponSet.Land1,
+								5 => WeaponSet.Land2,
+								_ => WeaponSet.Unknown
+							};
 						}
 
-						return new AgentWeaponSwapEvent(item.Time, GetAgentByAddress(item.SrcAgent),
-							newWeaponSet);
+						WeaponSet newWeaponSet = WeaponSetFromId((long) item.DstAgent);
+						WeaponSet? oldWeaponSet = isOldWeaponSetAvailable ? WeaponSetFromId(item.Value) : null;
+
+						return new AgentWeaponSwapEvent(item.Time, GetAgentByAddress(item.SrcAgent), newWeaponSet, oldWeaponSet);
 					case StateChange.MaxHealthUpdate:
-						return new AgentMaxHealthUpdateEvent(item.Time, GetAgentByAddress(item.SrcAgent),
-							item.DstAgent);
+						return new AgentMaxHealthUpdateEvent(item.Time, GetAgentByAddress(item.SrcAgent), item.DstAgent);
 					case StateChange.Reward:
 						return new RewardEvent(item.Time, item.DstAgent, item.Value);
 					case StateChange.BuffInitial:
@@ -989,7 +1040,12 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						return new FacingChangeEvent(item.Time, GetAgentByAddress(item.SrcAgent), x, y);
 					}
 					case StateChange.TeamChange:
-						return new TeamChangeEvent(item.Time, GetAgentByAddress(item.SrcAgent), item.DstAgent);
+						int? oldTeam = isOldTeamAvailable switch
+						{
+							true => item.Value,
+							false => null,
+						};
+						return new TeamChangeEvent(item.Time, GetAgentByAddress(item.SrcAgent), item.DstAgent, oldTeam);
 					case StateChange.Targetable:
 					{
 						var agent = GetAgentByAddress(item.SrcAgent);
@@ -1038,6 +1094,11 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						return new UnknownEvent(item.Time, item);
 					case StateChange.Tag:
 						uint markerId = (uint) item.Value;
+						if (markerId == 0)
+						{
+							return new AgentMarkerRemoveAllEvent(item.Time, GetAgentByAddress(item.SrcAgent));
+						}
+
 						if (!state.MarkersById.TryGetValue(markerId, out Marker marker))
 						{
 							marker = new Marker(markerId);
@@ -1045,14 +1106,13 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						}
 
 						// Added in aug.23.2022
-						bool isCommanderAvailable = string.Compare(state.EvtcVersion, "EVTC20220823", StringComparison.OrdinalIgnoreCase) >= 0;
 						bool? isCommander = isCommanderAvailable switch
 						{
 							true => item.Buff != 0,
 							false => null,
 						};
 						
-						return new AgentTagEvent(item.Time, GetAgentByAddress(item.SrcAgent), marker, isCommander);
+						return new AgentMarkerEvent(item.Time, GetAgentByAddress(item.SrcAgent), marker, isCommander);
 					case StateChange.BarrierUpdate:
 						var barrierFraction = item.DstAgent / 10000f;
 						return new BarrierUpdateEvent(item.Time, GetAgentByAddress(item.SrcAgent), barrierFraction);
@@ -1060,13 +1120,12 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						// Should not appear in logs
 						return new UnknownEvent(item.Time, item);
 					case StateChange.Extension:
-						// TODO: Implement
-						return new UnknownEvent(item.Time, item);
+						return new UnknownExtensionEvent(item.Time, item);
 					case StateChange.ApiDelayed:
 						// Should not appear in logs
 						return new UnknownEvent(item.Time, item);
 					case StateChange.TickRate:
-						return new UnknownEvent(item.Time, item);
+						return new RateHealthEvent(item.Time, item.SrcAgent);
 					case StateChange.Last90BeforeDown:
 						return new UnknownEvent(item.Time, item);
 					case StateChange.Effect:
@@ -1136,8 +1195,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					case StateChange.IdleEvent:
 						return new UnknownEvent(item.Time, item);
 					case StateChange.ExtensionCombat:
-						// Not sure if this ever appears in logs.
-						return new UnknownEvent(item.Time, item);
+						// Same as StateChange.Extension, but skillid is treated as skill and added to the skill table.
+						return new UnknownExtensionEvent(item.Time, item);
 					case StateChange.Effect2:
 					{
 						// Official docs as of 2023-07-18:
@@ -1216,6 +1275,52 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						}
 
 						return new EffectStartEvent(item.Time, master, effect, aroundAgent, position, orientation, duration, trackableId);
+					}
+					case StateChange.SquadMarker:
+					{
+						// Squad ground marker
+						// src_agent: (float*)&src_agent is float[3], x/y/z of marker location. if values are all zero or infinity, this marker is removed
+						// skillid: index of marker eg. 0 is arrow
+						
+						// Position is only 12 bytes, but we also include the 4 unused extra bytes from DstAgent here for simplicity
+						Span<byte> positionBytes = stackalloc byte[16];
+						BitConverter.TryWriteBytes(positionBytes[0..8], item.SrcAgent);
+						BitConverter.TryWriteBytes(positionBytes[8..16], item.DstAgent);
+						
+						float[] position = new float[3];
+						position[0] = BitConverter.ToSingle(positionBytes[0..4]);
+						position[1] = BitConverter.ToSingle(positionBytes[4..8]);
+						position[2] = BitConverter.ToSingle(positionBytes[8..12]);
+						SquadMarkerType groundMarker = item.SkillId switch
+						{
+							0 => SquadMarkerType.Arrow,
+							1 => SquadMarkerType.Circle,
+							2 => SquadMarkerType.Heart,
+							3 => SquadMarkerType.Square,
+							4 => SquadMarkerType.Star,
+							5 => SquadMarkerType.Spiral,
+							6 => SquadMarkerType.Triangle,
+							7 => SquadMarkerType.X,
+							_ => SquadMarkerType.Unknown
+						};
+						
+						if (position.All(x => x == 0 || float.IsInfinity(x)))
+						{
+							return new SquadGroundMarkerRemoveEvent(item.Time, groundMarker);
+						}
+						else
+						{
+							return new SquadGroundMarkerPlaceEvent(item.Time, groundMarker, position);
+						}
+					}
+					case StateChange.Glider:
+					{
+						return item.Value switch
+						{
+							0 => new AgentGliderCloseEvent(item.Time, GetAgentByAddress(item.SrcAgent)),
+							1 => new AgentGliderOpenEvent(item.Time, GetAgentByAddress(item.SrcAgent)),
+							_ => new UnknownEvent(item.Time, item)
+						};
 					}
 					default:
 						return new UnknownEvent(item.Time, item);
@@ -1339,6 +1444,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				// TODO: Rewrite
 				bool ignored = false;
 				bool defianceBar = false;
+				bool crowdControl = false;
 				var hitResult = PhysicalDamageEvent.Result.Normal;
 				var ignoreReason = IgnoredPhysicalDamageEvent.Reason.Absorbed;
 				switch (item.Result)
@@ -1380,28 +1486,25 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					case Result.DefianceBar:
 						defianceBar = true;
 						break;
+					case Result.CrowdControl:
+						crowdControl = true;
+						break;
 					default:
 						return new UnknownEvent(item.Time, item);
 				}
 
-				if (!defianceBar)
+				return (defianceBar, crowdControl, ignored) switch
 				{
-					if (!ignored)
-					{
-						return new PhysicalDamageEvent(item.Time, attacker, defender, skill, damage, isMoving,
-							isNinety, isFlanking, shieldDamage, hitResult);
-					}
-					else
-					{
-						return new IgnoredPhysicalDamageEvent(item.Time, attacker, defender, skill, damage,
-							isMoving, isNinety, isFlanking, shieldDamage, ignoreReason);
-					}
-				}
-				else
-				{
-					return new DefianceBarDamageEvent(item.Time, attacker, defender, skill, damage, isMoving,
-						isNinety, isFlanking);
-				}
+					(true, true, true) => throw new InvalidOperationException(),
+					(true, true, false) => throw new InvalidOperationException(),
+					(true, false, false) => new DefianceBarDamageEvent(item.Time, attacker, defender, skill, damage, isMoving, isNinety, isFlanking),
+					(true, false, true) => throw new InvalidOperationException(),
+					(false, true, false) => new CrowdControlEvent(item.Time, attacker, defender, skill, isMoving, isNinety, isFlanking),
+					(false, true, true) => throw new InvalidOperationException(),
+					(false, false, false) => new PhysicalDamageEvent(item.Time, attacker, defender, skill, damage, isMoving,
+							isNinety, isFlanking, shieldDamage, hitResult),
+					(false, false, true) => new IgnoredPhysicalDamageEvent(item.Time, attacker, defender, skill, damage, isMoving, isNinety, isFlanking, shieldDamage, ignoreReason)
+				};
 			}
 
 			return new UnknownEvent(item.Time, item);
