@@ -28,6 +28,7 @@ This is the full changelog of the arcdps Log Manager.
 - Exact arcdps build is now shown in the Statistics tabs; requires arcdps 2024-06-14 or newer.
 - Added old weapon set to AgentWeaponSwapEvent; requires arcdps 2024-06-27 or newer.
 - Added CrowdControlEvent (crowd control against non-defiant enemies); requires arcdps 2024-06-27 or newer.
+- Added old team ids to TeamChangeEvent; requires arcdps 2024-06-12 or newer.
 
 ## Log Manager v1.11.1
 

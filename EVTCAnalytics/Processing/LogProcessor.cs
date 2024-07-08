@@ -929,6 +929,10 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				state.SkillsById.Add(id, newSkill);
 				return newSkill;
 			}
+			
+			bool isOldWeaponSetAvailable = string.Compare(state.EvtcVersion, "EVTC20240627", StringComparison.OrdinalIgnoreCase) >= 0;
+			bool isCommanderAvailable = string.Compare(state.EvtcVersion, "EVTC20220823", StringComparison.OrdinalIgnoreCase) >= 0;
+			bool isOldTeamAvailable = string.Compare(state.EvtcVersion, "EVTC20240612", StringComparison.OrdinalIgnoreCase) >= 0;
 
 			if (item.IsStateChange != StateChange.Normal)
 			{
@@ -991,7 +995,6 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						}
 
 						WeaponSet newWeaponSet = WeaponSetFromId((long) item.DstAgent);
-						bool isOldWeaponSetAvailable = string.Compare(state.EvtcVersion, "EVTC20240627", StringComparison.OrdinalIgnoreCase) >= 0;
 						WeaponSet? oldWeaponSet = isOldWeaponSetAvailable ? WeaponSetFromId(item.Value) : null;
 
 						return new AgentWeaponSwapEvent(item.Time, GetAgentByAddress(item.SrcAgent), newWeaponSet, oldWeaponSet);
@@ -1037,7 +1040,12 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						return new FacingChangeEvent(item.Time, GetAgentByAddress(item.SrcAgent), x, y);
 					}
 					case StateChange.TeamChange:
-						return new TeamChangeEvent(item.Time, GetAgentByAddress(item.SrcAgent), item.DstAgent);
+						int? oldTeam = isOldTeamAvailable switch
+						{
+							true => item.Value,
+							false => null,
+						};
+						return new TeamChangeEvent(item.Time, GetAgentByAddress(item.SrcAgent), item.DstAgent, oldTeam);
 					case StateChange.Targetable:
 					{
 						var agent = GetAgentByAddress(item.SrcAgent);
@@ -1093,7 +1101,6 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						}
 
 						// Added in aug.23.2022
-						bool isCommanderAvailable = string.Compare(state.EvtcVersion, "EVTC20220823", StringComparison.OrdinalIgnoreCase) >= 0;
 						bool? isCommander = isCommanderAvailable switch
 						{
 							true => item.Buff != 0,

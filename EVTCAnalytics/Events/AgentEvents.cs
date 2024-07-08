@@ -187,9 +187,13 @@ namespace GW2Scratch.EVTCAnalytics.Events
 	/// <br />
 	/// Teams affect hostility of targets.
 	/// </summary>
-	public class TeamChangeEvent(long time, Agent agent, ulong newTeamId) : AgentEvent(time, agent)
+	public class TeamChangeEvent(long time, Agent agent, ulong newTeamId, int? oldTeamId) : AgentEvent(time, agent)
 	{
 		public ulong NewTeamId { get; } = newTeamId;
+		/// <remarks>
+		/// Introduced in EVTC20240612. May be null before.
+		/// </remarks>
+		public int? OldTeamId { get; } = oldTeamId;
 	}
 
 	/// <summary>
