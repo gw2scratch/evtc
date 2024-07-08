@@ -1121,7 +1121,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						// Should not appear in logs
 						return new UnknownEvent(item.Time, item);
 					case StateChange.TickRate:
-						return new UnknownEvent(item.Time, item);
+						return new RateHealthEvent(item.Time, item.SrcAgent);
 					case StateChange.Last90BeforeDown:
 						return new UnknownEvent(item.Time, item);
 					case StateChange.Effect:

@@ -48,7 +48,7 @@
 		Extension = 40,
 		ApiDelayed = 41, // Only in realtime API; should not appear in logs
 		InstanceStart = 42,
-		TickRate = 43,
+		TickRate = 43, // Renamed from CBTS_TICKRATE to CBTS_RATEHEALTH in arcdps at some point.
 		Last90BeforeDown = 44, // Removed with 20240612; "redundant as healthpercent is part of the limited set"
 		Effect = 45, // Not used since 20230716
 		IdToGuid = 46,

@@ -556,7 +556,7 @@ public class CombatItemFilters : ICombatItemFilters
 			StateChange.Extension => false,
 			StateChange.ApiDelayed => true,
 			StateChange.InstanceStart => true,
-			StateChange.TickRate => true,
+			StateChange.TickRate => false,
 			StateChange.Last90BeforeDown => false,
 			StateChange.Effect => false,
 			StateChange.IdToGuid => true,
