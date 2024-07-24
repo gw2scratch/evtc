@@ -676,13 +676,23 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				}
 				case Encounter.Eparch:
 				{
+					// Normal Mode Release: 31.771.528
+					// Challenge Mode Release: 32.618.906
+					// Challenge Mode Release (Normal Mode T4): 19.857.206
+					// HP Nerfs Patch (Challenge Mode): 22.833.236 
+					// HP Nerfs Patch (Normal Mode T4): 13.900.044
 					return GetDefaultBuilder(encounter, mainTarget)
 						.WithResult(new AnyCombinedResultDeterminer(
 								new AgentKillingBlowDeterminer(mainTarget),
 								new BuffAppliedBelowHealthThresholdDeterminer(mainTarget, 0.2f, SkillIds.Determined)))
-						// On release, Eparch had 31,771,528 health in NM.
-						// On CM release, Eparch was reduced to 19,857,206 in NM and CM health is 32,618,906
-						.WithModes(new AgentHealthModeDeterminer(mainTarget, 31_800_000))
+						.WithModes(new ConditionalModeDeterminer(
+							(gameBuild != null && gameBuild < GameBuilds.LonelyTowerCMRelease,
+								new AgentHealthModeDeterminer(mainTarget, 31_000_000, EncounterMode.Normal)),
+							(gameBuild != null && gameBuild >= GameBuilds.LonelyTowerCMRelease && gameBuild <= GameBuilds.LonelyTowerHPNerf2,
+								new AgentHealthModeDeterminer(mainTarget, 31_000_000, EncounterMode.Challenge)),
+							(gameBuild != null && gameBuild >= GameBuilds.LonelyTowerHPNerf2,
+								new AgentHealthModeDeterminer(mainTarget, 21_000_000, EncounterMode.Challenge))
+							))
 						.Build();
 				}
 				default:

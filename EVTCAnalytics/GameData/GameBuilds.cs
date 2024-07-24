@@ -31,9 +31,15 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		public static int LonelyTowerRelease = 163141;
 
 		/// <summary>
-		/// Lonely Tower Challenge Mode release.<br></br>
+		/// Lonely Tower Challenge Mode release with HP nerf.<br></br>
 		/// https://wiki.guildwars2.com/wiki/Game_updates/2024-06-04
 		/// </summary>
 		public static int LonelyTowerCMRelease = 163807;
+
+		/// <summary>
+		/// Eparch further HP nerfs for all modes.<br></br>
+		/// https://wiki.guildwars2.com/wiki/Game_updates/2024-06-25
+		/// </summary>
+		public static int LonelyTowerHPNerf2 = 164824;
 	}
 }
