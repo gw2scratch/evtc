@@ -212,7 +212,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Updates
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 11, 1, 7)
 			                     && log.Encounter is Encounter.Adina or Encounter.Sabir,
 				"Fix Adina and Sabir possibly being identified as the other one in rare scenarios."),
-			new LogUpdate(log => log.ParsingVersion < new Version(1, 11, 1, 8)
+			new LogUpdate(log => log.ParsingVersion < new Version(1, 11, 1, 9)
 								 && log.Encounter == Encounter.Other
 								 && log.MapId == MapIds.LonelyTower,
 				"Add support for Eparch in the Lonely Tower fractal."),

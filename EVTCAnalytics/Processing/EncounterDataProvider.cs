@@ -687,11 +687,11 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 								new BuffAppliedBelowHealthThresholdDeterminer(mainTarget, 0.2f, SkillIds.Determined)))
 						.WithModes(new ConditionalModeDeterminer(
 							(gameBuild != null && gameBuild < GameBuilds.LonelyTowerCMRelease,
-								new AgentHealthModeDeterminer(mainTarget, 31_000_000, EncounterMode.Normal)),
-							(gameBuild != null && gameBuild >= GameBuilds.LonelyTowerCMRelease && gameBuild <= GameBuilds.LonelyTowerHPNerf2,
-								new AgentHealthModeDeterminer(mainTarget, 31_000_000, EncounterMode.Challenge)),
+								new ConstantModeDeterminer(EncounterMode.Normal)),
+							(gameBuild != null && gameBuild >= GameBuilds.LonelyTowerCMRelease && gameBuild < GameBuilds.LonelyTowerHPNerf2,
+								new AgentHealthModeDeterminer(mainTarget, 31_000_000)),
 							(gameBuild != null && gameBuild >= GameBuilds.LonelyTowerHPNerf2,
-								new AgentHealthModeDeterminer(mainTarget, 21_000_000, EncounterMode.Challenge))
+								new AgentHealthModeDeterminer(mainTarget, 21_000_000))
 							))
 						.Build();
 				}
