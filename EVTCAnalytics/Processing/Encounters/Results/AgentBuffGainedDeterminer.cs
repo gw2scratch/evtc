@@ -17,7 +17,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 
 		protected override Event GetEvent(IEnumerable<Event> events)
 		{
-			var filteredEvents = stopAtDespawn ? events.TakeWhile(x => !(x is AgentDespawnEvent despawn && despawn.Agent == agent)) : events;
+			var filteredEvents = stopAtDespawn ? TakeUntilDespawn(events) : events;
 			
 			if (ignoreInitial)
 			{
@@ -29,9 +29,29 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 			else
 			{
 				return filteredEvents
-					.TakeWhile(x => x is not AgentDespawnEvent)
 					.OfType<BuffApplyEvent>()
 					.FirstOrDefault(x => x.Agent == agent && x.Buff.Id == buffId);
+			}
+		}
+
+		private IEnumerable<Event> TakeUntilDespawn(IEnumerable<Event> events)
+		{
+			// Very rarely, arcdps has been seen to emit a despawn event instead of a spawn event
+			// (specifically, this has been observed once with arcdps 20220330).
+			// To work around this issue, we ignore despawn events that happen very soon after the first event.
+			const long earlyDespawnThreshold = 200;
+			
+			long firstTime = long.MaxValue;
+			foreach (var e in events)
+			{
+				firstTime = Math.Min(firstTime, e.Time);
+				
+				if (e is AgentDespawnEvent despawn && despawn.Agent == agent && despawn.Time - firstTime > earlyDespawnThreshold)
+				{
+					yield break;
+				}
+				
+				yield return e;
 			}
 		}
 	}
