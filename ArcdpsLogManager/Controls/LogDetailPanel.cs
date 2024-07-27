@@ -306,12 +306,15 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			dpsReportUploadButton.Click += (sender, args) => { UploadProcessor.ScheduleDpsReportEIUpload(logData); };
 			dpsReportOpenButton.Click += (sender, args) =>
 			{
-				var processInfo = new ProcessStartInfo()
+				try
 				{
-					FileName = logData.DpsReportEIUpload.Url,
-					UseShellExecute = true
-				};
-				Process.Start(processInfo);
+					var processInfo = new ProcessStartInfo() { FileName = logData.DpsReportEIUpload.Url, UseShellExecute = true };
+					Process.Start(processInfo);
+				}
+				catch (Exception e)
+				{
+					MessageBox.Show(this, $"Failed to open the URL: {e.Message}. Please try again.", "Error", MessageBoxButtons.OK, MessageBoxType.Error);
+				}
 			};
 			copyButton.Click += (sender, args) =>
 			{
