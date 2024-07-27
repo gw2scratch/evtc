@@ -2,7 +2,9 @@
 
 This is the full changelog of the arcdps Log Manager.
 
-## Log Manager v1.11.2 (unreleased)
+## Log Manager v1.12.1 (unreleased)
+
+## Log Manager v1.12
 
 #### New features
 - Added support for Eparch in the Lonely Tower fractal (thanks, @Linkaaaaa!)
