@@ -205,24 +205,14 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				// Raids - Wing 5
 				case Encounter.SoullessHorror:
 				{
-					var soullessHorror = GetTargetBySpeciesId(agents, SpeciesIds.SoullessHorror);
-					var desmina = GetTargetBySpeciesId(agents, SpeciesIds.Desmina);
-
-					var targets = new Agent[] { soullessHorror, desmina }.Where(x => x != null).ToList();
-
-					return GetDefaultBuilder(encounter, targets)
-						.WithResult(new ConditionalResultDeterminer(
-							(desmina == null, new ConstantResultDeterminer(EncounterResult.Failure)),
-							(soullessHorror != null && desmina != null, new AllCombinedResultDeterminer(
-								new AgentBuffGainedDeterminer(soullessHorror, SkillIds.SoullessHorrorDetermined),
-								new NPCSpawnDeterminer(SpeciesIds.Desmina)
-							))
-						))
+					// It is fairly common for a failure to record long enough to include the respawned boss, especially
+					// if the fight resets with some players still alive (a common bug after someone leaves an instance mid-fight).
+					return GetDefaultBuilder(encounter, mainTarget, mergeMainTarget: false)
+						.WithResult(new AgentBuffGainedDeterminer(mainTarget, SkillIds.SoullessHorrorDetermined))
 						// Necrosis is applied faster in Challenge Mode. It is first removed and then reapplied
 						// so we check the remaining time of the removed buff.
 						.WithModes(new RemovedBuffStackRemainingTimeModeDeterminer(SkillIds.Necrosis,
 							EncounterMode.Challenge, 23000, EncounterMode.Normal, 18000))
-						.WithTargets(targets)
 						.Build();
 				}
 				case Encounter.RiverOfSouls:

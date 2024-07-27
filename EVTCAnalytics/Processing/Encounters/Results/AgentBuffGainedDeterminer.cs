@@ -9,35 +9,27 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 	/// <summary>
 	/// A result determiner that results in success if an agent gains a specified buff.
 	/// </summary>
-	public class AgentBuffGainedDeterminer : EventFoundResultDeterminer
+	public class AgentBuffGainedDeterminer(Agent agent, uint buffId, bool ignoreInitial = true, bool stopAtDespawn = true) : EventFoundResultDeterminer
 	{
-		private readonly Agent agent;
-		private readonly uint buffId;
-		private readonly bool ignoreInitial;
-
-		public AgentBuffGainedDeterminer(Agent agent, uint buffId, bool ignoreInitial = true)
-		{
-			this.agent = agent;
-			this.buffId = buffId;
-			this.ignoreInitial = ignoreInitial;
-		}
-		
-		public override IReadOnlyList<Type> RequiredEventTypes { get; } = new List<Type> { typeof(BuffApplyEvent), typeof(InitialBuffEvent) };
+		public override IReadOnlyList<Type> RequiredEventTypes { get; } = new List<Type> { typeof(BuffApplyEvent), typeof(InitialBuffEvent), typeof(AgentDespawnEvent) };
 		public override IReadOnlyList<uint> RequiredBuffSkillIds => new List<uint> { buffId };
 		public override IReadOnlyList<PhysicalDamageEvent.Result> RequiredPhysicalDamageEventResults { get; } = new List<PhysicalDamageEvent.Result>();
 
 		protected override Event GetEvent(IEnumerable<Event> events)
 		{
+			var filteredEvents = stopAtDespawn ? events.TakeWhile(x => !(x is AgentDespawnEvent despawn && despawn.Agent == agent)) : events;
+			
 			if (ignoreInitial)
 			{
-				return events
+				return filteredEvents
 					.OfType<BuffApplyEvent>()
 					.Where(x => x is not InitialBuffEvent)
 					.FirstOrDefault(x => x.Agent == agent && x.Buff.Id == buffId);
 			}
 			else
 			{
-				return events
+				return filteredEvents
+					.TakeWhile(x => x is not AgentDespawnEvent)
 					.OfType<BuffApplyEvent>()
 					.FirstOrDefault(x => x.Agent == agent && x.Buff.Id == buffId);
 			}
