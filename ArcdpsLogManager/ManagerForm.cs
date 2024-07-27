@@ -549,8 +549,17 @@ namespace GW2Scratch.ArcdpsLogManager
 					UseShellExecute = true
 				};
 				Process.Start(processInfo);
-			}) { MenuText = "Donate" });
+			}) { MenuText = "Donate a coffee \u2764\ufe0f" });
 			helpMenuItem.Items.Add(new SeparatorMenuItem());
+			helpMenuItem.Items.Add(new Command((_, _) =>
+			{
+				var processInfo = new ProcessStartInfo
+				{
+					FileName = "https://github.com/gw2scratch/evtc/releases",
+					UseShellExecute = true
+				};
+				Process.Start(processInfo);
+			}) { MenuText = "Changelog" });
 			helpMenuItem.Items.Add(new Command((_, _) =>
 			{
 				var processInfo = new ProcessStartInfo

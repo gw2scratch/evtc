@@ -8,7 +8,6 @@ namespace GW2Scratch.ArcdpsLogManager.Commands
 		public About()
 		{
 			MenuText = "About";
-			Shortcut = Keys.F11;
 		}
 
 		protected override void OnExecuted(EventArgs e)
