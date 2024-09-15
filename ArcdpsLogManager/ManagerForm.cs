@@ -703,6 +703,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			// We do not want to process logs before they are fully written,
 			// mid-compression and the like, so we add a delay after detecting one.
 			var delay = TimeSpan.FromSeconds(5);
+			var temporaryFileDelay = TimeSpan.FromSeconds(15);
 
 			fileSystemWatchers.Clear();
 			foreach (var directory in Settings.LogRootPaths)
@@ -716,7 +717,15 @@ namespace GW2Scratch.ArcdpsLogManager
 					{
 						Task.Run(async () =>
 						{
-							await Task.Delay(delay);
+							if (LogFinder.IsLikelyTemporary(args.FullPath))
+							{
+								await Task.Delay(temporaryFileDelay);
+							}
+							else
+							{
+								await Task.Delay(delay);
+							}
+							
 							if (File.Exists(args.FullPath) && LogFinder.IsLikelyEvtcLog(args.FullPath))
 							{
 								Application.Instance.AsyncInvoke(() => AddNewLog(args.FullPath));
@@ -727,7 +736,15 @@ namespace GW2Scratch.ArcdpsLogManager
 					{
 						Task.Run(async () =>
 						{
-							await Task.Delay(delay);
+							if (LogFinder.IsLikelyTemporary(args.FullPath))
+							{
+								await Task.Delay(temporaryFileDelay);
+							}
+							else
+							{
+								await Task.Delay(delay);
+							}
+							
 							if (File.Exists(args.FullPath) && LogFinder.IsLikelyEvtcLog(args.FullPath))
 							{
 								Application.Instance.AsyncInvoke(() => AddNewLog(args.FullPath));

@@ -70,6 +70,12 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 			return false;
 		}
 
+		/// <summary>
+		/// Arcdps creates a file and then adds into an archive. The file is then deleted. Checks if this is possibly one of these files.
+		/// It is not guaranteed, however, and this may return true for files that will not be removed.
+		/// </summary>
+		public bool IsLikelyTemporary(string filename) => !filename.Contains('.');
+
 		public IEnumerable<LogData> GetTesting()
 		{
 			var player1 = new LogPlayer("Testing player", ":Testing account.1234", 1, Profession.Thief, EliteSpecialization.Daredevil, "01D1DADF-751E-E411-ADEE-AC162DC0070D");
