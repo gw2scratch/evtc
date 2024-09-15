@@ -57,37 +57,37 @@ jobs:
           mv artifacts/inspector/win64/GW2Scratch.EVTCInspector.Wpf.exe artifacts/inspector/win64/EVTCInspector.exe
           mv artifacts/inspector/linux64/GW2Scratch.EVTCInspector.Gtk artifacts/inspector/linux64/EVTCInspector
     - name: Upload Log Manager (Windows)
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: Log Manager (Windows)
         path: artifacts/manager/win64/ArcdpsLogManager.exe
     - name: Upload Log Manager (Windows, self-contained)
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: Log Manager (Windows, self-contained)
         path: artifacts/manager/win64-sc/ArcdpsLogManager.exe
     - name: Upload Log Manager (Linux)
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: Log Manager (Linux)
         path: artifacts/manager/linux64/ArcdpsLogManager
     - name: Upload Log Manager (Linux, self-contained)
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: Log Manager (Linux, self-contained)
         path: artifacts/manager/linux64-sc/ArcdpsLogManager
     - name: Upload EVTC Inspector (Windows)
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: EVTC Inspector (Windows)
         path: artifacts/inspector/win64/EVTCInspector.exe
     - name: Upload EVTC Inspector (Linux)
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: EVTC Inspector (Linux)
         path: artifacts/inspector/linux64/EVTCInspector
     - name: Upload PDB files
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: PDB files
         path: artifacts/pdb/
