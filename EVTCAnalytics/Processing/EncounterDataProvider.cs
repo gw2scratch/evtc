@@ -77,7 +77,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					var narella = GetTargetBySpeciesId(agents, SpeciesIds.Narella);
 					var prisoner = GetTargetBySpeciesId(agents, SpeciesIds.TrioCagePrisoner);
 
-					var targets = new Agent[] {berg, zane, narella}.Where(x => x != null).ToArray();
+					var targets = new Agent[] { berg, zane, narella }.Where(x => x != null).ToArray();
 
 					return GetDefaultBuilder(encounter, targets)
 						.WithResult(new ConditionalResultDeterminer(
@@ -123,7 +123,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 							// ensure that this will be ignored. It is also very unlikely the boss would be defeated in such a short time,
 							// barring extreme exploits of broken game skills.
 							// Even such exploits from the past would have trouble meeting this time requirement (Shadow Flare, Renegade Invoke Torment).
-							(true, new AgentCombatExitDeterminer(secondPhaseXera) {MinTimeSinceSpawn = 10000})
+							(true, new AgentCombatExitDeterminer(secondPhaseXera) { MinTimeSinceSpawn = 10000 })
 						))
 						.WithHealth(new ConditionalHealthDeterminer(
 							(secondPhaseXera == null, new MaxMinHealthDeterminer()),
@@ -161,7 +161,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					// a long period of time when logs did not contain the main gadget so we need to rely on this.
 					bool canUseReward = gameBuild != null && gameBuild < GameBuilds.AhdashimRelease;
 
-					
+
 					// Deimos, the NPC, is replaced with a gadget for the last 10% of the fight.
 					// There may sometimes be other gadgets with the same id. They do not, however,
 					// have an attack target. They also have lower maximum health values.
@@ -174,7 +174,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					bool canUseTargets = mainGadget != null && attackTarget != null && prisoner != null;
 
 					var targets = new List<Agent> { mainTarget, mainGadget }.Where(x => x != null).ToList();
-					
+
 					return GetDefaultBuilder(encounter, mainTarget)
 						.WithModes(new AgentHealthModeDeterminer(mainTarget, 42_000_000))
 						.WithTargets(targets)
@@ -307,6 +307,22 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					return GetDefaultBuilder(encounter, mainTarget)
 						.WithModes(new AgentHealthModeDeterminer(mainTarget, 50_000_000))
 						.Build();
+				}
+				// Raids - Wing 8
+				case Encounter.Greer:
+				{
+					return GetDefaultBuilder(encounter, mainTarget).Build();
+				}
+				case Encounter.Decima:
+				{
+					// Note for the future challenge mode release
+					// Decima when it first released had 83,288,232 HP and got nerfed without patch to 70,795,000.
+					// Some logs with the original HP exist.
+					return GetDefaultBuilder(encounter, mainTarget).Build();
+				}
+				case Encounter.Ura:
+				{
+					return GetDefaultBuilder(encounter, mainTarget).Build();
 				}
 				// Challenge Mode fractals
 				case Encounter.Skorvald:

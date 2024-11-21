@@ -114,6 +114,11 @@ namespace GW2Scratch.ArcdpsLogManager
 		private Lazy<Image> CardinalSabirIcon { get; } = new Lazy<Image>(Resources.GetCardinalSabirIcon);
 		private Lazy<Image> QadimThePeerlessIcon { get; } = new Lazy<Image>(Resources.GetQadimThePeerlessIcon);
 
+		// WING 8
+		private Lazy<Image> GreerIcon { get; } = new Lazy<Image>(Resources.GetGreerIcon);
+		private Lazy<Image> DecimaIcon { get; } = new Lazy<Image>(Resources.GetDecimaIcon);
+		private Lazy<Image> UraIcon { get; } = new Lazy<Image>(Resources.GetUraIcon);
+
 		// STRIKES - ICEBROOD SAGA
 		private Lazy<Image> ShiverpeaksPassIcon { get; } = new Lazy<Image>(Resources.GetShiverpeaksPassIcon);
 		private Lazy<Image> VoiceAndClawOfTheFallenIcon { get; } = new Lazy<Image>(Resources.GetVoiceAndClawOfTheFallenIcon);
@@ -206,6 +211,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		private Lazy<Image> WideRaidWing5Icon { get; } = new Lazy<Image>(Resources.GetWideRaidWing5Icon);
 		private Lazy<Image> WideRaidWing6Icon { get; } = new Lazy<Image>(Resources.GetWideRaidWing6Icon);
 		private Lazy<Image> WideRaidWing7Icon { get; } = new Lazy<Image>(Resources.GetWideRaidWing7Icon);
+		private Lazy<Image> WideRaidWing8Icon { get; } = new Lazy<Image>(Resources.GetWideRaidWing8Icon);
 
 		public Image GetTinyLogIcon() => TinyIconLog.Value;
 		public Image GetTinyFractalsIcon() => TinyIconFractals.Value;
@@ -236,6 +242,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		public Image GetWideRaidWing5Icon() => WideRaidWing5Icon.Value;
 		public Image GetWideRaidWing6Icon() => WideRaidWing6Icon.Value;
 		public Image GetWideRaidWing7Icon() => WideRaidWing7Icon.Value;
+		public Image GetWideRaidWing8Icon() => WideRaidWing8Icon.Value;
 
 		public Image GetTinyProfessionIcon(Profession profession)
 		{
@@ -338,6 +345,10 @@ namespace GW2Scratch.ArcdpsLogManager
 				Encounter.Adina => CardinalAdinaIcon.Value,
 				Encounter.Sabir => CardinalSabirIcon.Value,
 				Encounter.QadimThePeerless => QadimThePeerlessIcon.Value,
+				// W8
+				Encounter.Greer => GreerIcon.Value,
+				Encounter.Decima => DecimaIcon.Value,
+				Encounter.Ura => UraIcon.Value,
 				// STRIKES - ICEBROOD SAGA
 				Encounter.ShiverpeaksPass => ShiverpeaksPassIcon.Value,
 				Encounter.VoiceAndClawOfTheFallen => VoiceAndClawOfTheFallenIcon.Value,

@@ -20,6 +20,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters.Groups
 			{EncounterCategory.RaidWing5, "Hall of Chains (W5)"},
 			{EncounterCategory.RaidWing6, "Mythwright Gambit (W6)"},
 			{EncounterCategory.RaidWing7, "The Key of Ahdashim (W7)"},
+			{EncounterCategory.RaidWing8, "Mount Balrior (W8)" },
 			{EncounterCategory.StrikeMissionIcebroodSaga, "Icebrood Saga"},
 			{EncounterCategory.StrikeMissionEndOfDragons, "End of Dragons"},
 			{EncounterCategory.StrikeMissionSecretsOfTheObscure, "Secrets of the Obscure"},

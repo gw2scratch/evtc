@@ -151,6 +151,11 @@ namespace GW2Scratch.ArcdpsLogManager
 		public static Image GetCardinalSabirIcon() => GetEncounterImage("Mini_Air_Djinn");
 		public static Image GetQadimThePeerlessIcon() => GetEncounterImage("Mini_Qadim_the_Peerless");
 
+		// WING 8
+		public static Image GetGreerIcon() => GetEncounterImage("Greer");
+		public static Image GetDecimaIcon() => GetEncounterImage("Decima");
+		public static Image GetUraIcon() => GetEncounterImage("Ura");
+
 		// STRIKES - ICEBROOD SAGA
 		public static Image GetShiverpeaksPassIcon() => GetEncounterImage("Mini_Icebrood_Construct");
 		public static Image GetVoiceAndClawOfTheFallenIcon() => GetEncounterImage("Mini_Cloudseeker");
@@ -226,5 +231,6 @@ namespace GW2Scratch.ArcdpsLogManager
 		public static Image GetWideRaidWing5Icon() => GetImage("ArenaNet.raid_wing5_96px_64px.png");
 		public static Image GetWideRaidWing6Icon() => GetImage("ArenaNet.raid_wing6_96px_64px.png");
 		public static Image GetWideRaidWing7Icon() => GetImage("ArenaNet.raid_wing7_96px_64px.png");
+		public static Image GetWideRaidWing8Icon() => GetImage("ArenaNet.raid_wing8_96px_64px.png");
 	}
 }

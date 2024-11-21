@@ -38,6 +38,9 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 				{Encounter.Adina, EncounterCategory.RaidWing7},
 				{Encounter.Sabir, EncounterCategory.RaidWing7},
 				{Encounter.QadimThePeerless, EncounterCategory.RaidWing7},
+				{Encounter.Greer, EncounterCategory.RaidWing8},
+				{Encounter.Decima, EncounterCategory.RaidWing8},
+				{Encounter.Ura, EncounterCategory.RaidWing8},
 				{Encounter.MAMA, EncounterCategory.FractalNightmare},
 				{Encounter.SiaxTheCorrupted, EncounterCategory.FractalNightmare},
 				{Encounter.EnsolyssOfTheEndlessTorment, EncounterCategory.FractalNightmare},
@@ -85,6 +88,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 				EncounterCategory.RaidWing5,
 				EncounterCategory.RaidWing6,
 				EncounterCategory.RaidWing7,
+				EncounterCategory.RaidWing8,
 			};
 		
 		private static readonly HashSet<EncounterCategory> StrikeMissionCategories =
