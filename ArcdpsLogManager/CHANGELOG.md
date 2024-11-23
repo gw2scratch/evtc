@@ -10,6 +10,9 @@ This is the full changelog of the arcdps Log Manager.
 #### Fixes
 - Increased delay for detecting files without an extension, should hopefully fix issue with ghost logs appearing.
 
+#### EVTC Inspector notes
+- Paired EffectEnd events with their corresponding EffectStart events, they can now be filtered by agent.
+
 ## Log Manager v1.12
 
 #### New features
