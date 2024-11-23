@@ -28,6 +28,6 @@ public static class MapIds
 
 	public static bool IsRaidMap(int id)
 	{
-		return id is RaidWing1 or RaidWing2 or RaidWing3 or RaidWing4 or RaidWing5 or RaidWing6 or RaidWing7;
+		return id is RaidWing1 or RaidWing2 or RaidWing3 or RaidWing4 or RaidWing5 or RaidWing6 or RaidWing7 or RaidWing8;
 	}
 }
