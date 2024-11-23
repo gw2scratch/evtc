@@ -22,6 +22,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 		RaidWing5 = 105,
 		RaidWing6 = 106,
 		RaidWing7 = 107,
+		RaidWing8 = 108,
 		FractalNightmare = 301,
 		FractalShatteredObservatory = 302,
 		FractalSunquaPeak = 303,

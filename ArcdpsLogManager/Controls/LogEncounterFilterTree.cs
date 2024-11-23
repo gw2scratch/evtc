@@ -261,6 +261,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				EncounterCategory.RaidWing5 => imageProvider.GetRaidWingIcon(),
 				EncounterCategory.RaidWing6 => imageProvider.GetRaidWingIcon(),
 				EncounterCategory.RaidWing7 => imageProvider.GetRaidWingIcon(),
+				EncounterCategory.RaidWing8 => imageProvider.GetRaidWingIcon(),
 				EncounterCategory.FractalNightmare => imageProvider.GetFractalMapIcon(),
 				EncounterCategory.FractalShatteredObservatory => imageProvider.GetFractalMapIcon(),
 				EncounterCategory.FractalSunquaPeak => imageProvider.GetFractalMapIcon(),

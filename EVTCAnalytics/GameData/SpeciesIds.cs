@@ -84,6 +84,10 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		// Qadim the Peerless
 		public const int QadimThePeerless = 22000;
 
+		// Wing 8
+		public const int Greer = 26725;
+		public const int Decima = 26774;
+		public const int Ura = 26712;
 
 		// Special Forces Training Area
 		public const int StandardKittyGolem = 16199;

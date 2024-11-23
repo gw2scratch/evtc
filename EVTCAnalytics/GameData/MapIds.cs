@@ -16,6 +16,7 @@ public static class MapIds
 	public const int RaidWing5 = 1264;
 	public const int RaidWing6 = 1303;
 	public const int RaidWing7 = 1323;
+	public const int RaidWing8 = 1564;
 
 	public const int XunlaiJadeJunkyard = 1451;
 	public const int OldLionsCourt = 1485;

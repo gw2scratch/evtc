@@ -28,6 +28,7 @@ public class WeeklyClears : DynamicLayout
 	private static readonly DateOnly W5Release = new DateOnly(2017, 11, 27);
 	private static readonly DateOnly W6Release = new DateOnly(2018, 9, 17);
 	private static readonly DateOnly W7Release = new DateOnly(2019, 6, 10);
+	private static readonly DateOnly W8Release = new DateOnly(2024, 11, 18);
 
 	private static readonly DateOnly EoDRelease = new DateOnly(2022, 2, 28);
 
@@ -103,6 +104,11 @@ public class WeeklyClears : DynamicLayout
 				new NormalEncounter(Encounter.Sabir, normalModeSince: W7Release, challengeModeSince: W7Release),
 				new NormalEncounter(Encounter.QadimThePeerless, normalModeSince: W7Release, challengeModeSince: W7Release),
 			]),
+			new EncounterRow("Mount Balrior (W8)", [
+				new NormalEncounter(Encounter.Greer, normalModeSince: W8Release, challengeModeSince: null),
+				new NormalEncounter(Encounter.Decima, normalModeSince: W8Release, challengeModeSince: null),
+				new NormalEncounter(Encounter.Ura, normalModeSince: W8Release, challengeModeSince: null),
+				])
 		]),
 		new EncounterGroup(EncounterCategory.StrikeIcebroodSaga, "Icebrood Saga", [
 			new EncounterRow("Icebrood Saga", [
@@ -540,6 +546,7 @@ public class WeeklyClears : DynamicLayout
 								5 => imageProvider.GetWideRaidWing5Icon(),
 								6 => imageProvider.GetWideRaidWing6Icon(),
 								7 => imageProvider.GetWideRaidWing7Icon(),
+								8 => imageProvider.GetWideRaidWing8Icon(),
 								_ => throw new ArgumentOutOfRangeException()
 							},
 							EncounterCategory.StrikeIcebroodSaga => imageProvider.GetWideIcebroodSagaIcon(),

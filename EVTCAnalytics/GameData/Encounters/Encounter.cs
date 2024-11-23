@@ -70,6 +70,11 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 		Sabir = 72,
 		QadimThePeerless = 73,
 
+		// Raids - Wing 8
+		Greer = 81,
+		Decima = 82,
+		Ura = 83,
+
 		// Fractals - Nightmare CM
 		MAMA = 10001,
 		SiaxTheCorrupted = 10002,

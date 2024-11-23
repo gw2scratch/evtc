@@ -96,6 +96,12 @@ public class EncounterIdentifier : IEncounterIdentifier
 					return skills.Any(x => x.Id == SkillIds.AdinaChargeUp) ? Encounter.Adina : Encounter.Sabir;
 				case SpeciesIds.QadimThePeerless:
 					return Encounter.QadimThePeerless;
+				case SpeciesIds.Greer:
+					return Encounter.Greer;
+				case SpeciesIds.Decima:
+					return Encounter.Decima;
+				case SpeciesIds.Ura:
+					return Encounter.Ura;
 				case SpeciesIds.StandardKittyGolem:
 					return Encounter.StandardKittyGolem;
 				case SpeciesIds.MediumKittyGolem:
@@ -307,6 +313,12 @@ public class EncounterIdentifier : IEncounterIdentifier
 				return new[] { Encounter.Sabir, Encounter.Adina };
 			case SpeciesIds.QadimThePeerless:
 				return new[] { Encounter.QadimThePeerless };
+			case SpeciesIds.Greer:
+				return new[] { Encounter.Greer };
+			case SpeciesIds.Decima:
+				return new[] { Encounter.Decima };
+			case SpeciesIds.Ura:
+				return new[] { Encounter.Ura };
 			case SpeciesIds.StandardKittyGolem:
 				return new[] { Encounter.StandardKittyGolem };
 			case SpeciesIds.MediumKittyGolem:

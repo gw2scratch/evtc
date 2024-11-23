@@ -41,5 +41,11 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		/// https://wiki.guildwars2.com/wiki/Game_updates/2024-06-25
 		/// </summary>
 		public static int LonelyTowerHPNerf2 = 164824;
+
+		/// <summary>
+		/// Wing 8 Release<br></br>
+		/// https://wiki.guildwars2.com/wiki/Game_updates/2024-11-19
+		/// </summary>
+		public static int MountBalriorRelease = 171452;
 	}
 }
