@@ -40,5 +40,6 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 		public bool MastersAssigned { get; set; }
 		public Agent MainTarget { get; set; }
 		public string ArcdpsBuild { get; set; }
+		public Dictionary<uint, EffectStartEvent> OngoingEffects { get; set; }
 	}
 }

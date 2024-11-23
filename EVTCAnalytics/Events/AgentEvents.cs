@@ -379,8 +379,52 @@ namespace GW2Scratch.EVTCAnalytics.Events
 	/// <remarks>
 	/// Introduced in EVTC20230718.
 	/// </remarks>
-	public class EffectEndEvent(long time, uint trackableId) : Event(time)
+	public class EffectEndEvent(
+		long time,
+		Agent effectOwner,
+		Effect effect,
+		Agent agentTarget,
+		float[] position,
+		short[] orientation,
+		uint? duration,
+		uint trackableId)
+		: AgentEvent(time, effectOwner)
 	{
+		/// <summary>
+		/// The owner of this effect. May be <see langword="null" /> if the corresponding start event could not be paired.
+		/// </summary>
+		public Agent EffectOwner => Agent;
+
+		/// <summary>
+		/// The Effect created. May be <see langword="null" /> if the corresponding start event could not be paired.
+		/// </summary>
+		public Effect Effect { get; } = effect;
+
+		/// <summary>
+		/// The <see cref="Agent"/> this effect is anchored to if anchored. May be <see langword="null" />.
+		/// May be <see langword="null" /> if the corresponding start event could not be paired.
+		/// </summary>
+		/// <seealso cref="Position"/>
+		public Agent AgentTarget { get; internal set; } = agentTarget;
+
+		/// <summary>
+		/// Position (x, y, z) of the effect when not anchored to a target. May be <see langword="null" />.
+		/// May be <see langword="null" /> if the corresponding start event could not be paired.
+		/// </summary>
+		/// <seealso cref="AgentTarget"/>
+		public float[] Position { get; } = position;
+
+		/// <summary>
+		/// The orientation (x, y, z) of the effect.
+		/// May be <see langword="null" /> if the corresponding start event could not be paired.
+		/// </summary>
+		public short[] Orientation { get; } = orientation;
+
+		/// <summary>
+		/// The duration of the effect in milliseconds.
+		/// May be <see langword="null" /> if the corresponding start event could not be paired.
+		/// </summary>
+		public uint? Duration { get; } = duration;
 		/// <summary>
 		/// Trackable id of this effect. Used for pairing with a corresponding EffectStartEvent.
 		/// </summary>

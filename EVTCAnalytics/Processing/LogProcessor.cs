@@ -80,6 +80,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			state.EffectsById = new Dictionary<uint, Effect>();
 			state.MarkersById = new Dictionary<uint, Marker>();
 			state.Errors = new List<LogError>();
+			state.OngoingEffects = new Dictionary<uint, EffectStartEvent>();
 			foreach (var agent in state.Agents)
 			{
 				foreach (var origin in agent.AgentOrigin.OriginalAgentData)
@@ -192,6 +193,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			state.Errors = new List<LogError>();
 			state.EffectsById = new Dictionary<uint, Effect>();
 			state.MarkersById = new Dictionary<uint, Marker>();
+			state.OngoingEffects = new Dictionary<uint, EffectStartEvent>();
 
 			var combatItemReader = reader.GetCombatItemReader(bossData, state.MainTarget, state.Agents, state.GameBuild, state.LogType, EncounterIdentifier, EncounterDataProvider);
 			ParsedCombatItem combatItem;
@@ -1235,8 +1237,9 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						}
 						else
 						{
-							// TODO: retrieve effect from a list of ongoing effects
-							return new EffectEndEvent(item.Time, trackableId);
+							EffectStartEvent effectStartEvent = state.OngoingEffects.GetValueOrDefault(trackableId);
+							state.OngoingEffects.Remove(trackableId);
+							return new EffectEndEvent(item.Time, effectStartEvent?.EffectOwner, effectStartEvent?.Effect, effectStartEvent?.AgentTarget, effectStartEvent?.Position, effectStartEvent?.Orientation, effectStartEvent?.Duration, trackableId);
 						}
 
 						// dst_agent if around dst,
@@ -1274,7 +1277,9 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 							orientation[i] = BitConverter.ToInt16(orientationBytes[(i*2)..(i*2+2)]);
 						}
 
-						return new EffectStartEvent(item.Time, master, effect, aroundAgent, position, orientation, duration, trackableId);
+						var startEvent = new EffectStartEvent(item.Time, master, effect, aroundAgent, position, orientation, duration, trackableId);
+						state.OngoingEffects[trackableId] = startEvent;
+						return startEvent;
 					}
 					case StateChange.SquadMarker:
 					{
