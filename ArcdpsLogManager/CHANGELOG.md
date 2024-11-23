@@ -5,7 +5,7 @@ This is the full changelog of the arcdps Log Manager.
 ## Log Manager v1.13
 
 #### New features
-- Added support for bosses of Mount Balrior, the eight raid wing (thanks, @Linkaaaaa!)
+- Added support for bosses of Mount Balrior, the eighth raid wing (thanks, @Linkaaaaa!)
 
 #### Fixes
 - Increased delay for detecting files without an extension, should hopefully fix issue with ghost logs appearing.
