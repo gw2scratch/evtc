@@ -2,6 +2,11 @@
 
 This is the full changelog of the arcdps Log Manager.
 
+## Log Manager v1.13.1
+
+#### Fixes
+- Fixed wing 8 logs not being reprocessed automatically
+
 ## Log Manager v1.13
 
 #### New features
