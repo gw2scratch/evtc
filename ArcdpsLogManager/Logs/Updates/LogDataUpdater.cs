@@ -216,11 +216,9 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Updates
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 11, 1, 10)
 			                     && log.Encounter == Encounter.SoullessHorror, 
 				"Fix detection for Soulless Horror in case the encounter resets before all players are dead."),
-			new LogUpdate(log => log.ParsingVersion < new Version(1, 14, 0, 0)
-								&& log.Encounter == Encounter.Greer
-								&& log.Encounter == Encounter.Decima
-								&& log.Encounter == Encounter.Ura
-								&& log.MapId == MapIds.RaidWing8,
+			new LogUpdate(log => log.ParsingVersion < new Version(1, 13, 0, 1)
+			                     && log.Encounter is Encounter.Greer or Encounter.Decima or Encounter.Ura
+			                     && log.MapId == MapIds.RaidWing8,
 				"Added support for Greer, Decima and Ura in Mount Balrior."),
 			// When adding a new update, you need to increase the revision (last value) of the version in the .csproj file
 			// unless the version changes more significantly, in that case it can be reset to 0.
