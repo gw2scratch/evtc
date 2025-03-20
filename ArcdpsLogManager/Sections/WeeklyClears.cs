@@ -29,6 +29,7 @@ public class WeeklyClears : DynamicLayout
 	private static readonly DateOnly W6Release = new DateOnly(2018, 9, 17);
 	private static readonly DateOnly W7Release = new DateOnly(2019, 6, 10);
 	private static readonly DateOnly W8Release = new DateOnly(2024, 11, 18);
+	private static readonly DateOnly W8CMRelease = new DateOnly(2025, 03, 10);
 
 	private static readonly DateOnly EoDRelease = new DateOnly(2022, 2, 28);
 
@@ -105,9 +106,9 @@ public class WeeklyClears : DynamicLayout
 				new NormalEncounter(Encounter.QadimThePeerless, normalModeSince: W7Release, challengeModeSince: W7Release),
 			]),
 			new EncounterRow("Mount Balrior (W8)", [
-				new NormalEncounter(Encounter.Greer, normalModeSince: W8Release, challengeModeSince: null),
-				new NormalEncounter(Encounter.Decima, normalModeSince: W8Release, challengeModeSince: null),
-				new NormalEncounter(Encounter.Ura, normalModeSince: W8Release, challengeModeSince: null),
+				new NormalEncounter(Encounter.Greer, normalModeSince: W8Release, challengeModeSince: W8CMRelease),
+				new NormalEncounter(Encounter.Decima, normalModeSince: W8Release, challengeModeSince: W8CMRelease),
+				new NormalEncounter(Encounter.Ura, normalModeSince: W8Release, challengeModeSince: W8CMRelease),
 				])
 		]),
 		new EncounterGroup(EncounterCategory.StrikeIcebroodSaga, "Icebrood Saga", [
