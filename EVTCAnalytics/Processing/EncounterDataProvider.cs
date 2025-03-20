@@ -333,7 +333,15 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				}
 				case Encounter.Ura:
 				{
-					return GetDefaultBuilder(encounter, mainTarget).Build();
+					// Normal mode 61,345,440
+					// Challenge mode 79,749,072
+					return GetDefaultBuilder(encounter, mainTarget)
+						.WithModes(new FallbackModeDeterminer(
+							// A preliminary guess
+							new AgentHealthModeDeterminer(mainTarget, 80_000_000, EncounterMode.LegendaryChallenge),
+							new AgentHealthModeDeterminer(mainTarget, 70_000_000, EncounterMode.Challenge)
+						))
+						.Build();
 				}
 				// Challenge Mode fractals
 				case Encounter.Skorvald:
