@@ -88,6 +88,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		public const int Greer = 26725;
 		public const int Ereg = 26859;
 		public const int Decima = 26774;
+		public const int DecimaChallengeMode = 26867;
 		public const int Ura = 26712;
 
 		// Special Forces Training Area

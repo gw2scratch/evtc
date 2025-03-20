@@ -317,10 +317,19 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				}
 				case Encounter.Decima:
 				{
-					// Note for the future challenge mode release
 					// Decima when it first released had 83,288,232 HP and got nerfed without patch to 70,795,000.
 					// Some logs with the original HP exist.
-					return GetDefaultBuilder(encounter, mainTarget).Build();
+					
+					var mode = mainTarget switch
+					{
+						NPC { SpeciesId: SpeciesIds.Decima } => EncounterMode.Normal,
+						NPC { SpeciesId: SpeciesIds.DecimaChallengeMode } => EncounterMode.Challenge,
+						_ => EncounterMode.Unknown,
+					};
+					
+					return GetDefaultBuilder(encounter, mainTarget)
+						.WithModes(new ConstantModeDeterminer(mode))
+						.Build();
 				}
 				case Encounter.Ura:
 				{

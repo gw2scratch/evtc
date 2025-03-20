@@ -99,6 +99,7 @@ public class EncounterIdentifier : IEncounterIdentifier
 				case SpeciesIds.Greer:
 					return Encounter.Greer;
 				case SpeciesIds.Decima:
+				case SpeciesIds.DecimaChallengeMode:
 					return Encounter.Decima;
 				case SpeciesIds.Ura:
 					return Encounter.Ura;
@@ -183,7 +184,6 @@ public class EncounterIdentifier : IEncounterIdentifier
 					}
 				}
 				case SpeciesIds.KanaxaiNM:
-					return Encounter.Kanaxai;
 				case SpeciesIds.KanaxaiCM:
 					return Encounter.Kanaxai;
 				case SpeciesIds.Eparch:
