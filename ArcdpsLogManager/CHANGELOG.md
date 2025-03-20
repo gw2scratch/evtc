@@ -2,6 +2,11 @@
 
 This is the full changelog of the arcdps Log Manager.
 
+## Log Manager v1.14
+
+#### New features
+- Added support for Mount Balrior Challenge Modes
+
 ## Log Manager v1.13.1
 
 #### Fixes

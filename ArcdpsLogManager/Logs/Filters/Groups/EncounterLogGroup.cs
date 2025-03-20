@@ -20,7 +20,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters.Groups
 			Encounter = encounter;
 
 			// TODO: A way to specify names from the outside to allow for future localization
-			if (!EncounterNames.TryGetEncounterNameForLanguage(GameLanguage.English, encounter, out string name))
+			if (!EncounterNames.TryGetEncounterNameForLanguage(out string name, GameLanguage.English, encounter))
 			{
 				name = encounter.ToString();
 			}

@@ -30,7 +30,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Names
 			string name = null;
 
 			// Get encounter name in the game language if names are available
-			if (EncounterNames.TryGetNamesForLanguage(logLanguage, out var names))
+			if (EncounterNames.TryGetNamesForLanguage(logLanguage, out var names, out _))
 			{
 				names.TryGetValue(encounterData.Encounter, out name);
 			}
@@ -38,7 +38,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Names
 			// If a translation is not available, try the default language
 			if (name == null)
 			{
-				if (EncounterNames.TryGetNamesForLanguage(DefaultLanguage, out var englishNames))
+				if (EncounterNames.TryGetNamesForLanguage(DefaultLanguage, out var englishNames, out _))
 				{
 					englishNames.TryGetValue(encounterData.Encounter, out name);
 				}

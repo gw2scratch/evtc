@@ -51,13 +51,8 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Naming
 		{
 			if (logData.Encounter != Encounter.Other && logData.Encounter != Encounter.Map)
 			{
-				if (EncounterNames.TryGetNamesForLanguage(language, out var names))
-				{
-					if (names.TryGetValue(logData.Encounter, out string name))
-					{
-						return name;
-					}
-				}
+				EncounterNames.TryGetEncounterNameForLanguage(out string encounterName, language, logData.Encounter, logData.EncounterMode);
+				return encounterName;
 			}
 
 			if (logData.Encounter == Encounter.Map)

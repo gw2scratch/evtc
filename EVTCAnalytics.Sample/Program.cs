@@ -33,7 +33,7 @@ namespace EVTCAnalytics.Sample
 			Encounter encounter = analyzer.GetEncounter();
 
 			// Encounter names are available for some languages, we use the target name if it's not.
-			if (EncounterNames.TryGetEncounterNameForLanguage(GameLanguage.English, encounter, out string name))
+			if (EncounterNames.TryGetEncounterNameForLanguage(out string name, GameLanguage.English, encounter))
 				Console.WriteLine($"Encounter: {name}");
 			else
 				Console.WriteLine($"Encounter: {log.MainTarget?.Name ?? "unknown target"}");

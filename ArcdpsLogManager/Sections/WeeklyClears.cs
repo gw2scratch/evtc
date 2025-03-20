@@ -564,8 +564,7 @@ public class WeeklyClears : DynamicLayout
 						var name = encounter switch
 						{
 							MultipartEncounter multipartEncounter => multipartEncounter.Name,
-							NormalEncounter normalEncounter => EncounterNames.TryGetEncounterNameForLanguage(GameLanguage.English, normalEncounter.Encounter,
-								out var normalName)
+							NormalEncounter normalEncounter => EncounterNames.TryGetEncounterNameForLanguage(out var normalName, GameLanguage.English, normalEncounter.Encounter)
 								? normalName
 								: normalEncounter.Encounter.ToString(),
 							UnsupportedEncounter unsupportedEncounter => unsupportedEncounter.Name,
