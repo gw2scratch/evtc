@@ -17,7 +17,7 @@
         Each new log data update causes a revision increase.
         See LogDataUpdater for the updates.
         -->
-        <Version>1.13.1.0</Version>
+        <Version>1.13.2.0</Version>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="DebounceThrottle" Version="2.0.0" />
