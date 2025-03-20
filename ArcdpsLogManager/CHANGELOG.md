@@ -2,6 +2,11 @@
 
 This is the full changelog of the arcdps Log Manager.
 
+## Log Manager v1.14.1
+
+#### Fixes
+- Added W8 challenge modes to the weekly clears tab
+
 ## Log Manager v1.14
 
 #### New features
