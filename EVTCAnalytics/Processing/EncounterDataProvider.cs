@@ -311,7 +311,9 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				// Raids - Wing 8
 				case Encounter.Greer:
 				{
-					return GetDefaultBuilder(encounter, mainTarget).Build();
+					return GetDefaultBuilder(encounter, mainTarget)
+						.WithModes(new NPCPresentModeDeterminer(SpeciesIds.Ereg))
+						.Build();
 				}
 				case Encounter.Decima:
 				{

@@ -25,27 +25,38 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		public static int TempleOfFebeHealthFix = 158968;
 
 		/// <summary>
-		/// Lonely Tower release, no challenge mode.<br></br>
+		/// Lonely Tower release, no challenge mode.
+		/// <br />
 		/// https://wiki.guildwars2.com/wiki/Game_updates/2024-05-21
 		/// </summary>
 		public static int LonelyTowerRelease = 163141;
 
 		/// <summary>
-		/// Lonely Tower Challenge Mode release with HP nerf.<br></br>
+		/// Lonely Tower Challenge Mode release with HP nerf.
+		/// <br />
 		/// https://wiki.guildwars2.com/wiki/Game_updates/2024-06-04
 		/// </summary>
 		public static int LonelyTowerCMRelease = 163807;
 
 		/// <summary>
-		/// Eparch further HP nerfs for all modes.<br></br>
+		/// Eparch further HP nerfs for all modes.
+		/// <br />
 		/// https://wiki.guildwars2.com/wiki/Game_updates/2024-06-25
 		/// </summary>
 		public static int LonelyTowerHPNerf2 = 164824;
 
 		/// <summary>
-		/// Wing 8 Release<br></br>
+		/// Wing 8 Release
+		/// <br/>
 		/// https://wiki.guildwars2.com/wiki/Game_updates/2024-11-19
 		/// </summary>
 		public static int MountBalriorRelease = 171452;
+		
+		/// <summary>
+		/// Wing 8 Challenge Mode Release
+		/// <br/>
+		/// https://wiki.guildwars2.com/wiki/Game_updates/2025-03-11
+		/// </summary>
+		public static int MountBalriorCMRelease = 176750;
 	}
 }

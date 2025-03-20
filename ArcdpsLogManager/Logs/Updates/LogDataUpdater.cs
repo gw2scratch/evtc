@@ -220,6 +220,10 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Updates
 								 && log.Encounter == Encounter.Other
 			                     && log.MapId == MapIds.RaidWing8,
 				"Added support for Greer, Decima and Ura in Mount Balrior."),
+			new LogUpdate(log => log.ParsingVersion < new Version(1, 13, 2, 0)
+								 && log.Encounter == Encounter.Greer
+								 && log.GameBuild >= GameBuilds.MountBalriorCMRelease,
+				"Added support for Greer Challenge Mode."),
 			// When adding a new update, you need to increase the revision (last value) of the version in the .csproj file
 			// unless the version changes more significantly, in that case it can be reset to 0.
 		};

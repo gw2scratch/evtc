@@ -86,6 +86,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 
 		// Wing 8
 		public const int Greer = 26725;
+		public const int Ereg = 26859;
 		public const int Decima = 26774;
 		public const int Ura = 26712;
 
