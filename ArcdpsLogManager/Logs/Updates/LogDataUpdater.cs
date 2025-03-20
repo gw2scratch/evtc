@@ -223,16 +223,16 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Updates
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 13, 2, 0)
 								 && log.Encounter == Encounter.Greer
 								 && log.GameBuild >= GameBuilds.MountBalriorCMRelease,
-				"Added support for Greer Challenge Mode."),
+				"Added support for Greer challenge mode."),
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 13, 2, 0)
 								 && log.Encounter == Encounter.Other
 			                     && log.MapId == MapIds.RaidWing8
 								 && log.GameBuild >= GameBuilds.MountBalriorCMRelease,
-				"Added support for Decima Challenge Mode."),
+				"Added support for Decima challenge mode."),
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 13, 2, 0)
 								 && log.Encounter == Encounter.Ura
 								 && log.GameBuild >= GameBuilds.MountBalriorCMRelease,
-				"Added support for Ura Challenge Mode."),
+				"Added support for Ura challenge mode."),
 			// When adding a new update, you need to increase the revision (last value) of the version in the .csproj file
 			// unless the version changes more significantly, in that case it can be reset to 0.
 		};
