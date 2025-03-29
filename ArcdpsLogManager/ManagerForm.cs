@@ -265,7 +265,7 @@ namespace GW2Scratch.ArcdpsLogManager
 				if (newHeight != null)
 				{
 					ClientSize = new Size(1300, newHeight.Value);
-					Location = new Point(Location.X, (int) (this.Screen.WorkingArea.Size.Height - newHeight) / 2);
+					Location = new Point(Location.X, (int) (((this.Screen.WorkingArea.Size.Height - newHeight) / 2) + this.Screen.WorkingArea.Top));
 				}
 			};
 		}
