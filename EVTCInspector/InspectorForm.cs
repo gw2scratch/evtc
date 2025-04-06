@@ -13,6 +13,7 @@ using GW2Scratch.EVTCAnalytics.Model.Effects;
 using GW2Scratch.EVTCAnalytics.Model.Skills;
 using GW2Scratch.EVTCAnalytics.Parsed;
 using GW2Scratch.EVTCAnalytics.Processing;
+using System.Globalization;
 
 namespace GW2Scratch.EVTCInspector
 {
@@ -392,6 +393,14 @@ namespace GW2Scratch.EVTCInspector
 				DataCell = new TextBoxCell
 				{
 					Binding = new DelegateBinding<Effect, string>(x => GuidToString(x.ContentGuid))
+				}
+			});
+			grid.Columns.Add(new GridColumn
+			{
+				HeaderText = "Duration",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Effect, string>(x => x.DefaultDuration.ToString(CultureInfo.CurrentCulture))
 				}
 			});
 			
