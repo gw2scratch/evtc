@@ -6,12 +6,12 @@ namespace GW2Scratch.EVTCAnalytics.Model.Effects;
 /// <summary>
 /// Represents a game visual effect.
 /// </summary>
-public class Effect
+public class Effect(uint id)
 {
 	/// <summary>
 	/// The ID number of the effect.
 	/// </summary>
-	public uint Id { get; }
+	public uint Id { get; } = id;
 
 	/// <summary>
 	/// The content GUID of this effect stored as 16 bytes.
@@ -20,11 +20,14 @@ public class Effect
 	/// Values from arcdps versions before 20220709 are wrong.
 	/// </remarks>
 	public byte[] ContentGuid { get; internal set; }
-
-	public Effect(uint id)
-	{
-		Id = id;
-	}
+	
+	/// <summary>
+	/// The last duration from the duration list.
+	/// </summary>
+	/// <remarks>
+	/// Available since 20241030
+	/// </remarks>
+	public float DefaultDuration { get; internal set; }
 
 	public override string ToString()
 	{

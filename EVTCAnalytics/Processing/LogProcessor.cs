@@ -823,6 +823,9 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 							effect.ContentGuid = guid;
 							BitConverter.GetBytes(item.SrcAgent).CopyTo(guid, 0);
 							BitConverter.GetBytes(item.DstAgent).CopyTo(guid, 8);
+
+							var duration = BitConversions.ToSingle(item.BuffDmg);
+							effect.DefaultDuration = duration;
 						}
 					}
 					else if (item.OverstackValue == 1)
