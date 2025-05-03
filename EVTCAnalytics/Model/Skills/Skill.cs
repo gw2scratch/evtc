@@ -40,7 +40,12 @@ namespace GW2Scratch.EVTCAnalytics.Model.Skills
 		/// May be null for older versions and for abilities.
 		/// </remarks>
 		public BuffData BuffData { get; internal set; }
-		
+
+		/// <summary>
+		/// The content GUID of this skill stored as 16 bytes.
+		/// </summary>
+		public byte[] ContentGuid { get; internal set; }
+
 		/// <summary>
 		/// Creates a new instance of a <see cref="Skill"/>.
 		/// </summary>

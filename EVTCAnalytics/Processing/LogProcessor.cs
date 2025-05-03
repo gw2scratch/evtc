@@ -79,6 +79,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			state.AgentsById = new Dictionary<int, List<Agent>>();
 			state.EffectsById = new Dictionary<uint, Effect>();
 			state.MarkersById = new Dictionary<uint, Marker>();
+			state.SpeciesById = new Dictionary<uint, Specie>();
 			state.Errors = new List<LogError>();
 			state.OngoingEffects = new Dictionary<uint, EffectStartEvent>();
 			foreach (var agent in state.Agents)
@@ -193,6 +194,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			state.Errors = new List<LogError>();
 			state.EffectsById = new Dictionary<uint, Effect>();
 			state.MarkersById = new Dictionary<uint, Marker>();
+			state.SpeciesById = new Dictionary<uint, Specie>();
 			state.OngoingEffects = new Dictionary<uint, EffectStartEvent>();
 
 			var combatItemReader = reader.GetCombatItemReader(bossData, state.MainTarget, state.Agents, state.GameBuild, state.LogType, EncounterIdentifier, EncounterDataProvider);
@@ -814,30 +816,62 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					state.InstanceStart = new InstanceStart(item.SrcAgent);
 					return;
 				case StateChange.IdToGuid:
-					if (item.OverstackValue == 0)
+					switch (item.OverstackValue)
 					{
 						// Effect
-						if (state.EffectsById.TryGetValue(item.SkillId, out var effect))
+						case 0:
 						{
-							var guid = new byte[16];
-							effect.ContentGuid = guid;
-							BitConverter.GetBytes(item.SrcAgent).CopyTo(guid, 0);
-							BitConverter.GetBytes(item.DstAgent).CopyTo(guid, 8);
+							if (state.EffectsById.TryGetValue(item.SkillId, out var effect))
+							{
+								var guid = new byte[16];
+								effect.ContentGuid = guid;
+								BitConverter.GetBytes(item.SrcAgent).CopyTo(guid, 0);
+								BitConverter.GetBytes(item.DstAgent).CopyTo(guid, 8);
 
-							var duration = BitConversions.ToSingle(item.BuffDmg);
-							effect.DefaultDuration = duration;
+								var duration = BitConversions.ToSingle(item.BuffDmg);
+								effect.DefaultDuration = duration;
+							}
 						}
-					}
-					else if (item.OverstackValue == 1)
-					{
+						return;
 						// Marker
-						if (state.MarkersById.TryGetValue(item.SkillId, out var marker))
+						case 1:
 						{
+							if (state.MarkersById.TryGetValue(item.SkillId, out var marker))
+							{
+								var guid = new byte[16];
+								marker.ContentGuid = guid;
+								BitConverter.GetBytes(item.SrcAgent).CopyTo(guid, 0);
+								BitConverter.GetBytes(item.DstAgent).CopyTo(guid, 8);
+							}
+						}
+						return;
+						// Skill
+						case 2:
+						{
+							if (state.SkillsById.TryGetValue(item.SkillId, out var skill))
+							{
+								var guid = new byte[16];
+								skill.ContentGuid = guid;
+								BitConverter.GetBytes(item.SrcAgent).CopyTo(guid, 0);
+								BitConverter.GetBytes(item.DstAgent).CopyTo(guid, 8);
+							}
+						}
+						return;
+						// Specie
+						case 3:
+						{
+                            if (!state.SpeciesById.TryGetValue(item.SkillId, out var specie))
+                            {
+                                specie = new Specie(item.SkillId);
+                                state.SpeciesById[item.SkillId] = specie;
+                            }
+
 							var guid = new byte[16];
-							marker.ContentGuid = guid;
+							specie.ContentGuid = guid;
 							BitConverter.GetBytes(item.SrcAgent).CopyTo(guid, 0);
 							BitConverter.GetBytes(item.DstAgent).CopyTo(guid, 8);
 						}
+						return;
 					}
 					return;
 				case StateChange.Error:
