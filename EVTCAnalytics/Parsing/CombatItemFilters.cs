@@ -585,6 +585,7 @@ public class CombatItemFilters : ICombatItemFilters
 			StateChange.SquadMarker => false,
 			StateChange.ArcBuild => true,
 			StateChange.Glider => false,
+			StateChange.StunBreak => false,
 			_ => throw new ArgumentOutOfRangeException(nameof(stateChange), stateChange, null)
 		};
 	}
