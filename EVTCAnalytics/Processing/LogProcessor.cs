@@ -1122,8 +1122,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						var barrierFraction = item.DstAgent / 10000f;
 						return new BarrierUpdateEvent(item.Time, GetAgentByAddress(item.SrcAgent), barrierFraction);
 					case StateChange.StatReset:
-						// Should not appear in logs
-						return new UnknownEvent(item.Time, item);
+						return new StatResetEvent(item.Time, item.SrcAgent);
 					case StateChange.Extension:
 						return new UnknownExtensionEvent(item.Time, item);
 					case StateChange.ApiDelayed:
@@ -1195,8 +1194,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						return new EffectEvent(item.Time, master, effect, aroundAgent, position, orientation, zOrientationOnly, duration);
 					}
 					case StateChange.LogNPCUpdate:
-						// TODO: implement
-						return new UnknownEvent(item.Time, item);
+						return new LogNPCUpdateEvent(item.Time, item.SrcAgent, GetAgentByAddress(item.DstAgent), item.Value);
 					case StateChange.IdleEvent:
 						return new UnknownEvent(item.Time, item);
 					case StateChange.ExtensionCombat:
