@@ -242,6 +242,7 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(EffectEndEvent)) return [StateChange.Effect2];
 		if (eventType == typeof(AgentGliderOpenEvent)) return [StateChange.Glider];
 		if (eventType == typeof(AgentGliderCloseEvent)) return [StateChange.Glider];
+		if (eventType == typeof(AgentStunBreakEvent)) return [StateChange.StunBreak];
 
 		if (eventType == typeof(BuffEvent)) return [];
 		if (eventType == typeof(BuffRemoveEvent)) return [];
@@ -319,6 +320,7 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(EffectEndEvent)) return false;
 		if (eventType == typeof(AgentGliderOpenEvent)) return false;
 		if (eventType == typeof(AgentGliderCloseEvent)) return false;
+		if (eventType == typeof(AgentStunBreakEvent)) return false;
 
 		if (eventType == typeof(BuffEvent)) return false;
 		if (eventType == typeof(BuffRemoveEvent)) return false;
@@ -394,6 +396,7 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(EffectEndEvent)) return false;
 		if (eventType == typeof(AgentGliderOpenEvent)) return false;
 		if (eventType == typeof(AgentGliderCloseEvent)) return false;
+		if (eventType == typeof(AgentStunBreakEvent)) return false;
 
 		if (eventType == typeof(BuffEvent)) return false;
 		if (eventType == typeof(BuffRemoveEvent)) return false;
@@ -469,6 +472,7 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(EffectEndEvent)) return [];
 		if (eventType == typeof(AgentGliderOpenEvent)) return [];
 		if (eventType == typeof(AgentGliderCloseEvent)) return [];
+		if (eventType == typeof(AgentStunBreakEvent)) return [];
 
 		if (eventType == typeof(BuffEvent)) return [];
 		if (eventType == typeof(BuffRemoveEvent)) return [];
