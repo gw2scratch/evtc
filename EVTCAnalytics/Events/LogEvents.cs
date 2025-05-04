@@ -1,3 +1,5 @@
+using GW2Scratch.EVTCAnalytics.Model.Agents;
+
 namespace GW2Scratch.EVTCAnalytics.Events
 {
 	/// <summary>
@@ -24,5 +26,39 @@ namespace GW2Scratch.EVTCAnalytics.Events
 		/// This can happen when the Guild Wars 2 server struggles to keep up, or in case of connection issues.
 		/// </summary>
 		public ulong TickRate { get; } = tickRate;
+	}
+
+	/// <summary>
+	/// Arcdps stats reset event.
+	/// </summary>
+	/// <param name="time"></param>
+	/// <param name="specieId"></param>
+	public class StatResetEvent(long time, ulong specieId) : Event(time)
+	{
+		/// <summary>
+		/// Specie ID of the Agent that triggered the reset.
+		/// </summary>
+		public ulong SpecieId { get; } = specieId;
+	}
+
+	/// <summary>
+	/// Log boss agent changed event.
+	/// </summary>
+	public class LogNPCUpdateEvent(long time, ulong specieId, Agent agent, int timestamp) : Event(time)
+	{
+		/// <summary>
+		/// Specie ID of the Agent triggering the update.
+		/// </summary>
+		public ulong SpecieId { get; } = specieId;
+
+		/// <summary>
+		/// The Agent that triggered the update.
+		/// </summary>
+		public Agent Agent { get; } = agent;
+
+		/// <summary>
+		/// Server unix timestamp of the update.
+		/// </summary>
+		public int Timestamp { get; } = timestamp;
 	}
 }
