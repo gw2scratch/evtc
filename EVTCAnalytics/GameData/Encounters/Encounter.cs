@@ -32,6 +32,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 
 		// Raids - Wing 1
 		ValeGuardian = 11,
+		SpiritRace = 12,
 		Gorseval = 13,
 		Sabetha = 14,
 

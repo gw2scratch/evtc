@@ -13,6 +13,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 			{
 				{Encounter.Other, EncounterCategory.Other},
 				{Encounter.ValeGuardian, EncounterCategory.RaidWing1},
+				{Encounter.SpiritRace, EncounterCategory.RaidWing1},
 				{Encounter.Gorseval, EncounterCategory.RaidWing1},
 				{Encounter.Sabetha, EncounterCategory.RaidWing1},
 				{Encounter.Slothasor, EncounterCategory.RaidWing2},
