@@ -58,5 +58,17 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		/// https://wiki.guildwars2.com/wiki/Game_updates/2025-03-11
 		/// </summary>
 		public static int MountBalriorCMRelease = 176750;
+
+		/// <summary>
+		/// Kinfall Fractal Release<br/>
+		/// https://wiki.guildwars2.com/wiki/Game_updates/2025-06-03
+		/// </summary>
+		public static int KinfallRelease = 181657;
+
+		/// <summary>
+		/// Kinfall Fractal CM Release<br/>
+		/// https://wiki.guildwars2.com/wiki/Game_updates/2025-06-24
+		/// </summary>
+		public static int KinfallCMRelease = 182824;
 	}
 }
