@@ -243,8 +243,13 @@ namespace GW2Scratch.ArcdpsLogManager
 			{
 				if (Settings.DpsReportAutoUpload)
 				{
+					bool filtersMatch = true;
+					if (Settings.DpsReportAutoUploadApplyFilters)
+					{
+						filtersMatch = args.Item.EncounterResult == EVTCAnalytics.Processing.Encounters.Results.EncounterResult.Success;
+					}
 					var age = DateTimeOffset.Now - args.Item.EncounterStartTime;
-					if (age < TimeSpan.FromDays(1))
+					if (age < TimeSpan.FromDays(1) && filtersMatch)
 					{
 						UploadProcessor.ScheduleDpsReportEIUpload(args.Item);
 					}
