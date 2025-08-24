@@ -38,33 +38,51 @@ namespace GW2Scratch.ArcdpsLogManager
 		public static Image GetTinyIconMesmer() => GetImage("Tango.Mesmer_tango_icon_20px.png");
 
 		// SPECIALIZATIONS
+		// Warrior
 		public static Image GetTinyIconBerserker() => GetImage("Tango.Berserker_tango_icon_20px.png");
 		public static Image GetTinyIconSpellbreaker() => GetImage("Tango.Spellbreaker_tango_icon_20px.png");
 		public static Image GetTinyIconBladesworn() => GetImage("Tango.Bladesworn_tango_icon_20px.png");
+		public static Image GetTinyIconParagon() => GetImage("Tango.Paragon_tango_icon_20px.png");
+		// Guardian
 		public static Image GetTinyIconDragonhunter() => GetImage("Tango.Dragonhunter_tango_icon_20px.png");
 		public static Image GetTinyIconFirebrand() => GetImage("Tango.Firebrand_tango_icon_20px.png");
 		public static Image GetTinyIconWillbender() => GetImage("Tango.Willbender_tango_icon_20px.png");
+		public static Image GetTinyIconLuminary() => GetImage("Tango.Luminary_tango_icon_20px.png");
+		// Revenant
 		public static Image GetTinyIconHerald() => GetImage("Tango.Herald_tango_icon_20px.png");
 		public static Image GetTinyIconRenegade() => GetImage("Tango.Renegade_tango_icon_20px.png");
 		public static Image GetTinyIconVindicator() => GetImage("Tango.Vindicator_tango_icon_20px.png");
+		public static Image GetTinyIconConduit() => GetImage("Tango.Conduit_tango_icon_20px.png");
+		// Ranger
 		public static Image GetTinyIconDruid() => GetImage("Tango.Druid_tango_icon_20px.png");
 		public static Image GetTinyIconSoulbeast() => GetImage("Tango.Soulbeast_tango_icon_20px.png");
 		public static Image GetTinyIconUntamed() => GetImage("Tango.Untamed_tango_icon_20px.png");
+		public static Image GetTinyIconGaleshot() => GetImage("Tango.Galeshot_tango_icon_20px.png");
+		// Thief
 		public static Image GetTinyIconDaredevil() => GetImage("Tango.Daredevil_tango_icon_20px.png");
 		public static Image GetTinyIconDeadeye() => GetImage("Tango.Deadeye_tango_icon_20px.png");
 		public static Image GetTinyIconSpecter() => GetImage("Tango.Specter_tango_icon_20px.png");
+		public static Image GetTinyIconAntiquary() => GetImage("Tango.Antiquary_tango_icon_20px.png");
+		// Engineer
 		public static Image GetTinyIconScrapper() => GetImage("Tango.Scrapper_tango_icon_20px.png");
 		public static Image GetTinyIconHolosmith() => GetImage("Tango.Holosmith_tango_icon_20px.png");
 		public static Image GetTinyIconMechanist() => GetImage("Tango.Mechanist_tango_icon_20px.png");
+		public static Image GetTinyIconAmalgam() => GetImage("Tango.Amalgam_tango_icon_20px.png");
+		// Necromancer
 		public static Image GetTinyIconReaper() => GetImage("Tango.Reaper_tango_icon_20px.png");
 		public static Image GetTinyIconScourge() => GetImage("Tango.Scourge_tango_icon_20px.png");
 		public static Image GetTinyIconHarbinger() => GetImage("Tango.Harbinger_tango_icon_20px.png");
+		public static Image GetTinyIconRitualist() => GetImage("Tango.Ritualist_tango_icon_20px.png");
+		// Elementalist
 		public static Image GetTinyIconTempest() => GetImage("Tango.Tempest_tango_icon_20px.png");
 		public static Image GetTinyIconWeaver() => GetImage("Tango.Weaver_tango_icon_20px.png");
 		public static Image GetTinyIconCatalyst() => GetImage("Tango.Catalyst_tango_icon_20px.png");
+		public static Image GetTinyIconEvoker() => GetImage("Tango.Evoker_tango_icon_20px.png");
+		// Mesmer
 		public static Image GetTinyIconChronomancer() => GetImage("Tango.Chronomancer_tango_icon_20px.png");
 		public static Image GetTinyIconMirage() => GetImage("Tango.Mirage_tango_icon_20px.png");
 		public static Image GetTinyIconVirtuoso() => GetImage("Tango.Virtuoso_tango_icon_20px.png");
+		public static Image GetTinyIconTroubadour() => GetImage("Tango.Troubadour_tango_icon_20px.png");
 
 		// CATEGORIES
 		public static Image GetTinyIconRaid() => GetImage("ArenaNet.raid_icon_32px.png");

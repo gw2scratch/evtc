@@ -97,6 +97,15 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 				{70, EliteSpecialization.Mechanist},
 				{71, EliteSpecialization.Specter},
 				{72, EliteSpecialization.Untamed},
+				{73, EliteSpecialization.Troubadour},
+				{74, EliteSpecialization.Paragon},
+				{75, EliteSpecialization.Amalgam},
+				{76, EliteSpecialization.Ritualist},
+				{77, EliteSpecialization.Antiquary},
+				{78, EliteSpecialization.Galeshot},
+				{79, EliteSpecialization.Conduit},
+				{80, EliteSpecialization.Evoker},
+				{81, EliteSpecialization.Luminary},
 			};
 
 		/// <summary>

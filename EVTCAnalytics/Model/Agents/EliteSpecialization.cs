@@ -35,5 +35,14 @@ namespace GW2Scratch.EVTCAnalytics.Model.Agents
 		Virtuoso,
 		Harbinger,
 		Vindicator,
+		Antiquary,
+		Amalgam,
+		Conduit,
+		Luminary,
+		Paragon,
+		Evoker,
+		Ritualist,
+		Troubadour,
+		Galeshot,
 	}
 }
