@@ -69,6 +69,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 					EncounterMode.Emboldened3 => "Emboldened 3",
 					EncounterMode.Emboldened4 => "Emboldened 4",
 					EncounterMode.Emboldened5 => "Emboldened 5",
+					EncounterMode.Quickplay => "Quickplay",
 					_ => throw new ArgumentOutOfRangeException()
 				};
 

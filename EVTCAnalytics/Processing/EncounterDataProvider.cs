@@ -733,7 +733,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				encounter,
 				new List<Agent> {mainTarget},
 				new AgentKilledDeterminer(mainTarget),
-				new EmboldenedDetectingModeDeterminer(),
+				new EmboldenedQuickplayDetectingModeDeterminer(),
 				new MaxMinHealthDeterminer()
 			);
 			if (mergeMainTarget && mainTarget is NPC npc)
@@ -764,7 +764,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				encounter,
 				targets.ToList(),
 				result,
-				new EmboldenedDetectingModeDeterminer(),
+				new EmboldenedQuickplayDetectingModeDeterminer(),
 				new MaxMinHealthDeterminer()
 			);
 

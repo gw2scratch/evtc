@@ -31,6 +31,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 		private bool showNormalModeLogs = true;
 		private bool showChallengeModeLogs = true;
 		private bool showLegendaryChallengeModeLogs = true;
+		private bool showQuickplayModeLogs = true;
 		private bool showNonFavoriteLogs = true;
 		private bool showFavoriteLogs = true;
 		private DateTime? minDateTime = null;
@@ -237,6 +238,17 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 			}
 		}
 
+		public bool ShowQuickplayModeLogs
+		{
+			get => showQuickplayModeLogs;
+			set
+			{
+				if (value == showQuickplayModeLogs) return;
+				showQuickplayModeLogs = value;
+				OnPropertyChanged();
+			}
+		}
+
 		public bool ShowNonFavoriteLogs
 		{
 			get => showNonFavoriteLogs;
@@ -406,7 +418,8 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 			       (log.EncounterMode == EncounterMode.Unknown && ShowNormalModeLogs) ||
 			       (log.EncounterMode == EncounterMode.Challenge && ShowChallengeModeLogs) ||
 			       (log.EncounterMode == EncounterMode.LegendaryChallenge && ShowLegendaryChallengeModeLogs) ||
-			       (log.EncounterMode.IsEmboldened() && ShowEmboldenedModeLogs);
+			       (log.EncounterMode.IsEmboldened() && ShowEmboldenedModeLogs) ||
+				   (log.EncounterMode == EncounterMode.Quickplay && ShowQuickplayModeLogs);
 		}
 
 		private bool FilterByFavoriteStatus(LogData log)
