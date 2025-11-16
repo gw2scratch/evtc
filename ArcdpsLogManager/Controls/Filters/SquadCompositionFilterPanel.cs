@@ -42,7 +42,8 @@ namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 					var specializationFilterGroups = new[] {
 						filterSnapshot.HeartOfThornsSpecializationFilters,
 						filterSnapshot.PathOfFireSpecializationFilters,
-						filterSnapshot.EndOfDragonsSpecializationFilters
+						filterSnapshot.EndOfDragonsSpecializationFilters,
+						filterSnapshot.VisionsOfEternitySpecializationFilters
 					};
 					foreach (var specializationFilters in specializationFilterGroups)
 					{
