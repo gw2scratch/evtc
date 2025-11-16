@@ -223,6 +223,8 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 								return "E4";
 							case EncounterMode.Emboldened5:
 								return "E5";
+							case EncounterMode.Quickplay:
+								return "QP";
 							case EncounterMode.Unknown:
 								return "?";
 							default:

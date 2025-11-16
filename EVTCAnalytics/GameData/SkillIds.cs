@@ -129,5 +129,6 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		public const int SabirFirstAutoattack = 56620;
 
 		public const int Emboldened = 68087;
+		public const int QuickplayBoost = 77676;
 	}
 }

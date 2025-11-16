@@ -9,9 +9,9 @@ using System.Linq;
 namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes
 {
 	/// <summary>
-	/// An encounter mode determiner that detects Emboldened mode.
+	/// An encounter mode determiner that detects Emboldened mode or Quickplay mode.
 	/// </summary>
-	public class EmboldenedDetectingModeDeterminer : IModeDeterminer
+	public class EmboldenedQuickplayDetectingModeDeterminer : IModeDeterminer
 	{
 		public IReadOnlyList<Type> RequiredEventTypes { get; } = new List<Type> { typeof(InitialBuffEvent) };
 		public IReadOnlyList<uint> RequiredBuffSkillIds => new List<uint> { SkillIds.Emboldened };
@@ -19,11 +19,17 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes
 
 		public EncounterMode? GetMode(Log log)
 		{
-			// In case Emboldened does not appear in the log at all, we can fail quickly without
+			// In case Emboldened or Quickplay Boost does not appear in the log at all, we can fail quickly without
 			// having to go through events.
-			if (log.Skills.All(x => x.Id != SkillIds.Emboldened))
+			if (log.Skills.All(x => x.Id != SkillIds.Emboldened) && log.Skills.All(x => x.Id != SkillIds.QuickplayBoost))
 			{
 				return EncounterMode.Normal;
+			}
+
+			// No stacks check for quickplay, can return immediately.
+			if (log.Skills.Any(x => x.Id == SkillIds.QuickplayBoost))
+			{
+				return EncounterMode.Quickplay;
 			}
 
 			var emboldenedCounts = new Dictionary<Agent, int>();

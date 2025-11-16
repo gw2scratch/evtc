@@ -42,6 +42,10 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes
 		/// A harder version of a challenge mode.
 		/// </summary>
 		LegendaryChallenge,
+		/// <summary>
+		/// Automatic group finder mode.
+		/// </summary>
+		Quickplay,
 	}
 	
 	public static class EncounterModeExtensions
