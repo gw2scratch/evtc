@@ -445,4 +445,16 @@ namespace GW2Scratch.EVTCAnalytics.Events
 	/// Introduced in EVTC20240627.
 	/// </remarks>
 	public class AgentGliderCloseEvent(long time, Agent agent) : AgentEvent(time, agent);
+
+	/// <summary>
+	/// Indicates that an agent broke a crowd control status.
+	/// </summary>
+	/// <remarks>Introduced in EVTC20240627</remarks>
+	public class AgentStunBreakEvent(long time, Agent agent, int duration) : AgentEvent(time, agent)
+	{
+		/// <summary>
+		/// Remaining crowd control duration.
+		/// </summary>
+		public int RemainingDuration { get; } = duration;
+	}
 }
