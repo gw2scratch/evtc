@@ -14,6 +14,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 		public IReadOnlyList<EliteSpecializationPlayerCountFilter> HeartOfThornsSpecializationFilters { get; }
 		public IReadOnlyList<EliteSpecializationPlayerCountFilter> PathOfFireSpecializationFilters { get; }
 		public IReadOnlyList<EliteSpecializationPlayerCountFilter> EndOfDragonsSpecializationFilters { get; }
+		public IReadOnlyList<EliteSpecializationPlayerCountFilter> VisionsOfEternitySpecializationFilters { get; }
 
 		public CompositionFilters() : this(
 			ProfessionData.Professions.Select(x => x.Profession)
@@ -23,6 +24,8 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 			ProfessionData.Professions.Select(x => x.PoF)
 				.Select(specialization => new EliteSpecializationPlayerCountFilter(specialization)),
 			ProfessionData.Professions.Select(x => x.EoD)
+				.Select(specialization => new EliteSpecializationPlayerCountFilter(specialization)),
+			ProfessionData.Professions.Select(x => x.VoE)
 				.Select(specialization => new EliteSpecializationPlayerCountFilter(specialization))
 		)
 		{
@@ -31,13 +34,15 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 		private CompositionFilters(IEnumerable<CoreProfessionPlayerCountFilter> coreFilters,
 			IEnumerable<EliteSpecializationPlayerCountFilter> hotFilters,
 			IEnumerable<EliteSpecializationPlayerCountFilter> pofFilters,
-			IEnumerable<EliteSpecializationPlayerCountFilter> eodFilters
+			IEnumerable<EliteSpecializationPlayerCountFilter> eodFilters,
+			IEnumerable<EliteSpecializationPlayerCountFilter> voeFilters
 		)
 		{
 			CoreProfessionFilters = coreFilters.ToList();
 			HeartOfThornsSpecializationFilters = hotFilters.ToList();
 			PathOfFireSpecializationFilters = pofFilters.ToList();
 			EndOfDragonsSpecializationFilters = eodFilters.ToList();
+			VisionsOfEternitySpecializationFilters = voeFilters.ToList();
 
 			foreach (var filter in CoreProfessionFilters)
 			{
@@ -58,14 +63,20 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 			{
 				filter.PropertyChanged += (_, _) => OnPropertyChanged(nameof(EndOfDragonsSpecializationFilters));
 			}
+
+			foreach (var filter in VisionsOfEternitySpecializationFilters)
+			{
+				filter.PropertyChanged += (_, _) => OnPropertyChanged(nameof(VisionsOfEternitySpecializationFilters));
+			}
 		}
 
 		public bool FilterLog(LogData log)
 		{
 			return CoreProfessionFilters.All(filter => filter.FilterLog(log)) &&
-			       HeartOfThornsSpecializationFilters.All(filter => filter.FilterLog(log)) &&
-			       PathOfFireSpecializationFilters.All(filter => filter.FilterLog(log)) &&
-			       EndOfDragonsSpecializationFilters.All(filter => filter.FilterLog(log));
+				   HeartOfThornsSpecializationFilters.All(filter => filter.FilterLog(log)) &&
+				   PathOfFireSpecializationFilters.All(filter => filter.FilterLog(log)) &&
+				   EndOfDragonsSpecializationFilters.All(filter => filter.FilterLog(log)) &&
+				   VisionsOfEternitySpecializationFilters.All(filter => filter.FilterLog(log));
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -81,7 +92,8 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 				CoreProfessionFilters.Select(x => x.DeepClone()),
 				HeartOfThornsSpecializationFilters.Select(x => x.DeepClone()),
 				PathOfFireSpecializationFilters.Select(x => x.DeepClone()),
-				EndOfDragonsSpecializationFilters.Select(x => x.DeepClone())
+				EndOfDragonsSpecializationFilters.Select(x => x.DeepClone()),
+				VisionsOfEternitySpecializationFilters.Select(x => x.DeepClone())
 			);
 		}
 
@@ -90,7 +102,8 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 			return CoreProfessionFilters.SequenceEqual(other.CoreProfessionFilters)
 			       && HeartOfThornsSpecializationFilters.SequenceEqual(other.HeartOfThornsSpecializationFilters)
 			       && PathOfFireSpecializationFilters.SequenceEqual(other.PathOfFireSpecializationFilters)
-			       && EndOfDragonsSpecializationFilters.SequenceEqual(other.EndOfDragonsSpecializationFilters);
+			       && EndOfDragonsSpecializationFilters.SequenceEqual(other.EndOfDragonsSpecializationFilters)
+				   && VisionsOfEternitySpecializationFilters.SequenceEqual(other.VisionsOfEternitySpecializationFilters);
 		}
 
 		public override bool Equals(object obj)
@@ -124,6 +137,11 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 				code.Add(filter.GetHashCode());
 			}
 
+			foreach (var filter in VisionsOfEternitySpecializationFilters)
+			{
+				code.Add(filter.GetHashCode());
+			}
+
 			return code.ToHashCode();
 		}
 
@@ -137,6 +155,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters
 				HeartOfThornsSpecializationFilters,
 				PathOfFireSpecializationFilters,
 				EndOfDragonsSpecializationFilters,
+				VisionsOfEternitySpecializationFilters,
 			};
 			
 			foreach (var group in filterGroups)

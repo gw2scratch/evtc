@@ -63,6 +63,15 @@ namespace GW2Scratch.ArcdpsLogManager.GameData
 				EliteSpecialization.Virtuoso => "Virtuoso",
 				EliteSpecialization.Harbinger => "Harbinger",
 				EliteSpecialization.Vindicator => "Vindicator",
+				EliteSpecialization.Antiquary => "Antiquary",
+				EliteSpecialization.Amalgam => "Amalgam",
+				EliteSpecialization.Conduit => "Conduit",
+				EliteSpecialization.Luminary => "Luminary",
+				EliteSpecialization.Paragon => "Paragon",
+				EliteSpecialization.Evoker => "Evoker",
+				EliteSpecialization.Ritualist => "Ritualist",
+				EliteSpecialization.Troubadour => "Troubadour",
+				EliteSpecialization.Galeshot => "Galeshot",
 				_ => throw new ArgumentOutOfRangeException(nameof(specialization), specialization, null)
 			};
 		}

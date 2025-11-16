@@ -36,6 +36,15 @@ namespace GW2Scratch.EVTCAnalytics.Tests.GameData
 		}
 
 		[Test]
+		[TestCaseSource(nameof(GetProfessions))]
+		public void AllProfessionsHaveAVisionsOfEternityEliteSpecializaiton(Profession profession)
+		{
+			EliteSpecialization specialization = EliteSpecialization.None;
+			Assert.DoesNotThrow(() => specialization = Characters.GetVisionsOfEternityEliteSpecialization(profession));
+			Assert.AreNotEqual(EliteSpecialization.None, specialization);
+		}
+
+		[Test]
 		[TestCaseSource(nameof(GetEliteSpecializations))]
 		public void AllEliteSpecializationsHaveABaseProfession(EliteSpecialization eliteSpecialization)
 		{

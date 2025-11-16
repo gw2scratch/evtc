@@ -64,6 +64,20 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 				{Profession.Revenant, EliteSpecialization.Vindicator}
 			};
 
+		private static readonly IReadOnlyDictionary<Profession, EliteSpecialization> VisionsOfEternitySpecializationsByProfession =
+			new Dictionary<Profession, EliteSpecialization>
+			{
+				{Profession.Guardian, EliteSpecialization.Luminary},
+				{Profession.Warrior, EliteSpecialization.Paragon},
+				{Profession.Engineer, EliteSpecialization.Amalgam},
+				{Profession.Ranger, EliteSpecialization.Galeshot},
+				{Profession.Thief, EliteSpecialization.Antiquary},
+				{Profession.Elementalist, EliteSpecialization.Evoker},
+				{Profession.Mesmer, EliteSpecialization.Troubadour},
+				{Profession.Necromancer, EliteSpecialization.Ritualist},
+				{Profession.Revenant, EliteSpecialization.Conduit}
+			};
+
 		/// <summary>
 		/// Ids of elite specializations as used internally in-game and publicly in the official API.
 		/// </summary>
@@ -97,6 +111,15 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 				{70, EliteSpecialization.Mechanist},
 				{71, EliteSpecialization.Specter},
 				{72, EliteSpecialization.Untamed},
+				{73, EliteSpecialization.Troubadour},
+				{74, EliteSpecialization.Paragon},
+				{75, EliteSpecialization.Amalgam},
+				{76, EliteSpecialization.Ritualist},
+				{77, EliteSpecialization.Antiquary},
+				{78, EliteSpecialization.Galeshot},
+				{79, EliteSpecialization.Conduit},
+				{80, EliteSpecialization.Evoker},
+				{81, EliteSpecialization.Luminary},
 			};
 
 		/// <summary>
@@ -133,6 +156,11 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 			return EndOfDragonsSpecializationsByProfession[profession];
 		}
 
+		public static EliteSpecialization GetVisionsOfEternityEliteSpecialization(Profession profession)
+		{
+			return VisionsOfEternitySpecializationsByProfession[profession];
+		}
+
 		/// <summary>
 		/// Provides the base profession for an elite specialization.
 		/// </summary>
@@ -163,6 +191,14 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 			}
 			
 			foreach (var (profession, spec) in EndOfDragonsSpecializationsByProfession)
+			{
+				if (specialization == spec)
+				{
+					return profession;
+				}
+			}
+
+			foreach (var (profession, spec) in VisionsOfEternitySpecializationsByProfession)
 			{
 				if (specialization == spec)
 				{

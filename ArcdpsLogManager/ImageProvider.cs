@@ -24,33 +24,51 @@ namespace GW2Scratch.ArcdpsLogManager
 		private Lazy<Image> TinyIconUnknownProfession { get; } = new Lazy<Image>(Resources.GetTinyIconUnknown);
 
 		// SPECIALIZATIONS
+		// Warrior
 		private Lazy<Image> TinyIconBerserker { get; } = new Lazy<Image>(Resources.GetTinyIconBerserker);
 		private Lazy<Image> TinyIconSpellbreaker { get; } = new Lazy<Image>(Resources.GetTinyIconSpellbreaker);
 		private Lazy<Image> TinyIconBladesworn { get; } = new Lazy<Image>(Resources.GetTinyIconBladesworn);
+		private Lazy<Image> TinyIconParagon { get; } = new Lazy<Image>(Resources.GetTinyIconParagon);
+		// Guardian
 		private Lazy<Image> TinyIconDragonhunter { get; } = new Lazy<Image>(Resources.GetTinyIconDragonhunter);
 		private Lazy<Image> TinyIconWillbender { get; } = new Lazy<Image>(Resources.GetTinyIconWillbender);
 		private Lazy<Image> TinyIconFirebrand { get; } = new Lazy<Image>(Resources.GetTinyIconFirebrand);
+		private Lazy<Image> TinyIconLuminary { get; } = new Lazy<Image>(Resources.GetTinyIconLuminary);
+		// Revenant
 		private Lazy<Image> TinyIconHerald { get; } = new Lazy<Image>(Resources.GetTinyIconHerald);
 		private Lazy<Image> TinyIconRenegade { get; } = new Lazy<Image>(Resources.GetTinyIconRenegade);
 		private Lazy<Image> TinyIconVindicator { get; } = new Lazy<Image>(Resources.GetTinyIconVindicator);
+		private Lazy<Image> TinyIconConduit { get; } = new Lazy<Image>(Resources.GetTinyIconConduit);
+		// Ranger
 		private Lazy<Image> TinyIconDruid { get; } = new Lazy<Image>(Resources.GetTinyIconDruid);
 		private Lazy<Image> TinyIconSoulbeast { get; } = new Lazy<Image>(Resources.GetTinyIconSoulbeast);
 		private Lazy<Image> TinyIconUntamed { get; } = new Lazy<Image>(Resources.GetTinyIconUntamed);
+		private Lazy<Image> TinyIconGaleshot { get; } = new Lazy<Image>(Resources.GetTinyIconGaleshot);
+		// Thief
 		private Lazy<Image> TinyIconDaredevil { get; } = new Lazy<Image>(Resources.GetTinyIconDaredevil);
 		private Lazy<Image> TinyIconDeadeye { get; } = new Lazy<Image>(Resources.GetTinyIconDeadeye);
 		private Lazy<Image> TinyIconSpecter { get; } = new Lazy<Image>(Resources.GetTinyIconSpecter);
+		private Lazy<Image> TinyIconAntiquary { get; } = new Lazy<Image>(Resources.GetTinyIconAntiquary);
+		// Engineer
 		private Lazy<Image> TinyIconScrapper { get; } = new Lazy<Image>(Resources.GetTinyIconScrapper);
 		private Lazy<Image> TinyIconHolosmith { get; } = new Lazy<Image>(Resources.GetTinyIconHolosmith);
 		private Lazy<Image> TinyIconMechanist { get; } = new Lazy<Image>(Resources.GetTinyIconMechanist);
+		private Lazy<Image> TinyIconAmalgam { get; } = new Lazy<Image>(Resources.GetTinyIconAmalgam);
+		// Necromancer
 		private Lazy<Image> TinyIconReaper { get; } = new Lazy<Image>(Resources.GetTinyIconReaper);
 		private Lazy<Image> TinyIconScourge { get; } = new Lazy<Image>(Resources.GetTinyIconScourge);
 		private Lazy<Image> TinyIconHarbinger { get; } = new Lazy<Image>(Resources.GetTinyIconHarbinger);
+		private Lazy<Image> TinyIconRitualist { get; } = new Lazy<Image>(Resources.GetTinyIconRitualist);
+		// Elementalist
 		private Lazy<Image> TinyIconTempest { get; } = new Lazy<Image>(Resources.GetTinyIconTempest);
 		private Lazy<Image> TinyIconWeaver { get; } = new Lazy<Image>(Resources.GetTinyIconWeaver);
 		private Lazy<Image> TinyIconCatalyst { get; } = new Lazy<Image>(Resources.GetTinyIconCatalyst);
+		private Lazy<Image> TinyIconEvoker { get; } = new Lazy<Image>(Resources.GetTinyIconEvoker);
+		// Mesmer
 		private Lazy<Image> TinyIconChronomancer { get; } = new Lazy<Image>(Resources.GetTinyIconChronomancer);
 		private Lazy<Image> TinyIconMirage { get; } = new Lazy<Image>(Resources.GetTinyIconMirage);
 		private Lazy<Image> TinyIconVirtuoso { get; } = new Lazy<Image>(Resources.GetTinyIconVirtuoso);
+		private Lazy<Image> TinyIconTroubadour { get; } = new Lazy<Image>(Resources.GetTinyIconTroubadour);
 
 		// CATEGORIES
 		private Lazy<Image> TinyIconRaid { get; } = new Lazy<Image>(Resources.GetTinyIconRaid);
@@ -266,33 +284,51 @@ namespace GW2Scratch.ArcdpsLogManager
 		{
 			return specialization switch
 			{
+				// Warrior
 				EliteSpecialization.Berserker => TinyIconBerserker.Value,
 				EliteSpecialization.Spellbreaker => TinyIconSpellbreaker.Value,
 				EliteSpecialization.Bladesworn => TinyIconBladesworn.Value,
+				EliteSpecialization.Paragon => TinyIconParagon.Value,
+				// Guardian
 				EliteSpecialization.Dragonhunter => TinyIconDragonhunter.Value,
 				EliteSpecialization.Firebrand => TinyIconFirebrand.Value,
 				EliteSpecialization.Willbender => TinyIconWillbender.Value,
+				EliteSpecialization.Luminary => TinyIconLuminary.Value,
+				// Revenant
 				EliteSpecialization.Herald => TinyIconHerald.Value,
 				EliteSpecialization.Renegade => TinyIconRenegade.Value,
 				EliteSpecialization.Vindicator => TinyIconVindicator.Value,
+				EliteSpecialization.Conduit => TinyIconConduit.Value,
+				// Ranger
 				EliteSpecialization.Druid => TinyIconDruid.Value,
 				EliteSpecialization.Soulbeast => TinyIconSoulbeast.Value,
 				EliteSpecialization.Untamed => TinyIconUntamed.Value,
+				EliteSpecialization.Galeshot => TinyIconGaleshot.Value,
+				// Thief
 				EliteSpecialization.Daredevil => TinyIconDaredevil.Value,
 				EliteSpecialization.Deadeye => TinyIconDeadeye.Value,
+				EliteSpecialization.Specter => TinyIconSpecter.Value,
+				EliteSpecialization.Antiquary => TinyIconAntiquary.Value,
+				// Engineer
 				EliteSpecialization.Scrapper => TinyIconScrapper.Value,
 				EliteSpecialization.Holosmith => TinyIconHolosmith.Value,
 				EliteSpecialization.Mechanist => TinyIconMechanist.Value,
+				EliteSpecialization.Amalgam => TinyIconAmalgam.Value,
+				// Necromancer
 				EliteSpecialization.Reaper => TinyIconReaper.Value,
 				EliteSpecialization.Scourge => TinyIconScourge.Value,
 				EliteSpecialization.Harbinger => TinyIconHarbinger.Value,
+				EliteSpecialization.Ritualist => TinyIconRitualist.Value,
+				// Elementalist
 				EliteSpecialization.Tempest => TinyIconTempest.Value,
 				EliteSpecialization.Weaver => TinyIconWeaver.Value,
+				EliteSpecialization.Catalyst => TinyIconCatalyst.Value,
+				EliteSpecialization.Evoker => TinyIconEvoker.Value,
+				// Mesmr
 				EliteSpecialization.Chronomancer => TinyIconChronomancer.Value,
 				EliteSpecialization.Mirage => TinyIconMirage.Value,
 				EliteSpecialization.Virtuoso => TinyIconVirtuoso.Value,
-				EliteSpecialization.Specter => TinyIconSpecter.Value,
-				EliteSpecialization.Catalyst => TinyIconCatalyst.Value,
+				EliteSpecialization.Troubadour => TinyIconTroubadour.Value,
 				_ => throw new ArgumentOutOfRangeException(nameof(specialization)),
 			};
 		}
