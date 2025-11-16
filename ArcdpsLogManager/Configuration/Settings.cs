@@ -39,6 +39,7 @@ namespace GW2Scratch.ArcdpsLogManager.Configuration
 			DpsReportUserTokenChanged += (sender, args) => SaveToFile();
 			DpsReportDomainChanged += (sender, args) => SaveToFile();
 			DpsReportAutoUploadChanged += (sender, args) => SaveToFile();
+			DpsReportAutoUploadApplyFiltersChanged += (sender, args) => SaveToFile();
 			MinimumLogDurationSecondsChanged += (sender, args) => SaveToFile();
 			IgnoredUpdateVersionsChanged += (sender, args) => SaveToFile();
 			DpsReportUploadDetailedWvwChanged += (sender, args) => SaveToFile();
@@ -280,7 +281,18 @@ namespace GW2Scratch.ArcdpsLogManager.Configuration
 				}
 			}
 		}
-
+		public static bool DpsReportAutoUploadApplyFilters
+		{
+			get => Values.DpsReportAutoUploadApplyFilters;
+			set
+			{
+				if (Values.DpsReportAutoUploadApplyFilters != value)
+				{
+					Values.DpsReportAutoUploadApplyFilters = value;
+					OnDpsReportAutoUploadApplyFiltersChanged();
+				}
+			}
+		}
 		public static bool DpsReportUploadDetailedWvw
 		{
 			get => Values.DpsReportUploadDetailedWvw;
@@ -293,7 +305,6 @@ namespace GW2Scratch.ArcdpsLogManager.Configuration
 				}
 			}
 		}
-		
 		public static IReadOnlyList<string> PlayerAccountNames
 		{
 			get => Values.PlayerAccountNames;
@@ -331,6 +342,7 @@ namespace GW2Scratch.ArcdpsLogManager.Configuration
 		public static event EventHandler<EventArgs> DpsReportUserTokenChanged;
 		public static event EventHandler<EventArgs> DpsReportDomainChanged;
 		public static event EventHandler<EventArgs> DpsReportAutoUploadChanged;
+		public static event EventHandler<EventArgs> DpsReportAutoUploadApplyFiltersChanged;
 		public static event EventHandler<EventArgs> MinimumLogDurationSecondsChanged;
 		public static event EventHandler<EventArgs> IgnoredUpdateVersionsChanged;
 		public static event EventHandler<EventArgs> DpsReportUploadDetailedWvwChanged;
@@ -382,6 +394,11 @@ namespace GW2Scratch.ArcdpsLogManager.Configuration
 			DpsReportAutoUploadChanged?.Invoke(null, EventArgs.Empty);
 		}
 
+		private static void OnDpsReportAutoUploadApplyFiltersChanged()
+		{
+			DpsReportAutoUploadApplyFiltersChanged?.Invoke(null, EventArgs.Empty);
+		}
+
 		private static void OnMinimumLogDurationSecondsChanged()
 		{
 			MinimumLogDurationSecondsChanged?.Invoke(null, EventArgs.Empty);
@@ -406,7 +423,7 @@ namespace GW2Scratch.ArcdpsLogManager.Configuration
 		{
 			DpsReportUploadDetailedWvwChanged?.Invoke(null, EventArgs.Empty);
 		}
-		
+
 		private static void OnPlayerAccountNamesChanged()
 		{
 			PlayerAccountNamesChanged?.Invoke(null, EventArgs.Empty);

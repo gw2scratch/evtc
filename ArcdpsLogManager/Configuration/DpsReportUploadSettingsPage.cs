@@ -11,6 +11,7 @@ namespace GW2Scratch.ArcdpsLogManager.Configuration
 		private readonly RadioButtonList domainList;
 		private readonly CheckBox uploadDetailedWvwCheckbox;
 		private readonly CheckBox autoUploadCheckbox;
+		private readonly CheckBox autoUploadApplyFiltersCheckbox;
 
 		private bool EditingUserToken { get; set; }
 
@@ -54,6 +55,11 @@ namespace GW2Scratch.ArcdpsLogManager.Configuration
 			uploadDetailedWvwCheckbox = new CheckBox { Text = "Detailed WVW Reports (large files may fail)", Checked = Settings.DpsReportUploadDetailedWvw };
 
 			autoUploadCheckbox = new CheckBox { Text = "Automatically upload logs", Checked = Settings.DpsReportAutoUpload };
+			autoUploadApplyFiltersCheckbox = new CheckBox { Text = "Only upload successful encounters", Checked = Settings.DpsReportAutoUploadApplyFilters, Enabled = Settings.DpsReportAutoUpload };
+			autoUploadCheckbox.CheckedChanged += (sender, args) =>
+			{
+				autoUploadApplyFiltersCheckbox.Enabled = autoUploadCheckbox.Checked.Value;
+			};
 
 			var userTokenTextBox = new TextBox { ReadOnly = true, Text = "************", Enabled = false };
 
@@ -102,6 +108,7 @@ namespace GW2Scratch.ArcdpsLogManager.Configuration
 						Wrap = WrapMode.Word,
 					});
 					layout.AddRow(autoUploadCheckbox);
+					layout.AddRow(autoUploadApplyFiltersCheckbox);
 				}
 				layout.EndGroup();
 
@@ -161,6 +168,11 @@ namespace GW2Scratch.ArcdpsLogManager.Configuration
 			if (autoUploadCheckbox.Checked.HasValue)
 			{
 				Settings.DpsReportAutoUpload = autoUploadCheckbox.Checked.Value;
+			}
+
+			if (autoUploadApplyFiltersCheckbox.Checked.HasValue)
+			{
+				Settings.DpsReportAutoUploadApplyFilters = autoUploadApplyFiltersCheckbox.Checked.Value;
 			}
 		}
 	}
