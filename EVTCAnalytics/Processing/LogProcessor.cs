@@ -79,7 +79,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			state.AgentsById = new Dictionary<int, List<Agent>>();
 			state.EffectsById = new Dictionary<uint, Effect>();
 			state.MarkersById = new Dictionary<uint, Marker>();
-			state.SpeciesById = new Dictionary<uint, Specie>();
+			state.SpeciesById = new Dictionary<uint, Species>();
 			state.Errors = new List<LogError>();
 			state.OngoingEffects = new Dictionary<uint, EffectStartEvent>();
 			foreach (var agent in state.Agents)
@@ -194,7 +194,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			state.Errors = new List<LogError>();
 			state.EffectsById = new Dictionary<uint, Effect>();
 			state.MarkersById = new Dictionary<uint, Marker>();
-			state.SpeciesById = new Dictionary<uint, Specie>();
+			state.SpeciesById = new Dictionary<uint, Species>();
 			state.OngoingEffects = new Dictionary<uint, EffectStartEvent>();
 
 			var combatItemReader = reader.GetCombatItemReader(bossData, state.MainTarget, state.Agents, state.GameBuild, state.LogType, EncounterIdentifier, EncounterDataProvider);
@@ -862,7 +862,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						{
                             if (!state.SpeciesById.TryGetValue(item.SkillId, out var specie))
                             {
-                                specie = new Specie(item.SkillId);
+                                specie = new Species(item.SkillId);
                                 state.SpeciesById[item.SkillId] = specie;
                             }
 

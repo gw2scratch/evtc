@@ -4,17 +4,17 @@ using System.Text;
 namespace GW2Scratch.EVTCAnalytics.Model.Agents;
 
 /// <summary>
-/// Represents the specie of a NPC
+/// Represents the species of a NPC
 /// </summary>
-public class Specie(uint id)
+public class Species(uint id)
 {
 	/// <summary>
-	/// The ID of the specie.
+	/// The ID of the species.
 	/// </summary>
 	public uint Id { get; } = id;
 
 	/// <summary>
-	/// The content GUID of this specie stored as 16 bytes.
+	/// The content GUID of this species stored as 16 bytes.
 	/// </summary>
 	public byte[] ContentGuid { get; internal set; }
 

@@ -54,7 +54,7 @@ namespace GW2Scratch.EVTCInspector
 		private readonly FilterCollection<Marker> markers = new FilterCollection<Marker>();
 
 		// Processed species
-		private readonly FilterCollection<Specie> species = new FilterCollection<Specie>();
+		private readonly FilterCollection<Species> species = new FilterCollection<Species>();
 
 		// Statistics
 		private readonly PropertyGrid statisticsPropertyGrid = new PropertyGrid();
@@ -103,7 +103,7 @@ namespace GW2Scratch.EVTCInspector
 			processedTabControl.Pages.Add(new TabPage(skillSplitter) {Text = "Skills"});
 			processedTabControl.Pages.Add(new TabPage(ConstructEffectGridView()) {Text = "Effects"});
 			processedTabControl.Pages.Add(new TabPage(ConstructMarkerGridView()) {Text = "Markers"});
-			processedTabControl.Pages.Add(new TabPage(ConstructSpecieGridView()) {Text = "Species"});
+			processedTabControl.Pages.Add(new TabPage(ConstructSpeciesGridView()) {Text = "Species"});
 
 			var statisticsLayout = new DynamicLayout();
 			statisticsLayout.Add(statisticsPropertyGrid);
@@ -547,15 +547,15 @@ namespace GW2Scratch.EVTCInspector
 			return grid;
 		}
 
-		private GridView<Specie> ConstructSpecieGridView()
+		private GridView<Species> ConstructSpeciesGridView()
 		{
-			var grid = new GridView<Specie>();
+			var grid = new GridView<Species>();
 			grid.Columns.Add(new GridColumn
 			{
 				HeaderText = "ID",
 				DataCell = new TextBoxCell
 				{
-					Binding = new DelegateBinding<Specie, string>(x => x.Id.ToString())
+					Binding = new DelegateBinding<Species, string>(x => x.Id.ToString())
 				}
 			});
 			grid.Columns.Add(new GridColumn
@@ -563,7 +563,7 @@ namespace GW2Scratch.EVTCInspector
 				HeaderText = "Content GUID",
 				DataCell = new TextBoxCell
 				{
-					Binding = new DelegateBinding<Specie, string>(x => GuidToString(x.ContentGuid))
+					Binding = new DelegateBinding<Species, string>(x => GuidToString(x.ContentGuid))
 				},
 			});
 
@@ -593,7 +593,7 @@ namespace GW2Scratch.EVTCInspector
 			grid.ContextMenu = menu;
 
 			grid.DataStore = species;
-			new GridViewSorter<Specie>(grid, species).EnableSorting();
+			new GridViewSorter<Species>(grid, species).EnableSorting();
 
 			return grid;
 		}
