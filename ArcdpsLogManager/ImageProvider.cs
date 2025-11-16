@@ -76,6 +76,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		// RAID BOSSES
 		// WING 1
 		private Lazy<Image> ValeGuardianIcon { get; } = new Lazy<Image>(Resources.GetValeGuardianIcon);
+		private Lazy<Image> SpiritRaceIcon { get; } = new Lazy<Image>(Resources.GetSpiritRaceIcon);
 		private Lazy<Image> GorsevalIcon { get; } = new Lazy<Image>(Resources.GetGorsevalIcon);
 		private Lazy<Image> SabethaIcon { get; } = new Lazy<Image>(Resources.GetSabethaIcon);
 
@@ -314,6 +315,7 @@ namespace GW2Scratch.ArcdpsLogManager
 				// RAIDS
 				// W1
 				Encounter.ValeGuardian => ValeGuardianIcon.Value,
+				Encounter.SpiritRace => SpiritRaceIcon.Value,
 				Encounter.Gorseval => GorsevalIcon.Value,
 				Encounter.Sabetha => SabethaIcon.Value,
 				// W2

@@ -14,6 +14,9 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 	/// </remarks>
 	public static class GadgetIds
 	{
+		// Wing 1
+		public const int EtherealBarrier = 47188;
+
 		// Wing 4
 		// Deimos
 		public const int ShackledPrisoner = 53040;
