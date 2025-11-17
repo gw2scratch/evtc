@@ -61,4 +61,19 @@ namespace GW2Scratch.EVTCAnalytics.Events
 		/// </summary>
 		public int Timestamp { get; } = timestamp;
 	}
+
+	/// <summary>
+	/// Player changed map event.
+	/// </summary>
+	public class MapChangeEvent(long time, ulong newMapID, ulong oldMapID) : Event(time)
+	{
+		/// <summary>
+		/// New Map ID
+		/// </summary>
+		public ulong NewMapID { get; } = newMapID;
+		/// <summary>
+		/// Old Map ID
+		/// </summary>
+		public ulong OldMapID { get; } = oldMapID;
+	}
 }
