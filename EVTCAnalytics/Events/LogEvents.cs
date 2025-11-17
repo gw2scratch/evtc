@@ -63,16 +63,31 @@ namespace GW2Scratch.EVTCAnalytics.Events
 	}
 
 	/// <summary>
+	/// Agent address IID changed.
+	/// </summary>
+	public class IIDChangeEvent(long time, ulong oldIID, ulong newIID) : Event(time)
+	{
+		/// <summary>
+		/// Old address IID.
+		/// </summary>
+		public ulong OldIID { get; } = oldIID;
+		/// <summary>
+		/// New address IID.
+		/// </summary>
+		public ulong NewIID { get; } = newIID;
+	}
+
+	/// <summary>
 	/// Player changed map event.
 	/// </summary>
 	public class MapChangeEvent(long time, ulong newMapID, ulong oldMapID) : Event(time)
 	{
 		/// <summary>
-		/// New Map ID
+		/// New Map ID.
 		/// </summary>
 		public ulong NewMapID { get; } = newMapID;
 		/// <summary>
-		/// Old Map ID
+		/// Old Map ID.
 		/// </summary>
 		public ulong OldMapID { get; } = oldMapID;
 	}

@@ -1328,6 +1328,10 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 							_ => new UnknownEvent(item.Time, item)
 						};
 					}
+					case StateChange.IIDChange:
+					{
+						return new IIDChangeEvent(item.Time, item.SrcAgent, item.DstAgent);
+					}
 					case StateChange.MapChange:
 					{
 						return new MapChangeEvent(item.Time, item.SrcAgent, item.DstAgent);
