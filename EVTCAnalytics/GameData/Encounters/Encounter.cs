@@ -32,6 +32,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 
 		// Raids - Wing 1
 		ValeGuardian = 11,
+		SpiritRace = 12,
 		Gorseval = 13,
 		Sabetha = 14,
 
@@ -98,6 +99,9 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 
 		// Fractals - Lonely Tower
 		Eparch = 10041,
+
+		// Fractals - Kinfall
+		WhisperingShadow = 10051,
 
 		// Festivals - Wintersday
 		Freezie = 20001,

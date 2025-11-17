@@ -113,6 +113,7 @@ namespace GW2Scratch.ArcdpsLogManager
 
 		// WING 1
 		public static Image GetValeGuardianIcon() => GetEncounterImage("Mini_Vale_Guardian");
+		public static Image GetSpiritRaceIcon() => GetEncounterImage("Spirit_Thread");
 		public static Image GetGorsevalIcon() => GetEncounterImage("Mini_Gorseval_the_Multifarious");
 		public static Image GetSabethaIcon() => GetEncounterImage("Mini_Sabetha");
 
@@ -188,6 +189,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		public static Image GetBothPhasesAiKeeperOfThePeakIcon() => GetEncounterImage("Both_Phases_Ai");
 		public static Image GetKanaxaiIcon() => GetEncounterImage("Mini_Kanaxai");
 		public static Image GetEparchIcon() => GetEncounterImage("Mini_Eparch");
+		public static Image GetWhisperingShadowIcon() => GetEncounterImage("Whispering_Shadow");
 
 		// FESTIVALS
 		public static Image GetFreezieIcon() => GetEncounterImage("Mini_Freezie");
