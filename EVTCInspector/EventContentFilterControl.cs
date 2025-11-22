@@ -1,7 +1,8 @@
-using System;
-using System.Linq;
 using Eto.Forms;
 using GW2Scratch.EVTCAnalytics.Events;
+using System;
+using System.Linq;
+using System.Linq.Expressions;
 
 namespace GW2Scratch.EVTCInspector
 {
@@ -11,19 +12,49 @@ namespace GW2Scratch.EVTCInspector
 		private bool BuffIdEnabled { get; set; }
 		private uint BuffDamageId { get; set; }
 		private bool BuffDamageIdEnabled { get; set; }
+		private uint CastSkillId { get; set; }
+		private bool CastSkillIdEnabled { get; set; }
+		private uint DamageSkillId { get; set; }
+		private bool DamageSkillIdEnabled { get; set; }
 
-		private readonly Control buffLayout;
-		private readonly Control buffDamageLayout;
+		private readonly DynamicLayout buffLayout;
+		private readonly DynamicLayout buffDamageLayout;
+		private readonly DynamicLayout castSkillLayout;
+		private readonly DynamicLayout damageSkillLayout;
 
 		public EventContentFilterControl()
 		{
-			buffLayout = ConstructBuffLayout();
-			buffDamageLayout = ConstructBuffDamageLayout();
+			buffLayout = ConstructLayout(
+				() => BuffId, x => BuffId = x,
+				() => BuffIdEnabled, x => BuffIdEnabled = x ?? false,
+				"Buff Events",
+				"Buff ID"
+			);
+			buffDamageLayout = ConstructLayout(
+				() => BuffDamageId, x => BuffDamageId = x,
+				() => BuffDamageIdEnabled, x => BuffDamageIdEnabled = x ?? false,
+				"Buff Damage Events",
+				"Buff ID"
+			);
+			castSkillLayout = ConstructLayout(
+				() => CastSkillId, x => CastSkillId = x,
+				() => CastSkillIdEnabled, x => CastSkillIdEnabled = x ?? false,
+				"Skill Cast Events",
+				"Skill ID"
+			);
+			damageSkillLayout = ConstructLayout(
+				() => DamageSkillId, x => DamageSkillId = x,
+				() => DamageSkillIdEnabled, x => DamageSkillIdEnabled = x ?? false,
+				"Damage Events",
+				"Skill ID"
+			);
 			var layout = new DynamicLayout();
 			layout.BeginVertical();
 			{
 				layout.Add(buffLayout);
 				layout.Add(buffDamageLayout);
+				layout.Add(castSkillLayout);
+				layout.Add(damageSkillLayout);
 			}
 			layout.EndVertical();
 			Content = layout;
@@ -74,69 +105,45 @@ namespace GW2Scratch.EVTCInspector
 			*/
 		}
 
-		private Control ConstructBuffLayout()
+		private static DynamicLayout ConstructLayout<TValue>(
+			Expression<Func<TValue>> valueGetterExpr, Action<TValue> valueSetter,
+			Expression<Func<bool?>> enabledGetterExpr, Action<bool?> enabledSetter,
+			string groupTitle, string labelText)
 		{
-			var buffIdTextBox = new NumericMaskedTextBox<uint> {Value = 0};
-			buffIdTextBox.ValueBinding.Bind(() => BuffId, x => BuffId = x);
+			var valueGetter = valueGetterExpr.Compile();
+			var enabledGetter = enabledGetterExpr.Compile();
 
-			var buffIdCheckbox = new CheckBox {Checked = false};
-			buffIdCheckbox.CheckedBinding.Bind(() => BuffIdEnabled, x => BuffIdEnabled = x ?? false);
+			var valueTextBox = new NumericMaskedTextBox<TValue>();
+			valueTextBox.ValueBinding.Bind(valueGetter, valueSetter);
 
-			var filterLayout = new DynamicLayout();
-			filterLayout.BeginHorizontal();
+			var enabledCheckbox = new CheckBox();
+			enabledCheckbox.CheckedBinding.Bind(enabledGetter, enabledSetter);
+
+			var layout = new DynamicLayout();
+			layout.BeginHorizontal();
 			{
-				filterLayout.BeginGroup("Buff");
+				layout.BeginGroup(groupTitle);
 				{
-					filterLayout.AddRow("Buff ID", buffIdTextBox, buffIdCheckbox, null);
+					layout.AddRow(labelText, valueTextBox, enabledCheckbox, null);
 				}
-				filterLayout.EndGroup();
-				filterLayout.AddRow(null);
+				layout.EndGroup();
+				layout.AddRow(null);
 			}
-			filterLayout.EndHorizontal();
-			return filterLayout;
-		}
+			layout.EndHorizontal();
 
-		private Control ConstructBuffDamageLayout()
-		{
-			var buffIdTextBox = new NumericMaskedTextBox<uint> {Value = 0};
-			buffIdTextBox.ValueBinding.Bind(() => BuffDamageId, x => BuffDamageId = x);
-
-			var buffIdCheckbox = new CheckBox {Checked = false};
-			buffIdCheckbox.CheckedBinding.Bind(() => BuffDamageIdEnabled, x => BuffDamageIdEnabled = x ?? false);
-
-			var filterLayout = new DynamicLayout();
-			filterLayout.BeginHorizontal();
-			{
-				filterLayout.BeginGroup("Buff damage");
-				{
-					filterLayout.AddRow("Buff ID", buffIdTextBox, buffIdCheckbox, null);
-				}
-				filterLayout.EndGroup();
-				filterLayout.AddRow(null);
-			}
-			filterLayout.EndHorizontal();
-			return filterLayout;
+			return layout;
 		}
 
 		public bool FilterEvent(Event e)
 		{
-			if (e is BuffEvent buffEvent)
+			return e switch
 			{
-				if (BuffIdEnabled)
-				{
-					return buffEvent.Buff.Id == BuffId;
-				}
-			}
-
-			if (e is BuffDamageEvent buffDamage)
-			{
-				if (BuffDamageIdEnabled)
-				{
-					return buffDamage.Skill.Id == BuffDamageId;
-				}
-			}
-
-			return true;
+				BuffEvent buffEvent when BuffIdEnabled => buffEvent.Buff.Id == BuffId,
+				BuffDamageEvent buffDamage when BuffDamageIdEnabled => buffDamage.Skill.Id == BuffDamageId,
+				SkillCastEvent skillEvent when CastSkillIdEnabled => skillEvent.Skill.Id == CastSkillId,
+				DamageEvent damageEvent when DamageSkillIdEnabled => damageEvent.Skill.Id == DamageSkillId,
+				_ => true,
+			};
 		}
 
 		private Type GetClosestType(Type a, Type b)
