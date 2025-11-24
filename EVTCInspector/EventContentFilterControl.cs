@@ -60,51 +60,6 @@ namespace GW2Scratch.EVTCInspector
 			Content = layout;
 		}
 
-		public void UpdateContent(EventListControl eventList)
-		{
-			var selectedTypes = eventList.TypeFilters.Where(x => x.Checked.HasValue && x.Checked.Value).ToArray();
-			if (selectedTypes.Length == 0)
-			{
-				return;
-			}
-
-			var commonAncestor = selectedTypes.First().Type;
-			foreach (var type in selectedTypes)
-			{
-				commonAncestor = GetClosestType(commonAncestor, type.Type);
-			}
-
-			buffLayout.Visible = typeof(BuffEvent).IsAssignableFrom(commonAncestor);
-			buffDamageLayout.Visible = typeof(BuffDamageEvent).IsAssignableFrom(commonAncestor);
-
-			/*
-			else if (typeof(AgentEvent).IsAssignableFrom(commonAncestor))
-			{
-				var filterAgentRadioButton = new RadioButton {Text = "Exact Agent"};
-				var filterAgentDataRadioButton = new RadioButton(filterAgentRadioButton) {Text = "Agent data"};
-				var agentsDropDown = new DropDown
-				{
-					DataStore = agents,
-					ItemTextBinding = new DelegateBinding<Agent, string>(x => $"{x.Name} ({x.Address})")
-				};
-
-				var filterLayout = new DynamicLayout();
-				filterLayout.BeginHorizontal();
-				filterLayout.BeginGroup("Agent filter");
-				filterLayout.BeginVertical(spacing: new Size(5, 5));
-				filterLayout.AddRow(filterAgentRadioButton, null, agentsDropDown);
-				filterLayout.AddRow(filterAgentDataRadioButton, new CheckBox {Text = "Name"}, new TextBox {Text = ""});
-				filterLayout.AddRow(null, new CheckBox {Text = "Type"},
-					new DropDown {DataStore = new[] {"Player", "NPC", "Gadget"}});
-				filterLayout.AddRow(null);
-				filterLayout.EndVertical();
-				filterLayout.EndGroup();
-				filterLayout.EndHorizontal();
-				filterPanel.Content = filterLayout;
-			}
-			*/
-		}
-
 		private static DynamicLayout ConstructLayout<TValue>(
 			Expression<Func<TValue>> valueGetterExpr, Action<TValue> valueSetter,
 			Expression<Func<bool?>> enabledGetterExpr, Action<bool?> enabledSetter,
