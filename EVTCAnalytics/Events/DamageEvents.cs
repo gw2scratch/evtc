@@ -147,7 +147,7 @@ namespace GW2Scratch.EVTCAnalytics.Events
 		bool isMoving,
 		bool isNinety,
 		bool isFlanking)
-		: Event(time)
+		: Event(time), ISkillEvent
 	{
 		public Skill Skill { get; } = skill;
 		public Agent Attacker { get; internal set; } = attacker;

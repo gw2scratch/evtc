@@ -337,8 +337,6 @@ namespace GW2Scratch.EVTCInspector
 		private void ApplyFilters()
 		{
 			((FilterCollection<Event>) eventGridView.DataStore).Refresh();
-
-			contentFilters.UpdateContent(this);
 		}
 
 		private bool FilterByEventType(Event e)

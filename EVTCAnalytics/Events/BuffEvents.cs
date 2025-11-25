@@ -10,9 +10,10 @@ namespace GW2Scratch.EVTCAnalytics.Events
 	/// Note that buffs are internally <see cref="Skill"/>s in the game.
 	/// </remarks>
 	public abstract class BuffEvent(long time, Agent agent, Skill buff, Agent sourceAgent)
-		: AgentEvent(time, agent)
+		: AgentEvent(time, agent), ISkillEvent
 	{
 		public Skill Buff { get; } = buff;
+		public Skill Skill { get => Buff; }
 		public Agent SourceAgent { get; internal set; } = sourceAgent;
 	}
 
