@@ -90,26 +90,14 @@ namespace GW2Scratch.EVTCInspector
 			return layout;
 		}
 
-		public bool FilterEvent(Event e)
-		{
-			switch (e)
-			{
-				case BuffEvent buff:
-					if (IdFilterEnabled && buff.Buff.Id == IdFilter) return true;
-					if (NameFilterEnabled && buff.Buff.Name.Contains(NameFilter, StringComparison.CurrentCultureIgnoreCase)) return true;
-					return !(IdFilterEnabled || NameFilterEnabled);
-				case SkillCastEvent skillEvent:
-					if (IdFilterEnabled && skillEvent.Skill.Id == IdFilter) return true;
-					if (NameFilterEnabled && skillEvent.Skill.Name.Contains(NameFilter, StringComparison.CurrentCultureIgnoreCase)) return true;
-					return !(IdFilterEnabled || NameFilterEnabled);
-				case DamageEvent damageEvent:
-					if (IdFilterEnabled && damageEvent.Skill.Id == IdFilter) return true;
-					if (NameFilterEnabled && damageEvent.Skill.Name.Contains(NameFilter, StringComparison.CurrentCultureIgnoreCase)) return true;
-					return !(IdFilterEnabled || NameFilterEnabled);
+		public bool FilterEvent(Event e) {
+			bool anyFilterActive = IdFilterEnabled || NameFilterEnabled;
+			if (e is not ISkillEvent ev) return !anyFilterActive;
 
-				default:
-					return true;
-			}
+			if (IdFilterEnabled && ev.Skill.Id == IdFilter) return true;
+			if (NameFilterEnabled && ev.Skill.Name.Contains(NameFilter, StringComparison.CurrentCultureIgnoreCase)) return true;
+
+			return !anyFilterActive;
 		}
 	}
 }

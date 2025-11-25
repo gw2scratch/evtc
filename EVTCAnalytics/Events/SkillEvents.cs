@@ -1,9 +1,19 @@
 using GW2Scratch.EVTCAnalytics.Model.Agents;
 using GW2Scratch.EVTCAnalytics.Model.Skills;
-using GW2Scratch.EVTCAnalytics.Model;
 
 namespace GW2Scratch.EVTCAnalytics.Events
 {
+	/// <summary>
+	/// Any event that features a <see cref="Skill"/>
+	/// </summary>
+	/// <remarks>
+	/// Both <see cref="SkillCastEvent"/>s and <see cref="BuffEvent"/>s can contain <see cref="Skill"/>s
+	/// </remarks>
+	public interface ISkillEvent
+	{
+		public Skill Skill { get; }
+	}
+
 	/// <summary>
 	/// An event representing a <see cref="Skill"/> cast by an <see cref="Agent"/>.
 	/// </summary>
@@ -11,7 +21,7 @@ namespace GW2Scratch.EVTCAnalytics.Events
 	/// Internally, skill casts are significantly tied to their animations.
 	/// </remarks>
 	public abstract class SkillCastEvent(long time, Agent agent, Skill skill, int castingTimeMs)
-		: AgentEvent(time, agent)
+		: AgentEvent(time, agent), ISkillEvent
 	{
 		public Skill Skill { get; } = skill;
 		public int CastingTimeMs { get; } = castingTimeMs;
