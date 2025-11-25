@@ -8,53 +8,34 @@ namespace GW2Scratch.EVTCInspector
 {
 	public class EventContentFilterControl : Panel
 	{
-		private uint BuffId { get; set; }
-		private bool BuffIdEnabled { get; set; }
-		private uint BuffDamageId { get; set; }
-		private bool BuffDamageIdEnabled { get; set; }
-		private uint CastSkillId { get; set; }
-		private bool CastSkillIdEnabled { get; set; }
-		private uint DamageSkillId { get; set; }
-		private bool DamageSkillIdEnabled { get; set; }
+		private uint IdFilter { get; set; }
+		private bool IdFilterEnabled { get; set; }
+		private string NameFilter { get; set; }
+		private bool NameFilterEnabled { get; set; }
 
-		private readonly DynamicLayout buffLayout;
-		private readonly DynamicLayout buffDamageLayout;
-		private readonly DynamicLayout castSkillLayout;
-		private readonly DynamicLayout damageSkillLayout;
+		private readonly DynamicLayout idLayout;
+		private readonly DynamicLayout nameLayout;
 
 		public EventContentFilterControl()
 		{
-			buffLayout = ConstructLayout(
-				() => BuffId, x => BuffId = x,
-				() => BuffIdEnabled, x => BuffIdEnabled = x ?? false,
-				"Buff Events",
-				"Buff ID"
-			);
-			buffDamageLayout = ConstructLayout(
-				() => BuffDamageId, x => BuffDamageId = x,
-				() => BuffDamageIdEnabled, x => BuffDamageIdEnabled = x ?? false,
-				"Buff Damage Events",
-				"Buff ID"
-			);
-			castSkillLayout = ConstructLayout(
-				() => CastSkillId, x => CastSkillId = x,
-				() => CastSkillIdEnabled, x => CastSkillIdEnabled = x ?? false,
-				"Skill Cast Events",
+			idLayout = ConstructLayout(
+				() => IdFilter, x => IdFilter = x,
+				() => IdFilterEnabled, x => IdFilterEnabled = x ?? false,
+				"Filter events by Skill ID",
 				"Skill ID"
 			);
-			damageSkillLayout = ConstructLayout(
-				() => DamageSkillId, x => DamageSkillId = x,
-				() => DamageSkillIdEnabled, x => DamageSkillIdEnabled = x ?? false,
-				"Damage Events",
-				"Skill ID"
+			nameLayout = ConstructLayout(
+				() => NameFilter, x => NameFilter = x,
+				() => NameFilterEnabled, x => NameFilterEnabled = x ?? false,
+				"Filter events by Skill Name",
+				"Skill Name"
 			);
+
 			var layout = new DynamicLayout();
 			layout.BeginVertical();
 			{
-				layout.Add(buffLayout);
-				layout.Add(buffDamageLayout);
-				layout.Add(castSkillLayout);
-				layout.Add(damageSkillLayout);
+				layout.Add(idLayout);
+				layout.Add(nameLayout);
 			}
 			layout.EndVertical();
 			Content = layout;
@@ -68,8 +49,28 @@ namespace GW2Scratch.EVTCInspector
 			var valueGetter = valueGetterExpr.Compile();
 			var enabledGetter = enabledGetterExpr.Compile();
 
-			var valueTextBox = new NumericMaskedTextBox<TValue>();
-			valueTextBox.ValueBinding.Bind(valueGetter, valueSetter);
+			Control valueControl;
+
+			if (typeof(TValue) == typeof(uint))
+			{
+				// Numberic filter
+				var numericTextBox = new NumericMaskedTextBox<TValue>();
+				numericTextBox.ValueBinding.Bind(valueGetter, valueSetter);
+
+				valueControl = numericTextBox;
+			}
+			else
+			{
+				// Text filter
+				var textBox = new TextBox();
+
+				textBox.TextBinding.Bind(
+					() => (string) (object) valueGetter(),
+					s => valueSetter((TValue) (object) s)
+				);
+
+				valueControl = textBox;
+			}
 
 			var enabledCheckbox = new CheckBox();
 			enabledCheckbox.CheckedBinding.Bind(enabledGetter, enabledSetter);
@@ -79,7 +80,7 @@ namespace GW2Scratch.EVTCInspector
 			{
 				layout.BeginGroup(groupTitle);
 				{
-					layout.AddRow(labelText, valueTextBox, enabledCheckbox, null);
+					layout.AddRow(labelText, valueControl, enabledCheckbox, null);
 				}
 				layout.EndGroup();
 				layout.AddRow(null);
@@ -91,27 +92,24 @@ namespace GW2Scratch.EVTCInspector
 
 		public bool FilterEvent(Event e)
 		{
-			return e switch
+			switch (e)
 			{
-				BuffEvent buffEvent when BuffIdEnabled => buffEvent.Buff.Id == BuffId,
-				BuffDamageEvent buffDamage when BuffDamageIdEnabled => buffDamage.Skill.Id == BuffDamageId,
-				SkillCastEvent skillEvent when CastSkillIdEnabled => skillEvent.Skill.Id == CastSkillId,
-				DamageEvent damageEvent when DamageSkillIdEnabled => damageEvent.Skill.Id == DamageSkillId,
-				_ => true,
-			};
-		}
+				case BuffEvent buff:
+					if (IdFilterEnabled && buff.Buff.Id == IdFilter) return true;
+					if (NameFilterEnabled && buff.Buff.Name.Contains(NameFilter, StringComparison.CurrentCultureIgnoreCase)) return true;
+					return !(IdFilterEnabled || NameFilterEnabled);
+				case SkillCastEvent skillEvent:
+					if (IdFilterEnabled && skillEvent.Skill.Id == IdFilter) return true;
+					if (NameFilterEnabled && skillEvent.Skill.Name.Contains(NameFilter, StringComparison.CurrentCultureIgnoreCase)) return true;
+					return !(IdFilterEnabled || NameFilterEnabled);
+				case DamageEvent damageEvent:
+					if (IdFilterEnabled && damageEvent.Skill.Id == IdFilter) return true;
+					if (NameFilterEnabled && damageEvent.Skill.Name.Contains(NameFilter, StringComparison.CurrentCultureIgnoreCase)) return true;
+					return !(IdFilterEnabled || NameFilterEnabled);
 
-		private Type GetClosestType(Type a, Type b)
-		{
-			while (a != null)
-			{
-				if (a.IsAssignableFrom(b))
-					return a;
-
-				a = a.BaseType;
+				default:
+					return true;
 			}
-
-			return null;
 		}
 	}
 }
