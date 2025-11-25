@@ -90,7 +90,8 @@ namespace GW2Scratch.EVTCInspector
 			return layout;
 		}
 
-		public bool FilterEvent(Event e) {
+		public bool FilterEvent(Event e)
+		{
 			bool anyFilterActive = IdFilterEnabled || NameFilterEnabled;
 			if (e is not ISkillEvent ev) return !anyFilterActive;
 
