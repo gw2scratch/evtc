@@ -152,6 +152,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		private Lazy<Image> BothPhasesAiKeeperOfThePeakIcon { get; } = new Lazy<Image>(Resources.GetBothPhasesAiKeeperOfThePeakIcon);
 		private Lazy<Image> KanaxaiIcon { get; } = new Lazy<Image>(Resources.GetKanaxaiIcon);
 		private Lazy<Image> EparchIcon { get; } = new Lazy<Image>(Resources.GetEparchIcon);
+		private Lazy<Image> WhisperingShadowIcon { get; } = new Lazy<Image>(Resources.GetWhisperingShadowIcon);
 
 		// FESTIVALS
 		private Lazy<Image> FreezieIcon { get; } = new Lazy<Image>(Resources.GetFreezieIcon);
@@ -382,6 +383,7 @@ namespace GW2Scratch.ArcdpsLogManager
 				Encounter.AiKeeperOfThePeakDayAndNight => BothPhasesAiKeeperOfThePeakIcon.Value,
 				Encounter.Kanaxai => KanaxaiIcon.Value,
 				Encounter.Eparch => EparchIcon.Value,
+				Encounter.WhisperingShadow => WhisperingShadowIcon.Value,
 				// FESTIVALS
 				Encounter.Freezie => FreezieIcon.Value,
 				// TRAINING AREA

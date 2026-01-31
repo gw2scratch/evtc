@@ -727,6 +727,18 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 							))
 						.Build();
 				}
+				case Encounter.WhisperingShadow:
+				{
+					// Tier 1 12.404.224 HP
+					// Tier 2 14.202.094 HP
+					// Tier 3 16.941.704 HP
+					// Tier 4 & CM 19.082.024 HP
+					return GetDefaultBuilder(encounter, mainTarget)
+						.WithModes(new ConditionalModeDeterminer(
+							(gameBuild != null && gameBuild >= GameBuilds.KinfallCMRelease, new SkillPresentModeDeterminer(SkillIds.LifeFireCircleCM, EncounterMode.Challenge))
+							))
+						.Build();
+				}
 				default:
 					return GetDefaultBuilder(encounter, mainTarget, mergeMainTarget: false).Build();
 			}
