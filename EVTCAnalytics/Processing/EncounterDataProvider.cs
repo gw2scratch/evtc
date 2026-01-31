@@ -735,7 +735,6 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					// Tier 4 & CM 19.082.024 HP
 					return GetDefaultBuilder(encounter, mainTarget)
 						.WithModes(new ConditionalModeDeterminer(
-							(gameBuild != null && gameBuild < GameBuilds.KinfallRelease, new ConstantModeDeterminer(EncounterMode.Normal)),
 							(gameBuild != null && gameBuild >= GameBuilds.KinfallCMRelease, new SkillPresentModeDeterminer(SkillIds.LifeFireCircleCM, EncounterMode.Challenge))
 							))
 						.Build();
