@@ -64,16 +64,16 @@ namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 			var normalModeCheckBox = new CheckBox {Text = "Normal", ToolTip = "Normal Mode"};
 			normalModeCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowNormalModeLogs);
 			BindEnabled(normalModeCheckBox);
-			var emboldenedCheckBox = new CheckBox {Text = "Emboldened", ToolTip = "Emboldened Normal Mode (regardless of how many stacks of Emboldened)"};
+			var emboldenedCheckBox = new CheckBox {Text = "Emboldened", ToolTip = "Emboldened Mode (regardless of how many stacks)"};
 			emboldenedCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowEmboldenedModeLogs);
 			BindEnabled(emboldenedCheckBox);
 			var challengeModeCheckBox = new CheckBox {Text = "Challenge", ToolTip = "Challenge Mode"};
 			challengeModeCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowChallengeModeLogs);
 			BindEnabled(challengeModeCheckBox);
-			var legendaryModeCheckBox = new CheckBox {Text = "Legendary", ToolTip = "Legendary Challenge Mode"};
+			var legendaryModeCheckBox = new CheckBox {Text = "Legendary", ToolTip = "Legendary Mode"};
 			legendaryModeCheckBox.CheckedBinding.Bind(this, x => x.Filters.ShowLegendaryChallengeModeLogs);
 			BindEnabled(legendaryModeCheckBox);
-			var quickplayCheckbox = new CheckBox {Text = "Quickplay", ToolTip = "Quickplay Normal Mode"};
+			var quickplayCheckbox = new CheckBox {Text = "Quickplay", ToolTip = "Quickplay Mode"};
 			quickplayCheckbox.CheckedBinding.Bind(this, x => x.Filters.ShowQuickplayModeLogs);
 			BindEnabled(quickplayCheckbox);
 
