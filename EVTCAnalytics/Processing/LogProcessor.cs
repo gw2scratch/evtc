@@ -1364,6 +1364,10 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 							_ => new UnknownEvent(item.Time, item)
 						};
 					}
+					case StateChange.StunBreak:
+					{
+						return new AgentStunBreakEvent(item.Time, GetAgentByAddress(item.SrcAgent), item.Value);
+					}
 					default:
 						return new UnknownEvent(item.Time, item);
 				}
