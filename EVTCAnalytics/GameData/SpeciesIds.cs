@@ -113,6 +113,8 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		public const int KanaxaiCM = 25577;
 		// Lonely Tower
 		public const int Eparch = 26231;
+		// Kinfall
+		public const int WhisperingShadow = 27010;
 
 		// Festivals
 		public const int Freezie = 21333;

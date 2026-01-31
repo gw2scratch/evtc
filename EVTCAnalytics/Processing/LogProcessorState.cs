@@ -20,6 +20,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 		public Dictionary<uint, Skill> SkillsById { get; set; }
 		public Dictionary<uint, Effect> EffectsById { get; set; }
 		public Dictionary<uint, Marker> MarkersById { get; set; }
+		public Dictionary<uint, Species> SpeciesById { get; set; }
 		public List<Skill> Skills { get; set; }
 		public List<Event> Events { get; set; }
 		public List<LogError> Errors { get; set; }

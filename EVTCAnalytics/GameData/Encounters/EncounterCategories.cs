@@ -13,6 +13,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 			{
 				{Encounter.Other, EncounterCategory.Other},
 				{Encounter.ValeGuardian, EncounterCategory.RaidWing1},
+				{Encounter.SpiritRace, EncounterCategory.RaidWing1},
 				{Encounter.Gorseval, EncounterCategory.RaidWing1},
 				{Encounter.Sabetha, EncounterCategory.RaidWing1},
 				{Encounter.Slothasor, EncounterCategory.RaidWing2},
@@ -55,6 +56,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 				{Encounter.AiKeeperOfThePeakDayAndNight, EncounterCategory.FractalSunquaPeak},
 				{Encounter.Kanaxai, EncounterCategory.FractalSilentSurf},
 				{Encounter.Eparch, EncounterCategory.FractalLonelyTower},
+				{Encounter.WhisperingShadow, EncounterCategory.FractalKinfall},
 				{Encounter.Freezie, EncounterCategory.StrikeMissionFestival},
 				{Encounter.StandardKittyGolem, EncounterCategory.SpecialForcesTrainingArea},
 				{Encounter.MediumKittyGolem, EncounterCategory.SpecialForcesTrainingArea},
@@ -108,6 +110,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 				EncounterCategory.FractalSunquaPeak,
 				EncounterCategory.FractalSilentSurf,
 				EncounterCategory.FractalLonelyTower,
+				EncounterCategory.FractalKinfall,
 			};
 
 		/// <summary>

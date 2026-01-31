@@ -12,6 +12,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 		public static IReadOnlyDictionary<Encounter, string> EnglishNames { get; } = new Dictionary<Encounter, string>
 		{
 			{Encounter.ValeGuardian, "Vale Guardian"},
+			{Encounter.SpiritRace, "Spirit Race" },
 			{Encounter.Gorseval, "Gorseval the Multifarious"},
 			{Encounter.Sabetha, "Sabetha the Saboteur"},
 			{Encounter.Slothasor, "Slothasor"},
@@ -53,7 +54,8 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 			{Encounter.AiKeeperOfThePeakNightOnly, "Ai, Keeper of the Peak – Dark"},
 			{Encounter.AiKeeperOfThePeakDayAndNight, "Ai, Keeper of the Peak – Both Phases"},
 			{Encounter.Kanaxai, "Kanaxai, Scythe of House Aurkus"},
-			{Encounter.Eparch, "Eparch" },
+			{Encounter.Eparch, "Eparch"},
+			{Encounter.WhisperingShadow, "Whispering Shadow"},
 			{Encounter.Freezie, "Freezie"},
 			{Encounter.StandardKittyGolem, "Standard Kitty Golem"},
 			{Encounter.MediumKittyGolem, "Medium Kitty Golem"},
