@@ -53,6 +53,9 @@ namespace GW2Scratch.EVTCInspector
 		// Processed markers
 		private readonly FilterCollection<Marker> markers = new FilterCollection<Marker>();
 
+		// Processed species
+		private readonly FilterCollection<Species> species = new FilterCollection<Species>();
+
 		// Statistics
 		private readonly PropertyGrid statisticsPropertyGrid = new PropertyGrid();
 
@@ -100,6 +103,7 @@ namespace GW2Scratch.EVTCInspector
 			processedTabControl.Pages.Add(new TabPage(skillSplitter) {Text = "Skills"});
 			processedTabControl.Pages.Add(new TabPage(ConstructEffectGridView()) {Text = "Effects"});
 			processedTabControl.Pages.Add(new TabPage(ConstructMarkerGridView()) {Text = "Markers"});
+			processedTabControl.Pages.Add(new TabPage(ConstructSpeciesGridView()) {Text = "Species"});
 
 			var statisticsLayout = new DynamicLayout();
 			statisticsLayout.Add(statisticsPropertyGrid);
@@ -278,6 +282,8 @@ namespace GW2Scratch.EVTCInspector
 					effects.AddRange(processedLog.Effects);
 					markers.Clear();
 					markers.AddRange(processedLog.Markers);
+					species.Clear();
+					species.AddRange(processedLog.Species);
 				});
 			}
 			catch (Exception ex)
@@ -368,6 +374,50 @@ namespace GW2Scratch.EVTCInspector
 					})
 				}
 			});
+			grid.Columns.Add(new GridColumn
+			{
+				HeaderText = "Content GUID",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Skill, string>(x => GuidToString(x.ContentGuid))
+				}
+			});
+
+			var menu = new ContextMenu();
+			menu.Items.Add(new ButtonMenuItem
+			{
+				Text = "Copy ID",
+				Command = new Command((_, _) =>
+				{
+					if (grid.SelectedItem != null)
+					{
+						Clipboard.Instance.Text = grid.SelectedItem.Id.ToString();
+					}
+				})
+			});
+			menu.Items.Add(new ButtonMenuItem
+			{
+				Text = "Copy Name",
+				Command = new Command((_, _) =>
+				{
+					if (grid.SelectedItem != null)
+					{
+						Clipboard.Instance.Text = grid.SelectedItem.Name.ToString();
+					}
+				})
+			});
+			menu.Items.Add(new ButtonMenuItem
+			{
+				Text = "Copy GUID",
+				Command = new Command((_, _) =>
+				{
+					if (grid.SelectedItem != null)
+					{
+						Clipboard.Instance.Text = GuidToString(grid.SelectedItem.ContentGuid);
+					}
+				})
+			});
+			grid.ContextMenu = menu;
 
 			grid.SelectedItemsChanged += (_, _) => {skillControl.Skill = grid.SelectedItem;};
 			grid.DataStore = skills;
@@ -424,6 +474,17 @@ namespace GW2Scratch.EVTCInspector
 					if (grid.SelectedItem != null)
 					{
 						Clipboard.Instance.Text = GuidToString(grid.SelectedItem.ContentGuid);
+					}
+				})
+			});
+			menu.Items.Add(new ButtonMenuItem
+			{
+				Text = "Copy Duration",
+				Command = new Command((_, _) =>
+				{
+					if (grid.SelectedItem != null)
+					{
+						Clipboard.Instance.Text = grid.SelectedItem.DefaultDuration.ToString();
 					}
 				})
 			});
@@ -485,8 +546,58 @@ namespace GW2Scratch.EVTCInspector
 
 			return grid;
 		}
-		
-		
+
+		private GridView<Species> ConstructSpeciesGridView()
+		{
+			var grid = new GridView<Species>();
+			grid.Columns.Add(new GridColumn
+			{
+				HeaderText = "ID",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Species, string>(x => x.Id.ToString())
+				}
+			});
+			grid.Columns.Add(new GridColumn
+			{
+				HeaderText = "Content GUID",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Species, string>(x => GuidToString(x.ContentGuid))
+				},
+			});
+
+			var menu = new ContextMenu();
+			menu.Items.Add(new ButtonMenuItem
+			{
+				Text = "Copy ID",
+				Command = new Command((_, _) =>
+				{
+					if (grid.SelectedItem != null)
+					{
+						Clipboard.Instance.Text = grid.SelectedItem.Id.ToString();
+					}
+				})
+			});
+			menu.Items.Add(new ButtonMenuItem
+			{
+				Text = "Copy GUID",
+				Command = new Command((_, _) =>
+				{
+					if (grid.SelectedItem != null)
+					{
+						Clipboard.Instance.Text = GuidToString(grid.SelectedItem.ContentGuid);
+					}
+				})
+			});
+			grid.ContextMenu = menu;
+
+			grid.DataStore = species;
+			new GridViewSorter<Species>(grid, species).EnableSorting();
+
+			return grid;
+		}
+
 		private GridView<Agent> ConstructAgentGridView()
 		{
 			var agentsGridView = new GridView<Agent>();

@@ -63,6 +63,12 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				// Raids - Wing 1
 				case Encounter.ValeGuardian:
 					return GetDefaultBuilder(encounter, mainTarget).Build();
+				case Encounter.SpiritRace:
+				{
+					return GetDefaultBuilder(encounter, mainTarget)
+						.WithResult(new RewardDeterminer(404))
+						.Build();
+				}
 				case Encounter.Gorseval:
 					return GetDefaultBuilder(encounter, mainTarget).Build();
 				case Encounter.Sabetha:
@@ -718,6 +724,18 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 								new AgentHealthModeDeterminer(mainTarget, 31_000_000)),
 							(gameBuild != null && gameBuild >= GameBuilds.LonelyTowerHPNerf2,
 								new AgentHealthModeDeterminer(mainTarget, 21_000_000))
+							))
+						.Build();
+				}
+				case Encounter.WhisperingShadow:
+				{
+					// Tier 1 12.404.224 HP
+					// Tier 2 14.202.094 HP
+					// Tier 3 16.941.704 HP
+					// Tier 4 & CM 19.082.024 HP
+					return GetDefaultBuilder(encounter, mainTarget)
+						.WithModes(new ConditionalModeDeterminer(
+							(gameBuild != null && gameBuild >= GameBuilds.KinfallCMRelease, new SkillPresentModeDeterminer(SkillIds.LifeFireCircleCM, EncounterMode.Challenge))
 							))
 						.Build();
 				}

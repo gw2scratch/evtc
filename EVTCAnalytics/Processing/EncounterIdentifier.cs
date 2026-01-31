@@ -188,6 +188,8 @@ public class EncounterIdentifier : IEncounterIdentifier
 					return Encounter.Kanaxai;
 				case SpeciesIds.Eparch:
 					return Encounter.Eparch;
+				case SpeciesIds.WhisperingShadow:
+					return Encounter.WhisperingShadow;
 				case SpeciesIds.Freezie:
 					return Encounter.Freezie;
 				case SpeciesIds.IcebroodConstruct:
@@ -233,6 +235,8 @@ public class EncounterIdentifier : IEncounterIdentifier
 		{
 			switch (gadgetBoss.VolatileId)
 			{
+				case GadgetIds.EtherealBarrier:
+					return Encounter.SpiritRace;
 				case GadgetIds.ConjuredAmalgamate:
 					return Encounter.ConjuredAmalgamate;
 				case GadgetIds.TheDragonvoidFinal:
@@ -347,6 +351,8 @@ public class EncounterIdentifier : IEncounterIdentifier
 				return new[] { Encounter.Kanaxai };
 			case SpeciesIds.Eparch:
 				return new[] { Encounter.Eparch };
+			case SpeciesIds.WhisperingShadow:
+				return new[] { Encounter.WhisperingShadow };
 			case SpeciesIds.Freezie:
 				return new[] { Encounter.Freezie };
 			case SpeciesIds.IcebroodConstruct:
@@ -385,6 +391,8 @@ public class EncounterIdentifier : IEncounterIdentifier
 				return new[] { Encounter.CosmicObservatory };
 			case SpeciesIds.Cerus:
 				return new[] { Encounter.TempleOfFebe };
+			case GadgetIds.EtherealBarrier:
+				return new[] { Encounter.SpiritRace };
 			case GadgetIds.ConjuredAmalgamate:
 				return new[] { Encounter.ConjuredAmalgamate };
 			case GadgetIds.TheDragonvoidFinal:

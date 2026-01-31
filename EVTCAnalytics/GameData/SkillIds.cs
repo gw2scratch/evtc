@@ -130,5 +130,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 
 		public const int Emboldened = 68087;
 		public const int QuickplayBoost = 77676;
+
+		public const int LifeFireCircleCM = 76339;
 	}
 }
