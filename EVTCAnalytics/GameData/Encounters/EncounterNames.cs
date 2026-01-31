@@ -12,6 +12,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 		public static IReadOnlyDictionary<Encounter, string> EnglishNames { get; } = new Dictionary<Encounter, string>
 		{
 			{Encounter.ValeGuardian, "Vale Guardian"},
+			{Encounter.SpiritRace, "Spirit Race" },
 			{Encounter.Gorseval, "Gorseval the Multifarious"},
 			{Encounter.Sabetha, "Sabetha the Saboteur"},
 			{Encounter.Slothasor, "Slothasor"},

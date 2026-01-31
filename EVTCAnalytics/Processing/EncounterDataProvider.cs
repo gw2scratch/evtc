@@ -63,6 +63,12 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				// Raids - Wing 1
 				case Encounter.ValeGuardian:
 					return GetDefaultBuilder(encounter, mainTarget).Build();
+				case Encounter.SpiritRace:
+				{
+					return GetDefaultBuilder(encounter, mainTarget)
+						.WithResult(new RewardDeterminer(404))
+						.Build();
+				}
 				case Encounter.Gorseval:
 					return GetDefaultBuilder(encounter, mainTarget).Build();
 				case Encounter.Sabetha:

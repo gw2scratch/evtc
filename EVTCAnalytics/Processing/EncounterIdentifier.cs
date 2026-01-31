@@ -233,6 +233,8 @@ public class EncounterIdentifier : IEncounterIdentifier
 		{
 			switch (gadgetBoss.VolatileId)
 			{
+				case GadgetIds.EtherealBarrier:
+					return Encounter.SpiritRace;
 				case GadgetIds.ConjuredAmalgamate:
 					return Encounter.ConjuredAmalgamate;
 				case GadgetIds.TheDragonvoidFinal:
@@ -385,6 +387,8 @@ public class EncounterIdentifier : IEncounterIdentifier
 				return new[] { Encounter.CosmicObservatory };
 			case SpeciesIds.Cerus:
 				return new[] { Encounter.TempleOfFebe };
+			case GadgetIds.EtherealBarrier:
+				return new[] { Encounter.SpiritRace };
 			case GadgetIds.ConjuredAmalgamate:
 				return new[] { Encounter.ConjuredAmalgamate };
 			case GadgetIds.TheDragonvoidFinal:

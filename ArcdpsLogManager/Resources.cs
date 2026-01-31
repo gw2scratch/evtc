@@ -113,6 +113,7 @@ namespace GW2Scratch.ArcdpsLogManager
 
 		// WING 1
 		public static Image GetValeGuardianIcon() => GetEncounterImage("Mini_Vale_Guardian");
+		public static Image GetSpiritRaceIcon() => GetEncounterImage("Spirit_Thread");
 		public static Image GetGorsevalIcon() => GetEncounterImage("Mini_Gorseval_the_Multifarious");
 		public static Image GetSabethaIcon() => GetEncounterImage("Mini_Sabetha");
 
