@@ -323,27 +323,21 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				}
 				case Encounter.Decima:
 				{
-					// Decima when it first released had 83,288,232 HP and got nerfed without patch to 70,795,000.
+					// Decima released with 83,288,232 HP and got nerfed without patch to 70,795,000.
 					// Some logs with the original HP exist.
-					
-					var mode = mainTarget switch
-					{
-						NPC { SpeciesId: SpeciesIds.Decima } => EncounterMode.Normal,
-						NPC { SpeciesId: SpeciesIds.DecimaChallengeMode } => EncounterMode.Challenge,
-						_ => EncounterMode.Unknown,
-					};
-					
+					// On December 10th, 2024, Decima's got nerfed from 70,795,000 to 60,165,720 HP.
+					// Challenge Mode has 97,020,184 HP.
 					return GetDefaultBuilder(encounter, mainTarget)
-						.WithModes(new ConstantModeDeterminer(mode))
+						.WithModes(new AgentHealthModeDeterminer(mainTarget, 90_000_000))
 						.Build();
 				}
 				case Encounter.Ura:
 				{
 					// Normal mode 61,345,440
 					// Challenge mode 79,749,072
+					// Legendary challenge mode 105,508,684
 					return GetDefaultBuilder(encounter, mainTarget)
 						.WithModes(new FallbackModeDeterminer(
-							// A preliminary guess
 							new AgentHealthModeDeterminer(mainTarget, 80_000_000, EncounterMode.LegendaryChallenge),
 							new AgentHealthModeDeterminer(mainTarget, 70_000_000, EncounterMode.Challenge),
 							finalFallbackMode: null

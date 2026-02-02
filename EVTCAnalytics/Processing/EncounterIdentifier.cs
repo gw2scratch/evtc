@@ -321,6 +321,7 @@ public class EncounterIdentifier : IEncounterIdentifier
 			case SpeciesIds.Greer:
 				return new[] { Encounter.Greer };
 			case SpeciesIds.Decima:
+			case SpeciesIds.DecimaChallengeMode:
 				return new[] { Encounter.Decima };
 			case SpeciesIds.Ura:
 				return new[] { Encounter.Ura };
