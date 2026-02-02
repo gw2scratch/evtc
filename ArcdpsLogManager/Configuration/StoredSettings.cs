@@ -22,6 +22,7 @@ public class StoredSettings
 	public string DpsReportDomain { get; set; } = DpsReportUploader.DefaultDomain.Domain;
 	public bool DpsReportAutoUpload { get; set; } = false;
 	public bool DpsReportUploadDetailedWvw { get; set; } = false;
+	public bool DpsReportAutoUploadApplyFilters { get; set; } = false;
 	public int? MinimumLogDurationSeconds { get; set; } = null;
 
 	public List<string> HiddenLogListColumns { get; set; } =
