@@ -16,6 +16,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 	{
 		// Wing 1
 		public const int EtherealBarrier = 47188;
+		public const int EtherealBarrierChina = 48133; // ID for the Chinese version of GW2
 
 		// Wing 4
 		// Deimos

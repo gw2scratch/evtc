@@ -236,6 +236,7 @@ public class EncounterIdentifier : IEncounterIdentifier
 			switch (gadgetBoss.VolatileId)
 			{
 				case GadgetIds.EtherealBarrier:
+				case GadgetIds.EtherealBarrierChina:
 					return Encounter.SpiritRace;
 				case GadgetIds.ConjuredAmalgamate:
 					return Encounter.ConjuredAmalgamate;
@@ -392,6 +393,7 @@ public class EncounterIdentifier : IEncounterIdentifier
 			case SpeciesIds.Cerus:
 				return new[] { Encounter.TempleOfFebe };
 			case GadgetIds.EtherealBarrier:
+			case GadgetIds.EtherealBarrierChina:
 				return new[] { Encounter.SpiritRace };
 			case GadgetIds.ConjuredAmalgamate:
 				return new[] { Encounter.ConjuredAmalgamate };
