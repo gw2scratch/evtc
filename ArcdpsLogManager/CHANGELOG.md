@@ -7,9 +7,13 @@ This is the full changelog of the arcdps Log Manager.
 #### New features
 - Added support for Spirit Race
 - Added support for Kinfall
+- Added support for Quickplay
+- Added support for VoE elite specs
+- Added support to only upload successful logs
 
 #### Fixes
 - Fixed event filters
+- Fixed Decima CM detection
 
 #### EVTC Inspector notes
 - Added effect duration
