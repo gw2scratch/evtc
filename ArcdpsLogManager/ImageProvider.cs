@@ -83,6 +83,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		private Lazy<Image> TinyIconIcebroodSaga { get; } = new Lazy<Image>(Resources.GetTinyIconIcebroodSaga);
 		private Lazy<Image> TinyIconEndOfDragons { get; } = new Lazy<Image>(Resources.GetTinyIconEndOfDragons);
 		private Lazy<Image> TinyIconSecretsOfTheObscure { get; } = new Lazy<Image>(Resources.GetTinyIconSecretsOfTheObscure);
+		private Lazy<Image> TinyVisionsOfEternity { get; } = new Lazy<Image>(Resources.GetTinyIconVisionsOfEternity);
 		private Lazy<Image> TinyIconInstance { get; } = new Lazy<Image>(Resources.GetTinyIconInstance);
 
 		// RAIDS
@@ -157,6 +158,9 @@ namespace GW2Scratch.ArcdpsLogManager
 		private Lazy<Image> CosmicObservatoryIcon { get; } = new Lazy<Image>(Resources.GetCosmicObservatoryIcon);
 		private Lazy<Image> TempleOfFebeIcon { get; } = new Lazy<Image>(Resources.GetTempleOfFebeIcon);
 
+		// STRIKES - VISIONS OF ETERNITY
+		private Lazy<Image> GuardiansGladeIcon { get; } = new Lazy<Image>(Resources.GetGuardiansGladeIcon);
+
 		// FRACTALS
 		private Lazy<Image> MAMAIcon { get; } = new Lazy<Image>(Resources.GetMAMAIcon);
 		private Lazy<Image> SiaxTheCorruptedIcon { get; } = new Lazy<Image>(Resources.GetSiaxTheCorruptedIcon);
@@ -224,6 +228,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		private Lazy<Image> WideIcebroodSagaIcon { get; } = new Lazy<Image>(Resources.GetWideIcebroodSagaIcon);
 		private Lazy<Image> WideEndOfDragonsIcon { get; } = new Lazy<Image>(Resources.GetWideEndOfDragonsIcon);
 		private Lazy<Image> WideSecretsOfTheObscureIcon { get; } = new Lazy<Image>(Resources.GetWideSecretsOfTheObscureIcon);
+		private Lazy<Image> WideVisionsOfEternityIcon { get; } = new Lazy<Image>(Resources.GetWideVisionsOfEternityIcon);
 		private Lazy<Image> WideRaidWing1Icon { get; } = new Lazy<Image>(Resources.GetWideRaidWing1Icon);
 		private Lazy<Image> WideRaidWing2Icon { get; } = new Lazy<Image>(Resources.GetWideRaidWing2Icon);
 		private Lazy<Image> WideRaidWing3Icon { get; } = new Lazy<Image>(Resources.GetWideRaidWing3Icon);
@@ -245,6 +250,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		public Image GetTinyIcebroodSagaIcon() => TinyIconIcebroodSaga.Value;
 		public Image GetTinyEndOfDragonsIcon() => TinyIconEndOfDragons.Value;
 		public Image GetTinySecretsOfTheObscureIcon() => TinyIconSecretsOfTheObscure.Value;
+		public Image GetTinyVisionsOfEternityIcon() => TinyVisionsOfEternity.Value;
 		public Image GetTinyInstanceIcon() => TinyIconInstance.Value;
 		public Image GetCopyButtonEnabledImage() => CopyButtonEnabledIcon.Value;
 		public Image GetCopyButtonDisabledImage() => CopyButtonDisabledIcon.Value;
@@ -255,6 +261,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		public Image GetWideIcebroodSagaIcon() => WideIcebroodSagaIcon.Value;
 		public Image GetWideEndOfDragonsIcon() => WideEndOfDragonsIcon.Value;
 		public Image GetWideSecretsOfTheObscureIcon() => WideSecretsOfTheObscureIcon.Value;
+		public Image GetWideVisionsOfEternityIcon() => WideVisionsOfEternityIcon.Value;
 		public Image GetWideRaidWing1Icon() => WideRaidWing1Icon.Value;
 		public Image GetWideRaidWing2Icon() => WideRaidWing2Icon.Value;
 		public Image GetWideRaidWing3Icon() => WideRaidWing3Icon.Value;
@@ -404,6 +411,8 @@ namespace GW2Scratch.ArcdpsLogManager
 				// STRIKES - SECRETS OF THE OBSCURE
 				Encounter.CosmicObservatory => CosmicObservatoryIcon.Value,
 				Encounter.TempleOfFebe => TempleOfFebeIcon.Value,
+				// STRIKES - VISIONS OF ETERNITY
+				Encounter.GuardiansGlade => GuardiansGladeIcon.Value,
 				// FRACTALS
 				Encounter.MAMA => MAMAIcon.Value,
 				Encounter.SiaxTheCorrupted => SiaxTheCorruptedIcon.Value,

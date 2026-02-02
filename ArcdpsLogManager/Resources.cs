@@ -97,6 +97,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		public static Image GetTinyIconIcebroodSaga() => GetImage("ArenaNet.icebrood_saga_32px.png");
 		public static Image GetTinyIconEndOfDragons() => GetImage("ArenaNet.end_of_dragons_32px.png");
 		public static Image GetTinyIconSecretsOfTheObscure() => GetImage("ArenaNet.secrets_of_the_obscure_32px.png");
+		public static Image GetTinyIconVisionsOfEternity() => GetImage("ArenaNet.visions_of_eternity_32px.png");
 		public static Image GetTinyIconInstance() => GetImage("ArenaNet.storyline_32px.png");
 
 		// FRACTAL INSTABILITIES
@@ -194,6 +195,9 @@ namespace GW2Scratch.ArcdpsLogManager
 		public static Image GetCosmicObservatoryIcon() => GetEncounterImage("Mini_Dagda");
 		public static Image GetTempleOfFebeIcon() => GetEncounterImage("Mini_Cerus");
 
+		// STRIKES - VISIONS OF ETERNITY
+		public static Image GetGuardiansGladeIcon() => GetEncounterImage("Kela"); // TODO Update image
+
 		// FRACTALS
 		public static Image GetGenericFractalMapIcon() => GetImage("ArenaNet.fractal_map_32px.png");
 		public static Image GetMAMAIcon() => GetEncounterImage("Mini_MAMA");
@@ -244,6 +248,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		public static Image GetWideIcebroodSagaIcon() => GetImage("ArenaNet.icebrood_saga_96px_64px.png");
 		public static Image GetWideEndOfDragonsIcon() => GetImage("ArenaNet.end_of_dragons_96px_64px.png");
 		public static Image GetWideSecretsOfTheObscureIcon() => GetImage("ArenaNet.secrets_of_the_obscure_96px_64px.png");
+		public static Image GetWideVisionsOfEternityIcon() => GetImage("ArenaNet.visions_of_eternity_96px_64px.png");
 		public static Image GetWideRaidWing1Icon() => GetImage("ArenaNet.raid_wing1_96px_64px.png");
 		public static Image GetWideRaidWing2Icon() => GetImage("ArenaNet.raid_wing2_96px_64px.png");
 		public static Image GetWideRaidWing3Icon() => GetImage("ArenaNet.raid_wing3_96px_64px.png");

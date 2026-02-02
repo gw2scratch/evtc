@@ -228,7 +228,9 @@ public class EncounterIdentifier : IEncounterIdentifier
 					return Encounter.CosmicObservatory;
 				case SpeciesIds.Cerus:
 					return Encounter.TempleOfFebe;
-				// Important: when adding a new encounter, make sure you also add it to the IdentifyPotentialEncounters method.
+				case SpeciesIds.Kela:
+					return Encounter.GuardiansGlade;
+					// Important: when adding a new encounter, make sure you also add it to the IdentifyPotentialEncounters method.
 			}
 		}
 		else if (mainTarget is Gadget gadgetBoss)
@@ -393,6 +395,8 @@ public class EncounterIdentifier : IEncounterIdentifier
 				return new[] { Encounter.CosmicObservatory };
 			case SpeciesIds.Cerus:
 				return new[] { Encounter.TempleOfFebe };
+			case SpeciesIds.Kela:
+				return new[] { Encounter.GuardiansGlade };
 			case GadgetIds.EtherealBarrier:
 			case GadgetIds.EtherealBarrierChina:
 				return new[] { Encounter.SpiritRace };

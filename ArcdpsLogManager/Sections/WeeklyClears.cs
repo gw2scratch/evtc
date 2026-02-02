@@ -52,6 +52,9 @@ public class WeeklyClears : DynamicLayout
 	private static readonly DateOnly COCMRelease = new DateOnly(2023, 11, 6);
 	private static readonly DateOnly ToFCMRelease = new DateOnly(2024, 2, 26);
 
+	private static readonly DateOnly GuardiansGladeRelease = new DateOnly(2026, 02, 02);
+	private static readonly DateOnly GuardiansGladeCMRelease = new DateOnly(2026, 02, 23);
+
 
 	private static readonly List<EncounterGroup> EncounterGroups =
 	[
@@ -139,6 +142,11 @@ public class WeeklyClears : DynamicLayout
 				new NormalEncounter(Encounter.CosmicObservatory, normalModeSince: SotORelease,
 					challengeModeSince: COCMRelease),
 				new NormalEncounter(Encounter.TempleOfFebe, normalModeSince: SotORelease, challengeModeSince: ToFCMRelease),
+			]),
+		]),
+		new EncounterGroup(EncounterCategory.StrikeVisionsOfEternity, "Visions of Eternity", [
+			new EncounterRow("Visions of Eternity", [
+				new NormalEncounter(Encounter.GuardiansGlade, normalModeSince: GuardiansGladeRelease, challengeModeSince: GuardiansGladeCMRelease),
 			]),
 		])
 	];
@@ -387,7 +395,8 @@ public class WeeklyClears : DynamicLayout
 			         ("Raid", EncounterCategory.Raids, true),
 			         ("IBS", EncounterCategory.StrikeIcebroodSaga, false),
 			         ("EoD", EncounterCategory.StrikeEndOfDragons, true),
-			         ("SotO", EncounterCategory.StrikeSecretsOfTheObscure, true)
+			         ("SotO", EncounterCategory.StrikeSecretsOfTheObscure, true),
+					 ("VoE", EncounterCategory.StrikeVisionsOfEternity, true)
 		         ])
 		{
 			var visible = Settings.WeeklyClearGroups.Contains(category);
@@ -553,6 +562,7 @@ public class WeeklyClears : DynamicLayout
 							EncounterCategory.StrikeIcebroodSaga => imageProvider.GetWideIcebroodSagaIcon(),
 							EncounterCategory.StrikeEndOfDragons => imageProvider.GetWideEndOfDragonsIcon(),
 							EncounterCategory.StrikeSecretsOfTheObscure => imageProvider.GetWideSecretsOfTheObscureIcon(),
+							EncounterCategory.StrikeVisionsOfEternity => imageProvider.GetWideVisionsOfEternityIcon(),
 							_ => throw new ArgumentOutOfRangeException()
 						}
 					};

@@ -9,4 +9,5 @@ public enum EncounterCategory
 	StrikeIcebroodSaga = 1,
 	StrikeEndOfDragons = 2,
 	StrikeSecretsOfTheObscure = 3,
+	StrikeVisionsOfEternity = 4,
 }

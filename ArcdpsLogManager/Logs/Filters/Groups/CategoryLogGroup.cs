@@ -24,6 +24,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters.Groups
 			{EncounterCategory.StrikeMissionIcebroodSaga, "Icebrood Saga"},
 			{EncounterCategory.StrikeMissionEndOfDragons, "End of Dragons"},
 			{EncounterCategory.StrikeMissionSecretsOfTheObscure, "Secrets of the Obscure"},
+			{EncounterCategory.StrikeMissionVisionsOfEternity, "Visions of Eternity"},
 			{EncounterCategory.StrikeMissionFestival, "Festivals"},
 			{EncounterCategory.Fractal, "Fractals of the Mists"},
 			{EncounterCategory.FractalNightmare, "Nightmare" },

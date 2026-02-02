@@ -733,6 +733,11 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 							))
 						.Build();
 				}
+				case Encounter.GuardiansGlade:
+					// TODO Add health documentation
+					return GetDefaultBuilder(encounter, mainTarget)
+						.WithModes(new AgentHealthModeDeterminer(mainTarget, 50_000_000)) // TODO Update health threshold when known
+						.Build();
 				default:
 					return GetDefaultBuilder(encounter, mainTarget, mergeMainTarget: false).Build();
 			}
