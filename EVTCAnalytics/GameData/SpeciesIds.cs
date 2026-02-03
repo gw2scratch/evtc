@@ -153,7 +153,10 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		// Strike Missions - Secrets of the Obscure
 		public const int Dagda = 25705;
 		public const int Cerus = 25989;
-		
+
+		// Strike Missions - Visions of Eternity
+		public const int Kela = 27124;
+
 		// Story
 		public const int HeartsAndMindsMordremoth = 15884;
 	}

@@ -76,6 +76,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 			{Encounter.OldLionsCourt, "Old Lion's Court"},
 			{Encounter.CosmicObservatory, "Cosmic Observatory"},
 			{Encounter.TempleOfFebe, "Temple of Febe"},
+			{Encounter.GuardiansGlade, "Guardian's Glade" },
 		};
 
 		public static IReadOnlyDictionary<Encounter, string> EnglishChallengeModeOverrides { get; } = new Dictionary<Encounter, string>

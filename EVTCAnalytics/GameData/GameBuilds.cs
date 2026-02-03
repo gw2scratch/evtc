@@ -70,5 +70,11 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		/// https://wiki.guildwars2.com/wiki/Game_updates/2025-06-24
 		/// </summary>
 		public static int KinfallCMRelease = 182824;
+
+		/// <summary>
+		/// Guardian's Glade Release & Raid Quickplay<br/>
+		/// https://wiki.guildwars2.com/wiki/Game_updates/2026-02-03
+		/// </summary>
+		public static int GuardiansGladeRaidQuickplayRelease = 194969;
 	}
 }

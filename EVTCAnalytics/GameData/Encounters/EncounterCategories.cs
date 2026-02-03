@@ -77,6 +77,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 				{Encounter.OldLionsCourt, EncounterCategory.StrikeMissionEndOfDragons},
 				{Encounter.CosmicObservatory, EncounterCategory.StrikeMissionSecretsOfTheObscure},
 				{Encounter.TempleOfFebe, EncounterCategory.StrikeMissionSecretsOfTheObscure},
+				{Encounter.GuardiansGlade, EncounterCategory.StrikeMissionVisionsOfEternity},
 				{Encounter.Map, EncounterCategory.Map},
 			};
 
@@ -99,6 +100,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 				EncounterCategory.StrikeMissionIcebroodSaga,
 				EncounterCategory.StrikeMissionEndOfDragons,
 				EncounterCategory.StrikeMissionSecretsOfTheObscure,
+				EncounterCategory.StrikeMissionVisionsOfEternity,
 				EncounterCategory.StrikeMissionFestival,
 			};
 

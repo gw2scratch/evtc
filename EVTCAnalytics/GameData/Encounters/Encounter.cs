@@ -133,7 +133,10 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 		// Strike Missions - Secrets of the Obscure
 		CosmicObservatory = 43001,
 		TempleOfFebe = 43002,
-		
+
+		// Strike Missions - Visions of Eternity
+		GuardiansGlade = 44001,
+
 		// Story
 		Mordremoth = 50001,
 

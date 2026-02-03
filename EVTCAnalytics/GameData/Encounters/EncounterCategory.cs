@@ -13,6 +13,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 		StrikeMissionIcebroodSaga = 4,
 		StrikeMissionEndOfDragons = 5,
 		StrikeMissionSecretsOfTheObscure = 6,
+		StrikeMissionVisionsOfEternity = 7,
 		StrikeMissionFestival = 9,
 		SpecialForcesTrainingArea = 100,
 		RaidWing1 = 101,
