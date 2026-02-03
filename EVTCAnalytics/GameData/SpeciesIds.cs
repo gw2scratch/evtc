@@ -155,7 +155,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		public const int Cerus = 25989;
 
 		// Strike Missions - Visions of Eternity
-		public const int Kela = 50000; // TODO Update when known
+		public const int Kela = 27124;
 
 		// Story
 		public const int HeartsAndMindsMordremoth = 15884;
