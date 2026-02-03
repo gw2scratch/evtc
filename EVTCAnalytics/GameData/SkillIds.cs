@@ -129,7 +129,8 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		public const int SabirFirstAutoattack = 56620;
 
 		public const int Emboldened = 68087;
-		public const int QuickplayBoost = 77676;
+		public const int QuickplayBoost = 77676; // Fractals
+		public const int QuickplayMorale = 99999; // Raids - TODO add id
 
 		public const int LifeFireCircleCM = 76339;
 	}
