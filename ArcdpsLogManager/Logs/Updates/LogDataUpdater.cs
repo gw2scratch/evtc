@@ -241,8 +241,8 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Updates
 				"Added support for Ura challenge mode."),
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 15, 0, 0)
 			                     && (log.Encounter == Encounter.Other || log.Encounter == Encounter.Decima ||
-			                         log.GameBuild >= 190105),
-				"Added support for Decima emboldened mode, Spirit Race and VoE elite specializations."),
+			                         log.GameBuild >= 186019),
+				"Added support for Decima emboldened mode, Spirit Race, Guardian's Glade and VoE elite specializations."),
 			// When adding a new update, you need to increase the revision (last value) of the version in the .csproj file
 			// unless the version changes more significantly, in that case it can be reset to 0.
 		};
