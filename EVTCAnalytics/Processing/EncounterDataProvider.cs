@@ -736,6 +736,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				case Encounter.GuardiansGlade:
 					// Normal Mode 42.469.920 HP 
 					return GetDefaultBuilder(encounter, mainTarget)
+						.WithResult(new AgentBuffGainedDeterminer(mainTarget, SkillIds.Determined))
 						.WithModes(new AgentHealthModeDeterminer(mainTarget, 45_000_000))
 						.Build();
 				default:
