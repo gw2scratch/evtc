@@ -2,7 +2,7 @@
 
 This is the full changelog of the arcdps Log Manager.
 
-## Log Manager v1.15 (unreleased)
+## Log Manager v1.15
 
 #### New features
 - Added support for Spirit Race
@@ -18,7 +18,7 @@ This is the full changelog of the arcdps Log Manager.
 
 #### EVTC Inspector notes
 - Added effect duration
-- Added StunBreak event
+- Added StunBreak, NPC update, stat reset and map change events
 
 ## Log Manager v1.14.1
 

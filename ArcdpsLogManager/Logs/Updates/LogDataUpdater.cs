@@ -30,7 +30,8 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Updates
 			                     && log.Encounter == Encounter.Skorvald,
 				"Skorvald the Shattered logs did not differentiate between normal and challenge mode."),
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 0, 0, 0)
-			                     && string.Compare(log.EvtcVersion, "EVTC20200609", StringComparison.OrdinalIgnoreCase) >= 0,
+			                     && string.Compare(log.EvtcVersion, "EVTC20200609",
+				                     StringComparison.OrdinalIgnoreCase) >= 0,
 				"Commander tag identification is now available."),
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 0, 0, 0)
 			                     && log.EncounterResult == EncounterResult.Failure,
@@ -67,7 +68,8 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Updates
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 3, 0, 1)
 			                     && log.GameBuild >= 119939
 			                     && (log.Players?.Any(x =>
-				                     x.Profession is Profession.Warrior or Profession.Revenant or Profession.Elementalist
+				                     x.Profession is Profession.Warrior or Profession.Revenant
+					                     or Profession.Elementalist
 				                     && x.EliteSpecialization == EliteSpecialization.None) ?? false),
 				"Add support for Bladesworn, Vindicator, and Catalyst."),
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 3, 0, 1)
@@ -140,8 +142,10 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Updates
 				"Add support for Silent Surf CM"),
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 9, 0, 1)
 			                     // There may be fractal encounters that are added manually and are not supported, so we also go through other logs.
-			                     && (log.Encounter == Encounter.Other || log.Encounter.GetEncounterCategory() == EncounterCategory.Fractal)
-			                     && string.Compare(log.EvtcVersion, "EVTC20230716", StringComparison.OrdinalIgnoreCase) >= 0,
+			                     && (log.Encounter == Encounter.Other ||
+			                         log.Encounter.GetEncounterCategory() == EncounterCategory.Fractal)
+			                     && string.Compare(log.EvtcVersion, "EVTC20230716",
+				                     StringComparison.OrdinalIgnoreCase) >= 0,
 				"Add support for fractal scale."),
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 9, 0, 2)
 			                     && log.Encounter == Encounter.Other
@@ -149,7 +153,8 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Updates
 				"Add support for Silent Surf NM"),
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 9, 0, 3)
 			                     && log.Encounter == Encounter.Map
-			                     && string.Compare(log.EvtcVersion, "EVTC20230716", StringComparison.OrdinalIgnoreCase) >= 0,
+			                     && string.Compare(log.EvtcVersion, "EVTC20230716",
+				                     StringComparison.OrdinalIgnoreCase) >= 0,
 				"Add support for fractal scale."),
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 10, 0, 1)
 			                     && (log.Encounter == Encounter.BanditTrio),
@@ -197,42 +202,47 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Updates
 				"Fix NM detection for Temple of Febe."),
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 11, 1, 3)
 			                     && log.Encounter == Encounter.Skorvald,
-				"Fix success detection for Skorvald when all players are dead while the boss is invulnerable at 1%."),			
+				"Fix success detection for Skorvald when all players are dead while the boss is invulnerable at 1%."),
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 11, 1, 7)
 			                     && log.Players.Count(x => x.Tag == PlayerTag.Commander) > 1,
 				"Fix commander tag detection."),
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 11, 1, 7)
 			                     && log.EncounterResult == EncounterResult.Success
-			                     && string.Compare(log.EvtcVersion, "EVTC20240612", StringComparison.OrdinalIgnoreCase) >= 0
+			                     && string.Compare(log.EvtcVersion, "EVTC20240612",
+				                     StringComparison.OrdinalIgnoreCase) >= 0
 			                     && log.Encounter is Encounter.XunlaiJadeJunkyard or Encounter.KainengOverlook,
 				"Fix success detection for Xunlai Jade Junkyard and Kaineng Overlook with recent arcdps versions."),
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 11, 1, 7)
 			                     && log.Encounter is Encounter.Adina or Encounter.Sabir,
 				"Fix Adina and Sabir possibly being identified as the other one in rare scenarios."),
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 11, 1, 9)
-								 && log.Encounter == Encounter.Other
-								 && log.MapId == MapIds.LonelyTower,
+			                     && log.Encounter == Encounter.Other
+			                     && log.MapId == MapIds.LonelyTower,
 				"Add support for Eparch in the Lonely Tower fractal."),
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 11, 1, 10)
-			                     && log.Encounter == Encounter.SoullessHorror, 
+			                     && log.Encounter == Encounter.SoullessHorror,
 				"Fix detection for Soulless Horror in case the encounter resets before all players are dead."),
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 13, 1, 0)
-								 && log.Encounter == Encounter.Other
+			                     && log.Encounter == Encounter.Other
 			                     && log.MapId == MapIds.RaidWing8,
 				"Added support for Greer, Decima and Ura in Mount Balrior."),
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 13, 2, 0)
-								 && log.Encounter == Encounter.Greer
-								 && log.GameBuild >= GameBuilds.MountBalriorCMRelease,
+			                     && log.Encounter == Encounter.Greer
+			                     && log.GameBuild >= GameBuilds.MountBalriorCMRelease,
 				"Added support for Greer challenge mode."),
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 13, 2, 0)
-								 && log.Encounter == Encounter.Other
+			                     && log.Encounter == Encounter.Other
 			                     && log.MapId == MapIds.RaidWing8
-								 && log.GameBuild >= GameBuilds.MountBalriorCMRelease,
+			                     && log.GameBuild >= GameBuilds.MountBalriorCMRelease,
 				"Added support for Decima challenge mode."),
 			new LogUpdate(log => log.ParsingVersion < new Version(1, 13, 2, 0)
-								 && log.Encounter == Encounter.Ura
-								 && log.GameBuild >= GameBuilds.MountBalriorCMRelease,
+			                     && log.Encounter == Encounter.Ura
+			                     && log.GameBuild >= GameBuilds.MountBalriorCMRelease,
 				"Added support for Ura challenge mode."),
+			new LogUpdate(log => log.ParsingVersion < new Version(1, 15, 0, 0)
+			                     && (log.Encounter == Encounter.Other || log.Encounter == Encounter.Decima ||
+			                         log.GameBuild >= 190105),
+				"Added support for Decima emboldened mode, Spirit Race and VoE elite specializations."),
 			// When adding a new update, you need to increase the revision (last value) of the version in the .csproj file
 			// unless the version changes more significantly, in that case it can be reset to 0.
 		};
