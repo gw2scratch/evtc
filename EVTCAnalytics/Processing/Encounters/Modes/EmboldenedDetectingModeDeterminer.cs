@@ -21,13 +21,13 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes
 		{
 			// In case Emboldened or Quickplay Boost does not appear in the log at all, we can fail quickly without
 			// having to go through events.
-			if (log.Skills.All(x => x.Id != SkillIds.Emboldened && x.Id != SkillIds.QuickplayBoost))
+			if (log.Skills.All(x => x.Id != SkillIds.Emboldened && x.Id != SkillIds.QuickplayBoost && x.Id != SkillIds.QuickplayMorale))
 			{
 				return EncounterMode.Normal;
 			}
 
 			// No stacks check for quickplay, can return immediately.
-			if (log.Skills.Any(x => x.Id == SkillIds.QuickplayBoost))
+			if (log.Skills.Any(x => x.Id == SkillIds.QuickplayBoost || x.Id == SkillIds.QuickplayMorale))
 			{
 				return EncounterMode.Quickplay;
 			}
