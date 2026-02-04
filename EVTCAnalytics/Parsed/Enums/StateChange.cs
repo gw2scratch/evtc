@@ -62,5 +62,7 @@
 		ArcBuild = 54, // Added 20240614
 		Glider = 55, // Added 20240627
 		StunBreak = 56, // Added 20240627
+		IIDChange = 64,
+		MapChange = 65,
 	};
 }

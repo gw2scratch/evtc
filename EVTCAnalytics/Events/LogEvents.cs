@@ -1,3 +1,5 @@
+using GW2Scratch.EVTCAnalytics.Model.Agents;
+
 namespace GW2Scratch.EVTCAnalytics.Events
 {
 	/// <summary>
@@ -24,5 +26,69 @@ namespace GW2Scratch.EVTCAnalytics.Events
 		/// This can happen when the Guild Wars 2 server struggles to keep up, or in case of connection issues.
 		/// </summary>
 		public ulong TickRate { get; } = tickRate;
+	}
+
+	/// <summary>
+	/// Arcdps stats reset event.
+	/// </summary>
+	/// <param name="time"></param>
+	/// <param name="speciesId"></param>
+	public class StatResetEvent(long time, ulong speciesId) : Event(time)
+	{
+		/// <summary>
+		/// Species ID of the Agent that triggered the reset.
+		/// </summary>
+		public ulong SpeciesId { get; } = speciesId;
+	}
+
+	/// <summary>
+	/// Log boss agent changed event.
+	/// </summary>
+	public class LogNPCUpdateEvent(long time, ulong speciesId, Agent agent, int timestamp) : Event(time)
+	{
+		/// <summary>
+		/// Specie ID of the Agent triggering the update.
+		/// </summary>
+		public ulong SpeciesId { get; } = speciesId;
+
+		/// <summary>
+		/// The Agent that triggered the update.
+		/// </summary>
+		public Agent Agent { get; } = agent;
+
+		/// <summary>
+		/// Server unix timestamp of the update.
+		/// </summary>
+		public int Timestamp { get; } = timestamp;
+	}
+
+	/// <summary>
+	/// Agent address IID changed.
+	/// </summary>
+	public class IIDChangeEvent(long time, ulong oldIID, ulong newIID) : Event(time)
+	{
+		/// <summary>
+		/// Old address instance ID.
+		/// </summary>
+		public ulong OldIID { get; } = oldIID;
+		/// <summary>
+		/// New address instance ID.
+		/// </summary>
+		public ulong NewIID { get; } = newIID;
+	}
+
+	/// <summary>
+	/// Player changed map event.
+	/// </summary>
+	public class MapChangeEvent(long time, ulong newMapID, ulong oldMapID) : Event(time)
+	{
+		/// <summary>
+		/// New Map ID.
+		/// </summary>
+		public ulong NewMapID { get; } = newMapID;
+		/// <summary>
+		/// Old Map ID.
+		/// </summary>
+		public ulong OldMapID { get; } = oldMapID;
 	}
 }

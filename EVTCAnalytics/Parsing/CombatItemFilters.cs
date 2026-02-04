@@ -1,4 +1,5 @@
 using GW2Scratch.EVTCAnalytics.Events;
+using GW2Scratch.EVTCAnalytics.Model.Skills;
 using GW2Scratch.EVTCAnalytics.Parsed.Enums;
 using System;
 using System.Collections.Generic;
@@ -264,6 +265,10 @@ public class CombatItemFilters : ICombatItemFilters
 
 		if (eventType == typeof(RewardEvent)) return [StateChange.Reward];
 		if (eventType == typeof(RateHealthEvent)) return [StateChange.TickRate];
+		if (eventType == typeof(StatResetEvent)) return [StateChange.StatReset];
+		if (eventType == typeof(LogNPCUpdateEvent)) return [StateChange.LogNPCUpdate];
+		if (eventType == typeof(IIDChangeEvent)) return [StateChange.IIDChange];
+		if (eventType == typeof(MapChangeEvent)) return [StateChange.MapChange];
 
 		if (eventType == typeof(CrowdControlEvent)) return [];
 
@@ -344,6 +349,10 @@ public class CombatItemFilters : ICombatItemFilters
 		
 		if (eventType == typeof(RewardEvent)) return false;
 		if (eventType == typeof(RateHealthEvent)) return false;
+		if (eventType == typeof(StatResetEvent)) return false;
+		if (eventType == typeof(LogNPCUpdateEvent)) return false;
+		if (eventType == typeof(IIDChangeEvent)) return false;
+		if (eventType == typeof(MapChangeEvent)) return false;
 
 		if (eventType == typeof(SkillCastEvent)) return false;
 		if (eventType == typeof(EndSkillCastEvent)) return false;
@@ -420,6 +429,10 @@ public class CombatItemFilters : ICombatItemFilters
 
 		if (eventType == typeof(RewardEvent)) return false;
 		if (eventType == typeof(RateHealthEvent)) return false;
+		if (eventType == typeof(StatResetEvent)) return false;
+		if (eventType == typeof(LogNPCUpdateEvent)) return false;
+		if (eventType == typeof(IIDChangeEvent)) return false;
+		if (eventType == typeof(MapChangeEvent)) return false;
 
 		if (eventType == typeof(SkillCastEvent)) return false;
 		if (eventType == typeof(EndSkillCastEvent)) return true;
@@ -496,6 +509,10 @@ public class CombatItemFilters : ICombatItemFilters
 
 		if (eventType == typeof(RewardEvent)) return [];
 		if (eventType == typeof(RateHealthEvent)) return [];
+		if (eventType == typeof(StatResetEvent)) return [];
+		if (eventType == typeof(LogNPCUpdateEvent)) return [];
+		if (eventType == typeof(IIDChangeEvent)) return [];
+		if (eventType == typeof(MapChangeEvent)) return [];
 
 		if (eventType == typeof(SkillCastEvent)) return [];
 		if (eventType == typeof(EndSkillCastEvent)) return [];
@@ -586,6 +603,8 @@ public class CombatItemFilters : ICombatItemFilters
 			StateChange.ArcBuild => true,
 			StateChange.Glider => false,
 			StateChange.StunBreak => false,
+			StateChange.IIDChange => false,
+			StateChange.MapChange => false,
 			_ => throw new ArgumentOutOfRangeException(nameof(stateChange), stateChange, null)
 		};
 	}
