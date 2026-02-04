@@ -602,7 +602,7 @@ public class CombatItemFilters : ICombatItemFilters
 			StateChange.SquadMarker => false,
 			StateChange.ArcBuild => true,
 			StateChange.Glider => false,
-      StateChange.StunBreak => false,
+			StateChange.StunBreak => false,
 			StateChange.IIDChange => false,
 			StateChange.MapChange => false,
 			_ => throw new ArgumentOutOfRangeException(nameof(stateChange), stateChange, null)

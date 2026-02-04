@@ -1362,7 +1362,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 							_ => new UnknownEvent(item.Time, item)
 						};
 					}
-          case StateChange.StunBreak:
+					case StateChange.StunBreak:
 					{
 						return new AgentStunBreakEvent(item.Time, GetAgentByAddress(item.SrcAgent), item.Value);
 					}
@@ -1373,7 +1373,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					case StateChange.MapChange:
 					{
 						return new MapChangeEvent(item.Time, item.SrcAgent, item.DstAgent);
-          }
+					}
 					default:
 						return new UnknownEvent(item.Time, item);
 				}

@@ -32,24 +32,24 @@ namespace GW2Scratch.EVTCAnalytics.Events
 	/// Arcdps stats reset event.
 	/// </summary>
 	/// <param name="time"></param>
-	/// <param name="specieId"></param>
-	public class StatResetEvent(long time, ulong specieId) : Event(time)
+	/// <param name="speciesId"></param>
+	public class StatResetEvent(long time, ulong speciesId) : Event(time)
 	{
 		/// <summary>
-		/// Specie ID of the Agent that triggered the reset.
+		/// Species ID of the Agent that triggered the reset.
 		/// </summary>
-		public ulong SpecieId { get; } = specieId;
+		public ulong SpeciesId { get; } = speciesId;
 	}
 
 	/// <summary>
 	/// Log boss agent changed event.
 	/// </summary>
-	public class LogNPCUpdateEvent(long time, ulong specieId, Agent agent, int timestamp) : Event(time)
+	public class LogNPCUpdateEvent(long time, ulong speciesId, Agent agent, int timestamp) : Event(time)
 	{
 		/// <summary>
 		/// Specie ID of the Agent triggering the update.
 		/// </summary>
-		public ulong SpecieId { get; } = specieId;
+		public ulong SpeciesId { get; } = speciesId;
 
 		/// <summary>
 		/// The Agent that triggered the update.
@@ -68,11 +68,11 @@ namespace GW2Scratch.EVTCAnalytics.Events
 	public class IIDChangeEvent(long time, ulong oldIID, ulong newIID) : Event(time)
 	{
 		/// <summary>
-		/// Old address IID.
+		/// Old address instance ID.
 		/// </summary>
 		public ulong OldIID { get; } = oldIID;
 		/// <summary>
-		/// New address IID.
+		/// New address instance ID.
 		/// </summary>
 		public ulong NewIID { get; } = newIID;
 	}
