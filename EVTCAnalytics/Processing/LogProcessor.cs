@@ -80,6 +80,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			state.EffectsById = new Dictionary<uint, Effect>();
 			state.MarkersById = new Dictionary<uint, Marker>();
 			state.SpeciesById = new Dictionary<uint, Species>();
+			state.TeamsById = new Dictionary<uint, Team>();
 			state.Errors = new List<LogError>();
 			state.OngoingEffects = new Dictionary<uint, EffectStartEvent>();
 			foreach (var agent in state.Agents)
@@ -195,6 +196,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			state.EffectsById = new Dictionary<uint, Effect>();
 			state.MarkersById = new Dictionary<uint, Marker>();
 			state.SpeciesById = new Dictionary<uint, Species>();
+			state.TeamsById = new Dictionary<uint, Team>();
 			state.OngoingEffects = new Dictionary<uint, EffectStartEvent>();
 
 			var combatItemReader = reader.GetCombatItemReader(bossData, state.MainTarget, state.Agents, state.GameBuild, state.LogType, EncounterIdentifier, EncounterDataProvider);
@@ -857,7 +859,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 							}
 						}
 						return;
-						// Specie
+						// Species
 						case 3:
 						{
                             if (!state.SpeciesById.TryGetValue(item.SkillId, out var specie))
@@ -868,6 +870,21 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 
 							var guid = new byte[16];
 							specie.ContentGuid = guid;
+							BitConverter.GetBytes(item.SrcAgent).CopyTo(guid, 0);
+							BitConverter.GetBytes(item.DstAgent).CopyTo(guid, 8);
+						}
+						return;
+						// Team
+						case 4:
+						{
+							if (!state.TeamsById.TryGetValue(item.SkillId, out var team))
+							{
+								team = new Team(item.SkillId);
+								state.TeamsById[item.SkillId] = team;
+							}
+
+							var guid = new byte[16];
+							team.ContentGuid = guid;
 							BitConverter.GetBytes(item.SrcAgent).CopyTo(guid, 0);
 							BitConverter.GetBytes(item.DstAgent).CopyTo(guid, 8);
 						}
