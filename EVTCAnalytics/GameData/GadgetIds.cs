@@ -26,8 +26,8 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		// Wing 6
 		// Conjured Amalgamate
 		public const int ConjuredAmalgamate = 43974;
-		
-		// Strike Missions - End of Dragons
+
+		// Raid Encounters - End of Dragons
 		public const int TheDragonvoid = 43488;
 		public const int TheDragonvoidFinal = 1378;
 	}

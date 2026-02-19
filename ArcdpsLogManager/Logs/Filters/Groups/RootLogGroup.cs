@@ -23,15 +23,17 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters.Groups
 			// -- Wing 1
 			// -- Wing 2
 			// -- ...
-			// -- Wing 7
-			// - Strike Missions
+			// -- Wing 8
+			// - Raid Encounters
 			// -- Icebrood Saga
 			// -- End of Dragons
+			// -- Secrets of the Obscure
+			// -- Visions of Eternity
 			// -- Festivals
 			// - Fractals
 			// -- Nightmare
 			// -- ...
-			// -- Silent Surf
+			// -- Lonely Tower
 			// - Special Forces Training Area (Golems)
 			// - Any other non-raid EncounterCategory
 			// - Others
@@ -57,7 +59,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters.Groups
 
 			var leftoverCategories = ((EncounterCategory[]) Enum.GetValues(typeof(EncounterCategory)))
 				.Where(x => !x.IsRaid() &&
-				            !x.IsStrikeMission() &&
+				            !x.IsRaidEncounter() &&
 							!x.IsFractal() &&
 				            !manuallyAddedCategories.Contains(x) &&
 				            !ignoredCategories.Contains(x));
@@ -65,7 +67,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Filters.Groups
 			var groups = new List<LogGroup>();
 
 			groups.Add(new RaidLogGroup());
-			groups.Add(new StrikeMissionLogGroup());
+			groups.Add(new RaidEncounterLogGroup());
 			groups.Add(new FractalLogGroup());
 			groups.Add(new CategoryLogGroup(EncounterCategory.SpecialForcesTrainingArea));
 			foreach (var category in leftoverCategories)

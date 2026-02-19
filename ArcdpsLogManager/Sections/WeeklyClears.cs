@@ -40,7 +40,7 @@ public class WeeklyClears : DynamicLayout
 	private static readonly DateOnly WhisperOfJormagRelease = new DateOnly(2020, 1, 27);
 	private static readonly DateOnly ColdWarRelease = new DateOnly(2020, 5, 25);
 
-	// With EoD, strike mission CMs started to be released individually at later dates.
+	// With EoD, raid encounter CMs started to be released individually at later dates.
 	private static readonly DateOnly AHCMRelease = new DateOnly(2022, 4, 18);
 	private static readonly DateOnly XJJCMRelease = new DateOnly(2022, 5, 9);
 	private static readonly DateOnly KOCMRelease = new DateOnly(2022, 5, 23);
@@ -114,7 +114,7 @@ public class WeeklyClears : DynamicLayout
 				new NormalEncounter(Encounter.Ura, normalModeSince: W8Release, challengeModeSince: W8CMRelease),
 				])
 		]),
-		new EncounterGroup(EncounterCategory.StrikeIcebroodSaga, "Icebrood Saga", [
+		new EncounterGroup(EncounterCategory.RaidEncountersIcebroodSaga, "Icebrood Saga", [
 			new EncounterRow("Icebrood Saga", [
 				new NormalEncounter(Encounter.ShiverpeaksPass, normalModeSince: ShiverpeaksPassRelease, challengeModeSince: null),
 				new NormalEncounter(Encounter.VoiceAndClawOfTheFallen, normalModeSince: VoiceClawRelease, challengeModeSince: null),
@@ -125,26 +125,26 @@ public class WeeklyClears : DynamicLayout
 				//new NormalEncounter(Encounter.VariniaStormsounder, normalModeSince: ColdWarRelease, challengeModeSince: null),
 			])
 		]),
-		new EncounterGroup(EncounterCategory.StrikeEndOfDragons, "End of Dragons", [
+		new EncounterGroup(EncounterCategory.RaidEncountersEndOfDragons, "End of Dragons", [
 			new EncounterRow("End of Dragons", [
 				new NormalEncounter(Encounter.AetherbladeHideout, normalModeSince: EoDRelease, challengeModeSince: AHCMRelease),
 				new NormalEncounter(Encounter.XunlaiJadeJunkyard, normalModeSince: EoDRelease, challengeModeSince: XJJCMRelease),
 				new NormalEncounter(Encounter.KainengOverlook, normalModeSince: EoDRelease, challengeModeSince: KOCMRelease),
 				new NormalEncounter(Encounter.HarvestTemple, normalModeSince: EoDRelease, challengeModeSince: HTCMRelease),
-				// The Old Lion's Court strike mission was released as part of Living World Season 1 and is accessible without End of Dragons (EoD).
-				// However, achievements for it are within EoD categories and it is usually considered part of the EoD strike missions.
+				// The Old Lion's Court raid encounter was released as part of Living World Season 1 and is accessible without End of Dragons (EoD).
+				// However, achievements for it are within EoD categories and it is usually considered part of the EoD raid encounters.
 				// Since adding more categories is problematic for layout, it is a simple decision to include it in the EoD category.
 				new NormalEncounter(Encounter.OldLionsCourt, normalModeSince: OLCRelease, challengeModeSince: OLCCMRelease),
 			]),
 		]),
-		new EncounterGroup(EncounterCategory.StrikeSecretsOfTheObscure, "Secrets of the Obscure", [
+		new EncounterGroup(EncounterCategory.RaidEncountersSecretsOfTheObscure, "Secrets of the Obscure", [
 			new EncounterRow("Secrets of the Obscure", [
 				new NormalEncounter(Encounter.CosmicObservatory, normalModeSince: SotORelease,
 					challengeModeSince: COCMRelease),
 				new NormalEncounter(Encounter.TempleOfFebe, normalModeSince: SotORelease, challengeModeSince: ToFCMRelease),
 			]),
 		]),
-		new EncounterGroup(EncounterCategory.StrikeVisionsOfEternity, "Visions of Eternity", [
+		new EncounterGroup(EncounterCategory.RaidEncountersVisionsOfEternity, "Visions of Eternity", [
 			new EncounterRow("Visions of Eternity", [
 				new NormalEncounter(Encounter.GuardiansGlade, normalModeSince: GuardiansGladeRelease, challengeModeSince: GuardiansGladeCMRelease),
 			]),
@@ -393,10 +393,10 @@ public class WeeklyClears : DynamicLayout
 		foreach ((string name, EncounterCategory category, bool hasCMs) in (ReadOnlySpan<(string, EncounterCategory, bool)>)
 		         [
 			         ("Raid", EncounterCategory.Raids, true),
-			         ("IBS", EncounterCategory.StrikeIcebroodSaga, false),
-			         ("EoD", EncounterCategory.StrikeEndOfDragons, true),
-			         ("SotO", EncounterCategory.StrikeSecretsOfTheObscure, true),
-					 ("VoE", EncounterCategory.StrikeVisionsOfEternity, true)
+			         ("IBS", EncounterCategory.RaidEncountersIcebroodSaga, false),
+			         ("EoD", EncounterCategory.RaidEncountersEndOfDragons, true),
+			         ("SotO", EncounterCategory.RaidEncountersSecretsOfTheObscure, true),
+					 ("VoE", EncounterCategory.RaidEncountersVisionsOfEternity, true)
 		         ])
 		{
 			var visible = Settings.WeeklyClearGroups.Contains(category);
@@ -559,10 +559,10 @@ public class WeeklyClears : DynamicLayout
 								8 => imageProvider.GetWideRaidWing8Icon(),
 								_ => throw new ArgumentOutOfRangeException()
 							},
-							EncounterCategory.StrikeIcebroodSaga => imageProvider.GetWideIcebroodSagaIcon(),
-							EncounterCategory.StrikeEndOfDragons => imageProvider.GetWideEndOfDragonsIcon(),
-							EncounterCategory.StrikeSecretsOfTheObscure => imageProvider.GetWideSecretsOfTheObscureIcon(),
-							EncounterCategory.StrikeVisionsOfEternity => imageProvider.GetWideVisionsOfEternityIcon(),
+							EncounterCategory.RaidEncountersIcebroodSaga => imageProvider.GetWideIcebroodSagaIcon(),
+							EncounterCategory.RaidEncountersEndOfDragons => imageProvider.GetWideEndOfDragonsIcon(),
+							EncounterCategory.RaidEncountersSecretsOfTheObscure => imageProvider.GetWideSecretsOfTheObscureIcon(),
+							EncounterCategory.RaidEncountersVisionsOfEternity => imageProvider.GetWideVisionsOfEternityIcon(),
 							_ => throw new ArgumentOutOfRangeException()
 						}
 					};

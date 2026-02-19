@@ -23,7 +23,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			{
 				LogGroup = group;
 
-				if (LogGroup is RootLogGroup or RaidLogGroup or StrikeMissionLogGroup or FractalLogGroup)
+				if (LogGroup is RootLogGroup or RaidLogGroup or RaidEncounterLogGroup or FractalLogGroup)
 				{
 					Expanded = true;
 				}
@@ -63,7 +63,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			// An obsolete category.
 			EncounterCategory.Festival,
 			// An obscure category. May be confusing to users if they have not done any of the fights within.
-			EncounterCategory.StrikeMissionFestival,
+			EncounterCategory.RaidEncounterFestival,
 			// Not supported by all tools and not enabled by all users.
 			EncounterCategory.Map,
 			// No reason showing this if there is nothing to select inside.
@@ -170,7 +170,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				item.Icon = item.LogGroup switch
 				{
 					RootLogGroup => imageProvider.GetTinyLogIcon(),
-					StrikeMissionLogGroup => imageProvider.GetTinyStrikeIcon(),
+					RaidEncounterLogGroup => imageProvider.GetTinyRaidEncounterIcon(),
 					RaidLogGroup => imageProvider.GetTinyRaidIcon(),
 					FractalLogGroup => imageProvider.GetTinyFractalsIcon(),
 					CategoryLogGroup categoryGroup => GetCategoryIcon(categoryGroup.Category),
@@ -249,11 +249,11 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				EncounterCategory.WorldVersusWorld => imageProvider.GetTinyWorldVersusWorldIcon(),
 				EncounterCategory.Festival => imageProvider.GetTinyFestivalIcon(),
 				EncounterCategory.Fractal => imageProvider.GetTinyFractalsIcon(),
-				EncounterCategory.StrikeMissionIcebroodSaga => imageProvider.GetTinyIcebroodSagaIcon(),
-				EncounterCategory.StrikeMissionEndOfDragons => imageProvider.GetTinyEndOfDragonsIcon(),
-				EncounterCategory.StrikeMissionSecretsOfTheObscure => imageProvider.GetTinySecretsOfTheObscureIcon(),
-				EncounterCategory.StrikeMissionVisionsOfEternity => imageProvider.GetTinyVisionsOfEternityIcon(),
-				EncounterCategory.StrikeMissionFestival => imageProvider.GetTinyFestivalIcon(),
+				EncounterCategory.RaidEncounterIcebroodSaga => imageProvider.GetTinyIcebroodSagaIcon(),
+				EncounterCategory.RaidEncounterEndOfDragons => imageProvider.GetTinyEndOfDragonsIcon(),
+				EncounterCategory.RaidEncounterSecretsOfTheObscure => imageProvider.GetTinySecretsOfTheObscureIcon(),
+				EncounterCategory.RaidEncounterVisionsOfEternity => imageProvider.GetTinyVisionsOfEternityIcon(),
+				EncounterCategory.RaidEncounterFestival => imageProvider.GetTinyFestivalIcon(),
 				EncounterCategory.SpecialForcesTrainingArea => imageProvider.GetTinyTrainingAreaIcon(),
 				EncounterCategory.RaidWing1 => imageProvider.GetRaidWingIcon(),
 				EncounterCategory.RaidWing2 => imageProvider.GetRaidWingIcon(),

@@ -89,7 +89,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		public static Image GetTinyIconFractals() => GetImage("ArenaNet.fractals_icon_32px.png");
 		public static Image GetTinyIconGuildRegistrar() => GetImage("ArenaNet.guild_registrar_icon_26px.png");
 		public static Image GetTinyIconCommander() => GetImage("ArenaNet.commander_tag_red_32px.png");
-		public static Image GetTinyIconStrike() => GetImage("ArenaNet.strike_icon_32px.png");
+		public static Image GetTinyIconRaidEncounter() => GetImage("ArenaNet.raid_encounter_icon_32px.png");
 		public static Image GetTinyIconTrainingArea() => GetImage("ArenaNet.training_area_32px.png");
 		public static Image GetTinyIconWorldVersusWorld() => GetImage("ArenaNet.world_vs_world_32px.png");
 		public static Image GetTinyIconUncategorized() => GetImage("ArenaNet.uncategorized_32px.png");
@@ -176,26 +176,26 @@ namespace GW2Scratch.ArcdpsLogManager
 		public static Image GetDecimaIcon() => GetEncounterImage("Decima");
 		public static Image GetUraIcon() => GetEncounterImage("Ura");
 
-		// STRIKES - ICEBROOD SAGA
+		// RAID ENCOUNTERS - ICEBROOD SAGA
 		public static Image GetShiverpeaksPassIcon() => GetEncounterImage("Mini_Icebrood_Construct");
 		public static Image GetVoiceAndClawOfTheFallenIcon() => GetEncounterImage("Mini_Cloudseeker");
 		public static Image GetFraenirOfJormagIcon() => GetEncounterImage("Mini_Icebrood_Construct");
 		public static Image GetBoneskinnerIcon() => GetEncounterImage("Mini_Boneskinner");
 		public static Image GetWhisperOfJormagIcon() => GetEncounterImage("Mini_Whisper_of_Jormag");
 		public static Image GetVariniaStormsounderIcon() => GetEncounterImage("Mini_Varinia_Stormsounder");
-		
-		// STRIKES - END OF DRAGONS
+
+		// RAID ENCOUNTERS - END OF DRAGONS
 		public static Image GetAetherbladeHideoutIcon() => GetEncounterImage("Aetherblade_Hideout");
 		public static Image GetXunlaiJadeJunkyardIcon() => GetEncounterImage("Xunlai_Jade_Junkyard");
 		public static Image GetKainengOverlookIcon() => GetEncounterImage("Kaineng_Overlook");
 		public static Image GetHarvestTempleIcon() => GetEncounterImage("Harvest_Temple");
 		public static Image GetOldLionsCourtIcon() => GetEncounterImage("Mini_Vermillion_Assault_Knight");
-		
-		// STRIKES - SECRETS OF THE OBSCURE
+
+		// RAID ENCOUNTERS - SECRETS OF THE OBSCURE
 		public static Image GetCosmicObservatoryIcon() => GetEncounterImage("Mini_Dagda");
 		public static Image GetTempleOfFebeIcon() => GetEncounterImage("Mini_Cerus");
 
-		// STRIKES - VISIONS OF ETERNITY
+		// RAID ENCOUNTERS - VISIONS OF ETERNITY
 		public static Image GetGuardiansGladeIcon() => GetEncounterImage("Kela"); // TODO Update image
 
 		// FRACTALS
@@ -213,7 +213,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		public static Image GetEparchIcon() => GetEncounterImage("Mini_Eparch");
 		public static Image GetWhisperingShadowIcon() => GetEncounterImage("Whispering_Shadow");
 
-		// FESTIVALS
+		// RAID ENCOUNTERS - FESTIVALS
 		public static Image GetFreezieIcon() => GetEncounterImage("Mini_Freezie");
 
 		// TRAINING AREA

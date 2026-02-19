@@ -439,7 +439,7 @@ encounter = "QadimThePeerless"
 mode = "Challenge"
 result = "Success"
 
-## IBS Strikes
+## IBS Raid Encounters
 # Icebrood Construct
 [[log]]
 filename = "encounters/icebrood_construct_kill.zevtc"
@@ -514,7 +514,7 @@ result = "Failure"
 mode = "Normal"
 comment = "Varinia Stormsounder failure"
 
-## EoD Strikes
+## EoD Raid Encounters
 # Aetherblade Hideout
 [[log]]
 filename = "encounters/mai_trin_kill.zevtc"
@@ -653,7 +653,7 @@ filename = "encounters/harvest_temple/success/20231016-205708.zevtc"
 encounter = "HarvestTemple"
 result = "Success"
 
-## Festival strikes
+## Festival Raid Encounters
 [[log]]
 filename = "encounters/freezie_kill.zevtc"
 encounter = "Freezie"

@@ -113,28 +113,28 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 		MassiveKittyGolem = 30004,
 		// TODO: Check if there are more golem types
 
-		// Strike Missions - Icebrood Saga
+		// Raid Encounters - Icebrood Saga
 		ShiverpeaksPass = 40001,
 		VoiceAndClawOfTheFallen = 40002,
 		FraenirOfJormag = 40003,
 		Boneskinner = 40004,
 		WhisperOfJormag = 40005,
-		VariniaStormsounder = 40006, // Last enemy in Strike Mission: Cold War
-		
-		// Strike Missions - End of Dragons
+		VariniaStormsounder = 40006, // Last enemy in Raid Encounter: Cold War
+
+		// Raid Encounters - End of Dragons
 		AetherbladeHideout = 41001,
 		XunlaiJadeJunkyard = 41002,
 		KainengOverlook = 41003,
 		HarvestTemple = 41004,
-		
-		// Strike Missions - End of Dragons - Living World Season 1
+
+		// Raid Encounters - End of Dragons - Living World Season 1
 		OldLionsCourt = 42001,
-			
-		// Strike Missions - Secrets of the Obscure
+
+		// Raid Encounters - Secrets of the Obscure
 		CosmicObservatory = 43001,
 		TempleOfFebe = 43002,
 
-		// Strike Missions - Visions of Eternity
+		// Raid Encounters - Visions of Eternity
 		GuardiansGlade = 44001,
 
 		// Story
