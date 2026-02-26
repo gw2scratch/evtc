@@ -116,10 +116,10 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		// Kinfall
 		public const int WhisperingShadow = 27010;
 
-		// Festivals
+		// Raid Encounters - Festivals
 		public const int Freezie = 21333;
 
-		// Strike Missions - Icebrood Saga
+		// Raid Encounters - Icebrood Saga
 		public const int IcebroodConstruct = 22154;
 		public const int VoiceOfTheFallen = 22343;
 		public const int ClawOfTheFallen = 22481;
@@ -127,8 +127,8 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		public const int Boneskinner = 22521;
 		public const int WhisperOfJormag = 22711;
 		public const int VariniaStormsounder = 22836;
-		
-		// Strike Missions - End of Dragons
+
+		// Raid Encounters - End of Dragons
 		public const int MaiTrin = 24033;
 		public const int Ankka = 23957;
 		public const int MinisterLi = 24485;
@@ -149,12 +149,12 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		public const int PrototypeVermillionChallengeMode = 25414;
 		public const int PrototypeArseniteChallengeMode = 25416;
 		public const int PrototypeIndigoChallengeMode = 25423;
-		
-		// Strike Missions - Secrets of the Obscure
+
+		// Raid Encounters - Secrets of the Obscure
 		public const int Dagda = 25705;
 		public const int Cerus = 25989;
 
-		// Strike Missions - Visions of Eternity
+		// Raid Encounters - Visions of Eternity
 		public const int Kela = 27124;
 
 		// Story

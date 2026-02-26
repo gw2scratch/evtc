@@ -40,5 +40,10 @@ public class StoredSettings
 	public List<string> PlayerAccountNames { get; set; } = [];
 
 	public List<EncounterCategory> WeeklyClearGroups { get; set; } =
-		[EncounterCategory.Raids, EncounterCategory.StrikeEndOfDragons, EncounterCategory.StrikeSecretsOfTheObscure];
+	[
+		EncounterCategory.Raids, 
+		EncounterCategory.RaidEncountersEndOfDragons, 
+		EncounterCategory.RaidEncountersSecretsOfTheObscure,
+		EncounterCategory.RaidEncountersVisionsOfEternity,
+	];
 }

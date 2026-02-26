@@ -75,7 +75,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		private Lazy<Image> TinyIconFractals { get; } = new Lazy<Image>(Resources.GetTinyIconFractals);
 		private Lazy<Image> TinyIconLog { get; } = new Lazy<Image>(Resources.GetTinyIconGuildRegistrar);
 		private Lazy<Image> TinyIconCommander { get; } = new Lazy<Image>(Resources.GetTinyIconCommander);
-		private Lazy<Image> TinyIconStrike { get; } = new Lazy<Image>(Resources.GetTinyIconStrike);
+		private Lazy<Image> TinyIconRaidEncounter { get; } = new Lazy<Image>(Resources.GetTinyIconRaidEncounter);
 		private Lazy<Image> TinyIconTrainingArea { get; } = new Lazy<Image>(Resources.GetTinyIconTrainingArea);
 		private Lazy<Image> TinyIconWorldVersusWorld { get; } = new Lazy<Image>(Resources.GetTinyIconWorldVersusWorld);
 		private Lazy<Image> TinyIconUncategorized { get; } = new Lazy<Image>(Resources.GetTinyIconUncategorized);
@@ -139,26 +139,26 @@ namespace GW2Scratch.ArcdpsLogManager
 		private Lazy<Image> DecimaIcon { get; } = new Lazy<Image>(Resources.GetDecimaIcon);
 		private Lazy<Image> UraIcon { get; } = new Lazy<Image>(Resources.GetUraIcon);
 
-		// STRIKES - ICEBROOD SAGA
+		// RAID ENCOUNTERS - ICEBROOD SAGA
 		private Lazy<Image> ShiverpeaksPassIcon { get; } = new Lazy<Image>(Resources.GetShiverpeaksPassIcon);
 		private Lazy<Image> VoiceAndClawOfTheFallenIcon { get; } = new Lazy<Image>(Resources.GetVoiceAndClawOfTheFallenIcon);
 		private Lazy<Image> FraenirOfJormagIcon { get; } = new Lazy<Image>(Resources.GetFraenirOfJormagIcon);
 		private Lazy<Image> BoneskinnerIcon { get; } = new Lazy<Image>(Resources.GetBoneskinnerIcon);
 		private Lazy<Image> WhisperOfJormagIcon { get; } = new Lazy<Image>(Resources.GetWhisperOfJormagIcon);
 		private Lazy<Image> VariniaStormsounderIcon { get; } = new Lazy<Image>(Resources.GetVariniaStormsounderIcon);
-		
-		// STRIKES - END OF DRAGONS
+
+		// RAID ENCOUNTERS - END OF DRAGONS
 		private Lazy<Image> AetherbladeHideoutIcon { get; } = new Lazy<Image>(Resources.GetAetherbladeHideoutIcon);
 		private Lazy<Image> XunlaiJadeJunkyardIcon { get; } = new Lazy<Image>(Resources.GetXunlaiJadeJunkyardIcon);
 		private Lazy<Image> KainengOverlookIcon { get; } = new Lazy<Image>(Resources.GetKainengOverlookIcon);
 		private Lazy<Image> HarvestTempleIcon { get; } = new Lazy<Image>(Resources.GetHarvestTempleIcon);
 		private Lazy<Image> OldLionsCourtIcon { get; } = new Lazy<Image>(Resources.GetOldLionsCourtIcon);
-		
-		// STRIKES - SECRETS OF THE OBSCURE
+
+		// RAID ENCOUNTERS - SECRETS OF THE OBSCURE
 		private Lazy<Image> CosmicObservatoryIcon { get; } = new Lazy<Image>(Resources.GetCosmicObservatoryIcon);
 		private Lazy<Image> TempleOfFebeIcon { get; } = new Lazy<Image>(Resources.GetTempleOfFebeIcon);
 
-		// STRIKES - VISIONS OF ETERNITY
+		// RAID ENCOUNTERS - VISIONS OF ETERNITY
 		private Lazy<Image> GuardiansGladeIcon { get; } = new Lazy<Image>(Resources.GetGuardiansGladeIcon);
 
 		// FRACTALS
@@ -176,7 +176,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		private Lazy<Image> EparchIcon { get; } = new Lazy<Image>(Resources.GetEparchIcon);
 		private Lazy<Image> WhisperingShadowIcon { get; } = new Lazy<Image>(Resources.GetWhisperingShadowIcon);
 
-		// FESTIVALS
+		// RAID ENCOUNTERS - FESTIVALS
 		private Lazy<Image> FreezieIcon { get; } = new Lazy<Image>(Resources.GetFreezieIcon);
 
 		// TRAINING AREA
@@ -242,7 +242,7 @@ namespace GW2Scratch.ArcdpsLogManager
 		public Image GetTinyFractalsIcon() => TinyIconFractals.Value;
 		public Image GetTinyRaidIcon() => TinyIconRaid.Value;
 		public Image GetTinyCommanderIcon() => TinyIconCommander.Value;
-		public Image GetTinyStrikeIcon() => TinyIconStrike.Value;
+		public Image GetTinyRaidEncounterIcon() => TinyIconRaidEncounter.Value;
 		public Image GetTinyTrainingAreaIcon() => TinyIconTrainingArea.Value;
 		public Image GetTinyWorldVersusWorldIcon() => TinyIconWorldVersusWorld.Value;
 		public Image GetTinyUncategorizedIcon() => TinyIconUncategorized.Value;
@@ -395,23 +395,23 @@ namespace GW2Scratch.ArcdpsLogManager
 				Encounter.Greer => GreerIcon.Value,
 				Encounter.Decima => DecimaIcon.Value,
 				Encounter.Ura => UraIcon.Value,
-				// STRIKES - ICEBROOD SAGA
+				// RAID ENCOUNTERS - ICEBROOD SAGA
 				Encounter.ShiverpeaksPass => ShiverpeaksPassIcon.Value,
 				Encounter.VoiceAndClawOfTheFallen => VoiceAndClawOfTheFallenIcon.Value,
 				Encounter.FraenirOfJormag => FraenirOfJormagIcon.Value,
 				Encounter.Boneskinner => BoneskinnerIcon.Value,
 				Encounter.WhisperOfJormag => WhisperOfJormagIcon.Value,
 				Encounter.VariniaStormsounder => VariniaStormsounderIcon.Value,
-				// STRIKES - END OF DRAGONS
+				// RAID ENCOUNTERS - END OF DRAGONS
 				Encounter.AetherbladeHideout => AetherbladeHideoutIcon.Value,
 				Encounter.XunlaiJadeJunkyard => XunlaiJadeJunkyardIcon.Value,
 				Encounter.KainengOverlook => KainengOverlookIcon.Value,
 				Encounter.HarvestTemple => HarvestTempleIcon.Value,
 				Encounter.OldLionsCourt => OldLionsCourtIcon.Value,
-				// STRIKES - SECRETS OF THE OBSCURE
+				// RAID ENCOUNTERS - SECRETS OF THE OBSCURE
 				Encounter.CosmicObservatory => CosmicObservatoryIcon.Value,
 				Encounter.TempleOfFebe => TempleOfFebeIcon.Value,
-				// STRIKES - VISIONS OF ETERNITY
+				// RAID ENCOUNTERS - VISIONS OF ETERNITY
 				Encounter.GuardiansGlade => GuardiansGladeIcon.Value,
 				// FRACTALS
 				Encounter.MAMA => MAMAIcon.Value,
@@ -429,7 +429,7 @@ namespace GW2Scratch.ArcdpsLogManager
 				Encounter.Kanaxai => KanaxaiIcon.Value,
 				Encounter.Eparch => EparchIcon.Value,
 				Encounter.WhisperingShadow => WhisperingShadowIcon.Value,
-				// FESTIVALS
+				// RAID ENCOUNTERS - FESTIVALS
 				Encounter.Freezie => FreezieIcon.Value,
 				// TRAINING AREA
 				Encounter.StandardKittyGolem => StandardKittyGolemIcon.Value,
