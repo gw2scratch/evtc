@@ -15,12 +15,6 @@ namespace GW2Scratch.EVTCAnalytics.Events
 	/// <summary>
 	/// An event representing the creation of a missile.
 	/// </summary>
-	/// <param name="time"></param>
-	/// <param name="agent"></param>
-	/// <param name="position"></param>
-	/// <param name="skinId"></param>
-	/// <param name="skill"></param>
-	/// <param name="trackableId"></param>
 	public class MissileCreateEvent(
 		long time,
 		Agent agent,
@@ -102,6 +96,7 @@ namespace GW2Scratch.EVTCAnalytics.Events
 
 	/// <summary>
 	/// An event representing the removal of a missile.
+	/// </summary>
 	public class MissileRemoveEvent(
 		long time,
 		Agent agent,

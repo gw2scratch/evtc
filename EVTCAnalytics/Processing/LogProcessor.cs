@@ -1374,6 +1374,9 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						// skillid: missile skill id
 						// pad61: (uint32_t*)&pad61 is uint32[1], trackable id
 
+						// Off-website documentation:
+						// i16[0] = float_to_int16_nonprecise(xyz_origin[0], 10.0f); // 10 is the multiplier to use to get the original value eg. 50,000 in game data would be 5,000 in the i16
+
 						Span<byte> positionBytes = stackalloc byte[4 * sizeof(short)];
 						BitConverter.GetBytes(item.Value).CopyTo(positionBytes[0..4]);
 						BitConverter.GetBytes(item.BuffDmg).CopyTo(positionBytes[4..8]);
@@ -1402,7 +1405,9 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						// is_shields: (int16_t*)&is_shields is int16[1], missile speed
 						// pad61: (uint32_t*)&pad61 is uint32[1], trackable id
 
-						// undocumented: isFlanking > 0 is first launch
+						// Off-website documentation:
+						// i16[0] = float_to_int16_nonprecise(xyz_origin[0], 10.0f); // 10 is the multiplier to use to get the original value eg. 50,000 in game data would be 5,000 in the i16
+						// isFlanking > 0 is first launch
 
 						Span<byte> positionBytes = stackalloc byte[6 * sizeof(short)];
 						BitConverter.GetBytes(item.Value).CopyTo(positionBytes[0..4]);
@@ -1446,7 +1451,6 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						float speed = BitConverter.ToInt16(missileSpeed) / 1000.0f;
 
 						uint trackableId = item.Padding;
-
 						return new MissileLaunchEvent(item.Time, GetAgentByAddress(item.SrcAgent), GetAgentByAddress(item.DstAgent), targetPosition, launchPosition, GetSkillById(item.SkillId), launchMotionType, result, launchFlags, isFirstLaunch, speed, trackableId);
 					}
 					case StateChange.MissileRemove:

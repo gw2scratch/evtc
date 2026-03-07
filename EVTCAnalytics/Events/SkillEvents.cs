@@ -7,7 +7,7 @@ namespace GW2Scratch.EVTCAnalytics.Events
 	/// Any event that features a <see cref="Skill"/>
 	/// </summary>
 	/// <remarks>
-	/// Both <see cref="SkillCastEvent"/>s and <see cref="BuffEvent"/>s can contain <see cref="Skill"/>s
+	/// <see cref="SkillCastEvent"/>, <see cref="BuffEvent"/> and <see cref="MissileEvent"/> contain <see cref="Skill"/>.
 	/// </remarks>
 	public interface ISkillEvent
 	{
