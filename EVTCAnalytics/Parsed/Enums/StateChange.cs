@@ -62,6 +62,13 @@
 		ArcBuild = 54, // Added 20240614
 		Glider = 55, // Added 20240627
 		StunBreak = 56, // Added 20240627
+		MissileCreate = 57, // Added 20250525
+		MissileLaunch = 58, // Added 20250525
+		MissileRemove = 59, // Added 20250525
+		//EffectGroundCreate = 60,
+		//EffectGroundRemove = 61,
+		//EffectAgentCreate = 62,
+		//EffectAgentRemove = 63,
 		IIDChange = 64,
 		MapChange = 65,
 	};

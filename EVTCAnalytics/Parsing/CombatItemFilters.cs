@@ -244,6 +244,9 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(AgentGliderOpenEvent)) return [StateChange.Glider];
 		if (eventType == typeof(AgentGliderCloseEvent)) return [StateChange.Glider];
 		if (eventType == typeof(AgentStunBreakEvent)) return [StateChange.StunBreak];
+		if (eventType == typeof(MissileCreateEvent)) return [StateChange.MissileCreate];
+		if (eventType == typeof(MissileLaunchEvent)) return [StateChange.MissileLaunch];
+		if (eventType == typeof(MissileRemoveEvent)) return [StateChange.MissileRemove];
 
 		if (eventType == typeof(BuffEvent)) return [];
 		if (eventType == typeof(BuffRemoveEvent)) return [];
@@ -326,6 +329,9 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(AgentGliderOpenEvent)) return false;
 		if (eventType == typeof(AgentGliderCloseEvent)) return false;
 		if (eventType == typeof(AgentStunBreakEvent)) return false;
+		if (eventType == typeof(MissileCreateEvent)) return false;
+		if (eventType == typeof(MissileLaunchEvent)) return false;
+		if (eventType == typeof(MissileRemoveEvent)) return false;
 
 		if (eventType == typeof(BuffEvent)) return false;
 		if (eventType == typeof(BuffRemoveEvent)) return false;
@@ -406,6 +412,9 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(AgentGliderOpenEvent)) return false;
 		if (eventType == typeof(AgentGliderCloseEvent)) return false;
 		if (eventType == typeof(AgentStunBreakEvent)) return false;
+		if (eventType == typeof(MissileCreateEvent)) return false;
+		if (eventType == typeof(MissileLaunchEvent)) return false;
+		if (eventType == typeof(MissileRemoveEvent)) return false;
 
 		if (eventType == typeof(BuffEvent)) return false;
 		if (eventType == typeof(BuffRemoveEvent)) return false;
@@ -486,6 +495,9 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(AgentGliderOpenEvent)) return [];
 		if (eventType == typeof(AgentGliderCloseEvent)) return [];
 		if (eventType == typeof(AgentStunBreakEvent)) return [];
+		if (eventType == typeof(MissileCreateEvent)) return [];
+		if (eventType == typeof(MissileLaunchEvent)) return [];
+		if (eventType == typeof(MissileRemoveEvent)) return [];
 
 		if (eventType == typeof(BuffEvent)) return [];
 		if (eventType == typeof(BuffRemoveEvent)) return [];
@@ -602,6 +614,9 @@ public class CombatItemFilters : ICombatItemFilters
 			StateChange.SquadMarker => false,
 			StateChange.ArcBuild => true,
 			StateChange.Glider => false,
+			StateChange.MissileCreate => false,
+			StateChange.MissileLaunch => false,
+			StateChange.MissileRemove => false,
 			StateChange.StunBreak => false,
 			StateChange.IIDChange => false,
 			StateChange.MapChange => false,

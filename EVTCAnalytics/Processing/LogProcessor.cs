@@ -1366,6 +1366,100 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					{
 						return new AgentStunBreakEvent(item.Time, GetAgentByAddress(item.SrcAgent), item.Value);
 					}
+					case StateChange.MissileCreate:
+					{
+						// src_agent: related to agent
+						// value: (int16*)&value is int16[3], location x/y/z, divided by 10
+						// overstack_value: skin id (player only)
+						// skillid: missile skill id
+						// pad61: (uint32_t*)&pad61 is uint32[1], trackable id
+
+						Span<byte> positionBytes = stackalloc byte[4 * sizeof(short)];
+						BitConverter.GetBytes(item.Value).CopyTo(positionBytes[0..4]);
+						BitConverter.GetBytes(item.BuffDmg).CopyTo(positionBytes[4..8]);
+
+						float[] position =
+						[
+							BitConverter.ToInt16(positionBytes[0..2]) * 10.0f,
+							BitConverter.ToInt16(positionBytes[2..4]) * 10.0f,
+							BitConverter.ToInt16(positionBytes[4..6]) * 10.0f,
+						];
+
+						uint skinId = item.OverstackValue;
+						uint trackableId = item.Padding;
+						return new MissileCreateEvent(item.Time, GetAgentByAddress(item.SrcAgent), position, skinId, GetSkillById(item.SkillId), trackableId);
+					}
+					case StateChange.MissileLaunch:
+					{
+						// src_agent: related to agent
+						// dst_agent: at agent, if set and in range
+						// value: (int16*)&value is int16[6], target x/y/z, current x/y/z, divided by 10
+						// skillid: missile skill id
+						// value: (int16*)&value is int16[3], location x/y/z, divided by 10
+						// iff: (uint8_t*)&iff is uint8_t[1], launch motion. unknown, from client
+						// result: (int16_t*)&result is int16[1], motion radius
+						// is_buffremove: (uint32_t*)&is_buffremove is uint32_t[1], launch flags. unknown, from client
+						// is_shields: (int16_t*)&is_shields is int16[1], missile speed
+						// pad61: (uint32_t*)&pad61 is uint32[1], trackable id
+
+						// undocumented: isFlanking > 0 is first launch
+
+						Span<byte> positionBytes = stackalloc byte[6 * sizeof(short)];
+						BitConverter.GetBytes(item.Value).CopyTo(positionBytes[0..4]);
+						BitConverter.GetBytes(item.BuffDmg).CopyTo(positionBytes[4..8]);
+						BitConverter.GetBytes(item.OverstackValue).CopyTo(positionBytes[8..12]);
+
+						float[] targetPosition =
+						[
+							BitConverter.ToInt16(positionBytes[0..2]) * 10.0f,
+							BitConverter.ToInt16(positionBytes[2..4]) * 10.0f,
+							BitConverter.ToInt16(positionBytes[4..6]) * 10.0f,
+						];
+						float[] launchPosition =
+						[
+							BitConverter.ToInt16(positionBytes[6..8]) * 10.0f,
+							BitConverter.ToInt16(positionBytes[8..10]) * 10.0f,
+							BitConverter.ToInt16(positionBytes[10..12]) * 10.0f,
+						];
+
+						uint launchMotionType = (byte) item.Iff;
+
+						Span<byte> motionRadius = stackalloc byte[sizeof(short)];
+						motionRadius[0] = (byte) item.Result;
+						motionRadius[1] = (byte) item.IsActivation;
+						short result = BitConverter.ToInt16(motionRadius);
+
+						Span<byte> flags = stackalloc byte[sizeof(uint)];
+						flags[0] = (byte) item.IsBuffRemove;
+						flags[1] = item.IsNinety;
+						flags[2] = item.IsFifty;
+						flags[3] = item.IsMoving;
+						uint launchFlags = BitConverter.ToUInt32(flags);
+
+						// 1 is first, 0 is reflect.
+						bool isFirstLaunch = item.IsFlanking > 0;
+
+						// Speed is in inch/s so we divide it by 1000 to get inch/ms.
+						Span<byte> missileSpeed = stackalloc byte[sizeof(short)];
+						missileSpeed[0] = item.IsShields;
+						missileSpeed[1] = item.IsOffCycle;
+						float speed = BitConverter.ToInt16(missileSpeed) / 1000.0f;
+
+						uint trackableId = item.Padding;
+
+						return new MissileLaunchEvent(item.Time, GetAgentByAddress(item.SrcAgent), GetAgentByAddress(item.DstAgent), targetPosition, launchPosition, GetSkillById(item.SkillId), launchMotionType, result, launchFlags, isFirstLaunch, speed, trackableId);
+					}
+					case StateChange.MissileRemove:
+					{
+						// src_agent: related to agent
+						// value: friendly fire damage total
+						// skillid: missile skill id
+						// is_src_flanking: hit at least one enemy along the way
+						// pad61: (uint32_t*)&pad61 is uint32[1], trackable id
+
+						uint trackableId = item.Padding;
+						return new MissileRemoveEvent(item.Time, GetAgentByAddress(item.SrcAgent), item.Value, GetSkillById(item.SkillId), item.IsFlanking, trackableId);
+					}
 					case StateChange.IIDChange:
 					{
 						return new IIDChangeEvent(item.Time, item.SrcAgent, item.DstAgent);
