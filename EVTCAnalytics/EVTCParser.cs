@@ -831,23 +831,19 @@ namespace GW2Scratch.EVTCAnalytics
 			reader.Skip(9);
 
 			// 1 byte: iff
-			item.IffByte = reader.ReadByte();
-			item.Iff = GetFriendOrFoeFromByte(item.IffByte);
+			item.Iff = GetFriendOrFoeFromByte(reader.ReadByte());
 
 			// 1 byte: buff
 			item.Buff = reader.ReadByte();
 
 			// 1 byte: result
-			item.ResultByte = reader.ReadByte();
-			item.Result = GetResultFromByte(item.ResultByte);
+			item.Result = GetResultFromByte(reader.ReadByte());
 
 			// 1 byte: is_activation
-			item.IsActivationByte = reader.ReadByte();
-			item.IsActivation = GetActivationFromByte(item.IsActivationByte);
+			item.IsActivation = GetActivationFromByte(reader.ReadByte());
 
 			// 1 byte: is_buffremove
-			item.IsBuffRemoveByte = reader.ReadByte();
-			item.IsBuffRemove = GetBuffRemoveFromByte(item.IsBuffRemoveByte);
+			item.IsBuffRemove = GetBuffRemoveFromByte(reader.ReadByte());
 
 			// 1 byte: is_ninety
 			item.IsNinety = reader.ReadByte();
@@ -859,8 +855,7 @@ namespace GW2Scratch.EVTCAnalytics
 			item.IsMoving = reader.ReadByte();
 
 			// 1 byte: is_statechange
-			item.IsStateChangeByte = reader.ReadByte();
-			item.IsStateChange = GetStateChangeFromByte(item.IsStateChangeByte);
+			item.IsStateChange = GetStateChangeFromByte(reader.ReadByte());
 
 			// 1 byte: is_flanking
 			item.IsFlanking = reader.ReadByte();
@@ -915,23 +910,19 @@ namespace GW2Scratch.EVTCAnalytics
 			item.DstMasterId = reader.ReadUInt16();
 
 			// 1 byte: iff
-			item.IffByte = reader.ReadByte();
-			item.Iff = GetFriendOrFoeFromByte(item.IffByte);
+			item.Iff = GetFriendOrFoeFromByte(reader.ReadByte());
 
 			// 1 byte: buff
 			item.Buff = reader.ReadByte();
 
 			// 1 byte: result
-			item.ResultByte = reader.ReadByte();
-			item.Result = GetResultFromByte(item.ResultByte);
+			item.Result = GetResultFromByte(reader.ReadByte());
 
 			// 1 byte: is_activation
-			item.IsActivationByte = reader.ReadByte();
-			item.IsActivation = GetActivationFromByte(item.IsActivationByte);
+			item.IsActivation = GetActivationFromByte(reader.ReadByte());
 
 			// 1 byte: is_buffremove
-			item.IsBuffRemoveByte = reader.ReadByte();
-			item.IsBuffRemove = GetBuffRemoveFromByte(item.IsBuffRemoveByte);
+			item.IsBuffRemove = GetBuffRemoveFromByte(reader.ReadByte());
 
 			// 1 byte: is_ninety
 			item.IsNinety = reader.ReadByte();
@@ -943,8 +934,7 @@ namespace GW2Scratch.EVTCAnalytics
 			item.IsMoving = reader.ReadByte();
 
 			// 1 byte: is_statechange
-			item.IsStateChangeByte = reader.ReadByte();
-			item.IsStateChange = GetStateChangeFromByte(item.IsStateChangeByte);
+			item.IsStateChange = GetStateChangeFromByte(reader.ReadByte());
 
 			// 1 byte: is_flanking
 			item.IsFlanking = reader.ReadByte();
