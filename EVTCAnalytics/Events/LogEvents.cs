@@ -91,4 +91,19 @@ namespace GW2Scratch.EVTCAnalytics.Events
 		/// </summary>
 		public ulong OldMapID { get; } = oldMapID;
 	}
+
+	/// <summary>
+	/// Attack Target to Gadget association.
+	/// </summary>
+	public class AttackTargetEvent(long time, Agent attackTarget, Agent gadget) : Event(time)
+	{
+		/// <summary>
+		/// The attack target.
+		/// </summary>
+		public Agent AttackTarget { get; }  = attackTarget;
+		/// <summary>
+		/// Associated gadget.
+		/// </summary>
+		public Agent Gadget { get; } = gadget;
+	}
 }

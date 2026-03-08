@@ -764,10 +764,6 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 
 					return;
 				}
-				case StateChange.AttackTarget:
-					// Only used for master assignment
-					// Contains if the attack target is targetable as the value.
-					return;
 				case StateChange.BuffInfo:
 				{
 					if (state.SkillsById.TryGetValue(item.SkillId, out var skill))
@@ -792,6 +788,18 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 
 					return;
 				}
+				case StateChange.BuffFormula:
+				{
+					// TODO implement buff formula
+
+					// (float*)&time[8]: type attr1 attr2 param1 param2 param3 trait_src trait_self,
+					// (float*)&src_instid[2] = buff_src buff_self,
+					// is_flanking = !npc,
+					// is_shields = !player,
+					// is_offcycle = break,
+					// overstack = value of type determined by pad61 (none/number/skill)
+					return;
+				}
 				case StateChange.SkillInfo:
 				{
 					// (float*)&time[4]
@@ -810,6 +818,16 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						};
 					}
 
+					return;
+				}
+				case StateChange.SkillTiming:
+				{
+					if (state.SkillsById.TryGetValue(item.SkillId, out var skill))
+					{
+						skill.SkillData.ActionByte = (byte)item.SrcAgent;
+						skill.SkillData.Action = skill.SkillData.GetSkillAction(skill.SkillData.ActionByte);
+						skill.SkillData.AtMillisecond = item.DstAgent;
+					}
 					return;
 				}
 				case StateChange.InstanceStart:
@@ -1085,6 +1103,12 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 							false => null,
 						};
 						return new TeamChangeEvent(item.Time, GetAgentByAddress(item.SrcAgent), item.DstAgent, oldTeam);
+					case StateChange.AttackTarget:
+						// Only used for master assignment
+						// Contains if the attack target is targetable as the value.
+						// src_agent: relates to agent, the attacktarget
+						// dst_agent: the gadget
+						return new AttackTargetEvent(item.Time, GetAgentByAddress(item.SrcAgent), GetAgentByAddress(item.DstAgent));
 					case StateChange.Targetable:
 					{
 						var agent = GetAgentByAddress(item.SrcAgent);
@@ -1098,6 +1122,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						}
 					}
 					case StateChange.ReplInfo:
+						// Internal use. Not in logs.
 						return new UnknownEvent(item.Time, item);
 					case StateChange.StackActive:
 						return new ActiveBuffStackEvent(item.Time, GetAgentByAddress(item.SrcAgent), (uint) item.DstAgent);
@@ -1118,19 +1143,6 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						// This encoding is inconsistent with the health update.
 						float breakbarHealthFraction = BitConversions.ToSingle(item.Value);
 						return new DefianceBarHealthUpdateEvent(item.Time, GetAgentByAddress(item.SrcAgent), breakbarHealthFraction);
-					case StateChange.BuffFormula:
-					{
-						// (float*)&time[8]: type attr1 attr2 param1 param2 param3 trait_src trait_self,
-						// (float*)&src_instid[2] = buff_src buff_self,
-						// is_flanking = !npc,
-						// is_shields = !player,
-						// is_offcycle = break,
-						// overstack = value of type determined by pad61 (none/number/skill)
-						return new UnknownEvent(item.Time, item);
-					}
-					case StateChange.SkillTiming:
-						// TODO: Figure out what the contents are
-						return new UnknownEvent(item.Time, item);
 					case StateChange.Tag:
 						uint markerId = (uint) item.Value;
 						if (markerId == 0)
@@ -1158,6 +1170,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					case StateChange.StatReset:
 						return new StatResetEvent(item.Time, item.SrcAgent);
 					case StateChange.Extension:
+						// TODO Implement healing meter extension
 						return new UnknownExtensionEvent(item.Time, item);
 					case StateChange.ApiDelayed:
 						// Should not appear in logs
@@ -1234,6 +1247,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					case StateChange.LogNPCUpdate:
 						return new LogNPCUpdateEvent(item.Time, item.SrcAgent, GetAgentByAddress(item.DstAgent), item.Value);
 					case StateChange.IdleEvent:
+						// Internal use. Not in logs.
 						return new UnknownEvent(item.Time, item);
 					case StateChange.ExtensionCombat:
 						// Same as StateChange.Extension, but skillid is treated as skill and added to the skill table.

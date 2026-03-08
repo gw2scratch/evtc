@@ -238,6 +238,7 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(DefianceBarHealthUpdateEvent)) return [StateChange.BreakbarPercent];
 		if (eventType == typeof(BarrierUpdateEvent)) return [StateChange.BarrierUpdate];
 		if (eventType == typeof(DefianceBarStateUpdateEvent)) return [StateChange.BreakbarState];
+		if (eventType == typeof(AttackTargetEvent)) return [StateChange.AttackTarget];
 		if (eventType == typeof(Last90BeforeDownEvent)) return [StateChange.Last90BeforeDown];
 		if (eventType == typeof(EffectEvent)) return [StateChange.Effect];
 		if (eventType == typeof(EffectStartEvent)) return [StateChange.Effect2];
@@ -332,6 +333,7 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(DefianceBarHealthUpdateEvent)) return false;
 		if (eventType == typeof(BarrierUpdateEvent)) return false;
 		if (eventType == typeof(DefianceBarStateUpdateEvent)) return false;
+		if (eventType == typeof(AttackTargetEvent)) return false;
 		if (eventType == typeof(Last90BeforeDownEvent)) return false;
 		if (eventType == typeof(EffectEvent)) return false;
 		if (eventType == typeof(EffectStartEvent)) return false;
@@ -424,6 +426,7 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(DefianceBarHealthUpdateEvent)) return false;
 		if (eventType == typeof(BarrierUpdateEvent)) return false;
 		if (eventType == typeof(DefianceBarStateUpdateEvent)) return false;
+		if (eventType == typeof(AttackTargetEvent)) return false;
 		if (eventType == typeof(Last90BeforeDownEvent)) return false;
 		if (eventType == typeof(EffectEvent)) return false;
 		if (eventType == typeof(EffectStartEvent)) return false;
@@ -516,6 +519,7 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(DefianceBarHealthUpdateEvent)) return [];
 		if (eventType == typeof(BarrierUpdateEvent)) return [];
 		if (eventType == typeof(DefianceBarStateUpdateEvent)) return [];
+		if (eventType == typeof(AttackTargetEvent)) return [];
 		if (eventType == typeof(Last90BeforeDownEvent)) return [];
 		if (eventType == typeof(EffectEvent)) return [];
 		if (eventType == typeof(EffectStartEvent)) return [];
