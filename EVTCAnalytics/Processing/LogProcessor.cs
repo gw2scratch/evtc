@@ -901,18 +901,18 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					BitConverter.GetBytes(item.DstAgentId).CopyTo(build[34..36]);
 					BitConverter.GetBytes(item.SrcMasterId).CopyTo(build[36..38]);
 					BitConverter.GetBytes(item.DstMasterId).CopyTo(build[38..40]);
-					build[40] = (byte)item.Iff;
-					build[41] = (byte)item.Buff;
-					build[42] = (byte)item.Result;
-					build[43] = (byte)item.IsActivation;
-					build[44] = (byte)item.IsBuffRemove;
-					build[45] = (byte)item.IsNinety;
-					build[46] = (byte)item.IsFifty;
-					build[47] = (byte)item.IsMoving;
-					build[48] = (byte)item.IsStateChange;
-					build[49] = (byte)item.IsFlanking;
-					build[50] = (byte)item.IsShields;
-					build[51] = (byte)item.IsOffCycle;
+					build[40] = item.IffByte;
+					build[41] = item.Buff;
+					build[42] = item.ResultByte;
+					build[43] = item.IsActivationByte;
+					build[44] = item.IsBuffRemoveByte;
+					build[45] = item.IsNinety;
+					build[46] = item.IsFifty;
+					build[47] = item.IsMoving;
+					build[48] = item.IsStateChangeByte;
+					build[49] = item.IsFlanking;
+					build[50] = item.IsShields;
+					build[51] = item.IsOffCycle;
 					BitConverter.GetBytes(item.Padding).CopyTo(build[52..56]);
 					
 					var buildString = Encoding.UTF8.GetString(build).TrimEnd('\0');;
@@ -1200,14 +1200,14 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 
 						// iff + buff + result + is_activation = x orientation
 						Span<byte> xOrientationBytes = stackalloc byte[4];
-						xOrientationBytes[0] = (byte) item.Iff;
+						xOrientationBytes[0] = item.IffByte;
 						xOrientationBytes[1] = item.Buff;
-						xOrientationBytes[2] = (byte) item.Result;
-						xOrientationBytes[3] = (byte) item.IsActivation;
+						xOrientationBytes[2] = item.ResultByte;
+						xOrientationBytes[3] = item.IsActivationByte;
 
 						// is_buffremove + is_ninety + is_fifty + is_moving = y orientation
 						Span<byte> yOrientationBytes = stackalloc byte[4];
-						yOrientationBytes[0] = (byte) item.IsBuffRemove;
+						yOrientationBytes[0] = item.IsBuffRemoveByte;
 						yOrientationBytes[1] = item.IsNinety;
 						yOrientationBytes[2] = item.IsFifty;
 						yOrientationBytes[3] = item.IsMoving;
@@ -1253,7 +1253,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 
 						// is_buffremove + is_ninety + is_fifty + is_moving = trackable id
 						Span<byte> trackableIdBytes = stackalloc byte[4];
-						trackableIdBytes[0] = (byte) item.IsBuffRemove;
+						trackableIdBytes[0] = item.IsBuffRemoveByte;
 						trackableIdBytes[1] = item.IsNinety;
 						trackableIdBytes[2] = item.IsFifty;
 						trackableIdBytes[3] = item.IsMoving;
@@ -1294,10 +1294,10 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 
 						// iff + buff + result + is_activation = duration
 						Span<byte> durationBytes = stackalloc byte[4];
-						durationBytes[0] = (byte) item.Iff;
+						durationBytes[0] = item.IffByte;
 						durationBytes[1] = item.Buff;
-						durationBytes[2] = (byte) item.Result;
-						durationBytes[3] = (byte) item.IsActivation;
+						durationBytes[2] = item.ResultByte;
+						durationBytes[3] = item.IsActivationByte;
 						
 
 						// is shields + is_offcycle + pad61 + pad62 + pad63 + pad64 = int16[3] orientation
@@ -1426,15 +1426,15 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 							BitConverter.ToInt16(positionBytes[10..12]) * 10.0f,
 						];
 
-						uint launchMotionType = (byte) item.Iff;
+						uint launchMotionType = item.IffByte;
 
 						Span<byte> motionRadius = stackalloc byte[sizeof(short)];
-						motionRadius[0] = (byte) item.Result;
-						motionRadius[1] = (byte) item.IsActivation;
+						motionRadius[0] = item.ResultByte;
+						motionRadius[1] = item.IsActivationByte;
 						short result = BitConverter.ToInt16(motionRadius);
 
 						Span<byte> flags = stackalloc byte[sizeof(uint)];
-						flags[0] = (byte) item.IsBuffRemove;
+						flags[0] = item.IsBuffRemoveByte;
 						flags[1] = item.IsNinety;
 						flags[2] = item.IsFifty;
 						flags[3] = item.IsMoving;
@@ -1502,13 +1502,13 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						}
 						
 						Span<byte> effectDurationBytes = stackalloc byte[sizeof(uint)];
-						effectDurationBytes[0] = (byte) item.Iff;
+						effectDurationBytes[0] = item.IffByte;
 						effectDurationBytes[1] = item.Buff;
-						effectDurationBytes[2] = (byte) item.Result;
-						effectDurationBytes[3] = (byte) item.IsActivation;
+						effectDurationBytes[2] = item.ResultByte;
+						effectDurationBytes[3] = item.IsActivationByte;
 						uint effectDuration = BitConverter.ToUInt32(effectDurationBytes);
 
-						byte flags = (byte)item.IsBuffRemove;
+						byte flags = item.IsBuffRemoveByte;
 						bool onNonStaticPlatform = item.IsFlanking > 0;
 
 						Span<byte> scaleBytes = stackalloc byte[sizeof(short)];
@@ -1551,10 +1551,10 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						}
 
 						Span<byte> effectDurationBytes = stackalloc byte[sizeof(uint)];
-						effectDurationBytes[0] = (byte) item.Iff;
+						effectDurationBytes[0] = item.IffByte;
 						effectDurationBytes[1] = item.Buff;
-						effectDurationBytes[2] = (byte) item.Result;
-						effectDurationBytes[3] = (byte) item.IsActivation;
+						effectDurationBytes[2] = item.ResultByte;
+						effectDurationBytes[3] = item.IsActivationByte;
 						uint effectDuration = BitConverter.ToUInt32(effectDurationBytes);
 
 						uint trackableId = item.Padding;

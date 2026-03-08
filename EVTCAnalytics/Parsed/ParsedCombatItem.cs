@@ -22,14 +22,19 @@ namespace GW2Scratch.EVTCAnalytics.Parsed
 		public ushort DstAgentId { get; internal set; }
 		public ushort SrcMasterId { get; internal set; }
 		public ushort DstMasterId { get; internal set; }
+		public byte IffByte { get; internal set; }
 		public FriendOrFoe Iff { get; internal set; }
 		public byte Buff { get; internal set; }
+		public byte ResultByte { get; internal set; }
 		public Result Result { get; internal set; }
+		public byte IsActivationByte { get; internal set; }
 		public Activation IsActivation { get; internal set; }
+		public byte IsBuffRemoveByte { get; internal set; }
 		public BuffRemove IsBuffRemove { get; internal set; }
 		public byte IsNinety { get; internal set; }
 		public byte IsFifty { get; internal set; }
 		public byte IsMoving { get; internal set; }
+		public byte IsStateChangeByte { get; internal set; }
 		public StateChange IsStateChange { get; internal set; }
 		public byte IsFlanking { get; internal set; }
 		public byte IsShields { get; internal set; }

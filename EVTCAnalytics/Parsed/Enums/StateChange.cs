@@ -65,10 +65,10 @@
 		MissileCreate = 57, // Added 20250525
 		MissileLaunch = 58, // Added 20250525
 		MissileRemove = 59, // Added 20250525
-		EffectGroundCreate = 60,
-		EffectGroundRemove = 61,
-		EffectAgentCreate = 62,
-		EffectAgentRemove = 63,
+		EffectGroundCreate = 60, // Added 20250526, replaces Effect2 51
+		EffectGroundRemove = 61, // Added 20250526, replaces Effect2 51
+		EffectAgentCreate = 62, // Added 20250526, replaces Effect2 51
+		EffectAgentRemove = 63, // Added 20250526, replaces Effect2 51
 		IIDChange = 64,
 		MapChange = 65,
 	};
