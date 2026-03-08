@@ -1509,7 +1509,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						uint effectDuration = BitConverter.ToUInt32(effectDurationBytes);
 
 						byte flags = (byte)item.IsBuffRemove;
-						bool isOnNonStaticPlatform = item.IsFlanking > 0;
+						bool onNonStaticPlatform = item.IsFlanking > 0;
 
 						Span<byte> scaleBytes = stackalloc byte[sizeof(short)];
 						scaleBytes[0] = item.IsShields;
@@ -1527,7 +1527,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						}
 
 						uint trackableId = item.Padding;
-						return new EffectGroundCreateEvent(item.Time, GetAgentByAddress(item.SrcAgent), originPosition, orientPosition, effect, effectDuration, flags, isOnNonStaticPlatform, scale, scaleSomething, trackableId);
+						return new EffectGroundCreateEvent(item.Time, GetAgentByAddress(item.SrcAgent), originPosition, orientPosition, effect, effectDuration, flags, onNonStaticPlatform, scale, scaleSomething, trackableId);
 					}
 					case StateChange.EffectGroundRemove:
 					{

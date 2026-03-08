@@ -317,12 +317,12 @@ namespace GW2Scratch.EVTCAnalytics.Events
 		/// </summary>
 		public ushort Duration { get; } = duration;
 	}
-	
+
 	/// <summary>
 	/// An event specifying that an effect was created.
 	/// </summary>
 	/// <remarks>
-	/// Introduced in EVTC20230718.
+	/// Introduced in EVTC20230718 and retired in EVTC20250526.
 	/// </remarks>
 	public class EffectStartEvent(
 		long time,
@@ -368,16 +368,16 @@ namespace GW2Scratch.EVTCAnalytics.Events
 		public uint Duration { get; } = duration;
 
 		/// <summary>
-		/// Trackable id of this effect. Used for pairing with a corresponding EffectEndEvent.
+		/// Trackable id of this effect. Used for pairing with a corresponding <see cref="EffectEndEvent"/>.
 		/// </summary>
 		public uint TrackableId { get; } = trackableId;
 	}
-	
+
 	/// <summary>
 	/// An event specifying that an effect ended.
 	/// </summary>
 	/// <remarks>
-	/// Introduced in EVTC20230718.
+	/// Introduced in EVTC20230718 and retired in EVTC20250526.
 	/// </remarks>
 	public class EffectEndEvent(
 		long time,
@@ -426,7 +426,7 @@ namespace GW2Scratch.EVTCAnalytics.Events
 		/// </summary>
 		public uint? Duration { get; } = duration;
 		/// <summary>
-		/// Trackable id of this effect. Used for pairing with a corresponding EffectStartEvent.
+		/// Trackable id of this effect. Used for pairing with a corresponding <see cref="EffectStartEvent"/>.
 		/// </summary>
 		public uint TrackableId { get; } = trackableId;
 	}
