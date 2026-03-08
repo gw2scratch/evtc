@@ -1165,7 +1165,11 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					case StateChange.TickRate:
 						return new RateHealthEvent(item.Time, item.SrcAgent);
 					case StateChange.Last90BeforeDown:
-						return new UnknownEvent(item.Time, item);
+						// Retired since EVTC20240529
+						// Waybackmachine documentation
+						// CBTS_LAST90BEFOREDOWN, // src_agent is enemy agent that went down, dst_agent is time in ms since last 90% (for downs contribution)
+
+						return new Last90BeforeDownEvent(item.Time, GetAgentByAddress(item.SrcAgent), item.DstAgent);
 					case StateChange.Effect:
 					{
 						// Note that the meaning of fields silently changed at some point (notably, is_flanking).

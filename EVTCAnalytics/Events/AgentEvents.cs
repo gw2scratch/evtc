@@ -260,6 +260,20 @@ namespace GW2Scratch.EVTCAnalytics.Events
 	}
 
 	/// <summary>
+	/// Enemy agent that went down and time since last 90% in milliseconds.
+	/// </summary>
+	/// <remarks>
+	/// Retired since EVTC20240529
+	/// </remarks>
+	public class Last90BeforeDownEvent(long time, Agent agent, ulong timeSinceLast90) : AgentEvent(time, agent)
+	{
+		/// <summary>
+		/// Time in milliseconds since last 90%.
+		/// </summary>
+		public ulong TimeSinceLast90 { get; } = timeSinceLast90;
+	}
+
+	/// <summary>
 	/// An event specifying that an effect was created.
 	/// </summary>
 	/// <remarks>
