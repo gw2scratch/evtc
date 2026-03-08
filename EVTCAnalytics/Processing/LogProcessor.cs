@@ -1398,16 +1398,15 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						// dst_agent: at agent, if set and in range
 						// value: (int16*)&value is int16[6], target x/y/z, current x/y/z, divided by 10
 						// skillid: missile skill id
-						// value: (int16*)&value is int16[3], location x/y/z, divided by 10
 						// iff: (uint8_t*)&iff is uint8_t[1], launch motion. unknown, from client
 						// result: (int16_t*)&result is int16[1], motion radius
 						// is_buffremove: (uint32_t*)&is_buffremove is uint32_t[1], launch flags. unknown, from client
+						// is_src_flanking: non-zero if first launch
 						// is_shields: (int16_t*)&is_shields is int16[1], missile speed
 						// pad61: (uint32_t*)&pad61 is uint32[1], trackable id
 
 						// Off-website documentation:
 						// i16[0] = float_to_int16_nonprecise(xyz_origin[0], 10.0f); // 10 is the multiplier to use to get the original value eg. 50,000 in game data would be 5,000 in the i16
-						// isFlanking > 0 is first launch
 
 						Span<byte> positionBytes = stackalloc byte[6 * sizeof(short)];
 						BitConverter.GetBytes(item.Value).CopyTo(positionBytes[0..4]);
@@ -1463,6 +1462,111 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 
 						uint trackableId = item.Padding;
 						return new MissileRemoveEvent(item.Time, GetAgentByAddress(item.SrcAgent), item.Value, GetSkillById(item.SkillId), item.IsFlanking, trackableId);
+					}
+					case StateChange.EffectGroundCreate:
+					{
+						// // src_agent: related to agent
+						// dst_agent: (int16*)&dst_agent is int16[6], origin x/y/z divided by 10, orient x/y/z multiplied by 1000
+						// skillid: effect id (prefer using an id to guid map via n_contentlocal)
+						// iff: (uint32_t*)&iff is uint32_t[1], effect duration. if duration is zero, it may be a fixed length duration (see n_contentlocal)
+						// is_buffremove: flags
+						// is_flanking: effect is on a non-static platform
+						// is_shields: (int16_t*)&is_shields is int16[1], scale (if zero, assume 1) multiplied by 1000
+						// pad61: (uint32_t*)&pad61 is uint32[1], trackable id
+
+						// Undocumented:
+						// is_fifty is int16_t[1] scale of something multiplied by 1000
+
+						Span<byte> originOrientBytes = stackalloc byte[6 * sizeof(short)];
+						BitConverter.GetBytes(item.DstAgent).CopyTo(originOrientBytes[0..8]);
+						BitConverter.GetBytes(item.Value).CopyTo(originOrientBytes[8..12]);
+
+						float[] originPosition =
+						[
+							BitConverter.ToInt16(originOrientBytes[0..2]) * 10.0f,
+							BitConverter.ToInt16(originOrientBytes[2..4]) * 10.0f,
+							BitConverter.ToInt16(originOrientBytes[4..6]) * 10.0f,
+						];
+						float[] orientPosition =
+						[
+							BitConverter.ToInt16(originOrientBytes[6..8]) / 1000.0f,
+							BitConverter.ToInt16(originOrientBytes[8..10]) / 1000.0f,
+							BitConverter.ToInt16(originOrientBytes[10..12]) / 1000.0f,
+						];
+
+						uint effectId = item.SkillId;
+						if (!state.EffectsById.TryGetValue(effectId, out Effect effect))
+						{
+							effect = new Effect(effectId);
+							state.EffectsById[effectId] = effect;
+						}
+						
+						Span<byte> effectDurationBytes = stackalloc byte[sizeof(uint)];
+						effectDurationBytes[0] = (byte) item.Iff;
+						effectDurationBytes[1] = item.Buff;
+						effectDurationBytes[2] = (byte) item.Result;
+						effectDurationBytes[3] = (byte) item.IsActivation;
+						uint effectDuration = BitConverter.ToUInt32(effectDurationBytes);
+
+						byte flags = (byte)item.IsBuffRemove;
+						bool isOnNonStaticPlatform = item.IsFlanking > 0;
+
+						Span<byte> scaleBytes = stackalloc byte[sizeof(short)];
+						scaleBytes[0] = item.IsShields;
+						scaleBytes[1] = item.IsOffCycle;
+						float scale = BitConverter.ToInt16(scaleBytes) / 1000.0f;
+
+						Span<byte> scaleSomethingBytes = stackalloc byte[sizeof(short)];
+						scaleSomethingBytes[0] = item.IsFifty;
+						scaleSomethingBytes[1] = item.IsMoving;
+						float scaleSomething = BitConverter.ToInt16(scaleSomethingBytes) / 1000.0f;
+						// Default to 1 if 0
+						if (scaleSomething == 0)
+						{
+							scaleSomething = 1.0f;
+						}
+
+						uint trackableId = item.Padding;
+						return new EffectGroundCreateEvent(item.Time, GetAgentByAddress(item.SrcAgent), originPosition, orientPosition, effect, effectDuration, flags, isOnNonStaticPlatform, scale, scaleSomething, trackableId);
+					}
+					case StateChange.EffectGroundRemove:
+					{
+						// pad61: (uint32_t*)&pad61 is uint32[1], trackable id
+
+						uint trackableId = item.Padding;
+						return new EffectGroundRemoveEvent(item.Time, null, trackableId);
+					}
+					case StateChange.EffectAgentCreate:
+					{
+						// src_agent: related to agent
+						// skillid: effect id (prefer using an id to guid map via n_contentlocal)
+						// iff: (uint32_t*)&iff is uint32_t[1], effect duration. if duration is zero, it may be a fixed length duration (see n_contentlocal)
+						// pad61: (uint32_t*)&pad61 is uint32[1], trackable id
+
+						uint effectId = item.SkillId;
+						if (!state.EffectsById.TryGetValue(effectId, out Effect effect))
+						{
+							effect = new Effect(effectId);
+							state.EffectsById[effectId] = effect;
+						}
+
+						Span<byte> effectDurationBytes = stackalloc byte[sizeof(uint)];
+						effectDurationBytes[0] = (byte) item.Iff;
+						effectDurationBytes[1] = item.Buff;
+						effectDurationBytes[2] = (byte) item.Result;
+						effectDurationBytes[3] = (byte) item.IsActivation;
+						uint effectDuration = BitConverter.ToUInt32(effectDurationBytes);
+
+						uint trackableId = item.Padding;
+						return new EffectAgentCreateEvent(item.Time, GetAgentByAddress(item.SrcAgent), effect, effectDuration, trackableId);
+					}
+					case StateChange.EffectAgentRemove:
+					{
+						// src_agent: related to agent
+						// pad61: (uint32_t*)&pad61 is uint32[1], trackable id
+
+						uint trackableId = item.Padding;
+						return new EffectAgentRemoveEvent(item.Time, GetAgentByAddress(item.SrcAgent), trackableId);
 					}
 					case StateChange.IIDChange:
 					{

@@ -250,6 +250,12 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(MissileLaunchEvent)) return [StateChange.MissileLaunch];
 		if (eventType == typeof(MissileRemoveEvent)) return [StateChange.MissileRemove];
 
+		if (eventType == typeof(SplitEffectEvent)) return [];
+		if (eventType == typeof(EffectGroundCreateEvent)) return [StateChange.EffectGroundCreate];
+		if (eventType == typeof(EffectGroundRemoveEvent)) return [StateChange.EffectGroundRemove];
+		if (eventType == typeof(EffectAgentCreateEvent)) return [StateChange.EffectAgentCreate];
+		if (eventType == typeof(EffectAgentRemoveEvent)) return [StateChange.EffectAgentRemove];
+
 		if (eventType == typeof(BuffEvent)) return [];
 		if (eventType == typeof(BuffRemoveEvent)) return [];
 		if (eventType == typeof(AllStacksRemovedBuffEvent)) return [];
@@ -337,6 +343,12 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(MissileLaunchEvent)) return false;
 		if (eventType == typeof(MissileRemoveEvent)) return false;
 
+		if (eventType == typeof(SplitEffectEvent)) return false;
+		if (eventType == typeof(EffectGroundCreateEvent)) return false;
+		if (eventType == typeof(EffectGroundRemoveEvent)) return false;
+		if (eventType == typeof(EffectAgentCreateEvent)) return false;
+		if (eventType == typeof(EffectAgentRemoveEvent)) return false;
+
 		if (eventType == typeof(BuffEvent)) return false;
 		if (eventType == typeof(BuffRemoveEvent)) return false;
 		if (eventType == typeof(AllStacksRemovedBuffEvent)) return false;
@@ -422,6 +434,12 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(MissileLaunchEvent)) return false;
 		if (eventType == typeof(MissileRemoveEvent)) return false;
 
+		if (eventType == typeof(SplitEffectEvent)) return false;
+		if (eventType == typeof(EffectGroundCreateEvent)) return false;
+		if (eventType == typeof(EffectGroundRemoveEvent)) return false;
+		if (eventType == typeof(EffectAgentCreateEvent)) return false;
+		if (eventType == typeof(EffectAgentRemoveEvent)) return false;
+
 		if (eventType == typeof(BuffEvent)) return false;
 		if (eventType == typeof(BuffRemoveEvent)) return false;
 		if (eventType == typeof(AllStacksRemovedBuffEvent)) return false;
@@ -506,6 +524,12 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(MissileCreateEvent)) return [];
 		if (eventType == typeof(MissileLaunchEvent)) return [];
 		if (eventType == typeof(MissileRemoveEvent)) return [];
+
+		if (eventType == typeof(SplitEffectEvent)) return [];
+		if (eventType == typeof(EffectGroundCreateEvent)) return [];
+		if (eventType == typeof(EffectGroundRemoveEvent)) return [];
+		if (eventType == typeof(EffectAgentCreateEvent)) return [];
+		if (eventType == typeof(EffectAgentRemoveEvent)) return [];
 
 		if (eventType == typeof(BuffEvent)) return [];
 		if (eventType == typeof(BuffRemoveEvent)) return [];
@@ -625,6 +649,10 @@ public class CombatItemFilters : ICombatItemFilters
 			StateChange.MissileCreate => false,
 			StateChange.MissileLaunch => false,
 			StateChange.MissileRemove => false,
+			StateChange.EffectGroundCreate => false,
+			StateChange.EffectGroundRemove => false,
+			StateChange.EffectAgentCreate => false,
+			StateChange.EffectAgentRemove => false,
 			StateChange.StunBreak => false,
 			StateChange.IIDChange => false,
 			StateChange.MapChange => false,
