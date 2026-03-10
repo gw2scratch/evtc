@@ -1533,6 +1533,10 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						scaleBytes[0] = item.IsShields;
 						scaleBytes[1] = item.IsOffCycle;
 						float scale = BitConverter.ToInt16(scaleBytes) / 1000.0f;
+						if (scale == 0)
+						{
+							scale = 1.0f;
+						}
 
 						Span<byte> scaleSomethingBytes = stackalloc byte[sizeof(short)];
 						scaleSomethingBytes[0] = item.IsFifty;
