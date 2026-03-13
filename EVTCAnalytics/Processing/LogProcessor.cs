@@ -1334,6 +1334,18 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						state.OngoingEffects[trackableId] = startEvent;
 						return startEvent;
 					}
+					case StateChange.Ruleset:
+					{
+						// ruleset for self
+						// src_agent: bit0: pve, bit1: wvw, bit2: pvp
+						return (byte) item.SrcAgent switch
+						{
+							1 => new RulesetEvent(item.Time, RulesetEvent.RulesetBit.PvE),
+							2 => new RulesetEvent(item.Time, RulesetEvent.RulesetBit.WvW),
+							4 => new RulesetEvent(item.Time, RulesetEvent.RulesetBit.PvP),
+							_ => new UnknownEvent(item.Time, item),
+						};
+					}
 					case StateChange.SquadMarker:
 					{
 						// Squad ground marker
