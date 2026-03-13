@@ -238,12 +238,25 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(DefianceBarHealthUpdateEvent)) return [StateChange.BreakbarPercent];
 		if (eventType == typeof(BarrierUpdateEvent)) return [StateChange.BarrierUpdate];
 		if (eventType == typeof(DefianceBarStateUpdateEvent)) return [StateChange.BreakbarState];
+		if (eventType == typeof(AttackTargetEvent)) return [StateChange.AttackTarget];
+		if (eventType == typeof(Last90BeforeDownEvent)) return [StateChange.Last90BeforeDown];
 		if (eventType == typeof(EffectEvent)) return [StateChange.Effect];
 		if (eventType == typeof(EffectStartEvent)) return [StateChange.Effect2];
 		if (eventType == typeof(EffectEndEvent)) return [StateChange.Effect2];
 		if (eventType == typeof(AgentGliderOpenEvent)) return [StateChange.Glider];
 		if (eventType == typeof(AgentGliderCloseEvent)) return [StateChange.Glider];
 		if (eventType == typeof(AgentStunBreakEvent)) return [StateChange.StunBreak];
+
+		if (eventType == typeof(MissileEvent)) return [];
+		if (eventType == typeof(MissileCreateEvent)) return [StateChange.MissileCreate];
+		if (eventType == typeof(MissileLaunchEvent)) return [StateChange.MissileLaunch];
+		if (eventType == typeof(MissileRemoveEvent)) return [StateChange.MissileRemove];
+
+		if (eventType == typeof(SplitEffectEvent)) return [];
+		if (eventType == typeof(EffectGroundCreateEvent)) return [StateChange.EffectGroundCreate];
+		if (eventType == typeof(EffectGroundRemoveEvent)) return [StateChange.EffectGroundRemove];
+		if (eventType == typeof(EffectAgentCreateEvent)) return [StateChange.EffectAgentCreate];
+		if (eventType == typeof(EffectAgentRemoveEvent)) return [StateChange.EffectAgentRemove];
 
 		if (eventType == typeof(BuffEvent)) return [];
 		if (eventType == typeof(BuffRemoveEvent)) return [];
@@ -320,12 +333,25 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(DefianceBarHealthUpdateEvent)) return false;
 		if (eventType == typeof(BarrierUpdateEvent)) return false;
 		if (eventType == typeof(DefianceBarStateUpdateEvent)) return false;
+		if (eventType == typeof(AttackTargetEvent)) return false;
+		if (eventType == typeof(Last90BeforeDownEvent)) return false;
 		if (eventType == typeof(EffectEvent)) return false;
 		if (eventType == typeof(EffectStartEvent)) return false;
 		if (eventType == typeof(EffectEndEvent)) return false;
 		if (eventType == typeof(AgentGliderOpenEvent)) return false;
 		if (eventType == typeof(AgentGliderCloseEvent)) return false;
 		if (eventType == typeof(AgentStunBreakEvent)) return false;
+
+		if (eventType == typeof(MissileEvent)) return false;
+		if (eventType == typeof(MissileCreateEvent)) return false;
+		if (eventType == typeof(MissileLaunchEvent)) return false;
+		if (eventType == typeof(MissileRemoveEvent)) return false;
+
+		if (eventType == typeof(SplitEffectEvent)) return false;
+		if (eventType == typeof(EffectGroundCreateEvent)) return false;
+		if (eventType == typeof(EffectGroundRemoveEvent)) return false;
+		if (eventType == typeof(EffectAgentCreateEvent)) return false;
+		if (eventType == typeof(EffectAgentRemoveEvent)) return false;
 
 		if (eventType == typeof(BuffEvent)) return false;
 		if (eventType == typeof(BuffRemoveEvent)) return false;
@@ -400,12 +426,25 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(DefianceBarHealthUpdateEvent)) return false;
 		if (eventType == typeof(BarrierUpdateEvent)) return false;
 		if (eventType == typeof(DefianceBarStateUpdateEvent)) return false;
+		if (eventType == typeof(AttackTargetEvent)) return false;
+		if (eventType == typeof(Last90BeforeDownEvent)) return false;
 		if (eventType == typeof(EffectEvent)) return false;
 		if (eventType == typeof(EffectStartEvent)) return false;
 		if (eventType == typeof(EffectEndEvent)) return false;
 		if (eventType == typeof(AgentGliderOpenEvent)) return false;
 		if (eventType == typeof(AgentGliderCloseEvent)) return false;
 		if (eventType == typeof(AgentStunBreakEvent)) return false;
+
+		if (eventType == typeof(MissileEvent)) return false;
+		if (eventType == typeof(MissileCreateEvent)) return false;
+		if (eventType == typeof(MissileLaunchEvent)) return false;
+		if (eventType == typeof(MissileRemoveEvent)) return false;
+
+		if (eventType == typeof(SplitEffectEvent)) return false;
+		if (eventType == typeof(EffectGroundCreateEvent)) return false;
+		if (eventType == typeof(EffectGroundRemoveEvent)) return false;
+		if (eventType == typeof(EffectAgentCreateEvent)) return false;
+		if (eventType == typeof(EffectAgentRemoveEvent)) return false;
 
 		if (eventType == typeof(BuffEvent)) return false;
 		if (eventType == typeof(BuffRemoveEvent)) return false;
@@ -480,12 +519,25 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(DefianceBarHealthUpdateEvent)) return [];
 		if (eventType == typeof(BarrierUpdateEvent)) return [];
 		if (eventType == typeof(DefianceBarStateUpdateEvent)) return [];
+		if (eventType == typeof(AttackTargetEvent)) return [];
+		if (eventType == typeof(Last90BeforeDownEvent)) return [];
 		if (eventType == typeof(EffectEvent)) return [];
 		if (eventType == typeof(EffectStartEvent)) return [];
 		if (eventType == typeof(EffectEndEvent)) return [];
 		if (eventType == typeof(AgentGliderOpenEvent)) return [];
 		if (eventType == typeof(AgentGliderCloseEvent)) return [];
 		if (eventType == typeof(AgentStunBreakEvent)) return [];
+
+		if (eventType == typeof(MissileEvent)) return [];
+		if (eventType == typeof(MissileCreateEvent)) return [];
+		if (eventType == typeof(MissileLaunchEvent)) return [];
+		if (eventType == typeof(MissileRemoveEvent)) return [];
+
+		if (eventType == typeof(SplitEffectEvent)) return [];
+		if (eventType == typeof(EffectGroundCreateEvent)) return [];
+		if (eventType == typeof(EffectGroundRemoveEvent)) return [];
+		if (eventType == typeof(EffectAgentCreateEvent)) return [];
+		if (eventType == typeof(EffectAgentRemoveEvent)) return [];
 
 		if (eventType == typeof(BuffEvent)) return [];
 		if (eventType == typeof(BuffRemoveEvent)) return [];
@@ -602,6 +654,13 @@ public class CombatItemFilters : ICombatItemFilters
 			StateChange.SquadMarker => false,
 			StateChange.ArcBuild => true,
 			StateChange.Glider => false,
+			StateChange.MissileCreate => false,
+			StateChange.MissileLaunch => false,
+			StateChange.MissileRemove => false,
+			StateChange.EffectGroundCreate => false,
+			StateChange.EffectGroundRemove => false,
+			StateChange.EffectAgentCreate => false,
+			StateChange.EffectAgentRemove => false,
 			StateChange.StunBreak => false,
 			StateChange.IIDChange => false,
 			StateChange.MapChange => false,

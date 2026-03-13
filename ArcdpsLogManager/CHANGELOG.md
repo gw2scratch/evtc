@@ -2,6 +2,22 @@
 
 This is the full changelog of the arcdps Log Manager.
 
+## Log Manager v1.16
+
+#### New features
+
+#### Fixes
+- Updated Strike Missions to Raid Encounters
+
+#### EVTC Inspector notes
+- Added Team GUIDs via CONTENTLOCAL_TEAM
+- Added AttackTarget event
+- Added SkillInfo event to SkillData
+- Added Last90BeforeDown event
+- Added MissileCreate, MissileLaunch and MissileRemove events
+- Added EffectGroundCreate and EffectGroundRemove events
+- Added EffectAgentCreate and EffectAgentRemove events
+
 ## Log Manager v1.15
 
 #### New features
