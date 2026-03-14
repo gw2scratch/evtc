@@ -27,13 +27,20 @@ namespace GW2Scratch.EVTCAnalytics.Model
 		public long TimeMilliseconds { get; }
 
 		/// <summary>
+		/// Type of the log.<br></br>
+		/// Used to define map logs post EVTC20250315.
+		/// </summary>
+		public int LogType { get; }
+
+		/// <summary>
 		/// Creates a new instance of <see cref="LogTime"/>.
 		/// </summary>
-		public LogTime(DateTimeOffset localTime, DateTimeOffset serverTime, long timeMilliseconds)
+		public LogTime(DateTimeOffset localTime, DateTimeOffset serverTime, long timeMilliseconds, int logType)
 		{
 			LocalTime = localTime;
 			ServerTime = serverTime;
 			TimeMilliseconds = timeMilliseconds;
+			LogType = logType;
 		}
 	}
 }

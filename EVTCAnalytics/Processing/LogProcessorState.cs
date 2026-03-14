@@ -25,7 +25,9 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 		public List<Event> Events { get; set; }
 		public List<LogError> Errors { get; set; }
 		public LogTime LogStartTime { get; set; }
+		public List<LogTime> LogStartTimes { get; set; }
 		public LogTime LogEndTime { get; set; }
+		public List<LogTime> LogEndTimes { get; set; }
 		public Player PointOfView { get; set; }
 		public string EvtcVersion { get; set; }
 		public InstanceStart InstanceStart { get; set; }

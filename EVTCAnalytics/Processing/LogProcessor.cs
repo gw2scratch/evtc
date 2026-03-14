@@ -100,6 +100,10 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			}
 
 			state.Skills = GetSkills(log).ToList();
+
+			state.LogStartTimes = new List<LogTime>();
+			state.LogEndTimes = new List<LogTime>();
+
 			GetDataFromCombatItems(log, state);
 
 			SetLogTypeAndTarget(state, log.ParsedBossData);
@@ -163,8 +167,9 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				}
 			}
 			state.AgentsByAddress = agentsByAddress;
-			
-			SetLogTypeAndTarget(state, bossData);
+
+			state.LogStartTimes = new List<LogTime>();
+			state.LogEndTimes = new List<LogTime>();
 			
 			// Get data from skills.
 			var skillsById = new Dictionary<uint, Skill>();
@@ -245,6 +250,9 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				
 				ProcessCombatItem(state, combatItem);
 			}
+
+			// Combat items need to be processed before this.
+			SetLogTypeAndTarget(state, bossData);
 
 			// Set agent origins now that we have read combat items and have ids.
 			foreach ((ulong address, Agent agent) in agentsByAddress)
@@ -348,7 +356,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 		private static void SetLogTypeAndTarget(LogProcessorState state, ParsedBossData bossData)
 		{
 			Debug.Assert(state.Agents != null);
-			
+
 			state.LogType = LogType.PvE;
 			if (bossData.ID == ArcdpsBossIds.WorldVersusWorld)
 			{
@@ -360,18 +368,26 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			}
 			else
 			{
-				// The boss id may be either an NPC species id or a Gadget id.
-				// Conflicts may happen, in that case the first found agent is chosen,
-				// as they are more likely to be the trigger. It is also possible to have
-				// multiple agents with the same id if they are not unique, in that case
-				// we once again choose the first one.
-				foreach (var agent in state.Agents)
+				var firstCombatStart = state.LogStartTimes.FirstOrDefault();
+				if (firstCombatStart != null && firstCombatStart.LogType == ArcdpsBossIds.Map)
 				{
-					if (agent is NPC npc && npc.SpeciesId == bossData.ID ||
-					    agent is Gadget gadget && gadget.VolatileId == bossData.ID)
+					state.LogType = LogType.Map;
+				}
+				else
+				{
+					// The boss id may be either an NPC species id or a Gadget id.
+					// Conflicts may happen, in that case the first found agent is chosen,
+					// as they are more likely to be the trigger. It is also possible to have
+					// multiple agents with the same id if they are not unique, in that case
+					// we once again choose the first one.
+					foreach (var agent in state.Agents)
 					{
-						state.MainTarget = agent;
-						break;
+						if (agent is NPC npc && npc.SpeciesId == bossData.ID ||
+							agent is Gadget gadget && gadget.VolatileId == bossData.ID)
+						{
+							state.MainTarget = agent;
+							break;
+						}
 					}
 				}
 			}
@@ -678,28 +694,32 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 		{
 			switch (item.IsStateChange)
 			{
-				case StateChange.LogStart when state.LogStartTime != null:
+				case StateChange.LogStart when state.LogStartTime != null && Int32.Parse(state.EvtcVersion.Remove(0, 4)) < 20250315 && state.LogType != LogType.Map:
 					throw new LogProcessingException("Multiple log start combat items found");
 				case StateChange.LogStart:
 				{
 					var serverTime = DateTimeOffset.FromUnixTimeSeconds(item.Value);
 					var localTime = DateTimeOffset.FromUnixTimeSeconds(item.BuffDmg);
+					var logType = (int) item.DstAgent;
 
-					state.LogStartTime = new LogTime(localTime, serverTime, item.Time);
+					state.LogStartTime = new LogTime(localTime, serverTime, item.Time, logType);
+					state.LogStartTimes.Add(state.LogStartTime);
 					return;
 				}
 				case StateChange.LogEnd when item.Value == 0 && item.BuffDmg == 0:
 					// This is an erroneous extra log end without any data,
 					// we ignore it. Happened in every log with EVTC20200506.
 					return;
-				case StateChange.LogEnd when state.LogEndTime != null:
+				case StateChange.LogEnd when state.LogEndTime != null && Int32.Parse(state.EvtcVersion.Remove(0, 4)) < 20250315 && state.LogType != LogType.Map:
 					throw new LogProcessingException("Multiple log end combat items found");
 				case StateChange.LogEnd:
 				{
 					var serverTime = DateTimeOffset.FromUnixTimeSeconds(item.Value);
 					var localTime = DateTimeOffset.FromUnixTimeSeconds(item.BuffDmg);
+					var logType = (int) item.DstAgent;
 
-					state.LogEndTime = new LogTime(localTime, serverTime, item.Time);
+					state.LogEndTime = new LogTime(localTime, serverTime, item.Time, logType);
+					state.LogEndTimes.Add(state.LogEndTime);
 					return;
 				}
 				case StateChange.PointOfView:
