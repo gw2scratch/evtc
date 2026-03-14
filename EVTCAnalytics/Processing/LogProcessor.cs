@@ -1143,7 +1143,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						// This encoding is inconsistent with the health update.
 						float breakbarHealthFraction = BitConversions.ToSingle(item.Value);
 						return new DefianceBarHealthUpdateEvent(item.Time, GetAgentByAddress(item.SrcAgent), breakbarHealthFraction);
-					case StateChange.Tag:
+					case StateChange.Tag_Marker:
 						uint markerId = (uint) item.Value;
 						if (markerId == 0)
 						{

@@ -227,8 +227,8 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(AgentHealthUpdateEvent)) return [StateChange.HealthUpdate];
 		if (eventType == typeof(AgentWeaponSwapEvent)) return [StateChange.WeaponSwap];
 		if (eventType == typeof(AgentMaxHealthUpdateEvent)) return [StateChange.MaxHealthUpdate];
-		if (eventType == typeof(AgentMarkerEvent)) return [StateChange.Tag];
-		if (eventType == typeof(AgentMarkerRemoveAllEvent)) return [StateChange.Tag];
+		if (eventType == typeof(AgentMarkerEvent)) return [StateChange.Tag_Marker];
+		if (eventType == typeof(AgentMarkerRemoveAllEvent)) return [StateChange.Tag_Marker];
 		if (eventType == typeof(InitialBuffEvent)) return [StateChange.BuffInitial];
 		if (eventType == typeof(PositionChangeEvent)) return [StateChange.Position];
 		if (eventType == typeof(VelocityChangeEvent)) return [StateChange.Velocity];
@@ -639,7 +639,7 @@ public class CombatItemFilters : ICombatItemFilters
 			StateChange.BreakbarState => false,
 			StateChange.BreakbarPercent => false,
 			StateChange.Error => true,
-			StateChange.Tag => false,
+			StateChange.Tag_Marker => false,
 			StateChange.BarrierUpdate => false,
 			StateChange.StatReset => true,
 			StateChange.Extension => false,
