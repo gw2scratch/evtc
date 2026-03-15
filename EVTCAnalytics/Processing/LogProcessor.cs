@@ -106,12 +106,12 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 
 			GetDataFromCombatItems(log, state);
 
-			SetLogTypeAndTarget(state, log.ParsedBossData);
+			SetLogType(state, log.ParsedBossData);
 
 			SetAgentAwareTimes(state);
 			AssignAgentMasters(log, state); // Has to be done after setting aware times
 
-			SetEncounterData(state);
+			SetEncounterData(state, log.ParsedBossData);
 
 			foreach (var step in state.EncounterData.ProcessingSteps)
 			{
@@ -120,7 +120,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 
 			// Post-processing steps might have changed the agents (e.g. by merging), which are not yet lazy within encounter data.
 			// For this reason, we need to regenerate the encounter data to update the referenced agents.
-			SetEncounterData(state);
+			SetEncounterData(state, log.ParsedBossData);
 
 			return new Log(state);
 		}
@@ -252,7 +252,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			}
 
 			// Combat items need to be processed before this.
-			SetLogTypeAndTarget(state, bossData);
+			SetLogType(state, bossData);
 
 			// Set agent origins now that we have read combat items and have ids.
 			foreach ((ulong address, Agent agent) in agentsByAddress)
@@ -298,7 +298,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			}
 			state.MastersAssigned = true;
 
-			SetEncounterData(state);
+			SetEncounterData(state, bossData);
 
 			foreach (var step in state.EncounterData.ProcessingSteps)
 			{
@@ -307,7 +307,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			
 			// Post-processing steps might have changed the agents (e.g. by merging), which are not yet lazy within encounter data.
 			// For this reason, we need to regenerate the encounter data to update the referenced agents.
-			SetEncounterData(state);
+			SetEncounterData(state, bossData);
 
 			return new Log(state);
 		}
@@ -353,7 +353,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			}
 		}
 
-		private static void SetLogTypeAndTarget(LogProcessorState state, ParsedBossData bossData)
+		private static void SetLogType(LogProcessorState state, ParsedBossData bossData)
 		{
 			Debug.Assert(state.Agents != null);
 
@@ -373,29 +373,12 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				{
 					state.LogType = LogType.Map;
 				}
-				else
-				{
-					// The boss id may be either an NPC species id or a Gadget id.
-					// Conflicts may happen, in that case the first found agent is chosen,
-					// as they are more likely to be the trigger. It is also possible to have
-					// multiple agents with the same id if they are not unique, in that case
-					// we once again choose the first one.
-					foreach (var agent in state.Agents)
-					{
-						if (agent is NPC npc && npc.SpeciesId == bossData.ID ||
-							agent is Gadget gadget && gadget.VolatileId == bossData.ID)
-						{
-							state.MainTarget = agent;
-							break;
-						}
-					}
-				}
 			}
 		}
 
-		private void SetEncounterData(LogProcessorState state)
+		private void SetEncounterData(LogProcessorState state, ParsedBossData bossData)
 		{
-			var encounter = EncounterIdentifier.IdentifyEncounter(state.MainTarget, state.Agents, state.Events, state.Skills);
+			var encounter = EncounterIdentifier.IdentifyEncounter(bossData.ID, state);
 			state.EncounterData = EncounterDataProvider.GetEncounterData(encounter, state.MainTarget, state.Agents, state.GameBuild, state.LogType);
 		}
 

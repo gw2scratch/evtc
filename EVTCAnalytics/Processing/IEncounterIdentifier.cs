@@ -23,12 +23,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 		/// which is why passing in individual parts of the log is required.
 		/// </para>
 		/// </remarks>
-		/// <param name="mainTarget">The main target of the log.</param>
-		/// <param name="events">The events of the log.</param>
-		/// <param name="agents">The agents of the log</param>
-		/// <param name="skills">The skills of the log</param>
 		/// <returns>The encounter within this log.</returns>
-		Encounter IdentifyEncounter(Agent mainTarget, IReadOnlyList<Agent> agents, IReadOnlyList<Event> events, IReadOnlyList<Skill> skills);
+		Encounter IdentifyEncounter(ushort triggerId, LogProcessorState state);
 
 		/// <summary>
 		/// Identifies potential encounters early during parsing.
