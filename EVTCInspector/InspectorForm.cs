@@ -56,6 +56,9 @@ namespace GW2Scratch.EVTCInspector
 		// Processed species
 		private readonly FilterCollection<Species> species = new FilterCollection<Species>();
 
+		// Processed teams
+		private readonly FilterCollection<Team> teams = new FilterCollection<Team>();
+
 		// Statistics
 		private readonly PropertyGrid statisticsPropertyGrid = new PropertyGrid();
 
@@ -104,6 +107,7 @@ namespace GW2Scratch.EVTCInspector
 			processedTabControl.Pages.Add(new TabPage(ConstructEffectGridView()) {Text = "Effects"});
 			processedTabControl.Pages.Add(new TabPage(ConstructMarkerGridView()) {Text = "Markers"});
 			processedTabControl.Pages.Add(new TabPage(ConstructSpeciesGridView()) {Text = "Species"});
+			processedTabControl.Pages.Add(new TabPage(ConstructTeamGridView()) {Text = "Teams"});
 
 			var statisticsLayout = new DynamicLayout();
 			statisticsLayout.Add(statisticsPropertyGrid);
@@ -284,6 +288,8 @@ namespace GW2Scratch.EVTCInspector
 					markers.AddRange(processedLog.Markers);
 					species.Clear();
 					species.AddRange(processedLog.Species);
+					teams.Clear();
+					teams.AddRange(processedLog.Teams);
 				});
 			}
 			catch (Exception ex)
@@ -594,6 +600,57 @@ namespace GW2Scratch.EVTCInspector
 
 			grid.DataStore = species;
 			new GridViewSorter<Species>(grid, species).EnableSorting();
+
+			return grid;
+		}
+
+		private GridView<Team> ConstructTeamGridView()
+		{
+			var grid = new GridView<Team>();
+			grid.Columns.Add(new GridColumn
+			{
+				HeaderText = "ID",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Team, string>(x => x.Id.ToString())
+				}
+			});
+			grid.Columns.Add(new GridColumn
+			{
+				HeaderText = "Content GUID",
+				DataCell = new TextBoxCell
+				{
+					Binding = new DelegateBinding<Team, string>(x => GuidToString(x.ContentGuid))
+				},
+			});
+
+			var menu = new ContextMenu();
+			menu.Items.Add(new ButtonMenuItem
+			{
+				Text = "Copy ID",
+				Command = new Command((_, _) =>
+				{
+					if (grid.SelectedItem != null)
+					{
+						Clipboard.Instance.Text = grid.SelectedItem.Id.ToString();
+					}
+				})
+			});
+			menu.Items.Add(new ButtonMenuItem
+			{
+				Text = "Copy GUID",
+				Command = new Command((_, _) =>
+				{
+					if (grid.SelectedItem != null)
+					{
+						Clipboard.Instance.Text = GuidToString(grid.SelectedItem.ContentGuid);
+					}
+				})
+			});
+			grid.ContextMenu = menu;
+
+			grid.DataStore = teams;
+			new GridViewSorter<Team>(grid, teams).EnableSorting();
 
 			return grid;
 		}
