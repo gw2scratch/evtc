@@ -2,15 +2,18 @@
 
 This is the full changelog of the arcdps Log Manager.
 
-## Log Manager v1.16
+## Upcoming Log Manager v1.16
 
 #### New features
 
 #### Fixes
 - Updated Strike Missions to Raid Encounters
+- Fixed Map/Instance logs failing to parse since EVTC20250315
+- Fixed incorrect main target name collision when a gadget rolled the same ID as the trigger ID
 
 #### EVTC Inspector notes
 - Added Team GUIDs via CONTENTLOCAL_TEAM
+- Added Emote GUIDs via CONTENTLOCAL_EMOTE
 - Added AttackTarget event
 - Added SkillInfo event to SkillData
 - Added Last90BeforeDown event
@@ -18,6 +21,7 @@ This is the full changelog of the arcdps Log Manager.
 - Added MissileCreate, MissileLaunch and MissileRemove events
 - Added EffectGroundCreate and EffectGroundRemove events
 - Added EffectAgentCreate and EffectAgentRemove events
+- Added Padding (Emote / Gadget Interact) to SkillCastEvent
 
 ## Log Manager v1.15
 
