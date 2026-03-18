@@ -81,6 +81,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			state.MarkersById = new Dictionary<uint, Marker>();
 			state.SpeciesById = new Dictionary<uint, Species>();
 			state.TeamsById = new Dictionary<uint, Team>();
+			state.EmotesById = new Dictionary<uint, Emote>();
 			state.Errors = new List<LogError>();
 			state.OngoingEffects = new Dictionary<uint, EffectStartEvent>();
 			foreach (var agent in state.Agents)
@@ -202,6 +203,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			state.MarkersById = new Dictionary<uint, Marker>();
 			state.SpeciesById = new Dictionary<uint, Species>();
 			state.TeamsById = new Dictionary<uint, Team>();
+			state.EmotesById = new Dictionary<uint, Emote>();
 			state.OngoingEffects = new Dictionary<uint, EffectStartEvent>();
 
 			var combatItemReader = reader.GetCombatItemReader(bossData, state.MainTarget, state.Agents, state.GameBuild, state.LogType, EncounterIdentifier, EncounterDataProvider);
@@ -846,6 +848,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						{
 							if (state.EffectsById.TryGetValue(item.SkillId, out var effect))
 							{
+								// Values from arcdps versions before 20220709 are wrong.
 								var guid = new byte[16];
 								effect.ContentGuid = guid;
 								BitConverter.GetBytes(item.SrcAgent).CopyTo(guid, 0);
@@ -906,6 +909,21 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 
 							var guid = new byte[16];
 							team.ContentGuid = guid;
+							BitConverter.GetBytes(item.SrcAgent).CopyTo(guid, 0);
+							BitConverter.GetBytes(item.DstAgent).CopyTo(guid, 8);
+						}
+						return;
+						// Emote
+						case 5:
+						{
+							if (!state.EmotesById.TryGetValue(item.SkillId, out var emote))
+							{
+								emote = new Emote(item.SkillId);
+								state.EmotesById[item.SkillId] = emote;
+							}
+
+							var guid = new byte[16];
+							emote.ContentGuid = guid;
 							BitConverter.GetBytes(item.SrcAgent).CopyTo(guid, 0);
 							BitConverter.GetBytes(item.DstAgent).CopyTo(guid, 8);
 						}
