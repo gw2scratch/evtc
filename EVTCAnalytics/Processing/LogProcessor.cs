@@ -1628,12 +1628,12 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						return new EndSkillCastEvent(item.Time, GetAgentByAddress(item.SrcAgent),
 							GetSkillById(item.SkillId), item.Value, EndSkillCastEvent.SkillEndType.Fire);
 					case Activation.Normal:
+						// if skillid == CSK_GADGETINTERACT, (u32)pad61 = gadget instid, if skillid == CSK_EMOTE, (u32)pad61 = emote_id
 						return new StartSkillCastEvent(item.Time, GetAgentByAddress(item.SrcAgent),
-							GetSkillById(item.SkillId), item.Value, StartSkillCastEvent.SkillCastType.Normal);
+							GetSkillById(item.SkillId), item.Value, item.Padding, StartSkillCastEvent.SkillCastType.Normal);
 					case Activation.Quickness:
 						return new StartSkillCastEvent(item.Time, GetAgentByAddress(item.SrcAgent),
-							GetSkillById(item.SkillId), item.Value,
-							StartSkillCastEvent.SkillCastType.WithQuickness);
+							GetSkillById(item.SkillId), item.Value, item.Padding, StartSkillCastEvent.SkillCastType.WithQuickness);
 					case Activation.Reset:
 						return new ResetSkillCastEvent(item.Time, GetAgentByAddress(item.SrcAgent),
 							GetSkillById(item.SkillId), item.Value);

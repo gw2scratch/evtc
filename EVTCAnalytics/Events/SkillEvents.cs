@@ -58,6 +58,7 @@ namespace GW2Scratch.EVTCAnalytics.Events
 		Agent agent,
 		Skill skill,
 		int castingTimeMs,
+		uint pad,
 		StartSkillCastEvent.SkillCastType castType)
 		: SkillCastEvent(time, agent, skill, castingTimeMs)
 	{
@@ -68,5 +69,6 @@ namespace GW2Scratch.EVTCAnalytics.Events
 		}
 
 		public SkillCastType CastType { get; } = castType;
+		public uint Pad { get; } = pad;
 	}
 }
