@@ -15,7 +15,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 	public interface IEncounterIdentifier
 	{
 		/// <summary>
-		/// Identify the encounter within the log.
+		/// Identify the encounter and the corrisponding target within the log.<br></br>
+		/// The target <see cref="Agent"/> can be a <see cref="NPC"/> or <see cref="Gadget"/>.
 		/// </summary>
 		/// <remarks>
 		/// <para>
@@ -23,12 +24,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 		/// which is why passing in individual parts of the log is required.
 		/// </para>
 		/// </remarks>
-		/// <param name="mainTarget">The main target of the log.</param>
-		/// <param name="events">The events of the log.</param>
-		/// <param name="agents">The agents of the log</param>
-		/// <param name="skills">The skills of the log</param>
 		/// <returns>The encounter within this log.</returns>
-		Encounter IdentifyEncounter(Agent mainTarget, IReadOnlyList<Agent> agents, IReadOnlyList<Event> events, IReadOnlyList<Skill> skills);
+		(Encounter, Agent) IdentifyEncounter(ushort triggerId, IReadOnlyList<Agent> agents, IReadOnlyList<Event> events, IReadOnlyList<Skill> skills);
 
 		/// <summary>
 		/// Identifies potential encounters early during parsing.

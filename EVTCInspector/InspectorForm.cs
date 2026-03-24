@@ -59,6 +59,9 @@ namespace GW2Scratch.EVTCInspector
 		// Processed teams
 		private readonly FilterCollection<Team> teams = new FilterCollection<Team>();
 
+		// Processed emotes
+		private readonly FilterCollection<Emote> emotes = new FilterCollection<Emote>();
+
 		// Statistics
 		private readonly PropertyGrid statisticsPropertyGrid = new PropertyGrid();
 
@@ -104,10 +107,17 @@ namespace GW2Scratch.EVTCInspector
 			processedTabControl.Pages.Add(new TabPage(eventsDetailLayout) {Text = "Events"});
 			processedTabControl.Pages.Add(new TabPage(agentSplitter) {Text = "Agents"});
 			processedTabControl.Pages.Add(new TabPage(skillSplitter) {Text = "Skills"});
-			processedTabControl.Pages.Add(new TabPage(ConstructEffectGridView()) {Text = "Effects"});
-			processedTabControl.Pages.Add(new TabPage(ConstructMarkerGridView()) {Text = "Markers"});
-			processedTabControl.Pages.Add(new TabPage(ConstructSpeciesGridView()) {Text = "Species"});
-			processedTabControl.Pages.Add(new TabPage(ConstructTeamGridView()) {Text = "Teams"});
+
+			var grid1 = new GridView<Effect>();
+			var grid2 = new GridView<Marker>();
+			var grid3 = new GridView<Species>();
+			var grid4 = new GridView<Team>();
+			var grid5 = new GridView<Emote>();
+			processedTabControl.Pages.Add(new TabPage(ConstructContentLocalGridView<Effect>(grid1, effects)) { Text = "Effects" });
+			processedTabControl.Pages.Add(new TabPage(ConstructContentLocalGridView<Marker>(grid2, markers)) { Text = "Markers" });
+			processedTabControl.Pages.Add(new TabPage(ConstructContentLocalGridView<Species>(grid3, species)) { Text = "Species" });
+			processedTabControl.Pages.Add(new TabPage(ConstructContentLocalGridView<Team>(grid4, teams)) { Text = "Teams" });
+			processedTabControl.Pages.Add(new TabPage(ConstructContentLocalGridView<Emote>(grid5, emotes)) { Text = "Emotes" });
 
 			var statisticsLayout = new DynamicLayout();
 			statisticsLayout.Add(statisticsPropertyGrid);
@@ -290,6 +300,8 @@ namespace GW2Scratch.EVTCInspector
 					species.AddRange(processedLog.Species);
 					teams.Clear();
 					teams.AddRange(processedLog.Teams);
+					emotes.Clear();
+					emotes.AddRange(processedLog.Emotes);
 				});
 			}
 			catch (Exception ex)
@@ -431,16 +443,15 @@ namespace GW2Scratch.EVTCInspector
 
 			return grid;
 		}
-		
-		private GridView<Effect> ConstructEffectGridView()
+
+		private static GridView<T> ConstructContentLocalGridView<T>(GridView<T> grid, FilterCollection<T> collection) where T : ContentLocal
 		{
-			var grid = new GridView<Effect>();
 			grid.Columns.Add(new GridColumn
 			{
 				HeaderText = "ID",
 				DataCell = new TextBoxCell
 				{
-					Binding = new DelegateBinding<Effect, string>(x => x.Id.ToString())
+					Binding = new DelegateBinding<T, string>(x => x.Id.ToString())
 				}
 			});
 			grid.Columns.Add(new GridColumn
@@ -448,128 +459,7 @@ namespace GW2Scratch.EVTCInspector
 				HeaderText = "Content GUID",
 				DataCell = new TextBoxCell
 				{
-					Binding = new DelegateBinding<Effect, string>(x => GuidToString(x.ContentGuid))
-				}
-			});
-			grid.Columns.Add(new GridColumn
-			{
-				HeaderText = "Duration",
-				DataCell = new TextBoxCell
-				{
-					Binding = new DelegateBinding<Effect, string>(x => x.DefaultDuration.ToString(CultureInfo.CurrentCulture))
-				}
-			});
-			
-			var menu = new ContextMenu();
-			menu.Items.Add(new ButtonMenuItem
-			{
-				Text = "Copy ID",
-				Command = new Command((_, _) =>
-				{
-					if (grid.SelectedItem != null)
-					{
-						Clipboard.Instance.Text = grid.SelectedItem.Id.ToString();
-					}
-				})
-			});
-			menu.Items.Add(new ButtonMenuItem
-			{
-				Text = "Copy GUID",
-				Command = new Command((_, _) =>
-				{
-					if (grid.SelectedItem != null)
-					{
-						Clipboard.Instance.Text = GuidToString(grid.SelectedItem.ContentGuid);
-					}
-				})
-			});
-			menu.Items.Add(new ButtonMenuItem
-			{
-				Text = "Copy Duration",
-				Command = new Command((_, _) =>
-				{
-					if (grid.SelectedItem != null)
-					{
-						Clipboard.Instance.Text = grid.SelectedItem.DefaultDuration.ToString();
-					}
-				})
-			});
-			grid.ContextMenu = menu;
-			
-			grid.DataStore = effects;
-			new GridViewSorter<Effect>(grid, effects).EnableSorting();
-
-			return grid;
-		}
-		
-		private GridView<Marker> ConstructMarkerGridView()
-		{
-			var grid = new GridView<Marker>();
-			grid.Columns.Add(new GridColumn
-			{
-				HeaderText = "ID",
-				DataCell = new TextBoxCell
-				{
-					Binding = new DelegateBinding<Marker, string>(x => x.Id.ToString())
-				}
-			});
-			grid.Columns.Add(new GridColumn
-			{
-				HeaderText = "Content GUID",
-				DataCell = new TextBoxCell
-				{
-					Binding = new DelegateBinding<Marker, string>(x => GuidToString(x.ContentGuid))
-				},
-			});
-			
-			var menu = new ContextMenu();
-			menu.Items.Add(new ButtonMenuItem
-			{
-				Text = "Copy ID",
-				Command = new Command((_, _) =>
-				{
-					if (grid.SelectedItem != null)
-					{
-						Clipboard.Instance.Text = grid.SelectedItem.Id.ToString();
-					}
-				})
-			});
-			menu.Items.Add(new ButtonMenuItem
-			{
-				Text = "Copy GUID",
-				Command = new Command((_, _) =>
-				{
-					if (grid.SelectedItem != null)
-					{
-						Clipboard.Instance.Text = GuidToString(grid.SelectedItem.ContentGuid);
-					}
-				})
-			});
-			grid.ContextMenu = menu;
-			
-			grid.DataStore = markers;
-			new GridViewSorter<Marker>(grid, markers).EnableSorting();
-
-			return grid;
-		}
-
-		private GridView<Species> ConstructSpeciesGridView()
-		{
-			var grid = new GridView<Species>();
-			grid.Columns.Add(new GridColumn
-			{
-				HeaderText = "ID",
-				DataCell = new TextBoxCell
-				{
-					Binding = new DelegateBinding<Species, string>(x => x.Id.ToString())
-				}
-			});
-			grid.Columns.Add(new GridColumn
-			{
-				HeaderText = "Content GUID",
-				DataCell = new TextBoxCell
-				{
-					Binding = new DelegateBinding<Species, string>(x => GuidToString(x.ContentGuid))
+					Binding = new DelegateBinding<T, string>(x => GuidToString(x.ContentGuid))
 				},
 			});
 
@@ -598,59 +488,8 @@ namespace GW2Scratch.EVTCInspector
 			});
 			grid.ContextMenu = menu;
 
-			grid.DataStore = species;
-			new GridViewSorter<Species>(grid, species).EnableSorting();
-
-			return grid;
-		}
-
-		private GridView<Team> ConstructTeamGridView()
-		{
-			var grid = new GridView<Team>();
-			grid.Columns.Add(new GridColumn
-			{
-				HeaderText = "ID",
-				DataCell = new TextBoxCell
-				{
-					Binding = new DelegateBinding<Team, string>(x => x.Id.ToString())
-				}
-			});
-			grid.Columns.Add(new GridColumn
-			{
-				HeaderText = "Content GUID",
-				DataCell = new TextBoxCell
-				{
-					Binding = new DelegateBinding<Team, string>(x => GuidToString(x.ContentGuid))
-				},
-			});
-
-			var menu = new ContextMenu();
-			menu.Items.Add(new ButtonMenuItem
-			{
-				Text = "Copy ID",
-				Command = new Command((_, _) =>
-				{
-					if (grid.SelectedItem != null)
-					{
-						Clipboard.Instance.Text = grid.SelectedItem.Id.ToString();
-					}
-				})
-			});
-			menu.Items.Add(new ButtonMenuItem
-			{
-				Text = "Copy GUID",
-				Command = new Command((_, _) =>
-				{
-					if (grid.SelectedItem != null)
-					{
-						Clipboard.Instance.Text = GuidToString(grid.SelectedItem.ContentGuid);
-					}
-				})
-			});
-			grid.ContextMenu = menu;
-
-			grid.DataStore = teams;
-			new GridViewSorter<Team>(grid, teams).EnableSorting();
+			grid.DataStore = collection;
+			new GridViewSorter<T>(grid, collection).EnableSorting();
 
 			return grid;
 		}

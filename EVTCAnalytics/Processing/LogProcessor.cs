@@ -13,6 +13,7 @@ using GW2Scratch.EVTCAnalytics.Model.Skills;
 using GW2Scratch.EVTCAnalytics.Parsed;
 using GW2Scratch.EVTCAnalytics.Parsed.Enums;
 using System.Text;
+using GW2Scratch.EVTCAnalytics.GameData.Encounters;
 
 namespace GW2Scratch.EVTCAnalytics.Processing
 {
@@ -81,6 +82,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			state.MarkersById = new Dictionary<uint, Marker>();
 			state.SpeciesById = new Dictionary<uint, Species>();
 			state.TeamsById = new Dictionary<uint, Team>();
+			state.EmotesById = new Dictionary<uint, Emote>();
 			state.Errors = new List<LogError>();
 			state.OngoingEffects = new Dictionary<uint, EffectStartEvent>();
 			foreach (var agent in state.Agents)
@@ -101,14 +103,18 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			}
 
 			state.Skills = GetSkills(log).ToList();
+
+			state.LogStartTimes = new List<LogTime>();
+			state.LogEndTimes = new List<LogTime>();
+
 			GetDataFromCombatItems(log, state);
 
-			SetLogTypeAndTarget(state, log.ParsedBossData);
+			SetLogType(state, log.ParsedBossData);
 
 			SetAgentAwareTimes(state);
 			AssignAgentMasters(log, state); // Has to be done after setting aware times
 
-			SetEncounterData(state);
+			SetEncounterData(state, log.ParsedBossData);
 
 			foreach (var step in state.EncounterData.ProcessingSteps)
 			{
@@ -117,7 +123,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 
 			// Post-processing steps might have changed the agents (e.g. by merging), which are not yet lazy within encounter data.
 			// For this reason, we need to regenerate the encounter data to update the referenced agents.
-			SetEncounterData(state);
+			SetEncounterData(state, log.ParsedBossData);
 
 			return new Log(state);
 		}
@@ -164,8 +170,9 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				}
 			}
 			state.AgentsByAddress = agentsByAddress;
-			
-			SetLogTypeAndTarget(state, bossData);
+
+			state.LogStartTimes = new List<LogTime>();
+			state.LogEndTimes = new List<LogTime>();
 			
 			// Get data from skills.
 			var skillsById = new Dictionary<uint, Skill>();
@@ -197,6 +204,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			state.MarkersById = new Dictionary<uint, Marker>();
 			state.SpeciesById = new Dictionary<uint, Species>();
 			state.TeamsById = new Dictionary<uint, Team>();
+			state.EmotesById = new Dictionary<uint, Emote>();
 			state.OngoingEffects = new Dictionary<uint, EffectStartEvent>();
 
 			var combatItemReader = reader.GetCombatItemReader(bossData, state.MainTarget, state.Agents, state.GameBuild, state.LogType, EncounterIdentifier, EncounterDataProvider);
@@ -248,6 +256,9 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				ProcessCombatItem(state, combatItem);
 			}
 
+			// Combat items need to be processed before this.
+			SetLogType(state, bossData);
+
 			// Set agent origins now that we have read combat items and have ids.
 			foreach ((ulong address, Agent agent) in agentsByAddress)
 			{
@@ -292,7 +303,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			}
 			state.MastersAssigned = true;
 
-			SetEncounterData(state);
+			SetEncounterData(state, bossData);
 
 			foreach (var step in state.EncounterData.ProcessingSteps)
 			{
@@ -301,7 +312,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			
 			// Post-processing steps might have changed the agents (e.g. by merging), which are not yet lazy within encounter data.
 			// For this reason, we need to regenerate the encounter data to update the referenced agents.
-			SetEncounterData(state);
+			SetEncounterData(state, bossData);
 
 			return new Log(state);
 		}
@@ -347,10 +358,10 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			}
 		}
 
-		private static void SetLogTypeAndTarget(LogProcessorState state, ParsedBossData bossData)
+		private static void SetLogType(LogProcessorState state, ParsedBossData bossData)
 		{
 			Debug.Assert(state.Agents != null);
-			
+
 			state.LogType = LogType.PvE;
 			if (bossData.ID == ArcdpsBossIds.WorldVersusWorld)
 			{
@@ -362,26 +373,20 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			}
 			else
 			{
-				// The boss id may be either an NPC species id or a Gadget id.
-				// Conflicts may happen, in that case the first found agent is chosen,
-				// as they are more likely to be the trigger. It is also possible to have
-				// multiple agents with the same id if they are not unique, in that case
-				// we once again choose the first one.
-				foreach (var agent in state.Agents)
+				var firstCombatStart = state.LogStartTimes.FirstOrDefault();
+				if (firstCombatStart != null && firstCombatStart.LogType == ArcdpsBossIds.Map)
 				{
-					if (agent is NPC npc && npc.SpeciesId == bossData.ID ||
-					    agent is Gadget gadget && gadget.VolatileId == bossData.ID)
-					{
-						state.MainTarget = agent;
-						break;
-					}
+					state.LogType = LogType.Map;
 				}
 			}
 		}
 
-		private void SetEncounterData(LogProcessorState state)
+		private void SetEncounterData(LogProcessorState state, ParsedBossData bossData)
 		{
-			var encounter = EncounterIdentifier.IdentifyEncounter(state.MainTarget, state.Agents, state.Events, state.Skills);
+			(Encounter encounter, Agent target) = EncounterIdentifier.IdentifyEncounter(bossData.ID, state.Agents, state.Events, state.Skills);
+			// We set the main target after the encounter identification to prevent mislabeling.
+			// Gadgets can sometimes roll a volatile ID that matches the log trigger ID.
+			state.MainTarget = target;
 			state.EncounterData = EncounterDataProvider.GetEncounterData(encounter, state.MainTarget, state.Agents, state.GameBuild, state.LogType);
 		}
 
@@ -680,28 +685,32 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 		{
 			switch (item.IsStateChange)
 			{
-				case StateChange.LogStart when state.LogStartTime != null:
+				case StateChange.LogStart when state.LogStartTime != null && Int32.Parse(state.EvtcVersion.Remove(0, 4)) < 20250315 && state.LogType != LogType.Map:
 					throw new LogProcessingException("Multiple log start combat items found");
 				case StateChange.LogStart:
 				{
 					var serverTime = DateTimeOffset.FromUnixTimeSeconds(item.Value);
 					var localTime = DateTimeOffset.FromUnixTimeSeconds(item.BuffDmg);
+					var logType = (int) item.DstAgent;
 
-					state.LogStartTime = new LogTime(localTime, serverTime, item.Time);
+					state.LogStartTime = new LogTime(localTime, serverTime, item.Time, logType);
+					state.LogStartTimes.Add(state.LogStartTime);
 					return;
 				}
 				case StateChange.LogEnd when item.Value == 0 && item.BuffDmg == 0:
 					// This is an erroneous extra log end without any data,
 					// we ignore it. Happened in every log with EVTC20200506.
 					return;
-				case StateChange.LogEnd when state.LogEndTime != null:
+				case StateChange.LogEnd when state.LogEndTime != null && Int32.Parse(state.EvtcVersion.Remove(0, 4)) < 20250315 && state.LogType != LogType.Map:
 					throw new LogProcessingException("Multiple log end combat items found");
 				case StateChange.LogEnd:
 				{
 					var serverTime = DateTimeOffset.FromUnixTimeSeconds(item.Value);
 					var localTime = DateTimeOffset.FromUnixTimeSeconds(item.BuffDmg);
+					var logType = (int) item.DstAgent;
 
-					state.LogEndTime = new LogTime(localTime, serverTime, item.Time);
+					state.LogEndTime = new LogTime(localTime, serverTime, item.Time, logType);
+					state.LogEndTimes.Add(state.LogEndTime);
 					return;
 				}
 				case StateChange.PointOfView:
@@ -843,6 +852,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						{
 							if (state.EffectsById.TryGetValue(item.SkillId, out var effect))
 							{
+								// Values from arcdps versions before 20220709 are wrong.
 								var guid = new byte[16];
 								effect.ContentGuid = guid;
 								BitConverter.GetBytes(item.SrcAgent).CopyTo(guid, 0);
@@ -903,6 +913,21 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 
 							var guid = new byte[16];
 							team.ContentGuid = guid;
+							BitConverter.GetBytes(item.SrcAgent).CopyTo(guid, 0);
+							BitConverter.GetBytes(item.DstAgent).CopyTo(guid, 8);
+						}
+						return;
+						// Emote
+						case 5:
+						{
+							if (!state.EmotesById.TryGetValue(item.SkillId, out var emote))
+							{
+								emote = new Emote(item.SkillId);
+								state.EmotesById[item.SkillId] = emote;
+							}
+
+							var guid = new byte[16];
+							emote.ContentGuid = guid;
 							BitConverter.GetBytes(item.SrcAgent).CopyTo(guid, 0);
 							BitConverter.GetBytes(item.DstAgent).CopyTo(guid, 8);
 						}
@@ -1160,7 +1185,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						// This encoding is inconsistent with the health update.
 						float breakbarHealthFraction = BitConversions.ToSingle(item.Value);
 						return new DefianceBarHealthUpdateEvent(item.Time, GetAgentByAddress(item.SrcAgent), breakbarHealthFraction);
-					case StateChange.Tag:
+					case StateChange.TagMarker:
 						uint markerId = (uint) item.Value;
 						if (markerId == 0)
 						{
@@ -1350,6 +1375,18 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						var startEvent = new EffectStartEvent(item.Time, master, effect, aroundAgent, position, orientation, duration, trackableId);
 						state.OngoingEffects[trackableId] = startEvent;
 						return startEvent;
+					}
+					case StateChange.Ruleset:
+					{
+						// ruleset for self
+						// src_agent: bit0: pve, bit1: wvw, bit2: pvp
+						return (byte) item.SrcAgent switch
+						{
+							1 => new RulesetEvent(item.Time, RulesetEvent.RulesetBit.PvE),
+							2 => new RulesetEvent(item.Time, RulesetEvent.RulesetBit.WvW),
+							4 => new RulesetEvent(item.Time, RulesetEvent.RulesetBit.PvP),
+							_ => new UnknownEvent(item.Time, item),
+						};
 					}
 					case StateChange.SquadMarker:
 					{
@@ -1630,12 +1667,12 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						return new EndSkillCastEvent(item.Time, GetAgentByAddress(item.SrcAgent),
 							GetSkillById(item.SkillId), item.Value, EndSkillCastEvent.SkillEndType.Fire);
 					case Activation.Normal:
+						// if skillid == CSK_GADGETINTERACT, (u32)pad61 = gadget instid, if skillid == CSK_EMOTE, (u32)pad61 = emote_id
 						return new StartSkillCastEvent(item.Time, GetAgentByAddress(item.SrcAgent),
-							GetSkillById(item.SkillId), item.Value, StartSkillCastEvent.SkillCastType.Normal);
+							GetSkillById(item.SkillId), item.Value, item.Padding, StartSkillCastEvent.SkillCastType.Normal);
 					case Activation.Quickness:
 						return new StartSkillCastEvent(item.Time, GetAgentByAddress(item.SrcAgent),
-							GetSkillById(item.SkillId), item.Value,
-							StartSkillCastEvent.SkillCastType.WithQuickness);
+							GetSkillById(item.SkillId), item.Value, item.Padding, StartSkillCastEvent.SkillCastType.WithQuickness);
 					case Activation.Reset:
 						return new ResetSkillCastEvent(item.Time, GetAgentByAddress(item.SrcAgent),
 							GetSkillById(item.SkillId), item.Value);

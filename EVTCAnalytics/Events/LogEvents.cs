@@ -1,4 +1,5 @@
 using GW2Scratch.EVTCAnalytics.Model.Agents;
+using static GW2Scratch.EVTCAnalytics.Events.RulesetEvent;
 
 namespace GW2Scratch.EVTCAnalytics.Events
 {
@@ -105,5 +106,29 @@ namespace GW2Scratch.EVTCAnalytics.Events
 		/// Associated gadget.
 		/// </summary>
 		public Agent Gadget { get; } = gadget;
+	}
+
+	/// <summary>
+	/// Self-only ruleset event.
+	/// </summary>
+	/// <remarks>
+	/// Present in guild hall logs.
+	/// </remarks>
+	public class RulesetEvent(long time, RulesetBit ruleset) : Event(time)
+	{
+		/// <summary>
+		/// Ruleset bitfield.
+		/// </summary>
+		public enum RulesetBit : byte
+		{
+			PvE = 1,
+			WvW = 2,
+			PvP = 4,
+		}
+
+		/// <summary>
+		/// The ruleset for self.
+		/// </summary>
+		public RulesetBit Ruleset { get; } = ruleset;
 	}
 }

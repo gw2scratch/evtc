@@ -227,8 +227,8 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(AgentHealthUpdateEvent)) return [StateChange.HealthUpdate];
 		if (eventType == typeof(AgentWeaponSwapEvent)) return [StateChange.WeaponSwap];
 		if (eventType == typeof(AgentMaxHealthUpdateEvent)) return [StateChange.MaxHealthUpdate];
-		if (eventType == typeof(AgentMarkerEvent)) return [StateChange.Tag];
-		if (eventType == typeof(AgentMarkerRemoveAllEvent)) return [StateChange.Tag];
+		if (eventType == typeof(AgentMarkerEvent)) return [StateChange.TagMarker];
+		if (eventType == typeof(AgentMarkerRemoveAllEvent)) return [StateChange.TagMarker];
 		if (eventType == typeof(InitialBuffEvent)) return [StateChange.BuffInitial];
 		if (eventType == typeof(PositionChangeEvent)) return [StateChange.Position];
 		if (eventType == typeof(VelocityChangeEvent)) return [StateChange.Velocity];
@@ -238,6 +238,7 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(DefianceBarHealthUpdateEvent)) return [StateChange.BreakbarPercent];
 		if (eventType == typeof(BarrierUpdateEvent)) return [StateChange.BarrierUpdate];
 		if (eventType == typeof(DefianceBarStateUpdateEvent)) return [StateChange.BreakbarState];
+		if (eventType == typeof(RulesetEvent)) return [StateChange.Ruleset];
 		if (eventType == typeof(AttackTargetEvent)) return [StateChange.AttackTarget];
 		if (eventType == typeof(Last90BeforeDownEvent)) return [StateChange.Last90BeforeDown];
 		if (eventType == typeof(EffectEvent)) return [StateChange.Effect];
@@ -333,6 +334,7 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(DefianceBarHealthUpdateEvent)) return false;
 		if (eventType == typeof(BarrierUpdateEvent)) return false;
 		if (eventType == typeof(DefianceBarStateUpdateEvent)) return false;
+		if (eventType == typeof(RulesetEvent)) return false;
 		if (eventType == typeof(AttackTargetEvent)) return false;
 		if (eventType == typeof(Last90BeforeDownEvent)) return false;
 		if (eventType == typeof(EffectEvent)) return false;
@@ -426,6 +428,7 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(DefianceBarHealthUpdateEvent)) return false;
 		if (eventType == typeof(BarrierUpdateEvent)) return false;
 		if (eventType == typeof(DefianceBarStateUpdateEvent)) return false;
+		if (eventType == typeof(RulesetEvent)) return false;
 		if (eventType == typeof(AttackTargetEvent)) return false;
 		if (eventType == typeof(Last90BeforeDownEvent)) return false;
 		if (eventType == typeof(EffectEvent)) return false;
@@ -519,6 +522,7 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(DefianceBarHealthUpdateEvent)) return [];
 		if (eventType == typeof(BarrierUpdateEvent)) return [];
 		if (eventType == typeof(DefianceBarStateUpdateEvent)) return [];
+		if (eventType == typeof(RulesetEvent)) return [];
 		if (eventType == typeof(AttackTargetEvent)) return [];
 		if (eventType == typeof(Last90BeforeDownEvent)) return [];
 		if (eventType == typeof(EffectEvent)) return [];
@@ -635,7 +639,7 @@ public class CombatItemFilters : ICombatItemFilters
 			StateChange.BreakbarState => false,
 			StateChange.BreakbarPercent => false,
 			StateChange.Error => true,
-			StateChange.Tag => false,
+			StateChange.TagMarker => false,
 			StateChange.BarrierUpdate => false,
 			StateChange.StatReset => true,
 			StateChange.Extension => false,
