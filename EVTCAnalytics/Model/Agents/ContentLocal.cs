@@ -45,6 +45,7 @@ public abstract class ContentLocal
 		if (guidBytes.Length != 16)
 			throw new ArgumentException("The GUID has to consist of 16 bytes", nameof(guidBytes));
 
+		// fixme: make sure this is correct
 		return $"{GetPart(guidBytes, 0, 4)}-{GetPart(guidBytes, 4, 6)}-{GetPart(guidBytes, 6, 8)}" +
 			   $"-{GetPart(guidBytes, 8, 10)}-{GetPart(guidBytes, 10, 16)}";
 	}

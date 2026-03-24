@@ -11,15 +11,13 @@ namespace GW2Scratch.EVTCAnalytics.Processing;
 
 public class EncounterIdentifier : IEncounterIdentifier
 {
-	public Encounter IdentifyEncounter(ushort triggerId, LogProcessorState state)
+	public (Encounter, Agent) IdentifyEncounter(ushort triggerId, IReadOnlyList<Agent> agents, IReadOnlyList<Event> events, IReadOnlyList<Skill> skills)
 	{
 		// Important: when adding a new encounter, make sure you also add it to the IdentifyPotentialEncounters method.
 
-		IEnumerable<Agent> mainTargets = state.Agents.Where(x =>
+		IEnumerable<Agent> mainTargets = agents.Where(x =>
 			x is NPC npc && npc.SpeciesId == triggerId ||
 			x is Gadget gadget && gadget.VolatileId == triggerId);
-
-		Encounter encounter = Encounter.Other;
 
 		foreach (var mainTarget in mainTargets)
 		{
@@ -28,147 +26,108 @@ public class EncounterIdentifier : IEncounterIdentifier
 				switch (boss.SpeciesId)
 				{
 					case SpeciesIds.ValeGuardian:
-						encounter = Encounter.ValeGuardian;
-						break;
+						return (Encounter.ValeGuardian, mainTarget);
 					case SpeciesIds.Gorseval:
-						encounter = Encounter.Gorseval;
-						break;
+						return (Encounter.Gorseval, mainTarget);
 					case SpeciesIds.Sabetha:
-						encounter = Encounter.Sabetha;
-						break;
+						return (Encounter.Sabetha, mainTarget);
 					case SpeciesIds.Slothasor:
-						encounter = Encounter.Slothasor;
-						break;
+						return (Encounter.Slothasor, mainTarget);
 					case SpeciesIds.Berg:
 					case SpeciesIds.Zane:
 					case SpeciesIds.Narella:
-						encounter = Encounter.BanditTrio;
-						break;
+						return (Encounter.BanditTrio, mainTarget);
 					case SpeciesIds.MatthiasGabrel:
-						encounter = Encounter.Matthias;
-						break;
+						return (Encounter.Matthias, mainTarget);
 					case SpeciesIds.MushroomKing:
 					case SpeciesIds.McLeod:
-						encounter = Encounter.Escort;
-						break;
+						return (Encounter.Escort, mainTarget);
 					case SpeciesIds.KeepConstruct:
-						encounter = Encounter.KeepConstruct;
-						break;
+						return (Encounter.KeepConstruct, mainTarget);
 					case SpeciesIds.HauntingStatue:
-						encounter = Encounter.TwistedCastle;
-						break;
+						return (Encounter.TwistedCastle, mainTarget);
 					case SpeciesIds.Xera:
 						// Twisted Castle logs sometimes get Xera as the main target when the player is too close to her
-						if (state.Agents.OfType<NPC>().Any(x => x.SpeciesId == SpeciesIds.HauntingStatue))
+						if (agents.OfType<NPC>().Any(x => x.SpeciesId == SpeciesIds.HauntingStatue))
 						{
-							return Encounter.TwistedCastle;
+							return (Encounter.TwistedCastle, mainTarget);
 						}
-						encounter = Encounter.Xera;
-						break;
+						return (Encounter.Xera, mainTarget);
 					case SpeciesIds.XeraSecondPhase:
-						encounter = Encounter.Xera;
-						break;
+						return (Encounter.Xera, mainTarget);
 					case SpeciesIds.CairnTheIndomitable:
-						encounter = Encounter.Cairn;
-						break;
+						return (Encounter.Cairn, mainTarget);
 					case SpeciesIds.MursaatOverseer:
-						encounter = Encounter.MursaatOverseer;
-						break;
+						return (Encounter.MursaatOverseer, mainTarget);
 					case SpeciesIds.Samarog:
-						encounter = Encounter.Samarog;
-						break;
+						return (Encounter.Samarog, mainTarget);
 					case SpeciesIds.Deimos:
-						encounter = Encounter.Deimos;
-						break;
+						return (Encounter.Deimos, mainTarget);
 					case SpeciesIds.SoullessHorror:
-						encounter = Encounter.SoullessHorror;
-						break;
+						return (Encounter.SoullessHorror, mainTarget);
 					case SpeciesIds.Desmina:
-						encounter = Encounter.RiverOfSouls;
-						break;
+						return (Encounter.RiverOfSouls, mainTarget);
 					case SpeciesIds.BrokenKing:
-						encounter = Encounter.BrokenKing;
-						break;
+						return (Encounter.BrokenKing, mainTarget);
 					case SpeciesIds.EaterOfSouls:
-						encounter = Encounter.EaterOfSouls;
-						break;
+						return (Encounter.EaterOfSouls, mainTarget);
 					case SpeciesIds.EyeOfJudgment:
 					case SpeciesIds.EyeOfFate:
-						encounter = Encounter.Eyes;
-						break;
+						return (Encounter.Eyes, mainTarget);
 					case SpeciesIds.Dhuum:
 						// Eyes logs sometimes get Dhuum as the main target when the player is too close to him
-						if (state.Agents.OfType<NPC>().Any(x => x.SpeciesId == SpeciesIds.EyeOfFate))
+						if (agents.OfType<NPC>().Any(x => x.SpeciesId == SpeciesIds.EyeOfFate))
 						{
-							return Encounter.Eyes;
+							return (Encounter.Eyes, mainTarget);
 						}
 
-						encounter = Encounter.Dhuum;
-						break;
+						return (Encounter.Dhuum, mainTarget);
 					case SpeciesIds.Nikare:
 					case SpeciesIds.Kenut:
-						encounter = Encounter.TwinLargos;
-						break;
+						return (Encounter.TwinLargos, mainTarget);
 					case SpeciesIds.Qadim:
-						encounter = Encounter.Qadim;
-						break;
+						return (Encounter.Qadim, mainTarget);
 					case SpeciesIds.CardinalAdina:
 						// During initial instance clearing, it is possible for the squad to start combat (clearing) near one boss
 						// and then move to the other and start without leaving combat.
 						// We check for the first cast skill of Sabir, that should happen reasonably early.
 						// If both bosses were attacked at the same time, then choosing one at random is acceptable as well.
-						encounter = state.Skills.Any(x => x.Id == SkillIds.SabirFirstAutoattack) ? Encounter.Sabir : Encounter.Adina;
-						break;
+						return (skills.Any(x => x.Id == SkillIds.SabirFirstAutoattack) ? Encounter.Sabir : Encounter.Adina, mainTarget);
 					case SpeciesIds.CardinalSabir:
 						// During initial instance clearing, it is possible for the squad to start combat (clearing) near one boss
 						// and then move to the other and start without leaving combat.
 						// We check for the first cast skill of Adina (often within a few milliseconds).
 						// If both bosses were attacked at the same time, then choosing one at random is acceptable as well.
-						encounter = state.Skills.Any(x => x.Id == SkillIds.AdinaChargeUp) ? Encounter.Adina : Encounter.Sabir;
-						break;
+						return (skills.Any(x => x.Id == SkillIds.AdinaChargeUp) ? Encounter.Adina : Encounter.Sabir, mainTarget);
 					case SpeciesIds.QadimThePeerless:
-						encounter = Encounter.QadimThePeerless;
-						break;
+						return (Encounter.QadimThePeerless, mainTarget);
 					case SpeciesIds.Greer:
-						encounter = Encounter.Greer;
-						break;
+						return (Encounter.Greer, mainTarget);
 					case SpeciesIds.Decima:
 					case SpeciesIds.DecimaChallengeMode:
-						encounter = Encounter.Decima;
-						break;
+						return (Encounter.Decima, mainTarget);
 					case SpeciesIds.Ura:
-						encounter = Encounter.Ura;
-						break;
+						return (Encounter.Ura, mainTarget);
 					case SpeciesIds.StandardKittyGolem:
-						encounter = Encounter.StandardKittyGolem;
-						break;
+						return (Encounter.StandardKittyGolem, mainTarget);
 					case SpeciesIds.MediumKittyGolem:
-						encounter = Encounter.MediumKittyGolem;
-						break;
+						return (Encounter.MediumKittyGolem, mainTarget);
 					case SpeciesIds.LargeKittyGolem:
-						encounter = Encounter.LargeKittyGolem;
-						break;
+						return (Encounter.LargeKittyGolem, mainTarget);
 					case SpeciesIds.MassiveKittyGolem:
-						encounter = Encounter.MassiveKittyGolem;
-						break;
+						return (Encounter.MassiveKittyGolem, mainTarget);
 					case SpeciesIds.MAMA:
-						encounter = Encounter.MAMA;
-						break;
+						return (Encounter.MAMA, mainTarget);
 					case SpeciesIds.SiaxTheCorrupted:
-						encounter = Encounter.SiaxTheCorrupted;
-						break;
+						return (Encounter.SiaxTheCorrupted, mainTarget);
 					case SpeciesIds.EnsolyssOfTheEndlessTorment:
-						encounter = Encounter.EnsolyssOfTheEndlessTorment;
-						break;
+						return (Encounter.EnsolyssOfTheEndlessTorment, mainTarget);
 					case SpeciesIds.Skorvald:
-						encounter = Encounter.Skorvald;
-						break;
+						return (Encounter.Skorvald, mainTarget);
 					case SpeciesIds.Artsariiv:
-						encounter = Encounter.Artsariiv;
-						break;
+						return (Encounter.Artsariiv, mainTarget);
 					case SpeciesIds.Arkk:
-						encounter = Encounter.Arkk;
-						break;
+						return (Encounter.Arkk, mainTarget);
 					case SpeciesIds.AiKeeperOfThePeak:
 					{
 						// This encounter has two phases with the same enemy. The enemy gains short invulnerability
@@ -185,23 +144,23 @@ public class EncounterIdentifier : IEncounterIdentifier
 						// 61356 && no determined afterwards -> failure in the second (dark) phase
 						// 61356 && Determined afterwards -> success
 
-						if (state.Skills.All(x => x.Id != SkillIds.Determined895))
+						if (skills.All(x => x.Id != SkillIds.Determined895))
 						{
 							// This is a quick path that doesn't require enumerating through events. 
 
 							// As there is no Determined, the log is a failure, and this cannot occur in a log
 							// that has both phases (as the Determined buff is applied in between).
 
-							bool hasDarkPhase = state.Skills.Any(x => x.Id == SkillIds.AiDarkEarlySkill);
-							encounter = hasDarkPhase
+							bool hasDarkPhase = skills.Any(x => x.Id == SkillIds.AiDarkEarlySkill);
+							return (hasDarkPhase
 								? Encounter.AiKeeperOfThePeakNightOnly
-								: Encounter.AiKeeperOfThePeakDayOnly;
+								: Encounter.AiKeeperOfThePeakDayOnly, mainTarget);
 						}
 						else
 						{
 							bool inDark = false;
 							bool determinedPreDark = false;
-							foreach (var ev in state.Events)
+							foreach (var ev in events)
 							{
 								if (ev is BuffApplyEvent { Buff.Id: SkillIds.Determined895 } and not InitialBuffEvent)
 								{
@@ -219,87 +178,65 @@ public class EncounterIdentifier : IEncounterIdentifier
 
 							if (inDark)
 							{
-								encounter = determinedPreDark
+								return (determinedPreDark
 									? Encounter.AiKeeperOfThePeakDayAndNight
-									: Encounter.AiKeeperOfThePeakNightOnly;
+									: Encounter.AiKeeperOfThePeakNightOnly, mainTarget);
 							}
 							else
 							{
-								encounter = Encounter.AiKeeperOfThePeakDayOnly;
+								return (Encounter.AiKeeperOfThePeakDayOnly, mainTarget);
 							}
 						}
-						break;
 					}
 					case SpeciesIds.KanaxaiNM:
 					case SpeciesIds.KanaxaiCM:
-						encounter = Encounter.Kanaxai;
-						break;
+						return (Encounter.Kanaxai, mainTarget);
 					case SpeciesIds.Eparch:
-						encounter = Encounter.Eparch;
-						break;
+						return (Encounter.Eparch, mainTarget);
 					case SpeciesIds.WhisperingShadow:
-						encounter = Encounter.WhisperingShadow;
-						break;
+						return (Encounter.WhisperingShadow, mainTarget);
 					case SpeciesIds.Freezie:
-						encounter = Encounter.Freezie;
-						break;
+						return (Encounter.Freezie, mainTarget);
 					case SpeciesIds.IcebroodConstruct:
-						encounter = Encounter.ShiverpeaksPass;
-						break;
+						return (Encounter.ShiverpeaksPass, mainTarget);
 					case SpeciesIds.VoiceOfTheFallen:
 					case SpeciesIds.ClawOfTheFallen:
-						encounter = Encounter.VoiceAndClawOfTheFallen;
-						break;
+						return (Encounter.VoiceAndClawOfTheFallen, mainTarget);
 					case SpeciesIds.FraenirOfJormag:
-						encounter = Encounter.FraenirOfJormag;
-						break;
+						return (Encounter.FraenirOfJormag, mainTarget);
 					case SpeciesIds.Boneskinner:
-						encounter = Encounter.Boneskinner;
-						break;
+						return (Encounter.Boneskinner, mainTarget);
 					case SpeciesIds.WhisperOfJormag:
-						encounter = Encounter.WhisperOfJormag;
-						break;
+						return (Encounter.WhisperOfJormag, mainTarget);
 					case SpeciesIds.VariniaStormsounder:
-						encounter = Encounter.VariniaStormsounder;
-						break;
+						return (Encounter.VariniaStormsounder, mainTarget);
 					case SpeciesIds.HeartsAndMindsMordremoth:
-						encounter = Encounter.Mordremoth;
-						break;
+						return (Encounter.Mordremoth, mainTarget);
 					case SpeciesIds.MaiTrin:
-						encounter = Encounter.AetherbladeHideout;
-						break;
+						return (Encounter.AetherbladeHideout, mainTarget);
 					case SpeciesIds.Ankka:
-						encounter = Encounter.XunlaiJadeJunkyard;
-						break;
+						return (Encounter.XunlaiJadeJunkyard, mainTarget);
 					case SpeciesIds.MinisterLi:
 					case SpeciesIds.MinisterLiChallengeMode:
-						encounter = Encounter.KainengOverlook;
-						break;
+						return (Encounter.KainengOverlook, mainTarget);
 					case SpeciesIds.VoidAmalgamate:
 					case SpeciesIds.VoidMelter:
-						encounter = Encounter.HarvestTemple;
-						break;
+						return (Encounter.HarvestTemple, mainTarget);
 					case SpeciesIds.PrototypeVermillion:
 					case SpeciesIds.PrototypeArsenite:
 					case SpeciesIds.PrototypeIndigo:
 					case SpeciesIds.PrototypeVermillionChallengeMode:
 					case SpeciesIds.PrototypeArseniteChallengeMode:
 					case SpeciesIds.PrototypeIndigoChallengeMode:
-						encounter = Encounter.OldLionsCourt;
-						break;
+						return (Encounter.OldLionsCourt, mainTarget);
 					case SpeciesIds.Dagda:
-						encounter = Encounter.CosmicObservatory;
-						break;
+						return (Encounter.CosmicObservatory, mainTarget);
 					case SpeciesIds.Cerus:
-						encounter = Encounter.TempleOfFebe;
-						break;
+						return (Encounter.TempleOfFebe, mainTarget);
 					case SpeciesIds.Kela:
-						encounter = Encounter.GuardiansGlade;
-						break;
-						// Important: when adding a new encounter, make sure you also add it to the IdentifyPotentialEncounters method.
+						return (Encounter.GuardiansGlade, mainTarget);
+					// Important: when adding a new encounter, make sure you also add it to the IdentifyPotentialEncounters method.
 				}
-				state.MainTarget = boss;
-				return encounter;
 			}
 			else if (mainTarget is Gadget gadgetBoss)
 			{
@@ -307,25 +244,20 @@ public class EncounterIdentifier : IEncounterIdentifier
 				{
 					case GadgetIds.EtherealBarrier:
 					case GadgetIds.EtherealBarrierChina:
-						encounter = Encounter.SpiritRace;
-						break;
+						return (Encounter.SpiritRace, mainTarget);
 					case GadgetIds.ConjuredAmalgamate:
-						encounter = Encounter.ConjuredAmalgamate;
-						break;
+						return (Encounter.ConjuredAmalgamate, mainTarget);
 					case GadgetIds.TheDragonvoidFinal:
-						encounter = Encounter.HarvestTemple;
-						break;
+						return (Encounter.HarvestTemple, mainTarget);
 					case GadgetIds.TheDragonvoid:
-						encounter = Encounter.HarvestTemple;
-						break;
-						// Important: when adding a new encounter, make sure you also add it to the IdentifyPotentialEncounters method.
+						return (Encounter.HarvestTemple, mainTarget);
+					// Important: when adding a new encounter, make sure you also add it to the IdentifyPotentialEncounters method.
 				}
-				state.MainTarget = gadgetBoss;
-				return encounter;
 			}
 		}
 
-		return encounter;
+		// Encounter not identified, default to the first id found.
+		return (Encounter.Other, mainTargets.FirstOrDefault());
 	}
 
 	public IEnumerable<Encounter> IdentifyPotentialEncounters(ParsedBossData bossData)

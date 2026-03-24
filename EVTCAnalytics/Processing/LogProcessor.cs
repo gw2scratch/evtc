@@ -13,6 +13,7 @@ using GW2Scratch.EVTCAnalytics.Model.Skills;
 using GW2Scratch.EVTCAnalytics.Parsed;
 using GW2Scratch.EVTCAnalytics.Parsed.Enums;
 using System.Text;
+using GW2Scratch.EVTCAnalytics.GameData.Encounters;
 
 namespace GW2Scratch.EVTCAnalytics.Processing
 {
@@ -382,7 +383,10 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 
 		private void SetEncounterData(LogProcessorState state, ParsedBossData bossData)
 		{
-			var encounter = EncounterIdentifier.IdentifyEncounter(bossData.ID, state);
+			(Encounter encounter, Agent target) = EncounterIdentifier.IdentifyEncounter(bossData.ID, state.Agents, state.Events, state.Skills);
+			// We set the main target after the encounter identification to prevent mislabeling.
+			// Gadgets can sometimes roll a volatile ID that matches the log trigger ID.
+			state.MainTarget = target;
 			state.EncounterData = EncounterDataProvider.GetEncounterData(encounter, state.MainTarget, state.Agents, state.GameBuild, state.LogType);
 		}
 
@@ -1181,7 +1185,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						// This encoding is inconsistent with the health update.
 						float breakbarHealthFraction = BitConversions.ToSingle(item.Value);
 						return new DefianceBarHealthUpdateEvent(item.Time, GetAgentByAddress(item.SrcAgent), breakbarHealthFraction);
-					case StateChange.Tag_Marker:
+					case StateChange.TagMarker:
 						uint markerId = (uint) item.Value;
 						if (markerId == 0)
 						{
