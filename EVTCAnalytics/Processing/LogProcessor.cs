@@ -207,6 +207,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			state.EmotesById = new Dictionary<uint, Emote>();
 			state.OngoingEffects = new Dictionary<uint, EffectStartEvent>();
 
+			SetEncounterData(state, bossData);
+
 			var combatItemReader = reader.GetCombatItemReader(bossData, state.MainTarget, state.Agents, state.GameBuild, state.LogType, EncounterIdentifier, EncounterDataProvider);
 			ParsedCombatItem combatItem;
 			state.Events = new List<Event>();
@@ -302,8 +304,6 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				}
 			}
 			state.MastersAssigned = true;
-
-			SetEncounterData(state, bossData);
 
 			foreach (var step in state.EncounterData.ProcessingSteps)
 			{
