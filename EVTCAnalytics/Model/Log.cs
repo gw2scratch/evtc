@@ -120,7 +120,31 @@ namespace GW2Scratch.EVTCAnalytics.Model
 		/// Provides a numeric ID of the shard (server instance) the contents of the log occured in.
 		/// </summary>
 		public int? GameShardId { get; }
-		
+
+		/// <summary>
+		/// Second block of shard information.
+		/// </summary>
+		/// <remarks>
+		/// When inside an instance, upper shard should always be 0 and <see cref="GameShardId"/> is the world where the instance is.
+		/// </remarks>
+		public int? UpperShardId { get; }
+
+		/// <summary>
+		/// Provides a number ID of your home world.
+		/// </summary>
+		/// <remarks>
+		/// Deltaconnected saw two fields with the same value so he's dumping both in Id0 and Id1.
+		/// </remarks>
+		public int? UserWorldId0 { get; }
+
+		/// <summary>
+		/// Provides a number ID of your home world.
+		/// </summary>
+		/// <remarks>
+		/// Deltaconnected saw two fields with the same value so he's dumping both in Id0 and Id1.
+		/// </remarks>
+		public int? UserWorldId1 { get; }
+
 		/// <summary>
 		/// Provides a numeric ID of the map the encounter occured in.
 		/// </summary>
@@ -181,6 +205,9 @@ namespace GW2Scratch.EVTCAnalytics.Model
 			GameLanguage = state.GameLanguage;
 			GameBuild = state.GameBuild;
 			GameShardId = state.GameShardId;
+			UpperShardId = state.UpperShardId;
+			UserWorldId0 = state.UserWorldId0;
+			UserWorldId1 = state.UserWorldId1;
 			FractalScale = state.FractalScale;
 			MapId = state.MapId;
 			Events = state.Events;
@@ -204,7 +231,8 @@ namespace GW2Scratch.EVTCAnalytics.Model
 			IEnumerable<Species> species, IEnumerable<Team> teams, IEnumerable<Emote> emotes,
 			IEnumerable<LogError> errors, string arcdpsBuild,
 			IEncounterData encounterData, GameLanguage gameLanguage, string evtcVersion, LogTime startTime,
-			LogTime endTime, Player pointOfView, int? language, int? gameBuild, int? gameShardId, int? mapId,
+			LogTime endTime, Player pointOfView, int? language, int? gameBuild, 
+			int? gameShardId, int? upperShardId, int? userWorldId0, int? userWorldId1, int? mapId, 
 			InstanceStart instanceStart, int? fractalScale)
 		{
 			MainTarget = mainTarget;
@@ -218,6 +246,9 @@ namespace GW2Scratch.EVTCAnalytics.Model
 			LanguageId = language;
 			GameBuild = gameBuild;
 			GameShardId = gameShardId;
+			UpperShardId = upperShardId;
+			UserWorldId0 = userWorldId0;
+			UserWorldId1 = userWorldId1;
 			MapId = mapId;
 			InstanceStart = instanceStart;
 			FractalScale = fractalScale;
