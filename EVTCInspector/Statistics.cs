@@ -26,14 +26,18 @@ namespace GW2Scratch.EVTCInspector
 		public int? GameBuild { get; }
 		public GameLanguage GameLanguage { get; }
 		public int? GameShardId { get; }
+		public int? UpperShardId { get; }
+		public int? UserWorldId0 { get; }
+		public int? UserWorldId1 { get; }
 		public int? MapId { get; }
 		public int? FractalScale { get; }
 		public string ArcdpsBuild { get; }
 
 		public Statistics(DateTimeOffset fightStart, Player logAuthor, EncounterResult encounterResult,
 			EncounterMode encounterMode, Encounter encounter, string logVersion, TimeSpan encounterDuration,
-			int? gameBuild, GameLanguage language, int? gameShardId, int? mapId, int? fractalScale, IEnumerable<LogError> logErrors,
-			string arcDpsBuild)
+			int? gameBuild, GameLanguage language,
+			int? gameShardId, int? upperShardId, int? userWorldId0, int? userWorldId1, int? mapId,
+			int? fractalScale, IEnumerable<LogError> logErrors, string arcDpsBuild)
 		{
 			Encounter = encounter;
 			LogVersion = logVersion;
@@ -46,6 +50,9 @@ namespace GW2Scratch.EVTCInspector
 			GameBuild = gameBuild;
 			GameLanguage = language;
 			GameShardId = gameShardId;
+			UpperShardId = upperShardId;
+			UserWorldId0 = userWorldId0;
+			UserWorldId1 = userWorldId1;
 			MapId = mapId;
 			FractalScale = fractalScale;
 			ArcdpsBuild = arcDpsBuild;
