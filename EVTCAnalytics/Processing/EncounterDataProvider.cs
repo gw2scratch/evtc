@@ -508,9 +508,9 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					// 14 April 2026 update:
 					// Normal Mode:
 					// Mai Trin: 5.898.600 -> 5.308.740 HP.
-					// Echo of Scarlet: 8.898.600 -> 8.008.740 HP.
+					// Echo of Scarlet: 17.695.800 -> 15.926.220 HP.
 					// Challenge Mode:
-					// Mai Trin: 17.695.800 -> 15.926.220 HP.
+					// Mai Trin: 8.898.600-> 8.008.740 HP.
 					// Echo of Scarlet: 40.082.400 -> 36.074.160 HP.
 					return GetDefaultBuilder(encounter, mainTarget)
 						.WithResult(new AgentBuffGainedDeterminer(mainTarget, SkillIds.Determined895))
