@@ -35,6 +35,9 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 		public InstanceStart InstanceStart { get; set; }
 		public int? GameBuild { get; set; }
 		public int? GameShardId { get; set; }
+		public int? UpperShardId { get; set; }
+		public int? UserWorldId0 { get; set; }
+		public int? UserWorldId1 { get; set; }
 		public int? GameLanguageId { get; set; }
 		public int? MapId { get; set; }
 		public int? FractalScale { get; set; }

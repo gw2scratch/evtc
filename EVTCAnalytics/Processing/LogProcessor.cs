@@ -735,6 +735,9 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					return;
 				case StateChange.ShardId:
 					state.GameShardId = (int)item.SrcAgent;
+					state.UpperShardId = (int)item.DstAgent;
+					state.UserWorldId0 = item.Value;
+					state.UserWorldId1 = item.BuffDmg;
 					return;
 				case StateChange.MapId:
 					state.MapId = (int)item.SrcAgent;
