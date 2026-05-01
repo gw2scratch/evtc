@@ -243,6 +243,12 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Updates
 			                     && (log.Encounter == Encounter.Other || log.Encounter == Encounter.Decima ||
 			                         log.GameBuild >= 186019),
 				"Added support for Decima emboldened mode, Spirit Race, Guardian's Glade and VoE elite specializations."),
+			new LogUpdate(log => log.ParsingVersion < new Version(1, 15, 1, 0)
+			                     && (log.Encounter == Encounter.Other ||
+			                         (log.GameBuild >= GameBuilds.BossHpReductions && log.Encounter is Encounter.Decima
+				                         or Encounter.AetherbladeHideout or Encounter.XunlaiJadeJunkyard
+				                         or Encounter.CosmicObservatory or Encounter.Eparch)),
+				"Fixed CM detection for 2024-04-14 game update. Fixed map log detection."),
 			// When adding a new update, you need to increase the revision (last value) of the version in the .csproj file
 			// unless the version changes more significantly, in that case it can be reset to 0.
 		};

@@ -2,12 +2,13 @@
 
 This is the full changelog of the arcdps Log Manager.
 
-## Upcoming Log Manager v1.16
+## Unreleased
 
-#### New features
+## Log Manager v1.15.1
 
 #### Fixes
-- Updated Strike Missions to Raid Encounters
+- Fixed CM detection for 2026-04-14 game update
+- Renamed Strike Missions to Raid Encounters
 - Fixed Map/Instance logs failing to parse since EVTC20250315
 - Fixed incorrect main target name collision when a gadget rolled the same ID as the trigger ID
 
