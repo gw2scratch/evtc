@@ -76,5 +76,14 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		/// https://wiki.guildwars2.com/wiki/Game_updates/2026-02-03
 		/// </summary>
 		public static int GuardiansGladeRaidQuickplayRelease = 194969;
+
+		/// <summary>
+		/// Balance patch nerfs & HP reductions for everything releasaed post-EoD.
+		/// https://wiki.guildwars2.com/wiki/Game_updates/2026-04-14
+		/// </summary>
+		/// <remarks>
+		/// The HP values for The Dragonvoid gadgets on Harvest Temple have not been changed.
+		/// </remarks>
+		public static int BossHpReductions = 198816;
 	}
 }
