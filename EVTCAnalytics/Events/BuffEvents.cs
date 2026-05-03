@@ -1,5 +1,6 @@
 using GW2Scratch.EVTCAnalytics.Model.Agents;
 using GW2Scratch.EVTCAnalytics.Model.Skills;
+using GW2Scratch.EVTCAnalytics.Parsed.Enums;
 
 namespace GW2Scratch.EVTCAnalytics.Events
 {
@@ -72,25 +73,51 @@ namespace GW2Scratch.EVTCAnalytics.Events
 	/// <summary>
 	/// An event emitted when a single stack of a buff is added to an <see cref="Agent"/>.
 	/// </summary>
-	public class BuffApplyEvent(
-		long time,
-		Agent agent,
-		Skill buff,
-		Agent sourceAgent,
-		int durationApplied,
-		uint durationOfRemovedStack,
-		uint instanceId,
-		bool isStackActive)
-		: BuffEvent(time, agent, buff, sourceAgent)
+	public class BuffApplyEvent : BuffEvent
 	{
-		public int DurationApplied { get; } = durationApplied;
-		public uint DurationOfRemovedStack { get; } = durationOfRemovedStack;
-		public uint StackId { get; } = instanceId;
-		public bool IsStackActive { get; } = isStackActive;
+		public int DurationApplied { get; }
+		public uint DurationOfRemovedStack { get; }
+		public uint StackId { get; }
+		public bool IsStackActive { get; }
+		public uint TrackableId { get; }
+
+		// Constructor 1
+		public BuffApplyEvent(
+			long time,
+			Agent agent,
+			Skill buff,
+			Agent sourceAgent,
+			int durationApplied,
+			uint durationOfRemovedStack,
+			uint instanceId,
+			bool isStackActive)
+			: base(time, agent, buff, sourceAgent)
+		{
+			DurationApplied = durationApplied;
+			DurationOfRemovedStack = durationOfRemovedStack;
+			StackId = instanceId;
+			IsStackActive = isStackActive;
+		}
+
+		// Constructor 2
+		public BuffApplyEvent(
+			long time,
+			Agent targetAgent,
+			Skill buff,
+			Agent sourceAgent,
+			int durationApplied,
+			bool isActive,
+			uint trackableId)
+			: base(time, targetAgent, buff, sourceAgent)
+		{
+			DurationApplied = durationApplied;
+			IsStackActive = isActive;
+			TrackableId = trackableId;
+		}
 	}
-	
+
 	/// <summary>
-	/// An event emitted when a single stack of a buff is added to an <see cref="Agent"/>.
+	/// An event emitted when a single stack of a buff is extended to an <see cref="Agent"/>.
 	/// </summary>
 	public class BuffExtensionEvent(
 		long time,
@@ -129,5 +156,57 @@ namespace GW2Scratch.EVTCAnalytics.Events
 	{
 		public uint StackId { get; } = stackId;
 		public int Duration { get; } = duration;
+	}
+
+	/// <summary>
+	/// An event emitted when a single stack of a buff is extended to an <see cref="Agent"/>.
+	/// </summary>
+	public class BuffChangeEvent(
+		long time,
+		Agent agent,
+		Skill buff,
+		Agent sourceAgent,
+		int durationDifference,
+		uint newDuration,
+		uint trackableId)
+		: BuffEvent(time, agent, buff, sourceAgent)
+	{
+		public int DurationDifference { get; } = durationDifference;
+		public uint NewDuration { get; } = newDuration;
+		public uint TrackableId { get; } = trackableId;
+	}
+
+	public class BuffRemoveSingleEvent(
+		long time,
+		Agent removeTarget,
+		Skill buff,
+		Agent removeSource,
+		int durationRemoved,
+		BuffRemove buffRemove,
+		uint trackableId
+		) : BuffEvent(time, removeSource, buff, removeTarget)
+	{
+		public Agent RemoveTarget { get; } = removeTarget;
+		public Agent RemoveSource { get; } = removeSource;
+		public int DurationRemoved { get; } = durationRemoved;
+		public BuffRemove BuffRemove { get; } = buffRemove;
+		public uint TrackableId { get; } = trackableId;
+	}
+
+	public class BuffRemoveAllEvent(
+		long time,
+		Agent removeTarget,
+		Skill buff,
+		Agent removeSource,
+		int durationRemoved,
+		int durationRemovedIntensity,
+		BuffRemove buffRemove
+	) : BuffEvent(time, removeSource, buff, removeTarget)
+	{
+		public Agent RemoveTarget { get; } = removeTarget;
+		public Agent RemoveSource { get; } = removeSource;
+		public int DurationRemoved { get; } = durationRemoved;
+		public int DurationRemovedIntensity { get; } = durationRemovedIntensity;
+		public BuffRemove BuffRemove { get; } = buffRemove;
 	}
 }
