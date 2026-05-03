@@ -471,4 +471,27 @@ namespace GW2Scratch.EVTCAnalytics.Events
 		/// </summary>
 		public int RemainingDuration { get; } = duration;
 	}
+
+	public class AgentTransformation(long time, Agent agent) : AgentEvent(time, agent)
+	{
+
+	}
+
+	/// <summary>
+	/// Agent tranformation (chair, tonic, mounts, etc.).
+	/// </summary>
+	/// <param name="id">Transformation id, 0 if untransformed</param>
+	/// <remarks>Introduced in EVTC20260507</remarks>
+	public class AgentTransformationEvent(long time, Agent agent, uint id) : AgentTransformation(time, agent)
+	{
+		public uint TransformationID { get; } = id;
+	}
+
+	/// <summary>
+	/// Agent transforming back to the normal character model.
+	/// </summary>
+	public class AgentTransformationRemoveEvent(long time, Agent agent, uint id) : AgentTransformation(time, agent)
+	{
+		public uint TransformationID { get; } = id;
+	}
 }

@@ -62,6 +62,9 @@ namespace GW2Scratch.EVTCInspector
 		// Processed emotes
 		private readonly FilterCollection<Emote> emotes = new FilterCollection<Emote>();
 
+		// Processed transformations
+		private readonly FilterCollection<Transformation> transformations = new FilterCollection<Transformation>();
+
 		// Statistics
 		private readonly PropertyGrid statisticsPropertyGrid = new PropertyGrid();
 
@@ -113,11 +116,13 @@ namespace GW2Scratch.EVTCInspector
 			var grid3 = new GridView<Species>();
 			var grid4 = new GridView<Team>();
 			var grid5 = new GridView<Emote>();
+			var grid6 = new GridView<Transformation>();
 			processedTabControl.Pages.Add(new TabPage(ConstructContentLocalGridView<Effect>(grid1, effects)) { Text = "Effects" });
 			processedTabControl.Pages.Add(new TabPage(ConstructContentLocalGridView<Marker>(grid2, markers)) { Text = "Markers" });
 			processedTabControl.Pages.Add(new TabPage(ConstructContentLocalGridView<Species>(grid3, species)) { Text = "Species" });
 			processedTabControl.Pages.Add(new TabPage(ConstructContentLocalGridView<Team>(grid4, teams)) { Text = "Teams" });
 			processedTabControl.Pages.Add(new TabPage(ConstructContentLocalGridView<Emote>(grid5, emotes)) { Text = "Emotes" });
+			processedTabControl.Pages.Add(new TabPage(ConstructContentLocalGridView<Transformation>(grid6, transformations)) { Text = "Transformations" });
 
 			var statisticsLayout = new DynamicLayout();
 			statisticsLayout.Add(statisticsPropertyGrid);
@@ -302,6 +307,8 @@ namespace GW2Scratch.EVTCInspector
 					teams.AddRange(processedLog.Teams);
 					emotes.Clear();
 					emotes.AddRange(processedLog.Emotes);
+					transformations.Clear();
+					transformations.AddRange(processedLog.Transformations);
 				});
 			}
 			catch (Exception ex)

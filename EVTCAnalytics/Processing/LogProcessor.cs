@@ -83,6 +83,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			state.SpeciesById = new Dictionary<uint, Species>();
 			state.TeamsById = new Dictionary<uint, Team>();
 			state.EmotesById = new Dictionary<uint, Emote>();
+			state.TransformationsById = new Dictionary<uint, Transformation>();
 			state.Errors = new List<LogError>();
 			state.OngoingEffects = new Dictionary<uint, EffectStartEvent>();
 			foreach (var agent in state.Agents)
@@ -205,6 +206,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			state.SpeciesById = new Dictionary<uint, Species>();
 			state.TeamsById = new Dictionary<uint, Team>();
 			state.EmotesById = new Dictionary<uint, Emote>();
+			state.TransformationsById = new Dictionary<uint, Transformation>();
 			state.OngoingEffects = new Dictionary<uint, EffectStartEvent>();
 
 			SetEncounterData(state, bossData);
@@ -935,6 +937,27 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 							BitConverter.GetBytes(item.DstAgent).CopyTo(guid, 8);
 						}
 						return;
+						// Transformation
+						case 6:
+						{
+							// Id 0 is transformation back to the player character model, no GUID.
+							if (item.SkillId == 0)
+							{
+								return;
+							}
+
+							if (!state.TransformationsById.TryGetValue(item.SkillId, out var transformation))
+							{
+								transformation = new Transformation(item.SkillId);
+								state.TransformationsById[item.SkillId] = transformation;
+							}
+
+							var guid = new byte[16];
+							transformation.ContentGuid = guid;
+							BitConverter.GetBytes(item.SrcAgent).CopyTo(guid, 0);
+							BitConverter.GetBytes(item.DstAgent).CopyTo(guid, 8);
+						}
+						return;
 					}
 					return;
 				case StateChange.Error:
@@ -1655,6 +1678,99 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					{
 						return new MapChangeEvent(item.Time, item.SrcAgent, item.DstAgent);
 					}
+					case StateChange.EarlyExit:
+					{
+						// Internal use.
+						return new UnknownEvent(item.Time, item);
+					}
+					case StateChange.AnimationStart:
+					{
+						// src_agent: agent beginning animation
+						// dst_agent: target agent if applicable
+						// value: ms duration until minimum of last significant trigger point and tooltip time
+						// buff_dmg: ms duration when control is returned to agent
+						// overstack_value: reference content id (emote id if CSK_EMOTE)
+						// skillid: skill id
+						// result: activation start source (debug)
+
+						return new AnimationStartEvent(item.Time, GetAgentByAddress(item.SrcAgent), GetAgentByAddress(item.DstAgent), item.Value, item.BuffDmg, item.OverstackValue, GetSkillById(item.SkillId), (AnimationStart)item.Result);
+					}
+					case StateChange.AnimationEnd:
+					{
+						// src_agent: agent beginning animation
+						// value: ms duration spent in animation scaled for speed
+						// buff_dmg: ms duration spent in animation not scaled
+						// skillid: skill id of previous animation start
+						// is_activation: simple progress check from cbtanimation
+						// result: activation stop source (debug)
+
+						return new AnimationEndEvent(item.Time, GetAgentByAddress(item.SrcAgent), item.Value, item.BuffDmg, item.IsActivation, (AnimationStop)item.Result, GetSkillById(item.SkillId));
+					}
+					case StateChange.BuffApply:
+					{
+						// src_agent: agent applying the stack
+						// dst_agent: agent the stack was applied to
+						// value: ms duration applied
+						// skillid: buff skill id
+						// is_shields: non-zero if buff is active when applied
+						// pad61: (uint32_t*)&pad61 is uint32[1], trackable id
+
+						return new BuffApplyEvent(item.Time, GetAgentByAddress(item.SrcAgent), GetSkillById(item.SkillId), GetAgentByAddress(item.DstAgent), item.Value, item.IsShields != 0, item.Padding);
+					}
+					case StateChange.BuffChange:
+					{
+						// dst_agent: relates to agent
+						// value: duration difference
+						// skillid: buff skill id
+						// overstack_value: new ms duration
+						// pad61: (uint32_t*)&pad61 is uint32[1], trackable id
+						return new BuffChangeEvent(item.Time, GetAgentByAddress(item.DstAgent), GetSkillById(item.SkillId), GetAgentByAddress(item.SrcAgent), item.Value, item.OverstackValue, item.Padding);
+					}
+					case StateChange.BuffRemoveSingle:
+					{
+						// src_agent: agent with buff removed
+						// dst_agent: agent removing the buff
+						// value: ms duration removed
+						// skillid: buff skill id
+						// is_buffremove: of enum cbtbuffremove
+						// pad61: (uint32_t*)&pad61 is uint32[1], trackable id
+
+						return new BuffRemoveSingleEvent(item.Time, GetAgentByAddress(item.SrcAgent), GetSkillById(item.SkillId), GetAgentByAddress(item.DstAgent), item.Value, item.IsBuffRemove, item.Padding);
+					}
+					case StateChange.BuffRemoveAll:
+					{
+						// src_agent: agent with buffs removed
+						// dst_agent: agent removing the buffs
+						// value: ms duration removed calculated as duration
+						// buff_dmg: ms duration removed calculated as intensity
+						// skillid: buff skill id
+						// is_buffremove: of enum cbtbuffremove
+
+						return new BuffRemoveAllEvent(item.Time, GetAgentByAddress(item.SrcAgent), GetSkillById(item.SkillId), GetAgentByAddress(item.DstAgent), item.Value, item.BuffDmg, item.IsBuffRemove);
+					}
+					case StateChange.Transformation:
+					{
+						// src_agent: related to agent
+						// skillid: transformation id (0 if untransform)
+
+						if (!state.TransformationsById.TryGetValue(item.SkillId, out Transformation transformation))
+						{
+							if (item.SkillId != 0)
+							{
+								transformation = new Transformation(item.SkillId);
+								state.TransformationsById[item.SkillId] = transformation;
+							}
+						}
+
+						if (item.SkillId != 0)
+						{
+							return new AgentTransformationEvent(item.Time, GetAgentByAddress(item.SrcAgent), item.SkillId);
+						}
+						else
+						{
+							return new AgentTransformationRemoveEvent(item.Time, GetAgentByAddress(item.SrcAgent), item.SkillId);
+						}
+					}
 					default:
 						return new UnknownEvent(item.Time, item);
 				}
@@ -1663,10 +1779,10 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			{
 				switch (item.IsActivation)
 				{
-					case Activation.CancelCancel:
+					case Activation.Cancel:
 						return new EndSkillCastEvent(item.Time, GetAgentByAddress(item.SrcAgent),
 							GetSkillById(item.SkillId), item.Value, EndSkillCastEvent.SkillEndType.Cancel);
-					case Activation.CancelFire:
+					case Activation.Minimim:
 						return new EndSkillCastEvent(item.Time, GetAgentByAddress(item.SrcAgent),
 							GetSkillById(item.SkillId), item.Value, EndSkillCastEvent.SkillEndType.Fire);
 					case Activation.Normal:
