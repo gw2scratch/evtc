@@ -940,13 +940,22 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						// Transformation
 						case 6:
 						{
+							// Id 0 is transformation back to the player character model, no GUID.
+							if (item.SkillId == 0)
+							{
+								return;
+							}
+
 							if (!state.TransformationsById.TryGetValue(item.SkillId, out var transformation))
 							{
-								var guid = new byte[16];
-								transformation.ContentGuid = guid;
-								BitConverter.GetBytes(item.SrcAgent).CopyTo(guid, 0);
-								BitConverter.GetBytes(item.DstAgent).CopyTo(guid, 8);
+								transformation = new Transformation(item.SkillId);
+								state.TransformationsById[item.SkillId] = transformation;
 							}
+
+							var guid = new byte[16];
+							transformation.ContentGuid = guid;
+							BitConverter.GetBytes(item.SrcAgent).CopyTo(guid, 0);
+							BitConverter.GetBytes(item.DstAgent).CopyTo(guid, 8);
 						}
 						return;
 					}
@@ -1746,8 +1755,11 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 
 						if (!state.TransformationsById.TryGetValue(item.SkillId, out Transformation transformation))
 						{
-							transformation = new Transformation(item.SkillId);
-							state.TransformationsById[item.SkillId] = transformation;
+							if (item.SkillId != 0)
+							{
+								transformation = new Transformation(item.SkillId);
+								state.TransformationsById[item.SkillId] = transformation;
+							}
 						}
 
 						if (item.SkillId != 0)
