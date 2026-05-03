@@ -1741,7 +1741,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					}
 					case StateChange.Transformation:
 					{
-						// // src_agent: related to agent
+						// src_agent: related to agent
 						// skillid: transformation id (0 if untransform)
 
 						if (!state.TransformationsById.TryGetValue(item.SkillId, out Transformation transformation))

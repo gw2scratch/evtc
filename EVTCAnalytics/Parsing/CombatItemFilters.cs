@@ -247,7 +247,9 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(AgentGliderOpenEvent)) return [StateChange.Glider];
 		if (eventType == typeof(AgentGliderCloseEvent)) return [StateChange.Glider];
 		if (eventType == typeof(AgentStunBreakEvent)) return [StateChange.StunBreak];
+		if (eventType == typeof(AgentTransformation)) return [];
 		if (eventType == typeof(AgentTransformationEvent)) return [StateChange.Transformation];
+		if (eventType == typeof(AgentTransformationRemoveEvent)) return [StateChange.Transformation];
 
 		if (eventType == typeof(MissileEvent)) return [];
 		if (eventType == typeof(MissileCreateEvent)) return [StateChange.MissileCreate];
@@ -351,7 +353,9 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(AgentGliderOpenEvent)) return false;
 		if (eventType == typeof(AgentGliderCloseEvent)) return false;
 		if (eventType == typeof(AgentStunBreakEvent)) return false;
+		if (eventType == typeof(AgentTransformation)) return false;
 		if (eventType == typeof(AgentTransformationEvent)) return false;
+		if (eventType == typeof(AgentTransformationRemoveEvent)) return false;
 
 		if (eventType == typeof(MissileEvent)) return false;
 		if (eventType == typeof(MissileCreateEvent)) return false;
@@ -453,7 +457,9 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(AgentGliderOpenEvent)) return false;
 		if (eventType == typeof(AgentGliderCloseEvent)) return false;
 		if (eventType == typeof(AgentStunBreakEvent)) return false;
+		if (eventType == typeof(AgentTransformation)) return false;
 		if (eventType == typeof(AgentTransformationEvent)) return false;
+		if (eventType == typeof(AgentTransformationRemoveEvent)) return false;
 
 		if (eventType == typeof(MissileEvent)) return false;
 		if (eventType == typeof(MissileCreateEvent)) return false;
@@ -555,7 +561,9 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(AgentGliderOpenEvent)) return [];
 		if (eventType == typeof(AgentGliderCloseEvent)) return [];
 		if (eventType == typeof(AgentStunBreakEvent)) return [];
+		if (eventType == typeof(AgentTransformation)) return [];
 		if (eventType == typeof(AgentTransformationEvent)) return [];
+		if (eventType == typeof(AgentTransformationRemoveEvent)) return [];
 
 		if (eventType == typeof(MissileEvent)) return [];
 		if (eventType == typeof(MissileCreateEvent)) return [];
