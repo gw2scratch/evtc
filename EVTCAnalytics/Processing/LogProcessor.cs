@@ -60,6 +60,8 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 		/// </summary>
 		public bool IgnoreUnknownEvents { get; set; } = true;
 
+		private int _evtcVersion = 0;
+
 		/// <summary>
 		/// Turn raw log data into easy-to-use objects.
 		/// </summary>
@@ -74,6 +76,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 		{
 			var state = new LogProcessorState();
 			state.EvtcVersion = log.LogVersion.BuildVersion;
+			_evtcVersion = int.Parse(log.LogVersion.BuildVersion.TrimStart("EVTC"));
 
 			state.Agents = GetAgents(log).ToList();
 			state.AgentsByAddress = new Dictionary<ulong, Agent>();
@@ -687,7 +690,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 		{
 			switch (item.IsStateChange)
 			{
-				case StateChange.LogStart when state.LogStartTime != null && Int32.Parse(state.EvtcVersion.Remove(0, 4)) < 20250315 && state.LogType != LogType.Map:
+				case StateChange.LogStart when state.LogStartTime != null && _evtcVersion < ArcdpsBuilds.LogStartLogEndPerCombatSequenceOnInstanceLogs && state.LogType != LogType.Map:
 					throw new LogProcessingException("Multiple log start combat items found");
 				case StateChange.LogStart:
 				{
@@ -703,7 +706,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					// This is an erroneous extra log end without any data,
 					// we ignore it. Happened in every log with EVTC20200506.
 					return;
-				case StateChange.LogEnd when state.LogEndTime != null && Int32.Parse(state.EvtcVersion.Remove(0, 4)) < 20250315 && state.LogType != LogType.Map:
+				case StateChange.LogEnd when state.LogEndTime != null && _evtcVersion < ArcdpsBuilds.LogStartLogEndPerCombatSequenceOnInstanceLogs && state.LogType != LogType.Map:
 					throw new LogProcessingException("Multiple log end combat items found");
 				case StateChange.LogEnd:
 				{
@@ -784,7 +787,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				{
 					if (state.SkillsById.TryGetValue(item.SkillId, out var skill))
 					{
-						bool isResistanceAvailable = string.Compare(state.EvtcVersion, "EVTC20200428", StringComparison.OrdinalIgnoreCase) >= 0;
+						bool isResistanceAvailable = _evtcVersion >= ArcdpsBuilds.ResistanceAvailable;
 						
 						Span<byte> padding = stackalloc byte[4];
 						BitConverter.TryWriteBytes(padding, item.Padding);
@@ -858,13 +861,16 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 							if (state.EffectsById.TryGetValue(item.SkillId, out var effect))
 							{
 								// Values from arcdps versions before 20220709 are wrong.
-								var guid = new byte[16];
-								effect.ContentGuid = guid;
-								BitConverter.GetBytes(item.SrcAgent).CopyTo(guid, 0);
-								BitConverter.GetBytes(item.DstAgent).CopyTo(guid, 8);
+								if (_evtcVersion >= ArcdpsBuilds.FunctionalIDToGUIDEvents)
+								{
+									var guid = new byte[16];
+									effect.ContentGuid = guid;
+									BitConverter.GetBytes(item.SrcAgent).CopyTo(guid, 0);
+									BitConverter.GetBytes(item.DstAgent).CopyTo(guid, 8);
 
-								var duration = BitConversions.ToSingle(item.BuffDmg);
-								effect.DefaultDuration = duration;
+									var duration = BitConversions.ToSingle(item.BuffDmg);
+									effect.DefaultDuration = duration;
+								}
 							}
 						}
 						return;
@@ -1055,9 +1061,9 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				return newSkill;
 			}
 			
-			bool isOldWeaponSetAvailable = string.Compare(state.EvtcVersion, "EVTC20240627", StringComparison.OrdinalIgnoreCase) >= 0;
-			bool isCommanderAvailable = string.Compare(state.EvtcVersion, "EVTC20220823", StringComparison.OrdinalIgnoreCase) >= 0;
-			bool isOldTeamAvailable = string.Compare(state.EvtcVersion, "EVTC20240612", StringComparison.OrdinalIgnoreCase) >= 0;
+			bool isOldWeaponSetAvailable = _evtcVersion >= ArcdpsBuilds.WeaponSwapValueIsPrevious_CrowdControlEvents_GliderEvents;
+			bool isCommanderAvailable = _evtcVersion >= ArcdpsBuilds.CommanderTagAvailable;
+			bool isOldTeamAvailable = _evtcVersion >= ArcdpsBuilds.TeamChangeOnDespawn;
 
 			if (item.IsStateChange != StateChange.Normal)
 			{
