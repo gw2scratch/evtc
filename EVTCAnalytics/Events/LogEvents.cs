@@ -131,4 +131,20 @@ namespace GW2Scratch.EVTCAnalytics.Events
 		/// </summary>
 		public RulesetBit Ruleset { get; } = ruleset;
 	}
+
+	public class WvWTeamsEvent(long time,
+		uint redShardID,
+		uint blueShardID,
+		uint greenShardID,
+		uint redTeamID,
+		uint blueTeamID,
+		uint greenTeamID) : Event(time)
+	{
+		public uint RedShardID { get; } = redShardID;
+		public uint BlueShardID { get; } = blueShardID;
+		public uint GreenShardID { get; } = greenShardID;
+		public uint RedTeamID { get; } = redTeamID;
+		public uint BlueTeamID { get; } = blueTeamID;
+		public uint GreenTeamID { get; } = greenTeamID;
+	}
 }

@@ -1,10 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using GW2Scratch.EVTCAnalytics.Events;
 using GW2Scratch.EVTCAnalytics.Exceptions;
 using GW2Scratch.EVTCAnalytics.GameData;
+using GW2Scratch.EVTCAnalytics.GameData.Encounters;
 using GW2Scratch.EVTCAnalytics.IO;
 using GW2Scratch.EVTCAnalytics.Model;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
@@ -12,8 +9,11 @@ using GW2Scratch.EVTCAnalytics.Model.Effects;
 using GW2Scratch.EVTCAnalytics.Model.Skills;
 using GW2Scratch.EVTCAnalytics.Parsed;
 using GW2Scratch.EVTCAnalytics.Parsed.Enums;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Text;
-using GW2Scratch.EVTCAnalytics.GameData.Encounters;
 
 namespace GW2Scratch.EVTCAnalytics.Processing
 {
@@ -1770,6 +1770,32 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						{
 							return new AgentTransformationRemoveEvent(item.Time, GetAgentByAddress(item.SrcAgent), item.SkillId);
 						}
+					}
+					case StateChange.WvWTeam:
+					{
+						// uint32_t* teams = (uint32_t*)&ev->src_agent;
+						// teams[0] = redshard->ShardId();
+						// teams[1] = blueshard->ShardId();
+						// teams[2] = greenshard->ShardId();
+						// teams[3] = redteamid;
+						// teams[4] = blueteamid;
+						// teams[5] = greenteamid;
+
+						Span<byte> wvwTeamBytes = stackalloc byte[6 * sizeof(uint)];
+						
+						BitConverter.GetBytes(item.SrcAgent).CopyTo(wvwTeamBytes[0..8]);
+						BitConverter.GetBytes(item.DstAgent).CopyTo(wvwTeamBytes[8..16]);
+						BitConverter.GetBytes(item.Value).CopyTo(wvwTeamBytes[16..20]);
+						BitConverter.GetBytes(item.BuffDmg).CopyTo(wvwTeamBytes[20..24]);
+
+						uint redShardID = BitConverter.ToUInt32(wvwTeamBytes[0..4]);
+						uint blueShardID = BitConverter.ToUInt32(wvwTeamBytes[4..8]);
+						uint greenShardID = BitConverter.ToUInt32(wvwTeamBytes[8..12]);
+						uint redTeamID = BitConverter.ToUInt32(wvwTeamBytes[12..16]);
+						uint blueTeamID = BitConverter.ToUInt32(wvwTeamBytes[16..20]);
+						uint greenTeamID = BitConverter.ToUInt32(wvwTeamBytes[20..24]);
+
+						return new WvWTeamsEvent(item.Time, redShardID, blueShardID, greenShardID, redTeamID, blueTeamID, greenTeamID);
 					}
 					default:
 						return new UnknownEvent(item.Time, item);

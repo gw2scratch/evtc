@@ -79,5 +79,6 @@
 		BuffRemoveSingle = 71, // Added 20260507
 		BuffRemoveAll = 72, // Added 20260507
 		Transformation = 73, // Added 20260507
+		WvWTeam = 74, // Added 20260507
 	};
 }
