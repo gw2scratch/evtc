@@ -132,6 +132,12 @@ namespace GW2Scratch.EVTCAnalytics.Events
 		public RulesetBit Ruleset { get; } = ruleset;
 	}
 
+	/// <summary>
+	/// WvW team shard and color IDs.
+	/// </summary>
+	/// <remarks>
+	/// Added in EVTCEVTC20260505. The Team ID will be 0 if there aren't players present from that team in the log.
+	/// </remarks>
 	public class WvWTeamsEvent(long time,
 		uint redShardID,
 		uint blueShardID,

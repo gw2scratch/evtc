@@ -72,13 +72,13 @@
 		IIDChange = 64,
 		MapChange = 65,
 		EarlyExit = 66, // Added 20260507, internal use
-		AnimationStart = 67, // Added 20260507
-		AnimationEnd = 68, // Added 20260507
-		BuffApply = 69, // Added 20260507
-		BuffChange = 70, // Added 20260507
-		BuffRemoveSingle = 71, // Added 20260507
-		BuffRemoveAll = 72, // Added 20260507
-		Transformation = 73, // Added 20260507
-		WvWTeam = 74, // Added 20260507
+		AnimationStart = 67, // Added 20260430
+		AnimationEnd = 68, // Added 20260430
+		BuffApply = 69, // Added 20260501
+		BuffChange = 70, // Added 20260501
+		BuffRemoveSingle = 71, // Added 20260501
+		BuffRemoveAll = 72, // Added 20260501
+		Transformation = 73, // Added 20260502
+		WvWTeam = 74, // Added 20260505
 	};
 }

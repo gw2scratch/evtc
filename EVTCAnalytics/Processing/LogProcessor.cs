@@ -60,6 +60,9 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 		/// </summary>
 		public bool IgnoreUnknownEvents { get; set; } = true;
 
+		/// <summary>
+		/// The Arcdps version without the "EVTC" prefix.
+		/// </summary>
 		private int _evtcVersion = 0;
 
 		/// <summary>
@@ -1814,7 +1817,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					case Activation.Cancel:
 						return new EndSkillCastEvent(item.Time, GetAgentByAddress(item.SrcAgent),
 							GetSkillById(item.SkillId), item.Value, EndSkillCastEvent.SkillEndType.Cancel);
-					case Activation.Minimim:
+					case Activation.Minimum:
 						return new EndSkillCastEvent(item.Time, GetAgentByAddress(item.SrcAgent),
 							GetSkillById(item.SkillId), item.Value, EndSkillCastEvent.SkillEndType.Fire);
 					case Activation.Normal:
