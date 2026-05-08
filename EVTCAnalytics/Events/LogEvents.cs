@@ -138,13 +138,15 @@ namespace GW2Scratch.EVTCAnalytics.Events
 	/// <remarks>
 	/// Added in EVTCEVTC20260505. The Team ID will be 0 if there aren't players present from that team in the log.
 	/// </remarks>
-	public class WvWTeamsEvent(long time,
+	public class WvWTeamsEvent(
+		long time,
 		uint redShardID,
 		uint blueShardID,
 		uint greenShardID,
 		uint redTeamID,
 		uint blueTeamID,
-		uint greenTeamID) : Event(time)
+		uint greenTeamID
+		) : Event(time)
 	{
 		public uint RedShardID { get; } = redShardID;
 		public uint BlueShardID { get; } = blueShardID;
@@ -152,5 +154,25 @@ namespace GW2Scratch.EVTCAnalytics.Events
 		public uint RedTeamID { get; } = redTeamID;
 		public uint BlueTeamID { get; } = blueTeamID;
 		public uint GreenTeamID { get; } = greenTeamID;
+	}
+
+	/// <summary>
+	/// WvW objective status (ownership).
+	/// </summary>
+	/// <remarks>
+	/// Added in EVTCEVTC20260507.
+	/// </remarks>
+	public class WvWObjectiveStatusEvent(
+		long time,
+		int mapId,
+		int teamId,
+		int objectiveId,
+		byte objectiveType
+		) : Event(time)
+	{
+		public int MapId { get; } = mapId;
+		public int ObjectiveId { get; } = objectiveId;
+		public int TeamId { get; } = teamId;
+		public byte ObjectiveType { get; } = objectiveType;
 	}
 }

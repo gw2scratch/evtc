@@ -1782,7 +1782,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					}
 					case StateChange.WvWTeam:
 					{
-						// uint32_t* teams = (uint32_t*)&ev->src_agent;
+						// src_agent: (uint32_t*)&src_agent is uint32[6], redshard id, blueshard id, greenshard id, redteam id, blueteam id, greenteam id
 						// teams[0] = redshard->ShardId();
 						// teams[1] = blueshard->ShardId();
 						// teams[2] = greenshard->ShardId();
@@ -1805,6 +1805,15 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						uint greenTeamID = BitConverter.ToUInt32(wvwTeamBytes[20..24]);
 
 						return new WvWTeamsEvent(item.Time, redShardID, blueShardID, greenShardID, redTeamID, blueTeamID, greenTeamID);
+					}
+					case StateChange.WvWObjectiveStatus:
+					{
+						// value: map id
+						// buff_dmg: team id
+						// skillid: objective id
+						// buff: objective type
+
+						return new WvWObjectiveStatusEvent(item.Time, item.Value, item.BuffDmg, (int)item.SkillId, item.Buff);
 					}
 					default:
 						return new UnknownEvent(item.Time, item);

@@ -80,5 +80,6 @@
 		BuffRemoveAll = 72, // Added 20260501
 		Transformation = 73, // Added 20260502
 		WvWTeam = 74, // Added 20260505
+		WvWObjectiveStatus = 75, // Added 20260507
 	};
 }

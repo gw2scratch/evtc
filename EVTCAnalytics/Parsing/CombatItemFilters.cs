@@ -290,6 +290,7 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(IIDChangeEvent)) return [StateChange.IIDChange];
 		if (eventType == typeof(MapChangeEvent)) return [StateChange.MapChange];
 		if (eventType == typeof(WvWTeamsEvent)) return [StateChange.WvWTeam];
+		if (eventType == typeof(WvWObjectiveStatusEvent)) return [StateChange.WvWObjectiveStatus];
 
 		if (eventType == typeof(CrowdControlEvent)) return [];
 
@@ -399,6 +400,7 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(IIDChangeEvent)) return false;
 		if (eventType == typeof(MapChangeEvent)) return false;
 		if (eventType == typeof(WvWTeamsEvent)) return false;
+		if (eventType == typeof(WvWObjectiveStatusEvent)) return false;
 
 		if (eventType == typeof(SkillCastEvent)) return false;
 		if (eventType == typeof(EndSkillCastEvent)) return false;
@@ -504,6 +506,7 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(IIDChangeEvent)) return false;
 		if (eventType == typeof(MapChangeEvent)) return false;
 		if (eventType == typeof(WvWTeamsEvent)) return false;
+		if (eventType == typeof(WvWObjectiveStatusEvent)) return false;
 
 		if (eventType == typeof(SkillCastEvent)) return false;
 		if (eventType == typeof(EndSkillCastEvent)) return true;
@@ -609,6 +612,7 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(IIDChangeEvent)) return [];
 		if (eventType == typeof(MapChangeEvent)) return [];
 		if (eventType == typeof(WvWTeamsEvent)) return [];
+		if (eventType == typeof(WvWObjectiveStatusEvent)) return [];
 
 		if (eventType == typeof(SkillCastEvent)) return [];
 		if (eventType == typeof(EndSkillCastEvent)) return [];
@@ -721,6 +725,7 @@ public class CombatItemFilters : ICombatItemFilters
 			StateChange.BuffRemoveAll => false,
 			StateChange.Transformation => false,
 			StateChange.WvWTeam => false,
+			StateChange.WvWObjectiveStatus => false,
 			_ => throw new ArgumentOutOfRangeException(nameof(stateChange), stateChange, null)
 		};
 	}
