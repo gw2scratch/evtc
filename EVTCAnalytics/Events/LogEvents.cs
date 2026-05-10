@@ -167,12 +167,14 @@ namespace GW2Scratch.EVTCAnalytics.Events
 		int mapId,
 		int teamId,
 		int objectiveId,
-		byte objectiveType
+		byte objectiveType,
+		uint upgradeProgress
 		) : Event(time)
 	{
 		public int MapId { get; } = mapId;
 		public int ObjectiveId { get; } = objectiveId;
 		public int TeamId { get; } = teamId;
 		public byte ObjectiveType { get; } = objectiveType;
+		public uint UpgradeProgress { get; } = upgradeProgress;
 	}
 }

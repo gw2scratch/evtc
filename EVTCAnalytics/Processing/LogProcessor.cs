@@ -1812,8 +1812,9 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						// buff_dmg: team id
 						// skillid: objective id
 						// buff: objective type
+						// pad61: (uint32_t*)&pad61 is uint32[1], upgrade progress count
 
-						return new WvWObjectiveStatusEvent(item.Time, item.Value, item.BuffDmg, (int)item.SkillId, item.Buff);
+						return new WvWObjectiveStatusEvent(item.Time, item.Value, item.BuffDmg, (int)item.SkillId, item.Buff, item.Padding);
 					}
 					default:
 						return new UnknownEvent(item.Time, item);
