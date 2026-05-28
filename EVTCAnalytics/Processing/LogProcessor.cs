@@ -1816,6 +1816,14 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 
 						return new WvWObjectiveStatusEvent(item.Time, item.Value, item.BuffDmg, (int)item.SkillId, item.Buff, item.Padding);
 					}
+					case StateChange.StealthChange:
+					{
+						// agent stealth state. 0 false, 1 true, 2 unsupported
+						// src_agent: relates to agent
+						// dst_agent: new stealth state (characters only)
+
+						return new AgentStealthChangeEvent(item.Time, GetAgentByAddress(item.SrcAgent), item.DstAgent);
+					}
 					default:
 						return new UnknownEvent(item.Time, item);
 				}

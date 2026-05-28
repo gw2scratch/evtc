@@ -250,6 +250,7 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(AgentTransformation)) return [];
 		if (eventType == typeof(AgentTransformationEvent)) return [StateChange.Transformation];
 		if (eventType == typeof(AgentTransformationRemoveEvent)) return [StateChange.Transformation];
+		if (eventType == typeof(AgentStealthChangeEvent)) return [StateChange.StealthChange];
 
 		if (eventType == typeof(MissileEvent)) return [];
 		if (eventType == typeof(MissileCreateEvent)) return [StateChange.MissileCreate];
@@ -358,6 +359,7 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(AgentTransformation)) return false;
 		if (eventType == typeof(AgentTransformationEvent)) return false;
 		if (eventType == typeof(AgentTransformationRemoveEvent)) return false;
+		if (eventType == typeof(AgentStealthChangeEvent)) return false;
 
 		if (eventType == typeof(MissileEvent)) return false;
 		if (eventType == typeof(MissileCreateEvent)) return false;
@@ -464,6 +466,7 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(AgentTransformation)) return false;
 		if (eventType == typeof(AgentTransformationEvent)) return false;
 		if (eventType == typeof(AgentTransformationRemoveEvent)) return false;
+		if (eventType == typeof(AgentStealthChangeEvent)) return false;
 
 		if (eventType == typeof(MissileEvent)) return false;
 		if (eventType == typeof(MissileCreateEvent)) return false;
@@ -570,6 +573,7 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(AgentTransformation)) return [];
 		if (eventType == typeof(AgentTransformationEvent)) return [];
 		if (eventType == typeof(AgentTransformationRemoveEvent)) return [];
+		if (eventType == typeof(AgentStealthChangeEvent)) return [];
 
 		if (eventType == typeof(MissileEvent)) return [];
 		if (eventType == typeof(MissileCreateEvent)) return [];
@@ -726,6 +730,7 @@ public class CombatItemFilters : ICombatItemFilters
 			StateChange.Transformation => false,
 			StateChange.WvWTeam => false,
 			StateChange.WvWObjectiveStatus => false,
+			StateChange.StealthChange => false,
 			_ => throw new ArgumentOutOfRangeException(nameof(stateChange), stateChange, null)
 		};
 	}

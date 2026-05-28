@@ -3,6 +3,7 @@ using GW2Scratch.EVTCAnalytics.Model;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
 using GW2Scratch.EVTCAnalytics.Model.Effects;
 using GW2Scratch.EVTCAnalytics.Model.Skills;
+using GW2Scratch.EVTCAnalytics.Parsed.Enums;
 
 namespace GW2Scratch.EVTCAnalytics.Events
 {
@@ -493,5 +494,10 @@ namespace GW2Scratch.EVTCAnalytics.Events
 	public class AgentTransformationRemoveEvent(long time, Agent agent, uint id) : AgentTransformation(time, agent)
 	{
 		public uint TransformationID { get; } = id;
+	}
+
+	public class AgentStealthChangeEvent(long time, Agent agent, ulong state) : AgentEvent(time, agent)
+	{
+		public StealthState State { get; } = (StealthState)state;
 	}
 }
