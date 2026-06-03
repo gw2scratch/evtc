@@ -44,14 +44,14 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes
 			if (Math.Abs(this.remaining1 - this.remaining2) < RemainingTimePrecision * 2)
 			{
 				throw new ArgumentException("Ambiguous buff remaining times." +
-				                            "For some values both modes would be a possible result." +
-				                            $"Make sure {nameof(remaining1)} and {nameof(remaining2)} are not " +
-				                            $"within {2*RemainingTimePrecision} of each other",
+											"For some values both modes would be a possible result." +
+											$"Make sure {nameof(remaining1)} and {nameof(remaining2)} are not " +
+											$"within {2 * RemainingTimePrecision} of each other",
 					nameof(this.remaining1));
 			}
 		}
 
-		public IReadOnlyList<Type> RequiredEventTypes { get; } = new List<Type> { typeof(ManualStackRemovedBuffEvent), typeof(BuffApplyEvent) };
+		public IReadOnlyList<Type> RequiredEventTypes { get; } = new List<Type> { typeof(ManualStackRemovedBuffEvent), typeof(BuffApplyEvent), typeof(BuffRemoveSingleEvent) };
 		public IReadOnlyList<uint> RequiredBuffSkillIds => new List<uint> { buffId };
 		public IReadOnlyList<PhysicalDamageEvent.Result> RequiredPhysicalDamageEventResults { get; } = new List<PhysicalDamageEvent.Result>();
 
@@ -65,20 +65,11 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes
 			{
 				if (buffEvent is ManualStackRemovedBuffEvent remove)
 				{
-					if (mode != null)
-					{
-						// We have already identified a mode, now we are only looking for a buff application.
-						continue;
-					}
-
-					if (Math.Abs(remove.RemainingDuration - remaining1) < RemainingTimePrecision)
-					{
-						mode = mode1;
-					}
-					else if (Math.Abs(remove.RemainingDuration - remaining2) < RemainingTimePrecision)
-					{
-						mode = mode2;
-					}
+					mode = CheckDuration(mode, remove.RemainingDuration);
+				}
+				else if (buffEvent is BuffRemoveSingleEvent removeNew)
+				{
+					mode = CheckDuration(mode, removeNew.DurationRemoved);
 				}
 				else if (buffEvent is BuffApplyEvent)
 				{
@@ -103,6 +94,26 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes
 			{
 				return null;
 			}
+		}
+
+		private EncounterMode? CheckDuration(EncounterMode? mode, int duration)
+		{
+			if (mode != null)
+			{
+				// We have already identified a mode, now we are only looking for a buff application.
+				return mode;
+			}
+
+			if (Math.Abs(duration - remaining1) < RemainingTimePrecision)
+			{
+				return mode1;
+			}
+			else if (Math.Abs(duration - remaining2) < RemainingTimePrecision)
+			{
+				return mode2;
+			}
+
+			return mode;
 		}
 	}
 }

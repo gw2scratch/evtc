@@ -31,7 +31,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 			this.timeSpan = timeSpan;
 		}
 
-		public override IReadOnlyList<Type> RequiredEventTypes { get; } = new List<Type> { typeof(SkillCastEvent), typeof(BuffApplyEvent) };
+		public override IReadOnlyList<Type> RequiredEventTypes { get; } = new List<Type> { typeof(SkillCastEvent), typeof(BuffApplyEvent), typeof(AnimationStartEvent) };
 		public override IReadOnlyList<uint> RequiredBuffSkillIds => new List<uint> { buffId };
 		public override IReadOnlyList<PhysicalDamageEvent.Result> RequiredPhysicalDamageEventResults { get; } = new List<PhysicalDamageEvent.Result>();
 
@@ -84,6 +84,14 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results
 						return skillCast;
 					}
 					SaveEvent(skillCastsByAgent, skillCast);
+				}
+				else if (e is AnimationStartEvent animationStart && agentSelector(animationStart.Agent) && animationStart.Skill.Id == skillId)
+				{
+					if (IsEventEligible(buffAppliesByAgent, animationStart))
+					{
+						return animationStart;
+					}
+					SaveEvent(skillCastsByAgent, animationStart);
 				}
 			}
 

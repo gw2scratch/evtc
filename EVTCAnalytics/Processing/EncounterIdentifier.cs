@@ -169,7 +169,7 @@ public class EncounterIdentifier : IEncounterIdentifier
 									determinedPreDark = true;
 								}
 
-								if (ev is SkillCastEvent { Skill.Id: SkillIds.AiDarkEarlySkill })
+								if (ev is SkillCastEvent || ev is AnimationStartEvent { Skill.Id: SkillIds.AiDarkEarlySkill })
 								{
 									inDark = true;
 									break;

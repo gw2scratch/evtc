@@ -102,9 +102,9 @@ namespace GW2Scratch.EVTCAnalytics.Events
 		// Constructor 2
 		public BuffApplyEvent(
 			long time,
-			Agent targetAgent,
-			Skill buff,
 			Agent sourceAgent,
+			Skill buff,
+			Agent targetAgent,
 			int durationApplied,
 			bool isActive,
 			uint trackableId)
