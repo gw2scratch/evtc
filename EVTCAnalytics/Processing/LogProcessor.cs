@@ -1721,18 +1721,36 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						// dst_agent: agent the stack was applied to
 						// value: ms duration applied
 						// skillid: buff skill id
+						// iff: is friend foe of enum iff
+						// is_ninety: src is above 90% health
+						// is_fifty: dst is below 50% health
+						// is_moving: bit0 set if src is moving, bit1 set if dst is moving
+						// is_flanking: src is flanking dst
 						// is_shields: non-zero if buff is active when applied
 						// pad61: (uint32_t*)&pad61 is uint32[1], trackable id
 
-						return new BuffApplyEvent(item.Time, GetAgentByAddress(item.SrcAgent), GetSkillById(item.SkillId), GetAgentByAddress(item.DstAgent), item.Value, item.IsShields != 0, item.Padding);
+						Agent source = GetAgentByAddress(item.SrcAgent);
+						Agent target = GetAgentByAddress(item.DstAgent);
+						int durationApplied = item.Value;
+						Skill skill = GetSkillById(item.SkillId);
+						FriendOrFoe iff = item.Iff;
+						bool isNinety = item.IsNinety > 0;
+						bool isFifty = item.IsFifty > 0;
+						Moving moving = (Moving)item.IsMoving;
+						bool isFlanking = item.IsFlanking > 0;
+						bool isActive = item.IsShields != 0;
+						uint trackableId = item.Padding;
+
+						return new BuffApplyEvent(item.Time, source, skill, target, durationApplied, iff, isNinety, isFifty, moving, isFlanking, isActive, trackableId);
 					}
 					case StateChange.BuffChange:
 					{
 						// dst_agent: relates to agent
 						// value: duration difference
-						// skillid: buff skill id
 						// overstack_value: new ms duration
+						// skillid: buff skill id
 						// pad61: (uint32_t*)&pad61 is uint32[1], trackable id
+
 						return new BuffChangeEvent(item.Time, GetAgentByAddress(item.DstAgent), GetSkillById(item.SkillId), GetAgentByAddress(item.SrcAgent), item.Value, item.OverstackValue, item.Padding);
 					}
 					case StateChange.BuffRemoveSingle:
@@ -1741,10 +1759,26 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						// dst_agent: agent removing the buff
 						// value: ms duration removed
 						// skillid: buff skill id
+						// iff: is friend foe of enum iff
 						// is_buffremove: of enum cbtbuffremove
+						// is_ninety: src is above 90% health
+						// is_fifty: dst is below 50% health
+						// is_moving: bit0 set if src is moving, bit1 set if dst is moving
+						// is_flanking: src is flanking dst
 						// pad61: (uint32_t*)&pad61 is uint32[1], trackable id
 
-						return new BuffRemoveSingleEvent(item.Time, GetAgentByAddress(item.SrcAgent), GetSkillById(item.SkillId), GetAgentByAddress(item.DstAgent), item.Value, item.IsBuffRemove, item.Padding);
+						Agent removalTarget = GetAgentByAddress(item.SrcAgent);
+						Agent removalSource = GetAgentByAddress(item.DstAgent);
+						int removedDuration = item.Value;
+						Skill skill = GetSkillById(item.SkillId);
+						BuffRemove buffRemove = item.IsBuffRemove;
+						bool isNinety = item.IsNinety > 0;
+						bool isFifty = item.IsFifty > 0;
+						Moving moving = (Moving) item.IsMoving;
+						bool isFlanking = item.IsFlanking > 0;
+						uint trackableId = item.Padding;
+
+						return new BuffRemoveSingleEvent(item.Time, removalTarget, skill, removalSource, removedDuration, buffRemove, isNinety, isFifty, moving, isFlanking, trackableId);
 					}
 					case StateChange.BuffRemoveAll:
 					{
@@ -1753,9 +1787,25 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						// value: ms duration removed calculated as duration
 						// buff_dmg: ms duration removed calculated as intensity
 						// skillid: buff skill id
+						// iff: is friend foe of enum iff
 						// is_buffremove: of enum cbtbuffremove
+						// is_ninety: src is above 90% health
+						// is_fifty: dst is below 50% health
+						// is_moving: bit0 set if src is moving, bit1 set if dst is moving
+						// is_flanking: src is flanking dst
 
-						return new BuffRemoveAllEvent(item.Time, GetAgentByAddress(item.SrcAgent), GetSkillById(item.SkillId), GetAgentByAddress(item.DstAgent), item.Value, item.BuffDmg, item.IsBuffRemove);
+						Agent removalTarget = GetAgentByAddress(item.SrcAgent);
+						Agent removalSource = GetAgentByAddress(item.DstAgent);
+						int removedDuration = item.Value;
+						int removedIntensity = item.BuffDmg;
+						Skill skill = GetSkillById(item.SkillId);
+						BuffRemove buffRemove = item.IsBuffRemove;
+						bool isNinety = item.IsNinety > 0;
+						bool isFifty = item.IsFifty > 0;
+						Moving moving = (Moving) item.IsMoving;
+						bool isFlanking = item.IsFlanking > 0;
+
+						return new BuffRemoveAllEvent(item.Time, removalTarget, skill, removalSource, removedDuration, removedIntensity, buffRemove, isNinety, isFifty, moving, isFlanking);
 					}
 					case StateChange.Transformation:
 					{

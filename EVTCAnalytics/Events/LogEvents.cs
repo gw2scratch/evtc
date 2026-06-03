@@ -171,10 +171,25 @@ namespace GW2Scratch.EVTCAnalytics.Events
 		uint upgradeProgress
 		) : Event(time)
 	{
+		/// <summary>
+		/// WvW map ID.
+		/// </summary>
 		public int MapId { get; } = mapId;
+		/// <summary>
+		/// Structure objective ID.
+		/// </summary>
 		public int ObjectiveId { get; } = objectiveId;
+		/// <summary>
+		/// Team ID of the objective.
+		/// </summary>
 		public int TeamId { get; } = teamId;
+		/// <summary>
+		/// Type of the objective.
+		/// </summary>
 		public byte ObjectiveType { get; } = objectiveType;
+		/// <summary>
+		/// Tier upgrade progress.
+		/// </summary>
 		public uint UpgradeProgress { get; } = upgradeProgress;
 	}
 }

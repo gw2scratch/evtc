@@ -80,8 +80,13 @@ namespace GW2Scratch.EVTCAnalytics.Events
 		public uint StackId { get; }
 		public bool IsStackActive { get; }
 		public uint TrackableId { get; }
+		public FriendOrFoe Iff { get; }
+		public bool IsNinety { get; }
+		public bool IsFifty { get; }
+		public Moving Moving { get; }
+		public bool IsFlanking { get; }
 
-		// Constructor 1
+		// Old constructor
 		public BuffApplyEvent(
 			long time,
 			Agent agent,
@@ -99,18 +104,28 @@ namespace GW2Scratch.EVTCAnalytics.Events
 			IsStackActive = isStackActive;
 		}
 
-		// Constructor 2
+		// New constructor since EVTC20260501
 		public BuffApplyEvent(
 			long time,
 			Agent sourceAgent,
 			Skill buff,
 			Agent targetAgent,
 			int durationApplied,
+			FriendOrFoe iff,
+			bool isNinety,
+			bool isFifty,
+			Moving moving,
+			bool isFlanking,
 			bool isActive,
 			uint trackableId)
 			: base(time, targetAgent, buff, sourceAgent)
 		{
 			DurationApplied = durationApplied;
+			Iff = iff;
+			IsNinety = isNinety;
+			IsFifty = isFifty;
+			Moving = moving;
+			IsFlanking = isFlanking;
 			IsStackActive = isActive;
 			TrackableId = trackableId;
 		}
@@ -176,6 +191,9 @@ namespace GW2Scratch.EVTCAnalytics.Events
 		public uint TrackableId { get; } = trackableId;
 	}
 
+	/// <summary>
+	/// Event when a single stack of a buff is removed from an <see cref="Agent"/>.
+	/// </summary>
 	public class BuffRemoveSingleEvent(
 		long time,
 		Agent removeTarget,
@@ -183,16 +201,25 @@ namespace GW2Scratch.EVTCAnalytics.Events
 		Agent removeSource,
 		int durationRemoved,
 		BuffRemove buffRemove,
+		bool isNinety,
+		bool isFifty,
+		Moving moving,
+		bool isFlanking,
 		uint trackableId
-		) : BuffEvent(time, removeSource, buff, removeTarget)
+		) : BuffEvent(time, removeTarget, buff, removeSource)
 	{
-		public Agent RemoveTarget { get; } = removeTarget;
-		public Agent RemoveSource { get; } = removeSource;
 		public int DurationRemoved { get; } = durationRemoved;
 		public BuffRemove BuffRemove { get; } = buffRemove;
+		public bool IsNinety { get; } = isNinety;
+		public bool IsFifty { get; } = isFifty;
+		public Moving Moving { get; } = moving;
+		public bool IsFlanking { get; } = isFlanking;
 		public uint TrackableId { get; } = trackableId;
 	}
 
+	/// <summary>
+	/// Event when all the stacks of a buff are removed from an <see cref="Agent"/>.
+	/// </summary>
 	public class BuffRemoveAllEvent(
 		long time,
 		Agent removeTarget,
@@ -200,13 +227,19 @@ namespace GW2Scratch.EVTCAnalytics.Events
 		Agent removeSource,
 		int durationRemoved,
 		int durationRemovedIntensity,
-		BuffRemove buffRemove
-	) : BuffEvent(time, removeSource, buff, removeTarget)
+		BuffRemove buffRemove,
+		bool isNinety,
+		bool isFifty,
+		Moving moving,
+		bool isFlanking
+	) : BuffEvent(time, removeTarget, buff, removeSource)
 	{
-		public Agent RemoveTarget { get; } = removeTarget;
-		public Agent RemoveSource { get; } = removeSource;
 		public int DurationRemoved { get; } = durationRemoved;
 		public int DurationRemovedIntensity { get; } = durationRemovedIntensity;
 		public BuffRemove BuffRemove { get; } = buffRemove;
+		public bool IsNinety { get; } = isNinety;
+		public bool IsFifty { get; } = isFifty;
+		public Moving Moving { get; } = moving;
+		public bool IsFlanking { get; } = isFlanking;
 	}
 }

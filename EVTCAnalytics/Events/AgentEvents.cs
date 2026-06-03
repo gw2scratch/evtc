@@ -473,6 +473,9 @@ namespace GW2Scratch.EVTCAnalytics.Events
 		public int RemainingDuration { get; } = duration;
 	}
 
+	/// <summary>
+	/// Agent transformation wrapper.
+	/// </summary>
 	public class AgentTransformation(long time, Agent agent) : AgentEvent(time, agent)
 	{
 
@@ -485,6 +488,9 @@ namespace GW2Scratch.EVTCAnalytics.Events
 	/// <remarks>Introduced in EVTC20260507</remarks>
 	public class AgentTransformationEvent(long time, Agent agent, uint id) : AgentTransformation(time, agent)
 	{
+		/// <summary>
+		/// Trackable ID of the transformation.
+		/// </summary>
 		public uint TransformationID { get; } = id;
 	}
 
@@ -493,6 +499,9 @@ namespace GW2Scratch.EVTCAnalytics.Events
 	/// </summary>
 	public class AgentTransformationRemoveEvent(long time, Agent agent, uint id) : AgentTransformation(time, agent)
 	{
+		/// <summary>
+		/// Trackable ID of the transformation.
+		/// </summary>
 		public uint TransformationID { get; } = id;
 	}
 
@@ -501,6 +510,9 @@ namespace GW2Scratch.EVTCAnalytics.Events
 	/// </summary>
 	public class AgentStealthChangeEvent(long time, Agent agent, ulong state) : AgentEvent(time, agent)
 	{
+		/// <summary>
+		/// Visibility state of the agent.
+		/// </summary>
 		public VisibilityState State { get; } = (VisibilityState)state;
 	}
 
@@ -517,6 +529,9 @@ namespace GW2Scratch.EVTCAnalytics.Events
 	/// </summary>
 	public class AgentGadgetNameEvent(long time, Agent agent, ulong state) : AgentEvent(time, agent)
 	{
+		/// <summary>
+		/// Visibility state of the gadget name.
+		/// </summary>
 		public VisibilityState State { get; } = (VisibilityState) state;
 	}
 }
