@@ -33,6 +33,13 @@ This is the full changelog of the arcdps Log Manager.
 - Added GadgetAnimation events
 - Added GadgetName events
 - Added Transformation GUIDs via CONTENTLOCAL_TRANSFORMATION
+- Updated Activation and Result enums for Skills
+- Updated BuffRemove enum for Buffs
+- Updated FriendOrFoe enum
+- Added AnimationStart, AnimationEnd, Moving and VisibilityState enums for related events
+
+#### Log Manager notes
+- Fixed Statistics/Specializations tab not displaying VoE elite specializations count
 
 ## Log Manager v1.15.1
 
