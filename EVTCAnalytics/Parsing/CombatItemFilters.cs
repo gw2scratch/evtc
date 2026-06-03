@@ -729,7 +729,7 @@ public class CombatItemFilters : ICombatItemFilters
 			StateChange.IIDChange => false,
 			StateChange.MapChange => false,
 			StateChange.EarlyExit => false,
-			StateChange.AnimationStart => false,
+			StateChange.AnimationStart => true,
 			StateChange.AnimationEnd => false,
 			StateChange.BuffApply => true,
 			StateChange.BuffChange => false,
