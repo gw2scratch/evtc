@@ -4,6 +4,36 @@ This is the full changelog of the arcdps Log Manager.
 
 ## Unreleased
 
+#### Fixes
+- Fixed parsing for the following encounters since EVTC20260430:
+- - Aetherblade Hideout (NM & CM)
+- - Guardian Glade (NM & CM)
+- - Harvest Temple (NM & CM)
+- - Eparch
+- - Kanaxai
+- - Skorvald (when invulnerable)
+- - Light Ai
+- - Dark Ai
+- - Both Phases Ai
+- - Freezie
+- Fixed incorrect encounter detection for Dark Ai since EVTC20260430
+
+#### EVTC Inspector notes
+- Added EarlyExit events
+- Added AnimationStart events
+- Added AnimationEnd events
+- Added BuffApply events
+- Added BuffChange events
+- Added BuffRemoveSingle events
+- Added BuffRemoveAll events
+- Added Transformation events
+- Added WvWTeam events
+- Added WvWObjectiveStatus events
+- Added StealthChange events
+- Added GadgetAnimation events
+- Added GadgetName events
+- Added Transformation GUIDs via CONTENTLOCAL_TRANSFORMATION
+
 ## Log Manager v1.15.1
 
 #### Fixes
