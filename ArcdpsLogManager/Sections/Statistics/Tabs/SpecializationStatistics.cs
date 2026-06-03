@@ -67,7 +67,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections.Statistics.Tabs
 										Add(coreImage);
 										Add(coreCountLabels[profession.Profession]);
 
-										foreach (var specialization in new[] {profession.HoT, profession.PoF, profession.EoD})
+										foreach (var specialization in new[] {profession.HoT, profession.PoF, profession.EoD, profession.VoE})
 										{
 											eliteCountLabels[specialization] = new Label {Text = "Unknown", Width = 60};
 											var image = new ImageView
