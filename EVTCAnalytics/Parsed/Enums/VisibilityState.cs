@@ -1,9 +1,9 @@
 ﻿namespace GW2Scratch.EVTCAnalytics.Parsed.Enums
 {
-	public enum StealthState : byte
+	public enum VisibilityState : byte
 	{
-		NotStealthed = 0,
-		Stealthed = 1,
+		False = 0,
+		True = 1,
 		Unsupported = 2,
 
 		Unknown

@@ -1824,6 +1824,22 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 
 						return new AgentStealthChangeEvent(item.Time, GetAgentByAddress(item.SrcAgent), item.DstAgent);
 					}
+					case StateChange.GadgetAnimation:
+					{
+						// play model animation
+						// src_agent: relates to agent
+						// dst_agent: token
+
+						return new AgentGadgetAnimationEvent(item.Time, GetAgentByAddress(item.SrcAgent), item.DstAgent);
+					}
+					case StateChange.GadgetName:
+					{
+						// gadget name visibility state. 0 false, 1 true, 2 unsupported
+						// src_agent: relates to agent
+						// dst_agent: new state (gadgets only)
+
+						return new AgentGadgetNameEvent(item.Time, GetAgentByAddress(item.SrcAgent), item.DstAgent);
+					}
 					default:
 						return new UnknownEvent(item.Time, item);
 				}

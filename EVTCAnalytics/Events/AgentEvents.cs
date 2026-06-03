@@ -496,8 +496,27 @@ namespace GW2Scratch.EVTCAnalytics.Events
 		public uint TransformationID { get; } = id;
 	}
 
+	/// <summary>
+	/// Agent visibility state change.
+	/// </summary>
 	public class AgentStealthChangeEvent(long time, Agent agent, ulong state) : AgentEvent(time, agent)
 	{
-		public StealthState State { get; } = (StealthState)state;
+		public VisibilityState State { get; } = (VisibilityState)state;
+	}
+
+	/// <summary>
+	/// Player model animation.
+	/// </summary>
+	public class AgentGadgetAnimationEvent(long time, Agent agent, ulong token) : AgentEvent(time, agent)
+	{
+		public ulong Token { get; } = token;
+	}
+
+	/// <summary>
+	/// Gadget name visibility state change.
+	/// </summary>
+	public class AgentGadgetNameEvent(long time, Agent agent, ulong state) : AgentEvent(time, agent)
+	{
+		public VisibilityState State { get; } = (VisibilityState) state;
 	}
 }

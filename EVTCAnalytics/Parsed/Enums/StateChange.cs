@@ -82,5 +82,7 @@
 		WvWTeam = 74, // Added 20260505
 		WvWObjectiveStatus = 75, // Added 20260507
 		StealthChange = 76, // Added 20260527
+		GadgetAnimation = 77,
+		GadgetName = 78,
 	};
 }
