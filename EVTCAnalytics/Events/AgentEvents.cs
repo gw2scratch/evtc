@@ -508,6 +508,9 @@ namespace GW2Scratch.EVTCAnalytics.Events
 	/// <summary>
 	/// Agent visibility state change.
 	/// </summary>
+	/// <remarks>
+	/// Introduced in 20260527
+	/// </remarks>
 	public class AgentStealthChangeEvent(long time, Agent agent, ulong state) : AgentEvent(time, agent)
 	{
 		/// <summary>
@@ -519,6 +522,9 @@ namespace GW2Scratch.EVTCAnalytics.Events
 	/// <summary>
 	/// Player model animation.
 	/// </summary>
+	/// <remarks>
+	/// Introduced in 20260530
+	/// </remarks>
 	public class AgentGadgetAnimationEvent(long time, Agent agent, ulong token) : AgentEvent(time, agent)
 	{
 		public ulong Token { get; } = token;
@@ -527,6 +533,9 @@ namespace GW2Scratch.EVTCAnalytics.Events
 	/// <summary>
 	/// Gadget name visibility state change.
 	/// </summary>
+	/// <remarks>
+	/// Introduced in 20260530
+	/// </remarks>
 	public class AgentGadgetNameEvent(long time, Agent agent, ulong state) : AgentEvent(time, agent)
 	{
 		/// <summary>
