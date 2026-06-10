@@ -257,13 +257,14 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(MissileEvent)) return [];
 		if (eventType == typeof(MissileCreateEvent)) return [StateChange.MissileCreate];
 		if (eventType == typeof(MissileLaunchEvent)) return [StateChange.MissileLaunch];
-		if (eventType == typeof(MissileRemoveEvent)) return [StateChange.MissileRemove];
+		if (eventType == typeof(MissileRemoveEvent)) return [StateChange.MissileRemove];		
 
 		if (eventType == typeof(SplitEffectEvent)) return [];
 		if (eventType == typeof(EffectGroundCreateEvent)) return [StateChange.EffectGroundCreate];
 		if (eventType == typeof(EffectGroundRemoveEvent)) return [StateChange.EffectGroundRemove];
 		if (eventType == typeof(EffectAgentCreateEvent)) return [StateChange.EffectAgentCreate];
 		if (eventType == typeof(EffectAgentRemoveEvent)) return [StateChange.EffectAgentRemove];
+		if (eventType == typeof(MissileEffectEvent)) return [StateChange.MissileEffect];
 
 		if (eventType == typeof(BuffEvent)) return [];
 		if (eventType == typeof(BuffRemoveEvent)) return [];
@@ -309,6 +310,11 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(SquadGroundMarkerEvent)) return [];
 		if (eventType == typeof(SquadGroundMarkerPlaceEvent)) return [StateChange.SquadMarker];
 		if (eventType == typeof(SquadGroundMarkerRemoveEvent)) return [StateChange.SquadMarker];
+
+		if (eventType == typeof(GadgetCaptureEvent)) return [];
+		if (eventType == typeof(GadgetCaptureOutlineShowEvent)) return [StateChange.GadgetCaptureOutlineShow];
+		if (eventType == typeof(GadgetCaptureSplitPercentEvent)) return [StateChange.GadgetCaptureSplitPercent];
+		if (eventType == typeof(GadgetCaptureOutlineHideEvent)) return [StateChange.GadgetCaptureOutlineHide];
 
 		// The unknown event can come from any state change, including not yet implemented ones,
 		// so we need to return all of them.
@@ -375,6 +381,7 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(EffectGroundRemoveEvent)) return false;
 		if (eventType == typeof(EffectAgentCreateEvent)) return false;
 		if (eventType == typeof(EffectAgentRemoveEvent)) return false;
+		if (eventType == typeof(MissileEffectEvent)) return false;
 
 		if (eventType == typeof(BuffEvent)) return false;
 		if (eventType == typeof(BuffRemoveEvent)) return false;
@@ -420,6 +427,11 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(SquadGroundMarkerEvent)) return false;
 		if (eventType == typeof(SquadGroundMarkerPlaceEvent)) return false;
 		if (eventType == typeof(SquadGroundMarkerRemoveEvent)) return false;
+
+		if (eventType == typeof(GadgetCaptureEvent)) return false;
+		if (eventType == typeof(GadgetCaptureOutlineShowEvent)) return false;
+		if (eventType == typeof(GadgetCaptureSplitPercentEvent)) return false;
+		if (eventType == typeof(GadgetCaptureOutlineHideEvent)) return false;
 
 		// The unknown event can come from anything
 		if (eventType == typeof(UnknownEvent)) return true;
@@ -484,6 +496,7 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(EffectGroundRemoveEvent)) return false;
 		if (eventType == typeof(EffectAgentCreateEvent)) return false;
 		if (eventType == typeof(EffectAgentRemoveEvent)) return false;
+		if (eventType == typeof(MissileEffectEvent)) return false;
 
 		if (eventType == typeof(BuffEvent)) return false;
 		if (eventType == typeof(BuffRemoveEvent)) return false;
@@ -529,6 +542,11 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(SquadGroundMarkerEvent)) return false;
 		if (eventType == typeof(SquadGroundMarkerPlaceEvent)) return false;
 		if (eventType == typeof(SquadGroundMarkerRemoveEvent)) return false;
+
+		if (eventType == typeof(GadgetCaptureEvent)) return false;
+		if (eventType == typeof(GadgetCaptureOutlineShowEvent)) return false;
+		if (eventType == typeof(GadgetCaptureSplitPercentEvent)) return false;
+		if (eventType == typeof(GadgetCaptureOutlineHideEvent)) return false;
 
 		// The unknown event can come from anything
 		if (eventType == typeof(UnknownEvent)) return true;
@@ -593,6 +611,7 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(EffectGroundRemoveEvent)) return [];
 		if (eventType == typeof(EffectAgentCreateEvent)) return [];
 		if (eventType == typeof(EffectAgentRemoveEvent)) return [];
+		if (eventType == typeof(MissileEffectEvent)) return [];
 
 		if (eventType == typeof(BuffEvent)) return [];
 		if (eventType == typeof(BuffRemoveEvent)) return [];
@@ -638,6 +657,11 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(SquadGroundMarkerEvent)) return [];
 		if (eventType == typeof(SquadGroundMarkerPlaceEvent)) return [];
 		if (eventType == typeof(SquadGroundMarkerRemoveEvent)) return [];
+
+		if (eventType == typeof(GadgetCaptureEvent)) return [];
+		if (eventType == typeof(GadgetCaptureOutlineShowEvent)) return [];
+		if (eventType == typeof(GadgetCaptureSplitPercentEvent)) return [];
+		if (eventType == typeof(GadgetCaptureOutlineHideEvent)) return [];
 
 		// The unknown event can come from any result, including not yet implemented ones,
 		// so we need to return all of them.
@@ -741,6 +765,10 @@ public class CombatItemFilters : ICombatItemFilters
 			StateChange.StealthChange => false,
 			StateChange.GadgetAnimation => false,
 			StateChange.GadgetName => false,
+			StateChange.MissileEffect => false,
+			StateChange.GadgetCaptureOutlineShow => false,
+			StateChange.GadgetCaptureSplitPercent => false,
+			StateChange.GadgetCaptureOutlineHide => false,
 			_ => throw new ArgumentOutOfRangeException(nameof(stateChange), stateChange, null)
 		};
 	}

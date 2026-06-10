@@ -84,5 +84,9 @@
 		StealthChange = 76, // Added 20260527
 		GadgetAnimation = 77, // Added 20260530
 		GadgetName = 78, // Added 20260530
+		MissileEffect = 79, // Added 20260610
+		GadgetCaptureOutlineShow = 80, // Added 20260610
+		GadgetCaptureSplitPercent = 81, // Added 20260610
+		GadgetCaptureOutlineHide = 82, // Added 20260610
 	};
 }
