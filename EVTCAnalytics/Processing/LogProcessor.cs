@@ -1,10 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using GW2Scratch.EVTCAnalytics.Events;
 using GW2Scratch.EVTCAnalytics.Exceptions;
 using GW2Scratch.EVTCAnalytics.GameData;
+using GW2Scratch.EVTCAnalytics.GameData.Encounters;
 using GW2Scratch.EVTCAnalytics.IO;
 using GW2Scratch.EVTCAnalytics.Model;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
@@ -12,8 +9,11 @@ using GW2Scratch.EVTCAnalytics.Model.Effects;
 using GW2Scratch.EVTCAnalytics.Model.Skills;
 using GW2Scratch.EVTCAnalytics.Parsed;
 using GW2Scratch.EVTCAnalytics.Parsed.Enums;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Text;
-using GW2Scratch.EVTCAnalytics.GameData.Encounters;
 
 namespace GW2Scratch.EVTCAnalytics.Processing
 {
@@ -61,6 +61,11 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 		public bool IgnoreUnknownEvents { get; set; } = true;
 
 		/// <summary>
+		/// The Arcdps version without the "EVTC" prefix.
+		/// </summary>
+		private int _evtcVersion = 0;
+
+		/// <summary>
 		/// Turn raw log data into easy-to-use objects.
 		/// </summary>
 		/// <remarks>
@@ -74,6 +79,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 		{
 			var state = new LogProcessorState();
 			state.EvtcVersion = log.LogVersion.BuildVersion;
+			_evtcVersion = int.Parse(log.LogVersion.BuildVersion.TrimStart("EVTC"));
 
 			state.Agents = GetAgents(log).ToList();
 			state.AgentsByAddress = new Dictionary<ulong, Agent>();
@@ -83,6 +89,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			state.SpeciesById = new Dictionary<uint, Species>();
 			state.TeamsById = new Dictionary<uint, Team>();
 			state.EmotesById = new Dictionary<uint, Emote>();
+			state.TransformationsById = new Dictionary<uint, Transformation>();
 			state.Errors = new List<LogError>();
 			state.OngoingEffects = new Dictionary<uint, EffectStartEvent>();
 			foreach (var agent in state.Agents)
@@ -205,6 +212,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			state.SpeciesById = new Dictionary<uint, Species>();
 			state.TeamsById = new Dictionary<uint, Team>();
 			state.EmotesById = new Dictionary<uint, Emote>();
+			state.TransformationsById = new Dictionary<uint, Transformation>();
 			state.OngoingEffects = new Dictionary<uint, EffectStartEvent>();
 
 			SetEncounterData(state, bossData);
@@ -685,7 +693,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 		{
 			switch (item.IsStateChange)
 			{
-				case StateChange.LogStart when state.LogStartTime != null && Int32.Parse(state.EvtcVersion.Remove(0, 4)) < 20250315 && state.LogType != LogType.Map:
+				case StateChange.LogStart when state.LogStartTime != null && _evtcVersion < ArcdpsBuilds.LogStartLogEndPerCombatSequenceOnInstanceLogs && state.LogType != LogType.Map:
 					throw new LogProcessingException("Multiple log start combat items found");
 				case StateChange.LogStart:
 				{
@@ -701,7 +709,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					// This is an erroneous extra log end without any data,
 					// we ignore it. Happened in every log with EVTC20200506.
 					return;
-				case StateChange.LogEnd when state.LogEndTime != null && Int32.Parse(state.EvtcVersion.Remove(0, 4)) < 20250315 && state.LogType != LogType.Map:
+				case StateChange.LogEnd when state.LogEndTime != null && _evtcVersion < ArcdpsBuilds.LogStartLogEndPerCombatSequenceOnInstanceLogs && state.LogType != LogType.Map:
 					throw new LogProcessingException("Multiple log end combat items found");
 				case StateChange.LogEnd:
 				{
@@ -782,7 +790,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				{
 					if (state.SkillsById.TryGetValue(item.SkillId, out var skill))
 					{
-						bool isResistanceAvailable = string.Compare(state.EvtcVersion, "EVTC20200428", StringComparison.OrdinalIgnoreCase) >= 0;
+						bool isResistanceAvailable = _evtcVersion >= ArcdpsBuilds.ResistanceAvailable;
 						
 						Span<byte> padding = stackalloc byte[4];
 						BitConverter.TryWriteBytes(padding, item.Padding);
@@ -856,13 +864,16 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 							if (state.EffectsById.TryGetValue(item.SkillId, out var effect))
 							{
 								// Values from arcdps versions before 20220709 are wrong.
-								var guid = new byte[16];
-								effect.ContentGuid = guid;
-								BitConverter.GetBytes(item.SrcAgent).CopyTo(guid, 0);
-								BitConverter.GetBytes(item.DstAgent).CopyTo(guid, 8);
+								if (_evtcVersion >= ArcdpsBuilds.FunctionalIDToGUIDEvents)
+								{
+									var guid = new byte[16];
+									effect.ContentGuid = guid;
+									BitConverter.GetBytes(item.SrcAgent).CopyTo(guid, 0);
+									BitConverter.GetBytes(item.DstAgent).CopyTo(guid, 8);
 
-								var duration = BitConversions.ToSingle(item.BuffDmg);
-								effect.DefaultDuration = duration;
+									var duration = BitConversions.ToSingle(item.BuffDmg);
+									effect.DefaultDuration = duration;
+								}
 							}
 						}
 						return;
@@ -931,6 +942,27 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 
 							var guid = new byte[16];
 							emote.ContentGuid = guid;
+							BitConverter.GetBytes(item.SrcAgent).CopyTo(guid, 0);
+							BitConverter.GetBytes(item.DstAgent).CopyTo(guid, 8);
+						}
+						return;
+						// Transformation
+						case 6:
+						{
+							// Id 0 is transformation back to the player character model, no GUID.
+							if (item.SkillId == 0)
+							{
+								return;
+							}
+
+							if (!state.TransformationsById.TryGetValue(item.SkillId, out var transformation))
+							{
+								transformation = new Transformation(item.SkillId);
+								state.TransformationsById[item.SkillId] = transformation;
+							}
+
+							var guid = new byte[16];
+							transformation.ContentGuid = guid;
 							BitConverter.GetBytes(item.SrcAgent).CopyTo(guid, 0);
 							BitConverter.GetBytes(item.DstAgent).CopyTo(guid, 8);
 						}
@@ -1032,9 +1064,9 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 				return newSkill;
 			}
 			
-			bool isOldWeaponSetAvailable = string.Compare(state.EvtcVersion, "EVTC20240627", StringComparison.OrdinalIgnoreCase) >= 0;
-			bool isCommanderAvailable = string.Compare(state.EvtcVersion, "EVTC20220823", StringComparison.OrdinalIgnoreCase) >= 0;
-			bool isOldTeamAvailable = string.Compare(state.EvtcVersion, "EVTC20240612", StringComparison.OrdinalIgnoreCase) >= 0;
+			bool isOldWeaponSetAvailable = _evtcVersion >= ArcdpsBuilds.WeaponSwapValueIsPrevious_CrowdControlEvents_GliderEvents;
+			bool isCommanderAvailable = _evtcVersion >= ArcdpsBuilds.CommanderTagAvailable;
+			bool isOldTeamAvailable = _evtcVersion >= ArcdpsBuilds.TeamChangeOnDespawn;
 
 			if (item.IsStateChange != StateChange.Normal)
 			{
@@ -1655,6 +1687,209 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					{
 						return new MapChangeEvent(item.Time, item.SrcAgent, item.DstAgent);
 					}
+					case StateChange.EarlyExit:
+					{
+						// Internal use.
+						return new UnknownEvent(item.Time, item);
+					}
+					case StateChange.AnimationStart:
+					{
+						// src_agent: agent beginning animation
+						// dst_agent: target agent if applicable
+						// value: ms duration until minimum of last significant trigger point and tooltip time
+						// buff_dmg: ms duration when control is returned to agent
+						// overstack_value: reference content id (emote id if CSK_EMOTE)
+						// skillid: skill id
+						// result: activation start source (debug)
+
+						return new AnimationStartEvent(item.Time, GetAgentByAddress(item.SrcAgent), GetAgentByAddress(item.DstAgent), item.Value, item.BuffDmg, item.OverstackValue, GetSkillById(item.SkillId), (AnimationStart)item.Result);
+					}
+					case StateChange.AnimationEnd:
+					{
+						// src_agent: agent beginning animation
+						// value: ms duration spent in animation scaled for speed
+						// buff_dmg: ms duration spent in animation not scaled
+						// skillid: skill id of previous animation start
+						// is_activation: simple progress check from cbtanimation
+						// result: activation stop source (debug)
+
+						return new AnimationEndEvent(item.Time, GetAgentByAddress(item.SrcAgent), item.Value, item.BuffDmg, item.IsActivation, (AnimationStop)item.Result, GetSkillById(item.SkillId));
+					}
+					case StateChange.BuffApply:
+					{
+						// src_agent: agent applying the stack
+						// dst_agent: agent the stack was applied to
+						// value: ms duration applied
+						// skillid: buff skill id
+						// iff: is friend foe of enum iff
+						// is_ninety: src is above 90% health
+						// is_fifty: dst is below 50% health
+						// is_moving: bit0 set if src is moving, bit1 set if dst is moving
+						// is_flanking: src is flanking dst
+						// is_shields: non-zero if buff is active when applied
+						// pad61: (uint32_t*)&pad61 is uint32[1], trackable id
+
+						Agent source = GetAgentByAddress(item.SrcAgent);
+						Agent target = GetAgentByAddress(item.DstAgent);
+						int durationApplied = item.Value;
+						Skill skill = GetSkillById(item.SkillId);
+						FriendOrFoe iff = item.Iff;
+						bool isNinety = item.IsNinety > 0;
+						bool isFifty = item.IsFifty > 0;
+						Moving moving = (Moving)item.IsMoving;
+						bool isFlanking = item.IsFlanking > 0;
+						bool isActive = item.IsShields != 0;
+						uint trackableId = item.Padding;
+
+						return new BuffApplyEvent(item.Time, source, skill, target, durationApplied, iff, isNinety, isFifty, moving, isFlanking, isActive, trackableId);
+					}
+					case StateChange.BuffChange:
+					{
+						// dst_agent: relates to agent
+						// value: duration difference
+						// overstack_value: new ms duration
+						// skillid: buff skill id
+						// pad61: (uint32_t*)&pad61 is uint32[1], trackable id
+
+						return new BuffChangeEvent(item.Time, GetAgentByAddress(item.DstAgent), GetSkillById(item.SkillId), GetAgentByAddress(item.SrcAgent), item.Value, item.OverstackValue, item.Padding);
+					}
+					case StateChange.BuffRemoveSingle:
+					{
+						// src_agent: agent with buff removed
+						// dst_agent: agent removing the buff
+						// value: ms duration removed
+						// skillid: buff skill id
+						// iff: is friend foe of enum iff
+						// is_buffremove: of enum cbtbuffremove
+						// is_ninety: src is above 90% health
+						// is_fifty: dst is below 50% health
+						// is_moving: bit0 set if src is moving, bit1 set if dst is moving
+						// is_flanking: src is flanking dst
+						// pad61: (uint32_t*)&pad61 is uint32[1], trackable id
+
+						Agent removalTarget = GetAgentByAddress(item.SrcAgent);
+						Agent removalSource = GetAgentByAddress(item.DstAgent);
+						int removedDuration = item.Value;
+						Skill skill = GetSkillById(item.SkillId);
+						BuffRemove buffRemove = item.IsBuffRemove;
+						bool isNinety = item.IsNinety > 0;
+						bool isFifty = item.IsFifty > 0;
+						Moving moving = (Moving) item.IsMoving;
+						bool isFlanking = item.IsFlanking > 0;
+						uint trackableId = item.Padding;
+
+						return new BuffRemoveSingleEvent(item.Time, removalTarget, skill, removalSource, removedDuration, buffRemove, isNinety, isFifty, moving, isFlanking, trackableId);
+					}
+					case StateChange.BuffRemoveAll:
+					{
+						// src_agent: agent with buffs removed
+						// dst_agent: agent removing the buffs
+						// value: ms duration removed calculated as duration
+						// buff_dmg: ms duration removed calculated as intensity
+						// skillid: buff skill id
+						// iff: is friend foe of enum iff
+						// is_buffremove: of enum cbtbuffremove
+						// is_ninety: src is above 90% health
+						// is_fifty: dst is below 50% health
+						// is_moving: bit0 set if src is moving, bit1 set if dst is moving
+						// is_flanking: src is flanking dst
+
+						Agent removalTarget = GetAgentByAddress(item.SrcAgent);
+						Agent removalSource = GetAgentByAddress(item.DstAgent);
+						int removedDuration = item.Value;
+						int removedIntensity = item.BuffDmg;
+						Skill skill = GetSkillById(item.SkillId);
+						BuffRemove buffRemove = item.IsBuffRemove;
+						bool isNinety = item.IsNinety > 0;
+						bool isFifty = item.IsFifty > 0;
+						Moving moving = (Moving) item.IsMoving;
+						bool isFlanking = item.IsFlanking > 0;
+
+						return new BuffRemoveAllEvent(item.Time, removalTarget, skill, removalSource, removedDuration, removedIntensity, buffRemove, isNinety, isFifty, moving, isFlanking);
+					}
+					case StateChange.Transformation:
+					{
+						// src_agent: related to agent
+						// skillid: transformation id (0 if untransform)
+
+						if (!state.TransformationsById.TryGetValue(item.SkillId, out Transformation transformation))
+						{
+							if (item.SkillId != 0)
+							{
+								transformation = new Transformation(item.SkillId);
+								state.TransformationsById[item.SkillId] = transformation;
+							}
+						}
+
+						if (item.SkillId != 0)
+						{
+							return new AgentTransformationEvent(item.Time, GetAgentByAddress(item.SrcAgent), item.SkillId);
+						}
+						else
+						{
+							return new AgentTransformationRemoveEvent(item.Time, GetAgentByAddress(item.SrcAgent), item.SkillId);
+						}
+					}
+					case StateChange.WvWTeam:
+					{
+						// src_agent: (uint32_t*)&src_agent is uint32[6], redshard id, blueshard id, greenshard id, redteam id, blueteam id, greenteam id
+						// teams[0] = redshard->ShardId();
+						// teams[1] = blueshard->ShardId();
+						// teams[2] = greenshard->ShardId();
+						// teams[3] = redteamid;
+						// teams[4] = blueteamid;
+						// teams[5] = greenteamid;
+
+						Span<byte> wvwTeamBytes = stackalloc byte[6 * sizeof(uint)];
+						
+						BitConverter.GetBytes(item.SrcAgent).CopyTo(wvwTeamBytes[0..8]);
+						BitConverter.GetBytes(item.DstAgent).CopyTo(wvwTeamBytes[8..16]);
+						BitConverter.GetBytes(item.Value).CopyTo(wvwTeamBytes[16..20]);
+						BitConverter.GetBytes(item.BuffDmg).CopyTo(wvwTeamBytes[20..24]);
+
+						uint redShardID = BitConverter.ToUInt32(wvwTeamBytes[0..4]);
+						uint blueShardID = BitConverter.ToUInt32(wvwTeamBytes[4..8]);
+						uint greenShardID = BitConverter.ToUInt32(wvwTeamBytes[8..12]);
+						uint redTeamID = BitConverter.ToUInt32(wvwTeamBytes[12..16]);
+						uint blueTeamID = BitConverter.ToUInt32(wvwTeamBytes[16..20]);
+						uint greenTeamID = BitConverter.ToUInt32(wvwTeamBytes[20..24]);
+
+						return new WvWTeamsEvent(item.Time, redShardID, blueShardID, greenShardID, redTeamID, blueTeamID, greenTeamID);
+					}
+					case StateChange.WvWObjectiveStatus:
+					{
+						// value: map id
+						// buff_dmg: team id
+						// skillid: objective id
+						// buff: objective type
+						// pad61: (uint32_t*)&pad61 is uint32[1], upgrade progress count
+
+						return new WvWObjectiveStatusEvent(item.Time, item.Value, item.BuffDmg, (int)item.SkillId, item.Buff, item.Padding);
+					}
+					case StateChange.StealthChange:
+					{
+						// agent stealth state. 0 false, 1 true, 2 unsupported
+						// src_agent: relates to agent
+						// dst_agent: new stealth state (characters only)
+
+						return new AgentStealthChangeEvent(item.Time, GetAgentByAddress(item.SrcAgent), item.DstAgent);
+					}
+					case StateChange.GadgetAnimation:
+					{
+						// play model animation
+						// src_agent: relates to agent
+						// dst_agent: token
+
+						return new AgentGadgetAnimationEvent(item.Time, GetAgentByAddress(item.SrcAgent), item.DstAgent);
+					}
+					case StateChange.GadgetName:
+					{
+						// gadget name visibility state. 0 false, 1 true, 2 unsupported
+						// src_agent: relates to agent
+						// dst_agent: new state (gadgets only)
+
+						return new AgentGadgetNameEvent(item.Time, GetAgentByAddress(item.SrcAgent), item.DstAgent);
+					}
 					default:
 						return new UnknownEvent(item.Time, item);
 				}
@@ -1663,10 +1898,10 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 			{
 				switch (item.IsActivation)
 				{
-					case Activation.CancelCancel:
+					case Activation.Cancel:
 						return new EndSkillCastEvent(item.Time, GetAgentByAddress(item.SrcAgent),
 							GetSkillById(item.SkillId), item.Value, EndSkillCastEvent.SkillEndType.Cancel);
-					case Activation.CancelFire:
+					case Activation.Minimum:
 						return new EndSkillCastEvent(item.Time, GetAgentByAddress(item.SrcAgent),
 							GetSkillById(item.SkillId), item.Value, EndSkillCastEvent.SkillEndType.Fire);
 					case Activation.Normal:

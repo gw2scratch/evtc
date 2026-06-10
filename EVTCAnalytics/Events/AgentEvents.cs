@@ -3,6 +3,7 @@ using GW2Scratch.EVTCAnalytics.Model;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
 using GW2Scratch.EVTCAnalytics.Model.Effects;
 using GW2Scratch.EVTCAnalytics.Model.Skills;
+using GW2Scratch.EVTCAnalytics.Parsed.Enums;
 
 namespace GW2Scratch.EVTCAnalytics.Events
 {
@@ -470,5 +471,67 @@ namespace GW2Scratch.EVTCAnalytics.Events
 		/// Remaining crowd control duration.
 		/// </summary>
 		public int RemainingDuration { get; } = duration;
+	}
+
+	/// <summary>
+	/// Agent transformation wrapper.
+	/// </summary>
+	public class AgentTransformation(long time, Agent agent) : AgentEvent(time, agent)
+	{
+
+	}
+
+	/// <summary>
+	/// Agent tranformation (chair, tonic, mounts, etc.).
+	/// </summary>
+	/// <param name="id">Transformation id, 0 if untransformed</param>
+	/// <remarks>Introduced in EVTC20260507</remarks>
+	public class AgentTransformationEvent(long time, Agent agent, uint id) : AgentTransformation(time, agent)
+	{
+		/// <summary>
+		/// Trackable ID of the transformation.
+		/// </summary>
+		public uint TransformationID { get; } = id;
+	}
+
+	/// <summary>
+	/// Agent transforming back to the normal character model.
+	/// </summary>
+	public class AgentTransformationRemoveEvent(long time, Agent agent, uint id) : AgentTransformation(time, agent)
+	{
+		/// <summary>
+		/// Trackable ID of the transformation.
+		/// </summary>
+		public uint TransformationID { get; } = id;
+	}
+
+	/// <summary>
+	/// Agent visibility state change.
+	/// </summary>
+	public class AgentStealthChangeEvent(long time, Agent agent, ulong state) : AgentEvent(time, agent)
+	{
+		/// <summary>
+		/// Visibility state of the agent.
+		/// </summary>
+		public VisibilityState State { get; } = (VisibilityState)state;
+	}
+
+	/// <summary>
+	/// Player model animation.
+	/// </summary>
+	public class AgentGadgetAnimationEvent(long time, Agent agent, ulong token) : AgentEvent(time, agent)
+	{
+		public ulong Token { get; } = token;
+	}
+
+	/// <summary>
+	/// Gadget name visibility state change.
+	/// </summary>
+	public class AgentGadgetNameEvent(long time, Agent agent, ulong state) : AgentEvent(time, agent)
+	{
+		/// <summary>
+		/// Visibility state of the gadget name.
+		/// </summary>
+		public VisibilityState State { get; } = (VisibilityState) state;
 	}
 }

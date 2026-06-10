@@ -1,6 +1,4 @@
-using GW2Scratch.EVTCAnalytics.Model.Agents;
-
-namespace GW2Scratch.EVTCAnalytics.Model;
+namespace GW2Scratch.EVTCAnalytics.Model.Agents;
 
 /// <summary>
 /// Represents a game marker above an agent.

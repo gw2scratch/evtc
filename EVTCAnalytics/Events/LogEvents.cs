@@ -131,4 +131,65 @@ namespace GW2Scratch.EVTCAnalytics.Events
 		/// </summary>
 		public RulesetBit Ruleset { get; } = ruleset;
 	}
+
+	/// <summary>
+	/// WvW team shard and color IDs.
+	/// </summary>
+	/// <remarks>
+	/// Added in EVTCEVTC20260505. The Team ID will be 0 if there aren't players present from that team in the log.
+	/// </remarks>
+	public class WvWTeamsEvent(
+		long time,
+		uint redShardID,
+		uint blueShardID,
+		uint greenShardID,
+		uint redTeamID,
+		uint blueTeamID,
+		uint greenTeamID
+		) : Event(time)
+	{
+		public uint RedShardID { get; } = redShardID;
+		public uint BlueShardID { get; } = blueShardID;
+		public uint GreenShardID { get; } = greenShardID;
+		public uint RedTeamID { get; } = redTeamID;
+		public uint BlueTeamID { get; } = blueTeamID;
+		public uint GreenTeamID { get; } = greenTeamID;
+	}
+
+	/// <summary>
+	/// WvW objective status (ownership).
+	/// </summary>
+	/// <remarks>
+	/// Added in EVTCEVTC20260507.
+	/// </remarks>
+	public class WvWObjectiveStatusEvent(
+		long time,
+		int mapId,
+		int teamId,
+		int objectiveId,
+		byte objectiveType,
+		uint upgradeProgress
+		) : Event(time)
+	{
+		/// <summary>
+		/// WvW map ID.
+		/// </summary>
+		public int MapId { get; } = mapId;
+		/// <summary>
+		/// Structure objective ID.
+		/// </summary>
+		public int ObjectiveId { get; } = objectiveId;
+		/// <summary>
+		/// Team ID of the objective.
+		/// </summary>
+		public int TeamId { get; } = teamId;
+		/// <summary>
+		/// Type of the objective.
+		/// </summary>
+		public byte ObjectiveType { get; } = objectiveType;
+		/// <summary>
+		/// Tier upgrade progress.
+		/// </summary>
+		public uint UpgradeProgress { get; } = upgradeProgress;
+	}
 }

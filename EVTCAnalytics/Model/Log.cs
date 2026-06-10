@@ -56,6 +56,11 @@ namespace GW2Scratch.EVTCAnalytics.Model
 		/// Provides a list of all <see cref="Emote"/>s that appear in the log.
 		/// </summary>
 		public IReadOnlyList<Emote> Emotes { get; }
+		
+		/// <summary>
+		/// Provides a list of all <see cref="Transformation"/>s that appear in the log.
+		/// </summary>
+		public IReadOnlyList<Transformation> Transformations { get; }
 
 		/// <summary>
 		/// Provides a string with the version of arcdps used to record this log, prefixed with "EVTC".
@@ -218,6 +223,7 @@ namespace GW2Scratch.EVTCAnalytics.Model
 			Species = state.SpeciesById.Values.OrderBy(x => x.Id).ToList();
 			Teams = state.TeamsById.Values.OrderBy(x => x.Id).ToList();
 			Emotes = state.EmotesById.Values.OrderBy(x => x.Id).ToList();
+			Transformations = state.TransformationsById.Values.OrderBy(x => x.Id).ToList();
 			Errors = state.Errors;
 			InstanceStart = state.InstanceStart;
 			ArcdpsBuild = state.ArcdpsBuild;
@@ -227,8 +233,8 @@ namespace GW2Scratch.EVTCAnalytics.Model
 		/// Creates a new instance of a <see cref="Log"/> without requiring a <see cref="LogProcessorState"/>.
 		/// </summary>
 		internal Log(Agent mainTarget, LogType logType, IEnumerable<Event> events, IEnumerable<Agent> agents,
-			IEnumerable<Skill> skills, IEnumerable<Effect> effects, IEnumerable<Marker> markers, 
-			IEnumerable<Species> species, IEnumerable<Team> teams, IEnumerable<Emote> emotes,
+			IEnumerable<Skill> skills, IEnumerable<Effect> effects, IEnumerable<Marker> markers, IEnumerable<Species> species,
+			IEnumerable<Team> teams, IEnumerable<Emote> emotes, IEnumerable<Transformation> transformations,
 			IEnumerable<LogError> errors, string arcdpsBuild,
 			IEncounterData encounterData, GameLanguage gameLanguage, string evtcVersion, LogTime startTime,
 			LogTime endTime, Player pointOfView, int? language, int? gameBuild, 
@@ -260,7 +266,8 @@ namespace GW2Scratch.EVTCAnalytics.Model
 			Markers = markers as Marker[] ?? markers.ToArray();
 			Species = species as Species[] ?? species.ToArray();
 			Teams = teams as Team[] ?? teams.ToArray();
-			Emotes = Emotes as Emote[] ?? emotes.ToArray();
+			Emotes = emotes as Emote[] ?? emotes.ToArray();
+			Transformations = transformations as Transformation[] ?? transformations.ToArray();
 			Errors = errors as LogError[] ?? errors.ToArray();
 		}
 	}

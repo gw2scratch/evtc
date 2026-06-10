@@ -71,5 +71,18 @@
 		EffectAgentRemove = 63, // Added 20250526, replaces Effect2 51
 		IIDChange = 64,
 		MapChange = 65,
+		EarlyExit = 66, // Added 20260507, internal use
+		AnimationStart = 67, // Added 20260430
+		AnimationEnd = 68, // Added 20260430
+		BuffApply = 69, // Added 20260501
+		BuffChange = 70, // Added 20260501
+		BuffRemoveSingle = 71, // Added 20260501
+		BuffRemoveAll = 72, // Added 20260501
+		Transformation = 73, // Added 20260502
+		WvWTeam = 74, // Added 20260505
+		WvWObjectiveStatus = 75, // Added 20260507
+		StealthChange = 76, // Added 20260527
+		GadgetAnimation = 77, // Added 20260530
+		GadgetName = 78, // Added 20260530
 	};
 }

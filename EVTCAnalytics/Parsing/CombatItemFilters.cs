@@ -247,6 +247,12 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(AgentGliderOpenEvent)) return [StateChange.Glider];
 		if (eventType == typeof(AgentGliderCloseEvent)) return [StateChange.Glider];
 		if (eventType == typeof(AgentStunBreakEvent)) return [StateChange.StunBreak];
+		if (eventType == typeof(AgentTransformation)) return [];
+		if (eventType == typeof(AgentTransformationEvent)) return [StateChange.Transformation];
+		if (eventType == typeof(AgentTransformationRemoveEvent)) return [StateChange.Transformation];
+		if (eventType == typeof(AgentStealthChangeEvent)) return [StateChange.StealthChange];
+		if (eventType == typeof(AgentGadgetAnimationEvent)) return [StateChange.GadgetAnimation];
+		if (eventType == typeof(AgentGadgetNameEvent)) return [StateChange.GadgetName];
 
 		if (eventType == typeof(MissileEvent)) return [];
 		if (eventType == typeof(MissileCreateEvent)) return [StateChange.MissileCreate];
@@ -268,6 +274,9 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(ActiveBuffStackEvent)) return [StateChange.StackActive];
 		if (eventType == typeof(ResetBuffStackEvent)) return [StateChange.StackReset];
 		if (eventType == typeof(BuffExtensionEvent)) return [];
+		if (eventType == typeof(BuffChangeEvent)) return [StateChange.BuffChange];
+		if (eventType == typeof(BuffRemoveSingleEvent)) return [StateChange.BuffRemoveSingle];
+		if (eventType == typeof(BuffRemoveAllEvent)) return [StateChange.BuffRemoveAll];
 
 		if (eventType == typeof(DamageEvent)) return [];
 		if (eventType == typeof(PhysicalDamageEvent)) return [];
@@ -283,6 +292,8 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(LogNPCUpdateEvent)) return [StateChange.LogNPCUpdate];
 		if (eventType == typeof(IIDChangeEvent)) return [StateChange.IIDChange];
 		if (eventType == typeof(MapChangeEvent)) return [StateChange.MapChange];
+		if (eventType == typeof(WvWTeamsEvent)) return [StateChange.WvWTeam];
+		if (eventType == typeof(WvWObjectiveStatusEvent)) return [StateChange.WvWObjectiveStatus];
 
 		if (eventType == typeof(CrowdControlEvent)) return [];
 
@@ -290,6 +301,10 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(EndSkillCastEvent)) return [];
 		if (eventType == typeof(StartSkillCastEvent)) return [];
 		if (eventType == typeof(ResetSkillCastEvent)) return [];
+
+		if (eventType == typeof(AnimationEvent)) return [];
+		if (eventType == typeof(AnimationStartEvent)) return [StateChange.AnimationStart];
+		if (eventType == typeof(AnimationEndEvent)) return [StateChange.AnimationEnd];
 
 		if (eventType == typeof(SquadGroundMarkerEvent)) return [];
 		if (eventType == typeof(SquadGroundMarkerPlaceEvent)) return [StateChange.SquadMarker];
@@ -343,6 +358,12 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(AgentGliderOpenEvent)) return false;
 		if (eventType == typeof(AgentGliderCloseEvent)) return false;
 		if (eventType == typeof(AgentStunBreakEvent)) return false;
+		if (eventType == typeof(AgentTransformation)) return false;
+		if (eventType == typeof(AgentTransformationEvent)) return false;
+		if (eventType == typeof(AgentTransformationRemoveEvent)) return false;
+		if (eventType == typeof(AgentStealthChangeEvent)) return false;
+		if (eventType == typeof(AgentGadgetAnimationEvent)) return false;
+		if (eventType == typeof(AgentGadgetNameEvent)) return false;
 
 		if (eventType == typeof(MissileEvent)) return false;
 		if (eventType == typeof(MissileCreateEvent)) return false;
@@ -364,6 +385,9 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(ActiveBuffStackEvent)) return false;
 		if (eventType == typeof(ResetBuffStackEvent)) return false;
 		if (eventType == typeof(BuffExtensionEvent)) return false;
+		if (eventType == typeof(BuffChangeEvent)) return false;
+		if (eventType == typeof(BuffRemoveSingleEvent)) return false;
+		if (eventType == typeof(BuffRemoveAllEvent)) return false;
 
 		if (eventType == typeof(DamageEvent)) return false;
 		if (eventType == typeof(PhysicalDamageEvent)) return false;
@@ -381,11 +405,17 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(LogNPCUpdateEvent)) return false;
 		if (eventType == typeof(IIDChangeEvent)) return false;
 		if (eventType == typeof(MapChangeEvent)) return false;
+		if (eventType == typeof(WvWTeamsEvent)) return false;
+		if (eventType == typeof(WvWObjectiveStatusEvent)) return false;
 
 		if (eventType == typeof(SkillCastEvent)) return false;
 		if (eventType == typeof(EndSkillCastEvent)) return false;
 		if (eventType == typeof(StartSkillCastEvent)) return false;
 		if (eventType == typeof(ResetSkillCastEvent)) return false;
+
+		if (eventType == typeof(AnimationEvent)) return false;
+		if (eventType == typeof(AnimationStartEvent)) return false;
+		if (eventType == typeof(AnimationEndEvent)) return false;
 
 		if (eventType == typeof(SquadGroundMarkerEvent)) return false;
 		if (eventType == typeof(SquadGroundMarkerPlaceEvent)) return false;
@@ -437,6 +467,12 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(AgentGliderOpenEvent)) return false;
 		if (eventType == typeof(AgentGliderCloseEvent)) return false;
 		if (eventType == typeof(AgentStunBreakEvent)) return false;
+		if (eventType == typeof(AgentTransformation)) return false;
+		if (eventType == typeof(AgentTransformationEvent)) return false;
+		if (eventType == typeof(AgentTransformationRemoveEvent)) return false;
+		if (eventType == typeof(AgentStealthChangeEvent)) return false;
+		if (eventType == typeof(AgentGadgetAnimationEvent)) return false;
+		if (eventType == typeof(AgentGadgetNameEvent)) return false;
 
 		if (eventType == typeof(MissileEvent)) return false;
 		if (eventType == typeof(MissileCreateEvent)) return false;
@@ -458,6 +494,9 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(ActiveBuffStackEvent)) return false;
 		if (eventType == typeof(ResetBuffStackEvent)) return false;
 		if (eventType == typeof(BuffExtensionEvent)) return false;
+		if (eventType == typeof(BuffChangeEvent)) return false;
+		if (eventType == typeof(BuffRemoveSingleEvent)) return false;
+		if (eventType == typeof(BuffRemoveAllEvent)) return false;
 
 		if (eventType == typeof(DamageEvent)) return false;
 		if (eventType == typeof(PhysicalDamageEvent)) return false;
@@ -475,11 +514,17 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(LogNPCUpdateEvent)) return false;
 		if (eventType == typeof(IIDChangeEvent)) return false;
 		if (eventType == typeof(MapChangeEvent)) return false;
+		if (eventType == typeof(WvWTeamsEvent)) return false;
+		if (eventType == typeof(WvWObjectiveStatusEvent)) return false;
 
 		if (eventType == typeof(SkillCastEvent)) return false;
 		if (eventType == typeof(EndSkillCastEvent)) return true;
 		if (eventType == typeof(StartSkillCastEvent)) return true;
 		if (eventType == typeof(ResetSkillCastEvent)) return true;
+
+		if (eventType == typeof(AnimationEvent)) return false;
+		if (eventType == typeof(AnimationStartEvent)) return false;
+		if (eventType == typeof(AnimationEndEvent)) return false;
 
 		if (eventType == typeof(SquadGroundMarkerEvent)) return false;
 		if (eventType == typeof(SquadGroundMarkerPlaceEvent)) return false;
@@ -531,6 +576,12 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(AgentGliderOpenEvent)) return [];
 		if (eventType == typeof(AgentGliderCloseEvent)) return [];
 		if (eventType == typeof(AgentStunBreakEvent)) return [];
+		if (eventType == typeof(AgentTransformation)) return [];
+		if (eventType == typeof(AgentTransformationEvent)) return [];
+		if (eventType == typeof(AgentTransformationRemoveEvent)) return [];
+		if (eventType == typeof(AgentStealthChangeEvent)) return [];
+		if (eventType == typeof(AgentGadgetAnimationEvent)) return [];
+		if (eventType == typeof(AgentGadgetNameEvent)) return [];
 
 		if (eventType == typeof(MissileEvent)) return [];
 		if (eventType == typeof(MissileCreateEvent)) return [];
@@ -552,6 +603,9 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(ActiveBuffStackEvent)) return [];
 		if (eventType == typeof(ResetBuffStackEvent)) return [];
 		if (eventType == typeof(BuffExtensionEvent)) return [];
+		if (eventType == typeof(BuffChangeEvent)) return [];
+		if (eventType == typeof(BuffRemoveSingleEvent)) return [];
+		if (eventType == typeof(BuffRemoveAllEvent)) return [];
 
 		if (eventType == typeof(DamageEvent)) return [];
 		if (eventType == typeof(PhysicalDamageEvent)) return [Result.Normal, Result.Critical, Result.Glance, Result.Interrupt, Result.KillingBlow, Result.Downed];
@@ -569,11 +623,17 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(LogNPCUpdateEvent)) return [];
 		if (eventType == typeof(IIDChangeEvent)) return [];
 		if (eventType == typeof(MapChangeEvent)) return [];
+		if (eventType == typeof(WvWTeamsEvent)) return [];
+		if (eventType == typeof(WvWObjectiveStatusEvent)) return [];
 
 		if (eventType == typeof(SkillCastEvent)) return [];
 		if (eventType == typeof(EndSkillCastEvent)) return [];
 		if (eventType == typeof(StartSkillCastEvent)) return [];
 		if (eventType == typeof(ResetSkillCastEvent)) return [];
+
+		if (eventType == typeof(AnimationEvent)) return [];
+		if (eventType == typeof(AnimationStartEvent)) return [];
+		if (eventType == typeof(AnimationEndEvent)) return [];
 
 		if (eventType == typeof(SquadGroundMarkerEvent)) return [];
 		if (eventType == typeof(SquadGroundMarkerPlaceEvent)) return [];
@@ -668,6 +728,19 @@ public class CombatItemFilters : ICombatItemFilters
 			StateChange.StunBreak => false,
 			StateChange.IIDChange => false,
 			StateChange.MapChange => false,
+			StateChange.EarlyExit => false,
+			StateChange.AnimationStart => true,
+			StateChange.AnimationEnd => false,
+			StateChange.BuffApply => true,
+			StateChange.BuffChange => false,
+			StateChange.BuffRemoveSingle => true,
+			StateChange.BuffRemoveAll => false,
+			StateChange.Transformation => false,
+			StateChange.WvWTeam => false,
+			StateChange.WvWObjectiveStatus => false,
+			StateChange.StealthChange => false,
+			StateChange.GadgetAnimation => false,
+			StateChange.GadgetName => false,
 			_ => throw new ArgumentOutOfRangeException(nameof(stateChange), stateChange, null)
 		};
 	}
