@@ -143,4 +143,31 @@ namespace GW2Scratch.EVTCAnalytics.Events
 		/// </summary>
 		public uint TrackableId { get; } = trackableId;
 	}
+
+	/// <summary>
+	/// Missile effect events.
+	/// </summary>
+	/// <remarks>
+	/// Introduced in EVTC20260610.
+	/// </remarks>
+	public class MissileEffectEvent(
+		long time,
+		Agent agent,
+		uint effectId,
+		int duration,
+		uint trackableId) : AgentEvent(time, agent)
+	{
+		/// <summary>
+		/// Effect Id.
+		/// </summary>
+		public uint EffectId { get; } = effectId;
+		/// <summary>
+		/// Duration of th effect.
+		/// </summary>
+		public int Duration { get; } = duration;
+		/// <summary>
+		/// Trackable id of the effect.
+		/// </summary>
+		public uint TrackableId { get; } = trackableId;
+	}
 }

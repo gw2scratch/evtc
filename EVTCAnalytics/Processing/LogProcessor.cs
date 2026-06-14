@@ -1890,6 +1890,54 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 
 						return new AgentGadgetNameEvent(item.Time, GetAgentByAddress(item.SrcAgent), item.DstAgent);
 					}
+					case StateChange.MissileEffect:
+					{
+						// dst_agent: owner of missile
+						// skillid: effect id
+						// value: *(uint32_t*)&value duration
+						// pad61: (uint32_t*)&pad61 is uint32[1], trackable id
+
+						return new MissileEffectEvent(item.Time, GetAgentByAddress(item.DstAgent), item.SkillId, item.Value, item.Padding);
+					}
+					case StateChange.GadgetCaptureOutlineShow:
+					{
+						// src_agent: relates to agent
+						// buff: wrbg colour
+
+						return new GadgetCaptureOutlineShowEvent(item.Time, GetAgentByAddress(item.SrcAgent), item.Buff);
+					}
+					case StateChange.GadgetCaptureSplitPercent:
+					{
+						// src_agent: relates to agent
+						// value: *(float*)&ev->value percent (1.0 - 0.0)
+						// buff: wrbg capping from
+						// result: wrbg capping by
+
+						// Note by deltaconnected on Discord: value is the float without any conversion or lower-precision-inting
+
+						float percentage = BitConverter.Int32BitsToSingle(item.Value);
+
+						return new GadgetCaptureSplitPercentEvent(item.Time, GetAgentByAddress(item.SrcAgent), percentage, item.Buff, (byte)item.Result);
+					}
+					case StateChange.GadgetCaptureOutlineHide:
+					{
+						// src_agent: relates to agent
+
+						return new GadgetCaptureOutlineHideEvent(item.Time, GetAgentByAddress(item.SrcAgent));
+					}
+					case StateChange.GadgetCaptureOutlinePoint:
+					{
+						// src_agent: relates to agent
+						// dst_agent: point index
+						// value: *(float*)&ev->value x
+						// buff_dmg: *(float*)&ev->buff_dmg y
+						// overstack_value: point count for this agent. if count is 1, shape is a circle around agent with radius x
+
+						float x = BitConverter.Int32BitsToSingle(item.Value);
+						float y = BitConverter.Int32BitsToSingle(item.BuffDmg);
+
+						return new GadgetCaptureOutlinePointEvent(item.Time, GetAgentByAddress(item.SrcAgent), (int)item.DstAgent, [x, y], item.OverstackValue);
+					}
 					default:
 						return new UnknownEvent(item.Time, item);
 				}
