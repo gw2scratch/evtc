@@ -4,8 +4,11 @@ This is the full changelog of the arcdps Log Manager.
 
 ## Unreleased
 
+## Log Manager v1.16.0
+
 #### Fixes
 - Fixed parsing for the following encounters since EVTC20260430:
+- - Soulless Horror
 - - Aetherblade Hideout (NM & CM)
 - - Guardian Glade (NM & CM)
 - - Harvest Temple (NM & CM)

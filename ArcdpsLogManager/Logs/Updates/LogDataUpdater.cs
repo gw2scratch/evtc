@@ -248,7 +248,17 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Updates
 			                         (log.GameBuild >= GameBuilds.BossHpReductions && log.Encounter is Encounter.Decima
 				                         or Encounter.AetherbladeHideout or Encounter.XunlaiJadeJunkyard
 				                         or Encounter.CosmicObservatory or Encounter.Eparch)),
-				"Fixed CM detection for 2024-04-14 game update. Fixed map log detection."),
+				"Fixed CM detection for the 2024-04-14 game update. Fixed map log detection."),
+			new LogUpdate(log => log.ParsingVersion < new Version(1, 16, 0, 0)
+			                     && (String.Compare(log.EvtcVersion, "EVTC20260430", StringComparison.Ordinal) >= 0
+			                         && log.Encounter is Encounter.AetherbladeHideout
+				                         or Encounter.GuardiansGlade or Encounter.HarvestTemple
+				                         or Encounter.Eparch or Encounter.Kanaxai or Encounter.Skorvald
+				                         or Encounter.AiKeeperOfThePeakDayOnly
+				                         or Encounter.AiKeeperOfThePeakNightOnly
+				                         or Encounter.AiKeeperOfThePeakDayAndNight or Encounter.Freezie
+				                         or Encounter.SoullessHorror),
+				"Fixed success and CM detection for the 2024-04-30 arcdps update."),
 			// When adding a new update, you need to increase the revision (last value) of the version in the .csproj file
 			// unless the version changes more significantly, in that case it can be reset to 0.
 		};
