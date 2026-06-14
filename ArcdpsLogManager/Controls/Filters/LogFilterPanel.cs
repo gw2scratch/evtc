@@ -20,9 +20,9 @@ namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 		private bool enabled = true;
 
 		private event EventHandler<IReadOnlyList<LogData>> LogsUpdated;
-		private event EventHandler EnabledChanged;
+		private new event EventHandler EnabledChanged;
 
-		public bool Enabled
+		public new bool Enabled
 		{
 			get => enabled;
 			set

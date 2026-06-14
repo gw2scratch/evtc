@@ -79,7 +79,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 		{
 			var state = new LogProcessorState();
 			state.EvtcVersion = log.LogVersion.BuildVersion;
-			_evtcVersion = int.Parse(log.LogVersion.BuildVersion.TrimStart("EVTC"));
+			_evtcVersion = int.Parse(log.LogVersion.BuildVersion.Replace("EVTC", ""));
 
 			state.Agents = GetAgents(log).ToList();
 			state.AgentsByAddress = new Dictionary<ulong, Agent>();
