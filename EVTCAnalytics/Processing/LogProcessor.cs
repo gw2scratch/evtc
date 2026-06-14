@@ -1909,19 +1909,34 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					case StateChange.GadgetCaptureSplitPercent:
 					{
 						// src_agent: relates to agent
-						// value: *(float*)&ev->value percent
+						// value: *(float*)&ev->value percent (1.0 - 0.0)
 						// buff: wrbg capping from
 						// result: wrbg capping by
 
 						// Note by deltaconnected on Discord: value is the float without any conversion or lower-precision-inting
 
-						return new GadgetCaptureSplitPercentEvent(item.Time, GetAgentByAddress(item.SrcAgent), item.Value, item.Buff, (byte)item.Result);
+						float percentage = BitConverter.Int32BitsToSingle(item.Value);
+
+						return new GadgetCaptureSplitPercentEvent(item.Time, GetAgentByAddress(item.SrcAgent), percentage, item.Buff, (byte)item.Result);
 					}
 					case StateChange.GadgetCaptureOutlineHide:
 					{
 						// src_agent: relates to agent
 
 						return new GadgetCaptureOutlineHideEvent(item.Time, GetAgentByAddress(item.SrcAgent));
+					}
+					case StateChange.GadgetCaptureOutlinePoint:
+					{
+						// src_agent: relates to agent
+						// dst_agent: point index
+						// value: *(float*)&ev->value x
+						// buff_dmg: *(float*)&ev->buff_dmg y
+						// overstack_value: point count for this agent. if count is 1, shape is a circle around agent with radius x
+
+						float x = BitConverter.Int32BitsToSingle(item.Value);
+						float y = BitConverter.Int32BitsToSingle(item.BuffDmg);
+
+						return new GadgetCaptureOutlinePointEvent(item.Time, GetAgentByAddress(item.SrcAgent), (int)item.DstAgent, [x, y], item.OverstackValue);
 					}
 					default:
 						return new UnknownEvent(item.Time, item);

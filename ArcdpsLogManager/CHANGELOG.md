@@ -36,6 +36,7 @@ This is the full changelog of the arcdps Log Manager.
 - Added GadgetCaptureOutlineShow events
 - Added GadgetCaptureSplitPercent events
 - Added GadgetCaptureOutlineHide events
+- Added GadgetCaptureOutlinePoint events
 - Added Transformation GUIDs via CONTENTLOCAL_TRANSFORMATION
 - Updated Activation and Result enums for Skills
 - Updated BuffRemove enum for Buffs

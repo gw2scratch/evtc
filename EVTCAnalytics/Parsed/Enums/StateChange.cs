@@ -88,5 +88,6 @@
 		GadgetCaptureOutlineShow = 80, // Added 20260610
 		GadgetCaptureSplitPercent = 81, // Added 20260610
 		GadgetCaptureOutlineHide = 82, // Added 20260610
+		GadgetCaptureOutlinePoint = 83, // Added 20260612
 	};
 }

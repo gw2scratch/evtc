@@ -315,6 +315,7 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(GadgetCaptureOutlineShowEvent)) return [StateChange.GadgetCaptureOutlineShow];
 		if (eventType == typeof(GadgetCaptureSplitPercentEvent)) return [StateChange.GadgetCaptureSplitPercent];
 		if (eventType == typeof(GadgetCaptureOutlineHideEvent)) return [StateChange.GadgetCaptureOutlineHide];
+		if (eventType == typeof(GadgetCaptureOutlinePointEvent)) return [StateChange.GadgetCaptureOutlinePoint];
 
 		// The unknown event can come from any state change, including not yet implemented ones,
 		// so we need to return all of them.
@@ -432,6 +433,7 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(GadgetCaptureOutlineShowEvent)) return false;
 		if (eventType == typeof(GadgetCaptureSplitPercentEvent)) return false;
 		if (eventType == typeof(GadgetCaptureOutlineHideEvent)) return false;
+		if (eventType == typeof(GadgetCaptureOutlinePointEvent)) return false;
 
 		// The unknown event can come from anything
 		if (eventType == typeof(UnknownEvent)) return true;
@@ -547,6 +549,7 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(GadgetCaptureOutlineShowEvent)) return false;
 		if (eventType == typeof(GadgetCaptureSplitPercentEvent)) return false;
 		if (eventType == typeof(GadgetCaptureOutlineHideEvent)) return false;
+		if (eventType == typeof(GadgetCaptureOutlinePointEvent)) return false;
 
 		// The unknown event can come from anything
 		if (eventType == typeof(UnknownEvent)) return true;
@@ -662,6 +665,7 @@ public class CombatItemFilters : ICombatItemFilters
 		if (eventType == typeof(GadgetCaptureOutlineShowEvent)) return [];
 		if (eventType == typeof(GadgetCaptureSplitPercentEvent)) return [];
 		if (eventType == typeof(GadgetCaptureOutlineHideEvent)) return [];
+		if (eventType == typeof(GadgetCaptureOutlinePointEvent)) return [];
 
 		// The unknown event can come from any result, including not yet implemented ones,
 		// so we need to return all of them.
@@ -769,6 +773,7 @@ public class CombatItemFilters : ICombatItemFilters
 			StateChange.GadgetCaptureOutlineShow => false,
 			StateChange.GadgetCaptureSplitPercent => false,
 			StateChange.GadgetCaptureOutlineHide => false,
+			StateChange.GadgetCaptureOutlinePoint => false,
 			_ => throw new ArgumentOutOfRangeException(nameof(stateChange), stateChange, null)
 		};
 	}
