@@ -16,7 +16,7 @@ namespace GW2Scratch.EVTCAnalytics.Events
 	/// An event specifying the current simulation tick rate.
 	/// </summary>
 	/// <remarks>
-	/// Introduced in arcdps version 20220520.
+	/// Introduced in arcdps version 20220520. Deprecated in arcdps version 20260627, replaced by <see cref="Tick"/>.
 	/// </remarks>
 	public class RateHealthEvent(long time, ulong tickRate) : Event(time)
 	{
@@ -27,6 +27,20 @@ namespace GW2Scratch.EVTCAnalytics.Events
 		/// This can happen when the Guild Wars 2 server struggles to keep up, or in case of connection issues.
 		/// </summary>
 		public ulong TickRate { get; } = tickRate;
+	}
+
+	/// <summary>
+	/// Event extrapolating the game ticks.
+	/// </summary>
+	/// <param name="tickInterpolated">Current extrapolated tick (ticks may go backwards if real update is lower than extrapolation).</param>
+	/// <param name="ticksSinceLastUpdate">Ticks since last real tick update.</param>
+	/// <remarks>
+	/// Introduced in arcdps version 20260627. Replaces <see cref="RateHealthEvent"/>.
+	/// </remarks>
+	public class Tick(long time, ulong tickInterpolated, ulong ticksSinceLastUpdate) : Event(time)
+	{
+		public ulong TickInterpolated { get; } = tickInterpolated;
+		public ulong TickSinceLastUpdate { get; } = ticksSinceLastUpdate;
 	}
 
 	/// <summary>

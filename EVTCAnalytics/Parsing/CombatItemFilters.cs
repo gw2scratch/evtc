@@ -289,6 +289,7 @@ public class CombatItemFilters : ICombatItemFilters
 
 		if (eventType == typeof(RewardEvent)) return [StateChange.Reward];
 		if (eventType == typeof(RateHealthEvent)) return [StateChange.TickRate];
+		if (eventType == typeof(Tick)) return [StateChange.Tick];
 		if (eventType == typeof(StatResetEvent)) return [StateChange.StatReset];
 		if (eventType == typeof(LogNPCUpdateEvent)) return [StateChange.LogNPCUpdate];
 		if (eventType == typeof(IIDChangeEvent)) return [StateChange.IIDChange];
@@ -409,6 +410,7 @@ public class CombatItemFilters : ICombatItemFilters
 		
 		if (eventType == typeof(RewardEvent)) return false;
 		if (eventType == typeof(RateHealthEvent)) return false;
+		if (eventType == typeof(Tick)) return false;
 		if (eventType == typeof(StatResetEvent)) return false;
 		if (eventType == typeof(LogNPCUpdateEvent)) return false;
 		if (eventType == typeof(IIDChangeEvent)) return false;
@@ -525,6 +527,7 @@ public class CombatItemFilters : ICombatItemFilters
 
 		if (eventType == typeof(RewardEvent)) return false;
 		if (eventType == typeof(RateHealthEvent)) return false;
+		if (eventType == typeof(Tick)) return false;
 		if (eventType == typeof(StatResetEvent)) return false;
 		if (eventType == typeof(LogNPCUpdateEvent)) return false;
 		if (eventType == typeof(IIDChangeEvent)) return false;
@@ -641,6 +644,7 @@ public class CombatItemFilters : ICombatItemFilters
 
 		if (eventType == typeof(RewardEvent)) return [];
 		if (eventType == typeof(RateHealthEvent)) return [];
+		if (eventType == typeof(Tick)) return [];
 		if (eventType == typeof(StatResetEvent)) return [];
 		if (eventType == typeof(LogNPCUpdateEvent)) return [];
 		if (eventType == typeof(IIDChangeEvent)) return [];
@@ -774,6 +778,7 @@ public class CombatItemFilters : ICombatItemFilters
 			StateChange.GadgetCaptureSplitPercent => false,
 			StateChange.GadgetCaptureOutlineHide => false,
 			StateChange.GadgetCaptureOutlinePoint => false,
+			StateChange.Tick => false,
 			_ => throw new ArgumentOutOfRangeException(nameof(stateChange), stateChange, null)
 		};
 	}

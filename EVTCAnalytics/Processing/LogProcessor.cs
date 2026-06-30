@@ -1938,6 +1938,13 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 
 						return new GadgetCaptureOutlinePointEvent(item.Time, GetAgentByAddress(item.SrcAgent), (int)item.DstAgent, [x, y], item.OverstackValue);
 					}
+					case StateChange.Tick:
+					{
+						// src_agent: current extrapolated tick (ticks may go backwards if real update is lower than extrapolation)
+						// dst_agent: ticks since last real tick update
+
+						return new Tick(item.Time, item.SrcAgent, item.DstAgent);
+					}
 					default:
 						return new UnknownEvent(item.Time, item);
 				}
