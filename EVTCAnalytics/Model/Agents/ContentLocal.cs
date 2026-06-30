@@ -28,7 +28,7 @@ public abstract class ContentLocal
 		return $"{Id} ({(ContentGuid != null ? GuidToString(ContentGuid) : "No GUID")})";
 	}
 
-	protected static string GuidToString(byte[] guidBytes)
+	public static string GuidToString(byte[] guidBytes)
 	{
 		string GetPart(byte[] bytes, int from, int to)
 		{
