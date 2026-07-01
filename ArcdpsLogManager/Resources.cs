@@ -88,7 +88,25 @@ namespace GW2Scratch.ArcdpsLogManager
 		public static Image GetTinyIconRaid() => GetImage("ArenaNet.raid_icon_32px.png");
 		public static Image GetTinyIconFractals() => GetImage("ArenaNet.fractals_icon_32px.png");
 		public static Image GetTinyIconGuildRegistrar() => GetImage("ArenaNet.guild_registrar_icon_26px.png");
-		public static Image GetTinyIconCommander() => GetImage("ArenaNet.commander_tag_red_32px.png");
+		public static Image GetTinyIconCommanderRed() => GetImage("ArenaNet.tags.Commander_tag_(red).png");
+		public static Image GetTinyIconCommanderOrange() => GetImage("ArenaNet.tags.Commander_tag_(orange).png");
+		public static Image GetTinyIconCommanderYellow() => GetImage("ArenaNet.tags.Commander_tag_(yellow).png");
+		public static Image GetTinyIconCommanderCyan() => GetImage("ArenaNet.tags.Commander_tag_(cyan).png");
+		public static Image GetTinyIconCommanderGreen() => GetImage("ArenaNet.tags.Commander_tag_(green).png");
+		public static Image GetTinyIconCommanderBlue() => GetImage("ArenaNet.tags.Commander_tag_(blue).png");
+		public static Image GetTinyIconCommanderPurple() => GetImage("ArenaNet.tags.Commander_tag_(purple).png");
+		public static Image GetTinyIconCommanderPink() => GetImage("ArenaNet.tags.Commander_tag_(pink).png");
+		public static Image GetTinyIconCommanderWhite() => GetImage("ArenaNet.tags.Commander_tag_(white).png");
+		public static Image GetTinyIconCatmanderRed() => GetImage("ArenaNet.tags.Catmander_tag_(red).png");
+		public static Image GetTinyIconCatmanderOrange() => GetImage("ArenaNet.tags.Catmander_tag_(orange).png");
+		public static Image GetTinyIconCatmanderYellow() => GetImage("ArenaNet.tags.Catmander_tag_(yellow).png");
+		public static Image GetTinyIconCatmanderCyan() => GetImage("ArenaNet.tags.Catmander_tag_(cyan).png");
+		public static Image GetTinyIconCatmanderGreen() => GetImage("ArenaNet.tags.Catmander_tag_(green).png");
+		public static Image GetTinyIconCatmanderBlue() => GetImage("ArenaNet.tags.Catmander_tag_(blue).png");
+		public static Image GetTinyIconCatmanderPurple() => GetImage("ArenaNet.tags.Catmander_tag_(purple).png");
+		public static Image GetTinyIconCatmanderPink() => GetImage("ArenaNet.tags.Catmander_tag_(pink).png");
+		public static Image GetTinyIconCatmanderWhite() => GetImage("ArenaNet.tags.Catmander_tag_(white).png");
+
 		public static Image GetTinyIconRaidEncounter() => GetImage("ArenaNet.raid_encounter_icon_32px.png");
 		public static Image GetTinyIconTrainingArea() => GetImage("ArenaNet.training_area_32px.png");
 		public static Image GetTinyIconWorldVersusWorld() => GetImage("ArenaNet.world_vs_world_32px.png");
@@ -223,12 +241,12 @@ namespace GW2Scratch.ArcdpsLogManager
 		public static Image GetMassiveKittyGolemIcon() => GetEncounterImage("Mini_Mister_Mittens");
 
 		// WORLD VS WORLD
-		public static Image GetEternalBattlegroundsIcon() => GetEncounterImage("Commander_tag_yellow");
-		public static Image GetRedBorderlandsIcon() => GetEncounterImage("Commander_tag_red");
-		public static Image GetBlueBorderlandsIcon() => GetEncounterImage("Commander_tag_blue");
-		public static Image GetGreenBorderlandsIcon() => GetEncounterImage("Commander_tag_green");
-		public static Image GetObsidianSanctumIcon() => GetEncounterImage("Commander_tag_purple");
-		public static Image GetEdgeOfTheMistsIcon() => GetEncounterImage("Commander_tag_white");
+		public static Image GetEternalBattlegroundsIcon() => GetTinyIconCommanderYellow();
+		public static Image GetRedBorderlandsIcon() => GetTinyIconCommanderRed();
+		public static Image GetBlueBorderlandsIcon() => GetTinyIconCommanderBlue();
+		public static Image GetGreenBorderlandsIcon() => GetTinyIconCommanderGreen();
+		public static Image GetObsidianSanctumIcon() => GetTinyIconCommanderPurple();
+		public static Image GetEdgeOfTheMistsIcon() => GetTinyIconCommanderWhite();
 		public static Image GetArmisticeBastionIcon() => GetEncounterImage("Armistice_Bastion_Pass");
 
 		private static Image GetEncounterImage(string iconName)

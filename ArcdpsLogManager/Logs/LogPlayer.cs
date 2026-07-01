@@ -1,4 +1,5 @@
 using GW2Scratch.EVTCAnalytics.Model.Agents;
+using GW2Scratch.EVTCAnalytics.Parsed.Enums;
 
 namespace GW2Scratch.ArcdpsLogManager.Logs
 {
@@ -11,6 +12,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 		public EliteSpecialization EliteSpecialization { get; set; }
 		public string GuildGuid { get; set; }
 		public PlayerTag Tag { get; set; }
+		public CommanderTags TagType { get; set; }
 
 		public LogPlayer(string name, string accountName, int subgroup, Profession profession,
 			EliteSpecialization eliteSpecialization, string guildGuid)

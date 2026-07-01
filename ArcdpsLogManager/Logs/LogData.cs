@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
 using GW2Scratch.ArcdpsLogManager.Analytics;
 using GW2Scratch.ArcdpsLogManager.Logs.Extras;
 using GW2Scratch.ArcdpsLogManager.Logs.Tagging;
@@ -11,10 +5,17 @@ using GW2Scratch.EVTCAnalytics.Events;
 using GW2Scratch.EVTCAnalytics.GameData;
 using GW2Scratch.EVTCAnalytics.GameData.Encounters;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
+using GW2Scratch.EVTCAnalytics.Parsed.Enums;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Text;
 
 namespace GW2Scratch.ArcdpsLogManager.Logs
 {
@@ -278,11 +279,24 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 
 				Players = [.. players.Select(p =>
 				{
-					var hasTag = tagEvents.Any(e => e.Agent == p && _commanderTags.Contains(ContentLocal.GuidToString(e.Marker.ContentGuid)));
+					// Set a default color
+					CommanderTags tagType = CommanderTags.RedCommanderTag;
+
+					foreach (AgentMarkerEvent markerEvent in tagEvents.Where(e => e.Agent == p))
+					{
+						if (CommanderTagGUIDs.Tags.TryGetValue(ContentLocal.GuidToString(markerEvent.Marker.ContentGuid), out var tag))
+						{
+							tagType = tag;
+							break;
+						}
+					}
+
+					var tagEvent = tagEvents.FirstOrDefault(e => e.Agent == p && CommanderTagGUIDs.Tags.TryGetValue(ContentLocal.GuidToString(e.Marker.ContentGuid), out var tag));
 
 					return new LogPlayer(p.Name, p.AccountName, p.Subgroup, p.Profession, p.EliteSpecialization, GetGuildGuid(p.GuildGuid))
 					{
-						Tag = hasTag ? PlayerTag.Commander : PlayerTag.None
+						Tag = tagEvent != null ? PlayerTag.Commander : PlayerTag.None,
+						TagType = tagType
 					};
 				})];
 
@@ -387,27 +401,5 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 				return $"{minutes:0}m {seconds}{separator}{milliseconds / 100}s";
 			}
 		}
-
-		private static readonly HashSet<string> _commanderTags =
-			[
-				"4242f370-667c-e54e-b3bf-22be8d06f986", // Red Commander Tag
-				"e57aae9e-e7fc-5d45-8b0c-f16be4b096bf", // Orange Commander Tag
-				"af9442a2-90c6-2145-96e0-b339eb3bde92", // Yellow Commander Tag
-				"74ad480e-531f-4740-a407-879976c8ca91", // Green CommanderTag
-				"96f4ab5c-dec5-2943-8837-5c7a03ab7614", // Cyan Commander Tag
-				"ae714fc5-e4ea-464c-8961-cd78e86f9291", // Blue Commander Tag
-				"1993fadb-6fb7-0e43-83a2-23a54d311f7d", // Purple Commander Tag
-				"e911d8c0-ef2f-df4d-8d25-2e5fb1283c62", // Pink Commander Tag
-				"a59678cd-fb57-3243-9d7f-cbf58d8bcec3", // White Commander Tag
-				"ca76ab02-3593-b044-8f69-2fe29df03d17", // Red Catmander Tag
-				"9fdf03e9-ba09-a245-8c1e-dda4d81bc34d", // Orange Catmander Tag
-				"6bce90e9-9016-b448-969e-b317784a8334", // Yellow Catmander Tag
-				"2ca226e0-7262-c743-ba19-3acf6f9d0af6", // Green CatmanderTag
-				"a8072d65-ce35-924b-abba-c831b12019d7", // Cyan Catmander Tag
-				"9b94f0fd-616e-7f4a-a58e-fdc8c59fb689", // Blue Catmander Tag
-				"7224a4af-710e-4243-bfe0-32629e17ca6e", // Purple Catmander Tag
-				"4387be61-46d4-3246-aa7b-333168ea58ea", // Pink Catmander Tag
-				"a0b0ec07-6bc8-3b40-a293-c1cdec4a7de7", // White Catmander Tag
-			];
 	}
 }
