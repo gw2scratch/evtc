@@ -180,6 +180,27 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.Services
 			logDataProcessor.Schedule(log);
 		}
 
+		/// <summary>
+		/// Looks up (or creates) the <see cref="LogData"/> for a single file noticed by a filesystem
+		/// watcher after the initial scan, and schedules it for processing if unparsed — the Avalonia
+		/// counterpart of the Eto <c>ManagerForm.AddNewLog</c>. Does not check whether the file is
+		/// already known to the caller; callers should dedupe against their own displayed list first.
+		/// </summary>
+		public LogData RegisterDiscoveredLog(string fullName)
+		{
+			if (!cache.TryGetLogData(fullName, out var log))
+			{
+				log = new LogData(fullName);
+			}
+
+			if (log.ParsingStatus != ParsingStatus.Parsed)
+			{
+				logDataProcessor.Schedule(log);
+			}
+
+			return log;
+		}
+
 		private IEnumerable<LogData> SafeGetFromDirectory(string path)
 		{
 			try

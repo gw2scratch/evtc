@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Threading;
@@ -43,6 +44,11 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels
 		private LogProcessingService? processingService;
 		private DispatcherTimer? processingRefreshTimer;
 		private bool loaded;
+
+		// Live discovery of newly-created log files while the app is running (Avalonia counterpart
+		// of the Eto ManagerForm's fileSystemWatchers/SetupFileSystemWatchers/AddNewLog).
+		private readonly LogFinder logFinder = new LogFinder();
+		private readonly List<FileSystemWatcher> fileSystemWatchers = new List<FileSystemWatcher>();
 
 		private readonly LogDataUpdater logDataUpdater = new LogDataUpdater();
 		private readonly ProgramUpdateChecker programUpdateChecker =
@@ -125,6 +131,10 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels
 			WeeklyClearsSection = new WeeklyClearsSectionViewModel(images);
 			GameDataSection = new GameDataSectionViewModel(images, nameProvider, cacheService);
 			ServicesSection = new ServicesSectionViewModel();
+
+			// Matches the Eto ManagerForm's constructor-time subscription: re-point the watchers at
+			// the new directories whenever the configured log root paths change.
+			Settings.LogRootPathChanged += (_, _) => SetupFileSystemWatchers();
 
 			InitialLoadTask = LoadAsync();
 		}
@@ -234,10 +244,113 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels
 					processingRefreshTimer.Tick += (_, _) => DrainProcessed();
 					processingRefreshTimer.Start();
 				}
+
+				SetupFileSystemWatchers();
 			}
 			catch (Exception e)
 			{
 				LogsSection.StatusText = $"Failed to load cache: {e.Message}";
+			}
+		}
+
+		/// <summary>
+		/// Watches the configured log root directories for newly-created files so they show up
+		/// immediately, without requiring an app restart — the Avalonia counterpart of the Eto
+		/// ManagerForm's <c>SetupFileSystemWatchers</c>. A no-op when there's no writable/processing
+		/// cache to add discovered logs to.
+		/// </summary>
+		private void SetupFileSystemWatchers()
+		{
+			foreach (var watcher in fileSystemWatchers)
+			{
+				watcher.Dispose();
+			}
+			fileSystemWatchers.Clear();
+
+			if (processingService == null)
+			{
+				return;
+			}
+
+			// We do not want to process logs before they are fully written, mid-compression and the
+			// like, so we add a delay after detecting one.
+			var delay = TimeSpan.FromSeconds(5);
+			var temporaryFileDelay = TimeSpan.FromSeconds(15);
+
+			foreach (var directory in settings.LogRootPaths)
+			{
+				try
+				{
+					var watcher = new FileSystemWatcher(directory);
+					watcher.IncludeSubdirectories = true;
+					watcher.Filter = "*";
+					watcher.Created += (_, args) =>
+					{
+						Task.Run(async () =>
+						{
+							await Task.Delay(logFinder.IsLikelyTemporary(args.FullPath) ? temporaryFileDelay : delay);
+
+							if (File.Exists(args.FullPath) && logFinder.IsLikelyEvtcLog(args.FullPath))
+							{
+								Dispatcher.UIThread.Post(() => AddNewLog(args.FullPath));
+							}
+						});
+					};
+					watcher.Renamed += (_, args) =>
+					{
+						Task.Run(async () =>
+						{
+							await Task.Delay(logFinder.IsLikelyTemporary(args.FullPath) ? temporaryFileDelay : delay);
+
+							if (File.Exists(args.FullPath) && logFinder.IsLikelyEvtcLog(args.FullPath))
+							{
+								Dispatcher.UIThread.Post(() => AddNewLog(args.FullPath));
+							}
+						});
+					};
+					watcher.EnableRaisingEvents = true;
+
+					fileSystemWatchers.Add(watcher);
+				}
+				catch (Exception e)
+				{
+					Debug.WriteLine($"Failed to set up FileSystemWatcher: {e.Message}");
+				}
+			}
+		}
+
+		private void AddNewLog(string fullName)
+		{
+			if (processingService == null || allRows.Any(r => r.Log.FileName == fullName))
+			{
+				return;
+			}
+
+			var log = processingService.RegisterDiscoveredLog(fullName);
+			var row = new LogRow(log, images, nameProvider);
+			InsertRowSorted(row);
+			rowByLog[log] = row;
+			ApplyFilters();
+		}
+
+		/// <summary>
+		/// Inserts a row into <see cref="allRows"/> at the position matching its sorted order
+		/// (by <see cref="LogData.EncounterStartTime"/>, descending — the same order the initial
+		/// load and <see cref="ReloadAsync"/> produce), rather than appending it. The Eto ManagerForm
+		/// got this for free from its <c>FilterCollection</c> maintaining a live sort as items were
+		/// added; <see cref="allRows"/> is a plain list, so newly-discovered/reprocessed logs need to
+		/// be placed explicitly or they'd show up at the very end of the grid instead of the top.
+		/// </summary>
+		private void InsertRowSorted(LogRow row)
+		{
+			int index = allRows.FindIndex(r => r.Log.EncounterStartTime < row.Log.EncounterStartTime);
+			if (index < 0)
+			{
+				allRows.Add(row);
+			}
+			else
+			{
+				allRows.Insert(index, row);
 			}
 		}
 
@@ -389,13 +502,14 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels
 					int index = allRows.IndexOf(oldRow);
 					if (index >= 0)
 					{
-						allRows[index] = newRow;
+						allRows.RemoveAt(index);
 					}
 				}
-				else
-				{
-					allRows.Add(newRow);
-				}
+
+				// Re-insert at the sorted position rather than replacing in place: parsing can
+				// refine EncounterStartTime from the file's creation-time estimate to the log's
+				// actual (precise) encounter start, which can shift where it belongs.
+				InsertRowSorted(newRow);
 
 				rowByLog[log] = newRow;
 				changed = true;
@@ -406,16 +520,20 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels
 				ApplyFilters();
 			}
 
+			// Note: ScheduledCount only reflects items still waiting in the queue, not the one
+			// currently being processed (it moves out of the queue as soon as it's dequeued) — so it
+			// can read 0 while a log is still being worked on. We used to stop this timer once it hit
+			// 0, which raced with exactly that case: a single newly-discovered log would get dequeued
+			// (ScheduledCount -> 0) before it finished processing, the timer would stop, and the
+			// eventual Processed event would enqueue into processedQueue with nothing left to drain
+			// it — the row stayed stuck on "Processing..." until the next app restart. The timer now
+			// just keeps polling for the lifetime of the session (matching the Eto ManagerForm, which
+			// keeps its equivalent LogDataProcessor.Processed subscription for the whole app run);
+			// draining an empty queue every 750ms is cheap.
 			int remaining = processingService?.ScheduledCount ?? 0;
 			if (remaining > 0)
 			{
 				LogsSection.StatusText = $"Processing logs… {remaining:N0} remaining.";
-			}
-			else if (processingRefreshTimer != null && processedQueue.IsEmpty)
-			{
-				// Nothing left to process; stop polling.
-				processingRefreshTimer.Stop();
-				processingRefreshTimer = null;
 			}
 		}
 
@@ -515,6 +633,12 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels
 		/// <summary>Stops background processing, persists pending cache changes and releases the mutex.</summary>
 		public void Dispose()
 		{
+			foreach (var watcher in fileSystemWatchers)
+			{
+				watcher.Dispose();
+			}
+			fileSystemWatchers.Clear();
+
 			processingRefreshTimer?.Stop();
 			processingService?.Dispose();
 			cacheService.Dispose();
