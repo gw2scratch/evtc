@@ -1,7 +1,9 @@
 using System;
+using System.Diagnostics;
 using System.Reflection;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using GW2Scratch.ArcdpsLogManager.Avalonia.Services;
@@ -83,6 +85,36 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.Views
 			Settings.WindowState = info;
 		}
 
+		// Custom title-bar behaviour, needed because ExtendClientAreaChromeHints="NoChrome" hides the
+		// OS-drawn title bar (drag handle) and caption buttons entirely.
+		private void OnHeaderPointerPressed(object? sender, PointerPressedEventArgs e)
+		{
+			if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
+			{
+				BeginMoveDrag(e);
+			}
+		}
+
+		private void OnHeaderDoubleTapped(object? sender, RoutedEventArgs e)
+		{
+			WindowState = WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
+		}
+
+		private void OnMinimizeClick(object? sender, RoutedEventArgs e)
+		{
+			WindowState = WindowState.Minimized;
+		}
+
+		private void OnMaximizeRestoreClick(object? sender, RoutedEventArgs e)
+		{
+			WindowState = WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
+		}
+
+		private void OnCloseClick(object? sender, RoutedEventArgs e)
+		{
+			Close();
+		}
+
 		private void OnOpenSettingsClick(object? sender, RoutedEventArgs e)
 		{
 			var window = new SettingsWindow
@@ -98,8 +130,30 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.Views
 			string message = "arcdps Log Manager\n" +
 			                 $"Version {version}\n\n" +
 			                 "A manager for Guild Wars 2 arcdps encounter logs.\n" +
+			                 "Developed by Sejsel.\n\n" +
 			                 "https://github.com/gw2scratch/evtc";
 			await Dialogs.ShowInfoAsync(this, "About", message);
+		}
+
+		private static void OnOpenDonateClick(object? sender, RoutedEventArgs e) =>
+			OpenUrl("https://ko-fi.com/sejsel");
+
+		private static void OnOpenChangelogClick(object? sender, RoutedEventArgs e) =>
+			OpenUrl("https://github.com/gw2scratch/evtc/releases");
+
+		private static void OnOpenWebsiteClick(object? sender, RoutedEventArgs e) =>
+			OpenUrl("https://gw2scratch.com/");
+
+		private static void OpenUrl(string url)
+		{
+			try
+			{
+				Process.Start(new ProcessStartInfo { FileName = url, UseShellExecute = true });
+			}
+			catch
+			{
+				// Ignore failures to launch the browser.
+			}
 		}
 
 		private void OnOpenCacheClick(object? sender, RoutedEventArgs e)

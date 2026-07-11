@@ -69,6 +69,9 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels
 		/// <c>ManagerForm</c> gates its equivalent tabs on this same setting.</summary>
 		[ObservableProperty] private bool showDebugData;
 
+		[ObservableProperty] private bool showGuildTagsInLogDetail;
+		[ObservableProperty] private bool showFailurePercentagesInLogList;
+
 		[ObservableProperty] private DateTimeOffset? minDate;
 		[ObservableProperty] private DateTimeOffset? maxDate;
 
@@ -108,6 +111,8 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels
 
 			showFilterSidebar = settings.ShowFilterSidebar;
 			showDebugData = settings.ShowDebugData;
+			showGuildTagsInLogDetail = settings.ShowGuildTagsInLogDetail;
+			showFailurePercentagesInLogList = settings.ShowFailurePercentagesInLogList;
 			settings.PropertyChanged += (_, e) =>
 			{
 				if (e.PropertyName == nameof(ISettingsService.ShowFilterSidebar))
@@ -117,6 +122,14 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels
 				else if (e.PropertyName == nameof(ISettingsService.ShowDebugData))
 				{
 					ShowDebugData = settings.ShowDebugData;
+				}
+				else if (e.PropertyName == nameof(ISettingsService.ShowGuildTagsInLogDetail))
+				{
+					ShowGuildTagsInLogDetail = settings.ShowGuildTagsInLogDetail;
+				}
+				else if (e.PropertyName == nameof(ISettingsService.ShowFailurePercentagesInLogList))
+				{
+					ShowFailurePercentagesInLogList = settings.ShowFailurePercentagesInLogList;
 				}
 			};
 
@@ -668,6 +681,21 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels
 		partial void OnShowFilterSidebarChanged(bool value)
 		{
 			settings.ShowFilterSidebar = value;
+		}
+
+		partial void OnShowDebugDataChanged(bool value)
+		{
+			settings.ShowDebugData = value;
+		}
+
+		partial void OnShowGuildTagsInLogDetailChanged(bool value)
+		{
+			settings.ShowGuildTagsInLogDetail = value;
+		}
+
+		partial void OnShowFailurePercentagesInLogListChanged(bool value)
+		{
+			settings.ShowFailurePercentagesInLogList = value;
 		}
 
 		partial void OnMinDateChanged(DateTimeOffset? value)

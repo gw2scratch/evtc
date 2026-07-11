@@ -118,5 +118,28 @@
         <Style Selector="Button.link /template/ ContentPresenter">
             <Setter Property="TextBlock.TextDecorations" Value="Underline" />
         </Style>
+
+        <!-- Custom title-bar caption buttons (minimize/maximize/close), used because the main
+             window's ExtendClientAreaChromeHints="NoChrome" hides the OS-drawn ones. -->
+        <Style Selector="Button.caption">
+            <Setter Property="Width" Value="44" />
+            <Setter Property="Height" Value="36" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="CornerRadius" Value="0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+        <Style Selector="Button.caption:pointerover">
+            <Setter Property="Background" Value="{DynamicResource SystemControlBackgroundBaseLowBrush}" />
+        </Style>
+        <Style Selector="Button.caption-close:pointerover">
+            <Setter Property="Background" Value="#E81123" />
+        </Style>
+        <Style Selector="Button.caption-close:pointerover /template/ ContentPresenter">
+            <Setter Property="TextBlock.Foreground" Value="White" />
+        </Style>
     </Application.Styles>
 </Application>

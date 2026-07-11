@@ -7,20 +7,80 @@
         xmlns:models="using:GW2Scratch.ArcdpsLogManager.Avalonia.Models"
         mc:Ignorable="d" d:DesignWidth="1100" d:DesignHeight="680"
         x:Class="GW2Scratch.ArcdpsLogManager.Avalonia.Views.MainWindow"
+        x:Name="RootWindow"
         x:DataType="vm:MainWindowViewModel"
         Width="1150" Height="720"
         Background="{DynamicResource AppBackgroundBrush}"
         Icon="avares://GW2Scratch.ArcdpsLogManager.Avalonia/Assets/Images/program_icon.ico"
-        Title="arcdps Log Manager">
+        Title="arcdps Log Manager"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaChromeHints="NoChrome"
+        ExtendClientAreaTitleBarHeightHint="-1">
 
-    <DockPanel>
-        <!-- Top bar: reserved for the future menu on the left; theme picker sits top-right
-             as a single compact dropdown rather than its own toolbar block. -->
-        <Border DockPanel.Dock="Top" Padding="8,5" BorderThickness="0,0,0,1"
+    <!-- Custom header merging the menu bar into the window's title-bar row, instead of a separate
+         OS title bar (~32px) plus our own menu row (~40px) stacked on top of each other. Avalonia
+         offers three ways to draw into the title-bar area (ExtendClientAreaChromeHints):
+           - SystemChrome/PreferSystemChrome: keep the OS-drawn min/max/close buttons and just paint
+             extra content around them. Simple in theory, but the exact pixel area those buttons
+             reserve is OS/DPI-dependent and hard to get right without live, per-platform testing.
+           - Default: same idea, platform picks the chrome style.
+           - NoChrome (chosen here): the OS draws no chrome at all — we own the whole row, including
+             a custom minimize/maximize/close button cluster and manual window-dragging via
+             BeginMoveDrag. More upfront code, but fully within our control and consistent across
+             Windows/Linux/macOS instead of guessing at native button placement. This is the pattern
+             Avalonia's own sample apps use for custom title bars. -->
+    <!-- Margin compensates for OffScreenMargin: on Windows, a maximized NoChrome window's invisible
+         resize border extends slightly past the visible screen edge, which otherwise clips this
+         content by a few pixels along every edge. -->
+    <DockPanel Margin="{Binding #RootWindow.OffScreenMargin}">
+        <Border DockPanel.Dock="Top" Height="36" BorderThickness="0,0,0,1"
                 BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}">
-            <DockPanel>
-                <DropDownButton DockPanel.Dock="Right"
-                                Content="{Binding ThemeName, StringFormat='Theme: {0}'}">
+            <Grid ColumnDefinitions="Auto,Auto,*,Auto,Auto">
+                <Image Grid.Column="0" Source="avares://GW2Scratch.ArcdpsLogManager.Avalonia/Assets/Images/program_icon.ico"
+                       Width="16" Height="16" Margin="10,0,8,0" VerticalAlignment="Center"
+                       IsHitTestVisible="False" />
+
+                <!-- Application menu, matching the Eto ManagerForm's Data/View/Settings/About
+                     top-level menu structure. -->
+                <Menu Grid.Column="1" VerticalAlignment="Center">
+                    <MenuItem Header="_Data">
+                        <MenuItem Header="_Update logs with outdated data…" Click="OnOpenProcessingUpdateClick" />
+                        <MenuItem Header="_Compress logs…" Click="OnOpenCompressClick" />
+                        <Separator />
+                        <MenuItem Header="_Log cache…" Click="OnOpenCacheClick" />
+                        <MenuItem Header="_API cache…" Click="OnOpenApiClick" />
+                    </MenuItem>
+                    <MenuItem Header="_View">
+                        <MenuItem Header="Show filters in a _sidebar" ToggleType="CheckBox"
+                                  IsChecked="{Binding ShowFilterSidebar}" />
+                        <MenuItem Header="Show _guild tags in log details" ToggleType="CheckBox"
+                                  IsChecked="{Binding ShowGuildTagsInLogDetail}" />
+                        <MenuItem Header="Show failure health _percentages in log list" ToggleType="CheckBox"
+                                  IsChecked="{Binding ShowFailurePercentagesInLogList}" />
+                        <Separator />
+                        <MenuItem Header="Show _debug data" ToggleType="CheckBox"
+                                  IsChecked="{Binding ShowDebugData}" />
+                    </MenuItem>
+                    <MenuItem Header="_Settings">
+                        <MenuItem Header="_Settings…" Click="OnOpenSettingsClick" />
+                    </MenuItem>
+                    <MenuItem Header="_About">
+                        <MenuItem Header="Donate a coffee ❤️" Click="OnOpenDonateClick" />
+                        <Separator />
+                        <MenuItem Header="Changelog" Click="OnOpenChangelogClick" />
+                        <MenuItem Header="Website" Click="OnOpenWebsiteClick" />
+                        <MenuItem Header="About…" Click="OnOpenAboutClick" />
+                    </MenuItem>
+                </Menu>
+
+                <!-- Empty space acts as the window's drag handle, like a normal title bar. -->
+                <Border Grid.Column="2" Background="Transparent"
+                        PointerPressed="OnHeaderPointerPressed" DoubleTapped="OnHeaderDoubleTapped" />
+
+                <DropDownButton Grid.Column="3" VerticalAlignment="Center" Margin="0,0,4,0"
+                                Padding="8,4" FontSize="14"
+                                Content="{Binding Theme, Converter={x:Static views:ThemeIconConverter.Instance}}"
+                                ToolTip.Tip="{Binding ThemeName, StringFormat='Theme: {0}'}">
                     <DropDownButton.Flyout>
                         <MenuFlyout>
                             <MenuItem Header="System" Command="{Binding SetThemeCommand}" CommandParameter="System" />
@@ -29,22 +89,17 @@
                         </MenuFlyout>
                     </DropDownButton.Flyout>
                 </DropDownButton>
-                <!-- Application menu (left). -->
-                <Menu VerticalAlignment="Center">
-                    <MenuItem Header="_Program">
-                        <MenuItem Header="_Settings…" Click="OnOpenSettingsClick" />
-                        <Separator />
-                        <MenuItem Header="_About…" Click="OnOpenAboutClick" />
-                    </MenuItem>
-                    <MenuItem Header="_Data">
-                        <MenuItem Header="_Update logs with outdated data…" Click="OnOpenProcessingUpdateClick" />
-                        <MenuItem Header="_Compress logs…" Click="OnOpenCompressClick" />
-                        <Separator />
-                        <MenuItem Header="_Log cache…" Click="OnOpenCacheClick" />
-                        <MenuItem Header="_API cache…" Click="OnOpenApiClick" />
-                    </MenuItem>
-                </Menu>
-            </DockPanel>
+
+                <!-- Custom caption buttons, required because ExtendClientAreaChromeHints="NoChrome"
+                     hides the OS-drawn ones. -->
+                <StackPanel Grid.Column="4" Orientation="Horizontal">
+                    <Button Classes="caption" Content="−" Click="OnMinimizeClick" ToolTip.Tip="Minimize" />
+                    <Button Classes="caption"
+                            Content="{Binding #RootWindow.WindowState, Converter={x:Static views:WindowStateIconConverter.Instance}}"
+                            Click="OnMaximizeRestoreClick" ToolTip.Tip="Maximize" />
+                    <Button Classes="caption caption-close" Content="✕" Click="OnCloseClick" ToolTip.Tip="Close" />
+                </StackPanel>
+            </Grid>
         </Border>
 
         <!-- Status bar: log load status / background processing (placeholder wiring for now). -->
