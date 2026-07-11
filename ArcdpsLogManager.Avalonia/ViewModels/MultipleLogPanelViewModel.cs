@@ -29,7 +29,12 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels
 		[ObservableProperty] private string countText = "";
 		[ObservableProperty] private string successCountText = "0";
 		[ObservableProperty] private string failureCountText = "0";
-		[ObservableProperty] private string totalDurationText = "";
+		/// <summary>Sum of each selected log's own encounter duration (fight-clock time).</summary>
+		[ObservableProperty] private string sumOfDurationsText = "";
+
+		/// <summary>Wall-clock span from the earliest log's start to the latest log's end —
+		/// i.e. how long the whole selected session took, including time between pulls.</summary>
+		[ObservableProperty] private string sessionLengthText = "";
 
 		[ObservableProperty] private bool showDebugData;
 		[ObservableProperty] private string parseTimeText = "";
@@ -131,8 +136,14 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels
 			CountText = $"{logs.Count} logs selected";
 
 			var parsed = logs.Where(x => x.ParsingStatus == ParsingStatus.Parsed).ToList();
-			var totalDuration = parsed.Aggregate(TimeSpan.Zero, (acc, log) => acc + log.EncounterDuration);
-			TotalDurationText = FormatTimeSpan(totalDuration);
+			var sumOfDurations = parsed.Aggregate(TimeSpan.Zero, (acc, log) => acc + log.EncounterDuration);
+			SumOfDurationsText = FormatTimeSpan(sumOfDurations);
+
+			var timed = parsed.Where(x => x.EncounterStartTime != default).ToList();
+			SessionLengthText = timed.Count > 0
+				? FormatTimeSpan(timed.Max(x => x.EncounterStartTime + x.EncounterDuration) - timed.Min(x => x.EncounterStartTime))
+				: FormatTimeSpan(TimeSpan.Zero);
+
 			SuccessCountText = parsed.Count(x => x.EncounterResult == EncounterResult.Success).ToString();
 			FailureCountText = parsed.Count(x => x.EncounterResult == EncounterResult.Failure).ToString();
 			ParseTimeText = $"{logs.Sum(x => x.ParseMilliseconds)} ms";

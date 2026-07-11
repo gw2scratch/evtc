@@ -12,13 +12,17 @@
                 <!-- Statistics -->
                 <StackPanel Spacing="4" Margin="0,8,0,0">
                     <TextBlock Text="Statistics" FontWeight="SemiBold" />
-                    <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto">
+                    <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto">
                         <TextBlock Grid.Row="0" Grid.Column="0" Text="Success logs:" Margin="0,0,8,2" />
                         <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding SuccessCountText}" />
                         <TextBlock Grid.Row="1" Grid.Column="0" Text="Failure logs:" Margin="0,0,8,2" />
                         <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding FailureCountText}" />
-                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Total duration:" Margin="0,0,8,2" />
-                        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding TotalDurationText}" />
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Sum of log times:" Margin="0,0,8,2"
+                                   ToolTip.Tip="Total fight-clock time: each selected log's own encounter duration, added up." />
+                        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding SumOfDurationsText}" />
+                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Session length:" Margin="0,0,8,2"
+                                   ToolTip.Tip="Wall-clock time from the earliest log's start to the latest log's end, including time spent between pulls." />
+                        <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding SessionLengthText}" />
                     </Grid>
                 </StackPanel>
 
