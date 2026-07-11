@@ -159,11 +159,13 @@
                         <TreeView.ItemTemplate>
                             <TreeDataTemplate ItemsSource="{Binding Children}"
                                               x:DataType="models:LogGroupNode">
-                                <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
-                                    <Image Source="{Binding Icon}" Width="16" Height="16"
-                                           VerticalAlignment="Center" />
-                                    <TextBlock Text="{Binding Name}" VerticalAlignment="Center" />
-                                </StackPanel>
+                                <Grid ColumnDefinitions="Auto,*,Auto" VerticalAlignment="Center">
+                                    <Image Grid.Column="0" Source="{Binding Icon}" Width="16" Height="16"
+                                           VerticalAlignment="Center" Margin="0,0,6,0" />
+                                    <TextBlock Grid.Column="1" Text="{Binding Name}" VerticalAlignment="Center" />
+                                    <TextBlock Grid.Column="2" Text="{Binding LogCount}" VerticalAlignment="Center"
+                                               Opacity="0.6" Margin="10,0,0,0" />
+                                </Grid>
                             </TreeDataTemplate>
                         </TreeView.ItemTemplate>
                     </TreeView>

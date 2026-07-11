@@ -400,10 +400,11 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels
 				rowByLog[row.Log] = row;
 			}
 
-			rootGroup = new Logs.Filters.Groups.RootLogGroup(rows.Select(r => r.Log).ToList(), nameProvider);
+			var allLogs = rows.Select(r => r.Log).ToList();
+			rootGroup = new Logs.Filters.Groups.RootLogGroup(allLogs, nameProvider);
 			Filters.LogGroups = new[] { (Logs.Filters.Groups.LogGroup) rootGroup };
 			EncounterGroups.Clear();
-			EncounterGroups.Add(new Models.LogGroupNode(rootGroup, images));
+			EncounterGroups.Add(new Models.LogGroupNode(rootGroup, images, allLogs));
 
 			AvailableTags.Clear();
 			foreach (var tag in rows.SelectMany(r => r.Log.Tags.Select(t => t.Name)).Distinct().OrderBy(t => t))

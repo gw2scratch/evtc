@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
+using GW2Scratch.ArcdpsLogManager.Logs;
 using GW2Scratch.ArcdpsLogManager.Logs.Filters.Groups;
 using GW2Scratch.EVTCAnalytics.GameData.Encounters;
 
@@ -19,17 +20,22 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.Models
 		public Bitmap? Icon { get; }
 		public IReadOnlyList<LogGroupNode> Children { get; }
 
+		/// <summary>Count of (unfiltered) logs belonging to this group, matching the Eto
+		/// <c>LogEncounterFilterTree</c>'s "Count" column.</summary>
+		public int LogCount { get; }
+
 		[ObservableProperty] private bool isExpanded;
 
-		public LogGroupNode(LogGroup group, ImageProvider imageProvider)
+		public LogGroupNode(LogGroup group, ImageProvider imageProvider, IReadOnlyList<LogData> allLogs)
 		{
 			Group = group;
 			Icon = GetIcon(group, imageProvider);
+			LogCount = allLogs.Count(group.IsInGroup);
 
 			// Mirrors the Eto LogEncounterFilterTree default-expanded groups.
 			isExpanded = group is RootLogGroup or RaidLogGroup or RaidEncounterLogGroup or FractalLogGroup;
 
-			Children = group.Subgroups.Select(g => new LogGroupNode(g, imageProvider)).ToList();
+			Children = group.Subgroups.Select(g => new LogGroupNode(g, imageProvider, allLogs)).ToList();
 		}
 
 		private static Bitmap? GetIcon(LogGroup group, ImageProvider imageProvider)
