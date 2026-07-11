@@ -1,0 +1,23 @@
+<Project>
+  <!--
+  Single source of truth for the arcdps Log Manager version, shared by ArcdpsLogManager.Core and
+  every UI launcher (Eto, Avalonia, Wpf, Gtk) via <Import Project="../ArcdpsLogManagerVersion.props" />.
+
+  This must be a plain evaluated property, not something computed inside an MSBuild Target (as the
+  launcher projects used to do, copying it from Core's already-built DLL via GetAssemblyIdentity in
+  a target with AfterTargets="ResolveReferences"): the SDK's own assembly-info generation, which is
+  what actually bakes FileVersion/InformationalVersion into the compiled binary, runs before that
+  point in the build, so anything set inside a Target is too late to have any effect. Importing this
+  file makes Version available at evaluation time instead, before assembly info is generated.
+  -->
+  <PropertyGroup>
+    <!--
+    The last value is used to differentiate analytics versions. This is useful when developing a
+    new version of the manager and some analytics have changed, requiring logs to be reprocessed.
+    Without this, we wouldn't be able to detect a log has already been reprocessed during
+    development. Each new log data update causes a revision increase. See LogDataUpdater for the
+    updates.
+    -->
+    <Version>1.16.0.0</Version>
+  </PropertyGroup>
+</Project>

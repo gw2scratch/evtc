@@ -1,4 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+    <Import Project="../ArcdpsLogManagerVersion.props" />
 
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
@@ -37,36 +38,5 @@
             <Link>Assets\Images\%(RecursiveDir)%(Filename)%(Extension)</Link>
         </AvaloniaResource>
     </ItemGroup>
-
-    <PropertyGroup>
-        <!-- Warning: This has to match the assembly name defined in ArcdpsLogManager.Core.csproj -->
-        <CoreDllFilename>GW2Scratch.ArcdpsLogManager.Core</CoreDllFilename>
-    </PropertyGroup>
-
-    <!--
-    This target sets the version in the metadata of the executable to be the same as the version
-    of the core application assembly. Ported from the retired ArcdpsLogManager.Wpf launcher.
-
-    Note that this does not seem to have any effect if using any combination of AfterTargets and
-    BeforeTargets with Compile or Build, even though the assembly version is correctly retrieved.
-    -->
-    <Target Name="SetVersion" AfterTargets="ResolveReferences">
-        <ItemGroup>
-            <!--
-            To find the filename of the core assembly, we go through all project references
-            (this includes transitive references) and only keep the one with a matching name
-            -->
-            <CoreDllPath Include="@(_ResolvedProjectReferencePaths)" Condition="$([System.String]::Copy(%(Filename)).Contains('$(CoreDllFilename)'))" />
-        </ItemGroup>
-        <Error Text="Core assembly dll ($(CoreDllFilename)) not found." Condition="@(CoreDllPath) == ''" />
-        <GetAssemblyIdentity AssemblyFiles="@(CoreDllPath)">
-            <Output TaskParameter="Assemblies" ItemName="AssemblyInfo" />
-        </GetAssemblyIdentity>
-        <Message Text="Updating version to %(AssemblyInfo.Version)" />
-        <PropertyGroup>
-            <FileVersion>%(AssemblyInfo.Version)</FileVersion>
-            <InformationalVersion>%(AssemblyInfo.Version)</InformationalVersion>
-        </PropertyGroup>
-    </Target>
 
 </Project>

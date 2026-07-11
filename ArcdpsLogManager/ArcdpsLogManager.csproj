@@ -1,4 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+    <Import Project="../ArcdpsLogManagerVersion.props" />
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <RootNamespace>GW2Scratch.ArcdpsLogManager</RootNamespace>
@@ -9,15 +10,6 @@
         <AssemblyName>GW2Scratch.ArcdpsLogManager</AssemblyName>
         <LangVersion>latest</LangVersion>
         <Title>arcdps Log Manager</Title>
-        <!--
-        The last value in the version is used to differentiate analytics versions.
-        This is useful when developing a new version of the manager and some analytics have changed,
-        requiring logs to be reprocessed. Without this, we wouldn't be able to detect
-        a log has already been reprocessed during development.
-        Each new log data update causes a revision increase.
-        See LogDataUpdater for the updates.
-        -->
-        <Version>1.16.0.0</Version>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="DebounceThrottle" Version="2.0.0" />
