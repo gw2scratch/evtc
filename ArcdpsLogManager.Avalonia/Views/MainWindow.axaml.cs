@@ -1,6 +1,5 @@
 using System;
 using System.Diagnostics;
-using System.Reflection;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -124,15 +123,10 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.Views
 			window.ShowDialog(this);
 		}
 
-		private async void OnOpenAboutClick(object? sender, RoutedEventArgs e)
+		private void OnOpenAboutClick(object? sender, RoutedEventArgs e)
 		{
-			var version = Assembly.GetExecutingAssembly().GetName().Version;
-			string message = "arcdps Log Manager\n" +
-			                 $"Version {version}\n\n" +
-			                 "A manager for Guild Wars 2 arcdps encounter logs.\n" +
-			                 "Developed by Sejsel.\n\n" +
-			                 "https://github.com/gw2scratch/evtc";
-			await Dialogs.ShowInfoAsync(this, "About", message);
+			var window = new AboutWindow();
+			window.ShowDialog(this);
 		}
 
 		private static void OnOpenDonateClick(object? sender, RoutedEventArgs e) =>

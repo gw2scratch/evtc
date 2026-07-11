@@ -64,7 +64,7 @@
                     <MenuItem Header="_Settings">
                         <MenuItem Header="_Settings…" Click="OnOpenSettingsClick" />
                     </MenuItem>
-                    <MenuItem Header="_About">
+                    <MenuItem Header="_Help">
                         <MenuItem Header="Donate a coffee ❤️" Click="OnOpenDonateClick" />
                         <Separator />
                         <MenuItem Header="Changelog" Click="OnOpenChangelogClick" />
