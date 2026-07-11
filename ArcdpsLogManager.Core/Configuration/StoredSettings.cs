@@ -31,6 +31,12 @@ public class StoredSettings
 	public ApplicationTheme Theme { get; set; } = ApplicationTheme.System;
 
 	/// <summary>
+	/// Whether to use FluentTheme's compact control density. Used by the Avalonia UI; ignored by
+	/// the legacy Eto UI.
+	/// </summary>
+	public bool CompactUi { get; set; } = false;
+
+	/// <summary>
 	/// Persisted main-window placement. Used by the Avalonia UI; ignored by the legacy Eto UI.
 	/// </summary>
 	public WindowStateInfo WindowState { get; set; } = new WindowStateInfo();

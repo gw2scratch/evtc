@@ -55,10 +55,6 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels
 			new ProgramUpdateChecker("http://gw2scratch.com/releases/manager.json");
 		private LogCompressionProcessor? compressionProcessor;
 
-		[ObservableProperty]
-		[NotifyPropertyChangedFor(nameof(ThemeName))]
-		private ApplicationTheme theme;
-
 		[ObservableProperty] private string searchQuery = "";
 
 		[ObservableProperty] private string tagSearchText = "";
@@ -87,8 +83,6 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels
 		/// <summary>Distinct tags found across the logs, selectable to require them in the filter.</summary>
 		public ObservableCollection<Models.TagFilterItem> AvailableTags { get; } = new();
 
-		public string ThemeName => Theme.ToString();
-
 		/// <summary>The shared filter model (bound directly by the filter sidebar).</summary>
 		public LogFilters Filters { get; }
 
@@ -107,7 +101,6 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels
 		public MainWindowViewModel(ISettingsService settings)
 		{
 			this.settings = settings;
-			theme = settings.Theme;
 
 			showFilterSidebar = settings.ShowFilterSidebar;
 			showDebugData = settings.ShowDebugData;
@@ -658,24 +651,6 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels
 			cacheService.Dispose();
 			WeeklyClearsSection.Dispose();
 			GameDataSection.Dispose();
-		}
-
-		[RelayCommand]
-		private void SetTheme(string variant)
-		{
-			Theme = variant switch
-			{
-				"Light" => ApplicationTheme.Light,
-				"Dark" => ApplicationTheme.Dark,
-				_ => ApplicationTheme.System,
-			};
-		}
-
-		partial void OnThemeChanged(ApplicationTheme value)
-		{
-			// Persist the choice and apply it to the running application.
-			settings.Theme = value;
-			ThemeManager.Apply(value);
 		}
 
 		partial void OnShowFilterSidebarChanged(bool value)

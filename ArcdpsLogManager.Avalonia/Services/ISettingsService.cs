@@ -18,6 +18,7 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.Services
 	public interface ISettingsService : INotifyPropertyChanged
 	{
 		ApplicationTheme Theme { get; set; }
+		bool CompactUi { get; set; }
 		bool ShowFilterSidebar { get; set; }
 		bool ShowDebugData { get; set; }
 		bool ShowGuildTagsInLogDetail { get; set; }
@@ -27,6 +28,8 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.Services
 		string DpsReportUserToken { get; set; }
 		bool DpsReportAutoUpload { get; set; }
 		bool DpsReportAutoUploadApplyFilters { get; set; }
+		bool DpsReportUploadDetailedWvw { get; set; }
+		string DpsReportDomain { get; set; }
 		int? MinimumLogDurationSeconds { get; set; }
 		IReadOnlyList<string> LogRootPaths { get; set; }
 	}

@@ -46,6 +46,7 @@ namespace GW2Scratch.ArcdpsLogManager.Configuration
 			PlayerAccountNamesChanged += (sender, args) => SaveToFile();
 			WeeklyClearGroupsChanged += (sender, args) => SaveToFile();
 			ThemeChanged += (sender, args) => SaveToFile();
+			CompactUiChanged += (sender, args) => SaveToFile();
 
 			return LoadFromFile();
 		});
@@ -345,6 +346,19 @@ namespace GW2Scratch.ArcdpsLogManager.Configuration
 			}
 		}
 
+		public static bool CompactUi
+		{
+			get => Values.CompactUi;
+			set
+			{
+				if (Values.CompactUi != value)
+				{
+					Values.CompactUi = value;
+					OnCompactUiChanged();
+				}
+			}
+		}
+
 		/// <summary>
 		/// Persisted main-window placement (Avalonia UI). Setting this saves immediately; there is
 		/// no change event because nothing needs to react to it live.
@@ -377,6 +391,7 @@ namespace GW2Scratch.ArcdpsLogManager.Configuration
 		public static event EventHandler<EventArgs> PlayerAccountNamesChanged;
 		public static event EventHandler<EventArgs> WeeklyClearGroupsChanged;
 		public static event EventHandler<EventArgs> ThemeChanged;
+		public static event EventHandler<EventArgs> CompactUiChanged;
 
 		private static void OnLogRootPathsChanged()
 		{
@@ -466,6 +481,11 @@ namespace GW2Scratch.ArcdpsLogManager.Configuration
 		private static void OnThemeChanged()
 		{
 			ThemeChanged?.Invoke(null, EventArgs.Empty);
+		}
+
+		private static void OnCompactUiChanged()
+		{
+			CompactUiChanged?.Invoke(null, EventArgs.Empty);
 		}
 	}
 }

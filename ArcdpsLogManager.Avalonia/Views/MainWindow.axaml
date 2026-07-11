@@ -35,7 +35,7 @@
     <DockPanel Margin="{Binding #RootWindow.OffScreenMargin}">
         <Border DockPanel.Dock="Top" Height="36" BorderThickness="0,0,0,1"
                 BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}">
-            <Grid ColumnDefinitions="Auto,Auto,*,Auto,Auto">
+            <Grid ColumnDefinitions="Auto,Auto,*,Auto">
                 <Image Grid.Column="0" Source="avares://GW2Scratch.ArcdpsLogManager.Avalonia/Assets/Images/program_icon.ico"
                        Width="16" Height="16" Margin="10,0,8,0" VerticalAlignment="Center"
                        IsHitTestVisible="False" />
@@ -77,22 +77,9 @@
                 <Border Grid.Column="2" Background="Transparent"
                         PointerPressed="OnHeaderPointerPressed" DoubleTapped="OnHeaderDoubleTapped" />
 
-                <DropDownButton Grid.Column="3" VerticalAlignment="Center" Margin="0,0,4,0"
-                                Padding="8,4" FontSize="14"
-                                Content="{Binding Theme, Converter={x:Static views:ThemeIconConverter.Instance}}"
-                                ToolTip.Tip="{Binding ThemeName, StringFormat='Theme: {0}'}">
-                    <DropDownButton.Flyout>
-                        <MenuFlyout>
-                            <MenuItem Header="System" Command="{Binding SetThemeCommand}" CommandParameter="System" />
-                            <MenuItem Header="Light" Command="{Binding SetThemeCommand}" CommandParameter="Light" />
-                            <MenuItem Header="Dark" Command="{Binding SetThemeCommand}" CommandParameter="Dark" />
-                        </MenuFlyout>
-                    </DropDownButton.Flyout>
-                </DropDownButton>
-
                 <!-- Custom caption buttons, required because ExtendClientAreaChromeHints="NoChrome"
                      hides the OS-drawn ones. -->
-                <StackPanel Grid.Column="4" Orientation="Horizontal">
+                <StackPanel Grid.Column="3" Orientation="Horizontal">
                     <Button Classes="caption" Content="−" Click="OnMinimizeClick" ToolTip.Tip="Minimize" />
                     <Button Classes="caption"
                             Content="{Binding #RootWindow.WindowState, Converter={x:Static views:WindowStateIconConverter.Instance}}"

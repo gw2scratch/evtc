@@ -18,8 +18,13 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia
 
 		public override void OnFrameworkInitializationCompleted()
 		{
-			// Apply the persisted theme preference before any window is shown.
+			// Apply the persisted theme/density preferences before any window is shown, and keep
+			// re-applying live as they're changed from the Settings window (which binds directly to
+			// the static Settings class, not through MainWindowViewModel).
 			ThemeManager.Apply(Settings.Theme);
+			DensityManager.Apply(Settings.CompactUi);
+			Settings.ThemeChanged += (_, _) => ThemeManager.Apply(Settings.Theme);
+			Settings.CompactUiChanged += (_, _) => DensityManager.Apply(Settings.CompactUi);
 
 			if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
 			{

@@ -17,6 +17,7 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.Services
 		{
 			// Mirror the underlying static change events as INotifyPropertyChanged notifications.
 			Settings.ThemeChanged += (_, _) => Raise(nameof(Theme));
+			Settings.CompactUiChanged += (_, _) => Raise(nameof(CompactUi));
 			Settings.ShowFilterSidebarChanged += (_, _) => Raise(nameof(ShowFilterSidebar));
 			Settings.ShowDebugDataChanged += (_, _) => Raise(nameof(ShowDebugData));
 			Settings.ShowGuildTagsInLogDetailChanged += (_, _) => Raise(nameof(ShowGuildTagsInLogDetail));
@@ -26,6 +27,8 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.Services
 			Settings.DpsReportUserTokenChanged += (_, _) => Raise(nameof(DpsReportUserToken));
 			Settings.DpsReportAutoUploadChanged += (_, _) => Raise(nameof(DpsReportAutoUpload));
 			Settings.DpsReportAutoUploadApplyFiltersChanged += (_, _) => Raise(nameof(DpsReportAutoUploadApplyFilters));
+			Settings.DpsReportUploadDetailedWvwChanged += (_, _) => Raise(nameof(DpsReportUploadDetailedWvw));
+			Settings.DpsReportDomainChanged += (_, _) => Raise(nameof(DpsReportDomain));
 			Settings.MinimumLogDurationSecondsChanged += (_, _) => Raise(nameof(MinimumLogDurationSeconds));
 			Settings.LogRootPathChanged += (_, _) => Raise(nameof(LogRootPaths));
 		}
@@ -40,6 +43,12 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.Services
 		{
 			get => Settings.Theme;
 			set => Settings.Theme = value;
+		}
+
+		public bool CompactUi
+		{
+			get => Settings.CompactUi;
+			set => Settings.CompactUi = value;
 		}
 
 		public bool ShowFilterSidebar
@@ -94,6 +103,18 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.Services
 		{
 			get => Settings.DpsReportAutoUploadApplyFilters;
 			set => Settings.DpsReportAutoUploadApplyFilters = value;
+		}
+
+		public bool DpsReportUploadDetailedWvw
+		{
+			get => Settings.DpsReportUploadDetailedWvw;
+			set => Settings.DpsReportUploadDetailedWvw = value;
+		}
+
+		public string DpsReportDomain
+		{
+			get => Settings.DpsReportDomain;
+			set => Settings.DpsReportDomain = value;
 		}
 
 		public int? MinimumLogDurationSeconds
