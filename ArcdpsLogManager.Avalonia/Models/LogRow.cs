@@ -21,55 +21,77 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.Models
 	/// grid cells can bind directly, keeping scrolling/virtualization cheap (no per-render work).
 	/// Mirrors the columns produced by the Eto <c>Sections/LogList.cs</c>.
 	/// </summary>
+	/// <remarks>
+	/// All displayed fields are observable and can be recomputed in place via <see cref="Refresh"/>
+	/// (e.g. after a reparse) without replacing this object — the grid's row/cell selection is tied
+	/// to LogRow identity, so keeping the same instance around is what lets a reparse update the
+	/// row's contents without dropping the user's selection.
+	/// </remarks>
 	public sealed partial class LogRow : ObservableObject
 	{
+		private readonly ImageProvider images;
+		private readonly ILogNameProvider nameProvider;
+
 		/// <summary>The underlying log data (for the detail panel, favorite toggling, deletion, etc.).</summary>
 		public LogData Log { get; }
 
 		/// <summary>Observable so the ★ cell refreshes when toggled.</summary>
 		[ObservableProperty] private bool favorite;
 
-		public string Encounter { get; }
+		[ObservableProperty] private string encounter = "";
 
 		/// <summary>Observable so it can be recomputed live when
 		/// Settings.ShowFailurePercentagesInLogList changes, without needing a full reload.</summary>
-		[ObservableProperty] private string result;
+		[ObservableProperty] private string result = "";
 
-		public string Mode { get; }
-		public int Players { get; }
-		public string Duration { get; }
-		public DateTimeOffset Date { get; }
-		public string DateText { get; }
-		public string Character { get; }
-		public string Account { get; }
-		public string MapId { get; }
-		public string GameVersion { get; }
-		public string EvtcVersion { get; }
-		public string FractalScale { get; }
+		[ObservableProperty] private string mode = "";
+		[ObservableProperty] private int players;
+		[ObservableProperty] private string duration = "";
+		[ObservableProperty] private DateTimeOffset date;
+		[ObservableProperty] private string dateText = "";
+		[ObservableProperty] private string character = "";
+		[ObservableProperty] private string account = "";
+		[ObservableProperty] private string mapId = "";
+		[ObservableProperty] private string gameVersion = "";
+		[ObservableProperty] private string evtcVersion = "";
+		[ObservableProperty] private string fractalScale = "";
 
 		/// <summary>The encounter icon (with WvW / instance fallbacks), or null if none applies.</summary>
-		public Bitmap? EncounterIcon { get; }
+		[ObservableProperty] private Bitmap? encounterIcon;
 
 		/// <summary>
 		/// One profession/specialization icon per identified player, forming the composition column.
 		/// Pre-resolved (and bitmap-cached in the shared <see cref="ImageProvider"/>) to avoid
 		/// per-render lookups — this column is the plan's #1 render-cost risk.
 		/// </summary>
-		public IReadOnlyList<Bitmap> Composition { get; }
+		[ObservableProperty] private IReadOnlyList<Bitmap> composition = Array.Empty<Bitmap>();
 
 		/// <summary>Fractal mistlock instability icons for the row, ordered by name.</summary>
-		public IReadOnlyList<Bitmap> Instabilities { get; }
+		[ObservableProperty] private IReadOnlyList<Bitmap> instabilities = Array.Empty<Bitmap>();
 
 		public LogRow(LogData log, ImageProvider images, ILogNameProvider nameProvider)
 		{
 			Log = log;
+			this.images = images;
+			this.nameProvider = nameProvider;
+			Refresh();
+		}
 
-			favorite = log.IsFavorite;
+		/// <summary>
+		/// Recomputes every displayed field from the current state of <see cref="Log"/>, in place.
+		/// Called on initial construction, and again after a background reparse finishes so the row
+		/// reflects the new data without being replaced (which would drop the grid's selection).
+		/// </summary>
+		public void Refresh()
+		{
+			var log = Log;
+
+			Favorite = log.IsFavorite;
 			Encounter = log.ParsingStatus is ParsingStatus.Unparsed or ParsingStatus.Parsing
 				? "Processing..."
 				: nameProvider.GetName(log);
 
-			result = ComputeResultText(log, Settings.ShowFailurePercentagesInLogList);
+			Result = ComputeResultText(log, Settings.ShowFailurePercentagesInLogList);
 
 			Mode = log.EncounterMode switch
 			{
@@ -86,8 +108,8 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.Models
 				_ => "",
 			};
 
-			var players = log.Players?.ToList() ?? new List<LogPlayer>();
-			Players = players.Count;
+			var playerList = log.Players?.ToList() ?? new List<LogPlayer>();
+			Players = playerList.Count;
 			Duration = log.ShortDurationString;
 
 			Date = log.EncounterStartTime;
@@ -108,7 +130,7 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.Models
 			                ?? images.GetWvWMapIcon(log.MapId)
 			                ?? (log.Encounter == EncounterEnum.Map ? images.GetTinyInstanceIcon() : null);
 
-			Composition = players
+			Composition = playerList
 				.OrderBy(p => p.Profession)
 				.ThenBy(p => p.EliteSpecialization)
 				.Select(images.GetTinyProfessionIcon)
@@ -120,6 +142,16 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.Models
 				.OrderBy(GameNames.GetInstabilityName)
 				.Select(images.GetMistlockInstabilityIcon)
 				.ToList();
+		}
+
+		/// <summary>
+		/// Immediately shows a "Processing..." placeholder without waiting for the background
+		/// processor to actually pick up the job (it may be queued behind other scheduled logs) —
+		/// used right after scheduling a reparse so the row visibly changes at once.
+		/// </summary>
+		public void MarkProcessing()
+		{
+			Encounter = "Processing...";
 		}
 
 		/// <summary>Recomputes <see cref="Result"/> live when Settings.ShowFailurePercentagesInLogList

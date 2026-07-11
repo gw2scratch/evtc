@@ -543,22 +543,29 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels
 			bool changed = false;
 			while (processedQueue.TryDequeue(out var log))
 			{
-				var newRow = new LogRow(log, images, nameProvider);
-				if (rowByLog.TryGetValue(log, out var oldRow))
+				if (rowByLog.TryGetValue(log, out var row))
 				{
-					int index = allRows.IndexOf(oldRow);
-					if (index >= 0)
+					// Refresh the existing row in place (same identity) instead of replacing it, so a
+					// reparse of an already-known log doesn't drop the grid's selection.
+					var previousDate = row.Date;
+					row.Refresh();
+
+					// Re-insert at the sorted position rather than leaving it in place: parsing can
+					// refine EncounterStartTime from the file's creation-time estimate to the log's
+					// actual (precise) encounter start, which can shift where it belongs.
+					if (row.Date != previousDate)
 					{
-						allRows.RemoveAt(index);
+						allRows.Remove(row);
+						InsertRowSorted(row);
 					}
 				}
+				else
+				{
+					row = new LogRow(log, images, nameProvider);
+					InsertRowSorted(row);
+					rowByLog[log] = row;
+				}
 
-				// Re-insert at the sorted position rather than replacing in place: parsing can
-				// refine EncounterStartTime from the file's creation-time estimate to the log's
-				// actual (precise) encounter start, which can shift where it belongs.
-				InsertRowSorted(newRow);
-
-				rowByLog[log] = newRow;
 				changed = true;
 			}
 

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -11,6 +12,8 @@ using Avalonia.VisualTree;
 using GW2Scratch.ArcdpsLogManager.Avalonia.Models;
 using GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels;
 using GW2Scratch.ArcdpsLogManager.Configuration;
+using GW2Scratch.ArcdpsLogManager.Logs;
+using GW2Scratch.ArcdpsLogManager.Processing;
 
 namespace GW2Scratch.ArcdpsLogManager.Avalonia.Views
 {
@@ -27,6 +30,11 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.Views
 		private DataGrid? logGrid;
 		private readonly List<(string Header, CheckBox Check)> menuChecks = new();
 		private EventHandler<EventArgs>? hiddenColumnsHandler;
+
+		// Built once and reused for every header right-click; the row menu below is rebuilt per
+		// right-click instead, since its contents (Reparse/upload/Delete availability) depend on
+		// the row(s) under the pointer at the time.
+		private ContextMenu? columnMenu;
 
 		// Click-and-drag row selection (Avalonia's DataGrid only supports click / ctrl+click /
 		// shift+click natively; the Eto GridView also supported dragging across rows to select
@@ -45,7 +53,13 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.Views
 			}
 
 			ApplyColumnVisibility();
-			logGrid.ContextMenu = BuildColumnMenu();
+			columnMenu = BuildColumnMenu();
+			// Assigning ContextMenu here (rather than only inside OnGridContextRequested) primes
+			// Avalonia's context-menu machinery ahead of time: setting the property for the very
+			// first time during the same right-click gesture that's supposed to open it doesn't
+			// take effect synchronously, so without this the first right-click of the app silently
+			// does nothing and only the second one onward opens a menu.
+			logGrid.ContextMenu = columnMenu;
 			logGrid.KeyDown += OnGridKeyDown;
 			logGrid.SelectionChanged += OnGridSelectionChanged;
 
@@ -57,6 +71,12 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.Views
 			logGrid.AddHandler(InputElement.PointerMovedEvent, OnGridPointerMovedForDrag,
 				RoutingStrategies.Tunnel, handledEventsToo: true);
 			logGrid.AddHandler(InputElement.PointerReleasedEvent, OnGridPointerReleasedForDrag,
+				RoutingStrategies.Tunnel, handledEventsToo: true);
+
+			// Decide which context menu applies (column show/hide on the header, row actions on a
+			// data row) before the built-in bubble-phase handling opens whichever menu is currently
+			// assigned to logGrid.ContextMenu.
+			logGrid.AddHandler(ContextRequestedEvent, OnGridContextRequested,
 				RoutingStrategies.Tunnel, handledEventsToo: true);
 			logGrid.PointerCaptureLost += (_, _) =>
 			{
@@ -94,6 +114,12 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.Views
 			}
 
 			var rows = logGrid.SelectedItems.OfType<LogRow>().ToList();
+			await DeleteRowsAsync(rows);
+		}
+
+		// Shared by the Delete key and the row context menu's "Delete" item.
+		private async Task DeleteRowsAsync(IReadOnlyList<LogRow> rows)
+		{
 			if (rows.Count == 0)
 			{
 				return;
@@ -112,6 +138,9 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.Views
 				});
 			}
 		}
+
+		private MainWindowViewModel? GetShell() =>
+			TopLevel.GetTopLevel(this) is Window { DataContext: MainWindowViewModel shell } ? shell : null;
 
 		// Multi-selection wiring (Avalonia counterpart of the Eto LogList's
 		// GridView.SelectionChanged -> RefreshSelectionForDetailPanels). The DataGrid's
@@ -227,6 +256,140 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.Views
 			isDragSelecting = false;
 			dragAnchorItem = null;
 			e.Pointer.Capture(null);
+		}
+
+		// Decides, ahead of the built-in bubble-phase handling that actually opens the menu,
+		// whether a right-click landed on a column header (show the column show/hide menu) or a
+		// data row (show row actions: Reparse / upload status / Delete). Elsewhere (e.g. below the
+		// last row) shows no menu at all.
+		private void OnGridContextRequested(object? sender, ContextRequestedEventArgs e)
+		{
+			if (logGrid == null || !e.TryGetPosition(logGrid, out var position))
+			{
+				return;
+			}
+
+			var hit = logGrid.InputHitTest(position) as Visual;
+
+			if (hit?.FindAncestorOfType<DataGridColumnHeader>(includeSelf: true) != null)
+			{
+				logGrid.ContextMenu = columnMenu;
+				return;
+			}
+
+			if (hit?.FindAncestorOfType<DataGridRow>(includeSelf: true)?.DataContext is LogRow logRow)
+			{
+				// Right-clicking a row outside the current selection replaces it, matching typical
+				// list/grid context-menu behavior; right-clicking within an existing multi-selection
+				// keeps it so the menu applies to the whole selection.
+				if (!logGrid.SelectedItems.Contains(logRow))
+				{
+					logGrid.SelectedItems.Clear();
+					logGrid.SelectedItems.Add(logRow);
+				}
+
+				logGrid.ContextMenu = BuildRowMenu(logGrid.SelectedItems.OfType<LogRow>().ToList());
+				return;
+			}
+
+			logGrid.ContextMenu = null;
+		}
+
+		// Row actions: Reparse (re-processes the local file, keeping any existing upload URL),
+		// upload status (initiates an upload when missing, copies the URL once uploaded), and
+		// Delete (removes from the view and deletes the file from disk).
+		private ContextMenu BuildRowMenu(List<LogRow> rows)
+		{
+			var shell = GetShell();
+			var menu = new ContextMenu();
+			var items = new List<object>();
+
+			var processingService = shell?.Processing;
+			var reparseItem = new MenuItem { Header = "Reparse", IsEnabled = processingService != null };
+			reparseItem.Click += (_, _) =>
+			{
+				if (processingService == null)
+				{
+					return;
+				}
+
+				foreach (var row in rows)
+				{
+					row.MarkProcessing();
+					processingService.ScheduleReprocessing(row.Log);
+				}
+			};
+			items.Add(reparseItem);
+
+			items.Add(BuildUploadMenuItem(rows, processingService?.UploadProcessor));
+
+			items.Add(new Separator());
+
+			var deleteItem = new MenuItem { Header = "Delete" };
+			deleteItem.Click += async (_, _) => await DeleteRowsAsync(rows);
+			items.Add(deleteItem);
+
+			menu.ItemsSource = items;
+			return menu;
+		}
+
+		private MenuItem BuildUploadMenuItem(List<LogRow> rows, UploadProcessor? uploadProcessor)
+		{
+			var logs = rows.Select(r => r.Log).ToList();
+			int missing = logs.Count(x => x.DpsReportEIUpload.UploadState
+				is UploadState.NotUploaded or UploadState.UploadError or UploadState.ProcessingError);
+			int uploading = logs.Count(x => x.DpsReportEIUpload.UploadState
+				is UploadState.Queued or UploadState.Uploading);
+
+			var item = new MenuItem();
+
+			if (missing > 0)
+			{
+				item.Header = missing == 1 ? "Not uploaded" : $"Not uploaded ({missing})";
+				item.IsEnabled = uploadProcessor != null;
+				item.Click += (_, _) =>
+				{
+					if (uploadProcessor == null)
+					{
+						return;
+					}
+
+					foreach (var log in logs)
+					{
+						var state = log.DpsReportEIUpload.UploadState;
+						if (state is UploadState.NotUploaded or UploadState.UploadError or UploadState.ProcessingError)
+						{
+							uploadProcessor.ScheduleDpsReportEIUpload(log);
+						}
+					}
+				};
+			}
+			else if (uploading > 0)
+			{
+				item.Header = "Uploading...";
+				item.IsEnabled = false;
+			}
+			else
+			{
+				item.Header = rows.Count > 1 ? "Copy URLs" : "Copy URL";
+				item.Click += async (_, _) =>
+				{
+					string text = string.Join(Environment.NewLine,
+						logs.Where(x => x.DpsReportEIUpload.Url != null).Select(x => x.DpsReportEIUpload.Url!));
+					if (string.IsNullOrEmpty(text))
+					{
+						return;
+					}
+
+					var clipboard = TopLevel.GetTopLevel(this)?.Clipboard;
+					if (clipboard != null)
+					{
+						await clipboard.SetTextAsync(text);
+					}
+				};
+			}
+
+			return item;
 		}
 
 		private static string HeaderText(DataGridColumn column) => column.Header?.ToString() ?? "";

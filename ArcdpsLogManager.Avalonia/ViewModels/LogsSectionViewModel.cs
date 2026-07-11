@@ -45,13 +45,49 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels
 			MultipleDetail = new MultipleLogPanelViewModel(cacheService, images);
 		}
 
-		/// <summary>Replaces the grid contents with the given rows (called on the UI thread).</summary>
+		/// <summary>
+		/// Replaces the grid contents with the given rows (called on the UI thread). Synchronizes
+		/// <see cref="Logs"/> in place (Add/Remove/Move) rather than clearing and re-adding
+		/// everything: a full Clear() resets the DataGrid's selection, which would otherwise make
+		/// every filter change or reparse drop whatever the user had selected.
+		/// </summary>
 		public void SetLogs(IReadOnlyList<LogRow> rows)
 		{
-			Logs.Clear();
-			foreach (var row in rows)
+			if (Logs.Count == 0)
 			{
-				Logs.Add(row);
+				foreach (var row in rows)
+				{
+					Logs.Add(row);
+				}
+				return;
+			}
+
+			var desired = new HashSet<LogRow>(rows);
+			for (int i = Logs.Count - 1; i >= 0; i--)
+			{
+				if (!desired.Contains(Logs[i]))
+				{
+					Logs.RemoveAt(i);
+				}
+			}
+
+			for (int i = 0; i < rows.Count; i++)
+			{
+				var row = rows[i];
+				if (i < Logs.Count && ReferenceEquals(Logs[i], row))
+				{
+					continue;
+				}
+
+				int currentIndex = Logs.IndexOf(row);
+				if (currentIndex < 0)
+				{
+					Logs.Insert(i, row);
+				}
+				else
+				{
+					Logs.Move(currentIndex, i);
+				}
 			}
 		}
 

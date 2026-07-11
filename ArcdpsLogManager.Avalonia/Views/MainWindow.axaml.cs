@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -21,21 +22,28 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.Views
 		}
 
 		// Checks for a new program version once the window is shown (Avalonia counterpart of the
-		// Eto ManagerForm's Shown += CheckUpdates), gated by Settings.CheckForUpdates.
+		// Eto ManagerForm's Shown += CheckUpdates), gated by Settings.CheckForUpdates, then — once the
+		// initial cache load / directory discovery has finished — offers to reprocess any logs with
+		// outdated processed data (the Eto ManagerForm's LogSearchFinished -> ProcessingUpdateDialog).
 		private async void OnWindowOpened(object? sender, EventArgs e)
 		{
-			if (DataContext is MainWindowViewModel shell)
+			if (DataContext is not MainWindowViewModel shell)
 			{
-				var release = await shell.CheckForProgramUpdateAsync();
-				if (release != null)
-				{
-					var window = new ProgramUpdateWindow
-					{
-						DataContext = new ProgramUpdateWindowViewModel(release),
-					};
-					await window.ShowDialog(this);
-				}
+				return;
 			}
+
+			var release = await shell.CheckForProgramUpdateAsync();
+			if (release != null)
+			{
+				var window = new ProgramUpdateWindow
+				{
+					DataContext = new ProgramUpdateWindowViewModel(release),
+				};
+				await window.ShowDialog(this);
+			}
+
+			await shell.InitialLoadTask;
+			await ShowProcessingUpdateAsync(shell, silentIfNone: true);
 		}
 
 		private void InitializeComponent()
@@ -177,26 +185,43 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.Views
 			}
 		}
 
-		private void OnOpenProcessingUpdateClick(object? sender, RoutedEventArgs e)
+		private async void OnOpenProcessingUpdateClick(object? sender, RoutedEventArgs e)
 		{
-			if (DataContext is not MainWindowViewModel shell)
+			if (DataContext is MainWindowViewModel shell)
 			{
-				return;
+				await ShowProcessingUpdateAsync(shell, silentIfNone: false);
 			}
+		}
 
+		/// <summary>
+		/// Shows the "logs with outdated data" reprocessing dialog if any loaded logs need it.
+		/// Shared by the manual menu item and the automatic startup prompt. When
+		/// <paramref name="silentIfNone"/> is <see langword="true"/> (startup), the "nothing to do"
+		/// and read-only-cache cases return silently instead of surfacing an info dialog.
+		/// </summary>
+		private async Task ShowProcessingUpdateAsync(MainWindowViewModel shell, bool silentIfNone)
+		{
 			if (shell.Processing == null)
 			{
-				_ = Dialogs.ShowInfoAsync(this, "Update logs with outdated data",
-					"Reprocessing requires an active log directory scan. The cache is currently " +
-					"read-only (in use by another instance) or no log directories are configured.");
+				if (!silentIfNone)
+				{
+					await Dialogs.ShowInfoAsync(this, "Update logs with outdated data",
+						"Reprocessing requires an active log directory scan. The cache is currently " +
+						"read-only (in use by another instance) or no log directories are configured.");
+				}
+
 				return;
 			}
 
 			var updates = shell.GetLogUpdates();
 			if (updates.Count == 0)
 			{
-				_ = Dialogs.ShowInfoAsync(this, "Update logs with outdated data",
-					"No logs currently require reprocessing.");
+				if (!silentIfNone)
+				{
+					await Dialogs.ShowInfoAsync(this, "Update logs with outdated data",
+						"No logs currently require reprocessing.");
+				}
+
 				return;
 			}
 
@@ -204,7 +229,7 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.Views
 			{
 				DataContext = new ProcessingUpdateWindowViewModel(updates, shell.Processing),
 			};
-			window.ShowDialog(this);
+			await window.ShowDialog(this);
 		}
 
 		private void OnOpenAdvancedFiltersClick(object? sender, RoutedEventArgs e)
