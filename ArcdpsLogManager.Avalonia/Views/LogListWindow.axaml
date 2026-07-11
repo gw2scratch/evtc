@@ -1,0 +1,13 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels"
+        xmlns:views="using:GW2Scratch.ArcdpsLogManager.Avalonia.Views"
+        x:Class="GW2Scratch.ArcdpsLogManager.Avalonia.Views.LogListWindow"
+        x:DataType="vm:LogListWindowViewModel"
+        Width="900" Height="700"
+        Background="{DynamicResource AppBackgroundBrush}"
+        Icon="avares://GW2Scratch.ArcdpsLogManager.Avalonia/Assets/Images/program_icon.ico"
+        Title="{Binding Title}">
+
+    <views:LogsSectionView DataContext="{Binding Logs}" />
+</Window>

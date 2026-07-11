@@ -1,0 +1,34 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels"
+        x:Class="GW2Scratch.ArcdpsLogManager.Avalonia.Views.ProcessingUpdateWindow"
+        x:DataType="vm:ProcessingUpdateWindowViewModel"
+        Width="560" SizeToContent="Height"
+        WindowStartupLocation="CenterOwner"
+        Background="{DynamicResource AppBackgroundBrush}"
+        Icon="avares://GW2Scratch.ArcdpsLogManager.Avalonia/Assets/Images/program_icon.ico"
+        Title="Manager update">
+
+    <StackPanel Margin="16" Spacing="12">
+        <TextBlock TextWrapping="Wrap"
+                   Text="This new version of the log manager brings improvements for processing some of the logs. They have to be processed again to correctly update the data. Affected logs are listed below. Do you wish to do so now?" />
+
+        <DataGrid ItemsSource="{Binding Rows}"
+                  IsReadOnly="True"
+                  CanUserSortColumns="True"
+                  CanUserResizeColumns="True"
+                  GridLinesVisibility="Horizontal"
+                  SelectionMode="Single"
+                  Height="260">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Logs" Binding="{Binding LogCount}" Width="80" MinWidth="60" />
+                <DataGridTextColumn Header="Reason" Binding="{Binding Reason}" Width="420" MinWidth="200" />
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
+            <Button Content="Later" Click="OnLaterClick" MinWidth="90" IsCancel="True" />
+            <Button Content="Yes" Click="OnYesClick" MinWidth="90" IsDefault="True" />
+        </StackPanel>
+    </StackPanel>
+</Window>

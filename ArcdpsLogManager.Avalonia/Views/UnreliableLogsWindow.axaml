@@ -1,0 +1,35 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels"
+        x:Class="GW2Scratch.ArcdpsLogManager.Avalonia.Views.UnreliableLogsWindow"
+        x:DataType="vm:UnreliableLogsWindowViewModel"
+        Width="500" SizeToContent="Height"
+        WindowStartupLocation="CenterOwner"
+        Background="{DynamicResource AppBackgroundBrush}"
+        Icon="avares://GW2Scratch.ArcdpsLogManager.Avalonia/Assets/Images/program_icon.ico"
+        Title="Warning: Unreliable log results">
+
+    <StackPanel Margin="16" Spacing="12">
+        <TextBlock TextWrapping="Wrap"
+                   Text="Some of the selected logs currently have unreliable success detection in rare scenarios. The logs may rarely display a failure even when they are successful." />
+
+        <Border BorderThickness="1" Padding="10"
+                BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}">
+            <StackPanel Spacing="4">
+                <TextBlock Text="Affected encounters" FontWeight="SemiBold" />
+                <ItemsControl ItemsSource="{Binding EncounterNames}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding StringFormat=' • {0}'}" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </Border>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
+            <Button Content="Cancel" Click="OnCancelClick" MinWidth="90" IsCancel="True" />
+            <Button Content="Delete anyway" Click="OnConfirmClick" MinWidth="120" />
+        </StackPanel>
+    </StackPanel>
+</Window>

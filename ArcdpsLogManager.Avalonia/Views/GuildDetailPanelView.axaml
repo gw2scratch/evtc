@@ -1,0 +1,96 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels"
+             xmlns:models="using:GW2Scratch.ArcdpsLogManager.Avalonia.Models"
+             x:Class="GW2Scratch.ArcdpsLogManager.Avalonia.Views.GuildDetailPanelView"
+             x:DataType="vm:GuildDetailPanelViewModel">
+
+    <Panel>
+        <TextBlock Text="Select a guild to see its details."
+                   Opacity="0.6" Margin="16"
+                   HorizontalAlignment="Center" VerticalAlignment="Center"
+                   IsVisible="{Binding !HasSelection}" />
+
+        <DockPanel IsVisible="{Binding HasSelection}" Margin="12">
+            <StackPanel DockPanel.Dock="Top" Spacing="4" Margin="0,0,0,8">
+                <TextBlock FontSize="16" FontWeight="Bold" TextWrapping="Wrap">
+                    <Run Text="{Binding GuildName}" /><Run Text=" [" /><Run Text="{Binding GuildTag}" /><Run Text="]" />
+                </TextBlock>
+                <TextBlock Text="{Binding MemberCountText}" Opacity="0.8" />
+            </StackPanel>
+
+            <TabControl>
+                <TabItem Header="Accounts">
+                    <DataGrid ItemsSource="{Binding Members}"
+                              IsReadOnly="True"
+                              CanUserSortColumns="True"
+                              CanUserResizeColumns="True"
+                              GridLinesVisibility="Horizontal"
+                              SelectionMode="Single">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Account" Binding="{Binding AccountName}"
+                                                 Width="160" MinWidth="100" />
+                            <DataGridTextColumn Header="Characters" Binding="{Binding CharacterCount}"
+                                                 Width="90" MinWidth="60" />
+                            <DataGridTextColumn Header="Logs" Binding="{Binding LogCount}"
+                                                 Width="70" MinWidth="50" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </TabItem>
+                <TabItem Header="Characters">
+                    <DataGrid ItemsSource="{Binding Characters}"
+                              IsReadOnly="True"
+                              CanUserSortColumns="True"
+                              CanUserResizeColumns="True"
+                              GridLinesVisibility="Horizontal"
+                              SelectionMode="Single">
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Header="" Width="30">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate x:DataType="models:GuildCharacterRow">
+                                        <Image Source="{Binding Icon}" Width="18" Height="18"
+                                               HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Header="Character" Binding="{Binding Name}"
+                                                 Width="130" MinWidth="90" />
+                            <DataGridTextColumn Header="Account" Binding="{Binding AccountName}"
+                                                 Width="130" MinWidth="90" />
+                            <DataGridTextColumn Header="Logs" Binding="{Binding LogCount}"
+                                                 Width="70" MinWidth="50" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </TabItem>
+                <TabItem Header="Logs">
+                    <!-- The list of logs with a member of this guild (the Eto panel opened this in a
+                         separate window via "Show logs with this guild"; shown inline here instead). -->
+                    <DataGrid ItemsSource="{Binding Logs}"
+                              IsReadOnly="True"
+                              CanUserSortColumns="True"
+                              CanUserResizeColumns="True"
+                              GridLinesVisibility="Horizontal"
+                              SelectionMode="Single">
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Header="Encounter" Width="150" MinWidth="100">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate x:DataType="models:LogRow">
+                                        <StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+                                            <Image Source="{Binding EncounterIcon}" Width="18" Height="18"
+                                                   VerticalAlignment="Center" />
+                                            <TextBlock Text="{Binding Encounter}" VerticalAlignment="Center" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Header="Result" Binding="{Binding Result}" Width="90" MinWidth="60" />
+                            <DataGridTextColumn Header="Date" Binding="{Binding DateText}" Width="130" MinWidth="90" />
+                            <DataGridTextColumn Header="Duration" Binding="{Binding Duration}" Width="70" MinWidth="50" />
+                            <DataGridTextColumn Header="Character" Binding="{Binding Character}" Width="110" MinWidth="80" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </TabItem>
+            </TabControl>
+        </DockPanel>
+    </Panel>
+</UserControl>

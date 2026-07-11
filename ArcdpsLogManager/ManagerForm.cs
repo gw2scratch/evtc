@@ -466,7 +466,9 @@ namespace GW2Scratch.ArcdpsLogManager
 				}
 			};
 			// Required in case the map name API request takes longer than creation of the panel.
-			LogNameProvider.MapNamesUpdated += (_, _) => filterPanel.UpdateLogs(logs);
+			// MapNamesUpdated is raised on a background thread (the provider no longer marshals),
+			// so we marshal to the UI thread here, consistent with the Processed handler above.
+			LogNameProvider.MapNamesUpdated += (_, _) => Application.Instance.AsyncInvoke(() => filterPanel.UpdateLogs(logs));
 
 			return filterPanel;
 		}
@@ -614,7 +616,10 @@ namespace GW2Scratch.ArcdpsLogManager
 			// Statistics
 			var statistics = new StatisticsSection(ImageProvider, LogNameProvider);
 			FilteredLogsUpdated += (sender, args) => statistics.UpdateDataFromLogs(logsFiltered.ToList());
-			LogNameProvider.MapNamesUpdated += (_, _) => statistics.UpdateDataFromLogs(logsFiltered.ToList());
+			// MapNamesUpdated is raised on a background thread (the provider no longer marshals),
+			// so we marshal to the UI thread here.
+			LogNameProvider.MapNamesUpdated += (_, _) =>
+				Application.Instance.AsyncInvoke(() => statistics.UpdateDataFromLogs(logsFiltered.ToList()));
 
 			// Game data collecting
 			var gameDataCollecting = new GameDataCollecting(logList, LogCache, ApiData, LogDataProcessor, UploadProcessor, ImageProvider, LogNameProvider);

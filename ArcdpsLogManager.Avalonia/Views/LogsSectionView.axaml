@@ -1,0 +1,115 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels"
+             xmlns:models="using:GW2Scratch.ArcdpsLogManager.Avalonia.Models"
+             xmlns:views="using:GW2Scratch.ArcdpsLogManager.Avalonia.Views"
+             x:Class="GW2Scratch.ArcdpsLogManager.Avalonia.Views.LogsSectionView"
+             x:DataType="vm:LogsSectionViewModel"
+             Background="{DynamicResource AppBackgroundBrush}">
+
+    <Grid ColumnDefinitions="*,4,340">
+        <!-- The log grid: DataGrid fed by the real cache, virtualized. -->
+        <DataGrid Grid.Column="0"
+                  Name="LogGrid"
+                  ItemsSource="{Binding Logs}"
+                  SelectedItem="{Binding SelectedLog}"
+                  IsReadOnly="True"
+                  CanUserSortColumns="True"
+                  CanUserResizeColumns="True"
+                  GridLinesVisibility="Horizontal"
+                  SelectionMode="Extended">
+            <DataGrid.Columns>
+                <!-- Favorite: a ★/☆ toggle button that persists through the log cache. -->
+                <DataGridTemplateColumn Header="★" Width="34" SortMemberPath="Favorite">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate x:DataType="models:LogRow">
+                            <Button Background="Transparent" BorderThickness="0" Padding="0"
+                                    HorizontalAlignment="Center" VerticalAlignment="Center"
+                                    Content="{Binding Favorite, Converter={x:Static views:FavoriteStarConverter.Instance}}"
+                                    Command="{Binding $parent[DataGrid].((vm:LogsSectionViewModel)DataContext).ToggleFavoriteCommand}"
+                                    CommandParameter="{Binding}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <!-- Encounter name with per-cell icon (validates the LogData -> Bitmap image layer).
+                     Pixel width (not star): Avalonia's DataGrid resizes star-sized columns
+                     counter-intuitively, so a concrete width + MinWidth gives normal drag behaviour. -->
+                <DataGridTemplateColumn Header="Encounter" Width="240" MinWidth="140" SortMemberPath="Encounter">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate x:DataType="models:LogRow">
+                            <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                                <Image Source="{Binding EncounterIcon}" Width="20" Height="20"
+                                       VerticalAlignment="Center" />
+                                <TextBlock Text="{Binding Encounter}" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Mode" Binding="{Binding Mode}" Width="Auto" />
+                <DataGridTextColumn Header="Result" Binding="{Binding Result}" Width="Auto" />
+                <DataGridTextColumn Header="Scale" Binding="{Binding FractalScale}" Width="Auto" />
+                <!-- Instabilities: a variable set of icons per row. -->
+                <DataGridTemplateColumn Header="Instabilities" Width="Auto" CanUserSort="False">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate x:DataType="models:LogRow">
+                            <ItemsControl ItemsSource="{Binding Instabilities}" VerticalAlignment="Center" Margin="2,0">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal" Spacing="2" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Image Source="{Binding}" Width="18" Height="18" />
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Date" Binding="{Binding DateText}" Width="Auto" SortMemberPath="Date" />
+                <DataGridTextColumn Header="Duration" Binding="{Binding Duration}" Width="Auto" />
+                <DataGridTextColumn Header="Character" Binding="{Binding Character}" Width="Auto" />
+                <DataGridTextColumn Header="Account" Binding="{Binding Account}" Width="Auto" />
+                <!-- Composition column: many profession icons per row (the plan's #1 render-cost risk). -->
+                <DataGridTemplateColumn Header="Players" Width="Auto" SortMemberPath="Players">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate x:DataType="models:LogRow">
+                            <ItemsControl ItemsSource="{Binding Composition}" VerticalAlignment="Center" Margin="2,0">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal" Spacing="1" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Image Source="{Binding}" Width="18" Height="18" />
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Map ID" Binding="{Binding MapId}" Width="Auto" />
+                <DataGridTextColumn Header="Game Version" Binding="{Binding GameVersion}" Width="Auto" />
+                <DataGridTextColumn Header="arcdps Version" Binding="{Binding EvtcVersion}" Width="Auto" />
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <GridSplitter Grid.Column="1" ResizeDirection="Columns" Background="Transparent" />
+
+        <!-- Single-log detail panel, swapped for the multi-log aggregate panel when 2+ logs are
+             selected (Avalonia counterpart of how the Eto LogList swaps LogDetailPanel/MultipleLogPanel). -->
+        <Border Grid.Column="2" BorderThickness="1,0,0,0"
+                BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}">
+            <Panel>
+                <Panel IsVisible="{Binding !HasMultipleSelection}">
+                    <views:LogDetailPanelView DataContext="{Binding Detail}" />
+                </Panel>
+                <Panel IsVisible="{Binding HasMultipleSelection}">
+                    <views:MultipleLogPanelView DataContext="{Binding MultipleDetail}" />
+                </Panel>
+            </Panel>
+        </Border>
+    </Grid>
+</UserControl>

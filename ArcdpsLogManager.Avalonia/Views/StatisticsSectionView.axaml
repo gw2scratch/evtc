@@ -1,0 +1,77 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels"
+             xmlns:models="using:GW2Scratch.ArcdpsLogManager.Avalonia.Models"
+             x:Class="GW2Scratch.ArcdpsLogManager.Avalonia.Views.StatisticsSectionView"
+             x:DataType="vm:StatisticsSectionViewModel"
+             Background="{DynamicResource AppBackgroundBrush}">
+
+    <TabControl Margin="4">
+        <TabItem Header="Encounters">
+            <DockPanel Margin="6">
+                <TextBlock DockPanel.Dock="Top" Text="{Binding CountText}" Opacity="0.7" Margin="2,0,0,6" />
+                <DataGrid ItemsSource="{Binding Encounters}"
+                          IsReadOnly="True"
+                          CanUserSortColumns="True"
+                          CanUserResizeColumns="True"
+                          GridLinesVisibility="Horizontal"
+                          SelectionMode="Single">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Encounter name" Binding="{Binding Name}" Width="240" MinWidth="140" />
+                        <DataGridTextColumn Header="Logs" Binding="{Binding LogCount}" Width="70" MinWidth="50" />
+                        <DataGridTextColumn Header="Total time" Binding="{Binding TotalTime}" Width="130" MinWidth="90"
+                                            SortMemberPath="TotalTimeValue" />
+                        <DataGridTextColumn Header="Successes" Binding="{Binding Successes}" Width="90" MinWidth="70" />
+                        <DataGridTextColumn Header="Time in successes" Binding="{Binding TimeInSuccesses}" Width="140" MinWidth="90" />
+                        <DataGridTextColumn Header="Average success time" Binding="{Binding AverageSuccessTime}" Width="160" MinWidth="100" />
+                        <DataGridTextColumn Header="Failures" Binding="{Binding Failures}" Width="80" MinWidth="60" />
+                        <DataGridTextColumn Header="Time in failures" Binding="{Binding TimeInFailures}" Width="140" MinWidth="90" />
+                        <DataGridTextColumn Header="Average failure time" Binding="{Binding AverageFailureTime}" Width="160" MinWidth="100" />
+                        <DataGridTextColumn Header="Success rate" Binding="{Binding SuccessRate}" Width="110" MinWidth="80"
+                                            SortMemberPath="SuccessRateValue" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+        </TabItem>
+        <TabItem Header="Specializations">
+            <Grid ColumnDefinitions="*,*" Margin="6">
+                <DockPanel Grid.Column="0" Margin="0,0,8,0">
+                    <TextBlock DockPanel.Dock="Top" Text="Profession counts" FontWeight="SemiBold" Margin="0,0,0,6" />
+                    <DataGrid ItemsSource="{Binding Professions}" IsReadOnly="True"
+                              CanUserSortColumns="True" GridLinesVisibility="Horizontal" SelectionMode="Single">
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Header="" Width="34" CanUserSort="False">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate x:DataType="models:ProfessionStatRow">
+                                        <Image Source="{Binding Icon}" Width="20" Height="20" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Header="Profession" Binding="{Binding Name}" Width="150" MinWidth="90" />
+                            <DataGridTextColumn Header="Count" Binding="{Binding Count}" Width="80" MinWidth="60" />
+                            <DataGridTextColumn Header="Avg / log" Binding="{Binding Average}" Width="90" MinWidth="70" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
+
+                <DockPanel Grid.Column="1" Margin="8,0,0,0">
+                    <TextBlock DockPanel.Dock="Top" Text="Elite specialization counts" FontWeight="SemiBold" Margin="0,0,0,6" />
+                    <DataGrid ItemsSource="{Binding EliteSpecializations}" IsReadOnly="True"
+                              CanUserSortColumns="True" GridLinesVisibility="Horizontal" SelectionMode="Single">
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Header="" Width="34" CanUserSort="False">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate x:DataType="models:SpecStatRow">
+                                        <Image Source="{Binding Icon}" Width="20" Height="20" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Header="Specialization" Binding="{Binding Name}" Width="160" MinWidth="90" />
+                            <DataGridTextColumn Header="Count" Binding="{Binding Count}" Width="80" MinWidth="60" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
+            </Grid>
+        </TabItem>
+    </TabControl>
+</UserControl>

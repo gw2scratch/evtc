@@ -1,0 +1,158 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="using:GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels"
+        xmlns:views="using:GW2Scratch.ArcdpsLogManager.Avalonia.Views"
+        xmlns:models="using:GW2Scratch.ArcdpsLogManager.Avalonia.Models"
+        mc:Ignorable="d" d:DesignWidth="1100" d:DesignHeight="680"
+        x:Class="GW2Scratch.ArcdpsLogManager.Avalonia.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Width="1150" Height="720"
+        Background="{DynamicResource AppBackgroundBrush}"
+        Icon="avares://GW2Scratch.ArcdpsLogManager.Avalonia/Assets/Images/program_icon.ico"
+        Title="arcdps Log Manager">
+
+    <DockPanel>
+        <!-- Top bar: reserved for the future menu on the left; theme picker sits top-right
+             as a single compact dropdown rather than its own toolbar block. -->
+        <Border DockPanel.Dock="Top" Padding="8,5" BorderThickness="0,0,0,1"
+                BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}">
+            <DockPanel>
+                <DropDownButton DockPanel.Dock="Right"
+                                Content="{Binding ThemeName, StringFormat='Theme: {0}'}">
+                    <DropDownButton.Flyout>
+                        <MenuFlyout>
+                            <MenuItem Header="System" Command="{Binding SetThemeCommand}" CommandParameter="System" />
+                            <MenuItem Header="Light" Command="{Binding SetThemeCommand}" CommandParameter="Light" />
+                            <MenuItem Header="Dark" Command="{Binding SetThemeCommand}" CommandParameter="Dark" />
+                        </MenuFlyout>
+                    </DropDownButton.Flyout>
+                </DropDownButton>
+                <!-- Application menu (left). -->
+                <Menu VerticalAlignment="Center">
+                    <MenuItem Header="_Program">
+                        <MenuItem Header="_Settings…" Click="OnOpenSettingsClick" />
+                        <Separator />
+                        <MenuItem Header="_About…" Click="OnOpenAboutClick" />
+                    </MenuItem>
+                    <MenuItem Header="_Data">
+                        <MenuItem Header="_Update logs with outdated data…" Click="OnOpenProcessingUpdateClick" />
+                        <MenuItem Header="_Compress logs…" Click="OnOpenCompressClick" />
+                        <Separator />
+                        <MenuItem Header="_Log cache…" Click="OnOpenCacheClick" />
+                        <MenuItem Header="_API cache…" Click="OnOpenApiClick" />
+                    </MenuItem>
+                </Menu>
+            </DockPanel>
+        </Border>
+
+        <!-- Status bar: log load status / background processing (placeholder wiring for now). -->
+        <Border DockPanel.Dock="Bottom" Padding="12,6" BorderThickness="0,1,0,0"
+                BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}">
+            <TextBlock Text="{Binding LogsSection.StatusText}" VerticalAlignment="Center" />
+        </Border>
+
+        <!-- Main area: filter sidebar (collapsible via Settings.ShowFilterSidebar) + tabbed sections.
+             A DockPanel so the sidebar yields its space entirely when hidden. -->
+        <DockPanel>
+            <Border DockPanel.Dock="Left" Width="280" BorderThickness="0,0,1,0"
+                    IsVisible="{Binding ShowFilterSidebar}"
+                    BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}">
+                <ScrollViewer>
+                    <StackPanel Spacing="8" Margin="10">
+                        <TextBlock Text="Filters" FontWeight="SemiBold" />
+
+                        <TextBox Text="{Binding SearchQuery}" Watermark="Search name / player…" />
+
+                      
+                        <TextBlock Text="Result" FontWeight="SemiBold" Margin="0,4,0,0" />
+                        <CheckBox Content="Success" IsChecked="{Binding Filters.ShowSuccessfulLogs}" />
+                        <CheckBox Content="Failure" IsChecked="{Binding Filters.ShowFailedLogs}" />
+                        <CheckBox Content="Unknown" IsChecked="{Binding Filters.ShowUnknownLogs}" />
+
+                        <TextBlock Text="Mode" FontWeight="SemiBold" Margin="0,4,0,0" />
+                        <CheckBox Content="Normal" IsChecked="{Binding Filters.ShowNormalModeLogs}" />
+                        <CheckBox Content="Challenge" IsChecked="{Binding Filters.ShowChallengeModeLogs}" />
+                        <CheckBox Content="Legendary CM" IsChecked="{Binding Filters.ShowLegendaryChallengeModeLogs}" />
+                        <CheckBox Content="Emboldened" IsChecked="{Binding Filters.ShowEmboldenedModeLogs}" />
+                        <CheckBox Content="Quickplay" IsChecked="{Binding Filters.ShowQuickplayModeLogs}" />
+
+                        <TextBlock Text="Favorites" FontWeight="SemiBold" Margin="0,4,0,0" />
+                        <CheckBox Content="Favorite" IsChecked="{Binding Filters.ShowFavoriteLogs}" />
+                        <CheckBox Content="Non-favorite" IsChecked="{Binding Filters.ShowNonFavoriteLogs}" />
+
+                        <TextBlock Text="Player count" FontWeight="SemiBold" Margin="0,4,0,0" />
+                        <Grid ColumnDefinitions="Auto,*,Auto,*">
+                            <TextBlock Grid.Column="0" Text="Min" VerticalAlignment="Center" Margin="0,0,4,0" />
+                            <NumericUpDown Grid.Column="1" Minimum="0" Maximum="100" Increment="1" Margin="0,0,6,0"
+                                           FormatString="0" Value="{Binding Filters.PlayerFilters.MinPlayerCount}" />
+                            <TextBlock Grid.Column="2" Text="Max" VerticalAlignment="Center" Margin="0,0,4,0" />
+                            <NumericUpDown Grid.Column="3" Minimum="0" Maximum="100" Increment="1"
+                                           FormatString="0" Value="{Binding Filters.PlayerFilters.MaxPlayerCount}" />
+                        </Grid>
+
+                        <TextBlock Text="Date range" FontWeight="SemiBold" Margin="0,4,0,0" />
+                        <TextBlock Text="From" FontSize="11" Opacity="0.7" />
+                        <DatePicker SelectedDate="{Binding MinDate}" />
+                        <TextBlock Text="To" FontSize="11" Opacity="0.7" />
+                        <DatePicker SelectedDate="{Binding MaxDate}" />
+                        <Button Content="Clear dates" Command="{Binding ClearDatesCommand}"
+                                HorizontalAlignment="Left" />
+
+                        <TextBlock Text="Tags" FontWeight="SemiBold" Margin="0,4,0,0" />
+                        <ItemsControl ItemsSource="{Binding AvailableTags}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="models:TagFilterItem">
+                                    <CheckBox Content="{Binding Name}" IsChecked="{Binding IsSelected}" />
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                        <TextBlock Text="Encounters" FontWeight="SemiBold" Margin="0,4,0,0" />
+                        <TreeView ItemsSource="{Binding EncounterGroups}"
+                                  SelectedItem="{Binding SelectedGroup}"
+                                  Height="240">
+                            <TreeView.ItemTemplate>
+                                <TreeDataTemplate ItemsSource="{Binding Children}"
+                                                  x:DataType="models:LogGroupNode">
+                                    <TextBlock Text="{Binding Name}" />
+                                </TreeDataTemplate>
+                            </TreeView.ItemTemplate>
+                        </TreeView>
+
+                        <Button Content="{Binding AdvancedFiltersButtonText}"
+                                HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                                Margin="0,4,0,0" Click="OnOpenAdvancedFiltersClick" />
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+
+            <TabControl>
+                <TabItem Header="Logs">
+                    <views:LogsSectionView DataContext="{Binding LogsSection}" />
+                </TabItem>
+                <TabItem Header="Players">
+                    <views:PlayersSectionView DataContext="{Binding PlayersSection}" />
+                </TabItem>
+                <TabItem Header="Guilds">
+                    <views:GuildsSectionView DataContext="{Binding GuildsSection}" />
+                </TabItem>
+                <TabItem Header="Statistics">
+                    <views:StatisticsSectionView DataContext="{Binding StatisticsSection}" />
+                </TabItem>
+                <TabItem Header="Weekly Clears">
+                    <views:WeeklyClearsSectionView DataContext="{Binding WeeklyClearsSection}" />
+                </TabItem>
+                <!-- Debug tabs: only shown when Settings.ShowDebugData is enabled, exactly like the
+                     Eto ManagerForm gates its "Game data"/"Services" TabPages. -->
+                <TabItem Header="Game data" IsVisible="{Binding ShowDebugData}">
+                    <views:GameDataSectionView DataContext="{Binding GameDataSection}" />
+                </TabItem>
+                <TabItem Header="Services" IsVisible="{Binding ShowDebugData}">
+                    <views:ServicesSectionView DataContext="{Binding ServicesSection}" />
+                </TabItem>
+            </TabControl>
+        </DockPanel>
+    </DockPanel>
+</Window>

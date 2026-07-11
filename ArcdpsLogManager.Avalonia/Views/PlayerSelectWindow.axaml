@@ -1,0 +1,45 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels"
+        x:Class="GW2Scratch.ArcdpsLogManager.Avalonia.Views.PlayerSelectWindow"
+        x:DataType="vm:PlayerSelectWindowViewModel"
+        Width="600" Height="500"
+        WindowStartupLocation="CenterOwner"
+        Background="{DynamicResource AppBackgroundBrush}"
+        Icon="avares://GW2Scratch.ArcdpsLogManager.Avalonia/Assets/Images/program_icon.ico"
+        Title="Select a player">
+
+    <DockPanel Margin="12">
+        <TextBlock DockPanel.Dock="Top" Margin="0,0,0,8" TextWrapping="Wrap"
+                   Text="Pick an account seen among the currently loaded logs." />
+
+        <Grid DockPanel.Dock="Top" ColumnDefinitions="Auto,*" Margin="0,0,0,8">
+            <TextBlock Grid.Column="0" Text="Filter by character or account name"
+                       VerticalAlignment="Center" Margin="0,0,8,0" />
+            <TextBox Name="FilterTextBox" Grid.Column="1" Text="{Binding Filter}" Watermark="name…" />
+        </Grid>
+
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right"
+                    Spacing="8" Margin="0,10,0,0">
+            <Button Content="Cancel" Click="OnCancelClick" MinWidth="90" IsCancel="True" />
+            <Button Content="Select" Click="OnSelectClick" MinWidth="90" IsDefault="True" />
+        </StackPanel>
+
+        <DataGrid Name="PlayerGrid"
+                  ItemsSource="{Binding Players}"
+                  SelectedItem="{Binding SelectedPlayer}"
+                  IsReadOnly="True"
+                  CanUserSortColumns="True"
+                  CanUserResizeColumns="True"
+                  GridLinesVisibility="Horizontal"
+                  SelectionMode="Single"
+                  DoubleTapped="OnRowDoubleTapped">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Account name" Binding="{Binding AccountName}"
+                                    Width="360" MinWidth="140" />
+                <DataGridTextColumn Header="Log count" Binding="{Binding LogCount}"
+                                    Width="100" MinWidth="70" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
+</Window>

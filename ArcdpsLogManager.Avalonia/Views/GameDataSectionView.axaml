@@ -1,0 +1,87 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels"
+             xmlns:models="using:GW2Scratch.ArcdpsLogManager.Avalonia.Models"
+             x:Class="GW2Scratch.ArcdpsLogManager.Avalonia.Views.GameDataSectionView"
+             x:DataType="vm:GameDataSectionViewModel"
+             Background="{DynamicResource AppBackgroundBrush}">
+
+    <DockPanel Margin="12">
+        <StackPanel DockPanel.Dock="Top" Spacing="6">
+            <TextBlock TextWrapping="Wrap"
+                       Text="Collects a list of all different agent species and skills found in logs (uses the logs currently shown in the Logs tab)." />
+            <TextBlock TextWrapping="Wrap"
+                       Text="Requires all logs to be processed again as this data is not cached." />
+
+            <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center" Margin="0,6,0,0">
+                <TextBlock Text="Threads to use for parallel processing" VerticalAlignment="Center" />
+                <NumericUpDown Minimum="1" Maximum="64" Increment="1" FormatString="0" Width="100"
+                                Value="{Binding ThreadCount}" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+                <Button Content="Collect data" Command="{Binding CollectDataCommand}" />
+                <Button Content="Cancel" Command="{Binding CancelCommand}" />
+            </StackPanel>
+
+            <StackPanel Spacing="2">
+                <ProgressBar Minimum="0" Maximum="{Binding ProgressMax}" Value="{Binding ProgressValue}" />
+                <TextBlock Text="{Binding ProgressText}" HorizontalAlignment="Center" />
+            </StackPanel>
+        </StackPanel>
+
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Spacing="8"
+                    HorizontalAlignment="Center" Margin="0,8,0,0">
+            <Button Content="Export species data to csv" Click="OnExportSpeciesClick" />
+            <Button Content="Export skill data to csv" Click="OnExportSkillsClick" />
+        </StackPanel>
+
+        <TabControl Margin="0,8,0,0">
+            <TabItem Header="Species">
+                <DataGrid ItemsSource="{Binding SpeciesRows}"
+                          IsReadOnly="True"
+                          CanUserSortColumns="True"
+                          CanUserResizeColumns="True"
+                          GridLinesVisibility="Horizontal">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Species ID" Binding="{Binding SpeciesId}" Width="90" MinWidth="70" />
+                        <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="260" MinWidth="120" />
+                        <DataGridTextColumn Header="Times seen" Binding="{Binding TimesSeen}" Width="100" MinWidth="80" />
+                        <DataGridTemplateColumn Header="Logs" Width="260" MinWidth="160">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate x:DataType="models:SpeciesDataRow">
+                                    <Button Content="{Binding LogsText}" Click="OnOpenSpeciesLogsClick"
+                                            Background="Transparent" BorderThickness="0"
+                                            HorizontalAlignment="Left" HorizontalContentAlignment="Left" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </TabItem>
+            <TabItem Header="Skills">
+                <DataGrid ItemsSource="{Binding SkillRows}"
+                          IsReadOnly="True"
+                          CanUserSortColumns="True"
+                          CanUserResizeColumns="True"
+                          GridLinesVisibility="Horizontal">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Skill ID" Binding="{Binding SkillId}" Width="90" MinWidth="70" />
+                        <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="220" MinWidth="120" />
+                        <DataGridTextColumn Header="Type" Binding="{Binding TypeText}" Width="90" MinWidth="70" />
+                        <DataGridTextColumn Header="Times seen" Binding="{Binding TimesSeen}" Width="100" MinWidth="80" />
+                        <DataGridTemplateColumn Header="Logs" Width="260" MinWidth="160">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate x:DataType="models:SkillDataRow">
+                                    <Button Content="{Binding LogsText}" Click="OnOpenSkillLogsClick"
+                                            Background="Transparent" BorderThickness="0"
+                                            HorizontalAlignment="Left" HorizontalContentAlignment="Left" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </TabItem>
+        </TabControl>
+    </DockPanel>
+</UserControl>

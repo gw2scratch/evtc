@@ -1,0 +1,22 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels"
+        x:Class="GW2Scratch.ArcdpsLogManager.Avalonia.Views.ProgramUpdateWindow"
+        x:DataType="vm:ProgramUpdateWindowViewModel"
+        Width="420" SizeToContent="Height"
+        WindowStartupLocation="CenterOwner"
+        Background="{DynamicResource AppBackgroundBrush}"
+        Icon="avares://GW2Scratch.ArcdpsLogManager.Avalonia/Assets/Images/program_icon.ico"
+        Title="Update available">
+
+    <StackPanel Margin="16" Spacing="12">
+        <TextBlock TextWrapping="Wrap" Text="{Binding Message}" />
+        <Button Content="View changes" Click="OnChangelogClick" HorizontalAlignment="Left" />
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
+            <Button Content="Ignore" Click="OnIgnoreClick" MinWidth="80" />
+            <Button Content="Later" Click="OnLaterClick" MinWidth="80" IsCancel="True" />
+            <Button Content="Download" Click="OnDownloadClick" MinWidth="90" IsDefault="True" />
+        </StackPanel>
+    </StackPanel>
+</Window>

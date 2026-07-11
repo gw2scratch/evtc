@@ -1,0 +1,35 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="GW2Scratch.ArcdpsLogManager.Avalonia.App"
+             RequestedThemeVariant="Default">
+    <!-- RequestedThemeVariant="Default" follows the operating system light/dark setting.
+         The in-app toggle overrides it at runtime. -->
+
+    <Application.Resources>
+        <ResourceDictionary>
+            <!-- App surface colour per theme. Fluent's stock dark base reads almost pure black;
+                 we use a softer charcoal so panels/grids don't look like a solid black block.
+                 Views bind their background to {DynamicResource AppBackgroundBrush}. -->
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Dark">
+                    <SolidColorBrush x:Key="AppBackgroundBrush" Color="#26262A" />
+                    <!-- A handful of embedded PNGs (e.g. the weekly-clears "not logged"/"did not
+                         exist" status icons) are dark gray line-art on transparent background,
+                         drawn for a light UI and low-contrast on our dark surface. Views wrap
+                         those specific icons in a Border with Classes.mono, styled to use this
+                         brush as a backdrop chip; it is transparent in Light so unaffected there. -->
+                    <SolidColorBrush x:Key="MonochromeIconBackdropBrush" Color="#DCDCDC" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Light">
+                    <SolidColorBrush x:Key="AppBackgroundBrush" Color="#FAFAFA" />
+                    <SolidColorBrush x:Key="MonochromeIconBackdropBrush" Color="Transparent" />
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+
+    <Application.Styles>
+        <FluentTheme />
+        <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml" />
+    </Application.Styles>
+</Application>

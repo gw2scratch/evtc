@@ -1,0 +1,116 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels"
+             xmlns:models="using:GW2Scratch.ArcdpsLogManager.Avalonia.Models"
+             x:Class="GW2Scratch.ArcdpsLogManager.Avalonia.Views.LogDetailPanelView"
+             x:DataType="vm:LogDetailPanelViewModel">
+
+    <Panel>
+        <!-- Placeholder shown when nothing is selected. -->
+        <TextBlock Text="Select a log to see its details."
+                   Opacity="0.6" Margin="16"
+                   HorizontalAlignment="Center" VerticalAlignment="Center"
+                   IsVisible="{Binding !HasSelection}" />
+
+        <ScrollViewer IsVisible="{Binding HasSelection}">
+            <StackPanel Margin="12" Spacing="6">
+                <TextBlock Text="{Binding Name}" FontSize="18" FontWeight="Bold" TextWrapping="Wrap" />
+                <TextBlock Text="{Binding ModeText}" FontStyle="Italic" TextWrapping="Wrap"
+                           IsVisible="{Binding HasMode}" />
+                <TextBlock Text="{Binding ResultText}" />
+                <TextBlock Text="{Binding FileName}" Opacity="0.6" FontSize="11" TextWrapping="Wrap" />
+
+                <!-- Fractal instabilities -->
+                <StackPanel Spacing="4" IsVisible="{Binding HasInstabilities}">
+                    <TextBlock Text="Instabilities" FontWeight="SemiBold" Margin="0,6,0,0" />
+                    <ItemsControl ItemsSource="{Binding Instabilities}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal" Spacing="4" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Image Source="{Binding}" Width="22" Height="22" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+
+                <!-- dps.report upload -->
+                <StackPanel Spacing="2" Margin="0,6,0,0">
+                    <TextBlock Text="dps.report" FontWeight="SemiBold" />
+                    <TextBlock Text="{Binding UploadStatus}" />
+                    <StackPanel Orientation="Horizontal" Spacing="4" Margin="0,2,0,0">
+                        <TextBox Name="UploadUrlBox" Text="{Binding UploadUrl}" IsReadOnly="True" Width="180"
+                                 IsVisible="{Binding HasUploadUrl}" />
+                        <Button Name="CopyUrlButton" Content="Copy" IsEnabled="{Binding HasUploadUrl}" />
+                        <Button Name="OpenUrlButton" Content="Open" IsEnabled="{Binding HasUploadUrl}" />
+                        <Button Content="{Binding UploadButtonText}" Command="{Binding UploadCommand}" />
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- Tags (add/remove) -->
+                <StackPanel Spacing="4" Margin="0,6,0,0">
+                    <TextBlock Text="Tags" FontWeight="SemiBold" />
+                    <ItemsControl ItemsSource="{Binding Tags}" IsVisible="{Binding HasTags}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="{DynamicResource SystemControlBackgroundBaseLowBrush}"
+                                        CornerRadius="4" Padding="6,2" Margin="0,0,4,4">
+                                    <StackPanel Orientation="Horizontal" Spacing="4">
+                                        <TextBlock Text="{Binding}" VerticalAlignment="Center" />
+                                        <Button Content="✕" Padding="2,0" FontSize="10"
+                                                Background="Transparent" BorderThickness="0"
+                                                Command="{Binding $parent[ItemsControl].((vm:LogDetailPanelViewModel)DataContext).RemoveTagCommand}"
+                                                CommandParameter="{Binding}" />
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <StackPanel Orientation="Horizontal" Spacing="4">
+                        <TextBox Text="{Binding NewTag}" Watermark="Add tag…" Width="160" />
+                        <Button Content="Add" Command="{Binding AddTagCommand}" />
+                    </StackPanel>
+                </StackPanel>
+
+                <Separator Margin="0,6" />
+
+                <!-- Group composition (hidden for failed logs) -->
+                <StackPanel Spacing="4" IsVisible="{Binding !IsFailed}">
+                    <TextBlock Text="Group composition" FontWeight="SemiBold" />
+                    <ItemsControl ItemsSource="{Binding Players}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="models:PlayerRow">
+                                <Grid ColumnDefinitions="24,Auto,*,Auto" Margin="0,2">
+                                    <Image Grid.Column="0" Source="{Binding Icon}" Width="20" Height="20"
+                                           VerticalAlignment="Center" />
+                                    <TextBlock Grid.Column="1" Text="{Binding CharacterName}"
+                                               VerticalAlignment="Center" Margin="4,0" />
+                                    <TextBlock Grid.Column="2" Text="{Binding AccountName}"
+                                               VerticalAlignment="Center" Margin="4,0" Opacity="0.6" />
+                                    <TextBlock Grid.Column="3" Text="{Binding SubgroupText}"
+                                               VerticalAlignment="Center" Margin="4,0" Opacity="0.6" />
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+
+                <!-- Failed-processing section -->
+                <StackPanel Spacing="4" IsVisible="{Binding IsFailed}">
+                    <TextBlock Text="Processing failed" FontWeight="SemiBold"
+                               Foreground="{DynamicResource SystemErrorTextColor}" />
+                    <TextBox Text="{Binding FailureText}" IsReadOnly="True" AcceptsReturn="True"
+                             TextWrapping="Wrap" MaxHeight="220" />
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+    </Panel>
+</UserControl>

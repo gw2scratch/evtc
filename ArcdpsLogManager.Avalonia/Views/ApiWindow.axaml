@@ -1,0 +1,29 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels"
+        x:Class="GW2Scratch.ArcdpsLogManager.Avalonia.Views.ApiWindow"
+        x:DataType="vm:ApiWindowViewModel"
+        Width="520" SizeToContent="Height"
+        WindowStartupLocation="CenterOwner"
+        Background="{DynamicResource AppBackgroundBrush}"
+        Icon="avares://GW2Scratch.ArcdpsLogManager.Avalonia/Assets/Images/program_icon.ico"
+        Title="API data">
+
+    <StackPanel Margin="16" Spacing="12">
+        <TextBlock TextWrapping="Wrap"
+                   Text="Guild names and tags are loaded from the official GW2 API, as the EVTC logs only contain GUID values." />
+
+        <Grid ColumnDefinitions="200,*" RowDefinitions="Auto,Auto" Margin="0,4">
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="Guilds:" />
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding GuildCountText}" />
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="Cache file size:" />
+            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding SizeText}" />
+        </Grid>
+
+        <CheckBox Content="Use the GW2 API" IsChecked="{Binding Settings.UseGW2Api}" />
+        <Button Content="Delete the API cache" Click="OnDeleteClick" HorizontalAlignment="Left" />
+
+        <Button Content="Close" HorizontalAlignment="Right" MinWidth="90" Click="OnCloseClick"
+                IsDefault="True" IsCancel="True" />
+    </StackPanel>
+</Window>

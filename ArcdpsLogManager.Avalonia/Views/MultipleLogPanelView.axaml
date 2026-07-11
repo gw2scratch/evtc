@@ -1,0 +1,105 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels"
+             x:Class="GW2Scratch.ArcdpsLogManager.Avalonia.Views.MultipleLogPanelView"
+             x:DataType="vm:MultipleLogPanelViewModel">
+
+    <Panel IsVisible="{Binding HasSelection}">
+        <ScrollViewer>
+            <StackPanel Margin="12" Spacing="6">
+                <TextBlock Text="{Binding CountText}" FontSize="16" FontWeight="Bold" />
+
+                <!-- Statistics -->
+                <StackPanel Spacing="4" Margin="0,8,0,0">
+                    <TextBlock Text="Statistics" FontWeight="SemiBold" />
+                    <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto">
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Success logs:" Margin="0,0,8,2" />
+                        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding SuccessCountText}" />
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Failure logs:" Margin="0,0,8,2" />
+                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding FailureCountText}" />
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Total duration:" Margin="0,0,8,2" />
+                        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding TotalDurationText}" />
+                    </Grid>
+                </StackPanel>
+
+                <!-- Debug data (mirrors the Eto panel's "Debug data" group, shown only when the
+                     debug-data setting is enabled). -->
+                <StackPanel Spacing="4" Margin="0,8,0,0" IsVisible="{Binding ShowDebugData}">
+                    <TextBlock Text="Debug data" FontWeight="SemiBold" />
+                    <Grid ColumnDefinitions="Auto,*">
+                        <TextBlock Grid.Column="0" Text="Time spent processing:" Margin="0,0,8,0" />
+                        <TextBlock Grid.Column="1" Text="{Binding ParseTimeText}" />
+                    </Grid>
+                    <Button Content="Reprocess all" Command="{Binding ReprocessAllCommand}"
+                            HorizontalAlignment="Left" />
+                </StackPanel>
+
+                <!-- Tags common to every selected log. -->
+                <StackPanel Spacing="4" Margin="0,8,0,0">
+                    <TextBlock Text="Tags (common to all selected)" FontWeight="SemiBold" />
+                    <ItemsControl ItemsSource="{Binding Tags}" IsVisible="{Binding HasTags}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="{DynamicResource SystemControlBackgroundBaseLowBrush}"
+                                        CornerRadius="4" Padding="6,2" Margin="0,0,4,4">
+                                    <StackPanel Orientation="Horizontal" Spacing="4">
+                                        <TextBlock Text="{Binding}" VerticalAlignment="Center" />
+                                        <Button Content="✕" Padding="2,0" FontSize="10"
+                                                Background="Transparent" BorderThickness="0"
+                                                Command="{Binding $parent[ItemsControl].((vm:MultipleLogPanelViewModel)DataContext).RemoveTagCommand}"
+                                                CommandParameter="{Binding}" />
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <StackPanel Orientation="Horizontal" Spacing="4">
+                        <TextBox Text="{Binding NewTag}" Watermark="Add tag to all selected…" Width="200" />
+                        <Button Content="Add" Command="{Binding AddTagCommand}" />
+                    </StackPanel>
+                </StackPanel>
+
+                <Separator Margin="0,6" />
+
+                <!-- dps.report aggregate status. -->
+                <StackPanel Spacing="4">
+                    <TextBlock Text="dps.report (Elite Insights)" FontWeight="SemiBold" />
+                    <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto">
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Not uploaded:" Margin="0,0,8,2" />
+                        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding NotUploadedText}" />
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Uploading:" Margin="0,0,8,2" />
+                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding UploadingText}" />
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Uploaded:" Margin="0,0,8,2" />
+                        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding UploadedText}" />
+                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Upload failed:" Margin="0,0,8,2"
+                                   IsVisible="{Binding HasUploadFailures}" />
+                        <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding UploadFailedText}"
+                                   IsVisible="{Binding HasUploadFailures}" />
+                        <TextBlock Grid.Row="4" Grid.Column="0" Text="dps.report error:" Margin="0,0,8,2"
+                                   IsVisible="{Binding HasProcessingFailures}" />
+                        <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding ProcessingFailedText}"
+                                   IsVisible="{Binding HasProcessingFailures}" />
+                    </Grid>
+                    <ProgressBar Minimum="0" Maximum="{Binding UploadProgressMax}"
+                                 Value="{Binding UploadProgressValue}" Height="16" />
+                    <TextBox Text="{Binding UploadedUrlsText}"
+                             IsReadOnly="True" AcceptsReturn="True" TextWrapping="Wrap" MaxHeight="120" />
+                    <StackPanel Orientation="Horizontal" Spacing="4" Margin="0,4,0,0">
+                        <Button Name="CopyLinksButton" Content="Copy links" IsEnabled="{Binding HasUploadedLogs}" />
+                        <Button Name="OpenLinksButton" Content="Open uploaded logs in a browser"
+                                IsEnabled="{Binding HasUploadedLogs}" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Spacing="4" Margin="0,4,0,0">
+                        <Button Content="{Binding UploadButtonText}" Command="{Binding UploadMissingCommand}" />
+                        <Button Content="Cancel" Command="{Binding CancelUploadsCommand}" />
+                    </StackPanel>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+    </Panel>
+</UserControl>

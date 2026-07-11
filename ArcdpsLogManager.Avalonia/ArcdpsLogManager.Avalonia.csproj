@@ -1,0 +1,71 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net8.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+        <ApplicationManifest>app.manifest</ApplicationManifest>
+        <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+        <RootNamespace>GW2Scratch.ArcdpsLogManager.Avalonia</RootNamespace>
+        <AssemblyName>GW2Scratch.ArcdpsLogManager.Avalonia</AssemblyName>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Avalonia" Version="11.2.1" />
+        <PackageReference Include="Avalonia.Desktop" Version="11.2.1" />
+        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.2.1" />
+        <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.2.1" />
+        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.2.1" />
+        <PackageReference Include="Avalonia.Diagnostics" Version="11.2.1" Condition="'$(Configuration)' == 'Debug'" />
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\ArcdpsLogManager.Core\ArcdpsLogManager.Core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <!--
+        The image assets are linked (not copied) from the existing Eto project during the
+        migration so we do not duplicate the ~175 PNGs. The Link metadata gives them stable
+        logical avares:// paths (avares://.../Assets/Images/...). At the Phase 10 cutover the
+        Eto project is deleted and these files should be physically moved into this project.
+        -->
+        <AvaloniaResource Include="..\ArcdpsLogManager\Images\**">
+            <Link>Assets\Images\%(RecursiveDir)%(Filename)%(Extension)</Link>
+        </AvaloniaResource>
+    </ItemGroup>
+
+    <PropertyGroup>
+        <!-- Warning: This has to match the assembly name defined in ArcdpsLogManager.Core.csproj -->
+        <CoreDllFilename>GW2Scratch.ArcdpsLogManager.Core</CoreDllFilename>
+    </PropertyGroup>
+
+    <!--
+    This target sets the version in the metadata of the executable to be the same as the version
+    of the core application assembly. Ported from the retired ArcdpsLogManager.Wpf launcher.
+
+    Note that this does not seem to have any effect if using any combination of AfterTargets and
+    BeforeTargets with Compile or Build, even though the assembly version is correctly retrieved.
+    -->
+    <Target Name="SetVersion" AfterTargets="ResolveReferences">
+        <ItemGroup>
+            <!--
+            To find the filename of the core assembly, we go through all project references
+            (this includes transitive references) and only keep the one with a matching name
+            -->
+            <CoreDllPath Include="@(_ResolvedProjectReferencePaths)" Condition="$([System.String]::Copy(%(Filename)).Contains('$(CoreDllFilename)'))" />
+        </ItemGroup>
+        <Error Text="Core assembly dll ($(CoreDllFilename)) not found." Condition="@(CoreDllPath) == ''" />
+        <GetAssemblyIdentity AssemblyFiles="@(CoreDllPath)">
+            <Output TaskParameter="Assemblies" ItemName="AssemblyInfo" />
+        </GetAssemblyIdentity>
+        <Message Text="Updating version to %(AssemblyInfo.Version)" />
+        <PropertyGroup>
+            <FileVersion>%(AssemblyInfo.Version)</FileVersion>
+            <InformationalVersion>%(AssemblyInfo.Version)</InformationalVersion>
+        </PropertyGroup>
+    </Target>
+
+</Project>
