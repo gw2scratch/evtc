@@ -69,8 +69,18 @@
             <Border Grid.Column="0" MinWidth="220" BorderThickness="0,0,1,0"
                     IsVisible="{Binding ShowFilterSidebar}"
                     BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}">
-                    <ScrollViewer>
-                        <StackPanel Spacing="8" Margin="10">
+                <!-- A DockPanel (not a single ScrollViewer) so "Advanced filters" pins to the very
+                     bottom and "Encounters" fills all remaining vertical space instead of being
+                     sized to a fixed height: the scrollable filters above it dock to the top, the
+                     button docks to the bottom, and the Encounters block (last, undocked) fills
+                     whatever space is left between them. -->
+                <DockPanel Margin="10">
+                    <Button DockPanel.Dock="Bottom" Content="{Binding AdvancedFiltersButtonText}"
+                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                            Margin="0,8,0,0" Click="OnOpenAdvancedFiltersClick" />
+
+                    <ScrollViewer DockPanel.Dock="Top">
+                        <StackPanel Spacing="8">
                             <TextBlock Text="Filters" FontWeight="SemiBold" />
 
                             <TextBox Text="{Binding SearchQuery}" Watermark="Search name / player…" />
@@ -135,34 +145,30 @@
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
-
-                            <TextBlock Text="Encounters" FontWeight="SemiBold" Margin="0,4,0,0" />
-                            <TreeView ItemsSource="{Binding EncounterGroups}"
-                                      SelectedItem="{Binding SelectedGroup}"
-                                      Height="280">
-                                <TreeView.Styles>
-                                    <Style Selector="TreeViewItem" x:DataType="models:LogGroupNode">
-                                        <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
-                                    </Style>
-                                </TreeView.Styles>
-                                <TreeView.ItemTemplate>
-                                    <TreeDataTemplate ItemsSource="{Binding Children}"
-                                                      x:DataType="models:LogGroupNode">
-                                        <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
-                                            <Image Source="{Binding Icon}" Width="16" Height="16"
-                                                   VerticalAlignment="Center" />
-                                            <TextBlock Text="{Binding Name}" VerticalAlignment="Center" />
-                                        </StackPanel>
-                                    </TreeDataTemplate>
-                                </TreeView.ItemTemplate>
-                            </TreeView>
-
-                            <Button Content="{Binding AdvancedFiltersButtonText}"
-                                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
-                                    Margin="0,4,0,0" Click="OnOpenAdvancedFiltersClick" />
                         </StackPanel>
                     </ScrollViewer>
-                </Border>
+
+                    <TextBlock DockPanel.Dock="Top" Text="Encounters" FontWeight="SemiBold" Margin="0,8,0,4" />
+                    <TreeView ItemsSource="{Binding EncounterGroups}"
+                              SelectedItem="{Binding SelectedGroup}">
+                        <TreeView.Styles>
+                            <Style Selector="TreeViewItem" x:DataType="models:LogGroupNode">
+                                <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+                            </Style>
+                        </TreeView.Styles>
+                        <TreeView.ItemTemplate>
+                            <TreeDataTemplate ItemsSource="{Binding Children}"
+                                              x:DataType="models:LogGroupNode">
+                                <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                                    <Image Source="{Binding Icon}" Width="16" Height="16"
+                                           VerticalAlignment="Center" />
+                                    <TextBlock Text="{Binding Name}" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </TreeDataTemplate>
+                        </TreeView.ItemTemplate>
+                    </TreeView>
+                </DockPanel>
+            </Border>
 
             <GridSplitter Grid.Column="1" ResizeDirection="Columns"
                           IsVisible="{Binding ShowFilterSidebar}" Background="Transparent" />
