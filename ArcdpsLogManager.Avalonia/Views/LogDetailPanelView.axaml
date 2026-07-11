@@ -12,13 +12,14 @@
                    HorizontalAlignment="Center" VerticalAlignment="Center"
                    IsVisible="{Binding !HasSelection}" />
 
-        <ScrollViewer IsVisible="{Binding HasSelection}">
-            <StackPanel Margin="12" Spacing="6">
+        <!-- Top to bottom: title/subtitle (fixed), group composition (fills remaining space,
+             scrolling internally if needed), tags, upload status (both pinned to the bottom). -->
+        <Grid IsVisible="{Binding HasSelection}" RowDefinitions="Auto,*,Auto,Auto,Auto" Margin="12">
+            <StackPanel Grid.Row="0" Spacing="6">
                 <TextBlock Text="{Binding Name}" FontSize="18" FontWeight="Bold" TextWrapping="Wrap" />
                 <TextBlock Text="{Binding ModeText}" FontStyle="Italic" TextWrapping="Wrap"
                            IsVisible="{Binding HasMode}" />
                 <TextBlock Text="{Binding ResultText}" />
-                <TextBlock Text="{Binding FileName}" Opacity="0.6" FontSize="11" TextWrapping="Wrap" />
 
                 <!-- Fractal instabilities -->
                 <StackPanel Spacing="4" IsVisible="{Binding HasInstabilities}">
@@ -36,81 +37,99 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </StackPanel>
+            </StackPanel>
 
-                <!-- dps.report upload -->
-                <StackPanel Spacing="2" Margin="0,6,0,0">
-                    <TextBlock Text="dps.report" FontWeight="SemiBold" />
-                    <TextBlock Text="{Binding UploadStatus}" />
-                    <StackPanel Orientation="Horizontal" Spacing="4" Margin="0,2,0,0">
-                        <TextBox Name="UploadUrlBox" Text="{Binding UploadUrl}" IsReadOnly="True" Width="180"
-                                 IsVisible="{Binding HasUploadUrl}" />
-                        <Button Name="CopyUrlButton" Content="Copy" IsEnabled="{Binding HasUploadUrl}" />
-                        <Button Name="OpenUrlButton" Content="Open" IsEnabled="{Binding HasUploadUrl}" />
-                        <Button Content="{Binding UploadButtonText}" Command="{Binding UploadCommand}" />
-                    </StackPanel>
-                </StackPanel>
+            <!-- Group composition (hidden for failed logs), split into per-subgroup boxes. -->
+            <ScrollViewer Grid.Row="1" Margin="0,10,0,0" IsVisible="{Binding !IsFailed}">
+                <ItemsControl ItemsSource="{Binding PlayerGroups}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Spacing="8" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="models:PlayerSubgroupRow">
+                            <HeaderedContentControl Header="{Binding Header}"
+                                                     Theme="{StaticResource GroupBoxTheme}">
+                                <ItemsControl ItemsSource="{Binding Players}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="models:PlayerRow">
+                                            <Grid ColumnDefinitions="24,Auto,*" Margin="0,2">
+                                                <Image Grid.Column="0" Source="{Binding Icon}" Width="20" Height="20"
+                                                       VerticalAlignment="Center" />
+                                                <TextBlock Grid.Column="1" Text="{Binding CharacterName}"
+                                                           VerticalAlignment="Center" Margin="4,0" />
+                                                <TextBlock Grid.Column="2" Text="{Binding AccountName}"
+                                                           VerticalAlignment="Center" Margin="4,0" Opacity="0.6" />
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </HeaderedContentControl>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
 
-                <!-- Tags (add/remove) -->
-                <StackPanel Spacing="4" Margin="0,6,0,0">
-                    <TextBlock Text="Tags" FontWeight="SemiBold" />
-                    <ItemsControl ItemsSource="{Binding Tags}" IsVisible="{Binding HasTags}">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <WrapPanel />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Border Background="{DynamicResource SystemControlBackgroundBaseLowBrush}"
-                                        CornerRadius="4" Padding="6,2" Margin="0,0,4,4">
-                                    <StackPanel Orientation="Horizontal" Spacing="4">
-                                        <TextBlock Text="{Binding}" VerticalAlignment="Center" />
-                                        <Button Content="✕" Padding="2,0" FontSize="10"
-                                                Background="Transparent" BorderThickness="0"
-                                                Command="{Binding $parent[ItemsControl].((vm:LogDetailPanelViewModel)DataContext).RemoveTagCommand}"
-                                                CommandParameter="{Binding}" />
-                                    </StackPanel>
-                                </Border>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                    <StackPanel Orientation="Horizontal" Spacing="4">
-                        <TextBox Text="{Binding NewTag}" Watermark="Add tag…" Width="160" />
-                        <Button Content="Add" Command="{Binding AddTagCommand}" />
-                    </StackPanel>
-                </StackPanel>
+            <!-- Failed-processing section, shown in place of the group composition. -->
+            <StackPanel Grid.Row="1" Spacing="4" Margin="0,10,0,0" IsVisible="{Binding IsFailed}">
+                <TextBlock Text="Processing failed" FontWeight="SemiBold"
+                           Foreground="{DynamicResource SystemErrorTextColor}" />
+                <TextBox Text="{Binding FailureText}" IsReadOnly="True" AcceptsReturn="True"
+                         TextWrapping="Wrap" MaxHeight="220" />
+            </StackPanel>
 
-                <Separator Margin="0,6" />
-
-                <!-- Group composition (hidden for failed logs) -->
-                <StackPanel Spacing="4" IsVisible="{Binding !IsFailed}">
-                    <TextBlock Text="Group composition" FontWeight="SemiBold" />
-                    <ItemsControl ItemsSource="{Binding Players}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate x:DataType="models:PlayerRow">
-                                <Grid ColumnDefinitions="24,Auto,*,Auto" Margin="0,2">
-                                    <Image Grid.Column="0" Source="{Binding Icon}" Width="20" Height="20"
-                                           VerticalAlignment="Center" />
-                                    <TextBlock Grid.Column="1" Text="{Binding CharacterName}"
-                                               VerticalAlignment="Center" Margin="4,0" />
-                                    <TextBlock Grid.Column="2" Text="{Binding AccountName}"
-                                               VerticalAlignment="Center" Margin="4,0" Opacity="0.6" />
-                                    <TextBlock Grid.Column="3" Text="{Binding SubgroupText}"
-                                               VerticalAlignment="Center" Margin="4,0" Opacity="0.6" />
-                                </Grid>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </StackPanel>
-
-                <!-- Failed-processing section -->
-                <StackPanel Spacing="4" IsVisible="{Binding IsFailed}">
-                    <TextBlock Text="Processing failed" FontWeight="SemiBold"
-                               Foreground="{DynamicResource SystemErrorTextColor}" />
-                    <TextBox Text="{Binding FailureText}" IsReadOnly="True" AcceptsReturn="True"
-                             TextWrapping="Wrap" MaxHeight="220" />
+            <!-- Tags (add/remove) -->
+            <StackPanel Grid.Row="2" Spacing="4" Margin="0,6,0,0">
+                <TextBlock Text="Tags" FontWeight="SemiBold" />
+                <ItemsControl ItemsSource="{Binding Tags}" IsVisible="{Binding HasTags}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Background="{DynamicResource SystemControlBackgroundBaseLowBrush}"
+                                    CornerRadius="4" Padding="6,2" Margin="0,0,4,4">
+                                <StackPanel Orientation="Horizontal" Spacing="4">
+                                    <TextBlock Text="{Binding}" VerticalAlignment="Center" />
+                                    <Button Content="✕" Padding="2,0" FontSize="10"
+                                            Background="Transparent" BorderThickness="0"
+                                            Command="{Binding $parent[ItemsControl].((vm:LogDetailPanelViewModel)DataContext).RemoveTagCommand}"
+                                            CommandParameter="{Binding}" />
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                    <TextBox Text="{Binding NewTag}" Watermark="Add tag…" Width="160" />
+                    <Button Content="Add" Command="{Binding AddTagCommand}" />
                 </StackPanel>
             </StackPanel>
-        </ScrollViewer>
+
+            <!-- dps.report upload -->
+            <StackPanel Grid.Row="3" Spacing="2" Margin="0,6,0,0">
+                <TextBlock Text="dps.report" FontWeight="SemiBold" />
+                <TextBlock Text="{Binding UploadStatus}" />
+                <TextBox Name="UploadUrlBox" Text="{Binding UploadUrl}" IsReadOnly="True"
+                         Margin="0,2,0,0" IsVisible="{Binding HasUploadUrl}" />
+                <StackPanel Orientation="Horizontal" Spacing="4" Margin="0,4,0,0">
+                    <Button Name="CopyUrlButton" Content="Copy" IsEnabled="{Binding HasUploadUrl}" />
+                    <Button Name="OpenUrlButton" Content="Open" IsEnabled="{Binding HasUploadUrl}" />
+                    <Button Content="{Binding UploadButtonText}" Command="{Binding UploadCommand}" />
+                </StackPanel>
+            </StackPanel>
+
+            <!-- Opens the containing folder with the file selected, like the old Eto build's
+                 bottom-right fileNameButton. Content is a TextBlock (not a plain string) so long
+                 file names wrap instead of overflowing past the sidebar's edge. -->
+            <Button Name="FileNameButton" Grid.Row="4" Click="OnFileNameClick"
+                    Classes="link" HorizontalAlignment="Right" Margin="0,6,0,0"
+                    Opacity="0.6" FontSize="11">
+                <TextBlock Text="{Binding FileName}" TextWrapping="Wrap" TextAlignment="Right" />
+            </Button>
+        </Grid>
     </Panel>
 </UserControl>

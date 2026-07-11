@@ -39,6 +39,7 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels
 		[ObservableProperty] private bool hasMode;
 		[ObservableProperty] private string resultText = "";
 		[ObservableProperty] private string fileName = "";
+		[ObservableProperty] private string filePath = "";
 		[ObservableProperty] private string parseStatus = "";
 
 		[ObservableProperty] private bool hasInstabilities;
@@ -51,7 +52,7 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels
 		[ObservableProperty] private bool isFailed;
 		[ObservableProperty] private string failureText = "";
 
-		public List<PlayerRow> Players { get; private set; } = new();
+		public List<PlayerSubgroupRow> PlayerGroups { get; private set; } = new();
 		public IReadOnlyList<Bitmap> Instabilities { get; private set; } = new List<Bitmap>();
 		public IReadOnlyList<string> Tags { get; private set; } = new List<string>();
 
@@ -195,15 +196,18 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels
 			ResultText = $"{result} in {log.ShortDurationString}";
 
 			FileName = log.FileName is null ? "" : Path.GetFileName(log.FileName);
+			FilePath = log.FileName ?? "";
 			ParseStatus = log.ParsingStatus.ToString();
 
-			Players = (log.Players ?? Enumerable.Empty<LogPlayer>())
+			PlayerGroups = (log.Players ?? Enumerable.Empty<LogPlayer>())
 				.OrderBy(p => p.Subgroup)
 				.ThenBy(p => p.Profession)
 				.ThenBy(p => p.EliteSpecialization)
-				.Select(p => new PlayerRow(p, images))
+				.GroupBy(p => p.Subgroup)
+				.OrderBy(g => g.Key)
+				.Select(g => new PlayerSubgroupRow(g.Key, g.Select(p => new PlayerRow(p, images)).ToList()))
 				.ToList();
-			OnPropertyChanged(nameof(Players));
+			OnPropertyChanged(nameof(PlayerGroups));
 
 			// Fractal instabilities.
 			Instabilities = (log.LogExtras?.FractalExtras?.MistlockInstabilities ?? Enumerable.Empty<MistlockInstability>())

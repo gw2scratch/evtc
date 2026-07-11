@@ -93,5 +93,17 @@
             <Setter Property="ShowButtonSpinner" Value="False" />
             <Setter Property="MinHeight" Value="26" />
         </Style>
+        <!-- A hyperlink look-alike for a Button (Avalonia has no built-in LinkButton), used for the
+             log detail panel's file name link that opens the containing folder. -->
+        <Style Selector="Button.link">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+        </Style>
+        <Style Selector="Button.link:pointerover /template/ ContentPresenter">
+            <Setter Property="TextBlock.TextDecorations" Value="Underline" />
+        </Style>
     </Application.Styles>
 </Application>

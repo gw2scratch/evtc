@@ -13,7 +13,6 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.Models
 		public string CharacterName { get; }
 		public string AccountName { get; }
 		public int Subgroup { get; }
-		public string SubgroupText { get; }
 
 		public PlayerRow(LogPlayer player, ImageProvider images)
 		{
@@ -21,7 +20,6 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.Models
 			CharacterName = player.Name;
 			AccountName = player.AccountName?.TrimStart(':') ?? "";
 			Subgroup = player.Subgroup;
-			SubgroupText = player.Subgroup > 0 ? player.Subgroup.ToString() : "-";
 		}
 	}
 }
