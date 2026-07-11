@@ -126,8 +126,17 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels
 			GameDataSection = new GameDataSectionViewModel(images, nameProvider, cacheService);
 			ServicesSection = new ServicesSectionViewModel();
 
-			_ = LoadAsync();
+			InitialLoadTask = LoadAsync();
 		}
+
+		/// <summary>
+		/// Completes once the initial cache load (and, if configured, directory discovery) has
+		/// finished. Awaited by the startup sequence so the heavy <see cref="MainWindow"/> is only
+		/// shown once there is data to show, mirroring the Eto <c>LoadingForm</c> -&gt;
+		/// <c>ManagerForm</c> handoff instead of showing a big window that sits unresponsive while
+		/// it loads.
+		/// </summary>
+		public Task InitialLoadTask { get; }
 
 		private void OnFiltersChanged(object? sender, PropertyChangedEventArgs e)
 		{
