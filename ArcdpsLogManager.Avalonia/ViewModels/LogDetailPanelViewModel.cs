@@ -7,7 +7,9 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using GW2Scratch.ArcdpsLogManager.Avalonia.Models;
 using GW2Scratch.ArcdpsLogManager.Avalonia.Services;
+using GW2Scratch.ArcdpsLogManager.Configuration;
 using GW2Scratch.ArcdpsLogManager.GameData;
+using GW2Scratch.ArcdpsLogManager.Gw2Api;
 using GW2Scratch.ArcdpsLogManager.Logs;
 using GW2Scratch.ArcdpsLogManager.Logs.Naming;
 using GW2Scratch.ArcdpsLogManager.Logs.Tagging;
@@ -29,6 +31,7 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels
 		private readonly ImageProvider images;
 		private readonly ILogNameProvider nameProvider;
 		private readonly LogCacheService cacheService;
+		private readonly ApiData apiData;
 		private LogData? currentLog;
 		private bool uploadProcessorAttached;
 
@@ -44,6 +47,11 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels
 
 		[ObservableProperty] private bool hasInstabilities;
 		[ObservableProperty] private bool hasTags;
+
+		/// <summary>Hides the Tags section entirely when off (Settings.ShowTags), not just the
+		/// sidebar filter. Subscribed directly to the static setting since this view model doesn't
+		/// otherwise have a path to the shell's settings mirror.</summary>
+		[ObservableProperty] private bool showTags = Settings.ShowTags;
 		[ObservableProperty] private string uploadStatus = "";
 		[ObservableProperty] private string? uploadUrl;
 		[ObservableProperty] private bool hasUploadUrl;
@@ -90,12 +98,16 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels
 
 		private UploadProcessor? uploadProcessor;
 
-		public LogDetailPanelViewModel(ImageProvider images, ILogNameProvider nameProvider, LogCacheService cacheService)
+		public LogDetailPanelViewModel(ImageProvider images, ILogNameProvider nameProvider, LogCacheService cacheService,
+			ApiData apiData)
 		{
 			this.images = images;
 			this.nameProvider = nameProvider;
 			this.cacheService = cacheService;
+			this.apiData = apiData;
 			copyIcon = images.GetCopyButtonDisabledImage();
+
+			Settings.ShowTagsChanged += (_, _) => Dispatcher.UIThread.Post(() => ShowTags = Settings.ShowTags);
 		}
 
 		// Raised on a background thread by the upload processor; marshal to the UI thread.
@@ -153,6 +165,24 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels
 			HasTags = Tags.Count > 0;
 		}
 
+		/// <summary>Rebuilds the group composition list for the currently shown log. Called both when
+		/// a new log is selected and when Settings.ShowGuildTagsInLogDetail changes, so the guild tag
+		/// suffix on player names updates immediately instead of only on the next selection.</summary>
+		public void RefreshPlayerGroups()
+		{
+			var players = currentLog?.Players ?? Enumerable.Empty<LogPlayer>();
+			bool showGuildTags = Settings.ShowGuildTagsInLogDetail;
+			PlayerGroups = players
+				.OrderBy(p => p.Subgroup)
+				.ThenBy(p => p.Profession)
+				.ThenBy(p => p.EliteSpecialization)
+				.GroupBy(p => p.Subgroup)
+				.OrderBy(g => g.Key)
+				.Select(g => new PlayerSubgroupRow(g.Key, g.Select(p => new PlayerRow(p, images, apiData, showGuildTags)).ToList()))
+				.ToList();
+			OnPropertyChanged(nameof(PlayerGroups));
+		}
+
 		public void Show(LogRow? row)
 		{
 			currentLog = row?.Log;
@@ -204,15 +234,7 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels
 			FilePath = log.FileName ?? "";
 			ParseStatus = log.ParsingStatus.ToString();
 
-			PlayerGroups = (log.Players ?? Enumerable.Empty<LogPlayer>())
-				.OrderBy(p => p.Subgroup)
-				.ThenBy(p => p.Profession)
-				.ThenBy(p => p.EliteSpecialization)
-				.GroupBy(p => p.Subgroup)
-				.OrderBy(g => g.Key)
-				.Select(g => new PlayerSubgroupRow(g.Key, g.Select(p => new PlayerRow(p, images)).ToList()))
-				.ToList();
-			OnPropertyChanged(nameof(PlayerGroups));
+			RefreshPlayerGroups();
 
 			// Fractal instabilities.
 			Instabilities = (log.LogExtras?.FractalExtras?.MistlockInstabilities ?? Enumerable.Empty<MistlockInstability>())

@@ -22,6 +22,10 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.Services
 			Settings.ShowDebugDataChanged += (_, _) => Raise(nameof(ShowDebugData));
 			Settings.ShowGuildTagsInLogDetailChanged += (_, _) => Raise(nameof(ShowGuildTagsInLogDetail));
 			Settings.ShowFailurePercentagesInLogListChanged += (_, _) => Raise(nameof(ShowFailurePercentagesInLogList));
+			Settings.ShowFavoritesFilterChanged += (_, _) => Raise(nameof(ShowFavoritesFilter));
+			Settings.ShowPlayerCountFilterChanged += (_, _) => Raise(nameof(ShowPlayerCountFilter));
+			Settings.ShowDateRangeFilterChanged += (_, _) => Raise(nameof(ShowDateRangeFilter));
+			Settings.ShowTagsChanged += (_, _) => Raise(nameof(ShowTags));
 			Settings.UseGW2ApiChanged += (_, _) => Raise(nameof(UseGW2Api));
 			Settings.CheckForUpdatesChanged += (_, _) => Raise(nameof(CheckForUpdates));
 			Settings.DpsReportUserTokenChanged += (_, _) => Raise(nameof(DpsReportUserToken));
@@ -73,6 +77,30 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.Services
 		{
 			get => Settings.ShowFailurePercentagesInLogList;
 			set => Settings.ShowFailurePercentagesInLogList = value;
+		}
+
+		public bool ShowFavoritesFilter
+		{
+			get => Settings.ShowFavoritesFilter;
+			set => Settings.ShowFavoritesFilter = value;
+		}
+
+		public bool ShowPlayerCountFilter
+		{
+			get => Settings.ShowPlayerCountFilter;
+			set => Settings.ShowPlayerCountFilter = value;
+		}
+
+		public bool ShowDateRangeFilter
+		{
+			get => Settings.ShowDateRangeFilter;
+			set => Settings.ShowDateRangeFilter = value;
+		}
+
+		public bool ShowTags
+		{
+			get => Settings.ShowTags;
+			set => Settings.ShowTags = value;
 		}
 
 		public bool UseGW2Api

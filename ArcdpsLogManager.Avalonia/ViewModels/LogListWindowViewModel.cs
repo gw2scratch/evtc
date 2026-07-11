@@ -3,6 +3,7 @@ using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using GW2Scratch.ArcdpsLogManager.Avalonia.Models;
 using GW2Scratch.ArcdpsLogManager.Avalonia.Services;
+using GW2Scratch.ArcdpsLogManager.Gw2Api;
 using GW2Scratch.ArcdpsLogManager.Logs;
 using GW2Scratch.ArcdpsLogManager.Logs.Naming;
 
@@ -22,10 +23,10 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels
 		public LogsSectionViewModel Logs { get; }
 
 		public LogListWindowViewModel(string title, IReadOnlyList<LogData> logs, ImageProvider images,
-			ILogNameProvider nameProvider, LogCacheService cacheService)
+			ILogNameProvider nameProvider, LogCacheService cacheService, ApiData apiData)
 		{
 			this.title = title;
-			Logs = new LogsSectionViewModel(images, nameProvider, cacheService);
+			Logs = new LogsSectionViewModel(images, nameProvider, cacheService, apiData);
 			Logs.SetLogs(logs.Select(log => new LogRow(log, images, nameProvider)).ToList());
 		}
 	}

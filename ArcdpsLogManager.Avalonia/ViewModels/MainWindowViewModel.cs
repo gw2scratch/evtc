@@ -68,6 +68,16 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels
 		[ObservableProperty] private bool showGuildTagsInLogDetail;
 		[ObservableProperty] private bool showFailurePercentagesInLogList;
 
+		/// <summary>Sidebar filter section visibility toggles (View menu), all default-on. These are
+		/// Avalonia-only additions — the Eto sidebar has no per-section visibility control.</summary>
+		[ObservableProperty] private bool showFavoritesFilter;
+		[ObservableProperty] private bool showPlayerCountFilter;
+		[ObservableProperty] private bool showDateRangeFilter;
+
+		/// <summary>Hides tag-related UI everywhere (sidebar filter, log detail panel, multi-selection
+		/// panel) when off, not just the sidebar section.</summary>
+		[ObservableProperty] private bool showTags;
+
 		[ObservableProperty] private DateTimeOffset? minDate;
 		[ObservableProperty] private DateTimeOffset? maxDate;
 
@@ -106,6 +116,10 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels
 			showDebugData = settings.ShowDebugData;
 			showGuildTagsInLogDetail = settings.ShowGuildTagsInLogDetail;
 			showFailurePercentagesInLogList = settings.ShowFailurePercentagesInLogList;
+			showFavoritesFilter = settings.ShowFavoritesFilter;
+			showPlayerCountFilter = settings.ShowPlayerCountFilter;
+			showDateRangeFilter = settings.ShowDateRangeFilter;
+			showTags = settings.ShowTags;
 			settings.PropertyChanged += (_, e) =>
 			{
 				if (e.PropertyName == nameof(ISettingsService.ShowFilterSidebar))
@@ -124,18 +138,34 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels
 				{
 					ShowFailurePercentagesInLogList = settings.ShowFailurePercentagesInLogList;
 				}
+				else if (e.PropertyName == nameof(ISettingsService.ShowFavoritesFilter))
+				{
+					ShowFavoritesFilter = settings.ShowFavoritesFilter;
+				}
+				else if (e.PropertyName == nameof(ISettingsService.ShowPlayerCountFilter))
+				{
+					ShowPlayerCountFilter = settings.ShowPlayerCountFilter;
+				}
+				else if (e.PropertyName == nameof(ISettingsService.ShowDateRangeFilter))
+				{
+					ShowDateRangeFilter = settings.ShowDateRangeFilter;
+				}
+				else if (e.PropertyName == nameof(ISettingsService.ShowTags))
+				{
+					ShowTags = settings.ShowTags;
+				}
 			};
 
 			textFilter = new TextSearchFilter(nameProvider);
 			Filters = new LogFilters(nameProvider, textFilter);
 			Filters.PropertyChanged += OnFiltersChanged;
 
-			LogsSection = new LogsSectionViewModel(images, nameProvider, cacheService);
+			LogsSection = new LogsSectionViewModel(images, nameProvider, cacheService, apiData);
 			PlayersSection = new PlayersSectionViewModel(images, nameProvider);
 			GuildsSection = new GuildsSectionViewModel(apiData, images, nameProvider);
 			StatisticsSection = new StatisticsSectionViewModel(nameProvider, images);
 			WeeklyClearsSection = new WeeklyClearsSectionViewModel(images);
-			GameDataSection = new GameDataSectionViewModel(images, nameProvider, cacheService);
+			GameDataSection = new GameDataSectionViewModel(images, nameProvider, cacheService, apiData);
 			ServicesSection = new ServicesSectionViewModel();
 
 			// Matches the Eto ManagerForm's constructor-time subscription: re-point the watchers at
@@ -666,11 +696,40 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels
 		partial void OnShowGuildTagsInLogDetailChanged(bool value)
 		{
 			settings.ShowGuildTagsInLogDetail = value;
+			// The currently shown log's player names need to be rebuilt with/without the guild tag
+			// suffix immediately, rather than waiting for the next selection change.
+			LogsSection.Detail.RefreshPlayerGroups();
 		}
 
 		partial void OnShowFailurePercentagesInLogListChanged(bool value)
 		{
 			settings.ShowFailurePercentagesInLogList = value;
+			// Every already-built LogRow computed its Result text once at construction time; update
+			// them all in place instead of waiting for the next reload.
+			foreach (var row in allRows)
+			{
+				row.UpdateResultText(value);
+			}
+		}
+
+		partial void OnShowFavoritesFilterChanged(bool value)
+		{
+			settings.ShowFavoritesFilter = value;
+		}
+
+		partial void OnShowPlayerCountFilterChanged(bool value)
+		{
+			settings.ShowPlayerCountFilter = value;
+		}
+
+		partial void OnShowDateRangeFilterChanged(bool value)
+		{
+			settings.ShowDateRangeFilter = value;
+		}
+
+		partial void OnShowTagsChanged(bool value)
+		{
+			settings.ShowTags = value;
 		}
 
 		partial void OnMinDateChanged(DateTimeOffset? value)

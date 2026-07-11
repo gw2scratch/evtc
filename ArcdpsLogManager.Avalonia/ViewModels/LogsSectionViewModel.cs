@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using GW2Scratch.ArcdpsLogManager.Avalonia.Models;
 using GW2Scratch.ArcdpsLogManager.Avalonia.Services;
+using GW2Scratch.ArcdpsLogManager.Gw2Api;
 using GW2Scratch.ArcdpsLogManager.Logs.Naming;
 
 namespace GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels
@@ -36,10 +37,11 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels
 		/// selected (Avalonia counterpart of the Eto <c>Controls/MultipleLogPanel.cs</c>).</summary>
 		public MultipleLogPanelViewModel MultipleDetail { get; }
 
-		public LogsSectionViewModel(ImageProvider images, ILogNameProvider nameProvider, LogCacheService cacheService)
+		public LogsSectionViewModel(ImageProvider images, ILogNameProvider nameProvider, LogCacheService cacheService,
+			ApiData apiData)
 		{
 			this.cacheService = cacheService;
-			Detail = new LogDetailPanelViewModel(images, nameProvider, cacheService);
+			Detail = new LogDetailPanelViewModel(images, nameProvider, cacheService, apiData);
 			MultipleDetail = new MultipleLogPanelViewModel(cacheService, images);
 		}
 

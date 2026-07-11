@@ -37,6 +37,20 @@ public class StoredSettings
 	public bool CompactUi { get; set; } = false;
 
 	/// <summary>
+	/// Sidebar filter section visibility toggles. Used by the Avalonia UI; ignored by the legacy
+	/// Eto UI, which has no equivalent per-section visibility control.
+	/// </summary>
+	public bool ShowFavoritesFilter { get; set; } = true;
+	public bool ShowPlayerCountFilter { get; set; } = true;
+	public bool ShowDateRangeFilter { get; set; } = true;
+
+	/// <summary>
+	/// Whether tag-related UI (sidebar filter, log detail panel, multi-selection panel) is shown
+	/// at all. Used by the Avalonia UI; ignored by the legacy Eto UI.
+	/// </summary>
+	public bool ShowTags { get; set; } = true;
+
+	/// <summary>
 	/// Persisted main-window placement. Used by the Avalonia UI; ignored by the legacy Eto UI.
 	/// </summary>
 	public WindowStateInfo WindowState { get; set; } = new WindowStateInfo();

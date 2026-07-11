@@ -9,6 +9,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using GW2Scratch.ArcdpsLogManager.Avalonia.Models;
 using GW2Scratch.ArcdpsLogManager.Avalonia.Services;
+using GW2Scratch.ArcdpsLogManager.Gw2Api;
 using GW2Scratch.ArcdpsLogManager.Logs;
 using GW2Scratch.ArcdpsLogManager.Logs.Naming;
 using GW2Scratch.ArcdpsLogManager.Sections.GameData;
@@ -32,6 +33,7 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels
 		private readonly ImageProvider images;
 		private readonly ILogNameProvider nameProvider;
 		private readonly LogCacheService cacheService;
+		private readonly ApiData apiData;
 		private readonly GameDataGatherer gatherer = new GameDataGatherer();
 		private CancellationTokenSource? cancellationTokenSource;
 
@@ -54,12 +56,15 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels
 		public ImageProvider Images => images;
 		public ILogNameProvider NameProvider => nameProvider;
 		public LogCacheService CacheService => cacheService;
+		public ApiData ApiData => apiData;
 
-		public GameDataSectionViewModel(ImageProvider images, ILogNameProvider nameProvider, LogCacheService cacheService)
+		public GameDataSectionViewModel(ImageProvider images, ILogNameProvider nameProvider, LogCacheService cacheService,
+			ApiData apiData)
 		{
 			this.images = images;
 			this.nameProvider = nameProvider;
 			this.cacheService = cacheService;
+			this.apiData = apiData;
 		}
 
 		/// <summary>Called by the shell whenever the filtered log set changes.</summary>

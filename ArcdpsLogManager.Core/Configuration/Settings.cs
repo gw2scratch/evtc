@@ -47,6 +47,10 @@ namespace GW2Scratch.ArcdpsLogManager.Configuration
 			WeeklyClearGroupsChanged += (sender, args) => SaveToFile();
 			ThemeChanged += (sender, args) => SaveToFile();
 			CompactUiChanged += (sender, args) => SaveToFile();
+			ShowFavoritesFilterChanged += (sender, args) => SaveToFile();
+			ShowPlayerCountFilterChanged += (sender, args) => SaveToFile();
+			ShowDateRangeFilterChanged += (sender, args) => SaveToFile();
+			ShowTagsChanged += (sender, args) => SaveToFile();
 
 			return LoadFromFile();
 		});
@@ -359,6 +363,58 @@ namespace GW2Scratch.ArcdpsLogManager.Configuration
 			}
 		}
 
+		public static bool ShowFavoritesFilter
+		{
+			get => Values.ShowFavoritesFilter;
+			set
+			{
+				if (Values.ShowFavoritesFilter != value)
+				{
+					Values.ShowFavoritesFilter = value;
+					OnShowFavoritesFilterChanged();
+				}
+			}
+		}
+
+		public static bool ShowPlayerCountFilter
+		{
+			get => Values.ShowPlayerCountFilter;
+			set
+			{
+				if (Values.ShowPlayerCountFilter != value)
+				{
+					Values.ShowPlayerCountFilter = value;
+					OnShowPlayerCountFilterChanged();
+				}
+			}
+		}
+
+		public static bool ShowDateRangeFilter
+		{
+			get => Values.ShowDateRangeFilter;
+			set
+			{
+				if (Values.ShowDateRangeFilter != value)
+				{
+					Values.ShowDateRangeFilter = value;
+					OnShowDateRangeFilterChanged();
+				}
+			}
+		}
+
+		public static bool ShowTags
+		{
+			get => Values.ShowTags;
+			set
+			{
+				if (Values.ShowTags != value)
+				{
+					Values.ShowTags = value;
+					OnShowTagsChanged();
+				}
+			}
+		}
+
 		/// <summary>
 		/// Persisted main-window placement (Avalonia UI). Setting this saves immediately; there is
 		/// no change event because nothing needs to react to it live.
@@ -392,6 +448,10 @@ namespace GW2Scratch.ArcdpsLogManager.Configuration
 		public static event EventHandler<EventArgs> WeeklyClearGroupsChanged;
 		public static event EventHandler<EventArgs> ThemeChanged;
 		public static event EventHandler<EventArgs> CompactUiChanged;
+		public static event EventHandler<EventArgs> ShowFavoritesFilterChanged;
+		public static event EventHandler<EventArgs> ShowPlayerCountFilterChanged;
+		public static event EventHandler<EventArgs> ShowDateRangeFilterChanged;
+		public static event EventHandler<EventArgs> ShowTagsChanged;
 
 		private static void OnLogRootPathsChanged()
 		{
@@ -486,6 +546,26 @@ namespace GW2Scratch.ArcdpsLogManager.Configuration
 		private static void OnCompactUiChanged()
 		{
 			CompactUiChanged?.Invoke(null, EventArgs.Empty);
+		}
+
+		private static void OnShowFavoritesFilterChanged()
+		{
+			ShowFavoritesFilterChanged?.Invoke(null, EventArgs.Empty);
+		}
+
+		private static void OnShowPlayerCountFilterChanged()
+		{
+			ShowPlayerCountFilterChanged?.Invoke(null, EventArgs.Empty);
+		}
+
+		private static void OnShowDateRangeFilterChanged()
+		{
+			ShowDateRangeFilterChanged?.Invoke(null, EventArgs.Empty);
+		}
+
+		private static void OnShowTagsChanged()
+		{
+			ShowTagsChanged?.Invoke(null, EventArgs.Empty);
 		}
 	}
 }

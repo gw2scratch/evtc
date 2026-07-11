@@ -23,6 +23,10 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.Services
 		bool ShowDebugData { get; set; }
 		bool ShowGuildTagsInLogDetail { get; set; }
 		bool ShowFailurePercentagesInLogList { get; set; }
+		bool ShowFavoritesFilter { get; set; }
+		bool ShowPlayerCountFilter { get; set; }
+		bool ShowDateRangeFilter { get; set; }
+		bool ShowTags { get; set; }
 		bool UseGW2Api { get; set; }
 		bool CheckForUpdates { get; set; }
 		string DpsReportUserToken { get; set; }

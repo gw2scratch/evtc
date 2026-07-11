@@ -43,6 +43,11 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels
 
 		[ObservableProperty] private string newTag = "";
 		[ObservableProperty] private bool hasTags;
+
+		/// <summary>Hides the Tags section entirely when off (Settings.ShowTags), not just the
+		/// sidebar filter.</summary>
+		[ObservableProperty] private bool showTags;
+		private readonly EventHandler<EventArgs> showTagsChangedHandler;
 		public IReadOnlyList<string> Tags { get; private set; } = new List<string>();
 
 		// dps.report aggregate status (display-only; see remarks above).
@@ -115,6 +120,11 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels
 			debugDataChangedHandler = (_, _) =>
 				Dispatcher.UIThread.Post(() => ShowDebugData = Settings.ShowDebugData);
 			Settings.ShowDebugDataChanged += debugDataChangedHandler;
+
+			showTags = Settings.ShowTags;
+			showTagsChangedHandler = (_, _) =>
+				Dispatcher.UIThread.Post(() => ShowTags = Settings.ShowTags);
+			Settings.ShowTagsChanged += showTagsChangedHandler;
 		}
 
 		partial void OnProcessingServiceChanged(LogProcessingService? value)

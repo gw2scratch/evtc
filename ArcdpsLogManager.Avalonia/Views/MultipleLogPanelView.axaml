@@ -41,7 +41,7 @@
 
             <!-- Tags common to every selected log. -->
             <HeaderedContentControl Grid.Row="3" Header="Tags" Theme="{StaticResource GroupBoxTheme}"
-                                     Margin="0,8,0,0">
+                                     Margin="0,8,0,0" IsVisible="{Binding ShowTags}">
                 <StackPanel Spacing="4">
                     <ItemsControl ItemsSource="{Binding Tags}" IsVisible="{Binding HasTags}">
                         <ItemsControl.ItemsPanel>

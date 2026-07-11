@@ -51,7 +51,7 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.Views
 		{
 			var window = new LogListWindow
 			{
-				DataContext = new LogListWindowViewModel(title, logs, vm.Images, vm.NameProvider, vm.CacheService),
+				DataContext = new LogListWindowViewModel(title, logs, vm.Images, vm.NameProvider, vm.CacheService, vm.ApiData),
 			};
 			window.Show();
 		}

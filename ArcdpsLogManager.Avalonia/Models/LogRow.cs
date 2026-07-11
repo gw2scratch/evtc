@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
+using GW2Scratch.ArcdpsLogManager.Configuration;
 using GW2Scratch.ArcdpsLogManager.GameData;
 using GW2Scratch.ArcdpsLogManager.Logs;
 using GW2Scratch.ArcdpsLogManager.Logs.Naming;
@@ -29,7 +30,11 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.Models
 		[ObservableProperty] private bool favorite;
 
 		public string Encounter { get; }
-		public string Result { get; }
+
+		/// <summary>Observable so it can be recomputed live when
+		/// Settings.ShowFailurePercentagesInLogList changes, without needing a full reload.</summary>
+		[ObservableProperty] private string result;
+
 		public string Mode { get; }
 		public int Players { get; }
 		public string Duration { get; }
@@ -64,15 +69,7 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.Models
 				? "Processing..."
 				: nameProvider.GetName(log);
 
-			Result = log.EncounterResult switch
-			{
-				EncounterResult.Success => "Success",
-				EncounterResult.Failure => log.HealthPercentage.HasValue
-					? $"Failure ({log.HealthPercentage * 100:0.00}%)"
-					: "Failure",
-				EncounterResult.Unknown => "Unknown",
-				_ => log.EncounterResult.ToString(),
-			};
+			result = ComputeResultText(log, Settings.ShowFailurePercentagesInLogList);
 
 			Mode = log.EncounterMode switch
 			{
@@ -123,6 +120,26 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.Models
 				.OrderBy(GameNames.GetInstabilityName)
 				.Select(images.GetMistlockInstabilityIcon)
 				.ToList();
+		}
+
+		/// <summary>Recomputes <see cref="Result"/> live when Settings.ShowFailurePercentagesInLogList
+		/// changes, instead of requiring a full reload for already-built rows.</summary>
+		public void UpdateResultText(bool showFailurePercentages)
+		{
+			Result = ComputeResultText(Log, showFailurePercentages);
+		}
+
+		private static string ComputeResultText(LogData log, bool showFailurePercentages)
+		{
+			return log.EncounterResult switch
+			{
+				EncounterResult.Success => "Success",
+				EncounterResult.Failure => showFailurePercentages && log.HealthPercentage.HasValue
+					? $"Failure ({log.HealthPercentage * 100:0.00}%)"
+					: "Failure",
+				EncounterResult.Unknown => "Unknown",
+				_ => log.EncounterResult.ToString(),
+			};
 		}
 	}
 }

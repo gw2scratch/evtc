@@ -61,7 +61,8 @@
                                                 <Image Grid.Column="1" Source="{Binding Icon}" Width="20" Height="20"
                                                        VerticalAlignment="Center" />
                                                 <TextBlock Grid.Column="2" Text="{Binding CharacterName}"
-                                                           VerticalAlignment="Center" Margin="4,0" />
+                                                           VerticalAlignment="Center" Margin="4,0"
+                                                           ToolTip.Tip="{Binding GuildTooltip}" />
                                                 <TextBlock Grid.Column="3" Text="{Binding AccountName}"
                                                            VerticalAlignment="Center" Margin="4,0" Opacity="0.6" />
                                             </Grid>
@@ -84,7 +85,7 @@
 
             <!-- Tags (add/remove) -->
             <HeaderedContentControl Grid.Row="2" Header="Tags" Theme="{StaticResource GroupBoxTheme}"
-                                     Margin="0,6,0,0">
+                                     Margin="0,6,0,0" IsVisible="{Binding ShowTags}">
                 <StackPanel Spacing="4">
                     <ItemsControl ItemsSource="{Binding Tags}" IsVisible="{Binding HasTags}">
                         <ItemsControl.ItemsPanel>

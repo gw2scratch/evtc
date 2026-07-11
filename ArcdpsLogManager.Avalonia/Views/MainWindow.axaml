@@ -51,15 +51,27 @@
                         <MenuItem Header="_API cache…" Click="OnOpenApiClick" />
                     </MenuItem>
                     <MenuItem Header="_View">
+                        <!-- MenuItem.IsChecked's default binding mode is not TwoWay, so clicking never
+                             wrote the value back to the view model without Mode=TwoWay explicitly —
+                             the root cause of every one of these toggles silently doing nothing. -->
                         <MenuItem Header="Show filters in a _sidebar" ToggleType="CheckBox"
-                                  IsChecked="{Binding ShowFilterSidebar}" />
+                                  IsChecked="{Binding ShowFilterSidebar, Mode=TwoWay}" />
                         <MenuItem Header="Show _guild tags in log details" ToggleType="CheckBox"
-                                  IsChecked="{Binding ShowGuildTagsInLogDetail}" />
+                                  IsChecked="{Binding ShowGuildTagsInLogDetail, Mode=TwoWay}" />
                         <MenuItem Header="Show failure health _percentages in log list" ToggleType="CheckBox"
-                                  IsChecked="{Binding ShowFailurePercentagesInLogList}" />
+                                  IsChecked="{Binding ShowFailurePercentagesInLogList, Mode=TwoWay}" />
+                        <Separator />
+                        <MenuItem Header="Show _favorites filter" ToggleType="CheckBox"
+                                  IsChecked="{Binding ShowFavoritesFilter, Mode=TwoWay}" />
+                        <MenuItem Header="Show pla_yer count filter" ToggleType="CheckBox"
+                                  IsChecked="{Binding ShowPlayerCountFilter, Mode=TwoWay}" />
+                        <MenuItem Header="Show date _range filter" ToggleType="CheckBox"
+                                  IsChecked="{Binding ShowDateRangeFilter, Mode=TwoWay}" />
+                        <MenuItem Header="Show ta_gs" ToggleType="CheckBox"
+                                  IsChecked="{Binding ShowTags, Mode=TwoWay}" />
                         <Separator />
                         <MenuItem Header="Show _debug data" ToggleType="CheckBox"
-                                  IsChecked="{Binding ShowDebugData}" />
+                                  IsChecked="{Binding ShowDebugData, Mode=TwoWay}" />
                     </MenuItem>
                     <MenuItem Header="_Settings">
                         <MenuItem Header="_Settings…" Click="OnOpenSettingsClick" />
@@ -148,7 +160,8 @@
                             </HeaderedContentControl>
 
                             <HeaderedContentControl Header="Favorites" Theme="{StaticResource GroupBoxTheme}"
-                                                     Padding="8,10,8,2" Margin="0,4,0,0">
+                                                     Padding="8,10,8,2" Margin="0,4,0,0"
+                                                     IsVisible="{Binding ShowFavoritesFilter}">
                                 <WrapPanel>
                                     <CheckBox Content="Favorite" IsChecked="{Binding Filters.ShowFavoriteLogs}" />
                                     <CheckBox Content="Non-favorite" IsChecked="{Binding Filters.ShowNonFavoriteLogs}" />
@@ -156,7 +169,7 @@
                             </HeaderedContentControl>
 
                             <HeaderedContentControl Header="Player count" Theme="{StaticResource GroupBoxTheme}"
-                                                     Margin="0,4,0,0">
+                                                     Margin="0,4,0,0" IsVisible="{Binding ShowPlayerCountFilter}">
                                 <Grid ColumnDefinitions="Auto,*,Auto,*">
                                     <TextBlock Grid.Column="0" Text="Min" VerticalAlignment="Center" Margin="0,0,4,0" />
                                     <NumericUpDown Grid.Column="1" Minimum="0" Maximum="100" Increment="1" Margin="0,0,6,0"
@@ -168,7 +181,7 @@
                             </HeaderedContentControl>
 
                             <HeaderedContentControl Header="Date range" Theme="{StaticResource GroupBoxTheme}"
-                                                     Margin="0,4,0,0">
+                                                     Margin="0,4,0,0" IsVisible="{Binding ShowDateRangeFilter}">
                                 <StackPanel Spacing="6">
                                     <StackPanel Spacing="2">
                                         <TextBlock Text="From" FontSize="11" Opacity="0.7" />
@@ -184,7 +197,7 @@
                             </HeaderedContentControl>
 
                             <HeaderedContentControl Header="Tags" Theme="{StaticResource GroupBoxTheme}"
-                                                     Margin="0,4,0,0">
+                                                     Margin="0,4,0,0" IsVisible="{Binding ShowTags}">
                                 <StackPanel Spacing="6">
                                     <TextBox Text="{Binding TagSearchText}" Watermark="Filter tags…" />
                                     <ItemsControl ItemsSource="{Binding AvailableTags}">
