@@ -54,81 +54,120 @@
         </Border>
 
         <!-- Main area: filter sidebar (collapsible via Settings.ShowFilterSidebar) + tabbed sections.
-             A DockPanel so the sidebar yields its space entirely when hidden. -->
-        <DockPanel>
-            <Border DockPanel.Dock="Left" Width="280" BorderThickness="0,0,1,0"
+             A single Grid (not a nested one) so the GridSplitter's default "Stretch" resize
+             behavior can resize the sidebar column (0) and the TabControl's star column (2)
+             together while leaving its own column (1) alone; that only works when all three
+             columns belong to the same Grid. The sidebar's two columns collapse to zero width
+             (rather than just hiding their content) when the sidebar is toggled off. -->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="{Binding ShowFilterSidebar, Converter={x:Static views:BoolToGridLengthConverter.Instance}, ConverterParameter=280}" />
+                <ColumnDefinition Width="{Binding ShowFilterSidebar, Converter={x:Static views:BoolToGridLengthConverter.Instance}, ConverterParameter=4}" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" MinWidth="220" BorderThickness="0,0,1,0"
                     IsVisible="{Binding ShowFilterSidebar}"
                     BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}">
-                <ScrollViewer>
-                    <StackPanel Spacing="8" Margin="10">
-                        <TextBlock Text="Filters" FontWeight="SemiBold" />
+                    <ScrollViewer>
+                        <StackPanel Spacing="8" Margin="10">
+                            <TextBlock Text="Filters" FontWeight="SemiBold" />
 
-                        <TextBox Text="{Binding SearchQuery}" Watermark="Search name / player…" />
+                            <TextBox Text="{Binding SearchQuery}" Watermark="Search name / player…" />
 
-                      
-                        <TextBlock Text="Result" FontWeight="SemiBold" Margin="0,4,0,0" />
-                        <CheckBox Content="Success" IsChecked="{Binding Filters.ShowSuccessfulLogs}" />
-                        <CheckBox Content="Failure" IsChecked="{Binding Filters.ShowFailedLogs}" />
-                        <CheckBox Content="Unknown" IsChecked="{Binding Filters.ShowUnknownLogs}" />
+                            <HeaderedContentControl Header="Result" Theme="{StaticResource GroupBoxTheme}"
+                                                     Margin="0,4,0,0">
+                                <WrapPanel>
+                                    <CheckBox Content="Success" IsChecked="{Binding Filters.ShowSuccessfulLogs}" />
+                                    <CheckBox Content="Failure" IsChecked="{Binding Filters.ShowFailedLogs}" />
+                                    <CheckBox Content="Unknown" IsChecked="{Binding Filters.ShowUnknownLogs}" />
+                                </WrapPanel>
+                            </HeaderedContentControl>
 
-                        <TextBlock Text="Mode" FontWeight="SemiBold" Margin="0,4,0,0" />
-                        <CheckBox Content="Normal" IsChecked="{Binding Filters.ShowNormalModeLogs}" />
-                        <CheckBox Content="Challenge" IsChecked="{Binding Filters.ShowChallengeModeLogs}" />
-                        <CheckBox Content="Legendary CM" IsChecked="{Binding Filters.ShowLegendaryChallengeModeLogs}" />
-                        <CheckBox Content="Emboldened" IsChecked="{Binding Filters.ShowEmboldenedModeLogs}" />
-                        <CheckBox Content="Quickplay" IsChecked="{Binding Filters.ShowQuickplayModeLogs}" />
+                            <HeaderedContentControl Header="Mode" Theme="{StaticResource GroupBoxTheme}"
+                                                     Margin="0,4,0,0">
+                                <WrapPanel>
+                                    <CheckBox Content="Normal" IsChecked="{Binding Filters.ShowNormalModeLogs}" />
+                                    <CheckBox Content="Challenge" IsChecked="{Binding Filters.ShowChallengeModeLogs}" />
+                                    <CheckBox Content="Legendary CM" IsChecked="{Binding Filters.ShowLegendaryChallengeModeLogs}" />
+                                    <CheckBox Content="Emboldened" IsChecked="{Binding Filters.ShowEmboldenedModeLogs}" />
+                                    <CheckBox Content="Quickplay" IsChecked="{Binding Filters.ShowQuickplayModeLogs}" />
+                                </WrapPanel>
+                            </HeaderedContentControl>
 
-                        <TextBlock Text="Favorites" FontWeight="SemiBold" Margin="0,4,0,0" />
-                        <CheckBox Content="Favorite" IsChecked="{Binding Filters.ShowFavoriteLogs}" />
-                        <CheckBox Content="Non-favorite" IsChecked="{Binding Filters.ShowNonFavoriteLogs}" />
+                            <HeaderedContentControl Header="Favorites" Theme="{StaticResource GroupBoxTheme}"
+                                                     Margin="0,4,0,0">
+                                <WrapPanel>
+                                    <CheckBox Content="Favorite" IsChecked="{Binding Filters.ShowFavoriteLogs}" />
+                                    <CheckBox Content="Non-favorite" IsChecked="{Binding Filters.ShowNonFavoriteLogs}" />
+                                </WrapPanel>
+                            </HeaderedContentControl>
 
-                        <TextBlock Text="Player count" FontWeight="SemiBold" Margin="0,4,0,0" />
-                        <Grid ColumnDefinitions="Auto,*,Auto,*">
-                            <TextBlock Grid.Column="0" Text="Min" VerticalAlignment="Center" Margin="0,0,4,0" />
-                            <NumericUpDown Grid.Column="1" Minimum="0" Maximum="100" Increment="1" Margin="0,0,6,0"
-                                           FormatString="0" Value="{Binding Filters.PlayerFilters.MinPlayerCount}" />
-                            <TextBlock Grid.Column="2" Text="Max" VerticalAlignment="Center" Margin="0,0,4,0" />
-                            <NumericUpDown Grid.Column="3" Minimum="0" Maximum="100" Increment="1"
-                                           FormatString="0" Value="{Binding Filters.PlayerFilters.MaxPlayerCount}" />
-                        </Grid>
+                            <TextBlock Text="Player count" FontWeight="SemiBold" Margin="0,4,0,0" />
+                            <Grid ColumnDefinitions="Auto,*,Auto,*">
+                                <TextBlock Grid.Column="0" Text="Min" VerticalAlignment="Center" Margin="0,0,4,0" />
+                                <NumericUpDown Grid.Column="1" Minimum="0" Maximum="100" Increment="1" Margin="0,0,6,0"
+                                               FormatString="0" Value="{Binding Filters.PlayerFilters.MinPlayerCount}" />
+                                <TextBlock Grid.Column="2" Text="Max" VerticalAlignment="Center" Margin="0,0,4,0" />
+                                <NumericUpDown Grid.Column="3" Minimum="0" Maximum="100" Increment="1"
+                                               FormatString="0" Value="{Binding Filters.PlayerFilters.MaxPlayerCount}" />
+                            </Grid>
 
-                        <TextBlock Text="Date range" FontWeight="SemiBold" Margin="0,4,0,0" />
-                        <TextBlock Text="From" FontSize="11" Opacity="0.7" />
-                        <DatePicker SelectedDate="{Binding MinDate}" />
-                        <TextBlock Text="To" FontSize="11" Opacity="0.7" />
-                        <DatePicker SelectedDate="{Binding MaxDate}" />
-                        <Button Content="Clear dates" Command="{Binding ClearDatesCommand}"
-                                HorizontalAlignment="Left" />
+                            <TextBlock Text="Date range" FontWeight="SemiBold" Margin="0,4,0,0" />
+                            <StackPanel Spacing="2">
+                                <TextBlock Text="From" FontSize="11" Opacity="0.7" />
+                                <DatePicker SelectedDate="{Binding MinDate}" HorizontalAlignment="Stretch" />
+                            </StackPanel>
+                            <StackPanel Spacing="2">
+                                <TextBlock Text="To" FontSize="11" Opacity="0.7" />
+                                <DatePicker SelectedDate="{Binding MaxDate}" HorizontalAlignment="Stretch" />
+                            </StackPanel>
+                            <Button Content="Clear dates" Command="{Binding ClearDatesCommand}"
+                                    HorizontalAlignment="Left" />
 
-                        <TextBlock Text="Tags" FontWeight="SemiBold" Margin="0,4,0,0" />
-                        <ItemsControl ItemsSource="{Binding AvailableTags}">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate x:DataType="models:TagFilterItem">
-                                    <CheckBox Content="{Binding Name}" IsChecked="{Binding IsSelected}" />
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
+                            <TextBlock Text="Tags" FontWeight="SemiBold" Margin="0,4,0,0" />
+                            <TextBox Text="{Binding TagSearchText}" Watermark="Filter tags…" />
+                            <ItemsControl ItemsSource="{Binding AvailableTags}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="models:TagFilterItem">
+                                        <CheckBox Content="{Binding Name}" IsChecked="{Binding IsSelected}"
+                                                  IsVisible="{Binding IsVisible}" />
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
 
-                        <TextBlock Text="Encounters" FontWeight="SemiBold" Margin="0,4,0,0" />
-                        <TreeView ItemsSource="{Binding EncounterGroups}"
-                                  SelectedItem="{Binding SelectedGroup}"
-                                  Height="240">
-                            <TreeView.ItemTemplate>
-                                <TreeDataTemplate ItemsSource="{Binding Children}"
-                                                  x:DataType="models:LogGroupNode">
-                                    <TextBlock Text="{Binding Name}" />
-                                </TreeDataTemplate>
-                            </TreeView.ItemTemplate>
-                        </TreeView>
+                            <TextBlock Text="Encounters" FontWeight="SemiBold" Margin="0,4,0,0" />
+                            <TreeView ItemsSource="{Binding EncounterGroups}"
+                                      SelectedItem="{Binding SelectedGroup}"
+                                      Height="280">
+                                <TreeView.Styles>
+                                    <Style Selector="TreeViewItem" x:DataType="models:LogGroupNode">
+                                        <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+                                    </Style>
+                                </TreeView.Styles>
+                                <TreeView.ItemTemplate>
+                                    <TreeDataTemplate ItemsSource="{Binding Children}"
+                                                      x:DataType="models:LogGroupNode">
+                                        <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                                            <Image Source="{Binding Icon}" Width="16" Height="16"
+                                                   VerticalAlignment="Center" />
+                                            <TextBlock Text="{Binding Name}" VerticalAlignment="Center" />
+                                        </StackPanel>
+                                    </TreeDataTemplate>
+                                </TreeView.ItemTemplate>
+                            </TreeView>
 
-                        <Button Content="{Binding AdvancedFiltersButtonText}"
-                                HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
-                                Margin="0,4,0,0" Click="OnOpenAdvancedFiltersClick" />
-                    </StackPanel>
-                </ScrollViewer>
-            </Border>
+                            <Button Content="{Binding AdvancedFiltersButtonText}"
+                                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                                    Margin="0,4,0,0" Click="OnOpenAdvancedFiltersClick" />
+                        </StackPanel>
+                    </ScrollViewer>
+                </Border>
 
-            <TabControl>
+            <GridSplitter Grid.Column="1" ResizeDirection="Columns"
+                          IsVisible="{Binding ShowFilterSidebar}" Background="Transparent" />
+
+            <TabControl Grid.Column="2">
                 <TabItem Header="Logs">
                     <views:LogsSectionView DataContext="{Binding LogsSection}" />
                 </TabItem>
@@ -153,6 +192,6 @@
                     <views:ServicesSectionView DataContext="{Binding ServicesSection}" />
                 </TabItem>
             </TabControl>
-        </DockPanel>
+        </Grid>
     </DockPanel>
 </Window>

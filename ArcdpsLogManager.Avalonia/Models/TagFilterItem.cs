@@ -9,6 +9,9 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.Models
 
 		[ObservableProperty] private bool isSelected;
 
+		/// <summary>Whether this tag matches the sidebar's tag search box (shown when true).</summary>
+		[ObservableProperty] private bool isVisible = true;
+
 		public TagFilterItem(string name)
 		{
 			Name = name;

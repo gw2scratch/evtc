@@ -55,6 +55,8 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels
 
 		[ObservableProperty] private string searchQuery = "";
 
+		[ObservableProperty] private string tagSearchText = "";
+
 		[ObservableProperty] private bool showFilterSidebar;
 
 		/// <summary>Gates the "Game data" and "Services" debug tabs, exactly like the Eto
@@ -279,15 +281,22 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels
 			rootGroup = new Logs.Filters.Groups.RootLogGroup(rows.Select(r => r.Log).ToList(), nameProvider);
 			Filters.LogGroups = new[] { (Logs.Filters.Groups.LogGroup) rootGroup };
 			EncounterGroups.Clear();
-			EncounterGroups.Add(new Models.LogGroupNode(rootGroup));
+			EncounterGroups.Add(new Models.LogGroupNode(rootGroup, images));
 
 			AvailableTags.Clear();
 			foreach (var tag in rows.SelectMany(r => r.Log.Tags.Select(t => t.Name)).Distinct().OrderBy(t => t))
 			{
 				var item = new Models.TagFilterItem(tag);
-				item.PropertyChanged += (_, _) => UpdateRequiredTags();
+				item.PropertyChanged += (_, args) =>
+				{
+					if (args.PropertyName == nameof(Models.TagFilterItem.IsSelected))
+					{
+						UpdateRequiredTags();
+					}
+				};
 				AvailableTags.Add(item);
 			}
+			ApplyTagSearch();
 
 			loaded = true;
 			ApplyFilters();
@@ -558,6 +567,20 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels
 		private void UpdateRequiredTags()
 		{
 			Filters.RequiredTags = AvailableTags.Where(t => t.IsSelected).Select(t => t.Name).ToList();
+		}
+
+		partial void OnTagSearchTextChanged(string value)
+		{
+			ApplyTagSearch();
+		}
+
+		private void ApplyTagSearch()
+		{
+			foreach (var tag in AvailableTags)
+			{
+				tag.IsVisible = string.IsNullOrWhiteSpace(TagSearchText) ||
+				                tag.Name.Contains(TagSearchText, StringComparison.OrdinalIgnoreCase);
+			}
 		}
 	}
 }

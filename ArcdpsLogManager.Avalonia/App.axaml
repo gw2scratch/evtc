@@ -7,6 +7,11 @@
 
     <Application.Resources>
         <ResourceDictionary>
+            <!-- The Eto build used a noticeably smaller/denser control size than Fluent's
+                 defaults; this drives the default font size on most Fluent control templates
+                 (buttons, text boxes, checkboxes, combo boxes, etc). -->
+            <x:Double x:Key="ControlContentThemeFontSize">13</x:Double>
+
             <!-- App surface colour per theme. Fluent's stock dark base reads almost pure black;
                  we use a softer charcoal so panels/grids don't look like a solid black block.
                  Views bind their background to {DynamicResource AppBackgroundBrush}. -->
@@ -25,11 +30,68 @@
                     <SolidColorBrush x:Key="MonochromeIconBackdropBrush" Color="Transparent" />
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
+
+            <!-- A GroupBox look-alike (Avalonia has no built-in GroupBox): a HeaderedContentControl
+                 styled with the classic winforms/Eto GroupBox visual — a bordered box with the
+                 header text sitting on top of, and breaking, the border line. Used for the
+                 sidebar's Result/Mode/Favorites checkbox groups. -->
+            <ControlTheme x:Key="GroupBoxTheme" TargetType="HeaderedContentControl">
+                <Setter Property="Template">
+                    <ControlTemplate>
+                        <Grid>
+                            <Border BorderThickness="1"
+                                    BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
+                                    CornerRadius="4" Margin="0,8,0,0" Padding="8,14,8,8">
+                                <ContentPresenter Content="{TemplateBinding Content}" />
+                            </Border>
+                            <Border Background="{DynamicResource AppBackgroundBrush}"
+                                    HorizontalAlignment="Left" VerticalAlignment="Top"
+                                    Margin="8,0,0,0" Padding="4,0">
+                                <ContentPresenter Content="{TemplateBinding Header}" FontWeight="SemiBold" />
+                            </Border>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter>
+            </ControlTheme>
         </ResourceDictionary>
     </Application.Resources>
 
     <Application.Styles>
         <FluentTheme />
         <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml" />
+
+        <!-- FontSize is an inherited property; setting it on the root covers plain TextBlocks
+             that don't set their own size (ControlContentThemeFontSize above covers the rest). -->
+        <Style Selector="Window">
+            <Setter Property="FontSize" Value="13" />
+        </Style>
+        <Style Selector="Button">
+            <Setter Property="Padding" Value="10,4" />
+        </Style>
+        <Style Selector="TextBox">
+            <Setter Property="Padding" Value="6,4" />
+        </Style>
+        <Style Selector="ComboBox">
+            <Setter Property="Padding" Value="6,0" />
+            <Setter Property="MinHeight" Value="26" />
+        </Style>
+        <Style Selector="CheckBox">
+            <Setter Property="MinHeight" Value="24" />
+            <Setter Property="Padding" Value="6,0,0,0" />
+        </Style>
+        <!-- Gives WrapPanel.CheckBox groups (the sidebar's Result/Mode/Favorites blocks) breathing
+             room between items without depending on WrapPanel item-spacing support. -->
+        <Style Selector="WrapPanel > CheckBox">
+            <Setter Property="Margin" Value="0,2,14,2" />
+        </Style>
+        <Style Selector="DatePicker">
+            <Setter Property="MinHeight" Value="26" />
+        </Style>
+        <!-- Avalonia's NumericUpDown ships with visible up/down spinner buttons; the Eto number
+             boxes had none, and the buttons make already-narrow filter fields even narrower. -->
+        <Style Selector="NumericUpDown">
+            <Setter Property="ShowButtonSpinner" Value="False" />
+            <Setter Property="MinHeight" Value="26" />
+        </Style>
     </Application.Styles>
 </Application>
