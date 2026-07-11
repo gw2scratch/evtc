@@ -12,6 +12,15 @@
                  (buttons, text boxes, checkboxes, combo boxes, etc). -->
             <x:Double x:Key="ControlContentThemeFontSize">13</x:Double>
 
+            <!-- The DataGrid's row selection highlight (DataGridRowSelectedBackgroundBrush etc,
+                 untouched) is the only selection indicator we want. Avalonia's DataGrid separately
+                 draws a "current cell" focus/currency box around whichever cell last had keyboard
+                 focus, using these brushes — a leftover from cell-level selection that's just visual
+                 noise on top of row selection here, so we make it invisible. -->
+            <SolidColorBrush x:Key="DataGridCellFocusVisualPrimaryBrush" Color="Transparent" />
+            <SolidColorBrush x:Key="DataGridCellFocusVisualSecondaryBrush" Color="Transparent" />
+            <SolidColorBrush x:Key="DataGridCurrencyVisualPrimaryBrush" Color="Transparent" />
+
             <!-- App surface colour per theme. Fluent's stock dark base reads almost pure black;
                  we use a softer charcoal so panels/grids don't look like a solid black block.
                  Views bind their background to {DynamicResource AppBackgroundBrush}. -->
