@@ -10,7 +10,7 @@
             <!-- The Eto build used a noticeably smaller/denser control size than Fluent's
                  defaults; this drives the default font size on most Fluent control templates
                  (buttons, text boxes, checkboxes, combo boxes, etc). -->
-            <x:Double x:Key="ControlContentThemeFontSize">13</x:Double>
+            <x:Double x:Key="ControlContentThemeFontSize">12</x:Double>
 
             <!-- The DataGrid's row selection highlight (DataGridRowSelectedBackgroundBrush etc,
                  untouched) is the only selection indicator we want. Avalonia's DataGrid separately
