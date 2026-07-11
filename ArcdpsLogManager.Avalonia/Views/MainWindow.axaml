@@ -61,7 +61,7 @@
              (rather than just hiding their content) when the sidebar is toggled off. -->
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="{Binding ShowFilterSidebar, Converter={x:Static views:BoolToGridLengthConverter.Instance}, ConverterParameter=280}" />
+                <ColumnDefinition Width="{Binding ShowFilterSidebar, Converter={x:Static views:BoolToGridLengthConverter.Instance}, ConverterParameter=320}" />
                 <ColumnDefinition Width="{Binding ShowFilterSidebar, Converter={x:Static views:BoolToGridLengthConverter.Instance}, ConverterParameter=4}" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
