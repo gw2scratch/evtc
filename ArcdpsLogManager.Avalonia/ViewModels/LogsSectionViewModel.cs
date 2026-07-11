@@ -40,7 +40,7 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels
 		{
 			this.cacheService = cacheService;
 			Detail = new LogDetailPanelViewModel(images, nameProvider, cacheService);
-			MultipleDetail = new MultipleLogPanelViewModel(cacheService);
+			MultipleDetail = new MultipleLogPanelViewModel(cacheService, images);
 		}
 
 		/// <summary>Replaces the grid contents with the given rows (called on the UI thread).</summary>

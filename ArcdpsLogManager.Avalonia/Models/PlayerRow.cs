@@ -13,6 +13,8 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.Models
 		public string CharacterName { get; }
 		public string AccountName { get; }
 		public int Subgroup { get; }
+		public Bitmap? TagIcon { get; }
+		public bool IsCommander { get; }
 
 		public PlayerRow(LogPlayer player, ImageProvider images)
 		{
@@ -20,6 +22,8 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.Models
 			CharacterName = player.Name;
 			AccountName = player.AccountName?.TrimStart(':') ?? "";
 			Subgroup = player.Subgroup;
+			IsCommander = player.Tag == PlayerTag.Commander;
+			TagIcon = IsCommander ? images.GetTinyCommanderIcon() : null;
 		}
 	}
 }

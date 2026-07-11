@@ -110,8 +110,9 @@
             <Setter Property="Padding" Value="0" />
             <Setter Property="Cursor" Value="Hand" />
             <Setter Property="HorizontalContentAlignment" Value="Left" />
+            <Setter Property="Foreground" Value="#3391FF" />
         </Style>
-        <Style Selector="Button.link:pointerover /template/ ContentPresenter">
+        <Style Selector="Button.link /template/ ContentPresenter">
             <Setter Property="TextBlock.TextDecorations" Value="Underline" />
         </Style>
     </Application.Styles>

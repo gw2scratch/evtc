@@ -52,6 +52,10 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels
 		[ObservableProperty] private bool isFailed;
 		[ObservableProperty] private string failureText = "";
 
+		/// <summary>The "Copy" button's icon, swapped between the enabled/disabled variant depending
+		/// on <see cref="HasUploadUrl"/>.</summary>
+		[ObservableProperty] private Bitmap? copyIcon;
+
 		public List<PlayerSubgroupRow> PlayerGroups { get; private set; } = new();
 		public IReadOnlyList<Bitmap> Instabilities { get; private set; } = new List<Bitmap>();
 		public IReadOnlyList<string> Tags { get; private set; } = new List<string>();
@@ -91,6 +95,7 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels
 			this.images = images;
 			this.nameProvider = nameProvider;
 			this.cacheService = cacheService;
+			copyIcon = images.GetCopyButtonDisabledImage();
 		}
 
 		// Raised on a background thread by the upload processor; marshal to the UI thread.
@@ -293,6 +298,7 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels
 			UploadStatus = text;
 			UploadUrl = upload.Url;
 			HasUploadUrl = !string.IsNullOrEmpty(upload.Url);
+			CopyIcon = HasUploadUrl ? images.GetCopyButtonEnabledImage() : images.GetCopyButtonDisabledImage();
 			UploadCommand.NotifyCanExecuteChanged();
 		}
 	}

@@ -54,12 +54,15 @@
                                 <ItemsControl ItemsSource="{Binding Players}">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate x:DataType="models:PlayerRow">
-                                            <Grid ColumnDefinitions="24,Auto,*" Margin="0,2">
-                                                <Image Grid.Column="0" Source="{Binding Icon}" Width="20" Height="20"
+                                            <Grid ColumnDefinitions="18,24,Auto,*" Margin="0,2">
+                                                <Image Grid.Column="0" Source="{Binding TagIcon}" Width="16" Height="17"
+                                                       VerticalAlignment="Center" IsVisible="{Binding IsCommander}"
+                                                       ToolTip.Tip="Commander" />
+                                                <Image Grid.Column="1" Source="{Binding Icon}" Width="20" Height="20"
                                                        VerticalAlignment="Center" />
-                                                <TextBlock Grid.Column="1" Text="{Binding CharacterName}"
+                                                <TextBlock Grid.Column="2" Text="{Binding CharacterName}"
                                                            VerticalAlignment="Center" Margin="4,0" />
-                                                <TextBlock Grid.Column="2" Text="{Binding AccountName}"
+                                                <TextBlock Grid.Column="3" Text="{Binding AccountName}"
                                                            VerticalAlignment="Center" Margin="4,0" Opacity="0.6" />
                                             </Grid>
                                         </DataTemplate>
@@ -80,54 +83,61 @@
             </StackPanel>
 
             <!-- Tags (add/remove) -->
-            <StackPanel Grid.Row="2" Spacing="4" Margin="0,6,0,0">
-                <TextBlock Text="Tags" FontWeight="SemiBold" />
-                <ItemsControl ItemsSource="{Binding Tags}" IsVisible="{Binding HasTags}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Border Background="{DynamicResource SystemControlBackgroundBaseLowBrush}"
-                                    CornerRadius="4" Padding="6,2" Margin="0,0,4,4">
-                                <StackPanel Orientation="Horizontal" Spacing="4">
-                                    <TextBlock Text="{Binding}" VerticalAlignment="Center" />
-                                    <Button Content="✕" Padding="2,0" FontSize="10"
-                                            Background="Transparent" BorderThickness="0"
-                                            Command="{Binding $parent[ItemsControl].((vm:LogDetailPanelViewModel)DataContext).RemoveTagCommand}"
-                                            CommandParameter="{Binding}" />
-                                </StackPanel>
-                            </Border>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-                <StackPanel Orientation="Horizontal" Spacing="4">
-                    <TextBox Text="{Binding NewTag}" Watermark="Add tag…" Width="160" />
-                    <Button Content="Add" Command="{Binding AddTagCommand}" />
+            <HeaderedContentControl Grid.Row="2" Header="Tags" Theme="{StaticResource GroupBoxTheme}"
+                                     Margin="0,6,0,0">
+                <StackPanel Spacing="4">
+                    <ItemsControl ItemsSource="{Binding Tags}" IsVisible="{Binding HasTags}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="{DynamicResource SystemControlBackgroundBaseLowBrush}"
+                                        CornerRadius="4" Padding="6,2" Margin="0,0,4,4">
+                                    <StackPanel Orientation="Horizontal" Spacing="4">
+                                        <TextBlock Text="{Binding}" VerticalAlignment="Center" />
+                                        <Button Content="✕" Padding="2,0" FontSize="10"
+                                                Background="Transparent" BorderThickness="0"
+                                                Command="{Binding $parent[ItemsControl].((vm:LogDetailPanelViewModel)DataContext).RemoveTagCommand}"
+                                                CommandParameter="{Binding}" />
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <Grid ColumnDefinitions="*,Auto">
+                        <TextBox Grid.Column="0" Text="{Binding NewTag}" Watermark="Add tag…" Margin="0,0,4,0" />
+                        <Button Grid.Column="1" Content="Add" Command="{Binding AddTagCommand}" />
+                    </Grid>
                 </StackPanel>
-            </StackPanel>
+            </HeaderedContentControl>
 
             <!-- dps.report upload -->
-            <StackPanel Grid.Row="3" Spacing="2" Margin="0,6,0,0">
-                <TextBlock Text="dps.report" FontWeight="SemiBold" />
-                <TextBlock Text="{Binding UploadStatus}" />
-                <TextBox Name="UploadUrlBox" Text="{Binding UploadUrl}" IsReadOnly="True"
-                         Margin="0,2,0,0" IsVisible="{Binding HasUploadUrl}" />
-                <StackPanel Orientation="Horizontal" Spacing="4" Margin="0,4,0,0">
-                    <Button Name="CopyUrlButton" Content="Copy" IsEnabled="{Binding HasUploadUrl}" />
-                    <Button Name="OpenUrlButton" Content="Open" IsEnabled="{Binding HasUploadUrl}" />
-                    <Button Content="{Binding UploadButtonText}" Command="{Binding UploadCommand}" />
+            <HeaderedContentControl Grid.Row="3" Header="Upload to dps.report (Elite Insights)"
+                                     Theme="{StaticResource GroupBoxTheme}" Margin="0,6,0,0">
+                <StackPanel Spacing="4">
+                    <TextBox Name="UploadUrlBox" Text="{Binding UploadUrl}" Watermark="{Binding UploadStatus}"
+                             IsReadOnly="True" />
+                    <Grid ColumnDefinitions="Auto,*,*">
+                        <Button Grid.Column="0" Name="CopyUrlButton" IsEnabled="{Binding HasUploadUrl}"
+                                ToolTip.Tip="Copy" Margin="0,0,4,0">
+                            <Image Source="{Binding CopyIcon}" Width="16" Height="16" />
+                        </Button>
+                        <Button Grid.Column="1" Name="OpenUrlButton" Content="Open" IsEnabled="{Binding HasUploadUrl}"
+                                HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="0,0,4,0" />
+                        <Button Grid.Column="2" Content="{Binding UploadButtonText}" Command="{Binding UploadCommand}"
+                                HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+                    </Grid>
                 </StackPanel>
-            </StackPanel>
+            </HeaderedContentControl>
 
             <!-- Opens the containing folder with the file selected, like the old Eto build's
                  bottom-right fileNameButton. Content is a TextBlock (not a plain string) so long
                  file names wrap instead of overflowing past the sidebar's edge. -->
             <Button Name="FileNameButton" Grid.Row="4" Click="OnFileNameClick"
-                    Classes="link" HorizontalAlignment="Right" Margin="0,6,0,0"
-                    Opacity="0.6" FontSize="11">
+                    Classes="link" HorizontalAlignment="Right" Margin="0,6,0,0">
                 <TextBlock Text="{Binding FileName}" TextWrapping="Wrap" TextAlignment="Right" />
             </Button>
         </Grid>

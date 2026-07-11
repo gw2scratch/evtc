@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -21,6 +22,7 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels
 	public partial class MultipleLogPanelViewModel : ObservableObject
 	{
 		private readonly LogCacheService cacheService;
+		private readonly ImageProvider images;
 		private IReadOnlyList<LogData> logs = Array.Empty<LogData>();
 		private readonly EventHandler<EventArgs> debugDataChangedHandler;
 		private bool uploadProcessorAttached;
@@ -59,6 +61,10 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels
 		[ObservableProperty] private bool canUploadMissing;
 		[ObservableProperty] private bool canCancelUploads;
 		public IReadOnlyList<string> UploadedUrls { get; private set; } = new List<string>();
+
+		/// <summary>The "Copy links" button's icon, swapped between the enabled/disabled variant
+		/// depending on <see cref="HasUploadedLogs"/> (matches the Eto WPF-only icon-button behavior).</summary>
+		[ObservableProperty] private Bitmap? copyIcon;
 
 		/// <summary>
 		/// The background processing service, assigned once available (the cache may still be
@@ -99,9 +105,11 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels
 
 		public bool CanReprocess => ProcessingService != null;
 
-		public MultipleLogPanelViewModel(LogCacheService cacheService)
+		public MultipleLogPanelViewModel(LogCacheService cacheService, ImageProvider images)
 		{
 			this.cacheService = cacheService;
+			this.images = images;
+			copyIcon = images.GetCopyButtonDisabledImage();
 
 			showDebugData = Settings.ShowDebugData;
 			debugDataChangedHandler = (_, _) =>
@@ -209,6 +217,7 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels
 			OnPropertyChanged(nameof(UploadedUrls));
 			HasUploadedLogs = UploadedUrls.Count > 0;
 			UploadedUrlsText = string.Join(Environment.NewLine, UploadedUrls);
+			CopyIcon = HasUploadedLogs ? images.GetCopyButtonEnabledImage() : images.GetCopyButtonDisabledImage();
 		}
 
 		[RelayCommand(CanExecute = nameof(CanReprocess))]
