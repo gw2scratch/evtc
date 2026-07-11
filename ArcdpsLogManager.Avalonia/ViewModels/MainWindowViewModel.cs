@@ -232,6 +232,16 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels
 					if (cacheService.Cache is { } cache && rootPaths.Count > 0)
 					{
 						processingService = new LogProcessingService(cache, apiData);
+
+						// Subscribe to processing results BEFORE scheduling any logs. DiscoverAndSchedule
+						// starts the background processor immediately, so if we subscribed later (after the
+						// await, on the UI thread) any log that finished parsing in that window would fire its
+						// Processed event into the void: its row was snapshotted while still unparsed and would
+						// stay stuck on "Processing..." until the next reload. Subscribing here captures those
+						// events into processedQueue; the refresh timer drains them once it starts.
+						processingService.LogProcessed += OnLogProcessed;
+						processingService.GuildDataUpdated += OnGuildDataUpdated;
+
 						logs = processingService.DiscoverAndSchedule(rootPaths);
 					}
 
@@ -271,11 +281,11 @@ namespace GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels
 				LogsSection.StatusText =
 					$"Loaded {rows.Count:N0} logs in {stopwatch.ElapsedMilliseconds:N0} ms.{note}";
 
-				// Reflect background processing results incrementally.
+				// Reflect background processing results incrementally. The LogProcessed/GuildDataUpdated
+				// subscriptions were already wired up (before scheduling, inside the Task.Run above) so no
+				// early events are missed; here we only start the timer that drains them onto the UI thread.
 				if (processingService != null)
 				{
-					processingService.LogProcessed += OnLogProcessed;
-					processingService.GuildDataUpdated += OnGuildDataUpdated;
 					processingRefreshTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(750) };
 					processingRefreshTimer.Tick += (_, _) => DrainProcessed();
 					processingRefreshTimer.Start();
