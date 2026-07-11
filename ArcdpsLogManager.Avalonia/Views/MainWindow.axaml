@@ -204,6 +204,13 @@
                     <TreeView ItemsSource="{Binding EncounterGroups}"
                               SelectedItem="{Binding SelectedGroup}">
                         <TreeView.Styles>
+                            <!-- Always compact here, independent of Settings.CompactUi (which only
+                                 controls the app-wide FluentTheme density): this list can get long
+                                 with all encounters, so dense rows matter more here than elsewhere. -->
+                            <Style Selector="TreeViewItem">
+                                <Setter Property="Padding" Value="4,2" />
+                                <Setter Property="MinHeight" Value="24" />
+                            </Style>
                             <Style Selector="TreeViewItem" x:DataType="models:LogGroupNode">
                                 <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
                             </Style>
