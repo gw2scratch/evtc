@@ -61,7 +61,7 @@
              (rather than just hiding their content) when the sidebar is toggled off. -->
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="{Binding ShowFilterSidebar, Converter={x:Static views:BoolToGridLengthConverter.Instance}, ConverterParameter=320}" />
+                <ColumnDefinition Width="{Binding ShowFilterSidebar, Converter={x:Static views:BoolToGridLengthConverter.Instance}, ConverterParameter=340}" />
                 <ColumnDefinition Width="{Binding ShowFilterSidebar, Converter={x:Static views:BoolToGridLengthConverter.Instance}, ConverterParameter=4}" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
@@ -86,7 +86,7 @@
                             <TextBox Text="{Binding SearchQuery}" Watermark="Search name / player…" />
 
                             <HeaderedContentControl Header="Result" Theme="{StaticResource GroupBoxTheme}"
-                                                     Margin="0,4,0,0">
+                                                     Padding="8,10,8,2" Margin="0,4,0,0">
                                 <WrapPanel>
                                     <CheckBox Content="Success" IsChecked="{Binding Filters.ShowSuccessfulLogs}" />
                                     <CheckBox Content="Failure" IsChecked="{Binding Filters.ShowFailedLogs}" />
@@ -95,7 +95,7 @@
                             </HeaderedContentControl>
 
                             <HeaderedContentControl Header="Mode" Theme="{StaticResource GroupBoxTheme}"
-                                                     Margin="0,4,0,0">
+                                                     Padding="8,10,8,2" Margin="0,4,0,0">
                                 <WrapPanel>
                                     <CheckBox Content="Normal" IsChecked="{Binding Filters.ShowNormalModeLogs}" />
                                     <CheckBox Content="Challenge" IsChecked="{Binding Filters.ShowChallengeModeLogs}" />
@@ -106,45 +106,55 @@
                             </HeaderedContentControl>
 
                             <HeaderedContentControl Header="Favorites" Theme="{StaticResource GroupBoxTheme}"
-                                                     Margin="0,4,0,0">
+                                                     Padding="8,10,8,2" Margin="0,4,0,0">
                                 <WrapPanel>
                                     <CheckBox Content="Favorite" IsChecked="{Binding Filters.ShowFavoriteLogs}" />
                                     <CheckBox Content="Non-favorite" IsChecked="{Binding Filters.ShowNonFavoriteLogs}" />
                                 </WrapPanel>
                             </HeaderedContentControl>
 
-                            <TextBlock Text="Player count" FontWeight="SemiBold" Margin="0,4,0,0" />
-                            <Grid ColumnDefinitions="Auto,*,Auto,*">
-                                <TextBlock Grid.Column="0" Text="Min" VerticalAlignment="Center" Margin="0,0,4,0" />
-                                <NumericUpDown Grid.Column="1" Minimum="0" Maximum="100" Increment="1" Margin="0,0,6,0"
-                                               FormatString="0" Value="{Binding Filters.PlayerFilters.MinPlayerCount}" />
-                                <TextBlock Grid.Column="2" Text="Max" VerticalAlignment="Center" Margin="0,0,4,0" />
-                                <NumericUpDown Grid.Column="3" Minimum="0" Maximum="100" Increment="1"
-                                               FormatString="0" Value="{Binding Filters.PlayerFilters.MaxPlayerCount}" />
-                            </Grid>
+                            <HeaderedContentControl Header="Player count" Theme="{StaticResource GroupBoxTheme}"
+                                                     Margin="0,4,0,0">
+                                <Grid ColumnDefinitions="Auto,*,Auto,*">
+                                    <TextBlock Grid.Column="0" Text="Min" VerticalAlignment="Center" Margin="0,0,4,0" />
+                                    <NumericUpDown Grid.Column="1" Minimum="0" Maximum="100" Increment="1" Margin="0,0,6,0"
+                                                   FormatString="0" Value="{Binding Filters.PlayerFilters.MinPlayerCount}" />
+                                    <TextBlock Grid.Column="2" Text="Max" VerticalAlignment="Center" Margin="0,0,4,0" />
+                                    <NumericUpDown Grid.Column="3" Minimum="0" Maximum="100" Increment="1"
+                                                   FormatString="0" Value="{Binding Filters.PlayerFilters.MaxPlayerCount}" />
+                                </Grid>
+                            </HeaderedContentControl>
 
-                            <TextBlock Text="Date range" FontWeight="SemiBold" Margin="0,4,0,0" />
-                            <StackPanel Spacing="2">
-                                <TextBlock Text="From" FontSize="11" Opacity="0.7" />
-                                <DatePicker SelectedDate="{Binding MinDate}" HorizontalAlignment="Stretch" />
-                            </StackPanel>
-                            <StackPanel Spacing="2">
-                                <TextBlock Text="To" FontSize="11" Opacity="0.7" />
-                                <DatePicker SelectedDate="{Binding MaxDate}" HorizontalAlignment="Stretch" />
-                            </StackPanel>
-                            <Button Content="Clear dates" Command="{Binding ClearDatesCommand}"
-                                    HorizontalAlignment="Left" />
+                            <HeaderedContentControl Header="Date range" Theme="{StaticResource GroupBoxTheme}"
+                                                     Margin="0,4,0,0">
+                                <StackPanel Spacing="6">
+                                    <StackPanel Spacing="2">
+                                        <TextBlock Text="From" FontSize="11" Opacity="0.7" />
+                                        <DatePicker SelectedDate="{Binding MinDate}" HorizontalAlignment="Stretch" />
+                                    </StackPanel>
+                                    <StackPanel Spacing="2">
+                                        <TextBlock Text="To" FontSize="11" Opacity="0.7" />
+                                        <DatePicker SelectedDate="{Binding MaxDate}" HorizontalAlignment="Stretch" />
+                                    </StackPanel>
+                                    <Button Content="Clear dates" Command="{Binding ClearDatesCommand}"
+                                            HorizontalAlignment="Left" />
+                                </StackPanel>
+                            </HeaderedContentControl>
 
-                            <TextBlock Text="Tags" FontWeight="SemiBold" Margin="0,4,0,0" />
-                            <TextBox Text="{Binding TagSearchText}" Watermark="Filter tags…" />
-                            <ItemsControl ItemsSource="{Binding AvailableTags}">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate x:DataType="models:TagFilterItem">
-                                        <CheckBox Content="{Binding Name}" IsChecked="{Binding IsSelected}"
-                                                  IsVisible="{Binding IsVisible}" />
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
+                            <HeaderedContentControl Header="Tags" Theme="{StaticResource GroupBoxTheme}"
+                                                     Margin="0,4,0,0">
+                                <StackPanel Spacing="6">
+                                    <TextBox Text="{Binding TagSearchText}" Watermark="Filter tags…" />
+                                    <ItemsControl ItemsSource="{Binding AvailableTags}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate x:DataType="models:TagFilterItem">
+                                                <CheckBox Content="{Binding Name}" IsChecked="{Binding IsSelected}"
+                                                          IsVisible="{Binding IsVisible}" />
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </HeaderedContentControl>
                         </StackPanel>
                     </ScrollViewer>
 

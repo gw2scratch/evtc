@@ -45,12 +45,15 @@
                  header text sitting on top of, and breaking, the border line. Used for the
                  sidebar's Result/Mode/Favorites checkbox groups. -->
             <ControlTheme x:Key="GroupBoxTheme" TargetType="HeaderedContentControl">
+                <!-- Default border padding; override per-instance via Padding="…" since it's now
+                     template-bound instead of hardcoded. -->
+                <Setter Property="Padding" Value="8,14,8,8" />
                 <Setter Property="Template">
                     <ControlTemplate>
                         <Grid>
                             <Border BorderThickness="1"
                                     BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
-                                    CornerRadius="4" Margin="0,8,0,0" Padding="8,14,8,8">
+                                    CornerRadius="4" Margin="0,8,0,0" Padding="{TemplateBinding Padding}">
                                 <ContentPresenter Content="{TemplateBinding Content}" />
                             </Border>
                             <Border Background="{DynamicResource AppBackgroundBrush}"
@@ -91,7 +94,7 @@
         <!-- Gives WrapPanel.CheckBox groups (the sidebar's Result/Mode/Favorites blocks) breathing
              room between items without depending on WrapPanel item-spacing support. -->
         <Style Selector="WrapPanel > CheckBox">
-            <Setter Property="Margin" Value="0,2,14,2" />
+            <Setter Property="Margin" Value="0,0,14,0" />
         </Style>
         <Style Selector="DatePicker">
             <Setter Property="MinHeight" Value="26" />
