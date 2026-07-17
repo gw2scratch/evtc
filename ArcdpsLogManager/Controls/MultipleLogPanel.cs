@@ -25,7 +25,8 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 
 		private readonly Label countLabel = new Label {Font = Fonts.Sans(12)};
 		private readonly Label parseTimeLabel = new Label();
-		private readonly Label totalDurationLabel = new Label();
+		private readonly Label sessionLengthLabel = new Label();
+		private readonly Label combatDurationLabel = new Label();
 		private readonly Label successCountLabel = new Label();
 		private readonly Label failureCountLabel = new Label();
 		private readonly Label dpsReportNotUploadedLabel = new Label();
@@ -60,8 +61,11 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				Visible = true;
 
 				countLabel.Text = $"{logData.Length} logs selected";
-				var totalDuration = logData.Where(x => x.ParsingStatus == ParsingStatus.Parsed).Aggregate(TimeSpan.Zero, (x, y) => x + y.EncounterDuration);
-				totalDurationLabel.Text = FormatTimeSpan(totalDuration);
+				var parsedLogs = logData.Where(x => x.ParsingStatus == ParsingStatus.Parsed).ToList();
+				var totalDuration = parsedLogs.Aggregate(TimeSpan.Zero, (x, y) => x + y.EncounterDuration);
+				var sessionDuration = parsedLogs.Max(x => x.EncounterStartTime + x.EncounterDuration) - parsedLogs.Min(x => x.EncounterStartTime);
+				sessionLengthLabel.Text = FormatTimeSpan(sessionDuration);
+				combatDurationLabel.Text = FormatTimeSpan(totalDuration);
 				successCountLabel.Text = logData.Count(x => x.ParsingStatus == ParsingStatus.Parsed && x.EncounterResult == EncounterResult.Success).ToString();
 				failureCountLabel.Text = logData.Count(x => x.ParsingStatus == ParsingStatus.Parsed && x.EncounterResult == EncounterResult.Failure).ToString();
 				parseTimeLabel.Text = $"{logData.Select(x => x.ParseMilliseconds).Sum()} ms";
@@ -265,7 +269,8 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				{
 					AddRow("Success logs: ", successCountLabel);
 					AddRow("Failure logs: ", failureCountLabel);
-					AddRow("Total duration: ", totalDurationLabel);
+					AddRow("Combat duration: ", combatDurationLabel);
+					AddRow("Session length: ", sessionLengthLabel);
 				}
 				EndGroup();
 				debugSection = BeginGroup("Debug data", new Padding(5), new Size(5, 5));
