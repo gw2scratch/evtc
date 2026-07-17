@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
 using GW2Scratch.ArcdpsLogManager.Analytics;
 using GW2Scratch.ArcdpsLogManager.Logs.Extras;
 using GW2Scratch.ArcdpsLogManager.Logs.Tagging;
@@ -11,10 +5,17 @@ using GW2Scratch.EVTCAnalytics.Events;
 using GW2Scratch.EVTCAnalytics.GameData;
 using GW2Scratch.EVTCAnalytics.GameData.Encounters;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
+using GW2Scratch.EVTCAnalytics.Parsed.Enums;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Text;
 
 namespace GW2Scratch.ArcdpsLogManager.Logs
 {
@@ -273,14 +274,35 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 					HealthPercentage = 0;
 				}
 
-				var tagEvents = log.Events.OfType<AgentMarkerEvent>().Where(x => x.Agent is Player).ToList();
-				Players = analyzer.GetPlayers().Where(x => x.Identified).Select(p =>
-					new LogPlayer(p.Name, p.AccountName, p.Subgroup, p.Profession, p.EliteSpecialization,
-						GetGuildGuid(p.GuildGuid))
+				List<LogPlayer> logPlayers = [];
+				var tagEvents = log.Events.OfType<AgentMarkerEvent>().Where(x => x.Agent is Player);
+				var players = analyzer.GetPlayers().Where(x => x.Identified);
+				CommanderTags tagType = CommanderTags.RedCommanderTag; // Set a default color
+				bool tagFound = false;
+
+				foreach (var p in players)
+				{
+					AgentMarkerEvent tagEvent = null;
+
+					if (!tagFound)
 					{
-						Tag = tagEvents.Any(e => e.Agent == p && e.IsCommander.GetValueOrDefault(true)) ? PlayerTag.Commander : PlayerTag.None
+						tagEvent = tagEvents.FirstOrDefault(x => x.Agent == p && CommanderTagGUIDs.Tags.ContainsKey(ContentLocal.GetGuid(x.Marker.ContentGuid)));
+
+						if (tagEvent != null && CommanderTagGUIDs.Tags.TryGetValue(ContentLocal.GetGuid(tagEvent.Marker.ContentGuid), out var tag))
+						{
+							tagType = tag;
+							tagFound = true;
+						}
 					}
-				).ToArray();
+
+					logPlayers.Add(new LogPlayer(p.Name, p.AccountName, p.Subgroup, p.Profession, p.EliteSpecialization, GetGuildGuid(p.GuildGuid))
+					{
+						Tag = tagEvent != null ? PlayerTag.Commander : PlayerTag.None,
+						TagType = tagType
+					});
+				}
+
+				Players = [.. logPlayers];
 
 				if (log.StartTime != null)
 				{
@@ -354,7 +376,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 			}
 
 			return $"{GetPart(guidBytes, 0, 4)}-{GetPart(guidBytes, 4, 6)}-{GetPart(guidBytes, 6, 8)}" +
-			       $"-{GetPart(guidBytes, 8, 10)}-{GetPart(guidBytes, 10, 16)}";
+				   $"-{GetPart(guidBytes, 8, 10)}-{GetPart(guidBytes, 10, 16)}";
 		}
 
 		public string ShortDurationString

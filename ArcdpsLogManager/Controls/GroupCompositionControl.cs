@@ -81,7 +81,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 
 						if (anyPlayerTag)
 						{
-							Image tagIcon = player.Tag == PlayerTag.Commander ? imageProvider.GetTinyCommanderIcon() : null;
+							Image tagIcon = player.Tag == PlayerTag.Commander ? imageProvider.GetTinyCommanderIcon(player.TagType) : null;
 							string tagToolTip = player.Tag == PlayerTag.Commander ? "Commander" : null;
 							var tagImageView = new ImageView
 							{

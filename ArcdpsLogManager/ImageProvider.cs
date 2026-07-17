@@ -6,6 +6,7 @@ using GW2Scratch.EVTCAnalytics.GameData;
 using GW2Scratch.EVTCAnalytics.GameData.Encounters;
 using GW2Scratch.EVTCAnalytics.Model;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
+using GW2Scratch.EVTCAnalytics.Parsed.Enums;
 
 namespace GW2Scratch.ArcdpsLogManager
 {
@@ -74,7 +75,24 @@ namespace GW2Scratch.ArcdpsLogManager
 		private Lazy<Image> TinyIconRaid { get; } = new Lazy<Image>(Resources.GetTinyIconRaid);
 		private Lazy<Image> TinyIconFractals { get; } = new Lazy<Image>(Resources.GetTinyIconFractals);
 		private Lazy<Image> TinyIconLog { get; } = new Lazy<Image>(Resources.GetTinyIconGuildRegistrar);
-		private Lazy<Image> TinyIconCommander { get; } = new Lazy<Image>(Resources.GetTinyIconCommander);
+		private Lazy<Image> TinyCommanderRed { get; } = new Lazy<Image>(Resources.GetTinyIconCommanderRed);
+		private Lazy<Image> TinyCommanderOrange { get; } = new Lazy<Image>(Resources.GetTinyIconCommanderOrange);
+		private Lazy<Image> TinyCommanderYellow { get; } = new Lazy<Image>(Resources.GetTinyIconCommanderYellow);
+		private Lazy<Image> TinyCommanderGreen { get; } = new Lazy<Image>(Resources.GetTinyIconCommanderGreen);
+		private Lazy<Image> TinyCommanderCyan { get; } = new Lazy<Image>(Resources.GetTinyIconCommanderCyan);
+		private Lazy<Image> TinyCommanderBlue { get; } = new Lazy<Image>(Resources.GetTinyIconCommanderBlue);
+		private Lazy<Image> TinyCommanderPurple { get; } = new Lazy<Image>(Resources.GetTinyIconCommanderPurple);
+		private Lazy<Image> TinyCommanderPink { get; } = new Lazy<Image>(Resources.GetTinyIconCommanderPink);
+		private Lazy<Image> TinyCommanderWhite { get; } = new Lazy<Image>(Resources.GetTinyIconCommanderWhite);
+		private Lazy<Image> TinyCatmanderRed { get; } = new Lazy<Image>(Resources.GetTinyIconCatmanderRed);
+		private Lazy<Image> TinyCatmanderOrange { get; } = new Lazy<Image>(Resources.GetTinyIconCatmanderOrange);
+		private Lazy<Image> TinyCatmanderYellow { get; } = new Lazy<Image>(Resources.GetTinyIconCatmanderYellow);
+		private Lazy<Image> TinyCatmanderGreen { get; } = new Lazy<Image>(Resources.GetTinyIconCatmanderGreen);
+		private Lazy<Image> TinyCatmanderCyan { get; } = new Lazy<Image>(Resources.GetTinyIconCatmanderCyan);
+		private Lazy<Image> TinyCatmanderBlue { get; } = new Lazy<Image>(Resources.GetTinyIconCatmanderBlue);
+		private Lazy<Image> TinyCatmanderPurple { get; } = new Lazy<Image>(Resources.GetTinyIconCatmanderPurple);
+		private Lazy<Image> TinyCatmanderPink { get; } = new Lazy<Image>(Resources.GetTinyIconCatmanderPink);
+		private Lazy<Image> TinyCatmanderWhite { get; } = new Lazy<Image>(Resources.GetTinyIconCatmanderWhite);
 		private Lazy<Image> TinyIconRaidEncounter { get; } = new Lazy<Image>(Resources.GetTinyIconRaidEncounter);
 		private Lazy<Image> TinyIconTrainingArea { get; } = new Lazy<Image>(Resources.GetTinyIconTrainingArea);
 		private Lazy<Image> TinyIconWorldVersusWorld { get; } = new Lazy<Image>(Resources.GetTinyIconWorldVersusWorld);
@@ -241,7 +259,6 @@ namespace GW2Scratch.ArcdpsLogManager
 		public Image GetTinyLogIcon() => TinyIconLog.Value;
 		public Image GetTinyFractalsIcon() => TinyIconFractals.Value;
 		public Image GetTinyRaidIcon() => TinyIconRaid.Value;
-		public Image GetTinyCommanderIcon() => TinyIconCommander.Value;
 		public Image GetTinyRaidEncounterIcon() => TinyIconRaidEncounter.Value;
 		public Image GetTinyTrainingAreaIcon() => TinyIconTrainingArea.Value;
 		public Image GetTinyWorldVersusWorldIcon() => TinyIconWorldVersusWorld.Value;
@@ -270,6 +287,32 @@ namespace GW2Scratch.ArcdpsLogManager
 		public Image GetWideRaidWing6Icon() => WideRaidWing6Icon.Value;
 		public Image GetWideRaidWing7Icon() => WideRaidWing7Icon.Value;
 		public Image GetWideRaidWing8Icon() => WideRaidWing8Icon.Value;
+
+		public Image GetTinyCommanderIcon(CommanderTags tags)
+		{
+			return tags switch
+			{
+				CommanderTags.RedCommanderTag => TinyCommanderRed.Value,
+				CommanderTags.OrangeCommanderTag => TinyCommanderOrange.Value,
+				CommanderTags.YellowCommanderTag => TinyCommanderYellow.Value,
+				CommanderTags.GreenCommanderTag => TinyCommanderGreen.Value,
+				CommanderTags.CyanCommanderTag => TinyCommanderCyan.Value,
+				CommanderTags.BlueCommanderTag => TinyCommanderBlue.Value,
+				CommanderTags.PurpleCommanderTag => TinyCommanderPurple.Value,
+				CommanderTags.PinkCommanderTag => TinyCommanderPink.Value,
+				CommanderTags.WhiteCommanderTag => TinyCommanderWhite.Value,
+				CommanderTags.RedCatmanderTag => TinyCatmanderRed.Value,
+				CommanderTags.OrangeCatmanderTag => TinyCatmanderOrange.Value,
+				CommanderTags.YellowCatmanderTag => TinyCatmanderYellow.Value,
+				CommanderTags.GreenCatmanderTag => TinyCatmanderGreen.Value,
+				CommanderTags.BlueCatmanderTag => TinyCatmanderBlue.Value,
+				CommanderTags.CyanCatmanderTag => TinyCatmanderCyan.Value,
+				CommanderTags.PurpleCatmanderTag => TinyCatmanderPurple.Value,
+				CommanderTags.PinkCatmanderTag => TinyCatmanderPink.Value,
+				CommanderTags.WhiteCatmanderTag => TinyCatmanderWhite.Value,
+				_ => throw new ArgumentOutOfRangeException(nameof(tags)),
+			};
+		}
 
 		public Image GetTinyProfessionIcon(Profession profession)
 		{
