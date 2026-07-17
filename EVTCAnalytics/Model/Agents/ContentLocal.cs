@@ -23,6 +23,23 @@ public abstract class ContentLocal
 		ContentGuid = contentGuid;
 	}
 
+	public static Guid GetGuid(byte[] content)
+	{
+		return new Guid(Reverse(content));
+	}
+
+	private static byte[] Reverse(byte[] content)
+	{
+		// Clone the array to not modify the original content sequence
+		byte[] guid = (byte[]) content.Clone();
+
+		Array.Reverse(guid, 0, 4);
+		Array.Reverse(guid, 4, 2);
+		Array.Reverse(guid, 6, 2);
+
+		return guid;
+	}
+
 	public override string ToString()
 	{
 		return $"{Id} ({(ContentGuid != null ? GuidToString(ContentGuid) : "No GUID")})";

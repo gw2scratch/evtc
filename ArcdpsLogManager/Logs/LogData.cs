@@ -274,31 +274,35 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 					HealthPercentage = 0;
 				}
 
-				var tagEvents = log.Events.OfType<AgentMarkerEvent>().Where(x => x.Agent is Player).ToList();
-				var players = analyzer.GetPlayers().Where(x => x.Identified).ToList();
+				List<LogPlayer> logPlayers = [];
+				var tagEvents = log.Events.OfType<AgentMarkerEvent>().Where(x => x.Agent is Player);
+				var players = analyzer.GetPlayers().Where(x => x.Identified);
+				CommanderTags tagType = CommanderTags.RedCommanderTag; // Set a default color
+				bool tagFound = false;
 
-				Players = [.. players.Select(p =>
+				foreach (var p in players)
 				{
-					// Set a default color
-					CommanderTags tagType = CommanderTags.RedCommanderTag;
+					AgentMarkerEvent tagEvent = null;
 
-					foreach (AgentMarkerEvent markerEvent in tagEvents.Where(e => e.Agent == p))
+					if (!tagFound)
 					{
-						if (CommanderTagGUIDs.Tags.TryGetValue(ContentLocal.GuidToString(markerEvent.Marker.ContentGuid), out var tag))
+						tagEvent = tagEvents.FirstOrDefault(x => x.Agent == p && CommanderTagGUIDs.Tags.ContainsKey(ContentLocal.GetGuid(x.Marker.ContentGuid)));
+
+						if (tagEvent != null && CommanderTagGUIDs.Tags.TryGetValue(ContentLocal.GetGuid(tagEvent.Marker.ContentGuid), out var tag))
 						{
 							tagType = tag;
-							break;
+							tagFound = true;
 						}
 					}
 
-					var tagEvent = tagEvents.FirstOrDefault(e => e.Agent == p && CommanderTagGUIDs.Tags.TryGetValue(ContentLocal.GuidToString(e.Marker.ContentGuid), out var tag));
-
-					return new LogPlayer(p.Name, p.AccountName, p.Subgroup, p.Profession, p.EliteSpecialization, GetGuildGuid(p.GuildGuid))
+					logPlayers.Add(new LogPlayer(p.Name, p.AccountName, p.Subgroup, p.Profession, p.EliteSpecialization, GetGuildGuid(p.GuildGuid))
 					{
 						Tag = tagEvent != null ? PlayerTag.Commander : PlayerTag.None,
 						TagType = tagType
-					};
-				})];
+					});
+				}
+
+				Players = [.. logPlayers];
 
 				if (log.StartTime != null)
 				{
@@ -372,7 +376,7 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 			}
 
 			return $"{GetPart(guidBytes, 0, 4)}-{GetPart(guidBytes, 4, 6)}-{GetPart(guidBytes, 6, 8)}" +
-			       $"-{GetPart(guidBytes, 8, 10)}-{GetPart(guidBytes, 10, 16)}";
+				   $"-{GetPart(guidBytes, 8, 10)}-{GetPart(guidBytes, 10, 16)}";
 		}
 
 		public string ShortDurationString
