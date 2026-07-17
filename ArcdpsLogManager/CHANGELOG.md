@@ -4,6 +4,9 @@ This is the full changelog of the arcdps Log Manager.
 
 ## Unreleased
 
+#### EVTC Inspector notes
+- Added Tick events
+
 ## Log Manager v1.16.0
 
 #### Fixes
