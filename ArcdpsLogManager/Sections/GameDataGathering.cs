@@ -10,113 +10,16 @@ using GW2Scratch.ArcdpsLogManager.Gw2Api;
 using GW2Scratch.ArcdpsLogManager.Logs;
 using GW2Scratch.ArcdpsLogManager.Logs.Naming;
 using GW2Scratch.ArcdpsLogManager.Processing;
-using GW2Scratch.EVTCAnalytics;
-using GW2Scratch.EVTCAnalytics.Model;
-using GW2Scratch.EVTCAnalytics.Model.Agents;
-using GW2Scratch.EVTCAnalytics.Processing;
-using System.Collections.Concurrent;
+using GW2Scratch.ArcdpsLogManager.Sections.GameData;
 
 namespace GW2Scratch.ArcdpsLogManager.Sections
 {
 	public class GameDataCollecting : DynamicLayout
 	{
-		private class SpeciesData : IEquatable<SpeciesData>
-		{
-			public int SpeciesId { get; }
-			public string Name { get; }
-			public List<LogData> Logs { get; } = new List<LogData>();
-
-			public SpeciesData(int speciesId, string name)
-			{
-				SpeciesId = speciesId;
-				Name = name;
-			}
-
-			public bool Equals(SpeciesData other)
-			{
-				if (ReferenceEquals(null, other)) return false;
-				if (ReferenceEquals(this, other)) return true;
-				return SpeciesId == other.SpeciesId && string.Equals(Name, other.Name);
-			}
-
-			public override bool Equals(object obj)
-			{
-				if (ReferenceEquals(null, obj)) return false;
-				if (ReferenceEquals(this, obj)) return true;
-				if (obj.GetType() != this.GetType()) return false;
-				return Equals((SpeciesData) obj);
-			}
-
-			public override int GetHashCode()
-			{
-				return HashCode.Combine(SpeciesId, Name);
-			}
-
-			public static bool operator ==(SpeciesData left, SpeciesData right)
-			{
-				return Equals(left, right);
-			}
-
-			public static bool operator !=(SpeciesData left, SpeciesData right)
-			{
-				return !Equals(left, right);
-			}
-		}
-
-		private enum SkillType
-		{
-			Unknown,
-			Buff,
-			Ability,
-		}
-		
-		private class SkillData : IEquatable<SkillData>
-		{
-			public uint SkillId { get; }
-			public string Name { get; }
-			public List<LogData> Logs { get; } = new List<LogData>();
-			public SkillType Type { get; }
-
-			public SkillData(uint skillId, string name, SkillType type)
-			{
-				SkillId = skillId;
-				Name = name;
-				Type = type;
-			}
-
-			public bool Equals(SkillData other)
-			{
-				if (ReferenceEquals(null, other)) return false;
-				if (ReferenceEquals(this, other)) return true;
-				return SkillId == other.SkillId && string.Equals(Name, other.Name);
-			}
-
-			public override bool Equals(object obj)
-			{
-				if (ReferenceEquals(null, obj)) return false;
-				if (ReferenceEquals(this, obj)) return true;
-				if (obj.GetType() != this.GetType()) return false;
-				return Equals((SkillData) obj);
-			}
-
-			public override int GetHashCode()
-			{
-				return HashCode.Combine(SkillId, Name, Type);
-			}
-
-			public static bool operator ==(SkillData left, SkillData right)
-			{
-				return Equals(left, right);
-			}
-
-			public static bool operator !=(SkillData left, SkillData right)
-			{
-				return !Equals(left, right);
-			}
-		}
-
-		private EVTCParser Parser { get; } = new EVTCParser() {SinglePassFilteringOptions = { PruneForEncounterData = true}};
-		private LogProcessor Processor { get; } = new LogProcessor();
+		// The gathering/parsing logic (SpeciesGatherResult/SkillGatherResult/GameDataGatherer)
+		// lives in ArcdpsLogManager.Core (GW2Scratch.ArcdpsLogManager.Sections.GameData) so it has
+		// a single source of truth shared with the Avalonia port instead of a diverging copy here.
+		private readonly GameDataGatherer gatherer = new GameDataGatherer();
 		private CancellationTokenSource cancellationTokenSource;
 
 		public GameDataCollecting(LogList logList, LogCache logCache, ApiData apiData, LogDataProcessor logProcessor,
@@ -135,8 +38,8 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			var exportSkillsButton = new Button {Text = "Export skill data to csv"};
 			var progressBar = new ProgressBar();
 			var progressLabel = new Label {Text = ""};
-			var speciesGridView = new GridView<SpeciesData>();
-			var skillGridView = new GridView<SkillData>();
+			var speciesGridView = new GridView<SpeciesGatherResult>();
+			var skillGridView = new GridView<SkillGatherResult>();
 
 			var dataTabs = new TabControl();
 			dataTabs.Pages.Add(new TabPage {Text = "Species", Content = speciesGridView});
@@ -182,7 +85,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 				HeaderText = "Species ID",
 				DataCell = new TextBoxCell()
 				{
-					Binding = new DelegateBinding<SpeciesData, string>(x => x.SpeciesId.ToString())
+					Binding = new DelegateBinding<SpeciesGatherResult, string>(x => x.SpeciesId.ToString())
 				}
 			});
 			speciesGridView.Columns.Add(new GridColumn
@@ -190,7 +93,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 				HeaderText = "Name",
 				DataCell = new TextBoxCell()
 				{
-					Binding = new DelegateBinding<SpeciesData, string>(x => x.Name)
+					Binding = new DelegateBinding<SpeciesGatherResult, string>(x => x.Name)
 				}
 			});
 			speciesGridView.Columns.Add(new GridColumn
@@ -198,7 +101,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 				HeaderText = "Times seen",
 				DataCell = new TextBoxCell()
 				{
-					Binding = new DelegateBinding<SpeciesData, string>(x => x.Logs.Count.ToString())
+					Binding = new DelegateBinding<SpeciesGatherResult, string>(x => x.Logs.Count.ToString())
 				}
 			});
 
@@ -207,7 +110,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 				HeaderText = "Logs",
 				DataCell = new TextBoxCell()
 				{
-					Binding = new DelegateBinding<SpeciesData, string>(x => $"{x.Logs.Count}, click me to open log list"),
+					Binding = new DelegateBinding<SpeciesGatherResult, string>(x => $"{x.Logs.Count}, click me to open log list"),
 				}
 			};
 			speciesGridView.Columns.Add(speciesLogsColumn);
@@ -216,7 +119,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			{
 				if (args.GridColumn == speciesLogsColumn)
 				{
-					if (args.Item is SpeciesData speciesData)
+					if (args.Item is SpeciesGatherResult speciesData)
 					{
 						var form = new Form
 						{
@@ -239,7 +142,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 				HeaderText = "Skill ID",
 				DataCell = new TextBoxCell()
 				{
-					Binding = new DelegateBinding<SkillData, string>(x => x.SkillId.ToString())
+					Binding = new DelegateBinding<SkillGatherResult, string>(x => x.SkillId.ToString())
 				}
 			});
 			skillGridView.Columns.Add(new GridColumn
@@ -247,7 +150,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 				HeaderText = "Name",
 				DataCell = new TextBoxCell()
 				{
-					Binding = new DelegateBinding<SkillData, string>(x => x.Name)
+					Binding = new DelegateBinding<SkillGatherResult, string>(x => x.Name)
 				}
 			});
 			skillGridView.Columns.Add(new GridColumn
@@ -255,7 +158,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 				HeaderText = "Type",
 				DataCell = new TextBoxCell()
 				{
-					Binding = new DelegateBinding<SkillData, string>(x => x.Type.ToString())
+					Binding = new DelegateBinding<SkillGatherResult, string>(x => x.Type.ToString())
 				}
 			});
 			skillGridView.Columns.Add(new GridColumn
@@ -263,7 +166,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 				HeaderText = "Times seen",
 				DataCell = new TextBoxCell()
 				{
-					Binding = new DelegateBinding<SkillData, string>(x => x.Logs.Count.ToString())
+					Binding = new DelegateBinding<SkillGatherResult, string>(x => x.Logs.Count.ToString())
 				}
 			});
 			var skillLogsColumn = new GridColumn
@@ -271,7 +174,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 				HeaderText = "Logs",
 				DataCell = new TextBoxCell()
 				{
-					Binding = new DelegateBinding<SkillData, string>(x => $"{x.Logs.Count}, click me to open log list"),
+					Binding = new DelegateBinding<SkillGatherResult, string>(x => $"{x.Logs.Count}, click me to open log list"),
 				}
 			};
 			skillGridView.Columns.Add(skillLogsColumn);
@@ -280,7 +183,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			{
 				if (args.GridColumn == skillLogsColumn)
 				{
-					if (args.Item is SkillData skillData)
+					if (args.Item is SkillGatherResult skillData)
 					{
 						var form = new Form
 						{
@@ -298,8 +201,8 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 				}
 			};
 
-			var speciesSorter = new GridViewSorter<SpeciesData>(speciesGridView);
-			var skillSorter = new GridViewSorter<SkillData>(skillGridView);
+			var speciesSorter = new GridViewSorter<SpeciesGatherResult>(speciesGridView);
+			var skillSorter = new GridViewSorter<SkillGatherResult>(skillGridView);
 
 			speciesSorter.EnableSorting();
 			skillSorter.EnableSorting();
@@ -308,12 +211,12 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			gatherButton.Click += (sender, args) =>
 				GatherData(logList, progressBar, progressLabel, speciesGridView, skillGridView, speciesSorter, skillSorter, (int) threadCountStepper.Value);
 			exportSkillsButton.Click += (sender, args) =>
-				SaveToCsv(skillGridView.DataStore ?? Enumerable.Empty<SkillData>());
+				SaveToCsv(skillGridView.DataStore ?? Enumerable.Empty<SkillGatherResult>());
 			exportSpeciesButton.Click += (sender, args) =>
-				SaveToCsv(speciesGridView.DataStore ?? Enumerable.Empty<SpeciesData>());
+				SaveToCsv(speciesGridView.DataStore ?? Enumerable.Empty<SpeciesGatherResult>());
 		}
 
-		private void SaveToCsv(IEnumerable<SkillData> skillData)
+		private void SaveToCsv(IEnumerable<SkillGatherResult> skillData)
 		{
 			var dialog = new SaveFileDialog();
 			if (dialog.ShowDialog(this) == DialogResult.Ok)
@@ -329,7 +232,7 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 			}
 		}
 
-		private void SaveToCsv(IEnumerable<SpeciesData> speciesData)
+		private void SaveToCsv(IEnumerable<SpeciesGatherResult> speciesData)
 		{
 			var dialog = new SaveFileDialog();
 			if (dialog.ShowDialog(this) == DialogResult.Ok)
@@ -346,14 +249,14 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 		}
 
 		private void GatherData(LogList logList, ProgressBar progressBar, Label progressLabel,
-			GridView<SpeciesData> speciesGridView, GridView<SkillData> skillGridView,
-			GridViewSorter<SpeciesData> speciesSorter, GridViewSorter<SkillData> skillSorter, int maxDegreeOfParallelism)
+			GridView<SpeciesGatherResult> speciesGridView, GridView<SkillGatherResult> skillGridView,
+			GridViewSorter<SpeciesGatherResult> speciesSorter, GridViewSorter<SkillGatherResult> skillSorter, int maxDegreeOfParallelism)
 		{
 			cancellationTokenSource?.Cancel();
 			cancellationTokenSource = new CancellationTokenSource();
 
 			var logs = logList.DataStore.ToArray();
-			ParseLogs(
+			gatherer.GatherAsync(
 				logs,
 				cancellationTokenSource.Token,
 				maxDegreeOfParallelism,
@@ -374,98 +277,14 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 					Application.Instance.Invoke(() =>
 					{
 						var (species, skills) = task.Result;
-						speciesGridView.DataStore = new FilterCollection<SpeciesData>(species);
-						skillGridView.DataStore = new FilterCollection<SkillData>(skills);
+						speciesGridView.DataStore = new FilterCollection<SpeciesGatherResult>(species);
+						skillGridView.DataStore = new FilterCollection<SkillGatherResult>(skills);
 
 						speciesSorter.UpdateDataStore();
 						skillSorter.UpdateDataStore();
 					});
 				}
 			});
-		}
-
-		private Task<(IEnumerable<SpeciesData>, IEnumerable<SkillData>)> ParseLogs(IReadOnlyCollection<LogData> logs,
-			CancellationToken cancellationToken, int maxDegreeOfParallelism, IProgress<(int done, int totalLogs, int failed)> progress = null)
-		{
-			return Task.Run(() =>
-			{
-				var species = new ConcurrentDictionary<int, ConcurrentDictionary<SpeciesData, ConcurrentBag<LogData>>>();
-				var skills = new ConcurrentDictionary<uint, ConcurrentDictionary<SkillData, ConcurrentBag<LogData>>>();
-
-				int done = 0;
-				int failed = 0;
-				var options = new ParallelOptions { MaxDegreeOfParallelism = maxDegreeOfParallelism };
-				Parallel.ForEach(logs, options, log =>
-				{
-					cancellationToken.ThrowIfCancellationRequested();
-
-					Log processedLog;
-					try
-					{
-						processedLog = Processor.ProcessLog(log.FileName, Parser);
-					}
-					catch
-					{
-						Interlocked.Increment(ref failed);
-						return;
-					}
-
-					foreach (var agent in processedLog.Agents.OfType<NPC>())
-					{
-						int id = agent.SpeciesId;
-						string name = agent.Name;
-
-						if (id == 0) continue;
-
-						var speciesData = new SpeciesData(id, name);
-						var dictForSpecies = species.GetOrAdd(id, new ConcurrentDictionary<SpeciesData, ConcurrentBag<LogData>>());
-
-						var listForSpeciesData = dictForSpecies.GetOrAdd(speciesData, new ConcurrentBag<LogData>());
-						listForSpeciesData.Add(log);
-					}
-
-					foreach (var skill in processedLog.Skills)
-					{
-						uint id = skill.Id;
-						string name = skill.Name;
-						var skillType = (skill.SkillData, skill.BuffData) switch
-						{
-							(null, null) => SkillType.Unknown,
-							(_, null) => SkillType.Ability,
-							(null, _) => SkillType.Buff,
-							_ => SkillType.Unknown,
-						};
-
-						if (id == 0) continue;
-
-						var skillData = new SkillData(id, name, skillType);
-						var dictForSkill = skills.GetOrAdd(id, new ConcurrentDictionary<SkillData, ConcurrentBag<LogData>>());
-
-						var listForSkillData = dictForSkill.GetOrAdd(skillData, new ConcurrentBag<LogData>());
-						listForSkillData.Add(log);
-					}
-
-					Interlocked.Increment(ref done);
-					progress?.Report((done, logs.Count, failed));
-				});
-
-				var speciesEnumerable = (IEnumerable<SpeciesData>) species.Values.SelectMany(x => x).Select(x =>
-					{
-						var key = x.Key;
-						key.Logs.AddRange(x.Value);
-						return key;
-					}).OrderBy(x => x.SpeciesId)
-					.ThenBy(x => x.Name);
-				var skillEnumerable = (IEnumerable<SkillData>) skills.Values.SelectMany(x => x).Select(x =>
-					{
-						var key = x.Key;
-						key.Logs.AddRange(x.Value);
-						return key;
-					}).OrderBy(x => x.SkillId)
-					.ThenBy(x => x.Name);
-
-				return (speciesEnumerable, skillEnumerable);
-			}, cancellationToken);
 		}
 	}
 }

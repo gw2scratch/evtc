@@ -1,0 +1,45 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels"
+             xmlns:views="using:GW2Scratch.ArcdpsLogManager.Avalonia.Views"
+             x:Class="GW2Scratch.ArcdpsLogManager.Avalonia.Views.PlayersSectionView"
+             x:DataType="vm:PlayersSectionViewModel"
+             Background="{DynamicResource AppBackgroundBrush}">
+
+    <DockPanel Margin="8">
+        <!-- Filter bar + counts. -->
+        <Grid DockPanel.Dock="Top" ColumnDefinitions="Auto,240,*,Auto" Margin="0,0,0,8">
+            <TextBlock Grid.Column="0" Text="Filter by character or account name"
+                       VerticalAlignment="Center" Margin="0,0,8,0" />
+            <TextBox Grid.Column="1" Text="{Binding Filter}" Watermark="name…" />
+            <TextBlock Grid.Column="3" Text="{Binding CountText}" VerticalAlignment="Center" Opacity="0.7" />
+        </Grid>
+
+        <Grid ColumnDefinitions="*,4,380">
+            <DataGrid Grid.Column="0"
+                      ItemsSource="{Binding Players}"
+                      SelectedItem="{Binding SelectedPlayer}"
+                      IsReadOnly="True"
+                      CanUserSortColumns="True"
+                      CanUserResizeColumns="True"
+                      GridLinesVisibility="Horizontal"
+                      SelectionMode="Single">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Account name" Binding="{Binding AccountName}"
+                                        Width="260" MinWidth="140" />
+                    <DataGridTextColumn Header="Log count" Binding="{Binding LogCount}"
+                                        Width="100" MinWidth="70" />
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <GridSplitter Grid.Column="1" ResizeDirection="Columns" Background="Transparent" />
+
+            <!-- Detail: characters + the log list of the selected account (Avalonia counterpart of
+                 the Eto Controls/PlayerDetailPanel.cs). -->
+            <Border Grid.Column="2" BorderThickness="1,0,0,0"
+                    BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}">
+                <views:PlayerDetailPanelView DataContext="{Binding Detail}" />
+            </Border>
+        </Grid>
+    </DockPanel>
+</UserControl>

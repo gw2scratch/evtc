@@ -1,0 +1,16 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="GW2Scratch.ArcdpsLogManager.Avalonia.Views.LoadingWindow"
+        Width="240" Height="90"
+        CanResize="False"
+        SizeToContent="Manual"
+        WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource AppBackgroundBrush}"
+        Icon="avares://GW2Scratch.ArcdpsLogManager.Avalonia/Assets/Images/program_icon.ico"
+        Title="Loading - arcdps Log Manager">
+
+    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="10" Margin="20">
+        <TextBlock Text="Loading the cache" HorizontalAlignment="Center" />
+        <ProgressBar IsIndeterminate="True" Width="180" />
+    </StackPanel>
+</Window>

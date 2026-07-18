@@ -1,0 +1,35 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels"
+        x:Class="GW2Scratch.ArcdpsLogManager.Avalonia.Views.CompressWindow"
+        x:DataType="vm:CompressWindowViewModel"
+        Width="520" SizeToContent="Height"
+        WindowStartupLocation="CenterOwner"
+        Background="{DynamicResource AppBackgroundBrush}"
+        Icon="avares://GW2Scratch.ArcdpsLogManager.Avalonia/Assets/Images/program_icon.ico"
+        Title="Compress logs">
+
+    <StackPanel Margin="16" Spacing="12">
+        <TextBlock TextWrapping="Wrap"
+                   Text="You may compress your uncompressed logs to save a significant amount of storage space. This will transform your .evtc logs into .zevtc logs." />
+
+        <StackPanel Orientation="Horizontal" Spacing="8">
+            <Button Content="Compress logs" Click="OnCompressClick" IsEnabled="{Binding CanCompress}" />
+            <Button Content="Stop compression" Click="OnCancelClick" IsEnabled="{Binding CanCancel}" />
+        </StackPanel>
+
+        <Grid ColumnDefinitions="200,*" RowDefinitions="Auto,Auto,Auto" Margin="0,4">
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="Uncompressed logs:" />
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding CompressibleCountText}" />
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="Newly compressed logs:" />
+            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding CompressedCountText}" />
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="Saved storage space:" />
+            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding SavedSpaceText}" />
+        </Grid>
+
+        <ProgressBar Minimum="0" Maximum="{Binding ProgressMax}" Value="{Binding ProgressValue}" />
+
+        <Button Content="Close" HorizontalAlignment="Right" MinWidth="90" Click="OnCloseClick"
+                IsDefault="True" IsCancel="True" />
+    </StackPanel>
+</Window>

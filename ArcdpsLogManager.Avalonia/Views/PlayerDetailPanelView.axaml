@@ -1,0 +1,67 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels"
+             xmlns:models="using:GW2Scratch.ArcdpsLogManager.Avalonia.Models"
+             x:Class="GW2Scratch.ArcdpsLogManager.Avalonia.Views.PlayerDetailPanelView"
+             x:DataType="vm:PlayerDetailPanelViewModel">
+
+    <Panel>
+        <TextBlock Text="Select an account to see its details."
+                   Opacity="0.6" Margin="16"
+                   HorizontalAlignment="Center" VerticalAlignment="Center"
+                   IsVisible="{Binding !HasSelection}" />
+
+        <DockPanel IsVisible="{Binding HasSelection}" Margin="12">
+            <StackPanel DockPanel.Dock="Top" Spacing="4" Margin="0,0,0,8">
+                <TextBlock Text="{Binding AccountName}" FontSize="16" FontWeight="Bold" TextWrapping="Wrap" />
+                <TextBlock Text="{Binding LogCountText}" Opacity="0.8" />
+            </StackPanel>
+
+            <!-- Known characters (already shown inline before this panel existed). -->
+            <StackPanel DockPanel.Dock="Top" Spacing="4" Margin="0,0,0,8" MaxHeight="180">
+                <TextBlock Text="Characters" FontWeight="SemiBold" />
+                <ScrollViewer MaxHeight="150">
+                    <ItemsControl ItemsSource="{Binding Characters}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="models:CharacterRow">
+                                <Grid ColumnDefinitions="24,*,Auto" Margin="0,2">
+                                    <Image Grid.Column="0" Source="{Binding Icon}" Width="20" Height="20" />
+                                    <TextBlock Grid.Column="1" Text="{Binding Name}" Margin="4,0"
+                                               VerticalAlignment="Center" />
+                                    <TextBlock Grid.Column="2" Text="{Binding LogCount}" Opacity="0.6"
+                                               VerticalAlignment="Center" />
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </StackPanel>
+
+            <!-- The list of logs this account appears in (the gap the inline section view left open). -->
+            <TextBlock DockPanel.Dock="Top" Text="Logs" FontWeight="SemiBold" Margin="0,0,0,4" />
+            <DataGrid ItemsSource="{Binding Logs}"
+                      IsReadOnly="True"
+                      CanUserSortColumns="True"
+                      CanUserResizeColumns="True"
+                      GridLinesVisibility="Horizontal"
+                      SelectionMode="Single">
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn Header="Encounter" Width="150" MinWidth="100">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate x:DataType="models:LogRow">
+                                <StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+                                    <Image Source="{Binding EncounterIcon}" Width="18" Height="18"
+                                           VerticalAlignment="Center" />
+                                    <TextBlock Text="{Binding Encounter}" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="Result" Binding="{Binding Result}" Width="90" MinWidth="60" />
+                    <DataGridTextColumn Header="Date" Binding="{Binding DateText}" Width="130" MinWidth="90" />
+                    <DataGridTextColumn Header="Duration" Binding="{Binding Duration}" Width="70" MinWidth="50" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </DockPanel>
+    </Panel>
+</UserControl>

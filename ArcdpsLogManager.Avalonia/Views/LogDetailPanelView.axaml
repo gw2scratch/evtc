@@ -1,0 +1,146 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels"
+             xmlns:models="using:GW2Scratch.ArcdpsLogManager.Avalonia.Models"
+             x:Class="GW2Scratch.ArcdpsLogManager.Avalonia.Views.LogDetailPanelView"
+             x:DataType="vm:LogDetailPanelViewModel">
+
+    <Panel>
+        <!-- Placeholder shown when nothing is selected. -->
+        <TextBlock Text="Select a log to see its details."
+                   Opacity="0.6" Margin="16"
+                   HorizontalAlignment="Center" VerticalAlignment="Center"
+                   IsVisible="{Binding !HasSelection}" />
+
+        <!-- Top to bottom: title/subtitle (fixed), group composition (fills remaining space,
+             scrolling internally if needed), tags, upload status (both pinned to the bottom). -->
+        <Grid IsVisible="{Binding HasSelection}" RowDefinitions="Auto,*,Auto,Auto,Auto" Margin="12">
+            <StackPanel Grid.Row="0" Spacing="6">
+                <TextBlock Text="{Binding Name}" FontSize="18" FontWeight="Bold" TextWrapping="Wrap" />
+                <TextBlock Text="{Binding ModeText}" FontStyle="Italic" TextWrapping="Wrap"
+                           IsVisible="{Binding HasMode}" />
+                <TextBlock Text="{Binding ResultText}" />
+
+                <!-- Fractal instabilities -->
+                <StackPanel Spacing="4" IsVisible="{Binding HasInstabilities}">
+                    <TextBlock Text="Instabilities" FontWeight="SemiBold" Margin="0,6,0,0" />
+                    <ItemsControl ItemsSource="{Binding Instabilities}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal" Spacing="4" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Image Source="{Binding}" Width="22" Height="22" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </StackPanel>
+
+            <!-- Group composition (hidden for failed logs), split into per-subgroup boxes. -->
+            <ScrollViewer Grid.Row="1" Margin="0,10,0,0" IsVisible="{Binding !IsFailed}">
+                <ItemsControl ItemsSource="{Binding PlayerGroups}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Spacing="8" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="models:PlayerSubgroupRow">
+                            <HeaderedContentControl Header="{Binding Header}"
+                                                     Theme="{StaticResource GroupBoxTheme}">
+                                <ItemsControl ItemsSource="{Binding Players}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="models:PlayerRow">
+                                            <Grid ColumnDefinitions="18,24,Auto,*" Margin="0,2">
+                                                <Image Grid.Column="0" Source="{Binding TagIcon}" Width="16" Height="17"
+                                                       VerticalAlignment="Center" IsVisible="{Binding IsCommander}"
+                                                       ToolTip.Tip="Commander" />
+                                                <Image Grid.Column="1" Source="{Binding Icon}" Width="20" Height="20"
+                                                       VerticalAlignment="Center" />
+                                                <TextBlock Grid.Column="2" Text="{Binding CharacterName}"
+                                                           VerticalAlignment="Center" Margin="4,0"
+                                                           ToolTip.Tip="{Binding GuildTooltip}" />
+                                                <TextBlock Grid.Column="3" Text="{Binding AccountName}"
+                                                           VerticalAlignment="Center" Margin="4,0" Opacity="0.6" />
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </HeaderedContentControl>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+
+            <!-- Failed-processing section, shown in place of the group composition. -->
+            <StackPanel Grid.Row="1" Spacing="4" Margin="0,10,0,0" IsVisible="{Binding IsFailed}">
+                <TextBlock Text="Processing failed" FontWeight="SemiBold"
+                           Foreground="{DynamicResource SystemErrorTextColor}" />
+                <TextBox Text="{Binding FailureText}" IsReadOnly="True" AcceptsReturn="True"
+                         TextWrapping="Wrap" MaxHeight="220" />
+            </StackPanel>
+
+            <!-- Tags (add/remove) -->
+            <HeaderedContentControl Grid.Row="2" Header="Tags" Theme="{StaticResource GroupBoxTheme}"
+                                     Margin="0,6,0,0" IsVisible="{Binding ShowTags}">
+                <StackPanel Spacing="4">
+                    <ItemsControl ItemsSource="{Binding Tags}" IsVisible="{Binding HasTags}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="{DynamicResource SystemControlBackgroundBaseLowBrush}"
+                                        CornerRadius="4" Padding="6,2" Margin="0,0,4,4">
+                                    <StackPanel Orientation="Horizontal" Spacing="4">
+                                        <TextBlock Text="{Binding}" VerticalAlignment="Center" />
+                                        <Button Content="✕" Padding="2,0" FontSize="10"
+                                                Background="Transparent" BorderThickness="0"
+                                                Command="{Binding $parent[ItemsControl].((vm:LogDetailPanelViewModel)DataContext).RemoveTagCommand}"
+                                                CommandParameter="{Binding}" />
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <Grid ColumnDefinitions="*,Auto">
+                        <TextBox Grid.Column="0" Text="{Binding NewTag}" Watermark="Add tag…" Margin="0,0,4,0" />
+                        <Button Grid.Column="1" Content="Add" Command="{Binding AddTagCommand}" />
+                    </Grid>
+                </StackPanel>
+            </HeaderedContentControl>
+
+            <!-- dps.report upload -->
+            <HeaderedContentControl Grid.Row="3" Header="Upload to dps.report (Elite Insights)"
+                                     Theme="{StaticResource GroupBoxTheme}" Margin="0,6,0,0">
+                <StackPanel Spacing="4">
+                    <TextBox Name="UploadUrlBox" Text="{Binding UploadUrl}" Watermark="{Binding UploadStatus}"
+                             IsReadOnly="True" />
+                    <Grid ColumnDefinitions="Auto,*,*">
+                        <Button Grid.Column="0" Name="CopyUrlButton" IsEnabled="{Binding HasUploadUrl}"
+                                ToolTip.Tip="Copy" Margin="0,0,4,0">
+                            <Image Source="{Binding CopyIcon}" Width="16" Height="16" />
+                        </Button>
+                        <Button Grid.Column="1" Name="OpenUrlButton" Content="Open" IsEnabled="{Binding HasUploadUrl}"
+                                HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="0,0,4,0" />
+                        <Button Grid.Column="2" Content="{Binding UploadButtonText}" Command="{Binding UploadCommand}"
+                                HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+                    </Grid>
+                </StackPanel>
+            </HeaderedContentControl>
+
+            <!-- Opens the containing folder with the file selected, like the old Eto build's
+                 bottom-right fileNameButton. Content is a TextBlock (not a plain string) so long
+                 file names wrap instead of overflowing past the sidebar's edge. -->
+            <Button Name="FileNameButton" Grid.Row="4" Click="OnFileNameClick"
+                    Classes="link" HorizontalAlignment="Right" Margin="0,6,0,0">
+                <TextBlock Text="{Binding FileName}" TextWrapping="Wrap" TextAlignment="Right" />
+            </Button>
+        </Grid>
+    </Panel>
+</UserControl>

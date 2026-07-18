@@ -1,0 +1,45 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels"
+             xmlns:views="using:GW2Scratch.ArcdpsLogManager.Avalonia.Views"
+             x:Class="GW2Scratch.ArcdpsLogManager.Avalonia.Views.GuildsSectionView"
+             x:DataType="vm:GuildsSectionViewModel"
+             Background="{DynamicResource AppBackgroundBrush}">
+
+    <DockPanel Margin="8">
+        <Grid DockPanel.Dock="Top" ColumnDefinitions="Auto,240,*,Auto" Margin="0,0,0,8">
+            <TextBlock Grid.Column="0" Text="Filter by guild or member name"
+                       VerticalAlignment="Center" Margin="0,0,8,0" />
+            <TextBox Grid.Column="1" Text="{Binding Filter}" Watermark="name or tag…" />
+            <TextBlock Grid.Column="3" Text="{Binding CountText}" VerticalAlignment="Center" Opacity="0.7" />
+        </Grid>
+
+        <Grid ColumnDefinitions="*,4,420">
+            <DataGrid Grid.Column="0"
+                      ItemsSource="{Binding Guilds}"
+                      SelectedItem="{Binding SelectedGuild}"
+                      IsReadOnly="True"
+                      CanUserSortColumns="True"
+                      CanUserResizeColumns="True"
+                      GridLinesVisibility="Horizontal"
+                      SelectionMode="Single">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Tag" Binding="{Binding Tag}" Width="70" MinWidth="50" />
+                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="240" MinWidth="140" />
+                    <DataGridTextColumn Header="Logs" Binding="{Binding LogCount}" Width="80" MinWidth="60" />
+                    <DataGridTextColumn Header="Players" Binding="{Binding PlayerCount}" Width="90" MinWidth="60" />
+                    <DataGridTextColumn Header="Characters" Binding="{Binding CharacterCount}" Width="100" MinWidth="70" />
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <GridSplitter Grid.Column="1" ResizeDirection="Columns" Background="Transparent" />
+
+            <!-- Detail: guild info, accounts/characters and the log list (Avalonia counterpart of
+                 the Eto Controls/GuildDetailPanel.cs). -->
+            <Border Grid.Column="2" BorderThickness="1,0,0,0"
+                    BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}">
+                <views:GuildDetailPanelView DataContext="{Binding Detail}" />
+            </Border>
+        </Grid>
+    </DockPanel>
+</UserControl>

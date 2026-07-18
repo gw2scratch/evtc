@@ -1,0 +1,33 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels"
+        x:Class="GW2Scratch.ArcdpsLogManager.Avalonia.Views.CacheWindow"
+        x:DataType="vm:CacheWindowViewModel"
+        Width="520" SizeToContent="Height"
+        WindowStartupLocation="CenterOwner"
+        Background="{DynamicResource AppBackgroundBrush}"
+        Icon="avares://GW2Scratch.ArcdpsLogManager.Avalonia/Assets/Images/program_icon.ico"
+        Title="Log cache">
+
+    <StackPanel Margin="16" Spacing="12">
+        <TextBlock TextWrapping="Wrap"
+                   Text="The processed contents of logs are saved in a cache file to save time. You can delete the cached results here to process the logs again, or prune results for logs that are no longer in the scanned directories." />
+
+        <Grid ColumnDefinitions="200,*" RowDefinitions="Auto,Auto,Auto" Margin="0,4">
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="Total cached logs:" />
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding CountText}" />
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="Unloaded cached logs:" />
+            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding UnloadedText}" />
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="Cache file size:" />
+            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding SizeText}" />
+        </Grid>
+
+        <StackPanel Orientation="Horizontal" Spacing="8" IsVisible="{Binding CanModify}">
+            <Button Content="Prune missing logs" Click="OnPruneClick" />
+            <Button Content="Delete the cache" Click="OnDeleteClick" />
+        </StackPanel>
+
+        <Button Content="Close" HorizontalAlignment="Right" MinWidth="90" Click="OnCloseClick"
+                IsDefault="True" IsCancel="True" />
+    </StackPanel>
+</Window>

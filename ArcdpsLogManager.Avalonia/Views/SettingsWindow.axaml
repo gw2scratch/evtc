@@ -1,0 +1,178 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels"
+        xmlns:models="using:GW2Scratch.ArcdpsLogManager.Avalonia.Models"
+        x:Class="GW2Scratch.ArcdpsLogManager.Avalonia.Views.SettingsWindow"
+        x:DataType="vm:SettingsWindowViewModel"
+        Width="560" Height="580" MinWidth="480" MinHeight="440"
+        WindowStartupLocation="CenterOwner"
+        Background="{DynamicResource AppBackgroundBrush}"
+        Icon="avares://GW2Scratch.ArcdpsLogManager.Avalonia/Assets/Images/program_icon.ico"
+        Title="Settings - arcdps Log Manager">
+
+    <!-- Tab layout matches the Eto SettingsForm's page structure (Logs / GW2 API / Uploads /
+         Updates), each page a series of GroupBox-style sections. The "Appearance" tab is new —
+         the Eto build had no theme setting at all, since the theme picker (now living only in
+         this tab) is an addition on top of the original app.
+
+         The TabItem header strip intentionally uses FluentTheme's stock look (just a slightly
+         larger FontSize below) rather than a custom template/underline: FluentTheme's own
+         selection indicator and hover states are compiled/embedded and not something we can
+         reliably introspect or safely override piece by piece from here — every attempt at a
+         custom accent line either duplicated the built-in indicator or broke native hover.
+         Matches the main window's tabs as a result, since neither overrides the theme. -->
+    <Window.Styles>
+        <Style Selector="TabItem">
+            <Setter Property="FontSize" Value="14" />
+        </Style>
+    </Window.Styles>
+
+    <DockPanel Margin="16">
+        <Button DockPanel.Dock="Bottom" Content="Close" HorizontalAlignment="Right"
+                MinWidth="90" Margin="0,12,0,0" Click="OnCloseClick"
+                IsDefault="True" IsCancel="True" />
+
+        <TabControl>
+            <TabItem Header="Logs">
+                <ScrollViewer>
+                    <StackPanel Spacing="12" Margin="0,8,0,0">
+                        <HeaderedContentControl Header="Log directories" Theme="{StaticResource GroupBoxTheme}">
+                            <StackPanel Spacing="6">
+                                <TextBlock Text="The directories in which your arcdps logs are stored. Subdirectories are also searched."
+                                           Opacity="0.7" TextWrapping="Wrap" />
+                                <ListBox ItemsSource="{Binding LogDirectories}" Height="120">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid ColumnDefinitions="*,Auto">
+                                                <TextBlock Grid.Column="0" Text="{Binding}" VerticalAlignment="Center"
+                                                           TextTrimming="CharacterEllipsis" />
+                                                <Button Grid.Column="1" Content="Remove"
+                                                        Command="{Binding $parent[ListBox].((vm:SettingsWindowViewModel)DataContext).RemoveDirectoryCommand}"
+                                                        CommandParameter="{Binding}" />
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                                <Button Content="Add directory…" HorizontalAlignment="Left" Click="OnAddDirectoryClick" />
+                            </StackPanel>
+                        </HeaderedContentControl>
+
+                        <HeaderedContentControl Header="Log filters" Theme="{StaticResource GroupBoxTheme}">
+                            <StackPanel Spacing="6">
+                                <CheckBox Content="Exclude short logs" IsChecked="{Binding ExcludeShortLogs}" />
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <TextBlock Text="Minimum duration in seconds:" VerticalAlignment="Center" />
+                                    <TextBox Text="{Binding MinimumLogDurationText}" Width="70"
+                                             IsEnabled="{Binding ExcludeShortLogs}" />
+                                </StackPanel>
+                            </StackPanel>
+                        </HeaderedContentControl>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <TabItem Header="GW2 API">
+                <ScrollViewer>
+                    <StackPanel Spacing="12" Margin="0,8,0,0">
+                        <HeaderedContentControl Header="API Data" Theme="{StaticResource GroupBoxTheme}">
+                            <StackPanel Spacing="6">
+                                <TextBlock Text="The program can use the official Guild Wars 2 API to retrieve guild data and map names. No API key is required. If this is not enabled, guild names and their tags along with map names will not be available."
+                                           Opacity="0.7" TextWrapping="Wrap" />
+                                <CheckBox Content="Use the Guild Wars 2 API" IsChecked="{Binding Settings.UseGW2Api}" />
+                            </StackPanel>
+                        </HeaderedContentControl>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <TabItem Header="Uploads">
+                <ScrollViewer>
+                    <StackPanel Spacing="12" Margin="0,8,0,0">
+                        <HeaderedContentControl Header="Automatic uploads" Theme="{StaticResource GroupBoxTheme}">
+                            <StackPanel Spacing="6">
+                                <TextBlock Text="If enabled, newly discovered logs will be automatically queued for an upload if they are less than 1 day old."
+                                           Opacity="0.7" TextWrapping="Wrap" />
+                                <CheckBox Content="Automatically upload logs"
+                                          IsChecked="{Binding Settings.DpsReportAutoUpload}" />
+                                <CheckBox Content="Only upload successful encounters"
+                                          IsChecked="{Binding Settings.DpsReportAutoUploadApplyFilters}"
+                                          IsEnabled="{Binding Settings.DpsReportAutoUpload}" />
+                            </StackPanel>
+                        </HeaderedContentControl>
+
+                        <HeaderedContentControl Header="Upload options" Theme="{StaticResource GroupBoxTheme}">
+                            <CheckBox Content="Detailed WvW Reports (large files may fail)"
+                                      IsChecked="{Binding Settings.DpsReportUploadDetailedWvw}" />
+                        </HeaderedContentControl>
+
+                        <HeaderedContentControl Header="Upload domain" Theme="{StaticResource GroupBoxTheme}">
+                            <StackPanel Spacing="6">
+                                <ItemsControl ItemsSource="{Binding DpsReportDomainOptions}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="models:DpsReportDomainOption">
+                                            <RadioButton GroupName="DpsReportDomain" Content="{Binding DisplayText}"
+                                                         IsChecked="{Binding IsSelected}" />
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                                <TextBlock Text="{Binding DpsReportDomainDescription}" Opacity="0.7" TextWrapping="Wrap" />
+                            </StackPanel>
+                        </HeaderedContentControl>
+
+                        <HeaderedContentControl Header="User token" Theme="{StaticResource GroupBoxTheme}">
+                            <StackPanel Spacing="6">
+                                <TextBlock Text="The user token used for dps.report uploads. Treat it as a password, it can be used to see all previous uploads."
+                                           Opacity="0.7" TextWrapping="Wrap" />
+                                <Grid ColumnDefinitions="*,Auto,Auto">
+                                    <TextBox Grid.Column="0" Text="{Binding UserTokenText}"
+                                             IsReadOnly="{Binding !IsUserTokenEditable}"
+                                             IsEnabled="{Binding IsUserTokenEnabled}" Margin="0,0,4,0" />
+                                    <Button Grid.Column="1" Content="Show" Margin="0,0,4,0"
+                                            Command="{Binding ShowUserTokenCommand}"
+                                            IsVisible="{Binding IsShowUserTokenButtonVisible}" />
+                                    <Button Grid.Column="2" Content="{Binding UserTokenButtonText}"
+                                            Command="{Binding ToggleEditUserTokenCommand}" />
+                                </Grid>
+                            </StackPanel>
+                        </HeaderedContentControl>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <TabItem Header="Updates">
+                <ScrollViewer>
+                    <StackPanel Spacing="12" Margin="0,8,0,0">
+                        <HeaderedContentControl Header="Log Manager updates" Theme="{StaticResource GroupBoxTheme}">
+                            <StackPanel Spacing="6">
+                                <TextBlock Text="The program can automatically look for updates on launch and inform you when there is a new release available."
+                                           Opacity="0.7" TextWrapping="Wrap" />
+                                <CheckBox Content="Check for updates on launch"
+                                          IsChecked="{Binding Settings.CheckForUpdates}" />
+                            </StackPanel>
+                        </HeaderedContentControl>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <TabItem Header="Appearance">
+                <ScrollViewer>
+                    <StackPanel Spacing="12" Margin="0,8,0,0">
+                        <HeaderedContentControl Header="Appearance" Theme="{StaticResource GroupBoxTheme}">
+                            <StackPanel Spacing="10">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <TextBlock Text="Theme" VerticalAlignment="Center" Width="100" />
+                                    <ComboBox ItemsSource="{Binding Themes}" SelectedItem="{Binding Settings.Theme}" MinWidth="160" />
+                                </StackPanel>
+                                <StackPanel Spacing="4">
+                                    <CheckBox Content="Use compact spacing" IsChecked="{Binding Settings.CompactUi}" />
+                                    <TextBlock Text="Shrinks padding and control sizes throughout the app (tabs, buttons, lists)."
+                                               Opacity="0.7" TextWrapping="Wrap" FontSize="11" />
+                                </StackPanel>
+                            </StackPanel>
+                        </HeaderedContentControl>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+        </TabControl>
+    </DockPanel>
+</Window>

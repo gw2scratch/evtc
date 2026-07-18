@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
     <Import Project="../ArcdpsLogManagerVersion.props" />
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
@@ -7,22 +7,16 @@
         Warning: Do not change the following assembly name without checking .csproj files of all platform launchers,
         they may rely on this project having this specific assembly name for version synchronization.
         -->
-        <AssemblyName>GW2Scratch.ArcdpsLogManager</AssemblyName>
+        <AssemblyName>GW2Scratch.ArcdpsLogManager.Core</AssemblyName>
         <LangVersion>latest</LangVersion>
-        <Title>arcdps Log Manager</Title>
+        <Title>arcdps Log Manager Core</Title>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="DebounceThrottle" Version="2.0.0" />
-        <PackageReference Include="Eto.Forms" Version="2.6.1" />
         <PackageReference Include="Gw2Sharp" Version="0.6.0" />
-        <PackageReference Include="RestSharp" Version="106.12.0" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+        <PackageReference Include="System.Net.Http" Version="4.3.4" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\EVTCAnalytics\EVTCAnalytics.csproj" />
-        <ProjectReference Include="..\EVTCInspector\EVTCInspector.csproj" />
-        <ProjectReference Include="..\ArcdpsLogManager.Core\ArcdpsLogManager.Core.csproj" />
-    </ItemGroup>
-    <ItemGroup>
-        <EmbeddedResource Include="Images\**" />
     </ItemGroup>
 </Project>

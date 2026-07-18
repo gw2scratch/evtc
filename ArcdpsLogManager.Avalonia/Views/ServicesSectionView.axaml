@@ -1,0 +1,49 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels"
+             x:Class="GW2Scratch.ArcdpsLogManager.Avalonia.Views.ServicesSectionView"
+             x:DataType="vm:ServicesSectionViewModel"
+             Background="{DynamicResource AppBackgroundBrush}">
+
+    <UserControl.Resources>
+        <!-- One status box per background processor (Avalonia counterpart of the Eto
+             Controls/BackgroundProcessorDetail.cs, one instance per processor in ManagerForm's
+             "Services" tab). -->
+        <DataTemplate x:Key="ProcessorStatusTemplate" x:DataType="vm:BackgroundProcessorStatusViewModel">
+            <Border BorderThickness="1" CornerRadius="4" Padding="12" Margin="6"
+                    BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}">
+                <StackPanel Spacing="6">
+                    <TextBlock Text="{Binding Name}" FontWeight="SemiBold" />
+                    <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto" Margin="0,4,0,0">
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Status:" Margin="0,0,10,4" />
+                        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding StatusText}" />
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="In queue:" Margin="0,0,10,4" />
+                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding QueuedCount}" />
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Processed:" Margin="0,0,10,4" />
+                        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding ProcessedCount}" />
+                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Queued (since start):" Margin="0,0,10,4" />
+                        <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding TotalQueuedCount}" />
+                        <TextBlock Grid.Row="4" Grid.Column="0" Text="Max concurrent processes:" Margin="0,0,10,0" />
+                        <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding MaxConcurrentProcesses}" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <StackPanel Margin="12" Spacing="4">
+        <TextBlock Text="Live status of the background processing services." Opacity="0.7" Margin="0,0,0,6" />
+        <Grid ColumnDefinitions="*,*">
+            <ContentControl Grid.Column="0" Content="{Binding UploadStatus}"
+                             ContentTemplate="{StaticResource ProcessorStatusTemplate}" />
+            <ContentControl Grid.Column="1" Content="{Binding ApiStatus}"
+                             ContentTemplate="{StaticResource ProcessorStatusTemplate}" />
+        </Grid>
+        <Grid ColumnDefinitions="*,*">
+            <ContentControl Grid.Column="0" Content="{Binding LogProcessingStatus}"
+                             ContentTemplate="{StaticResource ProcessorStatusTemplate}" />
+            <ContentControl Grid.Column="1" Content="{Binding CompressionStatus}"
+                             ContentTemplate="{StaticResource ProcessorStatusTemplate}" />
+        </Grid>
+    </StackPanel>
+</UserControl>

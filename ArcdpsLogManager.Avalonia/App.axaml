@@ -1,0 +1,145 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="GW2Scratch.ArcdpsLogManager.Avalonia.App"
+             RequestedThemeVariant="Default">
+    <!-- RequestedThemeVariant="Default" follows the operating system light/dark setting.
+         The in-app toggle overrides it at runtime. -->
+
+    <Application.Resources>
+        <ResourceDictionary>
+            <!-- The Eto build used a noticeably smaller/denser control size than Fluent's
+                 defaults; this drives the default font size on most Fluent control templates
+                 (buttons, text boxes, checkboxes, combo boxes, etc). -->
+            <x:Double x:Key="ControlContentThemeFontSize">12</x:Double>
+
+            <!-- The DataGrid's row selection highlight (DataGridRowSelectedBackgroundBrush etc,
+                 untouched) is the only selection indicator we want. Avalonia's DataGrid separately
+                 draws a "current cell" focus/currency box around whichever cell last had keyboard
+                 focus, using these brushes — a leftover from cell-level selection that's just visual
+                 noise on top of row selection here, so we make it invisible. -->
+            <SolidColorBrush x:Key="DataGridCellFocusVisualPrimaryBrush" Color="Transparent" />
+            <SolidColorBrush x:Key="DataGridCellFocusVisualSecondaryBrush" Color="Transparent" />
+            <SolidColorBrush x:Key="DataGridCurrencyVisualPrimaryBrush" Color="Transparent" />
+
+            <!-- App surface colour per theme. Fluent's stock dark base reads almost pure black;
+                 we use a softer charcoal so panels/grids don't look like a solid black block.
+                 Views bind their background to {DynamicResource AppBackgroundBrush}. -->
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Dark">
+                    <SolidColorBrush x:Key="AppBackgroundBrush" Color="#26262A" />
+                    <!-- A handful of embedded PNGs (e.g. the weekly-clears "not logged"/"did not
+                         exist" status icons) are dark gray line-art on transparent background,
+                         drawn for a light UI and low-contrast on our dark surface. Views wrap
+                         those specific icons in a Border with Classes.mono, styled to use this
+                         brush as a backdrop chip; it is transparent in Light so unaffected there. -->
+                    <SolidColorBrush x:Key="MonochromeIconBackdropBrush" Color="#DCDCDC" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Light">
+                    <SolidColorBrush x:Key="AppBackgroundBrush" Color="#FAFAFA" />
+                    <SolidColorBrush x:Key="MonochromeIconBackdropBrush" Color="Transparent" />
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+
+            <!-- A GroupBox look-alike (Avalonia has no built-in GroupBox): a HeaderedContentControl
+                 styled with the classic winforms/Eto GroupBox visual — a bordered box with the
+                 header text sitting on top of, and breaking, the border line. Used for the
+                 sidebar's Result/Mode/Favorites checkbox groups. -->
+            <ControlTheme x:Key="GroupBoxTheme" TargetType="HeaderedContentControl">
+                <!-- Default border padding; override per-instance via Padding="…" since it's now
+                     template-bound instead of hardcoded. -->
+                <Setter Property="Padding" Value="8,14,8,8" />
+                <Setter Property="Template">
+                    <ControlTemplate>
+                        <Grid>
+                            <Border BorderThickness="1"
+                                    BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
+                                    CornerRadius="4" Margin="0,8,0,0" Padding="{TemplateBinding Padding}">
+                                <ContentPresenter Content="{TemplateBinding Content}" />
+                            </Border>
+                            <Border Background="{DynamicResource AppBackgroundBrush}"
+                                    HorizontalAlignment="Left" VerticalAlignment="Top"
+                                    Margin="8,0,0,0" Padding="4,0">
+                                <ContentPresenter Content="{TemplateBinding Header}" FontWeight="SemiBold" />
+                            </Border>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter>
+            </ControlTheme>
+        </ResourceDictionary>
+    </Application.Resources>
+
+    <Application.Styles>
+        <FluentTheme />
+        <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml" />
+
+        <!-- FontSize is an inherited property; setting it on the root covers plain TextBlocks
+             that don't set their own size (ControlContentThemeFontSize above covers the rest). -->
+        <Style Selector="Window">
+            <Setter Property="FontSize" Value="13" />
+        </Style>
+        <Style Selector="Button">
+            <Setter Property="Padding" Value="10,4" />
+        </Style>
+        <Style Selector="TextBox">
+            <Setter Property="Padding" Value="6,4" />
+        </Style>
+        <Style Selector="ComboBox">
+            <Setter Property="Padding" Value="6,0" />
+            <Setter Property="MinHeight" Value="26" />
+        </Style>
+        <Style Selector="CheckBox">
+            <Setter Property="MinHeight" Value="24" />
+            <Setter Property="Padding" Value="6,0,0,0" />
+        </Style>
+        <!-- Gives WrapPanel.CheckBox groups (the sidebar's Result/Mode/Favorites blocks) breathing
+             room between items without depending on WrapPanel item-spacing support. -->
+        <Style Selector="WrapPanel > CheckBox">
+            <Setter Property="Margin" Value="0,0,14,0" />
+        </Style>
+        <Style Selector="DatePicker">
+            <Setter Property="MinHeight" Value="26" />
+        </Style>
+        <!-- Avalonia's NumericUpDown ships with visible up/down spinner buttons; the Eto number
+             boxes had none, and the buttons make already-narrow filter fields even narrower. -->
+        <Style Selector="NumericUpDown">
+            <Setter Property="ShowButtonSpinner" Value="False" />
+            <Setter Property="MinHeight" Value="26" />
+        </Style>
+        <!-- A hyperlink look-alike for a Button (Avalonia has no built-in LinkButton), used for the
+             log detail panel's file name link that opens the containing folder. -->
+        <Style Selector="Button.link">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+            <Setter Property="Foreground" Value="#3391FF" />
+        </Style>
+        <Style Selector="Button.link /template/ ContentPresenter">
+            <Setter Property="TextBlock.TextDecorations" Value="Underline" />
+        </Style>
+
+        <!-- Custom title-bar caption buttons (minimize/maximize/close), used because the main
+             window's ExtendClientAreaChromeHints="NoChrome" hides the OS-drawn ones. -->
+        <Style Selector="Button.caption">
+            <Setter Property="Width" Value="44" />
+            <Setter Property="Height" Value="36" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="CornerRadius" Value="0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+        <Style Selector="Button.caption:pointerover">
+            <Setter Property="Background" Value="{DynamicResource SystemControlBackgroundBaseLowBrush}" />
+        </Style>
+        <Style Selector="Button.caption-close:pointerover">
+            <Setter Property="Background" Value="#E81123" />
+        </Style>
+        <Style Selector="Button.caption-close:pointerover /template/ ContentPresenter">
+            <Setter Property="TextBlock.Foreground" Value="White" />
+        </Style>
+    </Application.Styles>
+</Application>

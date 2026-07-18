@@ -1,0 +1,154 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels"
+             xmlns:models="using:GW2Scratch.ArcdpsLogManager.Avalonia.Models"
+             x:Class="GW2Scratch.ArcdpsLogManager.Avalonia.Views.WeeklyClearsSectionView"
+             x:DataType="vm:WeeklyClearsSectionViewModel"
+             Background="{DynamicResource AppBackgroundBrush}">
+
+    <UserControl.Styles>
+        <!-- The "did not exist"/"no logs" status icons are dark gray line-art drawn for a light
+             UI; give them a backdrop chip so they stay legible on the dark theme's background
+             (transparent in Light, see MonochromeIconBackdropBrush in App.axaml). -->
+        <Style Selector="Border.mono">
+            <Setter Property="Background" Value="{DynamicResource MonochromeIconBackdropBrush}" />
+            <Setter Property="CornerRadius" Value="3" />
+            <Setter Property="Padding" Value="1" />
+        </Style>
+    </UserControl.Styles>
+
+    <Grid RowDefinitions="Auto,Auto,*,220" Margin="8">
+        <!-- Account selector -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="8" Margin="0,0,0,8">
+            <ComboBox Width="220" ItemsSource="{Binding AccountNames}" SelectedItem="{Binding SelectedAccountName}" />
+            <Button Content="Remove" Command="{Binding RemoveAccountCommand}" />
+            <Button Content="Add account…" Click="OnAddAccountClick" />
+        </StackPanel>
+
+        <!-- Encounter category group toggles -->
+        <ItemsControl Grid.Row="1" ItemsSource="{Binding Groups}" Margin="0,0,0,8">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="models:EncounterGroupSection">
+                    <CheckBox Content="{Binding Name}" IsChecked="{Binding IsEnabled}" Margin="0,0,16,0" />
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <!-- Encounter completion grid for the enabled groups -->
+        <Grid Grid.Row="2">
+            <TextBlock Text="To see weekly clears of encounters, select the groups you are interested in by checking the checkboxes above."
+                       TextWrapping="Wrap" Margin="10" IsVisible="{Binding !HasAnyGroupEnabled}" />
+            <ScrollViewer IsVisible="{Binding HasAnyGroupEnabled}">
+                <ItemsControl ItemsSource="{Binding Groups}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="models:EncounterGroupSection">
+                            <StackPanel IsVisible="{Binding IsEnabled}" Margin="0,0,0,12">
+                                <ItemsControl ItemsSource="{Binding Rows}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="models:EncounterRowSection">
+                                            <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,4">
+                                                <Image Source="{Binding Icon}" Width="48" Height="32" ToolTip.Tip="{Binding Name}" />
+                                                <ItemsControl ItemsSource="{Binding Boxes}">
+                                                    <ItemsControl.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <WrapPanel />
+                                                        </ItemsPanelTemplate>
+                                                    </ItemsControl.ItemsPanel>
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate x:DataType="models:EncounterBoxRow">
+                                                            <Border BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
+                                                                    BorderThickness="1" CornerRadius="4" Padding="6,4"
+                                                                    Margin="0,0,6,6" MinWidth="170">
+                                                                <StackPanel Spacing="3">
+                                                                    <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontSize="11" />
+                                                                    <StackPanel Orientation="Horizontal" Spacing="6">
+                                                                        <Border Classes.mono="{Binding NormalMode.IsMonochromeIcon}">
+                                                                            <Image Source="{Binding NormalMode.Icon}" Width="16" Height="16" />
+                                                                        </Border>
+                                                                        <TextBlock Text="{Binding NormalMode.Text}" FontSize="11"
+                                                                                   VerticalAlignment="Center" />
+                                                                    </StackPanel>
+                                                                    <StackPanel Orientation="Horizontal" Spacing="6">
+                                                                        <Border Classes.mono="{Binding ChallengeMode.IsMonochromeIcon}">
+                                                                            <Image Source="{Binding ChallengeMode.Icon}" Width="16" Height="16" />
+                                                                        </Border>
+                                                                        <TextBlock Text="{Binding ChallengeMode.Text}" FontSize="11"
+                                                                                   VerticalAlignment="Center" />
+                                                                    </StackPanel>
+                                                                </StackPanel>
+                                                            </Border>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Grid>
+
+        <!-- Reset-week grid: pick a week to inspect (drives the checkboxes above), plus per-category
+             clear counts/percentages. Category columns are shown/hidden in code-behind to mirror
+             Settings.WeeklyClearGroups (see WeeklyClearsSectionView.axaml.cs). -->
+        <DataGrid Grid.Row="3" Name="WeekGrid" Margin="0,8,0,0"
+                  ItemsSource="{Binding VisibleWeeks}" SelectedItem="{Binding SelectedWeek}"
+                  IsReadOnly="True" CanUserSortColumns="True" CanUserResizeColumns="True"
+                  GridLinesVisibility="Horizontal" SelectionMode="Single">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Week" Binding="{Binding WeekText}" Width="100" MinWidth="90" />
+                <DataGridTextColumn Header="NMs" Binding="{Binding TotalNormal}" Width="55" MinWidth="45" />
+                <DataGridTextColumn Header="CMs" Binding="{Binding TotalChallenge}" Width="55" MinWidth="45" />
+
+                <DataGridTextColumn Header="Raid NMs" Binding="{Binding RaidsNormalCount}" Width="80" MinWidth="60" />
+                <DataGridTextColumn Header="Raid NMs %"
+                                     Binding="{Binding RaidsNormalPercent, StringFormat={}{0:P0}}" Width="90" MinWidth="70"
+                                     SortMemberPath="RaidsNormalPercent" />
+                <DataGridTextColumn Header="Raid CMs" Binding="{Binding RaidsChallengeCount}" Width="80" MinWidth="60" />
+                <DataGridTextColumn Header="Raid CMs %"
+                                     Binding="{Binding RaidsChallengePercent, StringFormat={}{0:P0}}" Width="90" MinWidth="70"
+                                     SortMemberPath="RaidsChallengePercent" />
+
+                <DataGridTextColumn Header="IBS NMs" Binding="{Binding IbsNormalCount}" Width="80" MinWidth="60" />
+                <DataGridTextColumn Header="IBS NMs %"
+                                     Binding="{Binding IbsNormalPercent, StringFormat={}{0:P0}}" Width="90" MinWidth="70"
+                                     SortMemberPath="IbsNormalPercent" />
+
+                <DataGridTextColumn Header="EoD NMs" Binding="{Binding EodNormalCount}" Width="80" MinWidth="60" />
+                <DataGridTextColumn Header="EoD NMs %"
+                                     Binding="{Binding EodNormalPercent, StringFormat={}{0:P0}}" Width="90" MinWidth="70"
+                                     SortMemberPath="EodNormalPercent" />
+                <DataGridTextColumn Header="EoD CMs" Binding="{Binding EodChallengeCount}" Width="80" MinWidth="60" />
+                <DataGridTextColumn Header="EoD CMs %"
+                                     Binding="{Binding EodChallengePercent, StringFormat={}{0:P0}}" Width="90" MinWidth="70"
+                                     SortMemberPath="EodChallengePercent" />
+
+                <DataGridTextColumn Header="SotO NMs" Binding="{Binding SotoNormalCount}" Width="80" MinWidth="60" />
+                <DataGridTextColumn Header="SotO NMs %"
+                                     Binding="{Binding SotoNormalPercent, StringFormat={}{0:P0}}" Width="90" MinWidth="70"
+                                     SortMemberPath="SotoNormalPercent" />
+                <DataGridTextColumn Header="SotO CMs" Binding="{Binding SotoChallengeCount}" Width="80" MinWidth="60" />
+                <DataGridTextColumn Header="SotO CMs %"
+                                     Binding="{Binding SotoChallengePercent, StringFormat={}{0:P0}}" Width="90" MinWidth="70"
+                                     SortMemberPath="SotoChallengePercent" />
+
+                <DataGridTextColumn Header="VoE NMs" Binding="{Binding VoeNormalCount}" Width="80" MinWidth="60" />
+                <DataGridTextColumn Header="VoE NMs %"
+                                     Binding="{Binding VoeNormalPercent, StringFormat={}{0:P0}}" Width="90" MinWidth="70"
+                                     SortMemberPath="VoeNormalPercent" />
+                <DataGridTextColumn Header="VoE CMs" Binding="{Binding VoeChallengeCount}" Width="80" MinWidth="60" />
+                <DataGridTextColumn Header="VoE CMs %"
+                                     Binding="{Binding VoeChallengePercent, StringFormat={}{0:P0}}" Width="90" MinWidth="70"
+                                     SortMemberPath="VoeChallengePercent" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>

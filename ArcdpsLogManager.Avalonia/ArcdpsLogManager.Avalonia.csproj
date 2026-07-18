@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <Import Project="../ArcdpsLogManagerVersion.props" />
+
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net8.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+        <ApplicationManifest>app.manifest</ApplicationManifest>
+        <ApplicationIcon>../ArcdpsLogManager/Images/program_icon.ico</ApplicationIcon>
+        <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+        <RootNamespace>GW2Scratch.ArcdpsLogManager.Avalonia</RootNamespace>
+        <AssemblyName>GW2Scratch.ArcdpsLogManager.Avalonia</AssemblyName>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Avalonia" Version="11.2.1" />
+        <PackageReference Include="Avalonia.Desktop" Version="11.2.1" />
+        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.2.1" />
+        <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.2.1" />
+        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.2.1" />
+        <PackageReference Include="Avalonia.Diagnostics" Version="11.2.1" Condition="'$(Configuration)' == 'Debug'" />
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\ArcdpsLogManager.Core\ArcdpsLogManager.Core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <!--
+        The image assets are linked (not copied) from the existing Eto project during the
+        migration so we do not duplicate the ~175 PNGs. The Link metadata gives them stable
+        logical avares:// paths (avares://.../Assets/Images/...). At the Phase 10 cutover the
+        Eto project is deleted and these files should be physically moved into this project.
+        -->
+        <AvaloniaResource Include="..\ArcdpsLogManager\Images\**">
+            <Link>Assets\Images\%(RecursiveDir)%(Filename)%(Extension)</Link>
+        </AvaloniaResource>
+    </ItemGroup>
+
+</Project>

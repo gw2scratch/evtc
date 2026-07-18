@@ -1,0 +1,282 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="using:GW2Scratch.ArcdpsLogManager.Avalonia.ViewModels"
+        xmlns:views="using:GW2Scratch.ArcdpsLogManager.Avalonia.Views"
+        xmlns:models="using:GW2Scratch.ArcdpsLogManager.Avalonia.Models"
+        mc:Ignorable="d" d:DesignWidth="1100" d:DesignHeight="680"
+        x:Class="GW2Scratch.ArcdpsLogManager.Avalonia.Views.MainWindow"
+        x:Name="RootWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Width="1150" Height="720"
+        Background="{DynamicResource AppBackgroundBrush}"
+        Icon="avares://GW2Scratch.ArcdpsLogManager.Avalonia/Assets/Images/program_icon.ico"
+        Title="arcdps Log Manager"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaChromeHints="NoChrome"
+        ExtendClientAreaTitleBarHeightHint="-1">
+
+    <!-- Custom header merging the menu bar into the window's title-bar row, instead of a separate
+         OS title bar (~32px) plus our own menu row (~40px) stacked on top of each other. Avalonia
+         offers three ways to draw into the title-bar area (ExtendClientAreaChromeHints):
+           - SystemChrome/PreferSystemChrome: keep the OS-drawn min/max/close buttons and just paint
+             extra content around them. Simple in theory, but the exact pixel area those buttons
+             reserve is OS/DPI-dependent and hard to get right without live, per-platform testing.
+           - Default: same idea, platform picks the chrome style.
+           - NoChrome (chosen here): the OS draws no chrome at all — we own the whole row, including
+             a custom minimize/maximize/close button cluster and manual window-dragging via
+             BeginMoveDrag. More upfront code, but fully within our control and consistent across
+             Windows/Linux/macOS instead of guessing at native button placement. This is the pattern
+             Avalonia's own sample apps use for custom title bars. -->
+    <!-- Margin compensates for OffScreenMargin: on Windows, a maximized NoChrome window's invisible
+         resize border extends slightly past the visible screen edge, which otherwise clips this
+         content by a few pixels along every edge. -->
+    <DockPanel Margin="{Binding #RootWindow.OffScreenMargin}">
+        <Border DockPanel.Dock="Top" Height="36" BorderThickness="0,0,0,1"
+                BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}">
+            <Grid ColumnDefinitions="Auto,Auto,*,Auto">
+                <Image Grid.Column="0" Source="avares://GW2Scratch.ArcdpsLogManager.Avalonia/Assets/Images/program_icon.ico"
+                       Width="16" Height="16" Margin="10,0,8,0" VerticalAlignment="Center"
+                       IsHitTestVisible="False" />
+
+                <!-- Application menu, matching the Eto ManagerForm's Data/View/Settings/About
+                     top-level menu structure. -->
+                <Menu Grid.Column="1" VerticalAlignment="Center">
+                    <MenuItem Header="_Data">
+                        <MenuItem Header="_Update logs with outdated data…" Click="OnOpenProcessingUpdateClick" />
+                        <MenuItem Header="_Compress logs…" Click="OnOpenCompressClick" />
+                        <Separator />
+                        <MenuItem Header="_Log cache…" Click="OnOpenCacheClick" />
+                        <MenuItem Header="_API cache…" Click="OnOpenApiClick" />
+                    </MenuItem>
+                    <MenuItem Header="_View">
+                        <!-- MenuItem.IsChecked's default binding mode is not TwoWay, so clicking never
+                             wrote the value back to the view model without Mode=TwoWay explicitly —
+                             the root cause of every one of these toggles silently doing nothing. -->
+                        <MenuItem Header="Show filters in a _sidebar" ToggleType="CheckBox"
+                                  IsChecked="{Binding ShowFilterSidebar, Mode=TwoWay}" />
+                        <MenuItem Header="Show _guild tags in log details" ToggleType="CheckBox"
+                                  IsChecked="{Binding ShowGuildTagsInLogDetail, Mode=TwoWay}" />
+                        <MenuItem Header="Show failure health _percentages in log list" ToggleType="CheckBox"
+                                  IsChecked="{Binding ShowFailurePercentagesInLogList, Mode=TwoWay}" />
+                        <Separator />
+                        <MenuItem Header="Show _favorites filter" ToggleType="CheckBox"
+                                  IsChecked="{Binding ShowFavoritesFilter, Mode=TwoWay}" />
+                        <MenuItem Header="Show pla_yer count filter" ToggleType="CheckBox"
+                                  IsChecked="{Binding ShowPlayerCountFilter, Mode=TwoWay}" />
+                        <MenuItem Header="Show date _range filter" ToggleType="CheckBox"
+                                  IsChecked="{Binding ShowDateRangeFilter, Mode=TwoWay}" />
+                        <MenuItem Header="Show ta_gs" ToggleType="CheckBox"
+                                  IsChecked="{Binding ShowTags, Mode=TwoWay}" />
+                        <Separator />
+                        <MenuItem Header="Show _debug data" ToggleType="CheckBox"
+                                  IsChecked="{Binding ShowDebugData, Mode=TwoWay}" />
+                    </MenuItem>
+                    <MenuItem Header="_Settings">
+                        <MenuItem Header="_Settings…" Click="OnOpenSettingsClick" />
+                    </MenuItem>
+                    <MenuItem Header="_Help">
+                        <MenuItem Header="Donate a coffee ❤️" Click="OnOpenDonateClick" />
+                        <Separator />
+                        <MenuItem Header="Changelog" Click="OnOpenChangelogClick" />
+                        <MenuItem Header="Website" Click="OnOpenWebsiteClick" />
+                        <MenuItem Header="About…" Click="OnOpenAboutClick" />
+                    </MenuItem>
+                </Menu>
+
+                <!-- Empty space acts as the window's drag handle, like a normal title bar. -->
+                <Border Grid.Column="2" Background="Transparent"
+                        PointerPressed="OnHeaderPointerPressed" DoubleTapped="OnHeaderDoubleTapped" />
+
+                <!-- Custom caption buttons, required because ExtendClientAreaChromeHints="NoChrome"
+                     hides the OS-drawn ones. -->
+                <StackPanel Grid.Column="3" Orientation="Horizontal">
+                    <Button Classes="caption" Content="−" Click="OnMinimizeClick" ToolTip.Tip="Minimize" />
+                    <Button Classes="caption"
+                            Content="{Binding #RootWindow.WindowState, Converter={x:Static views:WindowStateIconConverter.Instance}}"
+                            Click="OnMaximizeRestoreClick" ToolTip.Tip="Maximize" />
+                    <Button Classes="caption caption-close" Content="✕" Click="OnCloseClick" ToolTip.Tip="Close" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Status bar: log load status / background processing (placeholder wiring for now). -->
+        <Border DockPanel.Dock="Bottom" Padding="12,6" BorderThickness="0,1,0,0"
+                BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}">
+            <TextBlock Text="{Binding LogsSection.StatusText}" VerticalAlignment="Center" />
+        </Border>
+
+        <!-- Main area: filter sidebar (collapsible via Settings.ShowFilterSidebar) + tabbed sections.
+             A single Grid (not a nested one) so the GridSplitter's default "Stretch" resize
+             behavior can resize the sidebar column (0) and the TabControl's star column (2)
+             together while leaving its own column (1) alone; that only works when all three
+             columns belong to the same Grid. The sidebar's two columns collapse to zero width
+             (rather than just hiding their content) when the sidebar is toggled off. -->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="{Binding ShowFilterSidebar, Converter={x:Static views:BoolToGridLengthConverter.Instance}, ConverterParameter=340}" />
+                <ColumnDefinition Width="{Binding ShowFilterSidebar, Converter={x:Static views:BoolToGridLengthConverter.Instance}, ConverterParameter=4}" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" MinWidth="220" BorderThickness="0,0,1,0"
+                    IsVisible="{Binding ShowFilterSidebar}"
+                    BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}">
+                <!-- A DockPanel (not a single ScrollViewer) so "Advanced filters" pins to the very
+                     bottom and "Encounters" fills all remaining vertical space instead of being
+                     sized to a fixed height: the scrollable filters above it dock to the top, the
+                     button docks to the bottom, and the Encounters block (last, undocked) fills
+                     whatever space is left between them. -->
+                <DockPanel Margin="10">
+                    <Button DockPanel.Dock="Bottom" Content="{Binding AdvancedFiltersButtonText}"
+                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                            Margin="0,8,0,0" Click="OnOpenAdvancedFiltersClick" />
+
+                    <ScrollViewer DockPanel.Dock="Top">
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="Filters" FontWeight="SemiBold" />
+
+                            <TextBox Text="{Binding SearchQuery}" Watermark="Search name / player…" />
+
+                            <HeaderedContentControl Header="Result" Theme="{StaticResource GroupBoxTheme}"
+                                                     Padding="8,10,8,2" Margin="0,4,0,0">
+                                <WrapPanel>
+                                    <CheckBox Content="Success" IsChecked="{Binding Filters.ShowSuccessfulLogs}" />
+                                    <CheckBox Content="Failure" IsChecked="{Binding Filters.ShowFailedLogs}" />
+                                    <CheckBox Content="Unknown" IsChecked="{Binding Filters.ShowUnknownLogs}" />
+                                </WrapPanel>
+                            </HeaderedContentControl>
+
+                            <HeaderedContentControl Header="Mode" Theme="{StaticResource GroupBoxTheme}"
+                                                     Padding="8,10,8,2" Margin="0,4,0,0">
+                                <WrapPanel>
+                                    <CheckBox Content="Normal" IsChecked="{Binding Filters.ShowNormalModeLogs}" />
+                                    <CheckBox Content="Challenge" IsChecked="{Binding Filters.ShowChallengeModeLogs}" />
+                                    <CheckBox Content="Legendary CM" IsChecked="{Binding Filters.ShowLegendaryChallengeModeLogs}" />
+                                    <CheckBox Content="Emboldened" IsChecked="{Binding Filters.ShowEmboldenedModeLogs}" />
+                                    <CheckBox Content="Quickplay" IsChecked="{Binding Filters.ShowQuickplayModeLogs}" />
+                                </WrapPanel>
+                            </HeaderedContentControl>
+
+                            <HeaderedContentControl Header="Favorites" Theme="{StaticResource GroupBoxTheme}"
+                                                     Padding="8,10,8,2" Margin="0,4,0,0"
+                                                     IsVisible="{Binding ShowFavoritesFilter}">
+                                <WrapPanel>
+                                    <CheckBox Content="Favorite" IsChecked="{Binding Filters.ShowFavoriteLogs}" />
+                                    <CheckBox Content="Non-favorite" IsChecked="{Binding Filters.ShowNonFavoriteLogs}" />
+                                </WrapPanel>
+                            </HeaderedContentControl>
+
+                            <HeaderedContentControl Header="Player count" Theme="{StaticResource GroupBoxTheme}"
+                                                     Margin="0,4,0,0" IsVisible="{Binding ShowPlayerCountFilter}">
+                                <Grid ColumnDefinitions="Auto,*,Auto,*">
+                                    <TextBlock Grid.Column="0" Text="Min" VerticalAlignment="Center" Margin="0,0,4,0" />
+                                    <NumericUpDown Grid.Column="1" Minimum="0" Maximum="100" Increment="1" Margin="0,0,6,0"
+                                                   FormatString="0" Value="{Binding Filters.PlayerFilters.MinPlayerCount}" />
+                                    <TextBlock Grid.Column="2" Text="Max" VerticalAlignment="Center" Margin="0,0,4,0" />
+                                    <NumericUpDown Grid.Column="3" Minimum="0" Maximum="100" Increment="1"
+                                                   FormatString="0" Value="{Binding Filters.PlayerFilters.MaxPlayerCount}" />
+                                </Grid>
+                            </HeaderedContentControl>
+
+                            <HeaderedContentControl Header="Date range" Theme="{StaticResource GroupBoxTheme}"
+                                                     Margin="0,4,0,0" IsVisible="{Binding ShowDateRangeFilter}">
+                                <StackPanel Spacing="6">
+                                    <StackPanel Spacing="2">
+                                        <TextBlock Text="From" FontSize="11" Opacity="0.7" />
+                                        <DatePicker SelectedDate="{Binding MinDate}" HorizontalAlignment="Stretch" />
+                                    </StackPanel>
+                                    <StackPanel Spacing="2">
+                                        <TextBlock Text="To" FontSize="11" Opacity="0.7" />
+                                        <DatePicker SelectedDate="{Binding MaxDate}" HorizontalAlignment="Stretch" />
+                                    </StackPanel>
+                                    <Button Content="Clear dates" Command="{Binding ClearDatesCommand}"
+                                            HorizontalAlignment="Left" />
+                                </StackPanel>
+                            </HeaderedContentControl>
+
+                            <HeaderedContentControl Header="Tags" Theme="{StaticResource GroupBoxTheme}"
+                                                     Margin="0,4,0,0" IsVisible="{Binding ShowTags}">
+                                <StackPanel Spacing="6">
+                                    <TextBox Text="{Binding TagSearchText}" Watermark="Filter tags…" />
+                                    <ItemsControl ItemsSource="{Binding AvailableTags}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate x:DataType="models:TagFilterItem">
+                                                <CheckBox Content="{Binding Name}" IsChecked="{Binding IsSelected}"
+                                                          IsVisible="{Binding IsVisible}" />
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </HeaderedContentControl>
+                        </StackPanel>
+                    </ScrollViewer>
+
+                    <TextBlock DockPanel.Dock="Top" Text="Encounters" FontWeight="SemiBold" Margin="0,8,0,4" />
+                    <TreeView ItemsSource="{Binding EncounterGroups}"
+                              SelectedItem="{Binding SelectedGroup}">
+                        <TreeView.Styles>
+                            <!-- Always compact here, independent of Settings.CompactUi (which only
+                                 controls the app-wide FluentTheme density): this list can get long
+                                 with all encounters, so dense rows matter more here than elsewhere. -->
+                            <Style Selector="TreeViewItem">
+                                <Setter Property="Padding" Value="4,2" />
+                                <Setter Property="MinHeight" Value="24" />
+                            </Style>
+                            <Style Selector="TreeViewItem" x:DataType="models:LogGroupNode">
+                                <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+                            </Style>
+                        </TreeView.Styles>
+                        <TreeView.ItemTemplate>
+                            <TreeDataTemplate ItemsSource="{Binding Children}"
+                                              x:DataType="models:LogGroupNode">
+                                <Grid ColumnDefinitions="Auto,*,Auto" VerticalAlignment="Center">
+                                    <Image Grid.Column="0" Source="{Binding Icon}" Width="16" Height="16"
+                                           VerticalAlignment="Center" Margin="0,0,6,0" />
+                                    <TextBlock Grid.Column="1" Text="{Binding Name}" VerticalAlignment="Center" />
+                                    <TextBlock Grid.Column="2" Text="{Binding LogCount}" VerticalAlignment="Center"
+                                               Opacity="0.6" Margin="10,0,0,0" />
+                                </Grid>
+                            </TreeDataTemplate>
+                        </TreeView.ItemTemplate>
+                    </TreeView>
+                </DockPanel>
+            </Border>
+
+            <GridSplitter Grid.Column="1" ResizeDirection="Columns"
+                          IsVisible="{Binding ShowFilterSidebar}" Background="Transparent" />
+
+            <TabControl Grid.Column="2">
+                <TabControl.Styles>
+                    <Style Selector="TabItem">
+                        <Setter Property="FontSize" Value="16" />
+                    </Style>
+                </TabControl.Styles>
+                <TabItem Header="Logs">
+                    <views:LogsSectionView DataContext="{Binding LogsSection}" />
+                </TabItem>
+                <TabItem Header="Players">
+                    <views:PlayersSectionView DataContext="{Binding PlayersSection}" />
+                </TabItem>
+                <TabItem Header="Guilds">
+                    <views:GuildsSectionView DataContext="{Binding GuildsSection}" />
+                </TabItem>
+                <TabItem Header="Statistics">
+                    <views:StatisticsSectionView DataContext="{Binding StatisticsSection}" />
+                </TabItem>
+                <TabItem Header="Weekly Clears">
+                    <views:WeeklyClearsSectionView DataContext="{Binding WeeklyClearsSection}" />
+                </TabItem>
+                <!-- Debug tabs: only shown when Settings.ShowDebugData is enabled, exactly like the
+                     Eto ManagerForm gates its "Game data"/"Services" TabPages. -->
+                <TabItem Header="Game data" IsVisible="{Binding ShowDebugData}">
+                    <views:GameDataSectionView DataContext="{Binding GameDataSection}" />
+                </TabItem>
+                <TabItem Header="Services" IsVisible="{Binding ShowDebugData}">
+                    <views:ServicesSectionView DataContext="{Binding ServicesSection}" />
+                </TabItem>
+            </TabControl>
+        </Grid>
+    </DockPanel>
+</Window>
