@@ -1048,7 +1048,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 					return skill;
 				}
 
-				return null;
+				return new Skill(id, "UNKNOWN");
 			}
 			
 			Skill GetSkillByIdOrAdd(uint id)
