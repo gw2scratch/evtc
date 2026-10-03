@@ -93,7 +93,7 @@ namespace GW2Scratch.EVTCInspector
 		public bool FilterEvent(Event e)
 		{
 			bool anyFilterActive = IdFilterEnabled || NameFilterEnabled;
-			if (e is not ISkillEvent ev) return !anyFilterActive;
+			if (e is not ISkillEvent ev) return true;
 
 			if (IdFilterEnabled && ev.Skill.Id == IdFilter) return true;
 			if (NameFilterEnabled && ev.Skill.Name.Contains(NameFilter, StringComparison.CurrentCultureIgnoreCase)) return true;
