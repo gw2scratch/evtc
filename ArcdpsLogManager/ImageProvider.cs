@@ -178,6 +178,7 @@ namespace GW2Scratch.ArcdpsLogManager
 
 		// RAID ENCOUNTERS - VISIONS OF ETERNITY
 		private Lazy<Image> GuardiansGladeIcon { get; } = new Lazy<Image>(Resources.GetGuardiansGladeIcon);
+		private Lazy<Image> NexusOfEternityIcon { get; } = new Lazy<Image>(Resources.GetNexusOfEternityIcon);
 
 		// FRACTALS
 		private Lazy<Image> MAMAIcon { get; } = new Lazy<Image>(Resources.GetMAMAIcon);
@@ -456,6 +457,7 @@ namespace GW2Scratch.ArcdpsLogManager
 				Encounter.TempleOfFebe => TempleOfFebeIcon.Value,
 				// RAID ENCOUNTERS - VISIONS OF ETERNITY
 				Encounter.GuardiansGlade => GuardiansGladeIcon.Value,
+				Encounter.NexusOfEternity => NexusOfEternityIcon.Value,
 				// FRACTALS
 				Encounter.MAMA => MAMAIcon.Value,
 				Encounter.SiaxTheCorrupted => SiaxTheCorruptedIcon.Value,

@@ -235,6 +235,8 @@ public class EncounterIdentifier : IEncounterIdentifier
 						return (Encounter.TempleOfFebe, mainTarget);
 					case SpeciesIds.Kela:
 						return (Encounter.GuardiansGlade, mainTarget);
+					case SpeciesIds.Vloxx:
+						return (Encounter.NexusOfEternity, mainTarget);
 					// Important: when adding a new encounter, make sure you also add it to the IdentifyPotentialEncounters method.
 				}
 			}
@@ -404,6 +406,8 @@ public class EncounterIdentifier : IEncounterIdentifier
 				return new[] { Encounter.TempleOfFebe };
 			case SpeciesIds.Kela:
 				return new[] { Encounter.GuardiansGlade };
+			case SpeciesIds.Vloxx:
+				return new[] { Encounter.NexusOfEternity };
 			case GadgetIds.EtherealBarrier:
 			case GadgetIds.EtherealBarrierChina:
 				return new[] { Encounter.SpiritRace };

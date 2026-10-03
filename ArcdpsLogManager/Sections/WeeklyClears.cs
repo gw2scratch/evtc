@@ -54,6 +54,8 @@ public class WeeklyClears : DynamicLayout
 
 	private static readonly DateOnly GuardiansGladeRelease = new DateOnly(2026, 02, 02);
 	private static readonly DateOnly GuardiansGladeCMRelease = new DateOnly(2026, 02, 23);
+	private static readonly DateOnly NexusOfEternityRelease = new DateOnly(2026, 09, 14);
+	private static readonly DateOnly NexusOfEternityCMRelease = new DateOnly(2026, 09, 28);
 
 
 	private static readonly List<EncounterGroup> EncounterGroups =
@@ -147,6 +149,7 @@ public class WeeklyClears : DynamicLayout
 		new EncounterGroup(EncounterCategory.RaidEncountersVisionsOfEternity, "Visions of Eternity", [
 			new EncounterRow("Visions of Eternity", [
 				new NormalEncounter(Encounter.GuardiansGlade, normalModeSince: GuardiansGladeRelease, challengeModeSince: GuardiansGladeCMRelease),
+				new NormalEncounter(Encounter.NexusOfEternity, normalModeSince: NexusOfEternityRelease, challengeModeSince: NexusOfEternityCMRelease),
 			]),
 		])
 	];
@@ -396,7 +399,7 @@ public class WeeklyClears : DynamicLayout
 			         ("IBS", EncounterCategory.RaidEncountersIcebroodSaga, false),
 			         ("EoD", EncounterCategory.RaidEncountersEndOfDragons, true),
 			         ("SotO", EncounterCategory.RaidEncountersSecretsOfTheObscure, true),
-					 ("VoE", EncounterCategory.RaidEncountersVisionsOfEternity, true)
+			         ("VoE", EncounterCategory.RaidEncountersVisionsOfEternity, true),
 		         ])
 		{
 			var visible = Settings.WeeklyClearGroups.Contains(category);

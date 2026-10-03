@@ -156,6 +156,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 
 		// Raid Encounters - Visions of Eternity
 		public const int Kela = 27124;
+		public const int Vloxx = 28106;
 
 		// Story
 		public const int HeartsAndMindsMordremoth = 15884;

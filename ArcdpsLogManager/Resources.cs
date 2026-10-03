@@ -214,7 +214,8 @@ namespace GW2Scratch.ArcdpsLogManager
 		public static Image GetTempleOfFebeIcon() => GetEncounterImage("Mini_Cerus");
 
 		// RAID ENCOUNTERS - VISIONS OF ETERNITY
-		public static Image GetGuardiansGladeIcon() => GetEncounterImage("Kela"); // TODO Update image
+		public static Image GetGuardiansGladeIcon() => GetEncounterImage("Kela");
+		public static Image GetNexusOfEternityIcon() => GetEncounterImage("Vloxx");
 
 		// FRACTALS
 		public static Image GetGenericFractalMapIcon() => GetImage("ArenaNet.fractal_map_32px.png");

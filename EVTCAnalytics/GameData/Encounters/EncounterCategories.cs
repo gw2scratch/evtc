@@ -78,6 +78,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 				{Encounter.CosmicObservatory, EncounterCategory.RaidEncounterSecretsOfTheObscure},
 				{Encounter.TempleOfFebe, EncounterCategory.RaidEncounterSecretsOfTheObscure},
 				{Encounter.GuardiansGlade, EncounterCategory.RaidEncounterVisionsOfEternity},
+				{Encounter.NexusOfEternity, EncounterCategory.RaidEncounterVisionsOfEternity},
 				{Encounter.Map, EncounterCategory.Map},
 			};
 

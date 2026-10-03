@@ -136,6 +136,7 @@ namespace GW2Scratch.EVTCAnalytics.GameData.Encounters
 
 		// Raid Encounters - Visions of Eternity
 		GuardiansGlade = 44001,
+		NexusOfEternity = 44002,
 
 		// Story
 		Mordremoth = 50001,

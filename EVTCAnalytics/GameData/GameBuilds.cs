@@ -85,5 +85,17 @@ namespace GW2Scratch.EVTCAnalytics.GameData
 		/// The HP values for The Dragonvoid gadgets on Harvest Temple have not been changed.
 		/// </remarks>
 		public static int BossHpReductions = 198816;
+
+		/// <summary>
+		/// Nexus of Eternity Release<br/>
+		/// https://wiki.guildwars2.com/wiki/Game_updates/2026-09-15
+		/// </summary>
+		public static int NexusOfEternityRelease = 207032;
+		
+		/// <summary>
+		/// Nexus of Eternity CM Release<br/>
+		/// https://wiki.guildwars2.com/wiki/Game_updates/2026-09-29
+		/// </summary>
+		public static int NexusOfEternityCMRelease = 207890;
 	}
 }

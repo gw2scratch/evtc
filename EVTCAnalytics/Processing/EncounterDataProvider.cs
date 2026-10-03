@@ -796,6 +796,16 @@ namespace GW2Scratch.EVTCAnalytics.Processing
 						.WithResult(new AgentBuffGainedDeterminer(mainTarget, SkillIds.Determined))
 						.WithModes(new AgentHealthModeDeterminer(mainTarget, 45_000_000))
 						.Build();
+				case Encounter.NexusOfEternity:
+					// Normal Mode 42.469.920 HP
+					// Challenge Mode 84.939.840 HP
+					return GetDefaultBuilder(encounter, mainTarget)
+						.WithModes(new FallbackModeDeterminer(
+							new AgentHealthModeDeterminer(mainTarget, 86_000_000, EncounterMode.LegendaryChallenge),
+							new AgentHealthModeDeterminer(mainTarget, 45_000_000, EncounterMode.Challenge),
+							finalFallbackMode: null
+						))
+						.Build();
 				default:
 					return GetDefaultBuilder(encounter, mainTarget, mergeMainTarget: false).Build();
 			}
