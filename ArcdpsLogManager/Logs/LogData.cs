@@ -5,6 +5,7 @@ using GW2Scratch.EVTCAnalytics.Events;
 using GW2Scratch.EVTCAnalytics.GameData;
 using GW2Scratch.EVTCAnalytics.GameData.Encounters;
 using GW2Scratch.EVTCAnalytics.Model.Agents;
+using GW2Scratch.EVTCAnalytics.Parsed;
 using GW2Scratch.EVTCAnalytics.Parsed.Enums;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Modes;
 using GW2Scratch.EVTCAnalytics.Processing.Encounters.Results;
@@ -278,14 +279,39 @@ namespace GW2Scratch.ArcdpsLogManager.Logs
 					HealthPercentage = 0;
 				}
 
+				// Event changelog:
+				// 09 June 2020 - Added Tag Event for players with possible commander tag.
+				// 28 June 2022 - Added ID to GUID for effects (content is broken).
+				// 01 July 2022 - Added ID to GUID for markers (content is broken).
+				// 09 July 2022 - Fixed ID to GUID content for effects and markers.
+				// 23 Aug 2022 - Added IsCommander field to MarkerEvent (then called TagEvent).
+
+				// Arcdps changelog from WaybackMachine:
+				// jun.09.2020: evtc: added cbts_tag event for players with (likely) commander tag.
+				// jun.28.2022: evtc: added cbts_effect (see readme).
+				// jun.28.2022: evtc: added cbts_idtoguid(see readme).
+				// jul.01.2022: evtc: added idtoguid for markers (cbts_tag, contentlocal enum 1).
+				// jul.09.2022: evtc: fixed an oops in idtoguid (ignore in all logs older than this).
+				// aug.23.2022: evtc: cbts_tag buff will be 1 if marker is a commander tag.
+
+				// Prior to 9 July 2022, we assume that the marker event on the player is a commander tag.
+
+				int evtcVersion = int.Parse(log.EvtcVersion.Replace("EVTC", ""));
+
 				var tagEvents = log.Events.OfType<AgentMarkerEvent>()
 					.SelectMany<AgentMarkerEvent, (AgentMarkerEvent, CommanderTags)>(x =>
 					{
-						if (x.Agent is Player &&
+						if (x.Agent is Player && x.Marker.ContentGuid != null &&
 						    CommanderTagGUIDs.Tags.TryGetValue(ContentLocal.GetGuid(x.Marker.ContentGuid
 						    ), out var tag))
 						{
 							return [(x, tag)];
+						}
+						else if (x.Agent is Player && x.Marker.ContentGuid == null && 
+								evtcVersion >= ArcdpsBuilds.TagEventAvailable && 
+								evtcVersion < ArcdpsBuilds.FunctionalIDToGUIDEvents)
+						{
+							return [(x, CommanderTags.RedCommanderTag)]; // Default to a red tag for logs with broken or missing content GUID.
 						}
 
 						return [];

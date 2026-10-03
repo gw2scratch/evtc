@@ -2,8 +2,9 @@
 
 public static class ArcdpsBuilds
 {
-	public const int FunctionalIDToGUIDEvents = 20220709;
 	public const int ResistanceAvailable = 20200428;
+	public const int TagEventAvailable = 20200609;
+	public const int FunctionalIDToGUIDEvents = 20220709;
 	public const int CommanderTagAvailable = 20220823;
 	public const int TeamChangeOnDespawn = 20240612;
 	public const int WeaponSwapValueIsPrevious_CrowdControlEvents_GliderEvents = 20240627;
