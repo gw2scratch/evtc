@@ -2,6 +2,18 @@
 
 This is the full changelog of the arcdps Log Manager.
 
+## Log Manager v1.17.0
+
+#### New features
+- Added support for Nexus of Eternity
+
+#### Fixes
+- Fixed commander tag detection prior to July 9th 2022
+- Fixed reprocessing of logs on startup
+
+#### EVTC Inspector notes
+- Relaxed skill id filter behavior
+
 ## Log Manager v1.16.1
 
 #### Fixes
