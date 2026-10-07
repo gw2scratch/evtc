@@ -28,6 +28,7 @@ public class AgentHealthDeterminer : IHealthDeterminer
 		float? healthPercentage = log.Events.OfType<AgentHealthUpdateEvent>()
 			.Where(e => e.Agent == agent)
 			.Select(a => (float?) a.HealthFraction)
+			.Where(f => Math.Abs(1 - f.Value) > 1e-6)
 			.DefaultIfEmpty(1)
 			.Last();
 

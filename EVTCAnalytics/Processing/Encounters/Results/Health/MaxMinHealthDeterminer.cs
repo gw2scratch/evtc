@@ -32,6 +32,7 @@ namespace GW2Scratch.EVTCAnalytics.Processing.Encounters.Results.Health
 				.GroupBy(e => e.Agent)
 				.Select(agentGroup => agentGroup
 					.Select(agent => (float?) agent.HealthFraction)
+					.Where(f => Math.Abs(1 - f.Value) > 1e-6)
 					.DefaultIfEmpty(1)
 					.Last()
 				)

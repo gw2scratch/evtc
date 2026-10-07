@@ -265,6 +265,11 @@ namespace GW2Scratch.ArcdpsLogManager.Logs.Updates
 			                     && log.Encounter == Encounter.Other &&
 			                     log.GameBuild >= GameBuilds.NexusOfEternityRelease,
 				"Added support for Nexus of Eternity."),
+			new LogUpdate(log => log.ParsingVersion < new Version(1, 17, 1, 0)
+								&& log.EncounterResult == EncounterResult.Failure
+								&& log.HealthPercentage.HasValue
+								&& Math.Abs(1 - log.HealthPercentage.Value) < 1e-6,
+				"Fixed remaining health detection for failed logs."),
 			// When adding a new update, you need to increase the revision (last value) of the version in the .csproj file
 			// unless the version changes more significantly, in that case it can be reset to 0.
 		};
