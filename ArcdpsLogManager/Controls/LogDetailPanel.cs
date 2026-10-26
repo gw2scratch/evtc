@@ -375,7 +375,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				}
 			};
 
-			Settings.ShowDebugDataChanged += (sender, args) =>
+			EventHandler<EventArgs> updateDebugVisibility = (sender, args) =>
 			{
 				debugSection.Visible = Settings.ShowDebugData;
 				debugSection.GroupBox.Visible = Settings.ShowDebugData;
@@ -387,9 +387,20 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				debugSection.GroupBox.Visible = Settings.ShowDebugData;
 			};
 
-			uploadProcessor.Processed += OnUploadProcessorUpdate;
-			uploadProcessor.Unscheduled += OnUploadProcessorUpdate;
-			uploadProcessor.Scheduled += OnUploadProcessorUpdate;
+			Load += (_, _) =>
+			{
+				Settings.ShowDebugDataChanged += updateDebugVisibility;
+				uploadProcessor.Processed += OnUploadProcessorUpdate;
+				uploadProcessor.Unscheduled += OnUploadProcessorUpdate;
+				uploadProcessor.Scheduled += OnUploadProcessorUpdate;
+			};
+			UnLoad += (_, _) =>
+			{
+				Settings.ShowDebugDataChanged -= updateDebugVisibility;
+				uploadProcessor.Processed -= OnUploadProcessorUpdate;
+				uploadProcessor.Unscheduled -= OnUploadProcessorUpdate;
+				uploadProcessor.Scheduled -= OnUploadProcessorUpdate;
+			};
 		}
 
 		private void UpdateUploadStatus()

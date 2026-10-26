@@ -64,7 +64,9 @@ namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 			tabs.Pages.Add(uploadTab);
 			UpdateTabNames();
 
-			filters.PropertyChanged += (_, _) => UpdateTabNames();
+			var updateTabNames = new System.ComponentModel.PropertyChangedEventHandler((_, _) => UpdateTabNames());
+			Load += (_, _) => { UpdateTabNames(); filters.PropertyChanged += updateTabNames; };
+			UnLoad += (_, _) => filters.PropertyChanged -= updateTabNames;
 
 			Add(tabs);
 		}

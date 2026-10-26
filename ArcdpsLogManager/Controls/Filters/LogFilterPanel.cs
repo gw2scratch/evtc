@@ -148,7 +148,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls.Filters
 				advancedFilterPanel.UpdateLogs(Logs);
 				var updateLogs = new EventHandler<IReadOnlyList<LogData>>((_, logs) => advancedFilterPanel.UpdateLogs(logs));
 				LogsUpdated += updateLogs;
-				form.Closed += (_, _) => LogsUpdated -= updateLogs;
+				form.Closed += (_, _) => { LogsUpdated -= updateLogs; advancedFilterPanel.Unbind(); };
 				
 				form.Show();
 			};

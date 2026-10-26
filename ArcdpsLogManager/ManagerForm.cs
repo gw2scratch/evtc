@@ -584,7 +584,7 @@ namespace GW2Scratch.ArcdpsLogManager
 			// Main log list
 			var logList = new LogList(LogCache, ApiData, LogDataProcessor, UploadProcessor, ImageProvider, LogNameProvider);
 			LogCollectionsInitialized += (sender, args) => logList.DataStore = logsFiltered;
-			FilteredLogsUpdated += (sender, args) => logList.RefreshSelectionForDetailPanels();
+			FilteredLogsUpdated += (sender, args) => Application.Instance.AsyncInvoke(logList.RefreshSelectionForDetailPanels);
 	
 			LogDataProcessor.Processed += (sender, args) =>
 			{

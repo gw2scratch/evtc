@@ -346,7 +346,7 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 			EndVertical();
 
 			// We need to hide the inner groupbox as hiding just the section does not work.
-			Settings.ShowDebugDataChanged += (sender, args) =>
+			EventHandler<EventArgs> updateDebugVisibility = (sender, args) =>
 			{
 				debugSection.Visible = Settings.ShowDebugData;
 				debugSection.GroupBox.Visible = Settings.ShowDebugData;
@@ -359,9 +359,20 @@ namespace GW2Scratch.ArcdpsLogManager.Controls
 				debugSection.GroupBox.Visible = Settings.ShowDebugData;
 			};
 
-			uploadProcessor.Processed += OnUploadProcessorUpdate;
-			uploadProcessor.Unscheduled += OnUploadProcessorUpdate;
-			uploadProcessor.Scheduled += OnUploadProcessorUpdate;
+			Load += (_, _) =>
+			{
+				Settings.ShowDebugDataChanged += updateDebugVisibility;
+				uploadProcessor.Processed += OnUploadProcessorUpdate;
+				uploadProcessor.Unscheduled += OnUploadProcessorUpdate;
+				uploadProcessor.Scheduled += OnUploadProcessorUpdate;
+			};
+			UnLoad += (_, _) =>
+			{
+				Settings.ShowDebugDataChanged -= updateDebugVisibility;
+				uploadProcessor.Processed -= OnUploadProcessorUpdate;
+				uploadProcessor.Unscheduled -= OnUploadProcessorUpdate;
+				uploadProcessor.Scheduled -= OnUploadProcessorUpdate;
+			};
 		}
 		
 		private string FormatTimeSpan(TimeSpan time)

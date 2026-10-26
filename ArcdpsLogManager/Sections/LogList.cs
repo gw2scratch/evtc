@@ -413,13 +413,15 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 				column.Visible = !Settings.HiddenLogListColumns.Contains(column.HeaderText);
 			}
 
-			Settings.HiddenLogListColumnsChanged += (sender, args) =>
+			EventHandler<EventArgs> updateColumns = (sender, args) =>
 			{
 				foreach (var column in gridView.Columns)
 				{
 					column.Visible = !Settings.HiddenLogListColumns.Contains(column.HeaderText);
 				}
 			};
+			Load += (_, _) => Settings.HiddenLogListColumnsChanged += updateColumns;
+			UnLoad += (_, _) => Settings.HiddenLogListColumnsChanged -= updateColumns;
 
 			// Some extra height is needed on the WPF platform to properly fit the icons
 			gridView.RowHeight = Math.Max(gridView.RowHeight, PlayerIconSize + 2);
@@ -552,11 +554,13 @@ namespace GW2Scratch.ArcdpsLogManager.Sections
 							Settings.HiddenLogListColumns.Where(x => x != column.HeaderText).ToList();
 					}
 				};
-				Settings.HiddenLogListColumnsChanged += (sender, args) =>
+				EventHandler<EventArgs> updateChecked = (sender, args) =>
 				{
 					bool shown = !Settings.HiddenLogListColumns.Contains(column.HeaderText);
 					menuItem.Checked = shown;
 				};
+				Load += (_, _) => Settings.HiddenLogListColumnsChanged += updateChecked;
+				UnLoad += (_, _) => Settings.HiddenLogListColumnsChanged -= updateChecked;
 				contextMenu.Items.Add(menuItem);
 			}
 
