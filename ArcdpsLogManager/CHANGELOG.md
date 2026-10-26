@@ -2,6 +2,12 @@
 
 This is the full changelog of the arcdps Log Manager.
 
+## Log Manager v1.17.2
+
+#### Fixes
+- Fixed a memory leak
+- Fixed log detail panel not updating when new logs arrive
+
 ## Log Manager v1.17.1
 
 #### Fixes
